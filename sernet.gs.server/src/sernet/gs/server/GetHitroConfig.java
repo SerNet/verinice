@@ -102,18 +102,26 @@ public class GetHitroConfig extends HttpServlet {
 				if(in==null) {
 					String message = "Resource not found: " + path;
 					response.getWriter().append(message);
-					// TODO this can be critical (missing snca.xml) or harmless (missing de_de.properties). Should be logged accordingly.
-					throw new RuntimeException(message);
-				}
-				out = response.getOutputStream();
-				while (true) {
-					synchronized (buffer) {
-						int amountRead = in.read(buffer);
-						if (amountRead == -1) {
-							break;
-						}
-						out.write(buffer, 0, amountRead);
+					// check if an language only file is searched (i.e. snca-messages_de.properties)
+					// or an language-region file (i.e. snca-messages_de_DE.properties)
+					if(fileName.matches("snca\\-messages_[A-Za-z]{2}_[A-Za-z]{2}\\.properties")) {
+					    if (log.isInfoEnabled()) {
+		                    log.info(message);
+		                }
+					} else {
+					    throw new RuntimeException(message);
 					}
+				} else {
+    				out = response.getOutputStream();
+    				while (true) {
+    					synchronized (buffer) {
+    						int amountRead = in.read(buffer);
+    						if (amountRead == -1) {
+    							break;
+    						}
+    						out.write(buffer, 0, amountRead);
+    					}
+    				}
 				}
 			}
 		} catch (Exception e) {

@@ -39,10 +39,12 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
-    private CnATreeElement cnaTreeElement;
-
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
     
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(AssetValueAdapter.class);
+    
+    private CnATreeElement cnaTreeElement;
+
     public AssetValueAdapter(CnATreeElement parent) {
         this.cnaTreeElement = parent;
     }
@@ -52,7 +54,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("get Integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY);
-        if (properties != null  && properties.getProperties() != null && properties.getProperties().size() > 0)
+        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0)
             return properties.getProperty(0).getNumericPropertyValue();
         else
             return AssetValueService.VALUE_UNDEF;
@@ -63,7 +65,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("get avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
-        if (properties != null  && properties.getProperties() != null && properties.getProperties().size() > 0)
+        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0)
             return properties.getProperty(0).getNumericPropertyValue();
         else
             return AssetValueService.VALUE_UNDEF;
@@ -104,80 +106,6 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY), Integer.toString(i));
     }
 
-    private void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
-
-        try {
-            // 1st step: traverse down:
-            // find bottom nodes from which to start:
-            CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
-            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
-
-            // 2nd step: traverse up:
-            for (CnATreeElement bottomNode : bottomNodes) {
-                // determine protection level from parents (or keep own
-                // depending on settings):
-                bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
-            }
-
-        } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
-        } catch (RuntimeException e) {
-            LOG.error(Messages.AssetValueAdapter_7, e);
-            ta.abort();
-        }
-    }
-
-    private void fireVertraulichkeitChanged(CascadingTransaction ta) {
-
-        try {
-            // 1st step: traverse down:
-            // find bottom nodes from which to start:
-            CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
-            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
-
-            // 2nd step: traverse up:
-            for (CnATreeElement bottomNode : bottomNodes) {
-                // determine protection level from parents (or keep own
-                // depending on description):
-                bottomNode.getLinkChangeListener().determineVertraulichkeit(ta);
-
-            }
-
-        } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
-        } catch (RuntimeException e) {
-            LOG.error(Messages.AssetValueAdapter_9, e);
-            ta.abort();
-        }
-    }
-
-    private void fireIntegritaetChanged(CascadingTransaction ta) {
-
-        try {
-            // 1st step: traverse down:
-            // find bottom nodes from which to start:
-            CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
-            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
-
-            // 2nd step: traverse up:
-            for (CnATreeElement bottomNode : bottomNodes) {
-                // determine protection level from parents (or keep own
-                // depending on description):
-                bottomNode.getLinkChangeListener().determineIntegritaet(ta);
-
-            }
-
-        } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
-        } catch (RuntimeException e) {
-            LOG.error(Messages.AssetValueAdapter_11, e);
-            ta.abort();
-        }
-    }
-
     /**
      * @param downwardElement
      * @param downwardsTA
@@ -185,13 +113,14 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * @return
      */
     private void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
-        if (downwardsTA.hasBeenVisited(downwardElement))
+        if (downwardsTA.hasBeenVisited(downwardElement)) {
             return;
+        }
 
         try {
             downwardsTA.enter(downwardElement);
         } catch (TransactionAbortedException e) {
-            Logger.getLogger(this.getClass()).error(Messages.AssetValueAdapter_12 + downwardElement.getTitle(), e);
+            LOG.error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitle(), e); //$NON-NLS-1$
             return;
         }
 
@@ -216,16 +145,82 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         this.cnaTreeElement = parent;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
+     */
     public void updateIntegritaet(CascadingTransaction ta) {
-        fireIntegritaetChanged(ta);
+        try {
+            // 1st step: traverse down:
+            // find bottom nodes from which to start:
+            CascadingTransaction downwardsTA = new CascadingTransaction();
+            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+
+            // 2nd step: traverse up:
+            for (CnATreeElement bottomNode : bottomNodes) {
+                // determine protection level from parents (or keep own
+                // depending on description):
+                bottomNode.getLinkChangeListener().determineIntegritaet(ta);
+
+            }
+
+        } catch (TransactionAbortedException tae) {
+            LOG.debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
+        } catch (RuntimeException e) {
+            LOG.error(Messages.AssetValueAdapter_11, e);
+            ta.abort();
+        }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
+     */
     public void updateVerfuegbarkeit(CascadingTransaction ta) {
-        fireVerfuegbarkeitChanged(ta);
+        try {
+            // 1st step: traverse down:
+            // find bottom nodes from which to start:
+            CascadingTransaction downwardsTA = new CascadingTransaction();
+            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+
+            // 2nd step: traverse up:
+            for (CnATreeElement bottomNode : bottomNodes) {
+                // determine protection level from parents (or keep own
+                // depending on settings):
+                bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
+            }
+
+        } catch (TransactionAbortedException tae) {
+            LOG.debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
+        } catch (RuntimeException e) {
+            LOG.error(Messages.AssetValueAdapter_7, e);
+            ta.abort();
+        }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
+     */
     public void updateVertraulichkeit(CascadingTransaction ta) {
-        fireVertraulichkeitChanged(ta);
+        try {
+            // 1st step: traverse down:
+            // find bottom nodes from which to start:
+            CascadingTransaction downwardsTA = new CascadingTransaction();
+            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+
+            // 2nd step: traverse up:
+            for (CnATreeElement bottomNode : bottomNodes) {
+                // determine protection level from parents (or keep own
+                // depending on description):
+                bottomNode.getLinkChangeListener().determineVertraulichkeit(ta);
+            }
+        } catch (TransactionAbortedException tae) {
+            LOG.debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
+        } catch (RuntimeException e) {
+            LOG.error(Messages.AssetValueAdapter_9, e);
+            ta.abort();
+        }
     }
 
     /*
@@ -300,8 +295,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         setDescription(text);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedAvailability()
+    /*
+     * (non-Javadoc)
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * isCalculatedAvailability()
      */
     public boolean isCalculatedAvailability() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
@@ -311,8 +309,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedConfidentiality()
+    /*
+     * (non-Javadoc)
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * isCalculatedConfidentiality()
      */
     public boolean isCalculatedConfidentiality() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
@@ -322,8 +323,12 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity
+     * ()
      */
     public boolean isCalculatedIntegrity() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);

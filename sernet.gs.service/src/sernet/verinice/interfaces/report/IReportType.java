@@ -17,8 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.report;
 
-public interface IReportType {
 
+public interface IReportType {
+    
 	/**
 	 * Returns an application usable id.
 	 * 

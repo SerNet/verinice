@@ -46,8 +46,8 @@ public class ModellierungReport implements IReportType {
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
-	}
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat() };
+    }
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();

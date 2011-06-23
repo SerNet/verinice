@@ -102,8 +102,12 @@ public class ControlTransformService {
 			if(doFullRefresh) {
 			    modelUpdater.reload();
 			}
-		} catch (Exception e) {
-			log.error("Error while transforming to control", e); //$NON-NLS-1$
+		} catch (RuntimeException re) {
+		    log.error("Error while transforming item to control", re); //$NON-NLS-1$
+            throw re;
+        } catch (Exception e) {
+			log.error("Error while transforming item to control", e); //$NON-NLS-1$
+			throw new RuntimeException("Error while transforming item to control", e); //$NON-NLS-1$
 		} finally {
 			progressObserver.done();
 		}
@@ -133,12 +137,13 @@ public class ControlTransformService {
                	 log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
            	 	}	
 			    
+			} else {
+			    throw new ItemTransformException(Messages.getString("ControlTransformService.0")); //$NON-NLS-1$
 			}
-		} else {
+		} else {		   		  		 
 			// create a control
 			element = GenericItemTransformer.transform(item);
-			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
-			
+			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));			
 			if (group.canContain(element)) {
 				group.addChild(element);
 				element.setParent(group);
@@ -146,9 +151,10 @@ public class ControlTransformService {
 			    	log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
 			
 				}
-            }
+            } else {
+                throw new ItemTransformException(Messages.getString("ControlTransformService.3")); //$NON-NLS-1$
+            }					
 		}
-
 		try {
 		    HashSet<Permission> newperms = new HashSet<Permission>();
 	        newperms.add(Permission.createPermission(element, getAuthService().getUsername(), true, true));

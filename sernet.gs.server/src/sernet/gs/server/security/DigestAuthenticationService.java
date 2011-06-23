@@ -39,10 +39,15 @@ import sernet.verinice.interfaces.IAuthService;
  */
 public final class DigestAuthenticationService implements IAuthService {
 
+    private final Logger log = Logger.getLogger(DigestAuthenticationService.class);
+    
 	private DigestProcessingFilterEntryPoint entryPoint;
     private String adminUsername;
 	
 	public String[] getRoles() {
+	    if (log.isDebugEnabled()) {
+	        log.debug("getRoles()...");
+        }
 		 GrantedAuthority[] authority = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 		 String[] roles = new String[authority.length];
 		 for (int i=0;i<authority.length; i++) {

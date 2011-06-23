@@ -320,7 +320,7 @@ public class Query implements IQuery
 			else
 				inParameters = null;
 		} catch (EvalError e) {
-			log.warn("Error evaluating the setup query: " + e);
+			log.error("Error evaluating the setup query: " + e);
 			
 			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
 		}
@@ -333,7 +333,7 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
-			log.error("Error evaluating the query: ", e);
+			log.error("Error evaluating the query: " + queryText, e);
 			result = new String("Exception while executing query: " + e.getErrorText());
 			if(e.getCause()!=null) {
 				result = result + ", " + e.getCause().getMessage();

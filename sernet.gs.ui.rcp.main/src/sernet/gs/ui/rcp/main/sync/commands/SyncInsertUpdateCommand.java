@@ -19,7 +19,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.sync.commands;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +39,8 @@ import sernet.gs.ui.rcp.main.service.CnATypeMapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
+import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -43,6 +49,8 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
@@ -112,13 +120,17 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.commands.LoadAttachmentByExternalId;
 import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.sync.VeriniceArchive;
+import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncFile;
 import de.sernet.sync.data.SyncLink;
 import de.sernet.sync.data.SyncObject;
-import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -153,18 +165,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
     
     private transient Map<String, CnATreeElement> idElementMap = new HashMap<String, CnATreeElement>();
+
+    private transient Map<String, Attachment> attachmentMap;
     
-    public int getUpdated() {
-        return updated;
-    }
-
-    public int getInserted() {
-        return inserted;
-    }
-
-    public List<String> getErrorList() {
-        return errorList;
-    }
+    private Integer format;
 
     public SyncInsertUpdateCommand(
     		String sourceId, 
@@ -173,6 +177,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     		String userName,
     		boolean insert, 
     		boolean update, 
+    		Integer format,
     		List<String> errorList) {
         this.sourceId = sourceId;
         this.syncData = syncData;
@@ -180,7 +185,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         this.userName = userName;
         this.insert = insert;
         this.update = update;
+        this.format = format;
         this.errorList = errorList;
+        attachmentMap = new HashMap<String, Attachment>();
     }
 
     /**
@@ -197,15 +204,23 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     public void execute() {
-        for (SyncObject so : syncData.getSyncObject()) {
-            importObject(null, so);
-        } // for <syncObject>
-        for (SyncLink syncLink : syncData.getSyncLink()) {
-            importLink(syncLink);
+        try {
+            for (SyncObject so : syncData.getSyncObject()) {
+                importObject(null, so);
+            } // for <syncObject>
+            for (SyncLink syncLink : syncData.getSyncLink()) {
+                importLink(syncLink);
+            }
+        } catch (RuntimeException e) {
+            log.error("RuntimeException while importing", e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Exception while importing", e);
+            throw new RuntimeCommandException(e);
         }
     }
 
-    private void importObject(CnATreeElement parent, SyncObject so) {
+    private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
         String extId = so.getExtId();
         String extObjectType = so.getExtObjectType();
         if (getLog().isDebugEnabled()) {
@@ -287,7 +302,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         if (null != elementInDB && setAttributes) {
             // for all <syncAttribute>-Elements below current
             // <syncObject>...
-            HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+            HUITypeFactory huiTypeFactory = getHuiTypeFactory();
             for (SyncAttribute sa : so.getSyncAttribute()) {
                 String attrExtId = sa.getName();
                 List<String> attrValues = sa.getValue();
@@ -309,6 +324,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
             elementInDB = dao.merge(elementInDB);
         } // if( null != ... )
 
+        if(isVeriniceArchive()) {
+            importFileList(elementInDB, so.getFile());
+        }
+        
         idElementMap.put(elementInDB.getExtId(), elementInDB);
         
         // Handle all the child objects.
@@ -323,6 +342,83 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         }
     }
     
+    /**
+     * @param elementInDB
+     * @param file
+     * @throws CommandException 
+     */
+    private void importFileList(CnATreeElement elementInDB, List<SyncFile> fileList) throws CommandException {
+        HUITypeFactory huiTypeFactory = getHuiTypeFactory();
+        for (SyncFile fileXml : fileList) {
+            LoadAttachmentByExternalId loadAttachment = new LoadAttachmentByExternalId(sourceId, fileXml.getExtId());
+            loadAttachment = getCommandService().executeCommand(loadAttachment);
+            Attachment attachment = loadAttachment.getAttachment();     
+            if(attachment==null) { 
+                attachment = new Attachment();
+                attachment.setExtId(fileXml.getExtId());
+                attachment.setSourceId(sourceId);
+            }
+            attachmentMap.put(fileXml.getFile(), attachment);
+            attachment.setCnATreeElementId(elementInDB.getDbId());
+            attachment.setCnAElementTitel(elementInDB.getTitle());
+            attachment.setTitel(fileXml.getFile());
+                   
+            SaveNote command = new SaveNote(attachment);        
+            command = getCommandService().executeCommand(command);
+            attachment = (Attachment) command.getAddition();
+            
+            MapObjectType mot = getMap(Attachment.TYPE_ID);
+            for (SyncAttribute sa : fileXml.getSyncAttribute()) {
+                String attrExtId = sa.getName();
+                List<String> attrValues = sa.getValue();
+                MapAttributeType mat = getMapAttribute(mot, attrExtId);
+
+                if (mat == null) {
+                    final String message = "Could not find mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + Attachment.TYPE_ID;
+                    getLog().error(message);
+                    this.errorList.add(message);
+                } else {
+                    String attrIntId = mat.getIntId();
+                    attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues);
+                }
+            }
+            
+            
+        }   
+    }
+    
+    /**
+     * Imports all file data from a verinice Archive (zipFileData).
+     * Call importFileList before calling this method! 
+     * 
+     * Danger: Out-of-memory trouble for large file...
+     * 
+     * @param zipFileData a verinice Archive
+     * @throws IOException
+     * @throws CommandException
+     */
+    public void importFileData(byte[] zipFileData) throws IOException, CommandException {
+        List<String> fileNameList = new ArrayList<String>(attachmentMap.keySet());
+        // Next call might result in out-of-memory trouble
+        // because all attachment data from zipFileData
+        // is stored in one map.
+        // In case of out of memory exceptions
+        // call this method in for loop.
+        Map<String, byte[]> fileDataMap = VeriniceArchive.extractZipEntries(zipFileData, fileNameList);
+        
+        for (String fileName : fileNameList) {
+            Attachment attachment = attachmentMap.get(fileName);
+            IBaseDao<AttachmentFile, Serializable> dao = (IBaseDao<AttachmentFile, Serializable>) getDaoFactory().getDAO(AttachmentFile.class);
+            AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
+            attachmentFile.setFileData(fileDataMap.get(fileName));
+            fileDataMap.remove(fileName);
+            SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
+            saveFileCommand = getCommandService().executeCommand(saveFileCommand);
+            saveFileCommand.clear();
+        }
+        fileDataMap.clear();     
+    }
+
     /**
      * @param syncLink
      * @throws CommandException 
@@ -568,6 +664,18 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         element.getParent().getTitle();
         elementSet.add(element);
     }
+    
+    public int getUpdated() {
+        return updated;
+    }
+
+    public int getInserted() {
+        return inserted;
+    }
+
+    public List<String> getErrorList() {
+        return errorList;
+    }
 
     public Map<Class, CnATreeElement> getContainerMap() {
 		return containerMap;
@@ -584,5 +692,14 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	protected void setUserName(String userName) {
 		this.userName = userName;
 	}
+	
+	private boolean isVeriniceArchive() {
+        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(format);
+    }
+	
+	private HUITypeFactory getHuiTypeFactory() {
+	    return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+	}
+    
 
 }

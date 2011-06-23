@@ -16,7 +16,7 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 		
 		<security:intercept-methods>
-		  <security:protect method="sernet.verinice.hibernate.TreeElementDao.*" access="ROLE_USER" />
+		  <security:protect method="sernet.verinice.hibernate.TreeElementDao.*" access="ROLE_USER,ROLE_WEB" />
 		</security:intercept-methods>
 	</bean>
 	

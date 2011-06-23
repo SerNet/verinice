@@ -59,11 +59,13 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 	 * The {@link Authentication} instance which gives user and admin privileges.
 	 */
 	private InternalAuthentication authentication = new InternalAuthentication(
-			"$internaluser$", "$notused$",
-			new GrantedAuthority[] { new GrantedAuthorityImpl(
-					ApplicationRoles.ROLE_USER),
-					new GrantedAuthorityImpl(
-							ApplicationRoles.ROLE_ADMIN)});
+			"$internaluser$", //$NON-NLS-1$
+			"$notused$",//$NON-NLS-1$
+			new GrantedAuthority[] { 
+			        new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER),
+			        new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
+					new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)
+			});
 	
 	public InternalAuthenticationProvider()
 	{

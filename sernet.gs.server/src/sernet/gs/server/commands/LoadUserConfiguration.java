@@ -56,7 +56,10 @@ public class LoadUserConfiguration extends GenericCommand {
 		if (username != null && username.length()>0) {
 		    allResults: for (Entity entity : entities) {
 		        if (username.equals(entity.getSimpleValue(Configuration.PROP_USERNAME))) {
-		            //HydratorUtil.hydrateEntity(dao, entity);
+		            // hydrate call removed
+		            // lazy="false" added to PropertyList.hbm.xml and PropertyListOracle.hbm.xml added
+		            // See Bug 297
+		            // HydratorUtil.hydrateEntity(dao, entity);
 		            entities = new ArrayList<Entity>();
 		            entities.add(entity);
 		            break allResults;

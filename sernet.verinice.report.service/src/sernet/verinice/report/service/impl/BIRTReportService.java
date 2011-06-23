@@ -25,9 +25,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.EngineConfig;
@@ -35,7 +34,6 @@ import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
-import org.eclipse.birt.report.engine.api.IGetParameterDefinitionTask;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
@@ -44,7 +42,6 @@ import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IResultSetItem;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.IRunTask;
-import org.eclipse.birt.report.engine.api.IScalarParameterDefn;
 import org.eclipse.birt.report.model.api.DefaultResourceLocator;
 import org.eclipse.birt.report.model.api.IResourceLocator;
 import org.eclipse.birt.report.model.api.ModuleHandle;
@@ -52,12 +49,10 @@ import org.eclipse.birt.report.model.api.ModuleOption;
 
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
-import sernet.verinice.oda.driver.impl.Query;
-import sernet.verinice.report.service.Activator;
 
 public class BIRTReportService {
 	
-	Logger log = Logger.getLogger(BIRTReportService.class.getName());
+	private final Logger log = Logger.getLogger(BIRTReportService.class);
 	
 	IReportEngine engine;
 
@@ -80,8 +75,8 @@ public class BIRTReportService {
 				if (url == null)
 					url = defaultLocator.findResource(moduleHandle, fileName, type, appContext);
 
-				if (url == null && log.isLoggable(Level.WARNING))
-					log.warning(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
+				if (url == null)
+					log.warn(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
 				return url;
 			}
 			
@@ -91,8 +86,8 @@ public class BIRTReportService {
 				if (url == null)
 					url = defaultLocator.findResource(moduleHandle, fileName, type);
 
-				if (url == null && log.isLoggable(Level.WARNING))
-					log.warning(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
+				if (url == null)
+					log.warn(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
 				return url;
 			}
 			
@@ -134,10 +129,10 @@ public class BIRTReportService {
 			design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
 			task = engine.createRunAndRenderTask(design);
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not open report design: " + e);
+			log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not open report design: " + e);
+			log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -154,10 +149,10 @@ public class BIRTReportService {
 			IReportRunnable design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
 			task = engine.createRunTask(design);
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not open report design: " + e);
+		    log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not open report design: " + e);
+		    log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -167,14 +162,14 @@ public class BIRTReportService {
 		try {
 			f = File.createTempFile("verinice", ".rptdocument");
 		} catch (IOException e) {
-			log.log(Level.SEVERE, "Could not create temporary file for report document.");
+		    log.error("Could not create temporary file for report document.");
 			throw new IllegalStateException(e);
 		}
 		
 		try {
 			task.run(f.getAbsolutePath());
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not create report: " + e);
+		    log.error("Could not create report: ", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -184,7 +179,7 @@ public class BIRTReportService {
 		try {
 			document = engine.openReportDocument(f.getAbsolutePath());
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not open report document: " + e);
+		    log.error("Could not open report document: ", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -198,7 +193,7 @@ public class BIRTReportService {
 		try {
 			extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
 		} catch (FileNotFoundException e) {
-			log.log(Level.SEVERE, "Could not prepare output stream: " + e);
+		    log.error("Could not prepare output stream: ", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -207,7 +202,7 @@ public class BIRTReportService {
 		try {
 			resultSetList = (List<IResultSetItem>) task.getResultSetList();
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not prepare extraction: " + e);
+			log.error("Could not prepare extraction: ", e);
 			throw new IllegalStateException(e);
 		}
 		IResultSetItem resultItem = (IResultSetItem) resultSetList.get( resultSetIndex );
@@ -216,10 +211,10 @@ public class BIRTReportService {
 		try {
 			task.extract(extractionOptions);
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not extract data: " + e);
+		    log.error("Could not extract data: ", e);
 			throw new IllegalStateException(e);
 		} catch (BirtException e) {
-			log.log(Level.SEVERE, "Could not extract data: " + e);
+		    log.error("Could not extract data: ", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -229,7 +224,7 @@ public class BIRTReportService {
 	{
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-
+		//renderOptions.setOutputFormat("doc");
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
 		task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
 
@@ -238,7 +233,7 @@ public class BIRTReportService {
 		try {
 			task.run();
 		} catch (EngineException e) {
-			log.log(Level.SEVERE, "Could not render design: " + e);
+		    log.error("Could not render design: ", e);
 			throw new IllegalStateException(e);
 		}
 	}

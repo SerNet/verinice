@@ -8,8 +8,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -18,14 +16,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.hui.common.connect.HitroUtil;
 
 public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage  {
@@ -140,11 +136,22 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         super.initialize();
         Activator.inheritVeriniceContextState();
         Set<String> allTags = HitroUtil.getInstance().getTypeFactory().getAllTags();
-        viewer.setInput(allTags.toArray());
+        Object[] allTagsArray =null;
+        if(allTags!=null) {
+            allTagsArray = allTags.toArray();
+            viewer.setInput(allTagsArray);
+        }
         
+        Object[] prefTagsArr = allTagsArray;
         String prefTags = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
-        String[] prefTagsArr = split(prefTags);
-        viewer.setCheckedElements(prefTagsArr);
+        
+        if(!PreferenceConstants.HUI_TAGS_ALL.equals(prefTags)) {
+            prefTagsArr = split(prefTags);
+        }
+        
+        if(prefTagsArr!=null) {
+            viewer.setCheckedElements(prefTagsArr);
+        }
     }
 
     /**

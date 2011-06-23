@@ -44,8 +44,7 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 
 	private String sourceID;
 
-	private static final String QUERY = "from CnATreeElement elmt " +
-		"where elmt.sourceId = ? and elmt.extId = ?"; 
+	private static final String QUERY = "from CnATreeElement elmt where elmt.sourceId = ? and elmt.extId = ?"; 
 	
 	public LoadCnAElementByExternalID( String sourceID, String id) {
 		this.id = id;

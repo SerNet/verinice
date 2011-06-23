@@ -111,7 +111,17 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     Map<String,String> model = new HashMap<String,String>();
     
-    private InternalAuthentication authentication = new InternalAuthentication("$internaluser$", "$notused$", new GrantedAuthority[] { new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN) }); //$NON-NLS-1$ //$NON-NLS-2$
+    // NotificationJob can not do a real login
+    // authentication is a fake instance to run secured commands and dao actions
+    // without a login
+    private InternalAuthentication authentication = new InternalAuthentication(
+            "$internaluser$", //$NON-NLS-1$ 
+            "$notused$", //$NON-NLS-1$
+            new GrantedAuthority[] { 
+                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
+                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
+                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN) 
+            }); 
     
     /*
      * Send notification if task notification is enabled.
@@ -138,6 +148,9 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     private void doExecute(JobExecutionContext context) {
         VeriniceContext.setState(NotificationJob.state);
 
+        // NotificationJob can not do a real login
+        // authentication is a fake instance to run secured commands and dao actions
+        // without a login
         SecurityContext ctx = SecurityContextHolder.getContext();
         ctx.setAuthentication(authentication);
 

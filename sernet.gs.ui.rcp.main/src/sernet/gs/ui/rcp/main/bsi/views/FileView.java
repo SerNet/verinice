@@ -74,8 +74,6 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachmentFile;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadAttachments;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -85,6 +83,8 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.StatusResult;
+import sernet.verinice.service.commands.LoadAttachmentFile;
+import sernet.verinice.service.commands.LoadAttachments;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement.
@@ -140,8 +140,6 @@ public class FileView extends ViewPart {
 	
 	private ICommandService	commandService;
 	
-	private Composite parent;
-	
 	protected TableViewer viewer;
 	protected TableColumn iconColumn;
 	protected TableColumn fileNameColumn;
@@ -182,7 +180,6 @@ public class FileView extends ViewPart {
 	}
 
 	private void initView(Composite parent) {
-		this.parent = parent;
 		parent.setLayout(new FillLayout());
 		try {
 		    createTable(parent);		

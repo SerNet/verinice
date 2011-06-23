@@ -44,10 +44,10 @@ public class BasisSichCheckReport implements IReportType {
 	public String getLabel() {
 		return Messages.BasisSichCheckReport_2;
 	}
-
+	
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
-	}
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat() };
+    }
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();

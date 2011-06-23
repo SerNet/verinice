@@ -32,6 +32,8 @@ public class StrukturanalyseReport implements IReportType {
 	private static final Logger LOG = Logger.getLogger(StrukturanalyseReport.class);
 	
     private static final String REPORT_DESIGN = "Strukturanalyse.rptdesign"; //$NON-NLS-1$
+    
+    private String filename = null;
 
 	public String getDescription() {
 		return Messages.StrukturanalyseReport_1;
@@ -46,8 +48,8 @@ public class StrukturanalyseReport implements IReportType {
 	}
 
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
-	}
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(),  new ExcelOutputFormat(), new WordOutputFormat() };
+    }
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
@@ -71,7 +73,7 @@ public class StrukturanalyseReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+       return null;
     }
 
     /* (non-Javadoc)

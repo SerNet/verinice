@@ -21,9 +21,13 @@ import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.internal.SWTEventListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -192,8 +196,28 @@ public class HitroUIComposite extends ScrolledComposite {
         huiView.createView(entity, editable, useRules, individualTags, taggedOnly);
     }
 	
+	public void addSelectionListener(String id, SelectionListener listener) {
+	    huiView.addSelectionListener(id,listener);
+	}
+	
+	public void removeSelectionListener(String id, SelectionListener listener) {
+        huiView.removeSelectionListener(id,listener);
+    }
+	
+	public void setFieldEnabled(String id, boolean enabled) {
+	    huiView.setFieldEnabled(id, enabled);    
+    }
+	
+	public Control getField(String id) {
+	    return huiView.getField(id);
+	}
+	
 	public void closeView() {
 		huiView.closeView();
 	}
+
+   
+
+    
 
 }

@@ -30,6 +30,7 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.iso27k.InheritLogger;
 
 /**
  * Association class for links between items.
@@ -41,7 +42,9 @@ import sernet.verinice.model.bsi.Raum;
  */
 @SuppressWarnings("serial")
 public class CnALink implements Serializable, ITypedElement {
-
+    
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
+    
     // constants for link typeId, now replaced by relationIDs that can be defined in SNCA.xml.
     // these can still be used to differentiate link categories such as "system links" that should never be displayed to the end user
     // which is why we keep the typeId field for now.
@@ -283,9 +286,19 @@ public class CnALink implements Serializable, ITypedElement {
 		return this.getId().hashCode();
 	}
 	
-	public void remove() {
+	public void remove() {	    
+	    if(LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("remove()...");
+        }
+	    
 		dependant.removeLinkDown(this);
 		dependency.removeLinkUp(this);
+		
+        if(dependency.isSchutzbedarfProvider()) {
+            dependency.fireIntegritaetChanged(new CascadingTransaction());
+            dependency.fireVerfuegbarkeitChanged(new CascadingTransaction());
+            dependency.fireVertraulichkeitChanged(new CascadingTransaction());
+        }
 
 	}
 

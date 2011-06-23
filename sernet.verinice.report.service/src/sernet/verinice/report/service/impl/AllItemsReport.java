@@ -42,10 +42,10 @@ public class AllItemsReport implements IReportType {
 	public String getLabel() {
 		return Messages.AllItemsReport_2;
 	}
-
+	
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
-	}
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat() };
+    }
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();

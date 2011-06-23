@@ -64,7 +64,6 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.ExportCommand;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -72,6 +71,8 @@ import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.ExportDialog;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
  * {@link Action} that exports assessment objects from the
@@ -153,8 +154,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                 }
             }
 		    filePath = dialog.getFilePath();
-		    filePath = addExtension(filePath, EXTENSION_XML);
-		    if(password!=null) {
+		    filePath = ExportAction.addExtension(filePath,ExportDialog.EXTENSION_ARRAY[dialog.getFormat()]);
+		    if(password!=null) {		        
 		        filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
 		    }
 		    if(x509CertificateFile!=null) {
@@ -171,7 +172,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                         		dialog.getSourceId(),
                         		password,
                         		x509CertificateFile,
-                        		keyAlias);                    
+                        		keyAlias,
+                        		dialog.getFormat());                    
                     } catch (Throwable e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
@@ -191,14 +193,22 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 		}
 	}
     
-    private void export(Set<CnATreeElement> elementSet, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile, String keyAlias) {
+    private void export(
+            Set<CnATreeElement> elementSet, 
+            String path, 
+            boolean reImport, 
+            String sourceId, 
+            char[] exportPassword, 
+            File x509CertificateFile,
+            String keyAlias,
+            int fileFormat) {
         if(elementSet!=null && elementSet.size()>0) {
         	if(sourceId==null || sourceId.isEmpty()) {
         		// if source id is not set by user the first 6 char. of an uuid is used
         		sourceId = UUID.randomUUID().toString().substring(0, 6);
         	}
             Activator.inheritVeriniceContextState();
-        	ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), sourceId, reImport);
+            ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), sourceId, reImport, fileFormat);
         	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
@@ -206,27 +216,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
         	}      	
-        }
-    }
-
-    private void export(CnATreeElement element, String path, boolean reImport, String sourceId, char[] exportPassword, File x509CertificateFile, String keyAlias) {
-        LinkedList<CnATreeElement> exportElements = new LinkedList<CnATreeElement>();
-        if(element!=null) {
-            sourceId = (sourceId==null || sourceId.isEmpty()) ? element.getUuid() : sourceId;
-            Activator.inheritVeriniceContextState();
-        	exportElements.add(element);
-        	ExportCommand exportCommand = new ExportCommand(exportElements, sourceId, reImport);
-        	try {
-        		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
-        		updateModel(exportCommand.getChangedElements());
-        	} catch (Exception e) {
-        		throw new IllegalStateException(e);
-        	}
-        	String title = "";
-        	if(element instanceof Organization) {
-        	    title = ((Organization)element).getTitle();
-        	}       	
         }
     }
     

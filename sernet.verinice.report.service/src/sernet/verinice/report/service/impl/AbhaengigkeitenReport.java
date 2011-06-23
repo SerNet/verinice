@@ -44,10 +44,10 @@ public class AbhaengigkeitenReport implements IReportType {
 	public String getLabel() {
 		return Messages.AbhaengigkeitenReport_2;
 	}
-
+	
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat() };
-	}
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat() };
+    }
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();

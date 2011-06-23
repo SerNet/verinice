@@ -29,6 +29,8 @@ import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IElementEntityDao;
+import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -59,31 +61,27 @@ public class UpdateElementEntity<T extends CnATreeElement> extends GenericComman
 	private String stationId;
 
 	public UpdateElementEntity(T element, boolean fireUpdates, String stationId) {
-		this.newElement = element;
+	    this.newElement = element;
 		this.fireupdates = fireUpdates;
 		this.stationId = stationId;
 	}
 
 	public void execute() {
 	    beforeUpdate();
-	    IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(newElement.getTypeId());
+	    IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.newElement.getTypeId());
         try {
-            elementDao.checkRights(newElement);
+            elementDao.checkRights(this.newElement);
         } catch(SecurityException e) {
-            getLog().warn("Can not update entity of element: " + newElement + " security check fails:" + e.getMessage());
+            getLog().warn("Can not update entity of element: " + this.newElement + " security check fails:" + e.getMessage());
             if (getLog().isDebugEnabled()) {
                 getLog().debug("stacktrace: ", e);
             }
             throw e;
         }
         
-        // we have to fireUpdates on save to calculate protection levels for assets and load the changed element afterwards:
-        IBaseDao dao =  getDaoFactory().getDAOforTypedElement(newElement);
-        Entity newEntity = newElement.getEntity();
-        T oldElement = (T) dao.findById(newElement.getDbId());
-        oldElement.setEntity(newEntity);
-        newElement = (T) dao.merge(oldElement, fireupdates);
-        
+	    IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
+	    this.newElement = (T) elementEntityDao.mergeEntityOfElement(newElement, true);
+	   
 	    afterUpdate();
 	}
 

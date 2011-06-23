@@ -48,6 +48,8 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
  * 
@@ -57,6 +59,8 @@ public class XMLImportDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
 
+    private final String SYNC_REQUEST = "syncRequest>"; //$NON-NLS-1$
+    
     private boolean insert;
     private boolean update;
     private boolean delete;
@@ -79,6 +83,8 @@ public class XMLImportDialog extends Dialog {
     private String password = ""; //$NON-NLS-1$
     
     private Text certificatePathField;
+    
+    private Integer format = ExportCommand.EXPORT_FORMAT_DEFAULT;
     
     public XMLImportDialog(Shell shell) {
         super(shell);
@@ -423,10 +429,12 @@ public class XMLImportDialog extends Dialog {
     private void displayFiles(Shell shell, Text pathText, File file) {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { 
+                "*"+VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
                 "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
                 "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
         dialog.setFilterNames(new String[] { 
+                Messages.XMLImportDialog_30,
                 Messages.XMLImportDialog_33,
                 Messages.XMLImportDialog_34,
                 Messages.XMLImportDialog_35 });
@@ -434,7 +442,10 @@ public class XMLImportDialog extends Dialog {
 
         if (path != null) {
             file = new File(path);
-
+            if(dialog.getFilterIndex()<2) {
+                // set the format if an uncrypted file was selected
+                format = dialog.getFilterIndex();
+            }
             if (file.isFile()) {
                 pathText.setText(file.getPath());
                 pathText.setEditable(true);
@@ -474,30 +485,15 @@ public class XMLImportDialog extends Dialog {
             if (selectedEncryptionMethod!=null) {           
                 IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
-                    fileData = service.decrypt(fileData, password.toCharArray());
+                    fileData = service.decrypt(fileData, password.toCharArray());                   
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {             
                     fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,privateKeyPassword);                  
-                    if(fileData!=null) {
-                        // fileData ends with lines
-                        //Content-Type: text/plain
-                        //Content-Transfer-Encoding: 7bit
-                        String content = new String(fileData);                   
-                        content = content.trim();
-                        final String SYNC_REQUEST = "syncRequest>"; //$NON-NLS-1$
-                        int n = content.lastIndexOf(SYNC_REQUEST);
-                        
-                        if(!content.endsWith(SYNC_REQUEST) && n!=-1) {
-                            if (LOG.isDebugEnabled()) {
-                                // charset debugging
-                                LOG.debug("Encoding: " + content.substring(n+SYNC_REQUEST.length()));
-                            }
-                            content = content.substring(0, n+SYNC_REQUEST.length());
-                        }
-                        fileData = content.getBytes();
-                    }
-                }                       
-            }
-            command = new SyncCommand(insert, update, delete, fileData);    
+                    fileData = trimContentSuffix(fileData);
+                }
+                // data is encrypted, guess format
+                format = guessFormat(fileData);
+            }         
+            command = new SyncCommand(format, insert, update, delete, fileData);    
             command = ServiceFactory.lookupCommandService().executeCommand(command);
 
         } catch (PasswordException  e) {
@@ -513,6 +509,48 @@ public class XMLImportDialog extends Dialog {
         Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
         Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);
+    }
+
+    /**
+     * Returns ExportCommand.EXPORT_FORMAT_XML_PURE
+     * if fileData is a verinice XML document
+     * if not ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV
+     * is returned.
+     *
+     * @param fileData a verinice XML document or verinice archive
+     * @return ExportCommand.EXPORT_FORMAT_XML_PURE or ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV 
+     */
+    private Integer guessFormat(byte[] fileData) {
+        Integer result = ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV;
+        if(fileData!=null) {
+            String content = new String(fileData);
+            content = content.trim();
+            if(content.endsWith(SYNC_REQUEST)) {
+                result = ExportCommand.EXPORT_FORMAT_XML_PURE;
+            }
+        }
+        return result;
+    }
+
+    private byte[] trimContentSuffix(byte[] fileData) {
+        if(fileData!=null) {
+            // fileData ends with lines
+            //Content-Type: text/plain
+            //Content-Transfer-Encoding: 7bit
+            String content = new String(fileData);                   
+            content = content.trim();
+            int n = content.lastIndexOf(SYNC_REQUEST);
+            
+            if(!content.endsWith(SYNC_REQUEST) && n!=-1) {
+                if (LOG.isDebugEnabled()) {
+                    // charset debugging
+                    LOG.debug("Encoding: " + content.substring(n+SYNC_REQUEST.length())); //$NON-NLS-1$
+                }
+                content = content.substring(0, n+SYNC_REQUEST.length());
+            }
+            fileData = content.getBytes();
+        }
+        return fileData;
     }
 
     private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {

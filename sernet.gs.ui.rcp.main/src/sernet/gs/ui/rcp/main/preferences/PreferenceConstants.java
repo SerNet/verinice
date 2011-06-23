@@ -127,6 +127,7 @@ public class PreferenceConstants {
     
 	// tags to filter HitroUI Editor fields / strict filter mode setting:
 	public static final String HUI_TAGS = "hui_tags";
+	public static final String HUI_TAGS_ALL = "hui_tags_all";
     public static final String HUI_TAGS_STRICT = "hui_tags_strict";
     
 	/**

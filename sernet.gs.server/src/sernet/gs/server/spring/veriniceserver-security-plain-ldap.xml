@@ -84,7 +84,7 @@
         <security:intercept-methods>
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.getRoles"
-                access="ROLE_USER" />
+                access="ROLE_USER,ROLE_WEB" />
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.hashPassword"
                 access="ROLE_ADMIN" />

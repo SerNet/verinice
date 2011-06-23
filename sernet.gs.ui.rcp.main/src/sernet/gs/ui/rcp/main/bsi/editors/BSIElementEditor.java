@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -80,6 +81,12 @@ public class BSIElementEditor extends EditorPart {
 	public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
     // limit display in SAMT perspective to properties tagged as "VDA-ISA" (simplified view):
 	private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA";
+	
+	/** {
+	 * @link IEditorBehavior} instances implementing special "behavior" of this editor
+	 * See method addBehavior.
+	 */
+	List<IEditorBehavior> editorBehaviorList = new ArrayList<IEditorBehavior>(1);
 	
 	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -195,7 +202,8 @@ public class BSIElementEditor extends EditorPart {
 	private void initContent() {
 		try {
 			
-			cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
+			cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();		
+			editorBehaviorList.clear();
 			
 			LoadElementForEditor command = new LoadElementForEditor(cnAElement);
 			command = ServiceFactory.lookupCommandService().executeCommand(
@@ -235,13 +243,29 @@ public class BSIElementEditor extends EditorPart {
 			    linkMaker.createPartControl(getIsWriteAllowed());
 			    linkMaker.setInputElmt(cnAElement);
 			}
+			
+			addBehavior();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, Messages.BSIElementEditor_8);
 		}
 
 	}
 	
-	 /**
+	/**
+	 * Adds special behavior to this editor.
+	 * "Behaviors" are implemented in {@link IEditorBehavior} instances.
+	 * Every IEditorBehavior must be added to editorBehaviorList.
+	 */
+	private void addBehavior() {
+        if(cnAElement.getSchutzbedarfProvider()!=null) {
+            IEditorBehavior behavior = new InheritanceBehavior(huiComposite);
+            editorBehaviorList.add(behavior);
+            behavior.addBehavior();
+            behavior.init();
+        }       
+    }
+
+    /**
      * @param tags
      * @return
      */
@@ -307,6 +331,9 @@ public class BSIElementEditor extends EditorPart {
 		return isWriteAllowed;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		FormLayout formLayout = new FormLayout();
@@ -370,6 +397,11 @@ public class BSIElementEditor extends EditorPart {
 	public void dispose() {
 	    if (linkMaker != null) {
 	        linkMaker.dispose();
+	    }
+	    if(editorBehaviorList!=null) {
+	        for (IEditorBehavior behavior : editorBehaviorList) {
+	            behavior.removeBehavior();
+            }
 	    }
 		huiComposite.closeView();
 		cnAElement.getEntity().removeListener(modelListener);

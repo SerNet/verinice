@@ -61,6 +61,8 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
  */
 public class DeleteActionDelegate implements IObjectActionDelegate {
 
+    private static final Logger LOG = Logger.getLogger(DeleteActionDelegate.class);
+    
     private IWorkbenchPart targetPart;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -69,99 +71,98 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
     @SuppressWarnings("unchecked")
     public void run(IAction action) {
-        Activator.inheritVeriniceContextState();
-
-        final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
-
-        if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), 
-                Messages.DeleteActionDelegate_0, 
-                NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
-            return;
-        }
-
-        // ask twice if IT verbund
-        boolean goahead = true;
-        final List<CnATreeElement> deleteList = createList(selection.toList());
-        Iterator iterator = deleteList.iterator();
-        Object object;
-        while (iterator.hasNext()) {
-            object = iterator.next();
-            if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
-                if (!goahead) {
-                    return;
-                }
-
-                String title = Messages.DeleteActionDelegate_3;
-                String message = Messages.DeleteActionDelegate_4;
-                if (object instanceof ITVerbund) {
-                    title = Messages.DeleteActionDelegate_5;
-                    message = NLS.bind(Messages.DeleteActionDelegate_6, ((ITVerbund) object).getTitle());
-                }
-                if (object instanceof IISO27kRoot) {
-                    title = Messages.DeleteActionDelegate_8;
-                    message = NLS.bind(Messages.DeleteActionDelegate_9, ((IISO27kRoot) object).getTitle());
-                }
-
-                if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
-                    goahead = false;
-                    return;
+        try {
+            Activator.inheritVeriniceContextState();
+    
+            final IStructuredSelection selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection());
+    
+            if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), 
+                    Messages.DeleteActionDelegate_0, 
+                    NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
+                return;
+            }
+    
+            // ask twice if IT verbund
+            boolean goahead = true;
+            final List<CnATreeElement> deleteList = createList(selection.toList());
+            Iterator iterator = deleteList.iterator();
+            Object object;
+            while (iterator.hasNext()) {
+                object = iterator.next();
+                if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
+                    if (!goahead) {
+                        return;
+                    }
+    
+                    String title = Messages.DeleteActionDelegate_3;
+                    String message = Messages.DeleteActionDelegate_4;
+                    if (object instanceof ITVerbund) {
+                        title = Messages.DeleteActionDelegate_5;
+                        message = NLS.bind(Messages.DeleteActionDelegate_6, ((ITVerbund) object).getTitle());
+                    }
+                    if (object instanceof IISO27kRoot) {
+                        title = Messages.DeleteActionDelegate_8;
+                        message = NLS.bind(Messages.DeleteActionDelegate_9, ((IISO27kRoot) object).getTitle());
+                    }
+    
+                    if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
+                        goahead = false;
+                        return;
+                    }
                 }
             }
-        }
-
-        try {
+        
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-                    monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
-
-                    for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
-                        Object sel = iter.next();
-
-                        if (sel instanceof IBSIStrukturElement 
-                                || sel instanceof BausteinUmsetzung 
-                                || sel instanceof FinishedRiskAnalysis 
-                                || sel instanceof GefaehrdungsUmsetzung 
-                                || sel instanceof ITVerbund 
-                                || sel instanceof IISO27kRoot 
-                                || sel instanceof IISO27kElement 
-                                || sel instanceof ImportIsoGroup) {
-
-                            // do not delete last ITVerbund:
-                            try {
+                    try {
+                        Activator.inheritVeriniceContextState();
+                        monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
+    
+                        for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
+                            Object sel = iter.next();
+    
+                            if (sel instanceof IBSIStrukturElement 
+                                    || sel instanceof BausteinUmsetzung 
+                                    || sel instanceof FinishedRiskAnalysis 
+                                    || sel instanceof GefaehrdungsUmsetzung 
+                                    || sel instanceof ITVerbund 
+                                    || sel instanceof IISO27kRoot 
+                                    || sel instanceof IISO27kElement 
+                                    || sel instanceof ImportIsoGroup) {
+    
+                                // do not delete last ITVerbund:                          
                                 if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
                                     ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12), Messages.DeleteActionDelegate_13);
                                     return;
                                 }
-                            } catch (Exception e) {
-                                Logger.getLogger(this.getClass()).debug(e);
-                            }
-
-                            CnATreeElement el = (CnATreeElement) sel;
-                            try {
+                                
+                                CnATreeElement el = (CnATreeElement) sel;                            
                                 monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
                                 el.getParent().removeChild(el);
                                 CnAElementHome.getInstance().remove(el);
-                                monitor.worked(1);
-
-                            } catch (Exception e) {
-                                ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                                monitor.worked(1);                           
                             }
-
                         }
+    
+                        // notify all listeners:
+                        CnATreeElement child = (CnATreeElement) deleteList.iterator().next();
+                        CnAElementFactory.getModel(child).databaseChildRemoved(child);
+                    } catch (Exception e) {
+                        LOG.error("Error while deleting element.", e);
+                        ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                     }
-
-                    // notify all listeners:
-                    CnATreeElement child = (CnATreeElement) deleteList.iterator().next();
-                    CnAElementFactory.getModel(child).databaseChildRemoved(child);
                 }
             });
         } catch (InvocationTargetException e) {
+            LOG.error("Error while deleting element.", e);
             ExceptionUtil.log(e.getCause(), Messages.DeleteActionDelegate_16);
         } catch (InterruptedException e) {
+            LOG.error("Error while deleting element.", e);
+            ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
+        } catch (Throwable e) {
+            LOG.error("Error while deleting element(s).", e);
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }
-
     }
     
     protected List<CnATreeElement> createList(List elementList) {

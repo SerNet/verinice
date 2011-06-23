@@ -34,9 +34,13 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.internal.SWTEventListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -507,5 +511,38 @@ public class HitroUIView implements IEntityChangedListener   {
 		if (control != null)
 			control.update();
 	}
+	
+	public void addSelectionListener(String id, SelectionListener listener) {
+        IHuiControl huiControl = fields.get(id);
+        if(huiControl!=null && huiControl.getControl()!=null && huiControl.getControl() instanceof Button) {
+            ((Button)huiControl.getControl()).addSelectionListener(listener);
+        }
+    }
+	
+	public void removeSelectionListener(String id, SelectionListener listener) {
+	    IHuiControl huiControl = fields.get(id);
+        if(huiControl!=null && huiControl.getControl()!=null && huiControl.getControl() instanceof Button) {
+            ((Button)huiControl.getControl()).removeSelectionListener(listener);
+        }
+        
+    }
+	
+	public void setFieldEnabled(String id, boolean enabled) {
+        IHuiControl huiControl = fields.get(id);
+        if(huiControl!=null && huiControl.getControl()!=null ) {
+            huiControl.getControl().setEnabled(enabled);
+        }
+    }
+
+    public Control getField(String id) {
+        Control control = null;
+        IHuiControl huiControl = fields.get(id);
+        if(huiControl!=null) {
+            control = huiControl.getControl();
+        }
+        return control;
+    }
+
+    
 
 }

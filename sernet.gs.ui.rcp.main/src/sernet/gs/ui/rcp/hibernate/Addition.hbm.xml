@@ -8,6 +8,8 @@
 		</id>
 		<discriminator column="OBJECT_TYPE" type="string"/>
 		<property column="cnatreeelement_id" name="cnATreeElementId" type="integer"/>
+        <property name="extId"/>    
+        <property name="sourceId"/>
 		<many-to-one 
 			name="entity" 
 			class="sernet.hui.common.connect.Entity"

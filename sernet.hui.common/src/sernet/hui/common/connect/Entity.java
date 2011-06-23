@@ -28,9 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
-import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
@@ -63,6 +61,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return log;
     }
+    
+    public static final String TITLE = "ENTITY_";
     
 	// map of "propertyTypeId : List of Properties"
     private Map<String, PropertyList> typedPropertyLists 
@@ -558,6 +558,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+	
+	public String getId() {
+	    return TITLE + getDbId();
 	}
 
     /* (non-Javadoc)

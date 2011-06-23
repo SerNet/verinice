@@ -83,5 +83,32 @@ public class AttachmentFile implements Serializable, ITypedElement {
     public String getTypeId() {
         return TYPE_ID;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AttachmentFile other = (AttachmentFile) obj;
+        if (dbId == null) {
+            if (other.dbId != null)
+                return false;
+        } else if (!dbId.equals(other.dbId))
+            return false;
+        return true;
+    }
+    
+    
 	
 }

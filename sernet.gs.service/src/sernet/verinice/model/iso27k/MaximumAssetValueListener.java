@@ -19,8 +19,6 @@ package sernet.verinice.model.iso27k;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -33,82 +31,71 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * $LastChangedBy$
  *
  */
-public class MaximumAssetValueListener implements ILinkChangeListener,
-        Serializable {
+public class MaximumAssetValueListener implements ILinkChangeListener, Serializable {
 
-    private CnATreeElement sbTarget;
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumAssetValueListener.class);
     
-    private static final Logger LOG = Logger.getLogger(MaximumAssetValueListener.class);
-
+    private CnATreeElement sbTarget;
+     
     public MaximumAssetValueListener(CnATreeElement item) {
         this.sbTarget = item;
     }
 
-    public void determineIntegritaet(CascadingTransaction ta)
-            throws TransactionAbortedException {
-        if (hasBeenVisited(ta))
+    public void determineIntegritaet(CascadingTransaction ta) throws TransactionAbortedException {
+        if (hasBeenVisited(ta)) {
             return;
-        ta.enter(sbTarget);
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Determining integrity for " + sbTarget); //$NON-NLS-1$
         }
         
-
+        ta.enter(sbTarget); 
+        
+        if (LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("Determining integrity for " + sbTarget.getTitle()); //$NON-NLS-1$
+        }
+        
         // get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isSchutzbedarfProvider()) {
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:
                 upwardElmt.getLinkChangeListener().determineIntegritaet(ta);
 
-                int value = upwardElmt.getSchutzbedarfProvider()
-                        .getIntegritaet();
-                if (value > highestValue)
+                int value = upwardElmt.getSchutzbedarfProvider().getIntegritaet();
+                if (value > highestValue) {
                     highestValue = value;
+                }
             }
         }
         
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getSchutzbedarfProvider().isCalculatedIntegrity()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Keeping current integrity " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            if (LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info("Integrity is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using maximum integrity " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+        if (LOG_INHERIT.isInfo()) {
+            LOG_INHERIT.info("Setting maximum integrity " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
     }
 
-    /**
-     * @param ta
-     * @return
-     */
-    private boolean hasBeenVisited(CascadingTransaction ta) {
-        if (ta.hasBeenVisited(sbTarget)) {
-            return true; // we have already been down this path
-        }
-        return false;
-    }
-
-    public void determineVerfuegbarkeit(CascadingTransaction ta)
-            throws TransactionAbortedException {
-        if (hasBeenVisited(ta))
+    public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException {
+        if (hasBeenVisited(ta)) {
             return;
+        }
+        
         ta.enter(sbTarget);
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Determining availability for " + sbTarget); //$NON-NLS-1$
+        
+        if (LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("Determining availability for " + sbTarget.getTitle()); //$NON-NLS-1$
         }
 
         // otherwise get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isSchutzbedarfProvider()) {
 
@@ -116,23 +103,23 @@ public class MaximumAssetValueListener implements ILinkChangeListener,
                 // recurse up:
                 upwardElmt.getLinkChangeListener().determineVerfuegbarkeit(ta);
 
-                int value = upwardElmt.getSchutzbedarfProvider()
-                        .getVerfuegbarkeit();
-                if (value > highestValue)
+                int value = upwardElmt.getSchutzbedarfProvider().getVerfuegbarkeit();
+                if (value > highestValue) {
                     highestValue = value;
+                }
             }
         }
 
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getSchutzbedarfProvider().isCalculatedAvailability()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Keeping current availability " + sbTarget.getSchutzbedarfProvider().getVerfuegbarkeit() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            if (LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info("Availability is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using maximum availability " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+        if (LOG_INHERIT.isInfo()) {
+            LOG_INHERIT.info("Setting maximum availability " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
     }
@@ -144,13 +131,13 @@ public class MaximumAssetValueListener implements ILinkChangeListener,
             return;
         ta.enter(sbTarget);
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Determining confidentiality for " + sbTarget); //$NON-NLS-1$
+        if (LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("Determining confidentiality for " + sbTarget.getTitle()); //$NON-NLS-1$
         }
 
         // otherwise get protection level from upward links:
         int highestValue = 0;
-        allLinks: for (CnALink link : sbTarget.getLinksUp()) {
+        for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
             if (upwardElmt.isSchutzbedarfProvider()) {
 
@@ -158,25 +145,39 @@ public class MaximumAssetValueListener implements ILinkChangeListener,
                 // recurse up:
                 upwardElmt.getLinkChangeListener().determineVertraulichkeit(ta);
 
-                int value = upwardElmt.getSchutzbedarfProvider()
-                        .getVertraulichkeit();
-                if (value > highestValue)
+                int value = upwardElmt.getSchutzbedarfProvider().getVertraulichkeit();
+                if (value > highestValue) {
                     highestValue = value;
+                }
             }
         }
         // if we dont use the maximum principle, keep current level:
-        if (!sbTarget.getSchutzbedarfProvider().isCalculatedConfidentiality()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Keeping current confidentiality " + sbTarget.getSchutzbedarfProvider().getVertraulichkeit() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
-            }            
+        if (!sbTarget.getSchutzbedarfProvider().isCalculatedConfidentiality()) {   
+            if (LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info("Confidentiality is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            }
             return;
         }
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using maximum confidentiality " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+        if (LOG_INHERIT.isInfo()) {
+            LOG_INHERIT.info("Setting maximum confidentiality " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
 
+    }
+    
+    /**
+     * @param ta
+     * @return
+     */
+    private boolean hasBeenVisited(CascadingTransaction ta) {
+        if (ta.hasBeenVisited(sbTarget)) {
+            if (LOG_INHERIT.isDebug()) {
+                LOG_INHERIT.debug(sbTarget.getTitle() + " has benn visited"); //$NON-NLS-1$
+            }
+            return true; // we have already been down this path
+        }
+        return false;
     }
 
 }

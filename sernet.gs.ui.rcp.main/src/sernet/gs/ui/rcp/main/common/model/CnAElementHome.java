@@ -245,6 +245,16 @@ public class CnAElementHome {
         command = getCommandService().executeCommand(command);
         return (CnATreeElement) command.getElement();
     }
+    
+    /**
+     * @param cnAElement
+     * @throws Exception 
+     */
+    public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
+        UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
+        command = getCommandService().executeCommand(command);
+        return (CnATreeElement) command.getElement(); 
+    }
 
     public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {
         UpdateMultipleElements command = new UpdateMultipleElements(elements, ChangeLogEntry.STATION_ID);
@@ -571,17 +581,6 @@ public class CnAElementHome {
         if (log.isDebugEnabled())
             log.debug("Link created"); //$NON-NLS-1$
         return true;
-    }
-
-    /**
-     * @param cnAElement
-     * @throws Exception 
-     */
-    public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
-        UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
-        command = getCommandService().executeCommand(command);
-        return (CnATreeElement) command.getElement();
-    
     }
 
     /**

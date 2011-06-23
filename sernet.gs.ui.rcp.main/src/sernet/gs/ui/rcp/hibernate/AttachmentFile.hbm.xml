@@ -4,7 +4,8 @@
 <hibernate-mapping package="sernet.verinice.model.bsi">
 	<class name="AttachmentFile" table="note">
 		<id column="dbId" name="dbId" type="java.lang.Integer">
-			<generator class="native"/>
+            <!-- lets the application assign an identifier to the object before save() is called.-->
+			<generator class="assigned"/>
 		</id>
 		<!--<property name="fileData" type="sernet.verinice.hibernate.ByteArrayType" >-->
 		<property name="fileData" type="binary" >

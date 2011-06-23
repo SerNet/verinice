@@ -16,10 +16,10 @@
  *     Andreas Becker <andreas[at]becker[dot]name> - initial API and implementation
  ******************************************************************************/
 
-package sernet.gs.ui.rcp.main.service.taskcommands;
+package sernet.verinice.service.commands;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,11 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-import javax.xml.bind.DataBindingException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import java.util.zip.ZipOutputStream;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -44,26 +40,28 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.VeriniceCharset;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.sync.StreamFactory;
+import sernet.verinice.service.sync.VeriniceArchive;
 import de.sernet.sync.data.SyncData;
-import de.sernet.sync.data.SyncLink;
+import de.sernet.sync.data.SyncFile;
 import de.sernet.sync.data.SyncObject;
-import de.sernet.sync.data.SyncObject.SyncAttribute;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -79,13 +77,18 @@ import de.sernet.sync.sync.SyncRequest;
 public class ExportCommand extends GenericCommand implements IChangeLoggingCommand
 {
     private transient Logger log = Logger.getLogger(ExportCommand.class);
-
+    
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(ExportCommand.class);
         }
         return log;
     }
+
+    public static final Integer EXPORT_FORMAT_VERINICE_ARCHIV = 0; 
+    public static final Integer EXPORT_FORMAT_XML_PURE = 1;  
+    public static final Integer EXPORT_FORMAT_DEFAULT = EXPORT_FORMAT_VERINICE_ARCHIV;
+    
     
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -113,31 +116,62 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 	private Map<String,String> entityTypesBlackList;
 	
 	private Map<Class,Class> entityClassBlackList;
-    
+	
 	private byte[] result;
 	
     private List<CnATreeElement> changedElements;
     private String stationId;
-	
-    public ExportCommand( List<CnATreeElement> elements, String sourceId ) {
-    	this(elements, sourceId, false);
+    
+    private Integer exportFormat;
+    private transient byte[] xmlData;
+    private transient Set<Attachment> attachmentSet;
+    
+    public ExportCommand( 
+            List<CnATreeElement> elements, 
+            String sourceId, 
+            boolean reImport) {
+        new ExportCommand(elements, sourceId, reImport, EXPORT_FORMAT_DEFAULT);
     }
     
-	public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport ) {
+	public ExportCommand( 
+	        List<CnATreeElement> elements, 
+	        String sourceId, 
+	        boolean reImport,
+	        Integer exportFormat) {
 		this.elements = elements;
 		this.sourceId = sourceId;
 		this.reImport = reImport;
+		if(exportFormat!=null) {
+		    this.exportFormat = exportFormat;
+		} else {
+		    this.exportFormat = EXPORT_FORMAT_DEFAULT;
+		}
 		this.linkSet = new HashSet<CnALink>();
+		this.attachmentSet = new HashSet<Attachment>();    
         this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
-	public ExportCommand( List<CnATreeElement> elements, String sourceId, HashMap<String,String> entityTypesToBeExported ) {
-		this( elements, sourceId, false );
-		this.entityTypesToBeExported = entityTypesToBeExported;
-	}
-	
 	public void execute() {
-		changedElements = new LinkedList<CnATreeElement>();
+	    try {
+    	    xmlData = createXmlData();
+    		
+    		if(isVeriniceArchive()) {
+    		    result = createVeriniceArchive();
+    		} else {
+    		    result = xmlData;
+    		}
+	    } catch (RuntimeException re) {
+            log.error("Runtime exception while exporting", re);
+            throw re;
+        } catch (Exception e) {
+            log.error("Exception while exporting", e);
+            throw new RuntimeCommandException("Exception while exporting", e);
+        }
+		
+	}
+
+    private byte[] createXmlData() throws CommandException {
+        changedElements = new LinkedList<CnATreeElement>();
 	    getCache().removeAll();
 		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
 		exportedObjectIDs = new HashMap<String, String>();
@@ -167,12 +201,12 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
 		Set<String> exportedTypes = new HashSet<String>();
 		for( CnATreeElement element : elements ) {	    
-			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);
+			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);	
 		}
 		sd.getSyncObject().addAll(orphaneList);
 		
 		for(CnALink link : linkSet) {
-		    export(sd.getSyncLink(),link);
+		    ExportFactory.transform(link, sd.getSyncLink());
 		}
 		
 		/* Adds SyncMapping for all EntityTypes that have been exported. This
@@ -215,21 +249,81 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		}
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		marshal(sr, bos);
-		
-		result = bos.toByteArray();
+		ExportFactory.marshal(sr, bos);
+		return bos.toByteArray();
+    }
+	
+	/**
+	 * Creates the verinice archive after createXmlData() was called.
+	 * 
+	 * @return the verinice archive as byte[]
+	 * @throws CommandException
+	 */
+	private byte[] createVeriniceArchive() throws CommandException {
+	    try {        
+	        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();        
+	        ZipOutputStream zipOut = new ZipOutputStream(byteOut);     
+	        
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, xmlData);
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD, StreamFactory.getDataXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD, StreamFactory.getMappingXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD, StreamFactory.getSyncXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, StreamFactory.getReadmeAsStream());
+            
+            
+            for (Attachment attachment : getAttachmentSet()) {
+                LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());      
+                command = getCommandService().executeCommand(command);
+                if(command.getAttachmentFile()!=null && command.getAttachmentFile().getFileData()!=null) {
+                    ExportFactory.createZipEntry(zipOut, ExportFactory.createZipFileName(attachment), command.getAttachmentFile().getFileData());                  
+                }
+                
+            }
+            
+            zipOut.close();
+            byteOut.close();
+            return byteOut.toByteArray();
+        } catch (IOException e) {
+            log.error("Error while creating zip output stream", e);
+            throw new RuntimeCommandException(e);
+        }
+	}
+
+    
+   
+	
+	private boolean isVeriniceArchive() {
+	    return EXPORT_FORMAT_VERINICE_ARCHIV.equals(exportFormat);
 	}
 	
-	private void marshal( Object jaxbObject, OutputStream os ) {
-        try {       
-            JAXBContext context = JAXBContext.newInstance( jaxbObject.getClass() );
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
-            m.setProperty(Marshaller.JAXB_ENCODING,VeriniceCharset.CHARSET_UTF_8.name());
-            m.marshal(jaxbObject, os);
-        } catch (JAXBException e) {
-            throw new DataBindingException(e);
-        } 
+	/**
+     * @param element
+	 * @param syncObject 
+	 * @throws CommandException 
+     */
+    private void exportAttachments(CnATreeElement element, SyncObject syncObject) throws CommandException {
+        if(element!=null) {
+            LoadAttachments command = new LoadAttachments(element.getDbId());
+            command = getCommandService().executeCommand(command);
+            List<Attachment> fileList = command.getAttachmentList();
+            List<SyncFile> fileListXml = syncObject.getFile();
+            for (Attachment attachment : fileList) {
+                SyncFile syncFile = new SyncFile();
+                Entity entity = attachment.getEntity();
+                String extId = ExportFactory.createExtId(attachment);
+                syncFile.setExtId(extId);
+                syncFile.setFile(ExportFactory.createZipFileName(attachment));
+                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID, getHuiTypeFactory());
+                fileListXml.add(syncFile);
+                if(isReImport()) {
+                    attachment.setExtId(extId);
+                    attachment.setSourceId(sourceId);
+                    saveElement(attachment);
+                }
+            }
+            // Add all files to attachment set, to export file data later
+            getAttachmentSet().addAll(fileList);
+        }     
     }
 
     /**
@@ -241,8 +335,9 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 	 * 
 	 * @param element
 	 * @return List<Element>
+     * @throws CommandException 
 	 */
-	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes) {	
+	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes) throws CommandException {	
 		List<SyncObject> childList = null;	
 		
 		/**
@@ -255,15 +350,12 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		if(checkElement(element)) {
 			element = hydrate( element );
 			
-			String extId = element.getExtId();
-			if(extId==null || extId.isEmpty()) {
-				extId = element.getId();
-			}
+			String extId = ExportFactory.createExtId(element);
 			SyncObject syncObject = new SyncObject();
 			syncObject.setExtId(extId);
 			syncObject.setExtObjectType(typeId);
 
-			List<SyncAttribute> attributes = syncObject.getSyncAttribute();
+			List<de.sernet.sync.data.SyncAttribute> attributes = syncObject.getSyncAttribute();
 			
 			/**
 			 * Retrieve all properties from the entity:
@@ -272,26 +364,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 			// Category instance may have no Entity attached to it
 			// For those we do not store any property values.
 			if (entity != null) {
-				Map<String, PropertyList> properties = entity.getTypedPropertyLists();
-				for (String propertyTypeId : properties.keySet()) {				
-					PropertyType propertyType = getHuiTypeFactory().getPropertyType(typeId, propertyTypeId);
-					if(propertyType!=null && propertyType.isReportable()) {
-						SyncAttribute syncAttribute = new SyncAttribute();
-						// Add <syncAttribute> to this <syncObject>:
-						syncAttribute.setName(propertyTypeId);
-						
-						int noOfValues = entity.exportProperties(propertyTypeId, syncAttribute.getValue());
-						// Only if any value for the attribute could be found the whole
-						// attribute instance is being added to the SyncObject's attribute
-						// list.
-						if (noOfValues > 0) {
-							attributes.add(syncAttribute);
-						}
-					}
-					if(propertyType==null) {
-						getLog().warn("Property type is null, propertyTypeId: " + propertyTypeId + ", typeId: " + typeId);
-					}
-				}
+			    ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory());
 				
 				// Add the elements EntityType to the set of exported EntityTypes in order to
 				// use it for the mapping generation later on.
@@ -305,6 +378,12 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 			// add links to linkSet
 			addLinks(element);
             		
+			if(isVeriniceArchive()) {
+                // export attachments of the element
+                exportAttachments(element, syncObject);
+                exportedEntityTypes.add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
+            }
+			
 			list.add(syncObject);
 			childList = syncObject.getChildren();
 			exportedObjectIDs.put( element.getId(), new String() );
@@ -341,6 +420,14 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
 		dao.saveOrUpdate(element);	
 	}
+	
+	/**
+     * @param attachment
+     */
+    private void saveElement(Attachment attachment) {
+        IBaseDao<Attachment, Serializable> dao = getDaoFactory().getDAO(Attachment.class);
+        dao.saveOrUpdate(attachment); 
+    }
 
 	private boolean checkElement(CnATreeElement element) {
 		return exportedObjectIDs.get(element.getId()) == null
@@ -348,21 +435,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		 && (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
 		 && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
 	}
-	
-	/**
-     * @param syncLink
-     * @param link
-     */
-    private void export(List<SyncLink> syncLinkList, CnALink link) {
-        SyncLink syncLink = new SyncLink();
-        syncLink.setDependant(link.getDependant().getId());
-        syncLink.setDependency(link.getDependency().getId());
-        syncLink.setRelationId(link.getRelationId());
-        if(link.getComment()!=null && !link.getComment().isEmpty()) {
-            syncLink.setComment(link.getComment());
-        }
-        syncLinkList.add(syncLink);     
-    }
 
     private void addLinks(CnATreeElement element) {
         try {
@@ -434,7 +506,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 		    return element;
 		}
 		
-		//IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
 		RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
 		ri.setLinksDown(true);
 		ri.setLinksUp(true);
@@ -512,5 +583,23 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 	public String getStationId() {
 		return stationId;
 	}
-	
+
+    public Integer getExportFormat() {
+        if(exportFormat==null) {
+            exportFormat = EXPORT_FORMAT_DEFAULT;
+        }
+        return exportFormat;
+    }
+
+    public void setExportFormat(Integer exportFormat) {
+        this.exportFormat = exportFormat;
+    }
+
+    public Set<Attachment> getAttachmentSet() {
+        if(attachmentSet==null) {
+            attachmentSet = new HashSet<Attachment>();
+        }
+        return attachmentSet;
+    }
+    
 }

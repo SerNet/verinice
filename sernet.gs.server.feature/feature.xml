@@ -550,7 +550,7 @@ Library.
          id="sernet.gs.server"
          download-size="4000"
          install-size="8600"
-         version="1.1.1"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -564,7 +564,7 @@ Library.
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
-         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
+         version="1.2.1.r35x_20090812-1200"
          unpack="false"/>
 
    <plugin
@@ -676,7 +676,7 @@ Library.
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
+
    <plugin
          id="com.springsource.javax.el"
          download-size="0"
@@ -689,6 +689,13 @@ Library.
          download-size="0"
          install-size="0"
          version="2.4.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.verinice.report.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

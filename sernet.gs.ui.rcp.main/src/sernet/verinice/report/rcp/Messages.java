@@ -32,13 +32,19 @@ public class Messages extends NLS {
     public static String GenerateReportDialog_1;
     public static String GenerateReportDialog_10;
     public static String GenerateReportDialog_11;
+    public static String GenerateReportDialog_12;
+    public static String GenerateReportDialog_13;
+    public static String GenerateReportDialog_14;
+    public static String GenerateReportDialog_15;
     public static String GenerateReportDialog_16;
     public static String GenerateReportDialog_19;
     public static String GenerateReportDialog_2;
     public static String GenerateReportDialog_20;
     public static String GenerateReportDialog_3;
+    public static String GenerateReportDialog_4;
     public static String GenerateReportDialog_5;
     public static String GenerateReportDialog_6;
+    public static String GenerateReportDialog_7;
     public static String GenerateReportDialog_8;
     public static String GenerateReportDialog_9;
     static {

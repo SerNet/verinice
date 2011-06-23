@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 import sernet.verinice.interfaces.CommandException;
@@ -43,159 +45,197 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.LoadConfiguration;
 
+/**
+ * Removes tree-elements.
+ * 
+ * Children, links and attachments are deleted by hibernate cascading 
+ * (see CnATreeElement.hbm.xml)
+ * 
+ * @author Alexander Koderman <ak[at]sernet[dot]de>.
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
-public class RemoveElement<T extends CnATreeElement> extends GenericCommand
-	implements IChangeLoggingCommand, INoAccessControl {
+public class RemoveElement<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand, INoAccessControl {
 
-	private T element;
-	private String stationId;
-	private Integer elementId;
+    private transient Logger log = Logger.getLogger(RemoveElement.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(RemoveElement.class);
+        }
+        return log;
+    }
+    
+    private T element;
+    private String stationId;
+    private Integer elementId;
     private String typeId;
 
-	public RemoveElement(T element) {
-		// only transfer id of element to keep footprint small:
-		typeId = element.getTypeId();
-		elementId = element.getDbId();
-		
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
-	
-	public void execute() {
-			try {
-				// load element from DB:
-				this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
-				
-				if (element instanceof Person || element instanceof PersonIso)
-					removeConfiguration(element);
-				
-				int listsDbId = 0;
-				if (element instanceof GefaehrdungsUmsetzung) {
-					listsDbId = element.getParent().getDbId();
-				}
-				
-				IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
-				element = (T) dao.findById(element.getDbId());
+    public RemoveElement(T element) {
+        // only transfer id of element to keep footprint small:
+        typeId = element.getTypeId();
+        elementId = element.getDbId();
 
-				if (element instanceof ITVerbund) {
-					CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
-					
-					// A defect in the application allowed that ITVerbund instances without a category are
-					// created. With this tiny check we can ensure that they can be deleted.
-					if (cat != null)
-					{
-						Set<CnATreeElement> personen = cat.getChildren();
-						for (CnATreeElement elmt : personen) {
-							removeConfiguration((Person)elmt);
-						}
-					}
-				}
-				
-				if (element instanceof FinishedRiskAnalysis) {
-					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
-					remove(analysis);
-				}
-				
-				if (element instanceof GefaehrdungsUmsetzung) {
-					GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
-					removeFromLists(listsDbId, gef);
-				}
-				
-				/*
-				 * Special case the deletion of FinishedRiskAnalysis instances: Before the instance
-				 * is deleted itself their children must be removed manually (otherwise referential
-				 * integrity is violated and Hibernate reports an error).
-				 * 
-				 * Using the children as an array ensure that there won't be a
-				 * ConcurrentModificationException while deleting the elements.
-				 */
-				CnATreeElement[] children = element.getChildrenAsArray();
-				
-				for (int i = 0; i < children.length; i++) {
-					if (children[i] instanceof FinishedRiskAnalysis) {
-						RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(children[i]);
-						getCommandService().executeCommand(command);
-					}
-				}
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
 
-				element.remove();
-				dao.delete(element);
-			} catch (CommandException e) {
-				throw new RuntimeCommandException(e);
-			}
-			
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
-	 */
-	@Override
-	public void clear() {
-		element = null;
-	}
+    public void execute() {
+        try {
+            // load element from DB:
+            this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 
-	/**
-	 * @param analysis
-	 * @throws CommandException 
-	 */
-	private void remove(FinishedRiskAnalysis analysis) throws CommandException {
-		Set<CnATreeElement> children = analysis.getChildren();
-		for (CnATreeElement child : children) {
-			if (child instanceof GefaehrdungsUmsetzung) {
-				GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
-				removeFromLists(gef.getParent().getDbId(), gef);
-			}
-		}
-	}
+            if (element instanceof Person || element instanceof PersonIso)
+                removeConfiguration(element);
 
-	/**
-	 * Remove from all referenced lists.
-	 * 
-	 * @param element2
-	 * @throws CommandException 
-	 */
-	private void removeFromLists(int analysisId, GefaehrdungsUmsetzung gef) throws CommandException {
-		FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysisId);
-		getCommandService().executeCommand(command);
-		FinishedRiskAnalysisLists lists = command.getFoundLists();
-		lists.removeGefaehrdungCompletely(gef);
-	}
+            int listsDbId = 0;
+            if (element instanceof GefaehrdungsUmsetzung) {
+                listsDbId = element.getParent().getDbId();
+            }
 
-	private void removeConfiguration(CnATreeElement person) throws CommandException {
-		LoadConfiguration command = new LoadConfiguration(person);
-		command = getCommandService().executeCommand(command);
-		Configuration conf = command.getConfiguration();
-		if (conf != null) {
-			IBaseDao<Configuration, Serializable> confDAO = getDaoFactory().getDAO(Configuration.class);
-			confDAO.delete(conf);
-			
-			// When a Configuration instance got deleted the server needs to update
-			// its cached role map. This is done here.
-			getCommandService().discardRoleMap();
-		}
-		
-	}
+            IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
+            element = (T) dao.findById(element.getDbId());
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_DELETE;
-	}
+            if (element instanceof ITVerbund) {
+                CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-		result.add(element);
-		return result;
-	}
+                // A defect in the application allowed that ITVerbund instances
+                // without a category are
+                // created. With this tiny check we can ensure that they can be
+                // deleted.
+                if (cat != null) {
+                    Set<CnATreeElement> personen = cat.getChildren();
+                    for (CnATreeElement elmt : personen) {
+                        removeConfiguration((Person) elmt);
+                    }
+                }
+            }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
-	 */
-	public String getStationId() {
-		return stationId;
-	}
+            if (element instanceof FinishedRiskAnalysis) {
+                FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
+                remove(analysis);
+            }
+
+            if (element instanceof GefaehrdungsUmsetzung) {
+                GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+                removeFromLists(listsDbId, gef);
+            }   
+            
+            /*
+             * Special case the deletion of FinishedRiskAnalysis instances:
+             * Before the instance is deleted itself their children must be
+             * removed manually (otherwise referential integrity is violated and
+             * Hibernate reports an error).
+             * 
+             * Using the children as an array ensure that there won't be a
+             * ConcurrentModificationException while deleting the elements.
+             */
+            CnATreeElement[] children = element.getChildrenAsArray();
+
+            for (int i = 0; i < children.length; i++) {
+                if (children[i] instanceof FinishedRiskAnalysis) {
+                    RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(children[i]);
+                    getCommandService().executeCommand(command);
+                }
+            }
+
+            element.remove();
+            dao.delete(element);
+        } catch (RuntimeException e) {
+            getLog().error("RuntimeException while deleting element: " + element, e);
+            throw e;
+        } catch (Exception e) {
+            getLog().error("Exception while deleting element: " + element, e);
+            throw new RuntimeCommandException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+     */
+    @Override
+    public void clear() {
+        element = null;
+    }
+
+    /**
+     * @param analysis
+     * @throws CommandException
+     */
+    private void remove(FinishedRiskAnalysis analysis) throws CommandException {
+        Set<CnATreeElement> children = analysis.getChildren();
+        for (CnATreeElement child : children) {
+            if (child instanceof GefaehrdungsUmsetzung) {
+                GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
+                removeFromLists(gef.getParent().getDbId(), gef);
+            }
+        }
+    }
+
+    /**
+     * Remove from all referenced lists.
+     * 
+     * @param element2
+     * @throws CommandException
+     */
+    private void removeFromLists(int analysisId, GefaehrdungsUmsetzung gef) throws CommandException {
+        FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysisId);
+        getCommandService().executeCommand(command);
+        FinishedRiskAnalysisLists lists = command.getFoundLists();
+        lists.removeGefaehrdungCompletely(gef);
+    }
+
+    private void removeConfiguration(CnATreeElement person) throws CommandException {
+        LoadConfiguration command = new LoadConfiguration(person);
+        command = getCommandService().executeCommand(command);
+        Configuration conf = command.getConfiguration();
+        if (conf != null) {
+            IBaseDao<Configuration, Serializable> confDAO = getDaoFactory().getDAO(Configuration.class);
+            confDAO.delete(conf);
+
+            // When a Configuration instance got deleted the server needs to
+            // update
+            // its cached role map. This is done here.
+            getCommandService().discardRoleMap();
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
+     * ()
+     */
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_DELETE;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
+        result.add(element);
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+     * ()
+     */
+    public String getStationId() {
+        return stationId;
+    }
 
 }

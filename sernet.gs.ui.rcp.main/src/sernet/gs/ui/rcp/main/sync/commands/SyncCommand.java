@@ -33,6 +33,7 @@ import javax.xml.bind.JAXB;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -41,6 +42,8 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.sync.VeriniceArchive;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
@@ -77,6 +80,10 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     private Set<CnATreeElement> importRootObject;
 
     private Set<CnATreeElement> elementSet = null;
+    
+    private transient VeriniceArchive veriniceArchive;
+    
+    private Integer format = ExportCommand.EXPORT_FORMAT_DEFAULT;
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -94,19 +101,27 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
      * @param delete
      * @param syncRequestSerialized
      */
-    public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
+    public SyncCommand(Integer format, boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
+        if(format!=null) {
+            this.format = format;
+        }
         this.insert = insert;
         this.update = update;
-        this.delete = delete;
-
+        this.delete = delete;     
         this.syncRequestSerialized = syncRequestSerialized;
         this.stationId = ChangeLogEntry.STATION_ID;
+    }
+    
+    public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
+        this(ExportCommand.EXPORT_FORMAT_DEFAULT, insert, update, delete, syncRequestSerialized);
     }
 
     /**
      * Works like
      * {@link #SyncCommand(String, boolean, boolean, boolean, byte[])} but does
      * the JAXB serialization under the hood automatically.
+     * 
+     * Called by ImportCSVWizard
      * 
      * @param insert
      * @param update
@@ -118,10 +133,12 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         this.update = update;
         this.delete = delete;
 
+        // TODO: dm, SyncRequest marshal is called in contructor and unmarshal is called in execute...
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         JAXB.marshal(sr, bos);
 
         this.syncRequestSerialized = bos.toByteArray();
+        this.format = ExportCommand.EXPORT_FORMAT_XML_PURE;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -136,26 +153,38 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         this.syncMapping = sr.getSyncMapping();
 
         this.syncRequestSerialized = null;
+        this.format = ExportCommand.EXPORT_FORMAT_XML_PURE;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
     @Override
     public void execute() {
+        if (syncRequestSerialized == null) {
+            throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
+        }
+        
+        byte[] xmlData = null;
+        if(isVeriniceArchive()) {
+            veriniceArchive = new VeriniceArchive(syncRequestSerialized);
+            xmlData = veriniceArchive.getVeriniceXml();
+        }
+        if(ExportCommand.EXPORT_FORMAT_XML_PURE.equals(format)) {
+            xmlData = syncRequestSerialized;
+        }
+        
         if (getLog().isDebugEnabled()) {
-            String xml = new String(syncRequestSerialized,VeriniceCharset.CHARSET_UTF_8);
+            String xml = new String(xmlData,VeriniceCharset.CHARSET_UTF_8);
             getLog().debug("### Importing data begin ###");
             getLog().debug(xml);
             getLog().debug("### Importing data end ####");
         }
-
-        if (syncRequestSerialized != null) {
-            SyncRequest sr = JAXB.unmarshal(new ByteArrayInputStream(syncRequestSerialized), SyncRequest.class);
-            sourceId = sr.getSourceId();
-            syncData = sr.getSyncData();
-            syncMapping = sr.getSyncMapping();
-        } else if (syncData == null || syncMapping == null) {
-            throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
-        }
+   
+        SyncRequest sr = JAXB.unmarshal(new ByteArrayInputStream(xmlData), SyncRequest.class);
+        sourceId = sr.getSourceId();
+        syncData = sr.getSyncData();
+        syncMapping = sr.getSyncMapping();
+        // clear memory
+        xmlData = null;
 
         SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(
         		sourceId, 
@@ -163,14 +192,25 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         		syncMapping,
         		getAuthService().getUsername(),
         		insert, 
-        		update, 
+        		update,
+        		format,
         		errors);
 
         try {
             cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
-        } catch (CommandException e) {
+            if(isVeriniceArchive()) {
+                cmdInsertUpdate.importFileData(syncRequestSerialized);
+            }
+            // clear memory
+            syncRequestSerialized = null;
+        } catch (RuntimeException e) {
+            log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
-            return;
+            throw e;
+        } catch (Exception e) {
+            log.error("Error while importing", e);
+            errors.add("Insert/Update failed.");
+            throw new RuntimeCommandException(e);
         }
 
         importRootObject = new HashSet<CnATreeElement>(cmdInsertUpdate.getContainerMap().values());
@@ -282,6 +322,10 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     @Override
     public void setAuthService(IAuthService service) {
         this.authService = service;
+    }
+    
+    private boolean isVeriniceArchive() {
+        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(format);
     }
 
 }

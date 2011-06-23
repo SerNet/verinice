@@ -56,30 +56,4 @@ public class UpdateControlEntity extends UpdateElementEntity<Control> implements
         this.processService = processService;      
     }
     
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity#beforeUpdate()
-     */
-    @Override
-    protected void beforeUpdate() {
-        // TODO Auto-generated method stub
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity#afterUpdate()
-     */
-    @Override
-    protected void afterUpdate() {
-        // you can interact with the process service here:
-        // there is no process service in standalone mode
-        /*
-        if(getProcessService()!=null) {
-            Map<String, Object> props = new HashMap<String, Object>();
-            props.put("control", getElement());
-            getProcessService().startProcess(IControlExecutionProcess.KEY, props);
-        }
-        */
-    }
-
-    
-
 }

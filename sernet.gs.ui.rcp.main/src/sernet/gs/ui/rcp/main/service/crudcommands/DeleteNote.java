@@ -28,7 +28,7 @@ import sernet.verinice.model.bsi.Note;
 
 public class DeleteNote extends GenericCommand {
 
-private transient Logger log = Logger.getLogger(SaveNote.class);
+private transient Logger log = Logger.getLogger(DeleteNote.class);
 	
 	public Logger getLog() {
 		if(log==null) {

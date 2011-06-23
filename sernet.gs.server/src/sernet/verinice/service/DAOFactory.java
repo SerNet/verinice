@@ -23,13 +23,17 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.hibernate.ElementEntityDao;
+import sernet.verinice.interfaces.IAttachmentDao;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -124,6 +128,14 @@ import sernet.verinice.model.samt.SamtTopic;
 public class DAOFactory implements IDAOFactory {
 	
 	private final Logger log = Logger.getLogger(DAOFactory.class);
+	
+	
+	/**
+	 * Special Dao for use in command {@link UpdateElementEntity}
+	 */
+	private IElementEntityDao elementEntityDao;
+	
+	private IAttachmentDao attachmentDao;
 	
 	// injected by spring
 	@SuppressWarnings("unchecked")
@@ -658,7 +670,29 @@ public class DAOFactory implements IDAOFactory {
         daosByTypeID.put(ImportBsiGroup.TYPE_ID, daoToSet);
     }
     
-	@SuppressWarnings("unchecked")
+	/**
+     * Returns a special Dao for use 
+     * in command {@link UpdateElementEntity}
+     * 
+	 * @return a UpdateElementEntity Dao
+	 */
+	public IElementEntityDao getElementEntityDao() {
+        return elementEntityDao;
+    }
+
+    public void setElementEntityDao(IElementEntityDao elementEntityDao) {
+        this.elementEntityDao = elementEntityDao;
+    }
+
+    public IAttachmentDao getAttachmentDao() {
+        return attachmentDao;
+    }
+
+    public void setAttachmentDao(IAttachmentDao attachmentDao) {
+        this.attachmentDao = attachmentDao;
+    }
+
+    @SuppressWarnings("unchecked")
 	/**
 	 *  Tries to find a DAO by class.
 	 *  If you pass a proxy (class enhanced by cglib), this method tries to find

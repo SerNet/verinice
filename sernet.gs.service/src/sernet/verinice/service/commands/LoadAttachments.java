@@ -15,23 +15,17 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 
-import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IAttachmentDao;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -39,10 +33,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * Loads files/attachmets meta data for a {@link CnATreeElement}
  * or for all elements if no id is set.
  * File data will not be loaded by this command. 
- * Use {@link LoadAttachmentFile} to load file data from database.
+ * Use command LoadAttachmentFile to load file data from database.
  * 
  * @see LoadAttachmentFile
- * @see FileView
  * @see Attachment
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -94,16 +87,8 @@ public class LoadAttachments extends GenericCommand {
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("executing, id is: " + getCnAElementId() + "...");
 		}
-		IBaseDao<Attachment, Serializable> dao = getDaoFactory().getDAO(Attachment.class);
-		DetachedCriteria crit = DetachedCriteria.forClass(Attachment.class);
-		if(getCnAElementId()!=null) {
-			crit.add(Restrictions.eq("cnATreeElementId", getCnAElementId()));
-		}
-		crit.setFetchMode("entity", FetchMode.JOIN);
-		crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-		crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-		crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		List<Attachment> attachmentList = dao.findByCriteria(crit);
+		IAttachmentDao dao = getDaoFactory().getAttachmentDao();
+		List<Attachment> attachmentList = dao.loadAttachmentList(getCnAElementId());
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("number of attachments found: " + attachmentList.size());
 		}

@@ -37,17 +37,22 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class Addition implements Serializable, ITypedElement {
 	
+    public static final String TYPE_ID = "addition";
+    
 	private transient CopyOnWriteArraySet<INoteChangedListener>  listeners;
 	
 	Integer dbId;
 
 	Integer cnATreeElementId;
 	
+	private String extId;
+
+    private String sourceId;
+	
 	private transient String cnAElementTitel;
 	
 	Entity entity;
 
-    public static final String TYPE_ID = "addition";
 
 	public Addition() {
 		super();
@@ -76,7 +81,23 @@ public class Addition implements Serializable, ITypedElement {
 		this.cnATreeElementId = cnATreeElementId;
 	}
 	
-	public String getCnAElementTitel() {
+	public String getExtId() {
+        return extId;
+    }
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getCnAElementTitel() {
 		return cnAElementTitel;
 	}
 

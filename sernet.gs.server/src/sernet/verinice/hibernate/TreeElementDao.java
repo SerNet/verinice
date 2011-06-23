@@ -19,6 +19,7 @@ package sernet.verinice.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -34,11 +35,14 @@ import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.InheritLogger;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
 
     private static final Logger log = Logger.getLogger(TreeElementDao.class);
-
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(TreeElementDao.class);
+    
     public TreeElementDao(Class<T> type) {
         super(type);
     }
@@ -78,7 +82,10 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      * spring configuration.
      */
 
-    public void saveOrUpdate(T entity) {
+    public void saveOrUpdate(T entity) { 
+        if(LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("saveOrUpdate...");
+        }
         super.saveOrUpdate(entity);
         if (entity instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) entity;
@@ -240,6 +247,10 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     public T merge(T entity, boolean fireChange) {
+        if(LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("merge...");
+        }
+        
         T mergedElement = super.merge(entity);
 
         if (fireChange && mergedElement instanceof CnATreeElement) {
@@ -268,25 +279,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      *            the element that had its protection level or protection level
      *            description changed.
      */
-    private void fireChange(CnATreeElement elmt) {
-        Object loopedObject = null;
-        CascadingTransaction ta;
-
-        ta = new CascadingTransaction();
-        elmt.fireIntegritaetChanged(ta);
-        if (ta.hasLooped())
-            loopedObject = ta.getLoopedObject();
-
-        ta = new CascadingTransaction();
-        elmt.fireVerfuegbarkeitChanged(ta);
-        if (ta.hasLooped())
-            loopedObject = ta.getLoopedObject();
-
-        ta = new CascadingTransaction();
-        elmt.fireVertraulichkeitChanged(ta);
-        if (ta.hasLooped())
-            loopedObject = ta.getLoopedObject();
-
+    protected void fireChange(CnATreeElement elmt) {  
+        if(LOG_INHERIT.isDebug()) {
+            LOG_INHERIT.debug("fireChange...");
+        }
+        elmt.fireIntegritaetChanged(new CascadingTransaction());
+        elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
+        elmt.fireVertraulichkeitChanged(new CascadingTransaction());   
     }
 
     public Class<T> getType() {

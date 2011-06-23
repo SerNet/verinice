@@ -25,14 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.LayoutStyle;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.ast.HasAnnotation;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
@@ -45,8 +40,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -64,6 +57,8 @@ import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -71,6 +66,8 @@ import sernet.verinice.model.iso27k.Organization;
 public class ExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 
+    public static final String[] EXTENSION_ARRAY = new String[] {VeriniceArchive.EXTENSION_VERINICE_ARCHIVE,ExportAction.EXTENSION_XML};
+    
     /**
      * Indicates if the output should be encrypted.
      */
@@ -83,6 +80,10 @@ public class ExportDialog extends TitleAreaDialog {
     
     private Text sourceIdText;
     private Text txtLocation;
+    
+    // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
+    private int format = ExportCommand.EXPORT_FORMAT_DEFAULT;
+    
     
     public ExportDialog(Shell activeShell) {
         this(activeShell, null);
@@ -163,7 +164,7 @@ public class ExportDialog extends TitleAreaDialog {
                 if(checkbox.getSelection()) {
 	                selectedElementSet.add(selectedElement);
 	                if(txtLocation!=null) {
-	                    filePath = selectedElement.getTitle() + ".xml"; //$NON-NLS-1$
+	                    filePath = selectedElement.getTitle() + getDefaultExtension();
 	                    txtLocation.setText(filePath);
 	                }
 	                setSourceId(selectedElement);
@@ -233,7 +234,7 @@ public class ExportDialog extends TitleAreaDialog {
          */
         
         final Button reImportCheckbox = new Button(sourceIdComposite, SWT.CHECK);
-        reImportCheckbox.setText("Prepare for re-import");
+        reImportCheckbox.setText(Messages.ExportDialog_0);
         gd = new GridData();
         gd.horizontalSpan = 3;
         reImportCheckbox.setLayoutData(gd);
@@ -302,17 +303,21 @@ public class ExportDialog extends TitleAreaDialog {
                         dialog.setFileName(""); //$NON-NLS-1$
                     }
                 }             
-                dialog.setFilterExtensions(new String[] { 
-                        "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
-                        "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                        "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-                dialog.setFilterNames(new String[] { 
-                        Messages.SamtExportDialog_15,
-                        Messages.SamtExportDialog_16,
-                        Messages.SamtExportDialog_17 });
+                dialog.setFilterExtensions(new String[] {
+                        "*"+EXTENSION_ARRAY[0], //$NON-NLS-1$
+                        "*"+EXTENSION_ARRAY[1] }); //$NON-NLS-1$          
+                dialog.setFilterNames(new String[] {
+                        Messages.ExportDialog_2,
+                        Messages.SamtExportDialog_15 });
+                // set the default extension to EXTENSION_VERINICE_ARCHIVE
+                dialog.setFilterIndex(0);
                 String exportPath = dialog.open();
+                // set export-format to filter index of dialog
+                // filter index must match ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV 
+                // or ExportCommand.EXPORT_FORMAT_XML_PURE
+                setFormat(dialog.getFilterIndex());
                 if (exportPath != null) {
-                    txtLocation.setText(ExportAction.addExtension(exportPath,ExportAction.EXTENSION_XML));
+                    txtLocation.setText(ExportAction.addExtension(exportPath,EXTENSION_ARRAY[dialog.getFilterIndex()]));
                     filePath = exportPath;
                 } else {
                     txtLocation.setText(""); //$NON-NLS-1$
@@ -342,7 +347,7 @@ public class ExportDialog extends TitleAreaDialog {
         });
         
         if(selectedElement!=null) {
-            filePath = selectedElement.getTitle() + ".xml"; //$NON-NLS-1$
+            filePath = selectedElement.getTitle() + getDefaultExtension();
             txtLocation.setText(filePath);
         }
         
@@ -351,6 +356,13 @@ public class ExportDialog extends TitleAreaDialog {
         return composite;
     }
     
+    /**
+     * @return
+     */
+    protected String getDefaultExtension() {
+        return VeriniceArchive.EXTENSION_VERINICE_ARCHIVE;
+    }
+
     private void setSourceId(CnATreeElement element) {
 		if(element!=null && element.getSourceId()!=null) {
 			this.sourceId = element.getSourceId();
@@ -360,7 +372,7 @@ public class ExportDialog extends TitleAreaDialog {
 		} else {
 			this.sourceId = null;
 			if(sourceIdText!=null) {
-				sourceIdText.setText("");
+				sourceIdText.setText(""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -425,6 +437,14 @@ public class ExportDialog extends TitleAreaDialog {
     }
     public String getSourceId() {
         return sourceId;
+    }
+
+    public int getFormat() {
+        return format;
+    }
+
+    public void setFormat(int exportFormat) {
+        this.format = exportFormat;
     }
 
 }

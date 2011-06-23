@@ -28,7 +28,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.model.iso27k.messages"; //$NON-NLS-1$
     public static String AssetValueAdapter_11;
-    public static String AssetValueAdapter_12;
     public static String AssetValueAdapter_7;
     public static String AssetValueAdapter_9;
     public static String ImportIsoGroup_0;

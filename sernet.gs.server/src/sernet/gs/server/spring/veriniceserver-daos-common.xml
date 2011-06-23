@@ -328,10 +328,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="attachmentDAO" class="sernet.verinice.hibernate.TreeElementDao">
-		<constructor-arg>
-			<value>sernet.verinice.model.bsi.Attachment</value>
-		</constructor-arg>
+	<bean id="attachmentDao" class="sernet.verinice.hibernate.AttachmentDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
@@ -567,6 +564,12 @@
         </constructor-arg>
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+    
+    <!-- Special dao to save CnaTreeElment entities in command UpdateElementEntity -->
+    <!-- See: sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity -->
+	<bean id="elementEntityDao" class="sernet.verinice.hibernate.ElementEntityDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
     
 	<!-- END dao definitions ============================================================================ -->
 

@@ -38,4 +38,12 @@ public class MessageBean {
     public void setError(String error) {
         this.error = error;
     }
+    
+    public void english() {
+        Util.english();
+    }
+    
+    public void german() {
+        Util.german();
+    }
 }

@@ -48,6 +48,8 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class DbUserDetailsService implements UserDetailsService {
 	
+    private final Logger log = Logger.getLogger(DbUserDetailsService.class);
+    
     // injected by spring
 	private ICommandService commandService;
 
@@ -71,7 +73,8 @@ public class DbUserDetailsService implements UserDetailsService {
 		try {
 		    loadUserConfigurationCommand.setUsername(username);
 			commandService.executeCommand(loadUserConfigurationCommand);
-		} catch (CommandException e) {
+		} catch (Exception e) {
+		    log.error("Error while loading user configuration", e);
 			throw new RuntimeException("Failed to retrieve user configurations.", e);
 		}
 		

@@ -1,17 +1,15 @@
 package sernet.verinice.report.rcp;
 
 import java.io.File;
-
-import org.apache.log4j.Logger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -21,17 +19,17 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.FileDialog;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -44,14 +42,18 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 
-@SuppressWarnings("restriction")
-public class GenerateReportDialog extends Dialog {
+public class GenerateReportDialog extends TitleAreaDialog {
 
+    private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
+    
+    // manual filename mode or auto filename mode 
+    private static final boolean FILENAME_MANUAL = false;
+    
 	private Combo comboReportType;
 
 	private Combo comboOutputFormat;
 
-	private Text textFile;
+	private Text textDir, textFile;
 
 	private File outputFile;
 
@@ -63,9 +65,9 @@ public class GenerateReportDialog extends Dialog {
 
     private Integer rootElement;
 
-    private Button openButton;
+    private Button openDirButton, openFileButton;
 
-    private Text textReportFile;
+    private Text textReportTemplateFile;
 
     private Button openReportButton;
 
@@ -79,26 +81,29 @@ public class GenerateReportDialog extends Dialog {
 
     private String auditName=null;
     
-    // estimated size of dialog for placement (doesnt have to be exact):
-    private static final int SIZE_X = 500;
-    private static final int SIZE_Y = 200;
+    private boolean userTemplate = true;
+
+    private boolean filenameManual = FILENAME_MANUAL;
     
-    private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
+    // estimated size of dialog for placement (doesnt have to be exact):
+    private static final int SIZE_X = 540;
+    private static final int SIZE_Y = 470;
     
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.GenerateReportDialog_0);
+        newShell.setText(Messages.GenerateReportDialog_4);
+        newShell.setSize(SIZE_X, SIZE_Y);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
         newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));
+    
     }
     
 
 	public GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		this.auditId=null;
         this.auditName = null;
 		reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
@@ -113,7 +118,7 @@ public class GenerateReportDialog extends Dialog {
         this.auditId=audit.getDbId();
         this.auditName = audit.getTitle();
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Setting audit in report dialog: " + auditId);
+            LOG.debug("Setting audit in report dialog: " + auditId); //$NON-NLS-1$
         }
     }
 
@@ -129,24 +134,47 @@ public class GenerateReportDialog extends Dialog {
 
     @Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout layout = new GridLayout(3, false);
-		container.setLayout(layout);
+        setTitle(Messages.GenerateReportDialog_0);
+        setMessage(Messages.GenerateReportDialog_7);
+
+        final Composite frame = (Composite) super.createDialogArea(parent);
+        GridLayout layout = (GridLayout) frame.getLayout();
+        layout.marginWidth = 10;
+        layout.marginHeight = 10;
+        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+        frame.setLayoutData(gd);
+        
+        final Composite composite = new Composite(frame, SWT.NONE);  
+		layout = new GridLayout(3, false);
+		composite.setLayout(layout);
+		gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+        
+		composite.setLayoutData(gd);
+
+		Group reportGroup = new Group(composite, SWT.NULL);
+		reportGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+		layout = new GridLayout();
+        layout.numColumns = 3;
+        reportGroup.setLayout(layout);
 		
-
-		Label labelReportType = new Label(container, SWT.NONE);
-		GridData gridLabelReportType = new GridData();
-		gridLabelReportType.horizontalAlignment = SWT.LEFT;
-		gridLabelReportType.verticalAlignment = SWT.CENTER;
+		Label labelReportType = new Label(reportGroup, SWT.NONE);
+		GridData gridDataLabel = new GridData();
+		gridDataLabel.horizontalAlignment = SWT.LEFT;
+		gridDataLabel.verticalAlignment = SWT.CENTER;
+		gridDataLabel.grabExcessHorizontalSpace = true;
+		gridDataLabel.minimumWidth = 140;
 		labelReportType.setText(Messages.GenerateReportDialog_1);
-		labelReportType.setLayoutData(gridLabelReportType);
+		labelReportType.setLayoutData(gridDataLabel);
 
-		comboReportType = new Combo(container, SWT.READ_ONLY);
+		comboReportType = new Combo(reportGroup, SWT.READ_ONLY);
 		GridData gridComboReportType = new GridData();
 		gridComboReportType.horizontalAlignment = SWT.FILL;
-		//gridComboReportType.verticalAlignment = SWT.CENTER;
 		gridComboReportType.grabExcessHorizontalSpace = true;
 		gridComboReportType.horizontalSpan=2;
+		gridComboReportType.grabExcessHorizontalSpace = true;
+		gridComboReportType.minimumWidth = 346;
 		comboReportType.setLayoutData(gridComboReportType);
 
 		for (IReportType rt : reportTypes) {
@@ -157,45 +185,59 @@ public class GenerateReportDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				setupComboOutputFormatContent();
 				enableFileSelection();
+				setupOutputFilename();
 			}
+     
 		});
 		
-		Label labelReportFile = new Label(container, SWT.NONE);
+		Label labelReportFile = new Label(reportGroup, SWT.NONE);
         GridData gridLabelReportFile = new GridData();
         gridLabelReportFile.horizontalAlignment = SWT.LEFT;
-        //gridLabelReportFile.verticalAlignment = SWT.CENTER;
         labelReportFile.setText(Messages.GenerateReportDialog_2);
         labelReportFile.setLayoutData(gridLabelReportFile);
         
-        textReportFile = new Text(container, SWT.BORDER);
+        textReportTemplateFile = new Text(reportGroup, SWT.BORDER);
         GridData gridTextFile2 = new GridData();
         gridTextFile2.horizontalAlignment = SWT.FILL;
         gridTextFile2.verticalAlignment = SWT.CENTER;
         gridTextFile2.grabExcessHorizontalSpace = true;
-        textReportFile.setLayoutData(gridTextFile2);
+        textReportTemplateFile.setLayoutData(gridTextFile2);
         
-        openReportButton = new Button(container, SWT.PUSH);
-            openReportButton.setText(Messages.GenerateReportDialog_3);
-            openReportButton.addSelectionListener(new SelectionAdapter() {
-              public void widgetSelected(SelectionEvent event) {
-                FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-                //dlg.setFilterNames(FILTER_NAMES);
-                dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                String fn = dlg.open();
-                if (fn != null) {
-                  textReportFile.setText(fn);
-                }
-              }
-            });
+        openReportButton = new Button(reportGroup, SWT.PUSH);
+        openReportButton.setText(Messages.GenerateReportDialog_3);
+        openReportButton.addSelectionListener(new SelectionAdapter() {
+          public void widgetSelected(SelectionEvent event) {
+            FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
+            //dlg.setFilterNames(FILTER_NAMES);
+            dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            String fn = dlg.open();
+            if (fn != null) {
+              textReportTemplateFile.setText(fn);
+              setupOutputFilename();
+            }
+          }
+        });
+        
+        Group scopeGroup = new Group(composite, SWT.NULL);
+        scopeGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        layout = new GridLayout();
+        layout.numColumns = 2;
+        scopeGroup.setLayout(layout);
             
-        Label label2 = new Label(container, SWT.NULL);
-        GridData gridData7 = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-        label2.setLayoutData(gridData7);
-        label2.setText(Messages.GenerateReportDialog_8);
+            
+        Label labelScope = new Label(scopeGroup, SWT.NULL);
+        GridData gridDataScope = new GridData();
+        gridDataScope.horizontalAlignment = SWT.LEFT;
+        gridDataScope.verticalAlignment = SWT.CENTER;
+        gridDataScope.grabExcessHorizontalSpace = true;
+        gridDataScope.minimumWidth = 140;
+        labelScope.setLayoutData(gridDataScope);
+        labelScope.setText(Messages.GenerateReportDialog_8);
 
-        scopeCombo = new Combo(container, SWT.READ_ONLY);
-        GridData gridDatascopeCombo = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
-        
+        scopeCombo = new Combo(scopeGroup, SWT.READ_ONLY);
+        GridData gridDatascopeCombo = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        gridDatascopeCombo.grabExcessHorizontalSpace = true;
+        gridDatascopeCombo.minimumWidth = 346;
         scopeCombo.setLayoutData(gridDatascopeCombo);
         
         scopeCombo.addSelectionListener(new SelectionListener() {
@@ -210,33 +252,118 @@ public class GenerateReportDialog extends Dialog {
             }
         });
 
-		Label labelOutputFormat = new Label(container, SWT.NONE);
+        Group groupFile = new Group(composite, SWT.NULL);
+        groupFile.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        layout = new GridLayout();
+        layout.numColumns = 3;
+        groupFile.setLayout(layout);
+        
+		Label labelOutputFormat = new Label(groupFile, SWT.NONE);
 		GridData gridLabelOutputFormat = new GridData();
 		gridLabelOutputFormat.horizontalAlignment = SWT.LEFT;
 		gridLabelOutputFormat.verticalAlignment = SWT.CENTER;
+		gridLabelOutputFormat.grabExcessHorizontalSpace = true;
+		gridLabelOutputFormat.minimumWidth = 140;
 		labelOutputFormat.setText(Messages.GenerateReportDialog_9);
 		labelOutputFormat.setLayoutData(gridLabelOutputFormat);
 
-		comboOutputFormat = new Combo(container, SWT.READ_ONLY);
+		comboOutputFormat = new Combo(groupFile, SWT.READ_ONLY);
 		GridData gridComboOutputFormat = new GridData();
 		gridComboOutputFormat.horizontalAlignment = SWT.FILL;
 		gridComboOutputFormat.verticalAlignment = SWT.CENTER;
 		gridComboOutputFormat.grabExcessHorizontalSpace = true;
 		gridComboOutputFormat.horizontalSpan=2;
+		gridComboOutputFormat.grabExcessHorizontalSpace = true;
+		gridComboOutputFormat.minimumWidth = 346;
 		comboOutputFormat.setLayoutData(gridComboOutputFormat);
+		comboOutputFormat.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setupOutputFilename();
+            }
+     
+        });
+		
+		Label labelDir = new Label(groupFile, SWT.NONE);
+        GridData gridLabelFile = new GridData();
+        gridLabelFile.horizontalAlignment = SWT.LEFT;
+        gridLabelFile.verticalAlignment = SWT.CENTER;
+        gridLabelFile.grabExcessHorizontalSpace = true;
+        gridLabelFile.minimumWidth = 140;
+        labelDir.setText(Messages.GenerateReportDialog_12);
+        labelDir.setLayoutData(gridLabelFile);
 
-		Label labelFile = new Label(container, SWT.NONE);
-		GridData gridLabelFile = new GridData();
-		gridLabelFile.horizontalAlignment = SWT.LEFT;
-		gridLabelFile.verticalAlignment = SWT.CENTER;
+        textDir = new Text(groupFile, SWT.BORDER);
+        GridData gridTextFile = new GridData();
+        gridTextFile.horizontalAlignment = SWT.FILL;
+        gridTextFile.verticalAlignment = SWT.CENTER;
+        gridTextFile.grabExcessHorizontalSpace = true;
+        textDir.setLayoutData(gridTextFile);
+        
+        textDir.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+        
+        textDir.setEditable(!FILENAME_MANUAL);
+        
+        openDirButton = new Button(groupFile, SWT.PUSH);
+        openDirButton.setText(Messages.GenerateReportDialog_11);
+        openDirButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+                DirectoryDialog dlg = new DirectoryDialog(getParentShell());
+
+                // Set the initial filter path according
+                // to anything they've selected or typed in
+                dlg.setFilterPath(textDir.getText());
+
+                // Change the title bar text
+                dlg.setText(Messages.GenerateReportDialog_13);
+
+                // Customizable message displayed in the dialog
+                dlg.setMessage(Messages.GenerateReportDialog_14);
+
+                // Calling open() will open and run the dialog.
+                // It will return the selected directory, or
+                // null if user cancels
+                String dir = dlg.open();
+                if (dir != null) {
+                    textDir.setText(dir);
+                    getButton(IDialogConstants.OK_ID).setEnabled(true);
+                    setupOutputFilename();
+                }
+            }
+        });
+        
+        openDirButton.setEnabled(!FILENAME_MANUAL);
+        
+        Label labelFilenameManual = new Label(groupFile, SWT.NONE);
+        labelFilenameManual.setText(Messages.GenerateReportDialog_15);
+        labelFilenameManual.setLayoutData(gridLabelFile);
+         
+        final Button checkFilenameManual = new Button(groupFile, SWT.CHECK);
+        checkFilenameManual.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 2, 1));
+        checkFilenameManual.setSelection(false);
+    
+        checkFilenameManual.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                filenameManual = checkFilenameManual.getSelection();
+                enableFileDialog(filenameManual);
+            }
+        });  
+
+		Label labelFile = new Label(groupFile, SWT.NONE);
 		labelFile.setText(Messages.GenerateReportDialog_10);
 		labelFile.setLayoutData(gridLabelFile);
 
-		textFile = new Text(container, SWT.BORDER);
-		GridData gridTextFile = new GridData();
-		gridTextFile.horizontalAlignment = SWT.FILL;
-		gridTextFile.verticalAlignment = SWT.CENTER;
-		gridTextFile.grabExcessHorizontalSpace = true;
+		textFile = new Text(groupFile, SWT.BORDER);
 		textFile.setLayoutData(gridTextFile);
 		
 		textFile.addKeyListener(new KeyListener() {
@@ -250,35 +377,57 @@ public class GenerateReportDialog extends Dialog {
             }
         });
 		
-//		  try {
-//		      textFile.setText(File.createTempFile("verinice-report-", "").toString());
-//	        } catch (IOException e1) {
-//	            LOG.error(e1);
-//	        }
+		textFile.setEditable(FILENAME_MANUAL);
 		
-		openButton = new Button(container, SWT.PUSH);
-		    openButton.setText(Messages.GenerateReportDialog_11);
-		    openButton.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent event) {
-		        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-		        //dlg.setFilterNames(FILTER_NAMES);
-		        dlg.setFilterExtensions(new String[] { "*.pdf", "*.html", "*.xls", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		        String fn = dlg.open();
-		        if (fn != null) {
-		          textFile.setText(fn);
-		          getButton(IDialogConstants.OK_ID).setEnabled(true);
-		        }
-		      }
-		    });
+		openFileButton = new Button(groupFile, SWT.PUSH);
+		openFileButton.setText(Messages.GenerateReportDialog_11);
+		openFileButton.addSelectionListener(new SelectionAdapter() {
+	      public void widgetSelected(SelectionEvent event) {
+	        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
+	        dlg.setFilterPath(textFile.getText());
+	        //dlg.setFilterNames(FILTER_NAMES);
+	        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+	        chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+	        ArrayList<String> extensionList = new ArrayList<String>();
+	        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
+	            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
+	        }
+	        extensionList.add("*.*"); //$NON-NLS-1$
+	        dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()])); 
+	        String fn = dlg.open();
+	        if (fn != null) {
+	          textFile.setText(fn);
+	          getButton(IDialogConstants.OK_ID).setEnabled(true);
+	        }
+	      }
+	    });
+		
+		openFileButton.setEnabled(FILENAME_MANUAL);
 		
 		comboReportType.select(0);
 		setupComboOutputFormatContent();
 		setupComboScopes();
-
-		return container;
+		
+		frame.pack(); 
+		return frame;
 	}
-	
-	/**
+
+
+    /**
+     * @param filenameManual2
+     */
+    protected void enableFileDialog(boolean filenameManual) {
+        textFile.setEditable(filenameManual);
+        openFileButton.setEnabled(filenameManual);
+        textDir.setEditable(!filenameManual);
+        openDirButton.setEnabled(!filenameManual);
+        if(filenameManual) {
+            textDir.setText(""); //$NON-NLS-1$
+        }
+    }
+
+
+    /**
      * Load list of scopes for user selection of top level element for report.
      */
     private void setupComboScopes() {
@@ -309,7 +458,7 @@ public class GenerateReportDialog extends Dialog {
         for (CnATreeElement elmt : scopes) {
             scopeTitles.add(elmt.getTitle());
             if (LOG.isDebugEnabled()) {
-                LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$
+                LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             }
         }
         
@@ -319,25 +468,66 @@ public class GenerateReportDialog extends Dialog {
     }
 
     protected void enableFileSelection() {
-        boolean enable = false;
+        userTemplate = false;
         if (reportTypes[comboReportType.getSelectionIndex()].getReportFile() != null) {
-            enable = true;
+            userTemplate = true;
         }
-        textReportFile.setEnabled(enable);
-        openReportButton.setEnabled(enable);
+        textReportTemplateFile.setEnabled(userTemplate);
+        openReportButton.setEnabled(userTemplate);
     }
 
     private void setupComboOutputFormatContent()
 	{
 		comboOutputFormat.removeAll();
-		for (IOutputFormat of : reportTypes[comboReportType
-				.getSelectionIndex()].getOutputFormats()) {
+		for (IOutputFormat of : reportTypes[comboReportType.getSelectionIndex()].getOutputFormats()) {
 			comboOutputFormat.add(of.getLabel());
 		};
 		comboOutputFormat.select(0);
 	}
+    
+    /**
+     * 
+     */
+    protected void setupOutputFilename() {
+        if(!filenameManual) {          
+            String reportLabel = null;
+            if(userTemplate) {
+                reportLabel = getLabelFromTemplateFile(textReportTemplateFile.getText());
+            }
+            chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+            if(!userTemplate && chosenReportType!=null) {
+                reportLabel = chosenReportType.getLabel();
+            }
+            String filename = convertToFileName(reportLabel);
+            chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+            String suffix = chosenOutputFormat.getFileSuffix();
+            String dir = System.getProperty("user.dir"); //$NON-NLS-1$
+            if(textDir!=null && textDir.getText()!=null && !textDir.getText().isEmpty()) {
+                dir = textDir.getText();
+            }
+            if(filename!=null && !filename.isEmpty()) {
+                textFile.setText(dir + File.separatorChar + filename + "." + suffix); //$NON-NLS-1$
+            }
+        }
+    }
 
-	@Override
+	/**
+     * @param text
+     */
+    private String getLabelFromTemplateFile(String filePath) {
+        String label = null;
+        if(filePath!=null && !filePath.isEmpty() && filePath.contains(".")) { //$NON-NLS-1$
+            int indexOfSeparator = filePath.lastIndexOf(File.separatorChar);
+            if(indexOfSeparator!=-1) {
+                filePath = filePath.substring(indexOfSeparator+1);
+            }
+            label = filePath.substring(0, filePath.lastIndexOf('.'));
+        }
+        return label;
+    }
+
+
+    @Override
 	protected void okPressed() {
 	    if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
 	        MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
@@ -348,7 +538,7 @@ public class GenerateReportDialog extends Dialog {
 		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
 		chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
 		
-		chosenReportType.setReportFile(textReportFile.getText());
+		chosenReportType.setReportFile(textReportTemplateFile.getText());
 		
 		// This just appends the chosen report's extension if the existing
 		// suffix does not match. Could be enhanced.
@@ -386,14 +576,12 @@ public class GenerateReportDialog extends Dialog {
         LoadCnATreeElementTitles<Organization> compoundLoader = new LoadCnATreeElementTitles<Organization>(
                 Organization.class);
         try {
-            compoundLoader = ServiceFactory.lookupCommandService()
-                    .executeCommand(compoundLoader);
+            compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_19);
         }
         
-        return compoundLoader
-                .getElements();
+        return compoundLoader.getElements();
         
     }
 
@@ -406,14 +594,28 @@ public class GenerateReportDialog extends Dialog {
         LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(
                 ITVerbund.class);
         try {
-            compoundLoader = ServiceFactory.lookupCommandService()
-                    .executeCommand(compoundLoader);
+            compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_20);
         }
         
-        return compoundLoader
-                .getElements();
+        return compoundLoader.getElements();
+    }
+    
+    public static String convertToFileName(String label) {
+        String filename = ""; //$NON-NLS-1$
+        if(label!=null) {
+            filename = label.replace(' ', '_');
+            filename = filename.replace("ä", "ae"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ü", "ue"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ö", "oe"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ä", "Ae"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ü", "Ue"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ö", "Oe"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ß", "ss"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return filename;
     }
     
 	

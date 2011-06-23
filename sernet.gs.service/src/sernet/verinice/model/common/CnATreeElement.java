@@ -32,6 +32,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
@@ -40,6 +41,7 @@ import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.InheritLogger;
 
 /**
  * This is the base class for all model classes of this application.
@@ -58,6 +60,8 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
     private transient Logger log = Logger.getLogger(CnATreeElement.class);
+    
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
     private Logger getLog() {
         if (log == null) {
@@ -67,18 +71,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
     
 	private Integer dbId;
+	
+	private String extId;
 
 	private String sourceId;
 	
 	private String objectType;
-
-	public String getSourceId() {
-		return sourceId;
-	}
-
-	public void setSourceId(String sourceId) {
-		this.sourceId = sourceId;
-	}
 	
 	public int getNumericProperty(String propertyTypeId) {
 	    PropertyList properties = getEntity().getProperties(propertyTypeId);
@@ -93,21 +91,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         getEntity().setSimpleValue(type.getPropertyType(propTypeId), Integer.toString(value));
 	}
 
-	private String extId;
-
 	public void setextId(String extId)
-	{
-	    this.extId = extId;
-	}
-	
-	/* */
-	
-	public String getExtId()
-	{
-	    return extId;
-	}
-
-	public void setExtId(String extId)
 	{
 	    this.extId = extId;
 	}
@@ -139,6 +123,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private Set<Permission> permissions = new HashSet<Permission>();
 	
 	private boolean childrenLoaded = false;
+	
+	private Set<Attachment> files;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -193,11 +179,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 * 
 	 */
 	public void remove() {
-		if (getParent() != null)
+		if (getParent() != null) {
 			getParent().removeChild(this);
+		}
 		
-		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(
-				getLinksDown());
+		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(getLinksDown());
 		for (CnALink link : list2) {
 			link.remove();
 		}
@@ -276,9 +262,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	public String getId() {
 		if (getEntity() == null)
-			return ENTITY_TITLE + getUuid();
+			return Entity.TITLE + getUuid();
 		else
-			return ENTITY_TITLE + getEntity().getDbId();
+			return getEntity().getId();
 	}
 
 	public abstract String getTypeId();
@@ -523,16 +509,25 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
+		    if(LOG_INHERIT.isInfo()) {
+	            LOG_INHERIT.info(this.getTypeId() + " is provider, update confidentiality");
+	        }
 			getSchutzbedarfProvider().updateVertraulichkeit(ta);
 		}
 	}
 	public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
+            if(LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info(this.getTypeId() + " is provider, update availability");
+            }
 			getSchutzbedarfProvider().updateVerfuegbarkeit(ta);
 		}
 	}
 	public void fireIntegritaetChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
+            if(LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
+            }
 			getSchutzbedarfProvider().updateIntegritaet(ta);
 		}
 	}
@@ -577,7 +572,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.childrenLoaded = childrenLoaded;
 	}
 	
-	public void databaseChildAdded(CnATreeElement child) {
+	public Set<Attachment> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<Attachment> files) {
+        this.files = files;
+    }
+
+    public void databaseChildAdded(CnATreeElement child) {
 		getModelChangeListener().databaseChildAdded(child);
 	}
 	
@@ -616,6 +619,24 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public void refreshAllListeners(Object source) {
 		// override this in model classes
 	}
+	
+	public String getExtId()
+    {
+        return extId;
+    }
+
+    public void setExtId(String extId)
+    {
+        this.extId = extId;
+    }
+    
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

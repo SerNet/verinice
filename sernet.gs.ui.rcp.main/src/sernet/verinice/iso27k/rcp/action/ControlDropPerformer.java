@@ -19,11 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
@@ -40,6 +42,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.ControlTransformOperation;
+import sernet.verinice.iso27k.service.ItemTransformException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
@@ -98,13 +101,29 @@ public class ControlDropPerformer implements DropPerformer {
 				} else if (LOG.isDebugEnabled()) {
 					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
 				}
-			} catch (Exception e) {
+			 } catch (ItemTransformException e) {
+                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+                showException(e);
+             } catch (InvocationTargetException e) {             
+                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+                Throwable t = e.getTargetException();
+                if(t instanceof ItemTransformException) {
+                    showException((ItemTransformException) t);
+                } else {
+                    ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
+                }
+             } catch (Exception e) {             
 				LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
 				ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
-			}
+			 }
 		}
 		return success;
 	}
+
+    private void showException(ItemTransformException e) {
+        final String message = Messages.getString("ControlDropPerformer.0") + e.getMessage(); //$NON-NLS-1$
+        MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.4"), message); //$NON-NLS-1$
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -123,7 +142,7 @@ public class ControlDropPerformer implements DropPerformer {
 			|| childTypeList.contains(SamtTopic.TYPE_ID);
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("validateDrop, target: " + target + " result: " + valid);
+			LOG.debug("validateDrop, target: " + target + " result: " + valid); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return isActive = valid;
 	}
@@ -134,7 +153,7 @@ public class ControlDropPerformer implements DropPerformer {
 	 */
 	public boolean validateDropObjects(Object target) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("validateDrop, target: " + target);
+			LOG.debug("validateDrop, target: " + target); //$NON-NLS-1$
 		}
 		boolean valid = false;
 
@@ -142,7 +161,7 @@ public class ControlDropPerformer implements DropPerformer {
 
 		if (items == null || items.isEmpty()) {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("No items in drag list");
+				LOG.debug("No items in drag list"); //$NON-NLS-1$
 			}
 			return isActive = false;
 		}
@@ -152,13 +171,13 @@ public class ControlDropPerformer implements DropPerformer {
 			if(childTypeList.contains(Control.TYPE_ID)) {
 				valid = isCorrectItemsForGroup(items, IItem.CONTROL);			
 			}
-			if(childTypeList.contains(SamtTopic.TYPE_ID)) {
+			if(!valid && childTypeList.contains(SamtTopic.TYPE_ID)) {
 				valid = isCorrectItemsForGroup(items, IItem.ISA_TOPIC);
 			}
-			if(childTypeList.contains(Threat.TYPE_ID)) {
+			if(!valid && childTypeList.contains(Threat.TYPE_ID)) {
 				valid = isCorrectItemsForGroup(items, IItem.THREAT);
 			}
-			if(childTypeList.contains(Vulnerability.TYPE_ID)) {
+			if(!valid && childTypeList.contains(Vulnerability.TYPE_ID)) {
 				valid = isCorrectItemsForGroup(items, IItem.VULNERABILITY);
 			}
 		}
@@ -181,7 +200,7 @@ public class ControlDropPerformer implements DropPerformer {
 			}
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("isCorrectItemsForGroup result: " + valid);
+			LOG.debug("isCorrectItemsForGroup result: " + valid); //$NON-NLS-1$
 		}
 		return valid;
 	}

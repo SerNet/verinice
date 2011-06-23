@@ -15,13 +15,12 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -30,10 +29,9 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * Loads files/attachmets data for a {@link CnATreeElement}
  * File meta-data data will not be loaded by this command. 
- * Use {@link LoadAttachments} to load file meta-data from database.
+ * Use command LoadAttachments to load file meta-data from database.
  * 
  * @see LoadAttachment
- * @see FileView
  * @see AttachmentFile
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
