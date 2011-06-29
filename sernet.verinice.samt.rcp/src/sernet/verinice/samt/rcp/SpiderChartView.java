@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
-import sernet.gs.ui.rcp.main.bsi.views.chart.Messages;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;

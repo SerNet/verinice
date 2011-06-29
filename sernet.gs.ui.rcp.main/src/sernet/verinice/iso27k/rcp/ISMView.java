@@ -464,9 +464,11 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		manager.add(collapseAction);
 		drillDownAdapter.addNavigationActions(manager);	
 	}
-
+	
 	/**
 	 * Passing the focus request to the viewer's control.
+	 * 
+	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
 	@Override
 	public void setFocus() {

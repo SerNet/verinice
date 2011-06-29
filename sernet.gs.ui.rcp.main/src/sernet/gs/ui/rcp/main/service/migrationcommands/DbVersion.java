@@ -37,6 +37,15 @@ import sernet.verinice.service.commands.LoadBSIModel;
  */
 public class DbVersion extends GenericCommand  {
 	
+    private transient Logger log = Logger.getLogger(DbVersion.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(DbVersion.class);
+        }
+        return log;
+    }
+    
 	private double clientVersion;
 
 	public DbVersion(double clientVersion) {
@@ -51,6 +60,9 @@ public class DbVersion extends GenericCommand  {
 	public void updateDBVersion(double dbVersion) throws CommandException {
 	        // round
 	        dbVersion = Math.round(dbVersion*100.0)/100.0;
+	        if (getLog().isDebugEnabled()) {
+                getLog().debug("updateDBVersion, current version is: " + dbVersion );
+            }
 			if (dbVersion < 0.91D) {
 				DbMigration migration = new MigrateDbTo0_91();
 				getCommandService().executeCommand(migration);
@@ -78,14 +90,19 @@ public class DbVersion extends GenericCommand  {
 
 			 if (dbVersion < 0.96D) {
 				 // schema update must have been done by SchemaCreator.java, before Hibernate session was started:
-				 Logger.getLogger(this.getClass()).debug("Database schema was not correctly updated to V 0.96.");
+			     getLog().debug("Database schema was not correctly updated to V 0.96.");
 				 throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
 			 }
 			 
-			 if (dbVersion < 0.97D) {
+			 if (dbVersion < 0.98D) {
 				 DbMigration migration = new MigrateDbTo0_97();
 				 getCommandService().executeCommand(migration);
 			 }
+			 
+			 if (dbVersion < 0.98D) {
+                 DbMigration migration = new MigrateDbTo0_98();
+                 getCommandService().executeCommand(migration);
+             }
 	}
 
 
@@ -108,6 +125,7 @@ public class DbVersion extends GenericCommand  {
 			dbVersion = command.getModel().getDbVersion();
 			updateDBVersion(dbVersion);
 		} catch (CommandException e) {
+		    getLog().error("Exception while updating database.", e);
 			throw new RuntimeCommandException("Fehler beim Migrieren der Datenbank auf aktuelle Version.", e);
 		}
 		

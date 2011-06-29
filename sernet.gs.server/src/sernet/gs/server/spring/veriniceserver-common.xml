@@ -104,9 +104,16 @@ This variant:
 
 	</bean>
 
+    <!-- Updates database to a new version if necessary -->
+    <!-- Is called before Hibernate sessionFactory is created -->
 	<bean id="schemaCreator" class="sernet.gs.server.SchemaCreator">
 		<property name="dataSource" ref="dataSource" />
+        <property name="dbUpdate97To98" ref="dbUpdate97To98" />
 	</bean>
+    
+    <bean id="dbUpdate97To98" class="sernet.gs.server.DbUpdate97To98">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
 
 	<bean id="daoFactory" class="sernet.verinice.service.DAOFactory">

@@ -30,7 +30,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Adapts schema for DB updates for cases where Hibernate hbm2ddl does not work on its own.
- * This class is used as a bean in spring context and called just before the Hibernate session factory bean is instantiated.
+ * This class is used as a "InitializingBean" in spring context 
+ * and called just before the Hibernate session factory bean is instantiated.
  * 
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
@@ -43,21 +44,28 @@ public class SchemaCreator implements InitializingBean {
 	
 	final private Logger log = Logger.getLogger(this.getClass());
 	
+	private static String SQL_GETDBVERSION_PRE_096     = "select dbversion from bsimodel";
+    private static String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement where object_type='bsimodel'";
+    
+    private static String SQL_Ver_095_096 = "sernet/gs/server/hibernate/update-095-096.sql";
+	
 	private DataSource dataSource;
 	
-	private static String SQL_GETDBVERSION_PRE_096 	= "select dbversion from bsimodel";
-	private static String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement where object_type='bsimodel'";
-	
-	private static String SQL_Ver_095_096 = "sernet/gs/server/hibernate/update-095-096.sql";
+	private IDBUpdate dbUpdate97To98;
 
-	public DataSource getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
+	/**
+	 * Use this mnethod to update database.
+	 * Method called just before the Hibernate session factory bean is instantiated.
+	 * So you can not use hibernate in this method.
+	 * 
+	 * Use Springs JdbcTemplate instead:
+	 *   JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+     *   jdbcTemplate.execute(query);
+     *
+     * DataSource is injected by Spring configuration.
+	 *  
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
 	public void afterPropertiesSet() throws Exception {
 		log.debug("afterPropertiesSet");
 		
@@ -74,15 +82,25 @@ public class SchemaCreator implements InitializingBean {
 				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 			}
 			if (dbVersion == 0.95D) {
+			    if (log.isInfoEnabled()) {
+		            log.info("Updating database from version 0.95 to 0.96");
+		        }
 				updateDbVersion(SQL_Ver_095_096);
 			}
+			if (dbVersion == 0.97D) {
+			    if (log.isInfoEnabled()) {
+		            log.info("Updating database from version 0.97 to 0.98");
+		        }
+			    getDbUpdate97To98().update();
+            }
 		} catch (Exception e) {
-			throw new RuntimeException("Konnte Datenbank-Schema nicht aktualisieren.", e);
+		    log.error("Exception while updating database.", e);
+		    // dont't throw an exception here to continue server start
 		}
 		
 	}
 
-	/**
+    /**
 	 * @param d
 	 * @throws IOException 
 	 */
@@ -100,8 +118,9 @@ public class SchemaCreator implements InitializingBean {
 			if(query.endsWith(";")) {
 				query = query.substring(0, query.length()-1);
 			}
-			if (Logger.getLogger(this.getClass()).isDebugEnabled())
-				Logger.getLogger(this.getClass()).debug("Executing query: " + query);
+			if (log.isDebugEnabled()) {
+			    log.debug("Executing query: " + query);
+			}
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			jdbcTemplate.execute(query);
 		}
@@ -119,8 +138,9 @@ public class SchemaCreator implements InitializingBean {
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			dbVersion = (Double) jdbcTemplate.queryForObject(SQL_GETDBVERSION_PRE_096, Double.class);
 		} catch (Exception e) {
-			log.info("Can not determine db-version. Database is new and empty or version is > 0.95.");
+			//  empty !
 			if (log.isDebugEnabled()) {
+			    log.debug("Can not determine db-version. Database is new and empty or version is > 0.95.");
 				log.debug("stacktrace: ", e);
 			}
 		}
@@ -140,6 +160,22 @@ public class SchemaCreator implements InitializingBean {
 		
 		return dbVersion;
 	}
+	
+	public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public IDBUpdate getDbUpdate97To98() {
+        return dbUpdate97To98;
+    }
+
+    public void setDbUpdate97To98(IDBUpdate dbUpdate97To98) {
+        this.dbUpdate97To98 = dbUpdate97To98;
+    }
 
 
 }

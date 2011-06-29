@@ -308,17 +308,16 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		}
 		return attachment;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
-	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-
-	}
+	
+	/**
+     * Passing the focus request to the viewer's control.
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        viewer.getControl().setFocus();
+    }
 
 	private void makeActions() {
 		addCatalogAction = new Action() {

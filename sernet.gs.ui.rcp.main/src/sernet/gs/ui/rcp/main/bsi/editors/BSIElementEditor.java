@@ -18,7 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -222,10 +224,10 @@ public class BSIElementEditor extends EditorPart {
 				setPartName(getPartName() + Messages.BSIElementEditor_7);
 			}
 
-			 String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
-			 String[] tags = split(tagString);
-             boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
-            
+            String[] tags = BSIElementEditor.getEditorTags(); 
+
+            boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
+
 			// samt perspective offers a simple view, only showing properties tagged with "isa":
 			if (isSamtPerspective()) {
                 tags = new String[] {SAMT_PERSPECTIVE_DEFAULT_TAGS};
@@ -269,7 +271,7 @@ public class BSIElementEditor extends EditorPart {
      * @param tags
      * @return
      */
-    private String[] split(String tags) {
+    private static String[] split(String tags) {
         if (tags == null)
             return new String[] {};
         
@@ -411,6 +413,19 @@ public class BSIElementEditor extends EditorPart {
 //        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
         
 		super.dispose();
+	}
+	
+	public static final String[] getEditorTags() {
+	    String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+        String[] tags = null;
+        if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
+            Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
+            tags = new String[allTagsSet.size()];
+            tags = allTagsSet.toArray(tags);
+        } else {
+            tags = split(tagString);
+        }
+        return tags;
 	}
 
 }

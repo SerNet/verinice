@@ -60,8 +60,13 @@ public class PersonDaoImpl implements IPersonDao {
 		                   }
 		               }
 		               if(attrs.get("telephoneNumber")!=null) {
+		                   // AD
 		            	   person.setPhone((String) attrs.get("telephoneNumber").get());
 		               }
+		               if(attrs.get("mail")!=null) {
+                           // AD
+                           person.setEmail((String) attrs.get("mail").get());
+                       }
 		               
 		               return new PersonInfo(person, login);
 		            }

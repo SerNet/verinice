@@ -2323,23 +2323,45 @@ Library.
          install-size="0"
          version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
          unpack="false"/>
-
+         
    <plugin
-         id="org.eclipse.birt.report.engine.emitter.wpml"
+         id="org.eclipse.ui.net.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.birt.report.engine.emitter.wpml.config"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.birt.report.engine.emitter.excel.config"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.postscript"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.postscript.config"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.ppt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.ppt.config"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2353,11 +2375,17 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.net.nl_de"
+         id="org.eclipse.birt.report.engine.emitter.wpml"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.birt.report.engine.emitter.wpml.config"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2011 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,30 +17,19 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.gs.server;
+
+import javax.sql.DataSource;
 
 /**
- * @author Daniel Murygin <dm@sernet.de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IVersionConstants {
+public interface IDBUpdate {
+    
+    DataSource getDataSource();
 
-    /**
-     * Version number of DB that can be used:
-     */
-    public static final double COMPATIBLE_DB_VERSION = 0.98D;
-    /**
-     * Version number of client that can be used.
-     * (Must be the same in client / server code of this class.)
-     * 
-     * This value is submitted by the client on every first connect in the
-     * instance variable <code>clientVersion</code>. If this value differs from
-     * the static field, the server throws an exception to prevent incompatible clients
-     * from connecting.
-     * 
-     * If verinice runs standalone (just on a client without server), the version 
-     * number will always be the same.
-     */
-    public static final double COMPATIBLE_CLIENT_VERSION = 0.97D;
-
+    void setDataSource(DataSource dataSource);
+    
+    void update();
 }

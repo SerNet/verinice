@@ -368,13 +368,16 @@ public class FileView extends ViewPart {
 		}
 		loadFiles();
 	}
-
-	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-
-	}
 	
+	/**
+     * Passing the focus request to the viewer's control.
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        viewer.getControl().setFocus();
+    }
 	
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();

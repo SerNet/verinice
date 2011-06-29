@@ -43,14 +43,14 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
     }
     
     private String stationId;
-    private CnALink link;
+    private CnALink element;
     private Integer dependantId;
     private Integer dependencyId;
     private String typeId; 
 
     public RemoveLink(CnALink link) {
         this.stationId = ChangeLogEntry.STATION_ID;
-        this.link = link;
+        this.element = link;
     }
 
     public RemoveLink(Integer dependantId, Integer dependencyId, String typeId) {
@@ -66,26 +66,18 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
         }
         
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-        if(link!=null) {
-            link = dao.findById(link.getId());
+        if(element!=null) {
+            element = dao.findById(element.getId());
         } else {
-            link = dao.findById(new CnALink.Id(dependantId, dependencyId, typeId));
+            element = dao.findById(new CnALink.Id(dependantId, dependencyId, typeId));
         }
-        if (link != null) {
+        if (element != null) {
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Found link, removing " + link.getId());
+                getLog().debug("Found link, removing " + element.getId());
             }
-            // remember elements for firing update events:
-            CnATreeElement dependant = link.getDependant();
-            CnATreeElement dependency = link.getDependency();
-            link.remove();
-            dao.delete(link);
+            element.remove();
+            dao.delete(element);
             dao.flush();
-            
-            // fire updates for both sides of the link, which may now be separate trees:
-            getDaoFactory().getDAO(dependant.getTypeId()).merge(dependant, true);
-            getDaoFactory().getDAO(dependency.getTypeId()).merge(dependency, true);
-            
         } else {
             getLog().warn("Link was already deleted while trying to delete it.");
         }
@@ -98,7 +90,7 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
      */
     @Override
     public void clear() {
-        link = null;
+        element = null;
     }
 
     /*
@@ -121,8 +113,8 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
     public List<CnATreeElement> getChangedElements() {
         // return link category item:
         List<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-        if (link != null) {
-            result.add(link.getDependant());
+        if (element != null) {
+            result.add(element.getDependant());
         }
         return result;
     }

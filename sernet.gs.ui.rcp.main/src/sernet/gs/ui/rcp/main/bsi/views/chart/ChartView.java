@@ -403,11 +403,13 @@ public class ChartView extends ViewPart {
 		}
 	}
 
-	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-
-	}
+	/**
+     * Passing the focus request to the viewer's control.
+     */
+    @Override
+    public void setFocus() {
+        frame.setFocus();
+    }
 	
 	/**
 	 * Currently selected  element for which a chart is generated

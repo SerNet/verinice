@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
@@ -79,7 +80,7 @@ public class BulkEditDialog extends Dialog {
                     entity = new Entity(entType.getId());
                 }
                 
-                String tags = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+                String[] tags = BSIElementEditor.getEditorTags();
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
                 
                 huiComposite.createView(entity, true, useRules, tags, strict);

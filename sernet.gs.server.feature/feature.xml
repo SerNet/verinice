@@ -561,6 +561,13 @@ Library.
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.ui.net"
+         download-size="0"
+         install-size="0"
+         version="1.2.1.r35x_20090812-1200"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.ui.editors"
          download-size="0"
          install-size="0"
@@ -686,13 +693,6 @@ Library.
 
    <plugin
          id="sernet.verinice.report.service"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
          version="0.0.0"

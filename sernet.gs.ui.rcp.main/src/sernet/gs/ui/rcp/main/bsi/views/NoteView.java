@@ -102,11 +102,15 @@ public class NoteView extends ViewPart {
 
 	}
 
-	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
-
-	}
+	/**
+     * Passing the focus request to the viewer's control.
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        expandBar.setFocus();
+    }
 	
 	private void hookPageSelection() {
 		selectionListener = new ISelectionListener() {

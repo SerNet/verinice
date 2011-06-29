@@ -280,6 +280,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		repositoryJob.schedule();	
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 

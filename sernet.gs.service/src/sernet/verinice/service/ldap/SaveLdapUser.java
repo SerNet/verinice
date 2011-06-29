@@ -95,6 +95,9 @@ public class SaveLdapUser extends GenericCommand implements IChangeLoggingComman
 				Configuration configuration = createConfiguration.getConfiguration();
 				configuration.setUser(personInfo.getLoginName());
 				configuration.setAdminUser(false);
+				if(person!=null && person.getEmail()!=null && !person.getEmail().isEmpty()) {
+				    configuration.setNotificationEmail(person.getEmail());
+				}
 				SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<Configuration>(configuration, false);
 				try {
 					saveConfiguration = getCommandService().executeCommand(saveConfiguration);
