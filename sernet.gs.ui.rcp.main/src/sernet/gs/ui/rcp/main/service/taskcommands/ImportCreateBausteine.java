@@ -184,7 +184,7 @@ public class ImportCreateBausteine extends GenericCommand {
 		List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung
 				.getMassnahmenUmsetzungen();
 		for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
-			BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlage(
+			BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(
 					massnahmenUmsetzung, list);
 			if (vorlage != null) {
 

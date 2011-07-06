@@ -293,7 +293,7 @@ public class TransferData {
         return "";
     }
 	
-	public static BausteineMassnahmenResult findMassnahmenVorlage(
+	public static BausteineMassnahmenResult findMassnahmenVorlageBaustein(
             MassnahmenUmsetzung massnahmenUmsetzung,
             List<BausteineMassnahmenResult> list) {
         for (BausteineMassnahmenResult result : list) {
@@ -311,7 +311,8 @@ public class TransferData {
      * @param mnums
      * @param massnahmenNotizen
      */
-    public static NotizenMassnahmeResult findMassnahmenVorlage(MassnahmenUmsetzung massnahmenUmsetzung, List<NotizenMassnahmeResult> list) {
+    public static NotizenMassnahmeResult findMassnahmenVorlageNotiz(MassnahmenUmsetzung massnahmenUmsetzung, 
+    		List<NotizenMassnahmeResult> list) {
         for (NotizenMassnahmeResult result : list) {
             if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
                     .getMskId()

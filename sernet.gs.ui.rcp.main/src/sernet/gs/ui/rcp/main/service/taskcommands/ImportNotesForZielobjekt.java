@@ -129,7 +129,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         
         List<MassnahmenUmsetzung> ums = bstUms.getMassnahmenUmsetzungen();
         for (MassnahmenUmsetzung mnums : ums) {
-            NotizenMassnahmeResult notizVorlage = TransferData.findMassnahmenVorlage(mnums, massnahmenNotizen);
+            NotizenMassnahmeResult notizVorlage = TransferData.findMassnahmenVorlageNotiz(mnums, massnahmenNotizen);
             if (notizVorlage != null) {
                 copy.remove(notizVorlage);
                 
