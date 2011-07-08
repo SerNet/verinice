@@ -57,29 +57,9 @@ Eclipse IDE:
     and change the default values for maximum heap size, by adding '-Xmx1024m'. This
     change requires a restart of the IDE
  
- - check out the following projects from trunk:
-  
-  	sernet.gs.db.fragment
-  	sernet.gs.ehcache.fragment
-	sernet.gs.hibernate.fragment
-	sernet.gs.log4j.fragment
-	sernet.gs.reveng
-	sernet.gs.server
-	sernet.gs.server.feature
-	sernet.gs.service
-	sernet.gs.springweb.fragment
-	sernet.gs.ui.rcp.main
-	sernet.gs.ui.rcp.main.feature
-	sernet.hui.common
-	sernet.hui.server
-	sernet.hui.swtclient
-	sernet.springclient
-	sernet.verinice.oda.driver
-	sernet.verinice.oda.driver.designer
-	sernet.verinice.samt.rcp
-	sernet.verinice.samt.service
-	target-platform/eclipse-3.5.2-rcp-sdk
-
+ - check out all projects from trunk except target-platform
+ 
+ - check out target-platform/eclipse-3.5.2-rcp-sdk
  
  - close all projects (important)
 
