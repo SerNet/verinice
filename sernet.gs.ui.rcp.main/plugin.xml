@@ -954,6 +954,16 @@
               %cheatsheets.description.18
            </description>
         </cheatsheet>
+        <cheatsheet
+              category="sernet.gs.ui.rcp.main.cheatSheets3"
+              composite="false"
+              contentFile="ISO_27005_Risk_Assessment.xml"
+              id="sernet.verinice.iso27k.cheatsheet_27005"
+              name="Risk Management according to ISO 27005">
+           <description>
+              This tutorial will show you how to accomplish a risk assessment based on the international standards ISO 27005 with verinice. Let's get started.
+           </description>
+        </cheatsheet>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
