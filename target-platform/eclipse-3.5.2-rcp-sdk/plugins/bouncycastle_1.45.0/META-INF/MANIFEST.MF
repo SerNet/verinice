@@ -96,3 +96,5 @@ Export-Package: org.bouncycastle,
  org.bouncycastle.x509.extension,
  org.bouncycastle.x509.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-RegisterBuddy: gnumail
+Require-Bundle: gnumail;bundle-version="1.1.2"
