@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+ <!-- httpInvoker exporter for the verinice command service -->
+    <bean name="/commandServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="commandService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.ICommandService</value>
+        </property>
+    </bean>
+    
+    <bean name="/authServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="authService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IAuthService</value>
+        </property>
+    </bean>
+    
+    <bean name="/taskServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="taskService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.ITaskService</value>
+        </property>
+    </bean>
+    
+    <bean name="/processServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="processService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IProcessService</value>
+        </property>
+    </bean>
+    
+</beans>
+

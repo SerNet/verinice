@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="Erste Schritte für Information Security Assessments">
+    <intro>
+        <description>
+            <b>Willkommen bei Information Security Assessments in verinice.</b>
+            <br />
+            <br />
+            Dieses Tutorial wird Ihnen dabei helfen, Ihr erstes Security Assessment mit verinice durchzuführen.
+        </description>
+    </intro>
+
+    <item title="Wechseln zur Security Assessment Perspektive">
+        <description>
+            <br/><br/>
+Zuerst müssen Sie ein neues Security Assessment anlegen. Sie sollten bereits in der Security Assessment Perspektive sein.
+Falls nicht, gehen Sie dorthin, indem Sie aus dem Anwendungsmenü auswählen:
+            <b>Ansicht -&gt; Zeige Perspektive -&gt; Security Assessment Perspektive</b>.
+            
+            Auf der linken Seite des Bildschirms sehen Sie nun den Security Assessment View.
+        </description>
+      
+    </item>
+
+    <item title="Neues Security Assessment anlegen" vnicon="icons/new.png">
+        <description>
+       Klicken Sie auf die Schaltfläche <b>Neu</b> im Security Assessment View oder wählen Sie aus dem Menü:
+       <b>Datei -&gt; Security Assessment -&gt; Neues Security Assessment </b>
+        <br/><br/>
+      Das neue Security Assessment erscheint im View. Doppelklicken Sie auf &quot;[Mein Unternehmen]&quot;, um den Editor anzuzeigen.
+      Ändern Sie den Namen <b>[Mein Unternehmen]</b> in Ihren tatsächlichen Firmennamen.
+        <br/><br/>
+        Speichern Sie mit der Tastenkombination <b>Strg-S</b> oder indem Sie aus dem Menü wählen:
+        <b>Datei -&gt; Speichern.</b>
+        </description>
+    </item>
+    
+    <item title="Die erste Kategorie öffnen">
+        <description>
+       Klappen Sie das Security Assessment auf, indem Sie den kleinen Pfeil links daneben anklicken.
+       Expandieren Sie auf dieselbe Weise die Gruppe &quot;Controls&quot; und dann die erste Kategorie darunter.
+        <br/><br/>
+       Sie sollten nun eine Reihe von Kategorien sehen, von &quot;Security Policy&quot; bis hin zu &quot;Access Control&quot;.
+       Diese Kategorien enthalten Fragen, die Ihnen dabei helfen, Ihren aktuellen Status der
+       Informationssicherheit in den wichtigsten Bereichen festzustellen.
+        </description>
+    </item>
+    
+    <item title="Fragen beantworten">
+    <description>
+       Doppelklicken Sie die erste Frage um den Editor zu öffnen.
+       Gleichzeitig zeigt Ihnen der Objektbrowser die Frage und eine Auswahl von Reifegraden an. 
+        <br/><br/>
+        Lesen Sie die Beschreibungen um zu entscheiden, welchen Reifegrad Sie in ihrer Organisation erreicht haben.
+        Um die Frage korrekt zu beantworten, müssen Sie evtl. andere Mitarbeiter befragen oder interne Recherchen anstellen.
+        <br/>
+        Wählen Sie den korrekten Reifegrad im Editor unterhalb des Objektbrowser aus. Sie können einen öffentlichen Kommentar
+        hinzufügen. Dieser Kommentar wird in Exporten und Reports enthalten sein. Sie können auch einen privaten Kommentar nur für Ihren internen Gebrauch eingeben.
+        Einträge in das Feld &quot;Privater Kommentar&quot; werden nur für die interne Dokumentation genutzt, in keinem Fall sind diese im Export oder Report enthalten.
+        <br/><br/>
+        Speichern Sie Ihre Änderungen mit der Tastenkombination <b>Strg-S</b> oder im Menü unter <b>Datei -&gt; Speichern</b>.
+        </description>
+    </item>
+    
+    <item title="Report erzeugen">
+      <description>
+       Fahren Sie wie beschrieben mit den übrigen Fragen fort. Während Sie dies tun, werden Sie bemerken wie sich das Diagramm
+       im linken unteren Bildschirmbereich ändert.
+        <br/><br/>
+        Wenn Sie alle Fragen abschliessend beantwortet haben, können Sie einen Report für das Management oder beteiligte Parteien erzeugen.
+        Dies tun Sie durch Auswahl des Menüpunktes
+        <b>Datei -&gt; Report erzeugen</b>.
+        <br/><br/>
+        Wählen Sie den &quot;nformation Security Assessment Report&quot; aus der Liste und geben Sie einen Dateinamen an, unter dem der Report gespeichert werden soll. Klicken Sie auf OK.
+         </description>
+    </item>
+    
+    <item title="Ergebnis exportieren">
+      <description>
+        Wenn Sie alle Fragen beantwortet haben, können Sie das Security Assessment exportieren um es einem beteiligtem Dritte zu schicken, 
+        z.B. per E-Mail oder auf anderem Wege.
+        Zum Export klicken Sie auf den <b>Export</b> Button im Security Assessment View oder wählen aus dem Menü <b>Datei -&gt; Security Assessment -&gt; Export in Datei.</b>
+        <br/><br/>
+        Sie müssen einen Dateinamen angeben, unter dem der Export gespeichert werden soll. Der Datenbankexport wird verschlüsselt
+        gespeichert, wenn Sie dies wünschen. Falls Sie die Option auswählen, müssen Sie ein Passwort oder ein Zertifikat für die Verschlüsselung angeben. 
+        Klicken Sie dann auf OK.
+         </description>
+    </item>
+    
+    <item title="Fertig">
+      <description>
+   Herzlichen Glückwunsch, Sie haben Ihr erstes Security Assessment mit verinice durchgeführt. Wenn Sie weitermachen möchten 
+   oder darüber nachdenken, ein vollständiges Managementsystem für Informationssicherheit (ISMS) in Ihrem Unternehmen zu etablieren,
+   gehen Sie zur Startseite zurück, indem Sie aus dem Menü wählen: <b>Hilfe -> Willkommen</b>
+    <br/><br/>
+    Wählen Sie diesmal die Option "Ein ISMS etablieren". Sie werden zur ISM Perspektive weitergeleitet, in der Sie ein weiteres Tutorial erwartet.
+     </description>
+    <onCompletion>
+        Dies beendet das Tutorial. Besuchen Sie unsere Webseite für mehr Informationen und Neuigkeiten: <b>http://verinice.org</b>
+    </onCompletion>
+   
+    </item>
+</cheatsheet>

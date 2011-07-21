@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="srcGenerated/"/>
+	<classpathentry exported="true" kind="lib" path="lib/tagsoup-1.1.3-ak.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-ant.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-dom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-dom4j.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-jdom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-s9api.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-sql.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-xom.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-xpath.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9-xqj.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/saxon9/saxon9.jar" sourcepath="sernet.gs.servicesrc.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

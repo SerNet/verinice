@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<!--
+/*******************************************************************************
+ * Copyright (c) 2009 Marek Seeger <ms@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU Lesser General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU Lesser General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *    Marek Seeger <ms@sernet.de> - initial version
+ ******************************************************************************/
+
+-->
+
+<cheatsheet title="Risikoanalyse">
+
+	<intro 
+		>
+		<description>
+		Risikoanalyse 
+		</description>
+	</intro>
+	
+	<item title="Neue Risikoanalyse">
+	<description>
+	F&#252;r jedes Zielobjekt, das im Report "Erg&#228;nzende Sicherheitsanalyse" gekennzeichnet wurde, ist 
+	nun die Risikoanalyse durchzuf&#252;hren.
+	Klicken Sie mit der rechten Maustaste auf das zuvor angelegte Buchhaltungssystem. W&#228;hlen Sie 
+	den Men&#252;punkt "Neue Risikoanalyse". 
+	</description>
+	</item>
+	
+
+	<item title="Gef&#228;hrdungs&#252;bersicht">
+	<description>
+	Zun&#228;chst m&#252;ssen Sie ausw&#228;hlen, welche Gef&#228;hrdungen betrachtet werden m&#252;ssen. 
+	Aus der Liste aller Gef&#228;hrdungen der
+	 Grundschutzkataloge sind bereits alle ausgew&#228;hlt, die &#252;ber die Bausteinzuordnung bereits 
+	 mit dem Zielobjekt verbunden sind.
+	 <br/><br/>
+	 W&#228;hlen Sie einige zus&#228;tzliche Gef&#228;hrdungen f&#252;r den Buchhaltungsserver aus. 
+	 Dabei ihlft Ihnen die Suchfunktion, um zu 
+	 Stichworten geeignete vorhandene Gef&#228;hrdungen anzuzeigen.
+	</description>
+	</item>
+	
+	
+	<item title="Eigene Gef&#228;hrdungen">
+	<description>
+		Ein wichtiger Aspekt bei der Risikoanalyse ist das Erarbeiten von individuelen, 
+		organisationsspezifischen Gef&#228;hrdungen.
+		<br/><br/>
+		Zur besseren &#220;bersichtlichkeit der eigenen Gef&#228;hrdungen w&#228;hlen Sie zun&#228;chst 
+		die Checkbox "nur eigene Gef&#228;hrdungen anzeigen".  
+		Eine eigene Gef&#228;hrdung legen Sie an, indem Sie auf den Button "neu" im Bereich
+		 "Eigene Gef&#228;hrdungen" klicken.
+	</description>
+	</item>
+	
+	<item title="Gef&#228;hrdung anlegen">
+	<description>
+	Geben Sie der Gef&#228;hrdung z.B. die Nummer "G-Z1" und den Namen "Gesetzeswidrige Ver&#228;nderung 
+	von rechnungslegungsrelevanten Daten". 
+	<br/><br/>
+	Kopieren Sie den folgenden Text als Beschreibung: "Auf dem Buchhaltungsserver befinden sich
+	 rechnungslegungsrelevante Daten. 
+	Daher m&#252;ssen die Anforderungen aus dem HGB bez&#252;glich der Vollst&#228;ndigkeit, Richtigkeit, 
+	Zeitgerechtheit, Ordnung, Nachvollziehbarkeit und Unver&#228;nderlichkeit sichergestellt sein. 
+	Ein nicht korrekt durchgef&#252;hrtes Ver&#228;ndern von 
+	Daten kann einen Gesetzesversto&#223; zur Folge haben und zur Einschr&#228;nkung oder zum Versagen des 
+	Best&#228;tigungsvermerks durch den Wirtschaftspr&#252;fer bei der Jahresabschlusspr&#252;fung f&#252;hren
+	 (siehe IDW PS 330, IDW RS FAIT 1, IDW PH 9.330.1 und andere)." 
+	<br/><br/>
+	Dr&#252;cken Sie auf den "OK"-Button, um das Anlegen dieser eigenen Gef&#228;hrdung abzuschlie&#223;en. 
+	Die angelegte Gef&#228;hrdung erscheint jetzt in der Gef&#228;hrdungs&#252;bersicht. Nachdem Sie alle
+	 notwendigen Gef&#228;hrdungen erzeugt und auch ausgew&#228;hlt haben, k&#246;nnen Sie den
+	  "Weiter"-Button dr&#252;cken. 
+	</description>
+	</item>
+
+	<item title="Zu betrachtende Gef&#228;hrdungen ausw&#228;hlen">
+	<description>
+	Nun bekommen Sie in diesem Fenster des Wizards alle relevanten Gef&#228;hrdungen angezeigt und m&#252;ssen 
+	all die ausw&#228;hlen (H&#228;kchen rechts), denen NICHT ausreichend Rechnung getragen wurde. Diese werden 
+	dann weiter betrachtet. Klicken Sie den "Weiter >"-Button. 
+	
+	</description>
+	</item>
+
+	<item title="Risikobehandlung">
+	<description>
+	Jetzt geht es darum, die nicht ausreichend betrachteten Risiken zu behandeln. Klicken Sie in der Spalte 
+	"Risikoalternative" auf das jeweilige Feld ihrer Gef&#228;hrdung. Dabei erhalten Sie die vier m&#246;glichen 
+	Alternativen zur Risikobehandlung vorgegeben. Wenn Sie nur die Alternativen B, C und/oder D ausgew&#228;hlt 
+	haben, so sind Sie fertig und der Wizard wird Ihnen den "Weiter >"-Button nicht mehr anbieten und Sie 
+	k&#246;nnen den Wizard mit dem Dr&#252;cken des Buttons "Fertig stellen" beenden. Sollte irgendwo die 
+	Alternative A ausgew&#228;hlt worden sein, so m&#252;ssen Sie im n&#228;chsten Schritt noch die 
+	passenden Ma&#223;nahmen bearbeiten.
+	</description>
+	</item>
+
+	<item title="Zus&#228;tzliche Ma&#223;nahmen">
+	<description>
+	Sie bekommen alle Ma&#223;nahmen der Grunschutzkataloge angezeigt. Um eigene Ma&#223;nehmen zu erstellen, 
+	m&#252;ssen Sie auf "neu" klicken.  Der Vorgang zum Erstellen eigener Ma&#223;nahmen funktioniert 
+	analog zu dem der Gef&#228;hrdungen. Per Drag'n'Drop k&#246;nnen Sie passende Ma&#223;nahmen den einzelnen 
+	Gef&#228;hrdungen zuordnen. Klicken Sie zum Schlu&#223; auf "Fertig stellen". Jetzt schlie&#223;t sich das 
+	Wizard-Fenster und Sie erhalten im GS-Modell-Fenster unterhalb des betrachteten Objekts die Risikoanalyse in 
+	der Baumstruktur angezeigt.
+        </description>
+	</item>
+
+	
+</cheatsheet>

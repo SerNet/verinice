@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.jbpm.pvm.internal.identity.impl" default-access="field">
+
+  <!-- ### USER ########################################################### -->
+  <class name="UserImpl" table="JBPM4_ID_USER">
+    <id name="dbid" column="DBID_">
+      <generator class="assigned" />
+    </id>
+    <version name="dbversion" column="DBVERSION_" />
+    
+    <property name="id" column="ID_" />
+    <property name="password" column="PASSWORD_" />
+    <property name="givenName" column="GIVENNAME_" />
+    <property name="familyName" column="FAMILYNAME_" />
+    <property name="businessEmail" column="BUSINESSEMAIL_" />
+  </class>
+  
+  <!-- ### MEMBERSHIP ##################################################### -->
+  <class name="MembershipImpl" table="JBPM4_ID_MEMBERSHIP">
+    <id name="dbid" column="DBID_">
+      <generator class="assigned" />
+    </id>
+    <version name="dbversion" column="DBVERSION_" />
+    
+    <many-to-one name="user"
+                 column="USER_" 
+                 class="UserImpl"
+                 foreign-key="FK_MEM_USER"
+                 index="IDX_MEM_USER"/>
+
+    <many-to-one name="group"
+                 column="GROUP_" 
+                 class="GroupImpl"
+                 foreign-key="FK_MEM_GROUP"
+                 index="IDX_MEM_GROUP"/>
+
+    <property name="role" column="NAME_" />
+  </class>
+  
+  <!-- ### GROUP ########################################################### -->
+  <class name="GroupImpl" table="JBPM4_ID_GROUP">
+    <id name="dbid" column="DBID_">
+      <generator class="assigned" />
+    </id>
+    <version name="dbversion" column="DBVERSION_" />
+    
+    <property name="id" column="ID_" />
+    <property name="name" column="NAME_" />
+    <property name="type" column="TYPE_" />
+
+    <many-to-one name="parent"
+                 column="PARENT_" 
+                 class="GroupImpl"
+                 foreign-key="FK_GROUP_PARENT"
+                 index="IDX_GROUP_PARENT"/>
+  </class>
+
+  <query name="findGroupsByUser">
+    <![CDATA[
+    select distinct g
+    from org.jbpm.pvm.internal.identity.impl.MembershipImpl m
+      join m.user u
+      join m.group g
+    where u.id = :userId
+    ]]>
+  </query>
+
+  <query name="findGroupsByUserAndGroupType">
+    <![CDATA[
+    select distinct g
+    from org.jbpm.pvm.internal.identity.impl.MembershipImpl m
+      join m.user u
+      join m.group g
+    where u.id = :userId
+      and g.type = :groupType
+    ]]>
+  </query>
+</hibernate-mapping>

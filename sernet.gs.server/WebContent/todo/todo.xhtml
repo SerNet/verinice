@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:o="http://openfaces.org/"
+      template="/layout.xhtml">
+	<ui:define name="content">
+		<a4j:queue requestDelay="500" ignoreDupResponce="true"/>
+		<div id="col1">
+			<div id="col1_content">	
+				<h:form id="verbundForm">
+					<h1><h:outputText value="#{msg['todo.groups']}" /></h1>
+					<ul id="listLeftNavi">
+						<o:forEach id="itVerbundList" items="#{assetNavigation.itVerbundList}" var="itVerbund">
+				  			<li id="liLeftNavi">
+						  		<a4j:commandLink 
+						  			value="#{itVerbund.title}" 
+						  			action="#{toDo.loadToDoListForVerbund}" 
+						  			reRender="tablePanel,elementPanel,itVerbundList,editPanel" 
+						  			styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
+						            <a4j:actionparam name="itVerbundTitel" value="#{itVerbund.title}" assignTo="#{assetNavigation.selectedItVerbundTitel}"/>
+						        </a4j:commandLink>
+						    </li>
+						</o:forEach>
+					</ul>
+					<h1><h:outputText value="#{msg['todo.realization']}" /></h1>
+					<ul id="listLeftNavi">
+						<!-- Grundschutz -->
+						
+			  			<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="executionNo" value="#{toDo.executionNo}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="executionNo" value="#{msg['todo.no']}"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="executionYes" value="#{toDo.executionYes}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="executionYes" value="#{msg['todo.yes']}"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="executionPartly" value="#{toDo.executionPartly}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="executionPartly" value="#{msg['todo.partly']}"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="executionDispensable" value="#{toDo.executionDispensable}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+						    <h:outputLabel for="executionDispensable" value="#{msg['todo.superfluous']}"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="executionUntreated" value="#{toDo.executionUntreated}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="executionUntreated" value="#{msg['todo.untreated']}"/>					    
+					    </li>							    					    				   
+					</ul>
+					<h1><h:outputText value="#{msg['todo.seal']}" /></h1>
+					<ul id="listLeftNavi">
+			  			<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="sealA" value="#{toDo.sealA}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="sealA" value="A"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="sealB" value="#{toDo.sealB}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="sealB" value="B"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="sealC" value="#{toDo.sealC}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="sealC" value="C"/>
+					  	</li>
+					  	<li id="liLeftNavi">
+					  		<h:selectBooleanCheckbox id="sealZ" value="#{toDo.sealZ}">	  			
+					  			<a4j:support action="#{toDo.loadToDoList}" event="onclick" reRender="tablePanel,editPanel"/>
+					  		</h:selectBooleanCheckbox>
+					  		<h:outputLabel for="sealZ" value="Z"/>
+					  	</li>
+					</ul>
+				</h:form>
+			</div>
+		</div>
+		<div id="col3" style="width: 180px; margin: 0 650px 0 140px; *margin-right:0;">
+			<div id="col3_content">	
+				<div id="col3_innen" class="floatbox">
+	      			<div class="csc-header csc-header-n1">
+	      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" /></h1>
+	      			</div>
+	      			<h:form id="elementsForm">
+		      			<rich:panelBar id="elementPanel" height="500" style="background-color: #ffffff;">
+		      				<rich:panelBarItem label="#{msg['todo.buildings']}" rendered="#{not empty assetNavigation.gebaeudeList}">
+					        	<ul>
+							 		<a4j:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
+							 			<li>
+									  		<a4j:commandLink 
+									  			value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}" 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>
+					        <rich:panelBarItem label="#{msg['todo.rooms']}" rendered="#{not empty assetNavigation.raumList}">
+					        	<ul>
+							  		<a4j:repeat id="raumList" value="#{assetNavigation.raumList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}" 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>				     					
+					        <rich:panelBarItem  label="#{msg['todo.clients']}" rendered="#{not empty assetNavigation.clienteList}">			      						
+	      						<ul>
+							  		<a4j:repeat id="clienteList" value="#{assetNavigation.clienteList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}"									  			 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>			        	
+					        </rich:panelBarItem>				     					
+					        <rich:panelBarItem label="#{msg['todo.server']}" rendered="#{not empty assetNavigation.serverList}">
+	      						<ul>
+							  		<a4j:repeat id="serverList" value="#{assetNavigation.serverList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}"
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>				     					
+					        <rich:panelBarItem label="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
+	      						<ul>
+							  		<a4j:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}" 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>				     					
+					        <rich:panelBarItem label="#{msg['todo.applications']}" rendered="#{not empty assetNavigation.anwendungList}">
+	      						<ul>
+							  		<a4j:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}" 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>				     					
+					        <rich:panelBarItem label="#{msg['todo.employees']}" rendered="#{not empty assetNavigation.personList}">
+	      						<ul>
+							  		<a4j:repeat id="personList" value="#{assetNavigation.personList}" var="item">
+							  			<li>
+									  		<a4j:commandLink value="#{item.title}" 
+									  			action="#{toDo.loadToDoListForElement}" 
+									  			reRender="tablePanel,editPanel,elementPanel" 
+									  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+									            <a4j:actionparam name="itemId" value="#{item.dbId}" assignTo="#{assetNavigation.selectedElementId}"/>
+									        </a4j:commandLink>
+									    </li>
+								    </a4j:repeat>
+								</ul>
+					        </rich:panelBarItem>				  
+					    </rich:panelBar>
+					</h:form>		
+				<!--###col3_content### end -->
+				</div>
+			</div>
+		</div>
+		<div id="col2" style="width:650px;">
+			<div id="col2_content">
+				<div id="col3_innen" class="floatbox">
+			    	<a id="c86"></a>
+				    <div class="csc-textpic-text">
+		      			<a4j:outputPanel id="editPanel">
+		      				<a4j:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null}">
+			      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"/></h1>
+			      			</a4j:outputPanel>
+		      				<a4j:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null}">	
+								<table id="editTable">
+									<tr>
+										<td>
+											<h:outputLabel for="umsetzung" value="#{msg['todo.realization']}" styleClass="formLabel"/>
+										</td>
+										<td>
+											<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}" style="width:155px;">
+					  							<o:dropDownItems value="#{toDo.executionList}"/>
+					  						</o:dropDownField>
+										</td>
+										<td>
+											<h:outputLabel for="erlaeuterung" value="#{msg['todo.comment']}" styleClass="formLabel"/>					  					
+										</td>
+										<td rowspan="2">
+											<h:inputTextarea value="#{toDo.massnahmeUmsetzung.erlaeuterung}" style="width:330px;height:55px;"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<h:outputLabel for="umsetzungBis" value="#{msg['todo.until']}" styleClass="formLabel"/>
+										</td>
+										<td>
+											<rich:calendar id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" timeZone="#{toDo.timeZone}" datePattern="d. MMM. yyyy"  style="width: 100px"/>										
+										</td>
+									</tr>
+									<tr>
+										<td>
+											
+										</td>
+										<td colspan="3">
+											<a4j:commandButton id="submit" value="#{msg['todo.save']}" action="#{toDo.save}" reRender="editPanel,tablePanel" style="margin-top:1em"/>					
+											<rich:message for="submit">
+												<f:facet name="errorMarker">
+						                        	<h:graphicImage value="/image/error.gif" style="margin-left:0.5em;margin-right:0.5em;"/>   
+						                    	</f:facet>
+						                    </rich:message>
+										</td>
+									</tr>
+								</table>
+								<a4j:outputPanel id="descriptionPanel">
+									<a4j:outputPanel id="descriptionPanelHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
+			      						<h1 class="csc-firstHeader">
+			      							<a4j:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.description']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+			      						</h1>
+			      						<a4j:commandLink action="#{toDo.toggleDescription}" value="#{toDo.showDescription ? msg['todo.hide'] : msg['todo.show']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+			      					</a4j:outputPanel>									
+									<h:outputText value="#{toDo.massnahmeHtml}" escape="false" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}"/>									
+									<br/>
+									<a4j:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.hide']}" reRender="descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}" style="color:#765;"/>
+								</a4j:outputPanel>
+							</a4j:form>
+						</a4j:outputPanel>			
+							<a4j:outputPanel id="tablePanel">
+							<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}"/></h1>
+			      			<a4j:form id="tableForm">
+			      				 <rich:extendedDataTable
+			      				 	id="toDoTable"
+					                value="#{toDo.todoList}" 
+					                var="item"
+					                binding="#{toDo.table}"
+					                width="650"
+					                selectionMode="single"
+					                selection="#{toDo.selection}">
+					                <rich:column id="colUmsetzung"
+			      						sortable="true" 
+			      						sortBy="#{item.umsetzung}"
+					                    width="35px"
+					                    label="Umsetzung">
+					                     <h:graphicImage id="colUmsetzungImage" url="/image/icon/#{item.umsetzungIcon}" />
+					                </rich:column>
+					                <rich:column id="colUmsetzungBis"
+			      						sortable="true" 
+			      						sortBy="#{item.umsetzungBis}"
+					                    width="55px"
+					                    label="bis">
+					                    <f:facet name="header">
+					                        <h:outputText id="colUmsetzungBisHeader" value="#{msg['todo.until']}" />
+					                    </f:facet>
+					                    <h:outputText id="colUmsetzungBisText" value="#{item.umsetzungBis}">
+									    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{toDo.timeZone}" />
+									    </h:outputText>
+					                </rich:column>
+					                <rich:column id="colUmsetzungDurch"
+			      						sortable="true" 
+			      						sortBy="#{item.umsetzungDurch}"
+					                    width="95px"
+					                    label="Verantwortlich">
+					                    <f:facet name="header">
+					                        <h:outputText id="colUmsetzungDurchHeader" value="#{msg['todo.responsible']}" />
+					                    </f:facet>
+					                    <h:outputText id="colUmsetzungDurchText" value="#{item.umsetzungDurch}"/>
+					                </rich:column>
+					                <rich:column id="colStufe"
+			      						sortable="true" 
+			      						sortBy="#{item.stufe}"
+					                    width="45px"
+					                    label="Stufe">
+					                    <f:facet name="header">
+					                        <h:outputText id="colStufeHeader" value="#{msg['todo.level']}" />
+					                    </f:facet>
+					                    <h:outputText id="colStufeText" value="#{item.stufe}"/>
+					                </rich:column>
+					                <rich:column id="colParentTitle"
+			      						sortable="true" 
+			      						sortBy="#{item.parentTitle}"
+					                    width="160px"
+					                    label="Zielobjekt">
+					                    <f:facet name="header">
+					                        <h:outputText id="colParentTitleHeader" value="#{msg['todo.asset']}" />
+					                    </f:facet>
+					                    <h:outputText id="colParentTitleText" value="#{item.parentTitle}"/>
+					                </rich:column>
+					                <rich:column id="colTitel"
+			      						sortable="true" 
+			      						sortBy="#{item.title}"
+					                    width="260px"
+					                    label="Titel">
+					                    <f:facet name="header">
+					                        <h:outputText id="colTitelHeader" value="#{msg['todo.title']}" />
+					                    </f:facet>
+					                    <h:outputText id="colTitelText" value="#{item.title}"/>
+					                </rich:column>
+			      					 <a4j:support reRender="editPanel"
+					                    action="#{toDo.loadToDo}"
+					                    event="onselectionchange" />
+					            </rich:extendedDataTable>								
+							</a4j:form>
+						</a4j:outputPanel>
+		      		</div>
+		    	</div>								    				    							    			    							
+			</div>
+		</div>
+		<!-- #main - Ende -->
+	</ui:define>
+</ui:composition>

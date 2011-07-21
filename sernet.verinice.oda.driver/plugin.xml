@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.datatools.connectivity.oda.dataSource">
+      <dataSource
+            driverClass="sernet.verinice.oda.driver.impl.Driver"
+            defaultDisplayName="%data.source.name"
+            setThreadContextClassLoader="false"
+            odaVersion="3.2"
+            id="verinice.oda.driver.dataSource.id">
+         <properties>
+            <property
+                  allowsEmptyValueAsNull="false"
+                  defaultDisplayName="SNCA URL"
+                  defaultValue="http://localhost:8080/veriniceserver/GetHitroConfig"
+                  isEncryptable="false"
+                  name="sncaUrl"
+                  type="string">
+            </property>
+            <property
+                  allowsEmptyValueAsNull="true"
+                  canInherit="true"
+                  defaultDisplayName="verinice Server URI"
+                  isEncryptable="false"
+                  name="serverURI"
+                  type="string">
+            </property>
+         </properties>
+      </dataSource>
+      <dataSet
+            defaultDisplayName="%data.set.name"
+            id="verinice.oda.driver.dataSet.id">
+         <dataTypeMapping
+               nativeDataTypeCode="1"
+               odaScalarDataType="String"
+               nativeDataType="String">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="4"
+               odaScalarDataType="Integer"
+               nativeDataType="Integer">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="8"
+               odaScalarDataType="Double"
+               nativeDataType="Double">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="3"
+               odaScalarDataType="Decimal"
+               nativeDataType="BigDecimal">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="91"
+               odaScalarDataType="Date"
+               nativeDataType="Date">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="92"
+               odaScalarDataType="Time"
+               nativeDataType="Time">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="93"
+               odaScalarDataType="Timestamp"
+               nativeDataType="Timestamp">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataTypeCode="16"
+               odaScalarDataType="Boolean"
+               nativeDataType="Boolean">
+         </dataTypeMapping>
+         <dataTypeMapping
+               nativeDataType="JavaObject"
+               nativeDataTypeCode="2000"
+               odaScalarDataType="JavaObject">
+         </dataTypeMapping>
+      </dataSet>
+   </extension>
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            name="verinice connection category"
+            parentCategory="org.eclipse.datatools.connectivity.oda.profileCategory"
+            id="verinice.oda.driver.dataSource.id">
+      </category>
+      <connectionProfile
+            pingFactory="org.eclipse.datatools.connectivity.oda.profile.OdaConnectionFactory"
+            name="verinice connection"
+            category="verinice.oda.driver.dataSource.id"
+            id="verinice.oda.driver.dataSource.id">
+      </connectionProfile>
+      <connectionFactory
+            name="ODA Connection Factory"
+            profile="verinice.oda.driver.dataSource.id"
+            class="org.eclipse.datatools.connectivity.oda.profile.OdaConnectionFactory"
+            id="org.eclipse.datatools.connectivity.oda.IConnection">
+      </connectionFactory>
+   </extension>
+
+</plugin>

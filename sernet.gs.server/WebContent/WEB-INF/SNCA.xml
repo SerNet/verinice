@@ -1,0 +1,5284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Definition of properties and predefined options for Hitro-UI.
+	
+	A dynamic object model is generated based on the definitions 
+	in this file and the necessary GUI forms created to allow 
+	selection of or entering data.
+	
+	Specific selections or values entered by the user will be saved in the 
+	database.
+	
+    Authors:  akoderman,
+    		  rschuster,
+    		  dmurygin
+-->
+
+<!--
+Template:
+(see hitro.xsd for full grammar and documentation)
+
+<huientity
+    name=""
+    id="">
+    
+    <huirelation id=""
+    	name="" reversename="" tooltip=""/>
+    
+    <huiproperty
+        name=""
+        id=""/>
+</huientity>
+-->
+
+<!-- 
+NOTE on Translation:
+====================
+Attributes and values in this file will be translated using the resource bundles "snca-messages*.properties" for each language.
+The names used in SNCA.xml will be the default when no translation exists for a locale or in the default locale (English: snca-messages.properties).
+
+When you add properties or relations here, do not forget to add the keys to snca-messages.properties for translation!
+
+The following keys will be taken from SNCA.xml and searched in the properties files for translation:
+
+huientity: id
+"name" will be used directly if no string is found for the key 
+
+huiproperty: id, tooltip
+"name" and "tooltip" will be used directly if no string is found for the key
+"tooltip" is searched as "[id]_tooltip", i.e. "person_name_tooltip=This is the persons name."
+
+option: id
+"name" will be used directly if no string is found for the key "id"
+
+huirelation: name, reversename, tooltip
+name, reversename and tooltip will be used directly if no string is found for the key 
+the keys are created follwing a naming convention of [id]_name, [id]_reversename and [id]_tooltip, 
+i.e. "rel_person_document_name=is author of"
+
+defaultRule param: id
+the value between <param></param> will be used directly if no string is found for the key
+-->
+
+<huientities
+	xmlns="http://www.sernet.de/hitro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.sernet.de/hitro hitro.xsd">
+
+<!-- akoderman pro-forma Entity for resolution of roles -->
+<huientity name ="Rollen" id="role" />
+
+<!-- akoderman configuration entity to save per-user account details -->
+ <huientity
+        name="Configuration"
+        id="configuration">
+
+
+	 <!-- Never set configuration_benutzername to visible=true! (Hash value of password will be displayed) -->
+	 <huiproperty
+            name="Benutzername"
+            id="configuration_benutzername" 
+            visible="false"/>
+     <!-- Never set configuration_passwort to visible=true! (Hash value of password will be displayed) -->
+	 <huiproperty
+            name="Passwort"
+            id="configuration_passwort" 
+            visible="false" />
+            
+	 <huiproperty
+            name="Rollen"
+            id="configuration_rolle"
+            tooltip="Liste von Anwendungsrollen"
+			inputtype="reference" 
+			required="true" 
+			crudButtons="true">
+			<references entitytype="role" />
+     </huiproperty>
+     
+   	<huiproperty 
+				name="Administrator" 
+				id="configuration_isadmin"
+				inputtype="singleoption">
+				<option id="configuration_isadmin_yes" name="Ja"/>
+				<option id="configuration_isadmin_no" name="Nein"/>
+	</huiproperty>
+     
+    <huiproperty name="Web access" 
+                id="configuration_web"
+                inputtype="singleoption">
+                <option id="configuration_web_yes" name="Ja"/>
+                <option id="configuration_web_no" name="Nein"/>
+    </huiproperty>
+    
+    <huiproperty name="Desktop access" 
+                id="configuration_rcp"
+                inputtype="singleoption">
+                <option id="configuration_rcp_yes" name="Ja"/>
+                <option id="configuration_rcp_no" name="Nein"/>
+    </huiproperty>
+     
+     <huipropertygroup
+			id="configuration_mailing"
+			name="Mailbenachrichtigung">
+			
+			<huiproperty name="Mailadresse" id="configuration_mailing_email"/>
+			
+			<huiproperty 
+				name="Mailbenachrichtigung aktivieren" 
+				id="configuration_mailing_yesno"
+				inputtype="singleoption">
+				<option id="configuration_mailing_yesno_yes" name="Ja"/>
+				<option id="configuration_mailing_yesno_no" name="Nein"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Alle Maßnahmen / nur eigene" 
+				id="configuration_mailing_owner"
+				inputtype="singleoption">
+				<option id="configuration_mailing_owner_all" name="Alle"/>
+				<option id="configuration_mailing_owner_self" name="Nur eigene"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_mailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_mailing_assigned_yesno_yes" name="An"/>
+				<option id="configuration_mailing_assigned_yesno_no" name="Aus"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Änderung an Massnahmen" 
+				id="configuration_mailing_measure_modification"
+				inputtype="singleoption">
+				<option id="configuration_mailing_measure_modification_yesno_yes" name="An"/>
+				<option id="configuration_mailing_measure_modification_yesno_no" name="Aus"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Terminwarnung: an / aus" 
+				id="configuration_mailing_expiring"
+				inputtype="singleoption">
+				<option id="configuration_mailing_expiring_yes" name="An"/>
+				<option id="configuration_mailing_expiring_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: bei Ablauf in X Tagen" 
+				id="configuration_mailing_expiredays">
+				 <defaultRule class="SimpleValue">
+                	<param id="configuration_mailing_expiredays_default">14</param>
+                </defaultRule>
+			</huiproperty>
+			
+	</huipropertygroup>
+	
+	  <huipropertygroup
+			id="configuration_auditmailing"
+			name="Mailbenachrichtigung Auditor">
+			
+			<huiproperty 
+				name="Alle Maßnahmen / nur eigene" 
+				id="configuration_auditmailing_owner"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_owner_all" name="Alle"/>
+				<option id="configuration_auditmailing_owner_self" name="Nur eigene"/>
+			</huiproperty>
+	
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_auditmailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_assigned_yes" name="An"/>
+				<option id="configuration_auditmailing_assigned_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: an / aus" 
+				id="configuration_auditmailing_expiring"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_expiring_yes" name="An"/>
+				<option id="configuration_auditmailing_expiring_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: bei Ablauf in X Tagen" 
+				id="configuration_auditmailing_expiredays">
+				 <defaultRule class="SimpleValue">
+	               	<param id="configuration_auditmailing_expiredays_default">14</param>
+	               </defaultRule>
+			</huiproperty>
+			
+	</huipropertygroup>
+
+</huientity>
+
+ <huientity
+        name="Raum"
+        id="raum">
+        
+          <huirelation to="gebaeude" id="raum_gebaeude" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
+        <huiproperty
+            name="Kürzel"
+            id="raum_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="raum_kuerzel_default">R-</param>
+                </defaultRule>
+        </huiproperty>
+       
+        <huiproperty
+            name="Name"
+            id="raum_name" />
+
+        <huiproperty
+            id="raum_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+        
+        <huiproperty
+            name="Anzahl"
+            id="raum_anzahl" />
+            
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="raum_erlaeuterung" />
+            
+        <huiproperty
+            name="Dokument"
+            id="raum_dokument"
+            isURL="true" />
+            
+        <huipropertygroup
+			id="raum_group_schutzbedarf"
+			name="Schutzbedarf">
+		
+			<huiproperty
+				id="raum_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="raum_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="raum_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="raum_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+			<huiproperty
+				id="raum_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="raum_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="raum_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="raum_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			<huiproperty
+				id="raum_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="raum_integritaet_normal"
+					name="Normal" />
+				<option
+					id="raum_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="raum_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="raum_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="raum_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="raum_integritaet_begruendung" />
+				
+			
+		</huipropertygroup>
+		
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="raum_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="raum_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="raum_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="raum_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="raum_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="raum_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="raum_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="raum_risikoanalyse_begruendung"
+				inputtype="text"/>
+			
+		</huipropertygroup>
+		
+    </huientity>
+
+ <huientity
+        name="Server"
+        id="server">
+        
+        <huirelation to="raum" id="server_raum_located" 
+        	name="befindet sich in" reversename="beinhaltet" />
+        
+        <huirelation to="server" id="server_server_dep" 
+        	name="hängt ab von" reversename="ist nötig für" />
+        
+        <huirelation to="server" id="server_server_vm" 
+        	name="virtualisiert auf" reversename="VM-Host für" />
+        
+       
+        <huiproperty
+            name="Kürzel"
+            id="server_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="server_kuerzel_default">S-</param>
+                </defaultRule>
+        </huiproperty>
+        <huiproperty
+            name="Name"
+            id="server_name" />
+
+        <huiproperty
+            id="server_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
+        <huiproperty
+            name="Anzahl"
+            id="server_anzahl" />
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="server_erlaeuterung" />
+            
+        <huiproperty
+            name="Dokument"
+            id="server_dokument"
+            isURL="true" />
+            
+        <huiproperty
+            name="Plattform"
+            id="server_plattform" />
+        <huiproperty
+            name="Aufstellungsort"
+            id="server_aufstellungsort" />
+        <huiproperty
+            name="Status"
+            id="server_status"
+            inputtype="singleoption">
+                <option
+                    id="server_status_betrieb"
+                    name="Betrieb" />
+                <option
+                    id="server_status_planung"
+                    name="Planung" />
+                <option
+                    id="server_status_grundinstallation"
+                    name="Grundinstallation" />
+                <option
+                    id="server_status_Konfiguration"
+                    name="Konfiguration" />
+                <option
+                    id="server_status_test"
+                    name="Test" />
+                <option
+                    id="server_status_auslieferung"
+                    name="Auslieferung" />
+                <option
+                    name="Reparatur"
+                    id="server_status_reparatur" />
+                <option
+                    name="Standby"
+                    id="server_status_standby" />
+                <option
+                    name="Reserve"
+                    id="server_status_reserve" />
+        </huiproperty>
+         <huiproperty
+			id="server_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+         <huiproperty
+			id="server_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        <huiproperty
+            name="Netzadressen"
+            id="server_netadr" />
+		<huipropertygroup
+			id="server_group_schutzbedarf"
+			name="Schutzbedarf">
+			<huiproperty
+				id="server_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="server_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="server_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="server_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			<huiproperty
+				id="server_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="server_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="server_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="server_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			<huiproperty
+				id="server_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="server_integritaet_normal"
+					name="Normal" />
+				<option
+					id="server_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="server_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="server_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="server_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="server_integritaet_begruendung" />
+
+		</huipropertygroup>        
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="server_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="server_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="server_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="server_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="server_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="server_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="server_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="server_risikoanalyse_begruendung"
+				inputtype="text"/>
+			
+		</huipropertygroup>   
+    </huientity>
+
+    <huientity
+        name="TK-Komponente"
+        id="tkkomponente">
+        
+          <huirelation to="raum" id="tkkomponente_raum_located" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
+        <huiproperty
+            name="Kürzel"
+            id="tkkomponente_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="tkkomponente_kuerzel_default">TK-</param>
+                </defaultRule>
+        </huiproperty>
+        <huiproperty
+            name="Name"
+            id="tkkomponente_name" />
+            
+        <huiproperty
+            id="tkkomponente_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
+        <huiproperty
+            name="Anzahl"
+            id="tkkomponente_anzahl" />
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="tkkomponente_erlaeuterung" />
+        <huiproperty
+            name="Dokument"
+            id="tkkomponente_dokument"
+            isURL="true" />
+            
+        <huiproperty
+            name="Plattform"
+            id="tkkomponente_plattform" />
+        <huiproperty
+            name="Aufstellungsort"
+            id="tkkomponente_aufstellungsort" />
+        <huiproperty
+            name="Status"
+            id="tkkomponente_status"
+            inputtype="singleoption">
+                <option
+                    id="tkkomponente_status_betrieb"
+                    name="Betrieb" />
+                <option
+                    id="tkkomponente_status_planung"
+                    name="Planung" />
+                <option
+                    id="tkkomponente_status_grundinstallation"
+                    name="Grundinstallation" />
+                <option
+                    id="tkkomponente_status_Konfiguration"
+                    name="Konfiguration" />
+                <option
+                    id="tkkomponente_status_test"
+                    name="Test" />
+                <option
+                    id="tkkomponente_status_auslieferung"
+                    name="Auslieferung" />
+                <option
+                    name="Reparatur"
+                    id="tkkomponente_status_reparatur" />
+                <option
+                    name="Standby"
+                    id="tkkomponente_status_standby" />
+                <option
+                    name="Reserve"
+                    id="tkkomponente_status_reserve" />
+        </huiproperty>
+         <huiproperty
+			id="tkkomponente_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+		 <huiproperty
+			id="tkkomponente_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        <huipropertygroup
+			id="tkkomponente_group_schutzbedarf"
+			name="Schutzbedarf">
+			
+            <huiproperty
+				id="tkkomponente_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="tkkomponente_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="tkkomponente_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="tkkomponente_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="tkkomponente_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="tkkomponente_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="tkkomponente_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="tkkomponente_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="tkkomponente_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="tkkomponente_integritaet_normal"
+					name="Normal" />
+				<option
+					id="tkkomponente_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="tkkomponente_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="tkkomponente_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="tkkomponente_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="tkkomponente_integritaet_begruendung" />
+
+		</huipropertygroup>
+		
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="tkkomponente_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="tkkomponente_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="tkkomponente_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="tkkomponente_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="tkkomponente_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="tkkomponente_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="tkkomponente_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="tkkomponente_risikoanalyse_begruendung"
+				inputtype="text"/>
+		</huipropertygroup>   
+		
+    </huientity>
+
+
+    <huientity
+        name="Netz / Verbindung"
+        id="netzkomponente">
+        
+          <huirelation to="raum" id="netzkomponente_raum_located" 
+            name="befindet sich in" reversename="beinhaltet" />
+        
+        <huiproperty
+            name="Kürzel"
+            id="netzkomponente_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="netzkomponente_kuerzel_default">N-</param>
+                </defaultRule>
+        </huiproperty>
+        <huiproperty
+            name="Name"
+            id="netzkomponente_name"/>
+        <huiproperty
+            id="netzkomponente_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+        
+        <huiproperty
+            name="Dokument"
+            id="netzkomponente_dokument"
+            isURL="true" />
+            
+        <huiproperty
+            name="Kabel / Komm.anbindung"
+            id="netzkomponente_kabel"/>
+        <huiproperty
+            name="Kapazität"
+            id="netzkomponente_kapazitaet"/>
+        <huiproperty
+            name="Protokolle"
+            id="netzkomponente_protokolle"/>
+        <huiproperty
+            name="Ext. Netz"
+            id="netzkomponente_extnetz"/>
+        
+        <huipropertygroup
+            id="netz_group_kritikalitaet"
+            name="Schutzbedarf" >
+        <huiproperty
+            name="Kritikalität"
+            id="netzkomponente_kritikalitaet"
+            tooltip="Verbindung ist kritisch aufgrund von..."
+            inputtype="multioption">
+            <option
+                id="netzkomponente_kritikalitaet_0"
+                name="K0: Unkritisch" />
+            <option
+                id="netzkomponente_kritikalitaet_1"
+                name="K1: Außenverbindung" />
+            <option
+                id="netzkomponente_kritikalitaet_2"
+                name="K2: hohe Vertraulichkeit" />
+            <option
+                id="netzkomponente_kritikalitaet_3"
+                name="K3: hohe Integrität" />
+            <option
+                id="netzkomponente_kritikalitaet_4"
+                name="K4: hohe Verfügbarkeit" />
+            <option
+                id="netzkomponente_kritikalitaet_5"
+                name="K5: keine Übertragung hochschutzbedürftiger Informationen" />
+        </huiproperty>
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="netzkomponente_erlaeuterung" />
+        </huipropertygroup>
+
+
+            <huipropertygroup 
+			name="Managementbewertung" 
+			id="nkkomponente_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="nkkomponente_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="nkkomponente_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="nkkomponente_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="nkkomponente_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="nkkomponente_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="nkkomponente_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="nkkomponente_risikoanalyse_begruendung"
+				inputtype="text"/>
+			</huipropertygroup>
+    </huientity>
+
+
+    <huientity
+        name="IT-Verbund"
+        id="itverbund" >
+        <huiproperty
+            name="Name"
+            id="itverbund_name" />
+        <huiproperty
+            name="Organisation"
+            id="itverbund_organisation" />
+        <huiproperty
+            id="itverbund_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space" 
+            />
+        <huiproperty
+            name="Anzahl Mitarbeiter"
+            id="itverbund_mitarbeiter" />
+        <huiproperty
+            name="Geltungsbereich"
+            id="itverbund_geltungsbereich" />
+        <huiproperty
+            name="Dokument"
+            id="itverbund_dokument"
+            isURL="true" />
+            
+        <huipropertygroup id="itverbund_report"  name="Reporting" tags="Dok.mgmt." >
+           <huiproperty
+	           id="itverbund_autor" tags="Dok.mgmt." />
+           <huiproperty
+	          id="itverbund_version" tags="Dok.mgmt." />
+           <huiproperty
+	          id="itverbund_freigabe" tags="Dok.mgmt." />
+        </huipropertygroup>
+        
+            
+		
+         <huipropertygroup
+			id="itverbund_group_schutzbedarf_normal"
+			name="Schutzbedarfskategorie: Normal">
+            <huiproperty
+				id="itverbund_normal_gesetze"
+				name="Gesetze / Vorschriften / Verträge"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_gesetze_default">Verstöße gegen Vorschriften und Gesetze mit geringfügigen Konsequenzen. Geringfügige Vertragsverletzungen mit maximal geringen Konventionalstrafen</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_normal_datenschutz"
+				name="Selbstbestimmungsrecht"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_datenschutz_default">Eine Beeinträchtigung des informationellen Selbstbestimmungsrechts würde durch den Einzelnen als tolerabel eingeschätzt werden.  Ein möglicher Mißbrauch personenbezogener Daten hat nur geringfügige Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen.</param> </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_normal_leib"
+				name="Unversehrtheit"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_leib_default">Eine Beeinträchtigung erscheint nicht möglich. </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_normal_aufgaben"
+				name="Aufgabenerfüllung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_aufgaben_default">Die Beeinträchtigung würde von den Betroffenen als tolerabel eingeschätzt werden.  Die maximal tolerierbare Ausfallzeit des IT- Systems ist größer als ??? Stunden.  </param> </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_normal_wirkung"
+				name="Innen- / Außenwirkung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_wirkung_default">Eine geringe bzw. nur interne Ansehens- oder Vertrauensbeeinträchtigung ist zu erwarten.  </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_normal_finanzen"
+				name="Finanzielle Auswirkungen"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_normal_finanzen_default">Der finanzieller Schaden ist kleiner als ???,- EUR. </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+         <huipropertygroup
+			id="itverbund_group_schutzbedarf_hoch"
+			name="Schutzbedarfskategorie: Hoch">
+            <huiproperty
+				id="itverbund_hoch_gesetze"
+				name="Gesetze / Vorschriften / Verträge"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_gesetze_default">Verstöße gegen Vorschriften und Gesetze mit erheblichen Konsequenzen Vertragsverletzungen mit hohen Konventionalstrafen </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_hoch_datenschutz"
+				name="Selbstbestimmungsrecht"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_datenschutz_default">Eine erhebliche Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten hat erhebliche Auswirkungen auf die gesellschaftliche Stellung oder die wirtschaftlichen Verhältnisse des Betroffenen. </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_hoch_leib"
+				name="Unversehrtheit"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_leib_default">Eine Beeinträchtigung der persönlichen Unversehrtheit kann nicht absolut ausgeschlossen werden.  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            <huiproperty
+				id="itverbund_hoch_aufgaben"
+				name="Aufgabenerfüllung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_aufgaben_default_default">Die Beeinträchtigung würde von einzelnen Betroffenen als nicht tolerabel eingeschätzt. Ein IT-Systemausfall ist nur zwischen ??? und ??? Stunden tolerabel.  </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_hoch_wirkung"
+				name="Innen- / Außenwirkung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_wirkung_default">Eine breite Ansehens- oder Vertrauensbeeinträchtigung ist erwarten. </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_hoch_finanzen"
+				name="Finanzielle Auswirkungen"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_hoch_finanzen_default">Der finanzielle Schaden liegt zwischen ???,- EUR und ???,-EUR. </param>
+                </defaultRule>
+            </huiproperty>
+         </huipropertygroup>
+         <huipropertygroup
+			id="itverbund_group_schutzbedarf_sehrhoch"
+			name="Schutzbedarfskategorie: Sehr Hoch">
+            <huiproperty
+				id="itverbund_sehrhoch_gesetze"
+				name="Gesetze / Vorschriften / Verträge"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_gesetze_default">Fundamentaler Verstoß gegen Vorschriften und Gesetze Vertragsverletzungen, deren Haftungsschäden ruinös sind </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_sehrhoch_datenschutz"
+				name="Selbstbestimmungsrecht"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_datenschutz_default">Eine besonders bedeutende Beeinträchtigung des informationellen Selbstbestimmungsrechts des Einzelnen erscheint möglich.  Ein möglicher Mißbrauch personenbezogener Daten würde für den Betroffenen den gesellschaftlichen oder wirtschaftlichen Ruin bedeuten.  </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_sehrhoch_leib"
+				name="Unversehrtheit"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_leib_default">Gravierende Beeinträchtigungen der persönlichen Unversehrtheit sind möglich. Gefahr für Leib und Leben </param>
+                </defaultRule>
+            </huiproperty>
+            
+            <huiproperty
+				id="itverbund_sehrhoch_aufgaben"
+				name="Aufgabenerfüllung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_aufgaben_default">Die Beeinträchtigung würde von allen Betroffenen als nicht tolerabel eingeschätzt werden. Ein IT-Systemausfall ist nur bis zu ??? Stunden tolerabel.  </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_sehrhoch_wirkung"
+				name="Innen- / Außenwirkung"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_wirkung_default">Ein weitreichende Ansehens- oder Vertrauensbeeinträchtigung, evtl. sogar existenzgefährdender Art, ist denkbar.  </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty
+				id="itverbund_sehrhoch_finanzen"
+				name="Finanzielle Auswirkungen"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_sehrhoch_finanzen_default">Der finanzielle Schaden ist größer als ???,- EUR. </param>
+                </defaultRule>
+            </huiproperty>
+         </huipropertygroup>
+    </huientity>
+    
+    <huientity
+        name="Client"
+        id="client" >
+        
+          <huirelation to="raum" id="client_raum_located" 
+        	name="befindet sich in" reversename="beinhaltet" />
+        
+	    <huiproperty	
+            name="Kürzel"
+            id="client_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="client_kuerzel_default">C-</param>
+                </defaultRule>
+        </huiproperty>
+        <huiproperty
+            name="Name"
+            id="client_name" />
+        
+        <huiproperty
+            id="client_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+        
+        <huiproperty
+            name="Anzahl"
+            id="client_anzahl" />
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="client_erlaeuterung" />
+        <huiproperty
+            name="Dokument"
+            id="client_dokument"
+            isURL="true" />
+        <huiproperty
+            name="Plattform"
+            id="client_plattform" />
+        <huiproperty
+            name="Aufstellungsort"
+            id="client_aufstellungsort" />
+        <huiproperty
+            name="Status"
+            id="client_status"
+            inputtype="singleoption">
+                <option
+                    id="client_status_betrieb"
+                    name="Betrieb" />
+                <option
+                    id="client_status_planung"
+                    name="Planung" />
+                <option
+                    id="client_status_grundinstallation"
+                    name="Grundinstallation" />
+                <option
+                    id="client_status_Konfiguration"
+                    name="Konfiguration" />
+                <option
+                    id="client_status_test"
+                    name="Test" />
+                <option
+                    id="client_status_auslieferung"
+                    name="Auslieferung" />
+                <option
+                    name="Reparatur"
+                    id="client_status_reparatur" />
+                <option
+                    name="Standby"
+                    id="client_status_standby" />
+                <option
+                    name="Reserve"
+                    id="client_status_reserve" />
+        </huiproperty>
+        <huiproperty
+			id="client_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        <huiproperty
+			id="client_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+        <huiproperty
+            name="Netzadressen"
+            id="client_netadr" />
+        <huiproperty
+            id="client_coms"
+            name="Schnittstellen"
+            inputtype="multioption">
+            <option id="client_coms_ether" name="Ethernet"/>
+            <option id="client_coms_wlan" name="WLAN"/>
+            <option id="client_coms_blue" name="Bluetooth"/>
+            <option id="client_coms_irda" name="IrDA"/>
+            <option id="client_coms_modem" name="Modem"/>
+            <option id="client_coms_usb" name="USB"/>
+            <option id="client_coms_ieee1394" name="IEEE 1394"/>
+            <option id="client_coms_seriell" name="Seriell"/>
+            <option id="client_coms_parallel" name="Parallel"/>
+            <option id="client_coms_scsi" name="Ext. SCSI"/>
+            <option id="client_coms_sata" name="Ext. SATA"/>
+            <option id="client_coms_ide" name="Ext. IDE"/>
+            <option id="client_coms_audio" name="Audio In"/>
+            <option id="client_coms_video" name="Video In"/>
+            <option id="client_coms_turnschuh" name="Turnschuh"/>
+        </huiproperty>
+         <huipropertygroup
+			id="client_group_schutzbedarf"
+			name="Schutzbedarf">
+			
+            <huiproperty
+				id="client_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="client_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="client_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="client_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="client_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="client_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="client_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="client_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="client_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="client_integritaet_normal"
+					name="Normal" />
+				<option
+					id="client_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="client_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="client_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="client_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="client_integritaet_begruendung" />
+
+		</huipropertygroup>
+		
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="client_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="client_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="client_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="client_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="client_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="client_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="client_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="client_risikoanalyse_begruendung"
+				inputtype="text"/>
+			</huipropertygroup>
+		
+    </huientity>
+    
+     <huientity
+        name="Sonstiges IT-System"
+        id="sonstit" >
+	    <huiproperty	
+            name="Kürzel"
+            id="sonstit_kuerzel"
+            focus="true" >
+             <defaultRule class="SimpleValue">
+                	<param id="sonstit_kuerzel_default">ITS-</param>
+                </defaultRule>
+        </huiproperty>
+        <huiproperty
+            name="Name"
+            id="sonstit_name" />
+            
+        <huiproperty
+            id="sonstit_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+            
+        <huiproperty
+            name="Anzahl"
+            id="sonstit_anzahl" />
+        <huiproperty
+            name="Erläuterung"
+            inputtype="text"
+            id="sonstit_erlaeuterung" />
+        <huiproperty
+            name="Dokument"
+            id="sonstit_dokument"
+            isURL="true" />
+        <huiproperty
+            name="Plattform"
+            id="sonstit_plattform" />
+        <huiproperty
+            name="Aufstellungsort"
+            id="sonstit_aufstellungsort" />
+        <huiproperty
+            name="Status"
+            id="sonstit_status"
+            inputtype="singleoption">
+                <option
+                    id="sonstit_status_betrieb"
+                    name="Betrieb" />
+                <option
+                    id="sonstit_status_planung"
+                    name="Planung" />
+                <option
+                    id="sonstit_status_grundinstallation"
+                    name="Grundinstallation" />
+                <option
+                    id="sonstit_status_Konfiguration"
+                    name="Konfiguration" />
+                <option
+                    id="sonstit_status_test"
+                    name="Test" />
+                <option
+                    id="sonstit_status_auslieferung"
+                    name="Auslieferung" />
+                <option
+                    name="Reparatur"
+                    id="sonstit_status_reparatur" />
+                <option
+                    name="Standby"
+                    id="sonstit_status_standby" />
+                <option
+                    name="Reserve"
+                    id="sonstit_status_reserve" />
+        </huiproperty>
+         <huiproperty
+			id="sonstit_anwender_link"
+			name="Anwender"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+         <huiproperty
+			id="sonstit_admin_link"
+			name="Admin"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        <huiproperty
+            name="Netzadressen"
+            id="sonstit_netadr" />
+        <huiproperty
+            id="sonstit_coms"
+            name="Schnittstellen"
+            inputtype="multioption">
+            <option id="sonstit_coms_ether" name="Ethernet"/>
+            <option id="sonstit_coms_wlan" name="WLAN"/>
+            <option id="sonstit_coms_blue" name="Bluetooth"/>
+            <option id="sonstit_coms_irda" name="IrDA"/>
+            <option id="sonstit_coms_modem" name="Modem"/>
+            <option id="sonstit_coms_usb" name="USB"/>
+            <option id="sonstit_coms_ieee1394" name="IEEE 1394"/>
+            <option id="sonstit_coms_seriell" name="Seriell"/>
+            <option id="sonstit_coms_parallel" name="Parallel"/>
+            <option id="sonstit_coms_scsi" name="Ext. SCSI"/>
+            <option id="sonstit_coms_sata" name="Ext. SATA"/>
+            <option id="sonstit_coms_ide" name="Ext. IDE"/>
+            <option id="sonstit_coms_audio" name="Audio In"/>
+            <option id="sonstit_coms_video" name="Video In"/>
+            <option id="sonstit_coms_turnschuh" name="Turnschuh"/>
+        </huiproperty>
+         <huipropertygroup
+			id="sonstit_group_schutzbedarf"
+			name="Schutzbedarf">
+			
+            <huiproperty
+				id="sonstit_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="sonstit_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="sonstit_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="sonstit_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="sonstit_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="sonstit_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="sonstit_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="sonstit_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="sonstit_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="sonstit_integritaet_normal"
+					name="Normal" />
+				<option
+					id="sonstit_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="sonstit_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="sonstit_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="sonstit_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="sonstit_integritaet_begruendung" />
+
+		</huipropertygroup>
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="sonstit_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="sonstit_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="sonstit_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="sonstit_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="sonstit_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="sonstit_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="sonstit_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="sonstit_risikoanalyse_begruendung"
+				inputtype="text"/>
+			</huipropertygroup>
+    </huientity>
+
+	<huientity
+		name="Mitarbeiter"
+		id="person">
+		<huiproperty
+			name="Kürzel"
+			id="person_kuerzel"
+			focus="true">
+                <defaultRule class="SimpleValue">
+                	<param id="person_kuerzel_default">M-</param>
+                </defaultRule>
+        </huiproperty>
+		<huiproperty
+			name="Anrede"
+			id="person_anrede"
+            inputtype="singleoption">
+				<option
+					id="person_anrede_none"
+					name="" />
+				<option
+					id="person_anrede_herr"/>
+				<option
+					id="person_anrede_frau"
+					name="Frau" />
+				<option
+					id="person_anrede_herrdr"
+					/>
+				<option
+					id="person_anrede_fraudr"
+					 />
+
+		</huiproperty>
+		<huiproperty
+			name="Vorname"
+			id="vorname">
+		</huiproperty>
+		<huiproperty
+			name="Name"
+			id="nachname" />
+
+        <huiproperty
+            id="person_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+
+		<huiproperty
+			name="Anzahl"
+			id="person_anzahl" />
+		<huiproperty
+			name="Telefon"
+			id="person_telefon" />
+		<huiproperty
+			name="Email"
+			id="person_email" />
+		<huiproperty
+			name="Org.-Einheit"
+			id="person_orgeinheit" />
+		<huiproperty
+			name="Erläuterung"
+			id="person_erlaeuterung" />
+            <!-- FIXME: required flag-->
+		<huiproperty
+			name="Rollen"
+			id="person_rollen"
+			tooltip="Zugewiesene Rollen des / der Mitarbeiter(s)"
+			required="false"
+			inputtype="multioption">
+			
+			<!-- Start: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
+			<option
+				id="person_0"
+				name="Administrator" />
+			<option
+				id="person_52"
+				name="Änderungsmanager" />
+			<option
+				id="person_2"
+				name="Anwendungsentwickler" />
+			<option
+				id="person_3"
+				name="Archivverwalter" />
+			<option
+				id="person_4"
+				name="Bauleiter" />
+			<option
+				id="person_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option
+				id="person_6"
+				name="Benutzer" />
+			<option
+				id="person_7"
+				name="Beschaffer" />
+			<option
+				id="person_8"
+				name="Brandschutzbeauftragter" />
+			<option
+				id="person_9"
+				name="Datenschutzbeauftragter" />
+			<option
+				id="person_43"
+				name="Entwickler" />
+			<option
+				id="person_10"
+				name="Errichterfirma" />
+			<option
+				id="person_11"
+				name="Fachabteilung" />
+			<option
+				id="person_42"
+				name="Fachverantwortliche" />
+			<option
+				id="person_12"
+				name="Fax-Poststelle" />
+			<option
+				id="person_13"
+				name="Fax-Verantwortlicher" />
+			<option
+				id="person_14"
+				name="Haustechnik" />
+			<option
+				id="person_16"
+				name="Innerer Dienst" />	
+			<option
+				id="person_17"
+				name="IT-Benutzer" />
+			<option
+				id="person_18"
+				name="IT-Sicherheitsbeauftragter" />
+			<option
+				id="person_19"
+				name="IT-Sicherheitsmanagement" />
+			<option
+				id="person_20"
+				name="IT-Verfahrensverantwortlicher" />	
+			<option
+				id="person_46"
+				name="Leiter Beschaffung" />	
+			<option
+				id="person_44"
+				name="Leiter Entwicklung" />
+			<option
+				id="person_47"
+				name="Leiter Fachabteilung" />
+			<option
+				id="person_48"
+				name="Leiter Haustechnik" />	
+			<option
+				id="person_49"
+				name="Leiter Innerer Dienst" />	
+			<option
+				id="person_45"
+				name="Leiter IT" />	
+			<option
+				id="person_50"
+				name="Leiter Organisation" />
+			<option
+				id="person_51"
+				name="Leiter Personal" />	
+			<option
+				id="person_22"
+				name="Mitarbeiter" />
+			<option
+				id="person_24"
+				name="Notfall-Verantwortliche" />
+			<option
+				id="person_25"
+				name="Personalabteilung" />
+			<option
+				id="person_26"
+				name="Personalrat/Betriebsrat" />
+			<option
+				id="person_1"
+				name="Planer" />
+			<option
+				id="person_27"
+				name="Poststelle" />
+			<option
+				id="person_40"
+				name="Pressestelle" />
+			<option
+				id="person_28"
+				name="Revisor" />
+			<option
+				id="person_29"
+				name="Telearbeiter" />
+			<option
+				id="person_35"
+				name="Tester" />
+			<option
+				id="person_30"
+				name="TK-Anlagen-Verantwortlicher" />	
+			<option
+				id="person_32"
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
+			<option
+				id="person_33"
+				name="Verantwortliche für die Datensicherung" />	
+			<option
+				id="person_34"
+				name="Vorgesetzte" />
+			<!-- ENDE: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
+			
+			<option
+				id="person_39"
+				name="Fax-Absender" />
+			<option
+				id="person_38"
+				name="Fax-Empfänger" />
+			<option
+				id="person_36"
+				name="IT Helpdesk" />
+			<option
+				id="person_37"
+				name="Hersteller" />
+			<option
+				id="person_15"
+				name="Hausverwaltung" />
+			<option
+				id="person_21"
+				name="Leitung" />
+			<option
+				id="person_23"
+				name="Netzplaner" />
+			<option
+				id="person_31"
+				name="Unternehmensleitung" />
+			<option
+				id="person_41"
+				name="Vertretung" />
+		</huiproperty>
+		<huiproperty
+            name="Dokument"
+            id="person_dokument"
+            isURL="true" />
+	</huientity>
+
+	<huientity
+		name="Gebäude"
+		id="gebaeude">
+		<huiproperty
+			name="Kürzel"
+			id="gebaeude_kuerzel"
+			focus="true">
+			 <defaultRule class="SimpleValue">
+                	<param id="gebaeude_kuerzel_default">G-</param>
+                </defaultRule>
+		</huiproperty>
+		<huiproperty
+			name="Name"
+			id="gebaeude_name">
+		</huiproperty>
+		
+        <huiproperty
+            id="gebaeude_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+        
+		<huiproperty
+			id="gebaeude_anzahl"
+			name="Anzahl" />
+		
+		<huiproperty
+			id="gebaeude_erlaeuterung"
+            inputtype="text"
+			name="Erläuterung" />
+		
+		<huiproperty
+            name="Dokument"
+            id="gebaeude_dokument"
+            isURL="true" />
+		<huipropertygroup
+			id="gebaeude_group_schutzbedarf"
+			name="Schutzbedarf">
+			<huiproperty
+				id="gebaeude_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="gebaeude_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="gebaeude_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="gebaeude_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			<huiproperty
+				id="gebaeude_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="gebaeude_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="gebaeude_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="gebaeude_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			<huiproperty
+				id="gebaeude_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="gebaeude_integritaet_normal"
+					name="Normal" />
+				<option
+					id="gebaeude_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="gebaeude_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="gebaeude_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="gebaeude_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="gebaeude_integritaet_begruendung" />
+
+		</huipropertygroup>
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="gebaeude_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="gebaeude_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="gebaeude_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="gebaeude_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="gebaeude_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="gebaeude_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="gebaeude_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="gebaeude_risikoanalyse_begruendung"
+				inputtype="text"/>
+			</huipropertygroup>				
+	</huientity>
+
+	<huientity
+		id="bstumsetzung"
+		name="BausteinUmsetzung"
+		 >
+	
+	     <!-- Bausteine (modules) can now be linked to objects -->	 
+		
+		 <huirelation  to="anwendung" id="rel_bstumsetzung_anwendung"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="raum" id="rel_bstumsetzung_raum"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="server" id="rel_bstumsetzung_server"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="tkkomponente" id="rel_bstumsetzung_tkkomponente"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="netzkomponente" id="rel_bstumsetzung_netzkomponente"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="itverbund" id="rel_bstumsetzung_itverbund"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="client" id="rel_bstumsetzung_client"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="sonstit" id="rel_bstumsetzung_sonstit"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation  to="gebaeude" id="rel_bstumsetzung_gebaeude"
+		 	name="verknüpft mit" reversename="modelliert mit" />
+			
+		<huiproperty
+			id="bstumsetzung_nr"
+            editable="false"
+			name="Kapitel" />
+		<huiproperty
+			id="bstumsetzung_name"
+            editable="false"
+			name="Titel" />
+		<huiproperty
+			id="bstumsetzung_url"
+            editable="false"
+            visible="false"
+			name="Url" />
+		<huiproperty
+			id="bstumsetzung_encoding"
+            editable="false"
+            visible="false"
+			name="Encoding" />
+		<huiproperty
+			id="bstumsetzung_stand"
+            editable="false"
+            visible="true"
+			name="Stand" />
+		<huiproperty
+			id="bstumsetzung_erfasstdurch_link"
+			name="Erfasst durch"
+			inputtype="reference" 
+			required="true">
+			<references 
+				entitytype="person"/>
+		</huiproperty>
+		<huiproperty
+			id="bstumsetzung_gespraechspartner_link"
+			name="Gesprächspartner"
+			inputtype="reference" 
+			required="true">
+			<references 
+				entitytype="person"/>
+		</huiproperty>
+		<huiproperty
+			id="bstumsetzung_erfasstam"
+			name="Erfasst am"
+			inputtype="date">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty
+			id="bstumsetzung_erlaeuterung"
+            inputtype="text"
+			name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="bstumsetzung_dokument"
+            isURL="true" />
+	</huientity>
+	
+	
+	<huientity
+		id="gefaehrdungsumsetzung"
+		name="Gefährdungsumsetzung">
+		<huiproperty
+				id="gefaehrdungsumsetzung_id"
+                editable="false"
+				name="Id" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_titel"
+                editable="true"
+				name="Titel" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_description"
+                editable="true"
+                inputtype="text"
+				name="Beschreibung" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_url"
+                editable="false"
+                visible="false"
+				name="Url" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_stand"
+                editable="false"
+				name="Stand" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_kategorie"
+                editable="true"
+				name="Kategorie" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_okay"
+				name="Risikoabdeckung"
+                editable="false"
+                inputtype="singleoption"
+		>
+			<option	id="gefaehrdungsumsetzung_okay_yes"
+					name="Ja" />
+			<option	id="gefaehrdungsumsetzung_okay_no"
+					name="Nein" />
+		</huiproperty>
+		 <huiproperty
+				id="gefaehrdungsumsetzung_vollstaendigkeit"
+				inputtype="singleoption"
+				name="Vollständigkeit" >
+				<option	id="gefaehrdungsumsetzung_vollstaendigkeit_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_vollstaendigkeit_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_mechanismenstaerke"
+				inputtype="singleoption"
+				name="Mechanismensstärke" >
+				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_zuverlaessigkeit"
+				inputtype="singleoption"
+				name="Zuverlässigkeit" >
+				<option	id="gefaehrdungsumsetzung_zuverlaessigkeit_ja"
+					name="Ausreichend" />
+				<option	id="gefaehrdungsumsetzung_zuverlaessigkeit_nein"
+					name="Nicht ausreichend" />
+		</huiproperty>
+		<huiproperty
+				id="gefaehrdungsumsetzung_alternative"
+                editable="false"
+				name="Risikobehandlung" />
+		<huiproperty
+				id="gefaehrdungsumsetzung_erlaeuterung"
+				inputtype="text"
+				name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="gefaehrdungsumsetzung_dokument"
+            isURL="true" />
+      
+            
+	</huientity>
+
+
+	<huientity
+		id="mnums"
+		name="Maßnahmenumsetzung">
+		<huiproperty
+				id="mnums_id"
+                editable="false"
+				name="Kapitel" />
+		<huiproperty
+				id="mnums_url"
+                editable="false"
+                visible="false"
+				name="Url" />
+		<huiproperty
+			id="mnums_stand"
+            editable="false"
+            visible="true"
+			name="Stand" />
+		<huiproperty
+			id="mnums_verantwortlichinit"
+            editable="false"
+            visible="false"
+			name="Verantw. Initiierung" />
+		<huiproperty
+			id="mnums_verantwortlichums"
+            editable="false"
+            visible="false"
+			name="Verantw. Umsetzung" />
+		<huiproperty
+				id="mnums_name"
+                editable="false"
+				name="Titel" />
+            <huiproperty
+                id="mnums_lebenszyklus"
+                name="Lebenszyklus"
+                editable="false"/>
+			<huiproperty
+				id="mnums_siegel"
+				name="Siegelstufe"
+                editable="false"
+                />
+        <huiproperty
+            name="Dokument"
+            id="mnums_dokument"
+            isURL="true" />
+            
+        <huipropertygroup id="mnums_gsaudit" name="GS Audit" tags="GS-Audit" >
+
+
+            <huiproperty
+               name="Auditor" id="mnums_gsaudit_auditor" tags="GS-Audit" />
+
+            <huiproperty
+               name="Befragter" id="mnums_gsaudit_befragt" tags="GS-Audit"/>
+
+            <huiproperty
+               name="Prüfmethoden" id="mnums_gsaudit_methode" tags="GS-Audit" inputtype="multioption" >
+                    <option
+                        id="mnums_gsaudit_methode_d"
+                        name="Dokumentationsprüfung A0 - A7" />
+                    <option
+                        id="mnums_gsaudit_methode_i"
+                        name="Interviews" />
+                    <option
+                        id="mnums_gsaudit_methode_c"
+                        name="Inaugenscheinnahme" />
+                    <option
+                        id="mnums_gsaudit_methode_s"
+                        name="Durchsicht von Unterlagen (z.B. Richtlinien, Anweisungen)" />
+                    <option
+                        id="mnums_gsaudit_methode_a"
+                        name="Verwertug Unterlagen Dritter (z.B. Protokolle, Verträge)" />
+                    <option
+                        id="mnums_gsaudit_methode_b"
+                        name="Beobachtung von Aktivitäten u. Arbeitsabläufen" />
+            </huiproperty>
+
+            <huiproperty
+               name="Prüffragen" id="mnums_gsaudit_fragen" tags="GS-Audit" inputtype="text" textrows="10" />
+            <huiproperty
+               name="Auditbeobachtung" id="mnums_gsaudit_beobachtung" tags="GS-Audit" inputtype="text" textrows="10" />
+            <huiproperty
+               name="Auditbericht" id="mnums_gsaudit_bericht" tags="GS-Audit" inputtype="text" textrows="10" />
+
+            <huiproperty
+               name="Auditiert am" id="mnums_gsaudit_auditam" inputtype="date" tags="GS-Audit">
+               <defaultRule class="Today" />
+            </huiproperty>
+            <huiproperty
+               name="Status" id="mnums_gsaudit_status" tags="GS-Audit" inputtype="numericoption" min="0" max="1">
+                    <option
+                        id="mnums_gsaudit_status_0"
+                        name="korrekt"
+                        value="0" />
+                    <option
+                        id="mnums_gsaudit_methode_1"
+                        name="unzureichend" 
+                        value="1" />
+            </huiproperty>
+
+            <huiproperty
+               name="Abweichung" id="mnums_gsaudit_abweichung" tags="GS-Audit" inputtype="numericoption" min="0" max="3">
+                    <option
+                        id="mnums_gsaudit_abweichung_0"
+                        name=" " 
+                        value="0" />
+                    <option
+                        id="mnums_gsaudit_abweichung_1"
+                        name="Empfehlung" 
+                        value="1" />
+                    <option
+                        id="mnums_gsaudit_abweichung_2"
+                        name="Geringfügig" 
+                        value="2" />
+                    <option
+                        id="mnums_gsaudit_abweichung_3"
+                        name="Schwerwiegend" 
+                        value="3" />
+            </huiproperty>
+
+            <huiproperty
+               name="Behebungsfrist" id="mnums_gsaudit_frist" tags="GS-Audit" inputtype="date" > 
+                <defaultRule class="Today" />
+            </huiproperty>
+
+            <huiproperty
+               name="Nachbesserung erfolgt?" id="mnums_gsaudit_nachberfolgt" tags="GS-Audit" inputtype="booleanoption"  defaultValue="0" />
+
+            <huiproperty
+               name="Nachbesserung" id="mnums_gsaudit_nachb" tags="GS-Audit" inputtype="text" textrows="10" />
+
+            <huiproperty
+               name="Auditor-Votum" id="mnums_gsaudit_votum" tags="GS-Audit" inputtype="text" textrows="10" />
+
+        </huipropertygroup>
+            
+            
+		<huipropertygroup
+			id="mnums_group_umsetzung"
+			name="Umsetzung">
+			<huiproperty
+				id="mnums_umsetzung"
+				name="Umsetzung"
+                focus="true"
+                required="true"
+				inputtype="singleoption">
+				<option
+					id="mnums_umsetzung_nein"
+					name="Nein" />
+				<option
+					id="mnums_umsetzung_ja"
+					name="Ja" />
+				<option
+					id="mnums_umsetzung_teilweise"
+					name="Teilweise" />
+				<option
+					id="mnums_umsetzung_entbehrlich"
+					name="Entbehrlich" />
+			</huiproperty>
+			<huiproperty
+				id="mnums_erlaeuterung"
+				name="Erläuterung"
+                required="false"
+				inputtype="text" />
+			<huiproperty
+				id="mnums_umsetzungbis"
+				name="Umsetzung bis"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param id="mnums_umsetzungbis_changeField">MONTH</param>
+                    <param id="mnums_umsetzungbis_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+			<huiproperty
+			id="mnums_umsetzungdurch_link"
+			name="Umsetzung durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty
+			id="mnums_initdurch_link"
+			name="Initiierung durch"
+			inputtype="reference" 
+			required="false">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+		</huipropertygroup>
+		
+		<huipropertygroup
+			id="mnums_group_kosten"
+            tags="Finance"
+			name="Kosten">
+            <huiproperty
+                id="mnums_kosten_ptfix"
+                tags="Finance"
+                name="Personalkosten fix EUR"/>
+            <huiproperty
+                id="mnums_kosten_ptvar"
+                tags="Finance"
+                name="Personalkosten var. EUR"/>
+            <huiproperty
+				id="mnums_kosten_ptperiod"
+                tags="Finance"
+				name="Zeitraum"
+				inputtype="singleoption">
+				<option
+					id="mnums_kosten_ptperiod_tag"
+					name="Tag" />
+				<option
+					id="mnums_kosten_ptperiod_woche"
+					name="Woche" />
+				<option
+					id="mnums_kosten_ptperiod_monat"
+					name="Monat" />
+				<option
+					id="mnums_kosten_ptperiod_quartal"
+					name="Quartal" />
+				<option
+					id="mnums_kosten_ptperiod_jahr"
+					name="Jahr" />
+			</huiproperty>
+            <huiproperty
+                id="mnums_kosten_sachfix"
+                tags="Finance"
+                name="Sachkosten fix EUR"/>
+            <huiproperty
+                id="mnums_kosten_sachvar"
+                tags="Finance"
+                name="Sachkosten var. EUR"/>
+            <huiproperty
+				id="mnums_kosten_sachperiod"
+                tags="Finance"
+				name="Zeitraum"
+				inputtype="singleoption">
+				<option
+					id="mnums_kosten_sachperiod_tag"
+					name="Tag" />
+				<option
+					id="mnums_kosten_sachperiod_woche"
+					name="Woche" />
+				<option
+					id="mnums_kosten_sachperiod_monat"
+					name="Monat" />
+				<option
+					id="mnums_kosten_sachperiod_quartal"
+					name="Quartal" />
+				<option
+					id="mnums_kosten_sachperiod_jahr"
+					name="Jahr" />
+			</huiproperty>
+		</huipropertygroup>
+		
+		
+		<huipropertygroup
+			id="mnums_group_revision"
+			name="Revision">
+			<huiproperty
+			id="mnums_letzterevisiondurch_link"
+			name="Letzte Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty 
+				id="mnums_letzterevisionam"
+				name="Letzte Revision am"
+				inputtype="date">
+            <defaultRule class="Today" />
+            </huiproperty>
+			<huiproperty
+				id="mnums_bemerkungen"
+				name="Bemerkungen"
+				inputtype="text" />
+			<huiproperty
+			id="mnums_naechsterevisiondurch_link"
+			name="Nächste Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty
+				id="mnums_naechsterevisionam"
+				name="Nächste Revision am"
+				inputtype="date" >
+                <defaultRule class="Today">
+                    <param id="mnums_naechsterevisionam_changeField">YEAR</param>
+                    <param id="mnums_naechsterevisionam_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+		</huipropertygroup>
+		
+	</huientity>
+
+    <huientity
+        id="anwendung"
+        name="Anwendung">
+        
+          <huirelation to="person" 
+        	id="anwendung_person_responsible"
+        	name="responsible" 
+        	reversename="responsible for" 
+        	tooltip="Responsible person"/>
+     
+        <huirelation to="person" id="anwendung_person_accountable" 
+        	name="accountable" reversename="accountable for" tooltip="Accountable person"/>
+      
+        <huirelation to="person" id="anwendung_person_consulted" 
+        	name="consulted" reversename="consulted for" tooltip="Consulted person"/>
+      
+        <huirelation to="person" id="anwendung_person_informed" 
+        	name="informed" reversename="informed about" tooltip="Informed person"/>
+            
+        <huirelation to="server" id="anwendung_server" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="client" id="anwendung_client" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="sonstit" id="anwendung_sonstit" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="netzkomponente" id="anwendung_netzkomponente" 
+            name="benötigt" reversename="nötig für" />
+        <huirelation to="tkkomponente" id="anwendung_tkkomponente" 
+            name="benötigt" reversename="nötig für" />
+
+            
+        
+        <huiproperty
+			name="Kürzel"
+			id="anwendung_kuerzel"
+			focus ="true">
+			 <defaultRule class="SimpleValue">
+                	<param id="anwendung_kuerzel_default">A-</param>
+                </defaultRule>
+		</huiproperty>
+        
+        <huiproperty
+            id="anwendung_name"
+            name="Name" 
+        />
+		
+		<huiproperty
+            id="anwendung_tag"
+            name="Tags"
+            tooltip="Liste von Tags, getrennt durch Komma oder Leerzeichen"
+        />
+		
+		
+        <huiproperty
+			name="Personenbezogene Daten"
+			id="anwendung_persbez"
+            inputtype="singleoption">
+        <option
+            id="anwendung_persbez_1"
+            name="Ja"
+        />
+        <option
+            id="anwendung_persbez_2"
+            name="Nein"
+        />
+		</huiproperty>
+
+		 <huiproperty
+			id="anwendung_benutzer_link"
+			name="Benutzer"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+        
+        <huiproperty
+            name="Status"
+            id="anwendung_status"
+            inputtype="singleoption">
+                <option
+                    id="anwendung_status_betrieb"
+                    name="Betrieb" />
+                <option
+                    id="anwendung_status_planung"
+                    name="Planung" />
+                <option
+                    id="anwendung_status_test"
+                    name="Test" />
+                <option
+                    name="Reserve"
+                    id="anwendung_status_reserve" />
+        </huiproperty>
+        
+        <huiproperty
+			id="anwendung_erlaeuterung"
+            inputtype="text"
+			name="Erläuterung" />
+		<huiproperty
+            name="Dokument"
+            id="anwendung_dokument"
+            isURL="true" />
+		 	
+        <huipropertygroup
+			id="anwendung_group_schutzbedarf"
+			name="Schutzbedarf">
+			
+            <huiproperty
+				id="anwendung_vertraulichkeit"
+				name="Vertraulichkeit"
+				inputtype="singleoption">
+				<option
+					id="anwendung_vertraulichkeit_normal"
+					name="Normal" />
+				<option
+					id="anwendung_vertraulichkeit_hoch"
+					name="Hoch" />
+				<option
+					id="anwendung_vertraulichkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="anwendung_verfuegbarkeit"
+				name="Verfügbarkeit"
+				inputtype="singleoption">
+				<option
+					id="anwendung_verfuegbarkeit_normal"
+					name="Normal" />
+				<option
+					id="anwendung_verfuegbarkeit_hoch"
+					name="Hoch" />
+				<option
+					id="anwendung_verfuegbarkeit_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+			
+            <huiproperty
+				id="anwendung_integritaet"
+				name="Integrität"
+				inputtype="singleoption">
+				<option
+					id="anwendung_integritaet_normal"
+					name="Normal" />
+				<option
+					id="anwendung_integritaet_hoch"
+					name="Hoch" />
+				<option
+					id="anwendung_integritaet_sehrhoch"
+					name="Sehr Hoch" />
+			</huiproperty>
+
+			<huiproperty
+				name="Begründung Vertraulichkeit"
+				inputtype="text"
+				id="anwendung_vertraulichkeit_begruendung" />
+			<huiproperty
+				name="Begründung Verfügbarkeit"
+				inputtype="text"
+				id="anwendung_verfuegbarkeit_begruendung" />
+			<huiproperty
+				name="Begründung Integrität"
+				inputtype="text"
+				id="anwendung_integritaet_begruendung" />
+
+		</huipropertygroup>
+
+<huipropertygroup
+			id="anwendung_group_fachaufgabe"
+			name="Fachaufgabe / Prozess">
+		
+			<huiproperty
+				id="anwendung_prozess"
+				name="Prozessbeschreibung" />
+				
+			<huiproperty
+				id="anwendung_prozess_informationen"
+				name="Verarbeitete Informationen" />
+	
+		     <huiproperty
+				id="anwendung_eigentümer_link"
+				name="Prozess-Eigentümer"
+				inputtype="reference" 
+				required="true">
+					<references 
+						entitytype="person"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Bedeutung für Prozess" 
+				id="anwendung_prozessbezug"
+				inputtype="singleoption">
+			<option 
+					id="anwendung_prozessbezug_1" 
+					name="unterstützend"/>
+			<option 
+					id="anwendung_prozessbezug_2" 
+					name="wichtig"/>
+			<option 
+					id="anwendung_prozessbezug_3" 
+					name="wesentlich"/>								
+			<option 
+					id="anwendung_prozessbezug_4" 
+					name="hochgradig notwendig"/>								
+			</huiproperty>
+			
+			<huiproperty
+				id="anwendung_prozessbezug_begruendung"
+				name="Begründung" />
+			
+		</huipropertygroup>
+	
+
+
+		<huipropertygroup 
+			name="Managementbewertung" 
+			id="anwendung_mgmtreview">
+			<huiproperty 
+				name="Erg. Sicherheitsanalyse" 
+				id="anwendung_ergaenzendeanalyse"
+				inputtype="singleoption">
+				<option 
+					id="anwendung_ergaenzendeanalyse_schutzbedarf" 
+					name="lt. Schutzbedarf"/>
+				<option 
+					id="anwendung_ergaenzendeanalyse_modell" 
+					name="zusätzlich vormerken"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Risikoanalyse" 
+				id="anwendung_risikoanalyse"
+				inputtype="singleoption">
+				<option 
+					id="anwendung_risikoanalyse_noetig" 
+					name="nötig"/>
+				<option 
+					id="anwendung_risikoanalyse_unnoetig" 
+					name="entbehrlich"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Begründung Mgmt" 
+				id="anwendung_risikoanalyse_begruendung"
+				inputtype="text"/>
+			</huipropertygroup>
+    </huientity>
+
+    <huientity
+        id="verarbeitungsangaben"
+        name="Verarbeitungsangaben">
+	    <huiproperty
+			id="va_beschreibung"
+			name="Wie werden personenbezogene Daten verarbeitet?"
+            inputtype="text"/>
+	    <huiproperty
+			id="va_status"
+			name="Statusangaben zur Verarbeitung"
+            inputtype="text"/>
+    </huientity>
+
+    <huientity
+        id="verantwortlichestelle"
+        name="Verantwortliche Stelle">
+         <huiproperty
+			id="vs_abteilung_link"
+			name="Zuständige Abteilung"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+         <huiproperty
+			id="vs_fachl_link"
+			name="Fachlich verantwortlich"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+         <huiproperty
+			id="vs_it_link"
+			name="IT-Verantwortlicher"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+		</huiproperty>
+    </huientity>
+
+    <huientity
+        id="zweckbestimmung"
+        name="Zweckbestimmung">
+	    <huiproperty
+			id="zb_zweck"
+			name="Zweck der Verarbeitung"
+            inputtype="multioption">
+            <option
+                id="zb_zweck_1"
+                name="Vertragsabwicklung"
+            />
+            <option
+                id="zb_zweck_2"
+                name="Vertragsanbahnung"
+            />
+            <option
+                id="zb_zweck_3"
+                name="Marketing"
+            />
+            <option
+                id="zb_zweck_4"
+                name="Gesetzesvorgabe"
+            />
+            <option
+                id="zb_zweck_5"
+                name="Kundenbetreuung"
+            />
+            <option
+                id="zb_zweck_6"
+                name="Marktforschung"
+            />
+            <option
+                id="zb_zweck_7"
+                name="Interner Zweck"
+            />
+        </huiproperty>
+        
+	    <huiproperty
+			id="zb_sonst"
+			name="Sonstiger Zweck"
+        />
+        
+	    <huiproperty
+			id="zb_erlaeuterung"
+			name="Erläuterung"
+        />
+    </huientity>
+
+    <huientity
+        id="personengruppen"
+        name="Personengruppen">
+
+        <huipropertygroup
+            id="pg_group_betroffene"
+            name="Betroffene"
+        >
+        
+	    <huiproperty
+			id="pg_betroffene"
+			name="Betroffene"
+            inputtype="multioption"
+        >
+        <option
+            id="pg_betroffene_1"
+            name="Kunden"
+        />
+        <option
+            id="pg_betroffene_2"
+            name="Auftraggeber"
+        />
+        <option
+            id="pg_betroffene_3"
+            name="Interessenten"
+        />
+        <option
+            id="pg_betroffene_4"
+            name="Mandanten"
+        />
+        <option
+            id="pg_betroffene_5"
+            name="Arbeitgeber"
+        />
+        <option
+            id="pg_betroffene_6"
+            name="Mitarbeiter"
+        />
+        <option
+            id="pg_betroffene_7"
+            name="Bewerber"
+        />
+        <option
+            id="pg_betroffene_8"
+            name="Aktionäre"
+        />
+        <option
+            id="pg_betroffene_9"
+            name="Partner"
+        />
+        <option
+            id="pg_betroffene_10"
+            name="Lieferanten"
+        />
+        <option
+            id="pg_betroffene_11"
+            name="Externe Berater"
+        />
+        </huiproperty>
+	    <huiproperty
+			id="pg_sonstbetr"
+			name="Sonstige Betroffene"
+        />
+        </huipropertygroup>
+        
+	    <huipropertygroup
+			id="pg_group_empfaenger"
+			name="Empfänger"
+        >
+	    <huiproperty
+			id="pg_empfaenger"
+			name="Empfänger"
+            inputtype="singleoption"
+        >
+        <option
+            id="pg_empfaenger_1"
+            name="Extern"
+            />
+        <option
+            id="pg_empfaenger_2"
+            name="Intern"
+            />
+        <option
+            id="pg_empfaenger_3"
+            name="Behörde"
+            />
+        </huiproperty>
+        
+	    <huiproperty
+			id="pg_ausserhalbeu"
+			name="Ausserhalb EU"
+            inputtype="singleoption"
+        >
+        <option
+            id="pg_ausserhalbeu_1"
+            name="Ja"
+        />
+        <option
+            id="pg_ausserhalbeu_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+            id="pg_sonstempf"
+            name="Sonstiger Empfänger"
+        />
+        <huiproperty
+            id="pg_anmerkungempfaenger"
+            name="Erläuterung"
+            inputtype="text"
+        />
+
+
+        </huipropertygroup>
+    </huientity>
+    
+    <huientity
+        id="datenverarbeitung"
+        name="Datenverarbeitung">
+	    <huipropertygroup
+			id="dv_group_kategorie"
+			name="Kategorie"
+        >
+        <huiproperty
+            id="dv_kategorie"
+            name="Kategorie"
+            inputtype="multioption"
+        >
+        <option
+            id="dv_kategorie_1"
+            name="Personendaten"
+        />
+        <option
+            id="dv_kategorie_2"
+            name="Leistungsdaten"
+        />
+        <option
+            id="dv_kategorie_3"
+            name="Verhaltensdaten"
+        />
+        <option
+            id="dv_kategorie_4"
+            name="Bonitätsdaten"
+        />
+        <option
+            id="dv_kategorie_5"
+            name="Bewerbungsdaten"
+        />
+        <option
+            id="dv_kategorie_6"
+            name="Akquisedaten"
+        />
+        <option
+            id="dv_kategorie_7"
+            name="Vertragsdaten"
+        />
+        <option
+            id="dv_kategorie_8"
+            name="Gesundheitsdaten"
+        />
+        </huiproperty>
+        <huiproperty
+            id="dv_kategorie_sonst"
+            name="Sonstige Daten"
+        />
+        </huipropertygroup>
+        
+	    <huipropertygroup
+			id="dv_group_herkunft"
+			name="Herkunft"
+        >
+        <huiproperty
+            id="dv_herkunft"
+            name="Herkunft"
+            inputtype="multioption"
+        >
+        <option
+            id="dv_herkunft_1"
+            name="Formular"
+        />
+        <option
+            id="dv_herkunft_2"
+            name="Webseite"
+        />
+        <option
+            id="dv_herkunft_3"
+            name="Lst.-Karte"
+        />
+        <option
+            id="dv_herkunft_4"
+            name="Ext. Stelle"
+        />
+        <option
+            id="dv_herkunft_5"
+            name="Software"
+        />
+        </huiproperty>
+        <huiproperty
+            id="dv_herkunft_sonst"
+            name="Sonstige Herkunft"
+        />
+        </huipropertygroup>
+        
+	    <huipropertygroup
+			id="dv_group_rechtsgrundlage"
+			name="Rechtsgrundlage"
+        >
+        <huiproperty
+            id="dv_rechtsgrundlage"
+            name="Rechtsgrundlage"
+            inputtype="multioption"
+        >
+        <option
+            id="dv_rechtsgrundlage_1"
+            name="Gesetz"
+        />
+        <option
+            id="dv_rechtsgrundlage_2"
+            name="Vertrag"
+        />
+        <option
+            id="dv_rechtsgrundlage_3"
+            name="Tarifvertrag"
+        />
+        <option
+            id="dv_rechtsgrundlage_4"
+            name="Betriebsvereinbarung"
+        />
+        <option
+            id="dv_rechtsgrundlage_5"
+            name="Einwilligung"
+        />
+        <option
+            id="dv_rechtsgrundlage_6"
+            name="Keine"
+        />
+        </huiproperty>
+        <huiproperty
+            id="dv_rechtsgrundlage_sonst"
+            name="Sonstige Grundlage"
+        />
+        <huiproperty
+            id="dv_rechtsgrundlage_erl"
+            name="Erläuterung"
+            inputtype="text"
+        />
+        </huipropertygroup>
+	    
+        <huipropertygroup
+			id="dv_group_loesch"
+			name="Löschfristen"
+        >
+        <huiproperty
+            id="dv_loeschfrist"
+            name="Löschfrist"
+            inputtype="multioption"
+        >
+        <option
+            id="dv_loeschfrist_1"
+            name="&lt; 1 Woche"
+        />
+        <option
+            id="dv_loeschfrist_2"
+            name="&lt; 1 Monat"
+        />
+        <option
+            id="dv_loeschfrist_3"
+            name="&lt; 6 Monate"
+        />
+        <option
+            id="dv_loeschfrist_4"
+            name="&lt; 1 Jahr"
+        />
+        <option
+            id="dv_loeschfrist_5"
+            name="&lt; 10 Jahre"
+        />
+        <option
+            id="dv_loeschfrist_6"
+            name="Keine"
+        />
+        </huiproperty>
+        <huiproperty
+            id="dv_loeschfrist_sonst"
+            name="Sonstige Frist"
+        />
+        <huiproperty
+            id="dv_loeschfrist_erl"
+            name="Erläuterung"
+            inputtype="text"
+        />
+        <huiproperty
+            id="dv_loeschfrist_verfahren"
+            name="Art der Löschung"
+        />
+        </huipropertygroup>
+    </huientity>
+    
+    <huientity
+        id="stellungnahmedsb"
+        name="Stellungnahme DSB">
+	    
+        <huiproperty
+			id="stellungnahmedsb_pbdaten"
+			name="Personenbezogene Daten?"
+            inputtype="singleoption"
+        >
+        <option
+            id="stellungnahmedsb_pbdaten_1"
+            name="Ja"
+        />
+        <option
+            id="stellungnahmedsb_pbdaten_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+			id="stellungnahmedsb_freigabe"
+			name="Freigabe ohne Prüfung?"
+            inputtype="singleoption"
+        >
+        <option
+            id="stellungnahmedsb_freigabe_1"
+            name="Ja"
+        />
+        <option
+            id="stellungnahmedsb_freigabe_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+			id="stellungnahmedsb_vorpruefung"
+			name="Vorabprüfung erforderlich?"
+            inputtype="singleoption"
+        >
+        <option
+            id="stellungnahmedsb_vorpruefung_1"
+            name="Ja"
+        />
+        <option
+            id="stellungnahmedsb_vorpruefung_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+			id="stellungnahmedsb_pruefungfreigabe"
+			name="Freigabe nach Prüfung?"
+            inputtype="singleoption"
+        >
+        <option
+            id="stellungnahmedsb_pruefungfreigabe_1"
+            name="Ohne Auflagen"
+        />
+        <option
+            id="stellungnahmedsb_pruefungfreigabe_2"
+            name="Mit Auflagen"
+        />
+        <option
+            id="stellungnahmedsb_pruefungfreigabe_3"
+            name="Nicht zutreffend"
+        />
+        </huiproperty>
+        
+	    <huiproperty
+			id="stellungnahmedsb_auflagen"
+			name="Auflagen"
+            inputtype="text"
+        />
+
+	    <huiproperty
+			id="stellungnahmedsb_hinweise"
+			name="Hinweise"
+        />
+        
+    </huientity>
+    
+    
+    <!-- ISO27000 Elements ==================================================================================================================== -->
+    
+    <huientity
+        name="Organization"
+        id="org" >
+        
+        <huirelation to="audit" id="rel_org_audit" />
+        <huirelation to="auditgroup" id="rel_org_auditgroup" />
+        
+        <huiproperty
+            name="Title"
+            id="org_name" 
+            focus="true"
+            tags="Risk,VDA-ISA" />
+        
+        <huiproperty
+	       name="Company Group" id="org_isa_compgroup" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Location" id="org_isa_loc" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Address" id="org_isa_addr"
+           inputtype="text" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Website" id="org_isa_web" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Short company description" id="org_isa_compdesc"
+           inputtype="text" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="D_B D-U-N-S Nr." id="org_isa_duns" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Contact" id="org_isa_cont" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Contact Phone" id="org_isa_contphone" 
+           tags="VDA-ISA" />
+        <huiproperty
+	       name="Contact email" id="org_isa_contmail" 
+           tags="VDA-ISA" />
+        <huiproperty
+            name="Abbreviation"
+            id="org_abbr"
+            tags="Risk" />
+        <huiproperty
+            id="org_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>                   
+         <huiproperty 
+            id="org_created"
+            inputtype="date"
+            tags="Risk,VDA-ISA"
+            >
+            <defaultRule class="Today" />
+        </huiproperty>
+        
+        <!-- risk analysis, ranges must match defined CIA levels + scnario probability -->
+		<huipropertygroup name="Acceptable Risk Levels " id="org_riskgroup" tags="Risk">
+			<huiproperty 
+				name="Confidentiality" id="org_riskaccept_confid" 
+				inputtype="numericoption" min="0" max="11" tags="Risk"/>
+			<huiproperty 
+				name="Integrity" id="org_riskaccept_integ" 
+				inputtype="numericoption" min="0" max="10" tags="Risk"/>
+			<huiproperty 
+				name="Availability" id="org_riskaccept_avail" 
+				inputtype="numericoption" min="0" max="12" tags="Risk" />
+			<huiproperty
+				name="Explanation" id="org_riskaccept_expl" inputtype="text" tags="Risk" />
+		</huipropertygroup>
+        
+        <huipropertygroup name="Business impact classification" id="org_classification" tags="Risk">
+            <huiproperty name="Confidentiality" id="org_class_asset_c"  tags="Risk" inputtype="text" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_c_default">0 Public: No special requirements.
+
+1 External Use: Information for internal use and customers or partners. Possible financial loss is between ??? and ???, breach of legal requirements with financial penalties is possible.
+
+2 Internal Use: Information for internal use only. Financial loss between ??? and ???. Breach of legal requirements could lead to high financial penalties. Personal injury could result by breach of confidentiality.
+
+3 Sensitive: Possible financial loss higher than ???. Breach of legal requirements could lead to prosecution and a prison sentence. Information loss could lead to serious injury or loss of life.</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty name="Integrity" id="org_class_asset_i" inputtype="text" textrows="6"  tags="Risk">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_i_default">0 None: Possible financial loss below ???
+
+1 Normal: Possible financial loss between ??? and ???. Breach of legal requirements could lead to financial penalties. Disclosure could result in personal injury.
+
+2 High: Possible financial loss higher than ???. Breach of legal requirements could lead to prison sentence. Disclosure could result in personal injury or death.
+                    </param>
+                </defaultRule>
+                </huiproperty>
+            <huiproperty name="Availability" id="org_class_asset_a" inputtype="text" textrows="6"  tags="Risk">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_asset_a_default">0 Basic: Possible financial due to downtime loss below ???. Recovery time objective (RTO) is higher than one week.
+
+1 Normal: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image
+
+2 High: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could impair public image or client relationship.
+
+3 Very high: Possible financial loss due to downtime  between ??? and ???. RTO is lower than ???. Donwtime could seriously impair public image or end client relationship. 
+
+4 Extraordinary: Special agreements with individual clients which do not fall in one of the above categories. 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="org_threat_class" name="Threat classification" tags="Risk">
+                   <huiproperty name="Likelihood" id="org_class_threat" inputtype="text" textrows="6"  tags="Risk">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_threat_default">Threats are classified by the likelihood of their ocurrence as follows:
+0 Rare
+1 Annually
+2 Monthly
+3 Weekly
+4 Daily
+5 Hourly 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        
+        <huipropertygroup id="org_vuln_class" name="Vulnerability classification" tags="Risk">
+                   <huiproperty name="Level" id="org_class_vuln" inputtype="text" textrows="6"  tags="Risk">
+                <defaultRule class="SimpleValue">
+                    <param id="org_class_vuln_default">0: Exploitation of the vulnerability requires a directed attack, highly special knowledge or skill and ressources that are not ordinarily available to an attacker. Rare Natural events or technical failures of a large scale could trigger the vulnerability. 
+                    
+1: Exploitation of the vulnerability requires a directed attack by a determined attacker. Natural events or technical failures could affect the vulnerability. 
+
+2: Exploitation of the vulnerability could occur by an automated attack (i.e. scripted attacks) or any attacker even with limited capabilities. Natural events or technical failures could affect the vulnerability.
+
+3: Exploitation of the vulnerability could occur randomly and is highly likely. Even someone without bad intentions could trigger the vulnerability accidentally. Common events will almost certainly trigger the vulnerability. 
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>        
+        
+    </huientity>
+    
+    <huientity
+        name="Asset-Group"
+        id="assetgroup" >
+        <huiproperty
+            name="Title"
+            id="assetgroup_name" />
+    </huientity>
+    
+    <huientity
+        name="Asset"
+        id="asset" >
+        
+        <huirelation to="asset" id="rel_asset_asset" 
+        	name="depends on" reversename="necessary for" tooltip="One asset may depend on other assets, i.e. an application depending on its server."/>
+
+        <huirelation to="person-iso" id="asset-person-owner" 
+        	name="owner" reversename="is owner of" tooltip="Person is owner of this asset. He / she is affected by damage to this asset."/>
+        <huirelation to="person-iso" id="rel_asset_person_respo"
+        	name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/>
+        <huirelation to="person-iso" id="rel_asset_person_accou"
+        	name="accountable" reversename="accountable for" tooltip="" />
+        <huirelation to="person-iso" id="rel_asset_person_consu"
+        	name="consulted" reversename="consulted for" tooltip="" />
+        <huirelation to="person-iso" id="rel_asset_person_info"
+        	name="informed" reversename="informed for" tooltip="" />
+            
+        <huirelation to="control" id="rel_asset_control" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/>
+        <huirelation to="controlgroup" id="rel_asset_controlgroup" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
+               
+        <huiproperty
+            name="Title" 
+            id="asset_name"/>
+        <huiproperty
+            name="Abbreviation" 
+            id="asset_abbr" />
+        <huiproperty
+            id="asset_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+		<huiproperty
+			name="Description" id="asset_description" inputtype="text"  />
+		
+		<huiproperty
+			name="Type of Asset"
+			id="asset_type"
+			inputtype="singleoption">
+			<option
+				name="Information"
+				id="asset_type_inf" />
+			<option
+				name="Software"
+				id="asset_type_software" />
+			<option
+				name="Physical"
+				id="asset_type_phys" />
+			<option
+				name="Service"
+				id="asset_type_service" />
+			<option
+				name="People"
+				id="asset_type_people" />
+			<option
+				name="Intangible"
+				id="asset_type_intangible" />
+		</huiproperty>
+
+    <!-- TODO externalize strings -->
+		<huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
+            <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
+          
+            <huiproperty id="asset_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time1_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time1_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time1_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time1_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_tim24_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_tim24_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_tim24_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_tim24_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time48_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time48_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time48_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time48_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time96_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time96_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time96_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time96_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time168_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time168_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time168_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time168_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="asset_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_time720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_time720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_time720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_time720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+             <huiproperty id="asset_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="asset_bcm_timegt720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="asset_bcm_timegt720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="asset_bcm_timegt720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="asset_bcm_timegt720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+        </huipropertygroup>
+		
+		<huipropertygroup id="asset_value_group" name="Business Impact" tags="Risk" >
+		<huiproperty 
+					id="asset_value_method_confidentiality"
+                     tags="Risk"
+					name="Deduce Confidentiality"
+					inputtype="booleanoption"  defaultValue="1">
+				</huiproperty>	
+		<huiproperty
+					id="asset_value_method_integrity"
+                     tags="Risk"
+					name="Deduce Integrity"
+					inputtype="booleanoption" defaultValue="1">
+				</huiproperty>	
+		<huiproperty
+					id="asset_value_method_availability"
+                     tags="Risk"
+					name="Deduce Availability"
+					inputtype="booleanoption"  defaultValue="1" >
+		</huiproperty>	
+	
+		<huiproperty
+					id="asset_value_confidentiality"
+					name="Confidentiality"
+                     tags="Risk"
+					inputtype="numericoption" min="0" max="3">
+					<option
+						id="asset_value_confidentiality_normal"
+						name="0 Public" 
+						value="0" />
+					<option
+						id="asset_value_confidentiality_hoch"
+						name="1 Company confidential" 
+						value ="1" />
+					<option
+						id="asset_value_confidentiality_sehrhoch"
+						name="2 Customer confidential"
+						value="2" />
+                    <option
+                        id="asset_value_confidentiality_sehrhoch2"
+                        name="3 Sensitive"
+                        value="3" />
+				</huiproperty>
+				
+			<huiproperty
+					id="asset_value_integrity"
+                     tags="Risk"
+					name="Integrity"
+					inputtype="numericoption"  min="0" max="2" >
+					<option
+						id="asset_value_integrity_normal"
+						name="0 None" value="0"  />
+					<option
+						id="asset_value_integrity_hoch"
+						name="1 Normal" value="1"  />
+					<option
+						id="asset_value_integrity_sehrhoch"
+						name="2 High" value="2" />
+				</huiproperty>
+				
+				<huiproperty
+					id="asset_value_availability"
+                     tags="Risk"
+					name="Availability"
+					inputtype="numericoption"  min="0" max="4" >
+					<option
+						id="asset_value_availability_normal"
+						name="0 Basic" value="0" />
+					<option
+						id="asset_value_availability_hoch"
+						name="1 Standard" value="1" />
+					<option
+						id="asset_value_availability_sehrhoch"
+						name="2 Premium" value="2" />
+                    <option
+                        id="asset_value_availability_sehrhoch2"
+                        name="3 Enterprise" value="3" />
+                    <option
+                        id="asset_value_availability_sehrhoch3"
+                        name="4 Exceptional" value="4" />
+				</huiproperty>
+                
+                <huiproperty
+	               name="Replacement Cost" id="asset_replacementcost" tags="Finance" />
+                <huiproperty
+	               id="asset_replcost_currency" name="Currency" tags="Finance"
+                   inputtype="singleoption" >
+                   <option id="asset_replcost_currency_eur" name="€"/>
+                   <option id="asset_replcost_currency_usd" name="$"/>
+                   <option id="asset_replcost_currency_bpd" name="£"/>
+                   <option id="asset_replcost_currency_yen" name="¥"/>
+               </huiproperty>
+				
+				<huiproperty
+					name="Explanation"
+                     tags="Risk"
+					inputtype="text"
+					id="asset_value_comment" />
+		</huipropertygroup>
+		
+	
+		<huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
+			<huiproperty
+             tags="Risk"
+				name="Confidentiality risk value" id="asset_riskvalue_c" editable="false"/>
+			<huiproperty
+             tags="Risk"
+				name="Confidentiality risk with implemented controls" id="asset_riskwcontrolvalue_c" editable="false"/>
+			<huiproperty
+             tags="Risk"
+				name="Confidentiality risk with planned controls" id="asset_riskwplancontrolvalue_c" editable="false"/>
+           
+            <huiproperty
+             tags="Risk"
+                name="Integrity risk value" id="asset_riskvalue_i" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Integrity risk with implemented controls" id="asset_riskwcontrolvalue_i" editable="false"/>                
+            <huiproperty
+             tags="Risk"
+                name="Integrity risk with planned controls" id="asset_riskwplancontrolvalue_i" editable="false"/>                
+           
+            <huiproperty
+             tags="Risk"
+                name="Availability risk value" id="asset_riskvalue_a" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability risk with implemented controls" id="asset_riskwcontrolvalue_a" editable="false"/>
+            <huiproperty
+             tags="Risk"
+                name="Availability risk with planned controls" id="asset_riskwplancontrolvalue_a" editable="false"/>
+		</huipropertygroup>
+            
+		<huipropertygroup name="Risk Treatment" id="asset_risktreatgroup" tags="Risk">
+			<huiproperty
+             tags="Risk" 
+				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
+				<option name="Reduction" id="asset_risktreat_reduct" />       	
+				<option name="Retention" id="asset_risktreat_retent" />       	
+				<option name="Avoidance" id="asset_risktreat_avoid" />       	
+				<option name="Transfer" id="asset_risktreat_transf" />       	
+			</huiproperty>
+			<huiproperty
+             tags="Risk"
+				name="Explanation" id="asset_risktreatexpl" inputtype="text" />
+		</huipropertygroup>
+    </huientity>
+    
+    <huientity
+        name="Person-Group"
+        id="persongroup" >
+        <huiproperty
+            name="Title"
+            id="persongroup_name" />
+    </huientity>
+    
+    <huientity
+        name="Person"
+        id="person-iso" >
+        
+        <huirelation to="org" id="rel_person_org_ceo"
+        	name="CEO of" reversename="CEO" tooltip="" />
+        <huirelation to="org" id="rel_person_org_cto"
+        	name="CTO of" reversename="CTO" tooltip="" />
+        <huirelation to="org" id="rel_person_org_ciso"
+        	name="CISO of" reversename="CISO" tooltip="" />
+
+       
+        <huirelation to="control" id="rel_person_control_imp"
+        	name="implements" reversename="implemented by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_mon"
+        	name="monitors" reversename="monitored by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_aud"
+        	name="audits" reversename="audited by" tooltip="" />
+       
+        <huirelation to="requirement" id="rel_person_requirement_responsible"
+        	name="responsible for" reversename="responsible" tooltip="" />
+       
+        <huirelation to="record" id="rel_person_record_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        
+        <huirelation to="process" id="rel_person_process_responsible"
+        	name="responsible for" reversename="responsible" tooltip="" />
+        <huirelation to="process" id="rel_person_process_accountable"
+        	name="accountable for" reversename="accountable" tooltip="" />
+        <huirelation to="process" id="rel_person_process_consulted"
+        	name="consulted about" reversename="consulted" tooltip="" />
+        <huirelation to="process" id="rel_person_process_informed"
+        	name="informed about" reversename="informed" tooltip="" />
+        	
+        <huirelation to="finding" id="rel_person_finding_aud"
+        	name="reported" reversename="reported by" tooltip="" />
+        <huirelation to="finding" id="rel_person_finding_ass"
+        	name="assigned to" reversename="assigned to" tooltip="" />
+
+        <huirelation to="evidence" id="rel_person_evidence_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+        	
+        <huirelation to="interview" id="rel_person_interview_intvwer"
+        	name="conducted" reversename="conducted by" tooltip="" />
+        <huirelation to="interview" id="rel_person_interview_intvwee"
+        	name="interviewed in" reversename="interviewed person" tooltip="" />
+        
+        <huirelation to="vulnerability" id="rel_person_vulnerability_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+       
+        <huirelation to="threat" id="rel_person_threat_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+       
+        <huirelation to="response" id="rel_person_response_devis"
+        	name="decided on" reversename="decided by" tooltip="" />
+       
+        <huirelation to="incident_scenario" id="rel_person_incscen_modl"
+        	name="modelled" reversename="modelled by" tooltip="" />
+       
+        <huirelation to="incident" id="rel_person_incident_rep"
+        	name="reported" reversename="reported by" tooltip="" />
+        
+        <!-- roles, int. auditor etc. -->
+        <huiproperty
+            name="Abbreviation"
+            id="person_abbr" />
+        <huiproperty
+            id="person-iso_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+
+		<huiproperty
+			name="Anrede"
+			id="person-iso_anrede"
+            inputtype="singleoption">
+				<option
+					id="person-iso_anrede_none"
+					name="" />
+				<option
+					id="person-iso_anrede_frau"
+					name="Mrs" />
+				<option
+					id="person-iso_anrede_herr"
+					name="Mr" />
+
+		</huiproperty>
+		<huiproperty
+			name="Surname"
+			id="person-iso_surname">
+		</huiproperty>
+		<huiproperty
+			name="Name"
+			id="person-iso_name" />
+
+		<huiproperty
+			name="Phone"
+			id="person-iso_telefon" />
+		<huiproperty
+			name="Email"
+			id="person-iso_email" />
+		<huiproperty
+			name="Org.-Unit"
+			id="person-iso_orgeinheit" />
+		<huiproperty
+			name="Explanation"
+			id="person-iso_erlaeuterung" />
+		<huiproperty
+			name="Roles"
+			id="person-iso_rollen"
+			tooltip="Roles of this employee."
+			required="false"
+			inputtype="multioption">
+			
+			<!-- Start: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen  ??? use english terms from safeguards-->
+			<option
+				id="person-iso_0"
+				name="Administrator" />
+			<option
+				id="person-iso_2"
+				name="Anwendungsentwickler" />
+			<option
+				id="person-iso_3"
+				name="Archivverwalter" />
+			<option
+				id="person-iso_4"
+				name="Bauleiter" />
+			<option
+				id="person-iso_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option
+				id="person-iso_6"
+				name="Benutzer" />
+			<option
+				id="person-iso_7"
+				name="Beschaffer" />
+			<option
+				id="person-iso_8"
+				name="Brandschutzbeauftragter" />
+			<option
+				id="person-iso_9"
+				name="Datenschutzbeauftragter" />
+			<option
+				id="person-iso_43"
+				name="Entwickler" />
+			<option
+				id="person-iso_10"
+				name="Errichterfirma" />
+			<option
+				id="person-iso_11"
+				name="Fachabteilung" />
+			<option
+				id="person-iso_42"
+				name="Fachverantwortliche" />
+			<option
+				id="person-iso_12"
+				name="Fax-Poststelle" />
+			<option
+				id="person-iso_13"
+				name="Fax-Verantwortlicher" />
+			<option
+				id="person-iso_14"
+				name="Haustechnik" />
+			<option
+				id="person-iso_16"
+				name="Innerer Dienst" />	
+			<option
+				id="person-iso_17"
+				name="IT-Benutzer" />
+			<option
+				id="person-iso_18"
+				name="IT-Sicherheitsbeauftragter" />
+			<option
+				id="person-iso_19"
+				name="IT-Sicherheitsmanagement" />
+			<option
+				id="person-iso_20"
+				name="IT-Verfahrensverantwortlicher" />	
+			<option
+				id="person-iso_46"
+				name="Leiter Beschaffung" />	
+			<option
+				id="person-iso_44"
+				name="Leiter Entwicklung" />
+			<option
+				id="person-iso_47"
+				name="Leiter Fachabteilung" />
+			<option
+				id="person-iso_48"
+				name="Leiter Haustechnik" />	
+			<option
+				id="person-iso_49"
+				name="Leiter Innerer Dienst" />	
+			<option
+				id="person-iso_45"
+				name="Leiter IT" />	
+			<option
+				id="person-iso_50"
+				name="Leiter Organisation" />
+			<option
+				id="person-iso_51"
+				name="Leiter Personal" />	
+			<option
+				id="person-iso_22"
+				name="Mitarbeiter" />
+			<option
+				id="person-iso_24"
+				name="Notfall-Verantwortliche" />
+			<option
+				id="person-iso_25"
+				name="Personalabteilung" />
+			<option
+				id="person-iso_26"
+				name="Personalrat/Betriebsrat" />
+			<option
+				id="person-iso_1"
+				name="Planer" />
+			<option
+				id="person-iso_27"
+				name="Poststelle" />
+			<option
+				id="person-iso_40"
+				name="Pressestelle" />
+			<option
+				id="person-iso_28"
+				name="Revisor" />
+			<option
+				id="person-iso_29"
+				name="Telearbeiter" />
+			<option
+				id="person-iso_35"
+				name="Tester" />
+			<option
+				id="person-iso_30"
+				name="TK-Anlagen-Verantwortlicher" />	
+			<option
+				id="person-iso_32"
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
+			<option
+				id="person-iso_33"
+				name="Verantwortliche für die Datensicherung" />	
+			<option
+				id="person-iso_34"
+				name="Vorgesetzte" />
+			<!-- ENDE: "offizielle" GS-Kataloge Rollen, verwendet fuer automatische Zuordnung von Massnahmen -->
+			
+			<option
+				id="person-iso_39"
+				name="Fax-Absender" />
+			<option
+				id="person-iso_38"
+				name="Fax-Empfänger" />
+			<option
+				id="person-iso_36"
+				name="IT Helpdesk" />
+			<option
+				id="person-iso_37"
+				name="Hersteller" />
+			<option
+				id="person-iso_15"
+				name="Hausverwaltung" />
+			<option
+				id="person-iso_21"
+				name="Leitung" />
+			<option
+				id="person-iso_23"
+				name="Netzplaner" />
+			<option
+				id="person-iso_31"
+				name="Unternehmensleitung" />
+			<option
+				id="person-iso_41"
+				name="Vertretung" />
+		</huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Audit-Group"
+        id="auditgroup" >
+        <huiproperty
+            name="Title"
+            id="auditgroup_name"
+            />
+        
+        <huirelation to="asset" id="rel_auditgroup_asset"/>
+    </huientity>
+    
+    <huientity
+        name="Audit"
+        id="audit" >
+        
+        <huirelation to="person-iso" id="rel_audit_person_auditor"
+        	name="Auditor" reversename="Auditor in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_auditee"
+        	name="Auditee" reversename="Auditee in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_guide"
+        	name="Guide" reversename="Guide in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_leadauditor"
+        	name="Lead Auditor" reversename="Lead Auditor in" tooltip="" />
+        <huirelation to="person-iso" id="rel_audit_person_mgmtrep"
+        	name="Management Representative" reversename="Management Representative in" tooltip="" />
+        <huirelation to="asset" id="rel_audit_asset"/>
+        <huirelation to="assetgroup" id="rel_audit_assetgroup"/>
+        <huirelation to="control" id="rel_audit_control"/>
+        <huirelation to="samt_topic" id="rel_audit_samttopic"/>
+        <huirelation to="controlgroup" id="rel_audit_controlgroup"/>
+        <huirelation to="finding" id="rel_audit_finding"/>
+        <huirelation to="finding_group" id="rel_audit_finding_group"/>
+        <huirelation to="evidence" id="rel_audit_evidence"/>
+        <huirelation to="evidence_group" id="rel_audit_evidence_group"/>
+        
+        
+        <huiproperty
+            name="Title"
+            id="audit_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="audit_abbr" />
+        <huiproperty
+            id="audit_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+       		name="Type" id="audit_type" inputtype="singleoption">
+			<option name="1st Party" id="audit_type_1st" />       	
+			<option name="2nd Party" id="audit_type_2nd" />       	
+			<option name="3rd Party" id="audit_type_3rd" />       	
+			<option name="Certification" id="audit_type_cert" />       	
+			<option name="Surveillance" id="audit_type_surv" />       	
+			<option name="Re-Certification" id="audit_type_recert" />       	
+		</huiproperty>
+		<huiproperty 
+			name="From"
+			id="audit_startdate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+		<huiproperty 
+			name="Until"
+			id="audit_enddate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+		<!-- moved from org to audit, bug 277 -->
+		<huiproperty
+			id="audit_description" 
+			inputtype="text" 
+            tags="Risk,VDA-ISA"/>
+		<huiproperty 
+		    id="audit_isa_creat" 
+            tags="VDA-ISA" />
+        <huiproperty 
+        	id="audit_isa_creatphone" 
+           	tags="VDA-ISA" />
+        <huiproperty 
+        	id="audit_isa_creatmail" 
+           	tags="VDA-ISA" />
+    </huientity>
+
+    <huientity
+        name="Control-Group"
+        id="controlgroup" >
+        <huiproperty
+            name="Title"
+            id="controlgroup_name" />
+    </huientity>
+
+    <huientity
+        name="Control"
+        id="control" >
+        
+        <huirelation to="incident_scenario" id="rel_control_incscen" 
+        	name="reduces probability of " reversename="probability reduced by" tooltip=""/>
+		<huirelation to="control" id="rel_control_control"
+        	name="details" reversename="is detailed by" tooltip="" />
+        <huirelation to="person-iso" id="rel_control_person-iso"
+            name="assignee" reversename="is responsible for" tooltip="" />
+        	
+        <huiproperty
+            name="Title"
+            id="control_name" 
+            inputtype="text"
+            tags="Web"/>
+        <huiproperty
+            name="Abbreviation"
+            id="control_abbr"
+            tags="Web" />
+        <huiproperty
+            id="control_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Description"
+            id="control_desc"
+            visible="false"
+            tags="Web"/>
+     	
+   
+
+<!--      	
+     	<huipropertygroup name="Monitoring Results" id="control_auditgroup" >
+     		 ??? measured effectiveness, notes, date... 
+     	</huipropertygroup>
+-->
+     	<huipropertygroup id="control_implementedgroup" name="Implementation" tags="Risk,Web">
+     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption" tags="Risk,Web">
+     			<option name="Yes" id="control_implemented_yes"/>
+     			<option name="No" id="control_implemented_no"/>
+     			<option name="Partly" id="control_implemented_partly"/>
+     			<option name="N.a." id="control_implemented_na"/>
+     		</huiproperty>
+     		<huiproperty 
+            tags="Risk,Web"
+     			name="Explanation" 
+     			id="control_implemented_explanation" 
+     			inputtype="text" />
+            <huiproperty
+            tags="Risk,Web" 
+                name="Objective" 
+                id="control_implemented_objective" 
+                inputtype="text" 
+                tooltip="The control objective is the goal that the control is supposed to achieve." />
+     		<huiproperty
+            tags="Risk,Web"
+				id="control_implby"
+				name="Implementation date"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param id="control_implby_changeField">MONTH</param>
+                    <param id="control_implby_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+     	</huipropertygroup>
+        
+         <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
+    <huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="Risk">
+            <huiproperty name="Impact on Confidentiality" id="control_effectiveness_confidentiality"
+            tags="Risk" 
+                inputtype="numericoption" min="0" max="3" >
+                <option name="No effect"          id="control_eff_conf_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_conf_1" value="1" />
+                <option name="Reduces 2 levels"    id="control_eff_conf_2" value="2" />
+                <option name="Reduces completely" id="control_eff_conf_3" value="3" />
+            </huiproperty>
+            <huiproperty tags="Risk" name="Impact on Integrity" id="control_effectiveness_integrity" 
+                inputtype="numericoption" min="0" max="2">
+                <option name="No effect"         id="control_eff_integ_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_integ_1" value="1" />
+                <option name="Reduces completely" id="control_eff_integ_2" value="2" />
+            </huiproperty>
+            <huiproperty tags="Risk" name="Impact on Availability" id="control_effectiveness_availability" 
+                inputtype="numericoption" min="0" max="4" >
+                <option name="No effect"         id="control_eff_avail_0" value="0" />
+                <option name="Reduces 1 level"    id="control_eff_avail_1" value="1" />
+                <option name="Reduces 2 levels"    id="control_eff_avail_2" value="2" />
+                <option name="Reduces 3 levels"    id="control_eff_avail_3" value="3" />
+                <option name="Reduces completely" id="control_eff_avail_4" value="4" />
+            </huiproperty>
+            <huiproperty tags="Risk" name="Probability of scenario" id="control_eff_probability"
+                inputtype="numericoption" min="0" max="8" >
+                <option name="No effect."      id="control_eff_prob_0" value="0" />
+                <option name="Reduces 1 level" id="control_eff_prob_1" value="1" /> 
+                <option name="Reduces 2 levels" id="control_eff_prob_2" value="2" />
+                <option name="Reduces 3 levels" id="control_eff_prob_3" value="3" />
+                <option name="Reduces 4 levels" id="control_eff_prob_4" value="4" />
+                <option name="Reduces 5 levels" id="control_eff_prob_5" value="5" />
+                <option name="Reduces 6 levels" id="control_eff_prob_6" value="6" />
+                <option name="Reduces 7 levels" id="control_eff_prob_7" value="7" />
+                <option name="Reduces completely" id="control_eff_prob_8" value="8" />
+            </huiproperty>
+            <huiproperty tags="Risk" name="Explanation" id="control_effectiveness_explanation2" inputtype="text"/>
+                
+        </huipropertygroup>
+        
+            <huipropertygroup id="control_maturitygroup" name="Maturity Level" tags="Maturity,Web" >
+        
+            <huiproperty
+                id="control_maturity"
+                name="Maturity"
+                 tags="Maturity" 
+                focus="false"
+                required="false"
+                inputtype="numericoption" 
+                min="0" max="9">
+            </huiproperty>
+            
+            <huiproperty
+                id="control_weight"
+                 tags="Maturity" 
+                name="Suggested weight"
+                editable="false" />
+            
+            <huiproperty
+                id="control_ownweight"
+                 tags="Maturity" 
+                name="Used weight" 
+                editable="true"/>
+            
+            <huiproperty 
+                id="control_min1" name="Threshold 1" editable="false"  tags="Maturity" />
+            
+            <huiproperty 
+                id="control_min2" name="Threshold 2" editable="false"  tags="Maturity" />
+            
+            <huiproperty
+                id="control_maturity_comment"
+                name="Remarks"
+                 tags="Maturity" 
+                inputtype="text" />
+            
+            <huiproperty
+                    id="control_maturity_duedate"
+                     tags="Maturity,Web" 
+                    name="Realize until"
+                    inputtype="date">
+                    <defaultRule class="Today">
+                        <param id="control_maturity_duedate_changeField">MONTH</param>
+                        <param id="control_maturity_duedate_timeDifference">2</param>
+                    </defaultRule>
+                </huiproperty>
+        </huipropertygroup>
+     	
+     	<huipropertygroup id="control_revisiongroup" name="Revision" tags="Revision" >
+     		<huiproperty
+				id="control_lastrev"
+				name="Last revision"
+				tags="Revision"
+				inputtype="date">
+                <defaultRule class="Today">
+                </defaultRule>
+            </huiproperty>
+            <huiproperty 
+     			name="Notes" 
+     			id="control_revision_notes" 
+     			tags="Revision"
+     			inputtype="text" />
+            <huiproperty
+				id="control_nextrev"
+				name="Next revision"
+				tags="Revision"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param id="control_nextrev_changeField">MONTH</param>
+                    <param id="control_nextrev_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+     	</huipropertygroup>
+     	
+     	
+        
+        <huipropertygroup
+			id="control_group_kosten"
+            tags="Finance"
+			name="Cost">
+            <huiproperty
+                   id="control_kosten_currency" name="Currency" 
+                   inputtype="singleoption" >
+                   <option id="control_kosten_currency_eur" name="€"/>
+                   <option id="control_kosten_currency_usd" name="$"/>
+                   <option id="control_kosten_currency_bpd" name="£"/>
+                   <option id="control_kosten_currency_yen" name="¥"/>
+           </huiproperty>
+                
+            <huiproperty
+                id="control_kosten_ptfix"
+                tags="Finance"
+                name="Labor costs fixed"/>
+            <huiproperty
+                id="control_kosten_ptvar"
+                tags="Finance"
+                name="Labor costs running"/>
+            <huiproperty
+				id="control_kosten_ptperiod"
+				name="Time period"
+                tags="Finance"
+				inputtype="singleoption">
+				<option
+					id="control_kosten_ptperiod_tag"
+					name="Day" />
+				<option
+					id="control_kosten_ptperiod_woche"
+					name="Week" />
+				<option
+					id="control_kosten_ptperiod_monat"
+					name="Month" />
+				<option
+					id="control_kosten_ptperiod_quartal"
+					name="Quarter" />
+				<option
+					id="control_kosten_ptperiod_jahr"
+					name="Year" />
+			</huiproperty>
+            <huiproperty
+                id="control_kosten_sachfix"
+                tags="Finance"
+                name="Material costs fixed"/>
+            <huiproperty
+                id="control_kosten_sachvar"
+                tags="Finance"
+                name="Material costs running"/>
+            <huiproperty
+				id="control_kosten_sachperiod"
+                tags="Finance"
+				name="Time period"
+				inputtype="singleoption">
+				<option
+					id="control_kosten_sachperiod_tag"
+					name="Day" />
+				<option
+					id="control_kosten_sachperiod_woche"
+					name="Week" />
+				<option
+					id="control_kosten_sachperiod_monat"
+					name="Month" />
+				<option
+					id="control_kosten_sachperiod_quartal"
+					name="Quarter" />
+				<option
+					id="control_kosten_sachperiod_jahr"
+					name="Year" />
+			</huiproperty>
+		</huipropertygroup>
+		
+		
+		<huipropertygroup id="control_isaaudit" name="ISA Audit" >
+		
+		     <huiproperty
+	           id="control_isa_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
+	           textrows="12"/>
+            
+          <huiproperty 
+            id="control_isa_maturity"      
+            inputtype="numericoption" 
+            min="-2" 
+            max="5" 
+            defaultValue="-2" 
+            tags="VDA-ISA,VDA_ISA_Audit"
+            focus="true">
+                <option id="control_isa_maturity_null"  value="-2" />
+                <option id="control_isa_maturity_na"  value="-1" />
+                <option id="control_isa_maturity_0"  value="0" />
+                <option id="control_isa_maturity_1"  value="1" />
+                <option id="control_isa_maturity_2"  value="2" />
+                <option id="control_isa_maturity_3"  value="3" />
+                <option id="control_isa_maturity_4"  value="4" />
+                <option id="control_isa_maturity_5"  value="5" />
+          </huiproperty>
+            
+          <huiproperty 
+            id="control_isa_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_ownweight" visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="control_isa_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
+
+            
+          <huiproperty 
+            id="control_isa_externalnote" 
+            tags="VDA-ISA"
+            inputtype="text"/>
+          <huiproperty 
+            id="control_isa_internalnote" 
+            inputtype="text"
+            tags="VDA-ISA"
+            report="false" />
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
+            <huiproperty
+	           id="control_isa_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
+                 inputtype="numericoption" 
+               min="-1" 
+               max="2" 
+               defaultValue="-1" 
+            >
+                <option id="control_isa_audit_ra_na"  value="-1" />
+                <option id="control_isa_audit_ra_0"  value="0" />
+                <option id="control_isa_audit_ra_1"  value="1" />
+                <option id="control_isa_audit_ra_2"  value="2" />
+            </huiproperty>
+
+            <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="control_isa_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
+               inputtype="numericoption" 
+               min="-1" 
+               max="1" 
+               defaultValue="-1" 
+            >
+                <option id="control_isa_audit_devi_na"  value="-1" />
+                <option id="control_isa_audit_devi_0"  value="0" />
+                <option id="control_isa_audit_devi_1"  value="1" />
+          </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="control_isa_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+                <defaultRule class="Today">
+                    <param id="control_isa_audit_compluntil_changeField">MONTH</param>
+                    <param id="control_isa_audit_compluntil_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+             <huiproperty 
+	            id="control_isa_isaauditnote" 
+	            tags="VDA_ISA_Audit"
+	            inputtype="text"
+	            textrows="12" />
+        
+        </huipropertygroup>
+       
+    </huientity>
+    
+    <huientity
+        name="Exception-Group"
+        id="exceptiongroup" >
+        <huiproperty
+            name="Title"
+            id="exceptiongroup_name" />
+    </huientity>
+    
+    <huientity
+        name="Exception"
+        id="exception" >
+        
+        <huirelation to="document" id="rel_exception_document" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+        <huirelation to="control" id="rel_exception_control" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+        <huirelation to="requirement" id="rel_exception_requirement" 
+        	name="exception from" reversename="approved exception" tooltip=""/>
+    
+        <huirelation to="person-iso" id="rel_exception_person_requested" 
+        	name="requested by" reversename="requested exception" tooltip=""/>
+        <huirelation to="person-iso" id="rel_exception_person_approved" 
+        	name="approved by" reversename="approved exception" tooltip=""/>
+       	
+        <huiproperty
+            name="Title"
+            id="exception_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="exception_abbr" />
+        <huiproperty
+            id="exception_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Reason" id="exception_reason" inputtype="text"/>
+        <huiproperty
+        	name="Approved" id="exception_approved" inputtype="singleoption">
+			<option name="Yes" id="exception_approved_yes" />       	
+			<option name="No" id="exception_approved_no" />       	
+		</huiproperty>
+        <huiproperty 
+        	name="Explanation" id="exception_approvedexpl" inputtype="text"/>
+        <huiproperty 
+        	name="Conditions" id="exception_condition" inputtype="text"/>
+        <huiproperty 
+			name="Approved on"
+			id="exception_startdate"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+        <huiproperty  
+        	name="Valid until" id="exception_enddate" inputtype="date">
+        	<defaultRule class="Today" />
+		</huiproperty>
+        
+    </huientity>
+    
+    <huientity
+        name="Requirement-Group"
+        id="requirementgroup" >
+        <huiproperty
+            name="Title"
+            id="requirementgroup_name" />
+    </huientity>
+    
+    <huientity
+        name="Requirement"
+        id="requirement" >
+        
+        <huirelation to="control" id="rel_requirement_control" 
+        	name="fullfilled by" reversename="fullfils" tooltip=""/>
+       	<huirelation to="asset" id="rel_requirement_asset" 
+        	name="applies to" reversename="requires" tooltip=""/>
+        	
+        <huiproperty
+            name="Title"
+            id="requirement_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="requirement_abbr" />
+        <huiproperty
+            id="requirement_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Description" id="requirement_desc" inputtype="text"/>
+		<huiproperty 
+			name="Type" id="requirement_type" inputtype="singleoption">
+			<option name="Legal" id="requirement_type_legal" />       	
+			<option name="Contractual" id="requirement_type_contract" />       	
+			<option name="Regulatory" id="requirement_type_regulat" />       	
+			<option name="Business Objective" id="requirement_type_busobj" />       	
+			<option name="IS Objective" id="requirement_type_isobj" />       	
+		</huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Incident"
+        id="incident" >
+        
+        <huirelation to="incident_scenario" id="rel_incident_incscen"
+        	name="predicted as" reversename="happened as" tooltip="" />
+        <huirelation to="asset" id="rel_incident_asset"
+        	name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="response" id="rel_incident_response"
+        	name="was responded by" reversename="response to" tooltip="" />
+        <huirelation to="control" id="rel_incident_control"
+        	name="in future prevented by" reversename="reaction to" tooltip="" />
+        
+        <huiproperty
+            name="Title"
+            id="incident_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="incident_abbr" />
+        <huiproperty
+            id="incident_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Event(s)" id="incident_desc" inputtype="text"/>
+		<huiproperty 
+			name="Date"
+			id="incident_date"
+			inputtype="date">
+            <defaultRule class="Today" />
+		</huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Incident-Group"
+        id="incident_group" >
+        <huiproperty
+            name="Title"
+            id="incident_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Incident-Scenario"
+        id="incident_scenario" >
+        
+        <huirelation to="threat" id="rel_incscen_threat" 
+        	name="relevant threat" reversename="applies to" tooltip=""/>
+        <huirelation to="vulnerability" id="rel_incscen_vulnerability" 
+        	name="relevant vulnerability" reversename="applies to" tooltip=""/>
+        <huirelation to="asset" id="rel_incscen_asset" 
+        	name="affects" reversename="affected by" tooltip=""/>
+        
+        <huiproperty
+            name="Title"
+            id="incident_scenario_name"
+            tags="Risk" />
+        <huiproperty
+            name="Abbreviation"
+            id="incident_scenario_abbr"
+            tags="Risk" />
+        <huiproperty
+            id="incident_scenario_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Explanation" id="incscen_explanation" inputtype="text" tags="Risk"/>
+            
+        <huiproperty
+                    id="scenario_value_method_confidentiality"
+                    name="Affects Confidentiality"
+                    tags="Risk"
+                    inputtype="booleanoption" defaultValue="1" >
+                </huiproperty>  
+        <huiproperty
+                    id="scenario_value_method_integrity"
+                    name="Affects Integrity"
+                    tags="Risk"
+                    inputtype="booleanoption"  defaultValue="1">
+                </huiproperty>  
+        <huiproperty
+                    id="scenario_value_method_availability"
+                    name="Affects Availability"
+                    tags="Risk"
+                    inputtype="booleanoption"  defaultValue="1">
+        </huiproperty>  
+        
+        <huipropertygroup name="Probability" id="incscen_likelihoodgroup" tags="Risk">
+			<huiproperty
+             tags="Risk"
+				name="Deduce from threat and vuln." id="incscen_likelihoodmethod" inputtype="booleanoption" defaultValue="1" >
+			</huiproperty>
+            
+            <huiproperty 
+                name="Threat Likelihood" id="incscen_threat_likelihood"
+                inputtype="numericoption" min="0" max="5" defaultValue="2" 
+                tags="Risk">
+                <option id="incscen_threat_likelihood_0" name="Rare" value="0"/>
+                <option id="incscen_threat_likelihood_1" name="Annually" value="1"/>
+                <option id="incscen_threat_likelihood_2" name="Monthly" value="2"/>
+                <option id="incscen_threat_likelihood_3" name="Weekly" value="3"/>
+                <option id="incscen_threat_likelihood_4" name="Daily" value="4"/>
+                <option id="incscen_threat_likelihood_5" name="Hourly" value="5"/>
+            </huiproperty>
+            
+            <huiproperty name="Vulnerability exploitation" id="incscen_vuln_level" inputtype="numericoption"
+                min="0" max="3" defaultValue="1" 
+                tags="Risk">
+                <option id="incscen_vuln_level_0" name="0: Hardly possible" value="0"/>
+                <option id="incscen_vuln_level_1" name="1: Possible" value="1"/>
+                <option id="incscen_vuln_level_2" name="2: Easily possible" value="2"/>
+                <option id="incscen_vuln_level_3" name="3: Probable" value="3"/>
+            </huiproperty> 
+            
+            <!-- Risk analysis, range has to match min to max sum possible from threat + vulnerability -->
+			<huiproperty
+             tags="Risk"
+				name="Probability of scenario occuring" id="incscen_likelihood" 
+					inputtype="numericoption" min="0" max="8" editable="false" 
+                    tooltip="Probability as determined by possible combination of threat and vulnerability, the lowest being a rarely occuring threat (less than once a year) meeting a barely exploitable vulnerability. The highest combination is an hourly occuring threat meeting an easily exploitable vulnerability. Probability is scaled between those limits."
+            >
+                    <option id="incscen_likely_0" name="0: Less than 10%" value="0" />
+                    <option id="incscen_likely_1" name="1: 20%" value="1" />
+                    <option id="incscen_likely_2" name="2: 30%" value="2" />
+                    <option id="incscen_likely_3" name="3: 40%" value="3" />
+                    <option id="incscen_likely_4" name="4: 50%" value="4" />
+                    <option id="incscen_likely_5" name="5: 60%" value="5" />
+                    <option id="incscen_likely_6" name="6: 70%" value="6" />
+                    <option id="incscen_likely_7" name="7: 80%" value="7" />
+                    <option id="incscen_likely_8" name="8: 90% and higher" value="8" />
+            </huiproperty>
+            
+            <huiproperty  tags="Risk" id="incscen_likelihood_wcontrol" name="Probability with implemented controls " 
+              inputtype="numericoption" min="0" max="8" editable="false">
+                <option id="incscen_likelyc_0" name="0: Less than 10%" value="0" />
+                <option id="incscen_likelyc_1" name="1: 20%" value="1" />
+                <option id="incscen_likelyc_2" name="2: 30%" value="2" />
+                <option id="incscen_likelyc_3" name="3: 40%" value="3" />
+                <option id="incscen_likelyc_4" name="4: 50%" value="4" />
+                <option id="incscen_likelyc_5" name="5: 60%" value="5" />
+                <option id="incscen_likelyc_6" name="6: 70%" value="6" />
+                <option id="incscen_likelyc_7" name="7: 80%" value="7" />
+                <option id="incscen_likelyc_8" name="8: 90% and higher" value="8" />
+          </huiproperty>
+          
+           <huiproperty id="incscen_likelihood_wplancontrol" name="Probability with planned controls " 
+              inputtype="numericoption" min="0" max="8" editable="false"  tags="Risk">
+                <option id="incscen_likelypc_0" name="0: Less than 10%" value="0" />
+                <option id="incscen_likelypc_1" name="1: 20%" value="1" />
+                <option id="incscen_likelypc_2" name="2: 30%" value="2" />
+                <option id="incscen_likelypc_3" name="3: 40%" value="3" />
+                <option id="incscen_likelypc_4" name="4: 50%" value="4" />
+                <option id="incscen_likelypc_5" name="5: 60%" value="5" />
+                <option id="incscen_likelypc_6" name="6: 70%" value="6" />
+                <option id="incscen_likelypc_7" name="7: 80%" value="7" />
+                <option id="incscen_likelypc_8" name="8: 90% and higher" value="8" />
+          </huiproperty>
+            
+			        	
+        </huipropertygroup>
+        
+    </huientity>
+    
+    <huientity
+        name="Incident-Scenario-Group"
+        id="incident_scenario_group" >
+        <huiproperty
+            name="Title"
+            id="incident_scenario_group_name" 
+            tags="Risk"/>
+    </huientity>
+    
+    <huientity
+        name="Response"
+        id="response" >
+        <huiproperty
+            name="Title"
+            id="response_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="response_abbr" />
+        <huiproperty
+            id="response_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Corrective Action" id="response_corract" inputtype="text" />
+    </huientity>
+    
+    <huientity
+        name="Response-Group"
+        id="response_group" >
+        <huiproperty
+            name="Title"
+            id="response_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Threat"
+        id="threat" >
+        <huiproperty
+            name="Title"
+            id="threat_name"
+            tags="Risk" />
+        <huiproperty
+            name="Abbreviation"
+            id="threat_abbr"
+            tags="Risk" />
+        <huiproperty
+            id="threat_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty 
+        	name="Description" id="threat_description" visible="false" tags="Risk"/>
+            
+            <!-- Threat likelihood and impact, the higher of the two values will be used. -->
+       	<huiproperty 
+       		name="Threat Likelihood" id="threat_likelihood" inputtype="numericoption" min="0" max="5" defaultValue="0" tags="Risk">
+            <option id="threat_likelihood_0" name="Rare" value="0"/>
+            <option id="threat_likelihood_1" name="Annually" value="1"/>
+            <option id="threat_likelihood_2" name="Monthly" value="2"/>
+            <option id="threat_likelihood_3" name="Weekly" value="3"/>
+            <option id="threat_likelihood_4" name="Daily" value="4"/>
+            <option id="threat_likelihood_5" name="Hourly" value="5"/>
+		</huiproperty>
+        <!-- Optionally enable this to allow either likelihood or threat level classification (or both): -->
+            <huiproperty 
+            visible="false"
+            name="Threat Impact" id="threat_impact" inputtype="numericoption" min="0" max="5" tags="Risk">
+            <option id="threat_impact_0" name="0: Very Low" value="0"/>
+            <option id="threat_impact_1" name="1: Low" value="1"/>
+            <option id="threat_impact_2" name="2: Medium" value="2"/>
+            <option id="threat_impact_3" name="3: High" value="3"/>
+            <option id="threat_impact_4" name="4: Very High" value="4"/>
+            <option id="threat_impact_5" name="5: Catastrophic" value="5"/>
+        </huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Threat-Group"
+        id="threat_group" >
+        <huiproperty
+            name="Title"
+            id="threat_group_name" tags="Risk" />
+    </huientity>
+    
+    <huientity
+        name="Vulnerability"
+        id="vulnerability" >
+        <huiproperty
+            name="Title"
+            id="vulnerability_name" tags="Risk"/>
+        <huiproperty
+            name="Abbreviation"
+            id="vulnerability_abbr" tags="Risk"/>
+        <huiproperty
+            id="vulnerability_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+				name="Description" id="vulnerability_desc"  visible="false" tags="Risk"/>
+                
+		<huiproperty name="Ease of Exploitation " id="vulnerability_level" inputtype="numericoption"
+			min="0" max="3" defaultValue="0" tags="Risk">
+            <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
+            <option id="vulnerability_level_1" name="1: Possible" value="1"/>
+            <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
+            <option id="vulnerability_level_3" name="3: Probable" value="3"/>
+		</huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Vulnerability-Group"
+        id="vulnerability_group" >
+        <huiproperty
+            name="Title"
+            id="vulnerability_group_name" tags="Risk" />
+    </huientity>
+    
+    <huientity
+        name="Document"
+        id="document" >
+        
+        <huirelation to="org" id="rel_document_org" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="asset" id="rel_document_asset" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="audit" id="rel_document_audit" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="control" id="rel_document_control" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="exception" id="rel_document_exception" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="requirement" id="rel_document_requirement" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="incident" id="rel_document_incident" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="incident_scenario" id="rel_document_incident_scenario" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="response" id="rel_document_response" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="threat" id="rel_document_threat" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="vulnerability" id="rel_document_vulnerability" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="interview" id="rel_document_interview" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="evidence" id="rel_document_evidence" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="finding" id="rel_document_finding" 
+        	name="documents" reversename="related document" tooltip=""/>
+
+        <huirelation to="person-iso" id="rel_document_person_owner" 
+        	name="owner" reversename="is owner of" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_author" 
+        	name="author" reversename="is author of" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_approved" 
+        	name="approval" reversename="approved" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_distributed" 
+        	name="distributed to" reversename="receives" tooltip=""/>
+        <huirelation to="person-iso" id="rel_document_person_reads" 
+        	name="actually read by" reversename="actually reads" tooltip=""/>
+        
+		<huirelation to="mnums" id="rel_mnums_doc"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />        
+		<huirelation to="bstumsetzung" id="rel_bstumsetzung"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="server" id="rel_server"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="raum" id="rel_raum"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		<huirelation to="gebaeude" id="rel_gebaeude"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+        <huirelation to="anwendung" id="rel_anwendung"
+        	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+		        
+        <huiproperty
+            name="Title"
+            id="document_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="document_abbr" />
+        <huiproperty
+            id="document_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Ext. Link"
+            id="document_link"
+            isURL="true" />
+       	<huiproperty 
+       		name="Document Type" id="document_type" inputtype="singleoption">
+			<option name="Policy" id="document_type_policy" />       	
+			<option name="Documented Procedure" id="document_type_procedure" />       	
+			<option name="Contract" id="document_type_contract" />       	
+			<option name="Agreement" id="document_type_agreement" />       	
+			<option name="System documentation" id="document_type_sysdoc" />       	
+			<option name="Research information" id="document_type_research" />       	
+			<option name="Manual" id="document_type_manual" />       	
+			<option name="Training materials" id="document_type_training" />       	
+			<option name="Other" id="document_type_other" />       	
+		</huiproperty>
+        <huiproperty 
+       		id="document_classfc" name="Classification" inputtype="singleoption">
+	       <option name="Confidential" id="document_classfc_confidential"/>
+	       <option name="Internal Use" id="document_classfc_internal"/>
+	       <option name="Public" id="document_classfc_public"/>
+        </huiproperty>
+    </huientity>
+    
+    <huientity
+        name="Document-Group"
+        id="document_group" >
+        <huiproperty
+            name="Title"
+            id="document_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Interview"
+        id="interview" >
+        <huiproperty
+            name="Title"
+            id="interview_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="interview_abbr" />
+        <huiproperty
+            id="interview_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+    </huientity>
+    
+    <huientity
+        name="Interview-Group"
+        id="interview_group" >
+        <huiproperty
+            name="Title"
+            id="interview_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Evidence"
+        id="evidence" >
+
+		<huirelation to="finding" id="rel_evidence_finding"
+        	name="proves" reversename="proved by" tooltip="" />        
+        
+        <huiproperty
+            name="Title"
+            id="evidence_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="evidence_abbr" />
+        <huiproperty
+            id="evidence_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+            <!-- ??? evidence types 19-9 -->
+    </huientity>
+    
+    <huientity
+        name="Evidence-Group"
+        id="evidence_group" >
+        <huiproperty
+            name="Title"
+            id="evidence_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Finding"
+        id="finding" >
+<!-- ??? more properties 20-7 -->
+		<huirelation to="response" id="rel_finding_response"
+        	name="corrective action" reversename="correction for" tooltip="" />
+		<huirelation to="audit" id="rel_finding_audit"
+        	name="noted in" reversename="improvement note" tooltip="" />
+		<huirelation to="control" id="rel_finding_control_nc"
+        	name="failure in" reversename="reprimanded by" tooltip="" />
+		<huirelation to="control" id="rel_finding_control_action"
+        	name="suggested control" reversename="suggested by" tooltip="" />
+
+        <huiproperty
+            name="Title"
+            id="finding_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="finding_abbr" />
+        <huiproperty
+            id="finding_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+			name="Description" id="finding_desc" inputtype="text"/>
+        <huiproperty
+			name="Root cause" id="finding_cause" inputtype="text"/>
+        <huiproperty id="finding_type" name="N.C. Level" inputtype="singleoption">
+        	<option id="finding_type_major" name="Major Non-Conformity"/>
+        	<option id="finding_type_minor" name="Minor Non-Conformity"/>
+        	<option id="finding_type_observation" name="Observation"/>
+        </huiproperty>
+        <huiproperty
+			name="N.C. Explanation" id="finding_expl" inputtype="text"/>
+		<huiproperty
+			name="Suggested response" id="finding_action" inputtype="text"/>
+		
+        <huiproperty 
+			name="Noted on"
+			id="finding_date"
+			inputtype="date">
+            <defaultRule class="Today" />
+        </huiproperty>
+        
+    </huientity>
+    
+    <huientity
+        name="Finding-Group"
+        id="finding_group" >
+        <huiproperty
+            name="Title"
+            id="finding_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Process"
+        id="process" >
+
+  	<huirelation to="asset" id="rel_process_asset"
+        	name="depends on" reversename="necessary for" tooltip="This process needs this asset to function." />
+
+        <huiproperty
+            name="Title"
+            id="process_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="process_abbr" />
+        <huiproperty
+            id="process_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+            
+            
+       <!-- TODO externalize strings -->
+        <huipropertygroup id="process_bcm_group" name="Business Continuity" tags="BCM" >
+            <huiproperty id="process_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="process_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="process_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
+          
+            <huiproperty id="process_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time1_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time1_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time1_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time1_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_tim24" name="Impact after 24h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_tim24_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_tim24_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_tim24_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_tim24_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time48" name="Impact after 48h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time48_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time48_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time48_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time48_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time96" name="Impact after 96h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time96_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time96_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time96_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time96_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time168" name="Impact after 168h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time168_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time168_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time168_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time168_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+              <huiproperty id="process_bcm_time720" name="Impact after 720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_time720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_time720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_time720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_time720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+             <huiproperty id="process_bcm_timegt720" name="Impact after >720h" tags="BCM" inputtype="numericoption" min="0" max="3">
+                <option
+                    id="process_bcm_timegt720_0"
+                    name="0 Low" 
+                    value="0" />
+                     <option
+                    id="process_bcm_timegt720_1"
+                    name="1 Medium" 
+                    value="1" />
+                     <option
+                    id="process_bcm_timegt720_2"
+                    name="2 High" 
+                    value="2" />
+                     <option
+                    id="process_bcm_timegt720_3"
+                    name="3 Very High" 
+                    value="3" />
+            </huiproperty>
+            
+        </huipropertygroup>
+            
+     <huipropertygroup id="process_value_group" name="Business Impact">
+		<huiproperty
+					id="process_value_method_confidentiality"
+					name="Deduce Confidentiality"
+					inputtype="booleanoption"  >
+				</huiproperty>	
+		<huiproperty
+					id="process_value_method_integrity"
+					name="Deduce Integrity"
+					inputtype="booleanoption"  >
+				</huiproperty>	
+		<huiproperty
+					id="process_value_method_availability"
+					name="Deduce Availability"
+					inputtype="booleanoption"  >
+		</huiproperty>	
+	
+		<huiproperty
+					id="process_value_confidentiality"
+					name="Confidentiality"
+					inputtype="numericoption" min="0" max="3">
+					<option
+						id="process_value_confidentiality_normal"
+						name="0 Public" 
+						value="0" />
+					<option
+						id="process_value_confidentiality_hoch"
+						name="1 Company confidential" 
+						value ="1" />
+					<option
+						id="process_value_confidentiality_sehrhoch"
+						name="2 Customer confidential"
+						value="2" />
+                    <option
+                        id="process_value_confidentiality_sehrhoch2"
+                        name="3 Sensitive"
+                        value="3" />
+				</huiproperty>
+				
+				<huiproperty
+					id="process_value_integrity"
+					name="Integrity"
+					inputtype="numericoption"  min="0" max="2" >
+					<option
+						id="process_value_integrity_normal"
+						name="0 None" value="0"  />
+					<option
+						id="process_value_integrity_hoch"
+						name="1 Normal" value="1"  />
+					<option
+						id="process_value_integrity_sehrhoch"
+						name="2 High" value="2" />
+				</huiproperty>
+				
+				<huiproperty
+					id="process_value_availability"
+					name="Availability"
+					inputtype="numericoption"  min="0" max="4" >
+					<option
+						id="process_value_availability_normal"
+						name="0 Basic" value="0" />
+					<option
+						id="process_value_availability_hoch"
+						name="1 Standard" value="1" />
+					<option
+						id="process_value_availability_sehrhoch"
+						name="2 Premium" value="2" />
+                    <option
+                        id="process_value_availability_sehrhoch2"
+                        name="3 Enterprise" value="3" />
+                    <option
+                        id="process_value_availability_sehrhoch3"
+                        name="4 Exceptional" value="4" />
+				</huiproperty>
+				
+				<huiproperty
+					name="Explanation"
+					inputtype="text"
+					id="process_value_comment" />
+		</huipropertygroup>
+		
+    </huientity>
+    
+    <huientity
+        name="Process-Group"
+        id="process_group" >
+        <huiproperty
+            name="Title"
+            id="process_group_name" />
+    </huientity>
+    
+    <huientity
+        name="Record"
+        id="record" >
+        <huiproperty
+            name="Title"
+            id="record_name" />
+        <huiproperty
+            name="Abbreviation"
+            id="record_abbr" />
+        <huiproperty
+            id="record_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+    </huientity>
+    
+    <huientity
+        name="Record-Group"
+        id="record_group" >
+        <huiproperty
+            name="Title"
+            id="record_group_name" />
+    </huientity>
+    
+    <huientity
+        id="note"
+        name="Notiz">        
+        <huiproperty id="note_name"
+            name="Titel" />   
+        <huiproperty id="note_text"
+			name="Text"
+            inputtype="text" />
+    </huientity>
+	
+	<huientity
+        id="attachment"
+        name="Attachment">        
+        <huiproperty id="attachment_name"
+            name="Titel" />
+        <huiproperty id="attachment_file_name"
+			name="Datei"
+            editable="false"
+            visible="true" />
+        <huiproperty id="attachment_text"
+			name="Beschreibung"
+            inputtype="text" />
+        <huiproperty id="attachment_mime_type"
+			name="MIME-Type"
+            editable="false"
+            visible="false" />
+		<huiproperty id="attachment_version"
+            name="Version" />
+        <huiproperty 
+        	name="Document State" id="attachment_approval" inputtype="singleoption">
+			<option name="N.A." id="attachment_approval_na" />       	
+			<option name="Draft" id="attachment_approval_draft" />       	
+			<option name="Approval requested" id="attachment_approval_request" />       	
+			<option name="Approved" id="attachment_approval_yes" />       	
+			<option name="Obsolete" id="attachment_approval_obsolete" />       	
+		</huiproperty>
+        <huiproperty
+        	id="attachment_publish"
+        	name="Publish"
+        	inputtype="singleoption">
+        	<depends option="attachment_approval_yes" />
+        	<option id="document_publish_yes" name="Yes"/>
+        	<option id="document_publish_no"  name="No"/>
+        </huiproperty>
+        <huiproperty id="attachment_date"
+			name="Datum"
+			inputtype="date"
+            editable="false" />
+      </huientity>
+      
+      <!-- Information Security Assessment (ISA), previously called "Self Assessment (SAMT)" Elements ========================= -->
+    
+      <huientity id="samt_topic" >	
+      
+          <huirelation to="asset" id="rel_samttopic_asset" 
+               name="reduces impact of"  reversename="impact reduced by" />
+         
+          <huirelation to="person-iso" id="rel_samttopic_person-iso_resp"
+            	reversename="responsible" name="responsible for"  />
+
+          <!-- 
+          <huirelation to="person-iso" id="rel_samttopic_person_imp"
+                reversename="implements" name="implemented by" tooltip="" />
+          <huirelation to="person-iso" id="rel_samttopic_person_maint"
+                reversename="maintains" name="maintained by" tooltip="" />
+          <huirelation to="person-iso" id="rel_samttopic_person_mon"
+              reversename="monitors" name="monitored by" tooltip="" />
+          <huirelation to="person-iso" id="rel_samttopic_person_aud"
+                reversename="audits" name="audited by" tooltip="" />
+                 -->
+        
+          <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
+          <huiproperty 
+                id="samt_topic_desc"
+                inputtype="text"
+                tags="Web"
+                editable="false"
+                visible="false"/>
+          </huipropertygroup>
+               
+          <huiproperty 
+            id="samt_topic_name" 
+            editable="false" 
+            />
+          <huiproperty 
+            id="samt_topic_abbr" 
+             visible="false"/>
+          <huiproperty 
+            id="samt_topic_tag" 
+             visible="false"/>
+          
+          <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->  
+          <huiproperty
+	           id="samt_topic_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
+	           textrows="12"/>
+            
+          <huiproperty 
+            id="samt_topic_maturity"      
+            inputtype="numericoption" 
+            min="-2" 
+            max="5" 
+            defaultValue="-2" 
+            tags="VDA-ISA,VDA_ISA_Audit,Web"
+            focus="true">
+                <option id="samt_topic_maturity_null"  value="-2" />
+                <option id="samt_topic_maturity_na"  value="-1" />
+                <option id="samt_topic_maturity_0"  value="0" />
+                <option id="samt_topic_maturity_1"  value="1" />
+                <option id="samt_topic_maturity_2"  value="2" />
+                <option id="samt_topic_maturity_3"  value="3" />
+                <option id="samt_topic_maturity_4"  value="4" />
+                <option id="samt_topic_maturity_5"  value="5" />
+          </huiproperty>
+          
+          <huiproperty 
+            id="samt_topic_weight"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="samt_topic_ownweight" visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="samt_topic_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
+          <huiproperty 
+            id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
+
+            
+          <huiproperty 
+            id="samt_topic_externalnote" 
+            tags="VDA-ISA"
+            inputtype="text"/>
+          <huiproperty 
+            id="samt_topic_internalnote" 
+            inputtype="text"
+            tags="VDA-ISA"
+            report="false" />          
+          <huiproperty
+	        id="samt_topic_controlnote" 
+	        inputtype="text"
+	        tags="VDA-ISA,VDA_ISA_Audit"/>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
+            <huiproperty id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
+               inputtype="numericoption" 
+               min="-1" 
+               max="2" 
+               defaultValue="-1">
+                            
+                <option id="samt_topic_audit_ra_na"  value="-1" />
+                <option id="samt_topic_audit_ra_0"  value="0" />
+                <option id="samt_topic_audit_ra_1"  value="1" />
+                <option id="samt_topic_audit_ra_2"  value="2" />
+            </huiproperty>
+
+            <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="samt_topic_audit_devi" name="Deviation" tags="VDA_ISA_Audit"
+               inputtype="numericoption" 
+               min="-1" 
+               max="1" 
+               defaultValue="-1" 
+            >
+                <option id="samt_topic_audit_devi_na"  value="-1" />
+                <option id="samt_topic_audit_devi_0"  value="0" />
+                <option id="samt_topic_audit_devi_1"  value="1" />
+          </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty
+	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+                <defaultRule class="Today">
+                    <param id="samt_topic_audit_compluntil_changeField">MONTH</param>
+                    <param id="samt_topic_audit_compluntil_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+            
+			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
+            <huiproperty 
+	            id="samt_topic_isaauditnote" 
+	            tags="VDA_ISA_Audit,Web"
+	            inputtype="text"
+	            textrows="12" />
+
+			<huiproperty name="Implemented" id="samt_topicimplemented" inputtype="singleoption" tags="Risk">
+    			<option name="Yes" id="samt_topicimplemented_yes"/>
+    			<option name="No" id="samt_topicimplemented_no"/>
+    			<option name="Partly" id="samt_topicimplemented_partly"/>
+    			<option name="N.a." id="samt_topicimplemented_na"/>
+    		</huiproperty>
+  
+      </huientity> 
+</huientities>
