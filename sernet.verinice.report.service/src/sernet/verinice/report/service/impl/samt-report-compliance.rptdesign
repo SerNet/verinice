@@ -26,7 +26,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">238</value>
+                <value type="constant">-1</value>
             </simple-property-list>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
@@ -3158,8 +3158,7 @@ return helper.map(
       <design:criteria/>
     </design:resultSetDefinitions>
   </design:ResultSets>
-</model:DesignValues>
-]]></xml-property>
+</model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
