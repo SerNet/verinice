@@ -5983,22 +5983,6 @@ columns(cols);</value>
                     <text-property name="displayName">org_isa_loc</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">org_isa_creatphone</property>
-                    <text-property name="displayName">org_isa_creatphone</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_isa_creatmail</property>
-                    <text-property name="displayName">org_isa_creatmail</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_description</property>
-                    <text-property name="displayName">org_description</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_isa_creat</property>
-                    <text-property name="displayName">org_isa_creat</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">org_isa_web</property>
                     <text-property name="displayName">org_isa_web</text-property>
                 </structure>
@@ -6113,91 +6097,76 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">org_isa_creatphone</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">org_isa_creatmail</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
                         <property name="name">org_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
-                        <property name="name">org_isa_creat</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
+                        <property name="position">10</property>
                         <property name="name">org_isa_web</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">11</property>
                         <property name="name">org_isa_addr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">12</property>
                         <property name="name">org_isa_compgroup</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">13</property>
                         <property name="name">org_isa_cont</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">14</property>
                         <property name="name">org_isa_compdesc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">15</property>
                         <property name="name">org_riskaccept_confid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">16</property>
                         <property name="name">org_riskaccept_integ</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">17</property>
                         <property name="name">org_riskaccept_avail</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">18</property>
                         <property name="name">org_riskaccept_expl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">19</property>
                         <property name="name">org_class_asset_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">20</property>
                         <property name="name">org_class_asset_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">21</property>
                         <property name="name">org_class_asset_a</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">22</property>
                         <property name="name">org_class_threat</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">23</property>
                         <property name="name">org_class_vuln</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -6210,182 +6179,138 @@ columns(cols);</value>
                     <property name="name">org_name</property>
                     <property name="nativeName">org_name</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">org_isa_contphone</property>
                     <property name="nativeName">org_isa_contphone</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">org_tag</property>
                     <property name="nativeName">org_tag</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">org_created</property>
                     <property name="nativeName">org_created</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">org_abbr</property>
                     <property name="nativeName">org_abbr</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
                     <property name="name">org_isa_contmail</property>
                     <property name="nativeName">org_isa_contmail</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
                     <property name="name">org_isa_duns</property>
                     <property name="nativeName">org_isa_duns</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
                     <property name="name">org_isa_loc</property>
                     <property name="nativeName">org_isa_loc</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">org_isa_creatphone</property>
-                    <property name="nativeName">org_isa_creatphone</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">org_isa_creatmail</property>
-                    <property name="nativeName">org_isa_creatmail</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
                     <property name="name">org_description</property>
                     <property name="nativeName">org_description</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
-                    <property name="name">org_isa_creat</property>
-                    <property name="nativeName">org_isa_creat</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
+                    <property name="position">10</property>
                     <property name="name">org_isa_web</property>
                     <property name="nativeName">org_isa_web</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">11</property>
                     <property name="name">org_isa_addr</property>
                     <property name="nativeName">org_isa_addr</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">12</property>
                     <property name="name">org_isa_compgroup</property>
                     <property name="nativeName">org_isa_compgroup</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">13</property>
                     <property name="name">org_isa_cont</property>
                     <property name="nativeName">org_isa_cont</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">14</property>
                     <property name="name">org_isa_compdesc</property>
                     <property name="nativeName">org_isa_compdesc</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
                     <property name="name">org_riskaccept_confid</property>
                     <property name="nativeName">org_riskaccept_confid</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">16</property>
                     <property name="name">org_riskaccept_integ</property>
                     <property name="nativeName">org_riskaccept_integ</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">17</property>
                     <property name="name">org_riskaccept_avail</property>
                     <property name="nativeName">org_riskaccept_avail</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">18</property>
                     <property name="name">org_riskaccept_expl</property>
                     <property name="nativeName">org_riskaccept_expl</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">19</property>
                     <property name="name">org_class_asset_c</property>
                     <property name="nativeName">org_class_asset_c</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">20</property>
                     <property name="name">org_class_asset_i</property>
                     <property name="nativeName">org_class_asset_i</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">21</property>
                     <property name="name">org_class_asset_a</property>
                     <property name="nativeName">org_class_asset_a</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">22</property>
                     <property name="name">org_class_threat</property>
                     <property name="nativeName">org_class_threat</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">23</property>
                     <property name="name">org_class_vuln</property>
                     <property name="nativeName">org_class_vuln</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
@@ -7706,23 +7631,8 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">org_isa_creatphone</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatphone"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creatmail</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatmail"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">org_description</property>
                     <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creat</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creat"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -9575,6 +9485,116 @@ columns(cols);</value>
                                 <expression name="expression" type="javascript">dataSetRow["org_class_asset_c"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
+                            <structure>
+                                <property name="name">org_name</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_name"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_contphone</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_contphone"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_tag</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_tag"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_created</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_created"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_abbr</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_abbr"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_contmail</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_contmail"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_duns</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_duns"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_loc</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_loc"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_description</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_web</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_web"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_addr</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_addr"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_compgroup</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_compgroup"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_cont</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_cont"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_isa_compdesc</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_isa_compdesc"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_riskaccept_confid</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_riskaccept_confid"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_riskaccept_integ</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_riskaccept_integ"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_riskaccept_avail</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_riskaccept_avail"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_riskaccept_expl</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_riskaccept_expl"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_class_asset_i</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_class_asset_i"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_class_asset_a</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_class_asset_a"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_class_threat</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_class_threat"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">org_class_vuln</property>
+                                <expression name="expression" type="javascript">dataSetRow["org_class_vuln"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
                         </list-property>
                         <property name="resultSetColumn">org_class_asset_c</property>
                     </data>
@@ -9941,23 +9961,8 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">org_isa_creatphone</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatphone"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creatmail</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatmail"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">org_description</property>
                     <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creat</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creat"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -11749,26 +11754,26 @@ columns(cols);</value>
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskC"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskC"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]-3</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"]-3)</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskC"]+2</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskC"]+2)</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_confid"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
@@ -11784,26 +11789,26 @@ columns(cols);</value>
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskI"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskI"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskI"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskI"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]-4</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"]-4)</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskI"]+3</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskI"]+3)</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_integ"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
@@ -11819,26 +11824,26 @@ columns(cols);</value>
                                                                                 <list-property name="highlightRules">
                                                                                     <structure>
                                                                                         <property name="operator">gt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskA"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskA"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">between</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskA"]</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskA"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]-3</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"]-3)</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</expression>
+                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">row["treatedRiskA"]+2</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskA"]+2)</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">row._outer._outer._outer["org_riskaccept_avail"]</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
