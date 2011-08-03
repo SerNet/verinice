@@ -89,7 +89,6 @@ public class MaturitySummaryWithOutISA extends MaturitySummary {
      * @param typeThreshold
      * @return
      */
-    @Override
     protected Double getThreshold(ControlGroup controlGroup, int typeThreshold) {
     	ControlMaturityWithOutISAService maturityService = new ControlMaturityWithOutISAService();
         Double result = Double.valueOf(0);

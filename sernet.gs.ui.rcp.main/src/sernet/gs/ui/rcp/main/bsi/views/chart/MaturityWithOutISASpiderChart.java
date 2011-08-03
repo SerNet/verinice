@@ -25,6 +25,10 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
  * ControlMaturityService also have been extended.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -94,6 +98,17 @@ public class MaturityWithOutISASpiderChart extends MaturitySpiderChart {
             return null;
         }
 
+    }
+    
+    protected List<Entry<String, Double>> sort(Set<Entry<String, Double>> entrySet) {
+        ArrayList<Entry<String, Double>> list = new ArrayList<Entry<String,Double>>();
+        list.addAll(entrySet);
+        Collections.sort(list, new Comparator<Entry<String, Double>>() {
+            public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
+        });
+        return list;
     }
 
     /*
