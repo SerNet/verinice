@@ -20,8 +20,10 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -137,6 +139,11 @@ public class ExportDialog extends TitleAreaDialog {
             return null;
         } 
         
+        List<CnATreeElement> orgsAndITVs = new LinkedList<CnATreeElement>();
+        orgsAndITVs.addAll(cmdLoadOrganization.getElements());
+        orgsAndITVs.addAll(cmdItVerbund.getElements());
+        orgsAndITVs = sortOrgListByTitle(orgsAndITVs);
+        
         final Group groupOrganization = new Group(composite, SWT.NONE);    
         groupOrganization.setText(Messages.SamtExportDialog_2);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
@@ -177,12 +184,12 @@ public class ExportDialog extends TitleAreaDialog {
 
         CnATreeElement oldSelectedElement = selectedElement;
         selectedElement = null;
-        selectedElementSet = new HashSet<CnATreeElement>();
-        List<Organization> organizationList = cmdLoadOrganization.getElements();
-        Iterator<Organization> organizationIter = organizationList.iterator();
+        selectedElementSet = new HashSet<CnATreeElement>();        List<Organization> organizationList = cmdLoadOrganization.getElements();
+
+        Iterator<CnATreeElement> organizationIter = orgsAndITVs.iterator();
         while (organizationIter.hasNext()) {
             final Button radioOrganization = new Button(innerComposite, SWT.CHECK);
-            Organization organization = organizationIter.next();
+            CnATreeElement organization = organizationIter.next();
             radioOrganization.setText(organization.getTitle());
             radioOrganization.setData(organization);
             radioOrganization.addSelectionListener(organizationListener);
@@ -199,26 +206,9 @@ public class ExportDialog extends TitleAreaDialog {
             }
         }
         
-        List<ITVerbund> itVerbundList = cmdItVerbund.getElements();
-        Iterator<ITVerbund> itVerbundIter = itVerbundList.iterator();
-        while (itVerbundIter.hasNext()) {
-            final Button radio = new Button(innerComposite, SWT.CHECK);
-            ITVerbund verbund = itVerbundIter.next();
-            radio.setText(verbund.getTitle());
-            radio.setData(verbund);
-            radio.addSelectionListener(organizationListener);
-            if (oldSelectedElement != null && oldSelectedElement.equals(verbund)) {
-                radio.setSelection(true);
-                selectedElement = verbund;              
-            }
-            if (organizationList.size() == 1 && selectedElement==null) {
-                radio.setSelection(true);
-                selectedElement = verbund;
-            }
-        }
         scrolledComposite.setVisible(true);
         Point size = innerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT); 
-        size.y += (organizationList.size() + itVerbundList.size()) * 2;
+        size.y += orgsAndITVs.size() * 2;
         innerComposite.setSize(size); 
         groupOrganization.layout(); 
         
@@ -445,6 +435,24 @@ public class ExportDialog extends TitleAreaDialog {
 
     public void setFormat(int exportFormat) {
         this.format = exportFormat;
+    }
+    
+    private List<CnATreeElement> sortOrgListByTitle(List<CnATreeElement> list){
+    	List<CnATreeElement> retVal = new LinkedList<CnATreeElement>();
+    	List<String> titleList = new LinkedList<String>();
+    	for(CnATreeElement e : list){
+    			titleList.add(e.getTitle());
+    	}
+    	Collections.sort(titleList);
+    	for(String title : titleList){
+    		for(CnATreeElement e : list){
+    			if(e.getTitle().equals(title)){
+    				retVal.add(e);
+    				break;
+    			}
+    		}
+    	}
+    	return retVal;
     }
 
 }
