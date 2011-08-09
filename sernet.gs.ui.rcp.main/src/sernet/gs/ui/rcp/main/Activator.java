@@ -17,11 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import iaik.security.provider.IAIK;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.Provider;
 import java.security.Security;
 import java.security.spec.PKCS8EncodedKeySpec;
 
@@ -172,7 +175,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		Preferences prefs = getPluginPreferences();
 		
 		// May replace the JDK's built-in security settings
-		VeriniceSecurityProvider.register(prefs);
+		try {
+		    VeriniceSecurityProvider.register(prefs);
+		} catch (Exception e) {
+            LOG.error("Error while registering verinice security provider.", e);
+        }
 
 		// set service factory location to local / remote according to
 		// preferences:

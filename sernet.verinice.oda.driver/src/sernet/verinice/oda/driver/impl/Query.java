@@ -320,7 +320,7 @@ public class Query implements IQuery
 			else
 				inParameters = null;
 		} catch (EvalError e) {
-			log.error("Error evaluating the setup query: " + e);
+			log.error("Error evaluating the setup query: ", e);
 			
 			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
 		}

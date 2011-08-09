@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -29,8 +29,6 @@ import sernet.gs.ui.rcp.main.Activator;
 
 /**
  * Preference page for the cryptographic options.
- * 
- * TODO: Make this a nicer dialog.
  * 
  * @author Robert Schuster <r.schuster[at]tarent[dot]de>
  * 
@@ -56,26 +54,26 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		// If this is checked the verinice security provider will take over the certificate/key management
 		// for SSL connections.
 		// Requires a restart of the application when changed.
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, "use verinice infrastructure for SSL connections", fep));
-
-		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, "source for certificates",
-				1, new String[][] { { "file", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE },
-						{ "PKCS#11 library", PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY }
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_VERINICE_SSL_SECURITY_ENABLED, Messages.getString("CryptoPreferencePage.0"), fep)); //$NON-NLS-1$
+		
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED, Messages.getString("CryptoPreferencePage.1"), fep)); //$NON-NLS-1$
+		
+		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, Messages.getString("CryptoPreferencePage.2"), //$NON-NLS-1$
+				1, new String[][] { { Messages.getString("CryptoPreferencePage.3"), PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE }, //$NON-NLS-1$
+						{ Messages.getString("CryptoPreferencePage.4"), PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY } //$NON-NLS-1$
 				}, fep));
 		
-		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, "source for keys",
-				1, new String[][] { { "none", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE },
-						{ "file", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE },
-						{ "PKCS#11 library", PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY }
+		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, Messages.getString("CryptoPreferencePage.5"), //$NON-NLS-1$
+				1, new String[][] { { Messages.getString("CryptoPreferencePage.6"), PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE }, //$NON-NLS-1$
+						{ Messages.getString("CryptoPreferencePage.7"), PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE }, //$NON-NLS-1$
+						{ Messages.getString("CryptoPreferencePage.8"), PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY } //$NON-NLS-1$
 				}, fep));
 		
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, "path to the trust store", fep));
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, "path to the key store", fep));
-
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, "use PKCS#11 library for general encryption", fep));
-		
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, "path to PKCS#11 library", fep));
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED, "use certificate for authentication", fep));
+		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, Messages.getString("CryptoPreferencePage.9"), fep)); //$NON-NLS-1$
+		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, Messages.getString("CryptoPreferencePage.10"), fep)); //$NON-NLS-1$
+		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, Messages.getString("CryptoPreferencePage.11"), fep)); //$NON-NLS-1$
+        
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, Messages.getString("CryptoPreferencePage.12"), fep)); //$NON-NLS-1$
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import java.security.KeyStoreException;
 import java.security.KeyStoreSpi;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.security.KeyStore.Entry;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Date;
@@ -219,7 +220,7 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 			throws NoSuchAlgorithmException, UnrecoverableKeyException {
 		try {
 			return delegate.getKey(alias, password);
-		} catch (KeyStoreException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

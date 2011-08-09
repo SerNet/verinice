@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.KeyStoreSpi;
@@ -46,6 +47,7 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.swt.widgets.Display;
 
@@ -55,6 +57,8 @@ import sun.security.pkcs11.SunPKCS11;
 @SuppressWarnings({ "serial", "restriction" })
 public final class VeriniceSecurityProvider extends Provider {
 
+    private static final Logger LOG = Logger.getLogger(VeriniceSecurityProvider.class);
+    
 	public static final String NAME = "VeriniceSecurityProvider";
 
 	public static final double VERSION = 1.0;
@@ -496,6 +500,9 @@ public final class VeriniceSecurityProvider extends Provider {
 	 * See {@link VeriniceTrustStore} for why this class exists and what it does.
 	 */
 	public static class VeriniceKeyStore extends DelegatingKeyStore {
+	    
+	    private boolean passwordWasWrong = false;
+	    
 		public VeriniceKeyStore() {
 			super();
 		}
@@ -513,8 +520,17 @@ public final class VeriniceSecurityProvider extends Provider {
 				// in the configuration file used by the SunPKCS class.
 				if (INSTANCE.usePKCS11LibraryAsKeyStore()) {
 					// Adding a password protection callback is not possible for this kind
-					// of keystore using the KeyStore.Builder API.
-					c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+					// of keystore using the KeyStore.Builder API.			   
+					//c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+				
+					KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(INSTANCE.getKeyStorePassword(passwordWasWrong));
+					try {
+					    c.keyStore = KeyStore.Builder.newInstance("PKCS11", Security.getProvider("SunPKCS11-verinice"), pp).getKeyStore();			
+					    passwordWasWrong=false;
+					} catch (Exception e) {
+                        passwordWasWrong=true;      
+					    LOG.error("Keystore exception", e);					               
+		            } 			 
 				} else {
 					c.maxAttempts = 3;
 					c.passwordHandler = new PasswordHandler() {
@@ -527,9 +543,7 @@ public final class VeriniceSecurityProvider extends Provider {
 				}
 			} catch (KeyStoreException e) {
 				throw new RuntimeException(e);
-			} catch (NoSuchProviderException e) {
-				throw new RuntimeException(e);
-			}
+			} 
 			
 			return c;
 		}
