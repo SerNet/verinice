@@ -52,14 +52,22 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     		if (dialog.open() == Dialog.OK) {
     			final IReportOptions ro = new IReportOptions() {
     			    Integer rootElmt; 
+    			    Integer[] rootElmts;
     				public boolean isToBeEncrypted() { return false; }
     				public boolean isToBeCompressed() { return false; }
     				public IOutputFormat getOutputFormat() { return dialog.getOutputFormat(); } 
     				public File getOutputFile() { return dialog.getOutputFile(); }
                     public void setRootElement(Integer rootElement) { rootElmt = rootElement; }
                     public Integer getRootElement() {return rootElmt; }
+                    public Integer[] getRootElements(){return rootElmts;}
+                    public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;					}
+					
     			};
-    			ro.setRootElement(dialog.getRootElement());
+    			if(dialog.getRootElement() != null){
+    				ro.setRootElement(dialog.getRootElement());
+    			} else if (dialog.getRootElements() != null && dialog.getRootElements().length > 0){
+    				ro.setRootElements(dialog.getRootElements());
+    			}
     			
     			 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

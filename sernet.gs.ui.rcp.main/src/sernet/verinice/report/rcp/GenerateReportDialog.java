@@ -64,6 +64,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	private IReportType chosenReportType;
 
     private Integer rootElement;
+    
+    private Integer[] rootElements;
 
     private Button openDirButton, openFileButton;
 
@@ -84,6 +86,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private boolean userTemplate = true;
 
     private boolean filenameManual = FILENAME_MANUAL;
+
+	private List<CnATreeElement> preSelectedElments;
     
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 540;
@@ -113,13 +117,28 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * @param shell
      * @param audit
      */
-    public GenerateReportDialog(Shell shell, Audit audit) {
+    public GenerateReportDialog(Shell shell, Object audit) {
         this(shell);
-        this.auditId=audit.getDbId();
-        this.auditName = audit.getTitle();
+
+        CnATreeElement cnaElmt = (CnATreeElement) audit;
+        
+        
+        this.auditId=cnaElmt.getDbId();
+        this.auditName = cnaElmt.getTitle();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Setting audit in report dialog: " + auditId); //$NON-NLS-1$
         }
+    }
+    
+    public GenerateReportDialog(Shell shell, List<Object> objects) {
+    	this(shell);
+    	
+    	List<CnATreeElement> elmts = new ArrayList<CnATreeElement>();
+    	for (Object object : objects) {
+			CnATreeElement cnaElmt = (CnATreeElement) object;
+			elmts.add(cnaElmt);
+		}
+    	this.preSelectedElments = elmts;
     }
 
 
@@ -432,7 +451,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     private void setupComboScopes() {
         // check if audit was selected by context menu:
-        if (this.auditId != null) {
+        if (this.auditId != null){
             scopeCombo.removeAll();
             scopeCombo.add(this.auditName);
             rootElement=auditId;
@@ -440,6 +459,23 @@ public class GenerateReportDialog extends TitleAreaDialog {
             scopeCombo.select(0);
             scopeCombo.redraw();
             return;
+        } else if(this.preSelectedElments != null && this.preSelectedElments.size() > 0) {
+            scopeCombo.removeAll();
+            ArrayList<Integer> auditIDList = new ArrayList<Integer>();
+            StringBuilder sb = new StringBuilder();
+            for(CnATreeElement elmt : preSelectedElments){
+            	sb.append(elmt.getTitle());
+            	if(preSelectedElments.indexOf(elmt) != preSelectedElments.size() - 1)
+            		sb.append(" & ");
+            	auditIDList.add(elmt.getDbId());
+            }
+            scopeCombo.add(sb.toString());
+            rootElements = auditIDList.toArray(new Integer[auditIDList.size()]);
+            scopeCombo.setEnabled(false);
+            scopeCombo.select(0);
+            scopeCombo.redraw();
+            return;
+        	
         }
         
         scopes = new ArrayList<CnATreeElement>();
@@ -570,6 +606,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     public Integer getRootElement() {
         return rootElement;
+    }
+    
+    /**
+     * Get ids of root elements, if there are more than one
+     * @return
+     */
+    public Integer[] getRootElements(){
+    	return rootElements;
     }
     
     private List<Organization> loadScopes() {

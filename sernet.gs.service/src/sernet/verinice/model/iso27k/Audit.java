@@ -19,8 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.TagHelper;
@@ -37,6 +39,10 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	public static final String PROP_ABBR = "audit_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "audit_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "audit_tag"; //$NON-NLS-1$
+	
+	public static final String PROP_CREAT = "audit_isa_creat";
+	public static final String PROP_CREATPHONE = "audit_isa_creatphone";
+	public static final String PROP_CREATMAIL = "audit_isa_creatmail";
 	
 	public static final String[] CHILD_TYPES = new String[] {
         AssetGroup.TYPE_ID,
@@ -125,6 +131,24 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	}
+	
+	public String getCreator(){
+		return getEntity().getSimpleValue(PROP_CREAT);
+	}
+	
+	public String getCreatorPhone(){
+		return getEntity().getSimpleValue(PROP_CREATPHONE);
+	}
+	
+	public String getCreatorEmail(){
+		return getEntity().getSimpleValue(PROP_CREATMAIL);
+	}
+	
+	public ArrayList<CnATreeElement> toList(){
+		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
+		list.add(this);
+		return list;
 	}
 
     /**

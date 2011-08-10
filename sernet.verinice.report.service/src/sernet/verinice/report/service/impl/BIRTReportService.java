@@ -226,8 +226,12 @@ public class BIRTReportService {
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 		//renderOptions.setOutputFormat("doc");
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
-		task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
-
+		if(options.getRootElement() != null){
+			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+		} else if(options.getRootElements() != null && options.getRootElements().length > 0){
+			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+		}
+		
 		task.setRenderOption(renderOptions);
 		
 		try {

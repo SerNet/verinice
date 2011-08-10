@@ -39,7 +39,22 @@ public interface IReportOptions {
 	 * The optional root element for the report.
 	 */
 	void setRootElement(Integer rootElement);
+	
+	/**
+	 * The optional root elements for the report.
+	 */
+	void setRootElements(Integer[] rootElements);
 
+	/**
+	 * Gets the root element for the report.
+	 * @return
+	 */
     Integer getRootElement();
+    
+    /**
+     * Get multiple root elements for the report.
+     * @return
+     */
+    Integer[] getRootElements();
 	
 }

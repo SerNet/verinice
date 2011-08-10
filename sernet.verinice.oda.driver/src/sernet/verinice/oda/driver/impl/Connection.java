@@ -39,6 +39,8 @@ public class Connection implements IConnection {
 	
 	private Object appContext;
 
+	
+
 	/*
 	 * @see
 	 * org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties
@@ -91,12 +93,20 @@ public class Connection implements IConnection {
 		// ignores the specified dataSetType
 		
 		Integer rootElementId = null;
+		Integer[] rootElementIds = null;
 		if (appContext != null)
 		{
 			// Retrieves the root element's id from the appContext. Find the corresponding part of this
 			// code by looking up the references to the used name.
 			Map ctx = (Map) appContext;
-			rootElementId = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+			if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null){
+				rootElementId = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+				return new Query(rootElementId);
+			}
+			else if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null && ((Integer[])ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0){
+				rootElementIds = (Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME);
+				return new Query(rootElementIds);
+			}
 		}
 		return new Query(rootElementId);
 	}

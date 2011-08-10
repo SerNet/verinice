@@ -26,6 +26,11 @@ public interface IVeriniceOdaDriver {
 	 */
 	public static final String ROOT_ELEMENT_ID_NAME = "rootElementId";
 	
+	/** Name of the property which stores the root element's ids. The ids specify the database ids of the
+	 * objects that are being used for a report that compares some organziations.
+	 */
+	public static final String ROOT_ELEMENT_IDS_NAME = "rootElementIds";
+	
 	/**
 	 * Registers an image provider for a certain image name.
 	 * 
