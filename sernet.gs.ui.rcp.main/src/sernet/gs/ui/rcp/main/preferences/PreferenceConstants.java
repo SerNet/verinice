@@ -116,6 +116,7 @@ public class PreferenceConstants {
 	public static final String CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY = "pkcs11";
 	public static final String CRYPTO_PKCS11_LIBRARY_ENABLED = "gs_cna_pkcs11_library_enabled";
 	public static final String CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED = "gs_cna_server_authentication_via_certificate_enabled";
+	public static final String CRYPTO_PKCS11_CERTIFICATE_ALIAS = "gs_cna_pkcs11_certificate_alias";
 	
 	// additional gui preferences
 	public static final String SWITCH_PERSPECTIVE = "switch_perspective";

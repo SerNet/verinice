@@ -32,6 +32,7 @@ import java.security.NoSuchProviderException;
 import java.security.Provider;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
+import java.security.KeyStore.Builder;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.KeyManager;
@@ -44,6 +45,7 @@ import javax.net.ssl.TrustManagerFactorySpi;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.TextInputCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.commons.io.IOUtils;
@@ -236,6 +238,10 @@ public final class VeriniceSecurityProvider extends Provider {
 		return prefs.getString(PreferenceConstants.CRYPTO_KEYSTORE_FILE);
 	}
 	
+	private String getCertificateAlias() {
+        return prefs.getString(PreferenceConstants.CRYPTO_PKCS11_CERTIFICATE_ALIAS);
+    }
+	
 	private String createPKCS11ConfigFile() {
 		File f = null;
 		PrintWriter writer = null;
@@ -280,7 +286,7 @@ public final class VeriniceSecurityProvider extends Provider {
 					keyStorePassword = d.getKeyStorePassword();
 					tokenPIN = d.getTokenPIN();
 
-					d.clearPasswords();
+					//d.clearPasswords();
 				}
 			});
 		}
@@ -381,8 +387,8 @@ public final class VeriniceSecurityProvider extends Provider {
 				password = INSTANCE.initKeyStore(ks, password);
 				
 				// Otherwise act completely like the reference implementation.
-				KeyManagerFactory kmf = KeyManagerFactory
-						.getInstance("SunX509");
+				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+				
 				kmf.init(ks, password);
 				keyManagers = kmf.getKeyManagers();
 			} catch (CertificateException e) {
@@ -404,8 +410,7 @@ public final class VeriniceSecurityProvider extends Provider {
 	 * <p>A trust store is used to verify server certificates.</p>
 	 *
 	 */
-	public static class DelegatingTrustManagerFactory extends
-			TrustManagerFactorySpi {
+	public static class DelegatingTrustManagerFactory extends TrustManagerFactorySpi {
 
 		TrustManager[] trustManagers;
 
@@ -431,8 +436,7 @@ public final class VeriniceSecurityProvider extends Provider {
 				INSTANCE.initTrustStore(ks);
 
 				// Like with the KeyManager the behavior is that of the reference implementation.
-				TrustManagerFactory tmf = TrustManagerFactory
-						.getInstance("PKIX");
+				TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
 				tmf.init(ks);
 				trustManagers = tmf.getTrustManagers();
 
@@ -519,18 +523,31 @@ public final class VeriniceSecurityProvider extends Provider {
 				// 'name' attribute
 				// in the configuration file used by the SunPKCS class.
 				if (INSTANCE.usePKCS11LibraryAsKeyStore()) {
-					// Adding a password protection callback is not possible for this kind
-					// of keystore using the KeyStore.Builder API.			   
-					//c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
-				
-					KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(INSTANCE.getKeyStorePassword(passwordWasWrong));
+					
+				    String alias = INSTANCE.getCertificateAlias();
+				    if(alias!=null && alias.isEmpty()) {
+				        alias = null;
+				    }
+					c.certificateAlias = alias;
 					try {
-					    c.keyStore = KeyStore.Builder.newInstance("PKCS11", Security.getProvider("SunPKCS11-verinice"), pp).getKeyStore();			
-					    passwordWasWrong=false;
+    					// Adding a password protection callback is not possible for this kind
+                        // of keystore using the KeyStore.Builder API.             
+                        c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+    					
+    					// For other PKCS#11 driver than CardOS try this code to prompt for pin only once:
+                        /*
+    					char[] pin = INSTANCE.getKeyStorePassword(passwordWasWrong);
+    					KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pin);			
+    				    c.keyStore = KeyStore.Builder.newInstance("PKCS11", Security.getProvider("SunPKCS11-verinice"), pp).getKeyStore();							    
+    				    c.keyStore.load(null, pin);
+    				    passwordWasWrong=false;				
+    		            */
 					} catch (Exception e) {
-                        passwordWasWrong=true;      
-					    LOG.error("Keystore exception", e);					               
-		            } 			 
+                        //passwordWasWrong=true;
+                        LOG.error("Keystore exception", e);                                
+                    }
+		            
+
 				} else {
 					c.maxAttempts = 3;
 					c.passwordHandler = new PasswordHandler() {

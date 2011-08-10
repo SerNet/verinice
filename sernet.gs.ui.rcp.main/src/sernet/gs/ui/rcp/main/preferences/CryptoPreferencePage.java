@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -72,8 +73,10 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, Messages.getString("CryptoPreferencePage.9"), fep)); //$NON-NLS-1$
 		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, Messages.getString("CryptoPreferencePage.10"), fep)); //$NON-NLS-1$
 		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, Messages.getString("CryptoPreferencePage.11"), fep)); //$NON-NLS-1$
+		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_CERTIFICATE_ALIAS, "Certificate alias for authentication", fep)); //$NON-NLS-1$
         
-		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, Messages.getString("CryptoPreferencePage.12"), fep)); //$NON-NLS-1$
+		// There is no option to decrypt by PKCS11 
+		//addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, Messages.getString("CryptoPreferencePage.12"), fep)); //$NON-NLS-1$
 	}
 
 	@Override

@@ -34,6 +34,8 @@ import java.util.Enumeration;
 
 import javax.security.auth.callback.PasswordCallback;
 
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+
 /**
  * The delegating keystore allows bringing keystore handling under application control.
  * 
@@ -71,6 +73,13 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	 * */
 	private final int maxAttempts;
 	
+	/*
+	 * An alias of a certificate
+	 * If set only this alias will be read from the keystore.
+	 * All other aliases with be ignored.
+	 */
+	private String certificateAlias;
+	
 	/** A helper class of which instances are used by subclasses to do a proper initialization
 	 * of the {@link DelegatingKeyStore}.
 	 * 
@@ -81,6 +90,7 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 		KeyStore keyStore;
 		PasswordHandler passwordHandler;
 		int maxAttempts;
+		String certificateAlias;
 	}
 	
 	/** Helper interface for retrieving the actual password.
@@ -144,6 +154,7 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 		delegate = config.keyStore;
 		passwordHandler = config.passwordHandler;
 		maxAttempts = config.maxAttempts;
+		certificateAlias = config.certificateAlias;
 	}
 	
 	/**
@@ -249,6 +260,10 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public Key engineGetKey(String alias, char[] password)
 			throws NoSuchAlgorithmException, UnrecoverableKeyException {
+	    if(certificateAlias!=null && !certificateAlias.equals(alias)) {
+	        return null;
+	    }
+	    
 		// If there is no password handler there is nothing we can do in case
 		// the password is wrong/missing/whatever.
 		// Handling this case here, simplifies later code.
