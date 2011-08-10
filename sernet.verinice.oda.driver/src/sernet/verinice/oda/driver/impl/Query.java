@@ -43,14 +43,9 @@ import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyGroup;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
-import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
@@ -69,6 +64,8 @@ public class Query implements IQuery
     
     private Integer vnRootElement;
     
+    private Integer[] vnRootElements;
+    
     private Interpreter setupInterpreter, interpreter;
     
     private HashMap<String, String> properties = new HashMap<String, String>();
@@ -80,6 +77,11 @@ public class Query implements IQuery
     private String[] columns, inParameters;
     
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
+    
+    Query(Integer[] rootElementIds){
+    	this(new Integer(-1));
+    	vnRootElements = rootElementIds;
+    }
     
     Query(Integer rootElementId)
     {
@@ -251,7 +253,11 @@ public class Query implements IQuery
         }
         
         public Integer getRoot() {
-            return vnRootElement;
+       		return vnRootElement;
+        }
+        
+        public Integer[] getRootElements(){
+        	return vnRootElements;
         }
 
         /**
@@ -270,7 +276,7 @@ public class Query implements IQuery
         	ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         	ImageIO.write(im, "png", bos);
-
+        	
         	return bos.toByteArray();
         }
         
