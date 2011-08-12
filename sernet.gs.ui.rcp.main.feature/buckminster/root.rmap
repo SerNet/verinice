@@ -47,6 +47,12 @@
 			<uri format="http://download.eclipse.org/releases/indigo?importType=binary"/>
 		</provider>
 	</searchPath>
+	
+	<searchPath name="org.eclipse.language-packs">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false" source="false">
+			<uri format="http://download.eclipse.org/technology/babel/update-site/R0.9.0/indigo?importType=binary"/>
+		</provider>
+	</searchPath>
 
 	<searchPath name="buckminster.test">
 		<provider readerType="cvs" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true"
@@ -134,5 +140,6 @@
 	<locator searchPathRef="org.eclipse.team.svn" pattern="^org\.eclipse\.team\.svn(\..+)?$" />
 	<locator searchPathRef="org.eclipse.platform" pattern="^org\.eclipse(\..+)?$" />
 	<locator searchPathRef="org.eclipse.platform" pattern="^org\.junit4(\..+)?$" />
+	<locator searchPathRef="org.eclipse.language-packs" pattern="^org\.eclipse(\..+)?$" />
 	<locator searchPathRef="default" pattern=".*" />
 </rmap>
