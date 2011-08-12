@@ -384,16 +384,6 @@ Library.
          fragment="true"/>
 
    <plugin
-         id="org.eclipse.equinox.launcher.wpf.win32.x86"
-         os="win32"
-         ws="wpf"
-         arch="x86"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="org.eclipse.equinox.preferences"
          download-size="0"
          install-size="0"
@@ -529,25 +519,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.filesystem.hpux.ia64_32"
-         os="hpux"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.linux.ppc"
-         os="linux"
-         arch="ppc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.filesystem.linux.x86"
          os="linux"
          arch="x86"
@@ -570,16 +541,6 @@ Library.
    <plugin
          id="org.eclipse.core.filesystem.macosx"
          os="macosx"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.solaris.sparc"
-         os="solaris"
-         arch="sparc"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1487,12 +1448,6 @@ Library.
          version="0.0.0"/>
 
    <plugin
-         id="org.mozilla.rhino"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.emf.ecore.xmi"
          download-size="0"
          install-size="0"
@@ -1680,12 +1635,6 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="com.lowagie.itext"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.birt.report.engine.fonts"
@@ -1998,7 +1947,7 @@ Library.
          id="org.eclipse.equinox.p2.repository.tools"
          download-size="0"
          install-size="0"
-         version="1.0.2.R35x_20100111"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -2086,14 +2035,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.p2.exemplarysetup.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.p2.extensionlocation"
          download-size="0"
          install-size="0"
@@ -2123,15 +2064,7 @@ Library.
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.p2.metadata.generator.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
+         
    <plugin
          id="org.eclipse.equinox.p2.metadata.nl_de"
          download-size="0"
@@ -2348,20 +2281,6 @@ Library.
 
    <plugin
          id="org.eclipse.birt.report.engine.emitter.postscript.config"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.birt.report.engine.emitter.ppt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.birt.report.engine.emitter.ppt.config"
          download-size="0"
          install-size="0"
          version="0.0.0"
