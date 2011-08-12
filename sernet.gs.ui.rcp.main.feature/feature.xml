@@ -2005,35 +2005,35 @@ Library.
          id="org.eclipse.equinox.p2.touchpoint.eclipse"
          download-size="0"
          install-size="0"
-         version="1.0.101.R35x_20090820-1821"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.touchpoint.natives"
          download-size="0"
          install-size="0"
-         version="1.0.101.R35x_v20090806"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.updatechecker"
          download-size="0"
          install-size="0"
-         version="1.1.0.v20090520-1905"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.publisher"
          download-size="0"
          install-size="0"
-         version="1.0.1.R35x_20100105"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.artifact.repository.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2041,7 +2041,7 @@ Library.
          id="org.eclipse.equinox.p2.console.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2049,7 +2049,7 @@ Library.
          id="org.eclipse.equinox.p2.core.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2057,7 +2057,7 @@ Library.
          id="org.eclipse.equinox.p2.director.app.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2065,7 +2065,7 @@ Library.
          id="org.eclipse.equinox.p2.director.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2073,7 +2073,7 @@ Library.
          id="org.eclipse.equinox.p2.directorywatcher.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2081,7 +2081,7 @@ Library.
          id="org.eclipse.equinox.p2.engine.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2089,7 +2089,7 @@ Library.
          id="org.eclipse.equinox.p2.exemplarysetup.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2097,14 +2097,14 @@ Library.
          id="org.eclipse.equinox.p2.extensionlocation"
          download-size="0"
          install-size="0"
-         version="1.0.100.v20090520-1905"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.extensionlocation.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2112,7 +2112,7 @@ Library.
          id="org.eclipse.equinox.p2.garbagecollector.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2120,7 +2120,7 @@ Library.
          id="org.eclipse.equinox.p2.jarprocessor.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2128,7 +2128,7 @@ Library.
          id="org.eclipse.equinox.p2.metadata.generator.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2136,7 +2136,7 @@ Library.
          id="org.eclipse.equinox.p2.metadata.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2144,7 +2144,7 @@ Library.
          id="org.eclipse.equinox.p2.metadata.repository.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2152,7 +2152,7 @@ Library.
          id="org.eclipse.equinox.p2.publisher.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2160,7 +2160,7 @@ Library.
          id="org.eclipse.equinox.p2.reconciler.dropins.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2168,7 +2168,7 @@ Library.
          id="org.eclipse.equinox.p2.repository.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2176,7 +2176,7 @@ Library.
          id="org.eclipse.equinox.p2.repository.tools.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2184,7 +2184,7 @@ Library.
          id="org.eclipse.equinox.p2.touchpoint.eclipse.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2192,7 +2192,7 @@ Library.
          id="org.eclipse.equinox.p2.touchpoint.natives.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2200,7 +2200,7 @@ Library.
          id="org.eclipse.equinox.p2.ui.sdk.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2208,7 +2208,7 @@ Library.
          id="org.eclipse.equinox.p2.ui.sdk.scheduler.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2216,7 +2216,7 @@ Library.
          id="org.eclipse.equinox.p2.updatechecker.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2224,7 +2224,7 @@ Library.
          id="org.eclipse.equinox.p2.updatesite.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2232,35 +2232,35 @@ Library.
          id="org.eclipse.birt.chart.engine.extension"
          download-size="0"
          install-size="0"
-         version="2.5.2.v20100121"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.birt.chart.reportitem"
          download-size="0"
          install-size="0"
-         version="2.5.2.v20100209"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.birt.core.script.function"
          download-size="0"
          install-size="0"
-         version="2.5.2.v20100205"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.birt.report.item.crosstab.core"
          download-size="0"
          install-size="0"
-         version="2.5.2.v20100127"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.util.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
@@ -2268,7 +2268,7 @@ Library.
          id="org.eclipse.equinox.p2.ui.nl_de"
          download-size="0"
          install-size="0"
-         version="3.5.0.v20091121043401"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 
