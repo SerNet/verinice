@@ -299,7 +299,8 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.equinox.p2.metadata.repository,
  org.eclipse.equinox.p2.artifact.repository;bundle-version="1.0.101",
  org.eclipse.equinox.p2.ui.sdk;bundle-version="1.0.100",
- org.eclipse.equinox.p2.repository
+ org.eclipse.equinox.p2.repository,
+ org.eclipse.equinox.p2.core;bundle-version="1.0.101"
 Import-Package: javax.xml.rpc.encoding,
  org.apache.axis.encoding.ser,
  org.eclipse.core.runtime;version="3.4.0",
