@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.3.90" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.3.1.92" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
@@ -76,7 +76,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    <intro introId="sernet.gs.ui.rcp.main.intro1"/>
 
    <vm>
-      <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>
+      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>
    </vm>
 
    <license>
@@ -762,7 +762,7 @@ Public License instead of this License.  But first, please read
    <plugins>
       <plugin id="SpringClient" fragment=""/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.ibm.icu.source"/>
+      <plugin id="com.ibm.icu.source" fragment=""/>
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.eclipse.core.commands"/>
@@ -831,7 +831,7 @@ Public License instead of this License.  But first, please read
    <features>
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <feature id="sernet.gs.ui.rcp.main.feature" version="1.1.1.qualifier"/>
-      <feature id="org.eclipse.equinox.p2.user.ui" version="1.1.2.R35x_v20091106-7u6FbQFUAtsCKD5Fxz0qz0fb2932"/>
+      <feature id="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
    </features>
 
 
