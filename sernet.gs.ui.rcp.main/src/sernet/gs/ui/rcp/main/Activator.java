@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,6 +34,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.console.ProvisioningHelper;
+import org.eclipse.equinox.p2.core.ProvisionException;
+import org.eclipse.equinox.p2.repository.IRepositoryManager;
+import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
+import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
@@ -44,12 +49,12 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
+import org.springframework.osgi.service.importer.support.ServiceReferenceEditor;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
@@ -168,13 +173,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		CnAWorkspace.getInstance().prepareWorkDir();
 
 		Preferences prefs = getPluginPreferences();
-		
-		// May replace the JDK's built-in security settings
-		try {
-		    VeriniceSecurityProvider.register(prefs);
-		} catch (Exception e) {
-            LOG.error("Error while registering verinice security provider.", e);
-        }
 
 		// set service factory location to local / remote according to
 		// preferences:
@@ -441,49 +439,64 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	    } else {
 	        repoUri = new URI(UPDATE_SITE_URL); 
 	    }
-        removeRepository();    
+        removeRepository(); 
+        
+
+        //Load repo
         try {
-            ProvisioningHelper.addMetadataRepository(repoUri);
-            if (LOG.isDebugEnabled()) {
+        	getMetadataRepositoryManager().addRepository(repoUri);
+	        if (LOG.isDebugEnabled()) {
                 LOG.debug("MetadataRepository added: " + repoUri);
             }
+	        getArtifactRepositoryManager().addRepository(repoUri);
+	        if (LOG.isDebugEnabled()) {
+                LOG.debug("ArtifactRepository added: " + repoUri);
+            }
         } catch( Exception e ) {
-            LOG.warn("Can not add update repository: " + repoUri);
+            LOG.warn("Can not add repository: " + repoUri);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("stacktrace: ", e);
             }
         }
-        try {
-            ProvisioningHelper.addArtifactRepository(repoUri);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("ArtifactRepository added: " + repoUri);
-            }
-        } catch( Exception e ) {
-            LOG.warn("Can not add update repository: " + repoUri);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("stacktrace: ", e);
-            }
-        }  
+
     }
+
+	private IArtifactRepositoryManager getArtifactRepositoryManager() {
+		//Load artifact manager
+        IArtifactRepositoryManager artifactManager = (IArtifactRepositoryManager) context.getService(context.getServiceReference(IArtifactRepositoryManager.class.getName()));                  
+        if(artifactManager == null) {
+        	// throw exception
+        }
+		return artifactManager;
+	}
+
+	private IMetadataRepositoryManager getMetadataRepositoryManager() {
+		//Load repository manager
+        IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) context.getService(context.getServiceReference(IMetadataRepositoryManager.class.getName()));  
+        if(metadataManager == null) {
+        	// throw exception
+        }
+		return metadataManager;
+	}
 	
 
 
     private void removeRepository() {
-        URI[] uriArray = ProvisioningHelper.getArtifactRepositories();
+    	URI[] uriArray = getArtifactRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);     
         if(uriArray!=null) {
     	    for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
                 if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
-                    ProvisioningHelper.removeArtifactRepository(uri);
+                	getArtifactRepositoryManager().removeRepository(uri);
                 }
             }
         }
-        uriArray = ProvisioningHelper.getMetadataRepositories();
+        uriArray = getArtifactRepositoryManager().getKnownRepositories(IRepositoryManager.REPOSITORIES_ALL);         
     	if(uriArray!=null) {
             for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
                 if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
-                    ProvisioningHelper.removeMetadataRepository(uri);
+                	getMetadataRepositoryManager().removeRepository(uri);
                 }
             }
         }
