@@ -496,7 +496,7 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.apache.lucene.core"
          download-size="0"
@@ -2071,7 +2071,7 @@ Library.
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.equinox.p2.metadata.nl_de"
          download-size="0"
@@ -2263,7 +2263,7 @@ Library.
          install-size="0"
          version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
          unpack="false"/>
-         
+
    <plugin
          id="org.eclipse.ui.net.nl_de"
          download-size="0"
@@ -2309,6 +2309,13 @@ Library.
 
    <plugin
          id="org.eclipse.birt.report.engine.emitter.wpml.config"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.lowagie.text"
          download-size="0"
          install-size="0"
          version="0.0.0"
