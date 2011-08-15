@@ -44,8 +44,10 @@
 			<arg value="${target.arch}" />
 			<arg value="-consoleLog"/>
 			<arg value="-roaming"/>
+			<!--
 			<jvmarg value="-Declipse.p2.data.area=${destination}/p2"/>
 			<jvmarg value="-Declipse.p2.profile=${profile}"/>
+			-->
 		</java>
 	</target>
 </project>
