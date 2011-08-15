@@ -23,9 +23,9 @@
 			<arg value="-application"/>
 			<arg value="org.eclipse.equinox.p2.director"/>
 			<arg value="-artifactRepository"/>
-			<arg value="file:${repository}"/>
+			<arg value="${repository}"/>
 			<arg value="-metadataRepository"/>
-			<arg value="file:${repository}"/>
+			<arg value="${repository}"/>
 			<arg value="-destination"/>
 			<arg value="${destination}"/>
 			<arg value="-bundlepool"/>
