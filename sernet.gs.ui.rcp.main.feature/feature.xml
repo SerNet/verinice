@@ -2336,6 +2336,7 @@ Library.
          id="org.eclipse.swt.cocoa.macosx"
          os="macosx"
          ws="cocoa"
+         arch="x86,x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
