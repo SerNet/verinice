@@ -64,11 +64,11 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       location="sernet.gs.ui.rcp.main"
       startupProgressRect="5,5,300,15" />
    <launcher name="verinice">
-      <linux icon="wxcas.xpm"/>
-      <macosx icon="v_logo_mac.icns"/>
+      <linux icon="/sernet.gs.ui.rcp.main.feature/wxcas.xpm"/>
+      <macosx icon="/sernet.gs.ui.rcp.main.feature/v_logo_mac.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="v_48.ico"/>
+         <ico path="/sernet.gs.ui.rcp.main.feature/v_48.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -832,6 +832,7 @@ Public License instead of this License.  But first, please read
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <feature id="sernet.gs.ui.rcp.main.feature" version="1.1.1.qualifier"/>
       <feature id="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
+      <feature id="org.eclipse.equinox.executable" version="3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
    </features>
 
 
