@@ -229,35 +229,39 @@ public class IDI2VN {
         SyncData syncData = new SyncData();
         
         for (IDIObject object : this.objects) {
-            SyncObject syncObject = new SyncObject();
-            syncObject.setExtId(object.sysid);
-            syncObject.setExtObjectType(object.type);
-            
-            // we have to set the abbreviation to prevent verinice to setting the default value on first edit:
-            SyncAttribute abbrev = new SyncAttribute();
-            abbrev.setName("idoit-abbrev");
-            abbrev.getValue().add(" ");
-            syncObject.getSyncAttribute().add(abbrev);
-
-            // set title and combined description:
-            SyncAttribute title = new SyncAttribute();
-            title.setName("idoit-title");
-            title.getValue().add(object.title);
-            syncObject.getSyncAttribute().add(title);
-
-            SyncAttribute desc = new SyncAttribute();
-            desc.setName("idoit-description");
-            desc.getValue().add(combineDetails(object));
-            syncObject.getSyncAttribute().add(desc);
-
-            // set original object type as tag for easy filtering by type:
-            SyncAttribute tag = new SyncAttribute();
-            tag.setName("idoit-tag");
-            tag.getValue().add(object.type);
-            syncObject.getSyncAttribute().add(tag);
-            
-            syncData.getSyncObject().add(syncObject);
-        }
+        	if(object.sysid!=null && object.type!=null) {
+	            SyncObject syncObject = new SyncObject();
+	            syncObject.setExtId(object.sysid);
+	            syncObject.setExtObjectType(object.type);
+	            
+	            // we have to set the abbreviation to prevent verinice to setting the default value on first edit:
+	            SyncAttribute abbrev = new SyncAttribute();
+	            abbrev.setName("idoit-abbrev");
+	            abbrev.getValue().add(" ");
+	            syncObject.getSyncAttribute().add(abbrev);
+	
+	            // set title and combined description:
+	            SyncAttribute title = new SyncAttribute();
+	            title.setName("idoit-title");
+	            title.getValue().add(object.title);
+	            syncObject.getSyncAttribute().add(title);
+	
+	            SyncAttribute desc = new SyncAttribute();
+	            desc.setName("idoit-description");
+	            desc.getValue().add(combineDetails(object));
+	            syncObject.getSyncAttribute().add(desc);
+	
+	            // set original object type as tag for easy filtering by type:
+	            SyncAttribute tag = new SyncAttribute();
+	            tag.setName("idoit-tag");
+	            tag.getValue().add(object.type);
+	            syncObject.getSyncAttribute().add(tag);
+	            
+	            syncData.getSyncObject().add(syncObject);
+	        } else {
+	        	log.warn("Idoit objekt hat keine sysid oder keinen typ und kann nicht umgewandelt werden, Titel: " + object.title);
+	        }
+	    }
         return syncData;
     }
 
