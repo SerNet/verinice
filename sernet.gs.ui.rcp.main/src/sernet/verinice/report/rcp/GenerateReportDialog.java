@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.internal.registry.WizardParameterValues.New;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -47,13 +48,13 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
     
     // manual filename mode or auto filename mode 
-    private static final boolean FILENAME_MANUAL = false;
+    private static final boolean FILENAME_MANUAL = true;
     
 	private Combo comboReportType;
 
 	private Combo comboOutputFormat;
 
-	private Text textDir, textFile;
+	private Text textFile;
 
 	private File outputFile;
 
@@ -67,7 +68,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private Integer[] rootElements;
 
-    private Button openDirButton, openFileButton;
+    private Button openFileButton;
 
     private Text textReportTemplateFile;
 
@@ -85,19 +86,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private boolean userTemplate = true;
 
-    private boolean filenameManual = FILENAME_MANUAL;
-
 	private List<CnATreeElement> preSelectedElments;
     
     // estimated size of dialog for placement (doesnt have to be exact):
-    private static final int SIZE_X = 540;
-    private static final int SIZE_Y = 470;
+    private static final int SIZE_X = 410;
+    private static final int SIZE_Y = 540;
     
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.GenerateReportDialog_4);
-        newShell.setSize(SIZE_X, SIZE_Y);
+        newShell.setSize(SIZE_Y,SIZE_X);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
@@ -202,9 +201,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		comboReportType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+			    chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
 				setupComboOutputFormatContent();
 				enableFileSelection();
-				setupOutputFilename();
 			}
      
 		});
@@ -232,7 +231,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             String fn = dlg.open();
             if (fn != null) {
               textReportTemplateFile.setText(fn);
-              setupOutputFilename();
             }
           }
         });
@@ -298,85 +296,24 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		comboOutputFormat.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                setupOutputFilename();
+                if(chosenReportType!=null) {
+                    chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];    
+                }
+                setupOutputFilepath();
             }
      
         });
 		
-		Label labelDir = new Label(groupFile, SWT.NONE);
         GridData gridLabelFile = new GridData();
         gridLabelFile.horizontalAlignment = SWT.LEFT;
         gridLabelFile.verticalAlignment = SWT.CENTER;
         gridLabelFile.grabExcessHorizontalSpace = true;
         gridLabelFile.minimumWidth = 140;
-        labelDir.setText(Messages.GenerateReportDialog_12);
-        labelDir.setLayoutData(gridLabelFile);
-
-        textDir = new Text(groupFile, SWT.BORDER);
+        
         GridData gridTextFile = new GridData();
         gridTextFile.horizontalAlignment = SWT.FILL;
         gridTextFile.verticalAlignment = SWT.CENTER;
-        gridTextFile.grabExcessHorizontalSpace = true;
-        textDir.setLayoutData(gridTextFile);
-        
-        textDir.addKeyListener(new KeyListener() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-        
-        textDir.setEditable(!FILENAME_MANUAL);
-        
-        openDirButton = new Button(groupFile, SWT.PUSH);
-        openDirButton.setText(Messages.GenerateReportDialog_11);
-        openDirButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent event) {
-                DirectoryDialog dlg = new DirectoryDialog(getParentShell());
-
-                // Set the initial filter path according
-                // to anything they've selected or typed in
-                dlg.setFilterPath(textDir.getText());
-
-                // Change the title bar text
-                dlg.setText(Messages.GenerateReportDialog_13);
-
-                // Customizable message displayed in the dialog
-                dlg.setMessage(Messages.GenerateReportDialog_14);
-
-                // Calling open() will open and run the dialog.
-                // It will return the selected directory, or
-                // null if user cancels
-                String dir = dlg.open();
-                if (dir != null) {
-                    textDir.setText(dir);
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-                    setupOutputFilename();
-                }
-            }
-        });
-        
-        openDirButton.setEnabled(!FILENAME_MANUAL);
-        
-        Label labelFilenameManual = new Label(groupFile, SWT.NONE);
-        labelFilenameManual.setText(Messages.GenerateReportDialog_15);
-        labelFilenameManual.setLayoutData(gridLabelFile);
-         
-        final Button checkFilenameManual = new Button(groupFile, SWT.CHECK);
-        checkFilenameManual.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 2, 1));
-        checkFilenameManual.setSelection(false);
-    
-        checkFilenameManual.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent arg0) {
-                filenameManual = checkFilenameManual.getSelection();
-                enableFileDialog(filenameManual);
-            }
-        });  
+        gridTextFile.grabExcessHorizontalSpace = true;       
 
 		Label labelFile = new Label(groupFile, SWT.NONE);
 		labelFile.setText(Messages.GenerateReportDialog_10);
@@ -405,14 +342,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
 	        dlg.setFilterPath(textFile.getText());
 	        //dlg.setFilterNames(FILTER_NAMES);
-	        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-	        chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+	        //chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+	        //chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
 	        ArrayList<String> extensionList = new ArrayList<String>();
 	        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
 	            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
 	        }
 	        extensionList.add("*.*"); //$NON-NLS-1$
 	        dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()])); 
+	        dlg.setFileName(getDefaultOutputFilename());
 	        String fn = dlg.open();
 	        if (fn != null) {
 	          textFile.setText(fn);
@@ -424,6 +362,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		openFileButton.setEnabled(FILENAME_MANUAL);
 		
 		comboReportType.select(0);
+		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
 		setupComboOutputFormatContent();
 		setupComboScopes();
 		
@@ -438,11 +377,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     protected void enableFileDialog(boolean filenameManual) {
         textFile.setEditable(filenameManual);
         openFileButton.setEnabled(filenameManual);
-        textDir.setEditable(!filenameManual);
-        openDirButton.setEnabled(!filenameManual);
-        if(filenameManual) {
-            textDir.setText(""); //$NON-NLS-1$
-        }
     }
 
 
@@ -512,54 +446,42 @@ public class GenerateReportDialog extends TitleAreaDialog {
         openReportButton.setEnabled(userTemplate);
     }
 
-    private void setupComboOutputFormatContent()
-	{
+    private void setupComboOutputFormatContent(){
 		comboOutputFormat.removeAll();
 		for (IOutputFormat of : reportTypes[comboReportType.getSelectionIndex()].getOutputFormats()) {
 			comboOutputFormat.add(of.getLabel());
 		};
 		comboOutputFormat.select(0);
+		if(chosenReportType!=null) {
+            chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];    
+        }
 	}
     
     /**
      * 
      */
-    protected void setupOutputFilename() {
-        if(!filenameManual) {          
-            String reportLabel = null;
-            if(userTemplate) {
-                reportLabel = getLabelFromTemplateFile(textReportTemplateFile.getText());
+    protected void setupOutputFilepath() { 
+        String currentPath = textFile.getText();
+        String path = currentPath;
+        if(currentPath!=null && !currentPath.isEmpty() && chosenOutputFormat!=null) {
+            int lastDot = currentPath.lastIndexOf('.');
+            if(lastDot!=-1) {
+                path = currentPath.substring(0,lastDot+1) + chosenOutputFormat.getFileSuffix();
+            } else {
+                path = currentPath + chosenOutputFormat.getFileSuffix();
             }
-            chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-            if(!userTemplate && chosenReportType!=null) {
-                reportLabel = chosenReportType.getLabel();
-            }
-            String filename = convertToFileName(reportLabel);
-            chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
-            String suffix = chosenOutputFormat.getFileSuffix();
-            String dir = System.getProperty("user.dir"); //$NON-NLS-1$
-            if(textDir!=null && textDir.getText()!=null && !textDir.getText().isEmpty()) {
-                dir = textDir.getText();
-            }
-            if(filename!=null && !filename.isEmpty()) {
-                textFile.setText(dir + File.separatorChar + filename + "." + suffix); //$NON-NLS-1$
-            }
+        }
+        if(!currentPath.equals(path)) {
+            textFile.setText(path);
         }
     }
-
-	/**
-     * @param text
-     */
-    private String getLabelFromTemplateFile(String filePath) {
-        String label = null;
-        if(filePath!=null && !filePath.isEmpty() && filePath.contains(".")) { //$NON-NLS-1$
-            int indexOfSeparator = filePath.lastIndexOf(File.separatorChar);
-            if(indexOfSeparator!=-1) {
-                filePath = filePath.substring(indexOfSeparator+1);
-            }
-            label = filePath.substring(0, filePath.lastIndexOf('.'));
+    
+    protected String getDefaultOutputFilename() {     
+        StringBuilder sb = new StringBuilder("unknown");
+        if(chosenOutputFormat!=null) {
+            sb.append(".").append(chosenOutputFormat.getFileSuffix());
         }
-        return label;
+        return sb.toString();
     }
 
 

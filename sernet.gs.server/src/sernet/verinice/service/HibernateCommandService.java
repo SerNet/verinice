@@ -98,10 +98,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 
 		
 		if (log.isDebugEnabled()) {
-			log.debug(
-	                "Service executing command: "
-                    + command.getClass().getSimpleName() 
-            + " / user: " + getAuthService().getUsername()); 
+			log.debug("Service executing command: " + command.getClass().getSimpleName() + " / user: " + getAuthService().getUsername()); 
 		}
 		
 		
@@ -136,7 +133,9 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 					&& !(command instanceof INoAccessControl)
 					&& !hasAdminRole(authService.getRoles()))
 			{
-				log.debug("Enabling security access filter for user: " + authService.getUsername());
+				if(log.isDebugEnabled()) {
+					log.debug("Enabling security access filter for user: " + authService.getUsername());
+				}
 				setAccessFilterEnabled(true);
 			}
 			

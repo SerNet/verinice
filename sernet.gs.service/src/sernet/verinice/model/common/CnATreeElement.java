@@ -124,7 +124,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	private boolean childrenLoaded = false;
 	
-	private Set<Attachment> files;
+	private Set<Attachment> files = new HashSet<Attachment>(1);
 	
 	@Override
 	public boolean equals(Object obj) {
