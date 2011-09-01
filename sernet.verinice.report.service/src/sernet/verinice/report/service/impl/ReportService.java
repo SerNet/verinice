@@ -53,7 +53,8 @@ public class ReportService implements IReportService {
 		        new BasisSichCheckReport(),
 		        new RisikoanalyseReport(),
 		        new RealisierungsplanReport(),
-		        new AuditberichtReport()
+		        new AuditberichtReport(),
+		        new ComprehensiveSamtReportType()
 		    };
 		
 		return reportTypes;

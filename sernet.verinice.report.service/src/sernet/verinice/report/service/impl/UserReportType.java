@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
+import sernet.gs.ui.rcp.main.connect.HibernateBugFixDeleteEventListener;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;

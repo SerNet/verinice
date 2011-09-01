@@ -14,138 +14,172 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Sebastian Hagedorn <sh@sernet.de>
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
+
+import org.apache.log4j.Logger;
+
+import sernet.gs.service.NumericStringComparator;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Loads all findings for a given {@link CnATreeElement} (?).
  * 
- * <p>TODO samt: The current implementation generates random values which can change
- * each time the command is invoked. The ids used in here correspond to those used
- * in the {@link LoadChapterListCommand}.</p> 
- *
+ * <p>
+ * TODO samt: The current implementation generates random values which can
+ * change each time the command is invoked. The ids used in here correspond to
+ * those used in the {@link LoadChapterListCommand}.
+ * </p>
+ * 
  * @author Robert Schuster <r.schuster@tarent.de>
+ * @author Sebastian Hagedorn <sh@sernet.de>
  */
 @SuppressWarnings("serial")
 public class LoadAllFindingsCommand extends GenericCommand {
 
-	private Object[][] result;
+    private Object[][] result;
 
-	private int id;
-	
-	private static int MAX = 10;
-	
-	static HashMap<Integer, Object[][]> hardcodedData = new HashMap<Integer, Object[][]>();
-	
-	static
-	{
-		// Manual ISO/IEC chapter
-		makeEntry(10011, new Object[][] {
-				makeFinding(1001101,
-						"An information security policy document should be approved by management, and published and communicated to all employees and relevant external parties.",
-						"Policy document is available but not signed by the management until now. Some security documents from A are taken, modified to local requirements, translated into german and will be signed in January by the management. Users know partly about the documents. ",
-						2, 1, 1, "Take the ISSO documents and translate it CISO by 2006/08/31 into german for publishing in the intranet and communication to all employees. In case of any specific additions use the appendix of these documents. Let the policy document sign by the group board manager.", "CISO by 2006/08/31"),
-		});
-		
-		// ISO/IEC chapters
-		makeRandomEntry(10021);
-		
-		makeRandomEntry(10031);
-		makeRandomEntry(10032);
-		makeRandomEntry(10033);
-		
-		makeRandomEntry(10041);
-		makeRandomEntry(10042);
-		
-		makeRandomEntry(10051);
-		makeRandomEntry(10052);
-		
-		makeRandomEntry(10061);
-		makeRandomEntry(10062);
-		makeRandomEntry(10063);
-		makeRandomEntry(10064);
-		
-		makeRandomEntry(10071);
-		makeRandomEntry(10072);
-		
-		makeRandomEntry(10081);
-		makeRandomEntry(10082);
-		makeRandomEntry(10083);
-		makeRandomEntry(10084);
-		makeRandomEntry(10085);
-		
-		makeRandomEntry(10091);
-		makeRandomEntry(10092);
-		makeRandomEntry(10093);
-		
-		makeRandomEntry(10101);
-		makeRandomEntry(10102);
-		
-		// IT rooms
-		makeRandomEntry(2001);
-		makeRandomEntry(2002);
-		makeRandomEntry(2003);
-		makeRandomEntry(2004);
-		
-		// Office places
-		makeRandomEntry(3001);
-		makeRandomEntry(3002);
-		
-		// System checks
-		makeRandomEntry(4001);
-	}
-	
-	private static void makeRandomEntry(int baseId)
-	{
-		ArrayList<Object[]> al = new ArrayList<Object[]>();
-		final int amount = (int) (Math.random() * (MAX + 1));
-		for (int i = 0; i < amount; i++)
-		{
-			al.add(makeRandomFinding(baseId, i));
-		}
-		
-		hardcodedData.put(baseId, al.toArray(new Object[al.size()][]));
-	}
-	
-	private static Object[] makeRandomFinding(int baseId, int countingId) {
-		return makeFinding(
-				baseId * 100 + countingId,
-				String.format("control %s-%s", baseId, countingId),
-				String.format("finding %s-%s", baseId, countingId),
-				(int) (Math.random() * 6),
-				(int) (Math.random() * 3),
-				(int) (Math.random() * 3),
-				String.format("measure %s-%s", baseId, countingId),
-				String.format("p. in charge %s-%s", baseId, countingId));
-	}
-	
-	private static Object[] makeFinding(int id, String control, String finding,
-			int maturityLevel, int deviation, int risk, String measure, String personInCharge) {
-		return new Object[] { id, control, finding, maturityLevel, deviation, risk, measure, personInCharge };
-	}
-	
-	private static void makeEntry(int id, Object[][] data)
-	{
-		hardcodedData.put(id, data);
-	}
+    private Integer id;
 
-	public LoadAllFindingsCommand(int id) {
-		this.id = id;
-	}
+    private transient Logger log;
 
-	public Object[][] getResult() {
-		return result;
-	}
+    private transient CacheManager manager = null;
+    private String cacheId = null;
+    private transient Cache cache = null;
+    
+    private static final String SAMT_PERSON_INCHARGE_PROPERTY = "rel_samttopic_person-iso_resp";
+    public static final String SAMT_MEASURE_PROPERTY = "samt_topic_controlnote";
 
-	@Override
-	public void execute() {
-		result = hardcodedData.get(id);
-	}
+    static HashMap<Integer, Object[][]> computedData = new HashMap<Integer, Object[][]>();
 
+    public LoadAllFindingsCommand(int id) {
+        if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
+            String chapterIdString = String.valueOf(id);
+            chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
+            id = Integer.parseInt(chapterIdString);
+        }
+        this.id = id;
+        log = Logger.getLogger(LoadAllFindingsCommand.class);
+    }
+
+    public Object[][] getResult() {
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<SamtTopic> getAllSamtTopicChildren(ControlGroup parent) {
+        Set<SamtTopic> set = new HashSet<SamtTopic>();
+        if (getCache().get(parent.getUuid()) != null) {
+            set = (Set<SamtTopic>) getCache().get(parent.getUuid()).getValue();
+        } else {
+            for (CnATreeElement e : parent.getChildren()) {
+                if (e instanceof ControlGroup) {
+                    set.addAll(getAllSamtTopicChildren((ControlGroup) e));
+                } else if (e instanceof SamtTopic) {
+                    set.add((SamtTopic) e);
+                }
+            }
+            getCache().put(new Element(parent.getUuid(), set));
+        }
+        return set;
+    }
+
+    private Object[][] generateResultEntry(ControlGroup group) {
+        Set<SamtTopic> allTopics = getAllSamtTopicChildren(group);
+        Object[][] retVal = new Object[allTopics.size()][8];
+        Iterator<SamtTopic> iter = allTopics.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            retVal[count] = generateSamtEntry(iter.next());
+            count++;
+        }
+        return retVal;
+    }
+    
+    private Object[][] sortResult(Object[][] unsortedResults){
+        if (unsortedResults != null && unsortedResults.length > 0 && unsortedResults[0].length > 0) {
+            ArrayList<Object[]> list = new ArrayList<Object[]>();
+            for (Object[] objects : unsortedResults) {
+                list.add(objects);
+            }
+            Collections.sort(list, new Comparator<Object[]>() {
+              @Override
+              public int compare(Object[] o1, Object[] o2) {
+                  NumericStringComparator comparator = new NumericStringComparator();
+                  return comparator.compare((String)o1[1], (String)o2[1]);
+              }
+            });
+            return list.toArray(new Object[unsortedResults.length][unsortedResults[0].length]);
+        }
+        return new Object[0][0];
+    }
+
+    private Object[] generateSamtEntry(SamtTopic topic) {
+        String finding = topic.getEntity().getValue(LoadWorstFindingsCommand.SAMT_PROP_FINDING);
+        int dev = topic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_DEVIATION_PROPERTY);
+        int risk = topic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_RISK_PROPERTY);
+        String measure = topic.getEntity().getValue(SAMT_MEASURE_PROPERTY);
+        String personInCharge = "";
+        for (CnALink link : topic.getLinksDown()) {
+            if (link.getRelationId().equals(SAMT_PERSON_INCHARGE_PROPERTY)) {
+                personInCharge = link.getDependency().getTitle();
+                break;
+            }
+        }
+        return new Object[] { topic.getDbId(), topic.getTitle(), finding, topic.getMaturity(), dev, risk, measure, personInCharge };
+    }
+
+    @Override
+    public void execute() {
+        LoadCnAElementById command = new LoadCnAElementById(ControlGroup.TYPE_ID, id);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            if (command.getFound() != null) {
+                computedData.put(id, generateResultEntry((ControlGroup) command.getFound()));
+            }
+        } catch (CommandException e) {
+            log.error("Error while executing command", e);
+        }
+        result = computedData.get(id);
+        result = sortResult(result);
+    }
+
+    private Cache getCache() {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            cache = createCache();
+        } else {
+            cache = manager.getCache(cacheId);
+        }
+        return cache;
+    }
+
+    private Cache createCache() {
+        cacheId = UUID.randomUUID().toString();
+        manager = CacheManager.create();
+        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        manager.addCache(cache);
+        return cache;
+    }
 }

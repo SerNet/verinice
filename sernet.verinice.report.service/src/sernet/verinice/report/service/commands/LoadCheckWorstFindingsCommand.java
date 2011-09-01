@@ -20,12 +20,17 @@ package sernet.verinice.report.service.commands;
 import sernet.verinice.interfaces.GenericCommand;
 
 /**
- * Retrieves the worst finding of a 'check' item.
+ * Retrieves the worst finding of a 'check' item
  * 
- * @author Robert Schuster <r.schuster@tarent.de>
+ * UPDATE: Check 'items' are organized in ordinary ControlGroups, which have to have controlgroup_is_NoIso_group (equals 1) set
+ * so this class is useless
+ * 
+ * @author Robert Schuster <r.schuster@tarent.de>,
+ * 		   Sebastian Hagedorn <sh@sernet.de>
  *
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class LoadCheckWorstFindingsCommand extends GenericCommand {
 
 	private Object[][] result;
@@ -37,6 +42,9 @@ public class LoadCheckWorstFindingsCommand extends GenericCommand {
 	}
 
 	public Object[][] getResult() {
+	       if(result == null){
+	            this.hashCode();
+	        }
 		return result;
 	}
 

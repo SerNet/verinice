@@ -253,6 +253,9 @@ public class Query implements IQuery
         }
         
         public Integer getRoot() {
+            if(vnRootElement.intValue() < 16000){
+                this.hashCode();
+            }
        		return vnRootElement;
         }
         

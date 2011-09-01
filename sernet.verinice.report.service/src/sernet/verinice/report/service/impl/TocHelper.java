@@ -63,7 +63,7 @@ public class TocHelper {
 	 * </ul>
 	 */
 	private static int resetCount = 0;
-
+	
 	/** When the TOC page count has been found out it is copied into this variable for usage
 	 * in the final run.
 	 */
@@ -110,13 +110,15 @@ public class TocHelper {
 	 * @param depth
 	 */
 	public static void addTocItem(String item, int depth) {
-		StringBuilder sb = new StringBuilder(depth + item.length());
-		for (int i = 0; i < depth; i++)
-			sb.append("_");
-		sb.append(item);
-
-		items.add(sb.toString());
-		pages.add(pageNumber);
+	    if(!item.equals("")){ // create no item for dummy groups
+    		StringBuilder sb = new StringBuilder(depth + item.length());
+    		for (int i = 0; i < depth; i++)
+    			sb.append("_");
+    		sb.append(item);
+    
+    		items.add(sb.toString());
+    		pages.add(pageNumber);
+	    }
 	}
 
 	/**
@@ -192,7 +194,7 @@ public class TocHelper {
 			finalPages.addAll(pages);
 
 			finalTocPageCount = tocPageCount;
-
+			
 			break;
 		case 3:
 			// End of 3rd run:
@@ -212,7 +214,7 @@ public class TocHelper {
 		}
 
 	}
-
+	
 	/**
 	 * Increases the page count. This method should be called whenever a general page break
 	 * happens. (E.g. override the document's "onPageBreak()" method.)

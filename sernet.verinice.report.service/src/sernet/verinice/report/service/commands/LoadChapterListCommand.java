@@ -14,182 +14,375 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Sebastian Hagedorn <sh@sernet.de> - providing content to the skeleton
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
+
+import org.apache.log4j.Logger;
+
+import sernet.gs.service.NumericStringComparator;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByTypeId;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementByTitle;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnALink.Id;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * Loads the ids and names of various elements of {@link CnATreeElement} (?) that are eligible
- * for a security assesment. They are referenced as chapters since each element
- * turns into a chapter in the 'comprehensive security assessment report'.
+ * Loads the ids and names of various elements of {@link CnATreeElement} (?)
+ * that are eligible for a security assesment. They are referenced as chapters
+ * since each element turns into a chapter in the 'comprehensive security
+ * assessment report'.
  * 
- * TODO samt: Check the comments for explanations of where the ids come from and what they
- * are supposed to mean.  
+ * TODO samt: Check the comments for explanations of where the ids come from and
+ * what they are supposed to mean.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
+ * @author Sebastian Hagedorn <sh@sernet.de>
  */
 @SuppressWarnings("serial")
 public class LoadChapterListCommand extends GenericCommand {
 
-	private Object[][] result;
+    private Object[][] result;
 
-	private int id;
+    private Integer chapterId;
 
-	public LoadChapterListCommand(int id) {
-		this.id = id;
-	}
+    private CnATreeElement rootObject;
 
-	public Object[][] getResult() {
-		return result;
-	}
+    private transient Logger log;
+    
+    private transient CacheManager manager = null;
+    private String cacheId = null;
+    private transient Cache cache = null;
 
-	@Override
-	public void execute() {
-		switch (id) {
-		/*
-		 * The id used here is more or less a magic number. Maybe a customized command
-		 * that finds the elements for this part of the report makes more sense.
-		 */
-		case 0:
-			/* 
-			 * Chapters designated for the ISO/IEC
-			 */
-			result = new Object[][] {
-					makeEntry(100, "ISO/IEC Overview"),
-			};
-			break;
-		/*
-		 * The id used here is more or less a magic number. Maybe a customized command
-		 * that finds the elements for this part of the report makes more sense.
-		 */
-		case 1:
-			/* 
-			 * Chapters designated for the IT check *details*
-			 */
-			result = new Object[][] {
-					makeEntry(200, "IT rooms"),
-					makeEntry(300, "Office places"),
-					makeEntry(400, "System checks")
-			};
-			break;
-		/*
-		 * Sort of main chapters
-		 * 
-		 * The ids used here are supposed to be database ids that are the result of a previous
-		 * request.
-		 * 
-		 * The 100 is a slight exception as it is directly used to find the subchapters for
-		 * chapter 4. It should be a goal to get of this direct usage when a better understanding
-		 * has developed about the nature of the data.
-		 */
-		case 100:
-			// ISO/IEC
-			result = new Object[][] {
-					makeEntry(1001, "Security Policy"),
-					makeEntry(1002, "Organization of Information Security"),
-					makeEntry(1003, "Asset Management"),
-					makeEntry(1005, "Physical and Environmental Security"),
-					makeEntry(1006, "Communications and Operations Management"),
-					makeEntry(1007, "Access Control"),
-					makeEntry(1008,
-							"Information Systems Acquisition, Development and Maintenance"),
-					makeEntry(1009, "Information Security Incident Management"),
-					makeEntry(1010, "Business Continuity Management") };
-			break;
-		case 200:
-			// IT rooms
-			result = new Object[][] {
-					makeEntry(2001, "Server room #1"),
-					makeEntry(2002, "Server room #2"),
-					makeEntry(2003, "Server room #3"),
-					makeEntry(2004, "Workstationroom #1"), };
-			break;
-		case 300:
-			// Office places
-			result = new Object[][] { makeEntry(3001, "8th floor"),
-					makeEntry(3002, "9th floor"), };
-			break;
-		case 400:
-			// Office places
-			result = new Object[][] { makeEntry(4001, "System checks"), };
-			break;
-		/* 
-		 * Subchapters of the ISO/IEC part - correspond to constants in LoadAllFindingsCommand
-		 * 
-		 * From now one the ids resemble a parent->child relation in the database.
-		 */
-		case 1001:
-			result = new Object[][] {
-					makeEntry(10011, "1001-1")
-			};
-			break;
-		case 1002:
-			result = new Object[][] {
-					makeEntry(10021, "1002-1")
-			};
-			break;
-		case 1003:
-			result = new Object[][] {
-					makeEntry(10031, "1003-1"),
-					makeEntry(10032, "1003-2"),
-					makeEntry(10033, "1003-3")
-			};
-			break;
-		case 1004:
-			result = new Object[][] {
-					makeEntry(10041, "1004-1"),
-					makeEntry(10042, "1004-2"),
-			};
-			break;
-		case 1005:
-			result = new Object[][] {
-					makeEntry(10051, "1005-1"),
-					makeEntry(10052, "1005-2"),
-			};
-			break;
-		case 1006:
-			result = new Object[][] {
-					makeEntry(10061, "1006-1"),
-					makeEntry(10062, "1006-2"),
-					makeEntry(10063, "1006-3"),
-					makeEntry(10063, "1006-4")
-			};
-			break;
-		case 1007:
-			result = new Object[][] {
-					makeEntry(10071, "1007-1"),
-					makeEntry(10072, "1007-2"),
-			};
-			break;
-		case 1008:
-			result = new Object[][] {
-					makeEntry(10081, "1008-1"),
-					makeEntry(10082, "1008-2"),
-					makeEntry(10083, "1008-3"),
-					makeEntry(10083, "1008-4"),
-					makeEntry(10085, "1008-5")
-			};
-			break;
-		case 1009:
-			result = new Object[][] {
-					makeEntry(10091, "1009-1"),
-					makeEntry(10092, "1009-2"),
-					makeEntry(10093, "1009-3")
-			};
-			break;
-		case 1010:
-			result = new Object[][] {
-					makeEntry(10101, "1010-1"),
-					makeEntry(10102, "1010-2"),
-			};
-			break;
-		}
-	}
+    private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
+    public static final Integer PLACEHOLDER_CONTROLGROUP_ID = -7;
+    
+    public LoadChapterListCommand(Integer chapterId) {
+        log = Logger.getLogger(LoadChapterListCommand.class);
+        this.chapterId = chapterId;
+    }
 
-	private Object[] makeEntry(int chapterId, String chapterName) {
-		return new Object[] { chapterId, chapterName };
-	};
+    public LoadChapterListCommand(Integer chapterId, int rootId) {
+        this(chapterId);
+        setRootObject(rootId);
+    }
 
+    private void setRootObject(int id) {
+        if (getCache().get(id) != null) {
+            rootObject = (Audit) getCache().get(id).getValue();
+            return;
+        } else {
+            LoadCnAElementById command = new LoadCnAElementById(Audit.TYPE_ID, id);
+            try {
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                CnATreeElement e = command.getFound();
+                if (e != null && e instanceof Audit) {
+                    rootObject = loadChildren((Audit) e);
+                }
+            } catch (Exception e) {
+                log.error("Error while executing command", e);
+            }
+        }
+    }
+
+    public Object[][] getResult() {
+        return result;
+    }
+
+    @Override
+    public void execute() {
+        ArrayList<Object[]> list = new ArrayList<Object[]>();
+        list.addAll(computeChapters(chapterId));
+        result = sortResults(list.toArray(new Object[list.size()][]));
+    }
+
+    private Object[][] sortResults(Object[][] unsortedResults) {
+        if (unsortedResults.length > 0 && unsortedResults[0].length > 0) {
+            ArrayList<Object[]> list = new ArrayList<Object[]>();
+            for (Object[] objects : unsortedResults) {
+                list.add(objects);
+            }
+            Collections.sort(list, new Comparator<Object[]>() {
+                @Override
+                public int compare(Object[] o1, Object[] o2) {
+                    if(((Integer)o1[0]).intValue() > 0 && ((Integer)o2[0]).intValue() > 0){
+                        NumericStringComparator comparator = new NumericStringComparator();
+                        return comparator.compare((String) o1[1], (String) o2[1]);
+                    } else {
+                        if(((Integer)o1[0]).intValue() < ((Integer)o2[0]).intValue()){
+                            return -1;
+                        } else if(((Integer)o1[0]).intValue() > ((Integer)o2[0]).intValue()){
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+            });
+            return list.toArray(new Object[unsortedResults.length][unsortedResults[0].length]);
+        }
+        return new Object[0][0];
+    }
+
+    private int getLvlCountToRootAudit(CnATreeElement elmt) {
+        int count = 1;
+        CnATreeElement parent = elmt.getParent();
+        while (parent != null && !parent.equals(rootObject)) {
+            count++;
+            parent = parent.getParent();
+        }
+        return count;
+    }
+
+    private List<Object[]> computeChapters(Integer id) {
+        List<Object[]> values = new ArrayList<Object[]>(0);
+        if (!rootObject.isChildrenLoaded()) {
+            loadChildren(rootObject);
+        }
+        if (id == -1) { // overview case
+            for (CnATreeElement e : rootObject.getChildren()) {
+                if (e instanceof ControlGroup) {
+                    ControlGroup g = (ControlGroup) e;
+                    values.add(createValueEntry(g));
+                }
+            }
+        } else if (id == -2 || id == -3) {
+            List<Object[]> lvl1Groups = computeChapters(-1);
+            for (Object[] oArr : lvl1Groups) {
+                int groupId = ((Integer) oArr[0]).intValue();
+                ControlGroup g = null;
+                if (getCache().get(groupId) != null) {
+                    g = (ControlGroup) getCache().get(groupId).getValue();
+                } else {
+                    LoadCnAElementById command = new LoadCnAElementById(ControlGroup.TYPE_ID, groupId);
+                    try {
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        if (command.getFound() != null) {
+                            g = (ControlGroup) command.getFound();
+                            getCache().put(new Element(groupId, g));
+                        }
+                    } catch (CommandException e) {
+                        log.error("Error while executing command", e);
+                    }
+                }
+                for (CnATreeElement e : g.getChildren()) {
+                    if (e instanceof ControlGroup) {
+                        values.add(createValueEntry(e));
+                    }
+                }
+                break;
+            }
+        } else if (id == -5) {
+            ControlGroup headlineGroup = new ControlGroup();
+            headlineGroup.setTitel(rootObject.getTitle() + " Overview");
+            headlineGroup.setDbId(-10);
+            values.add(createValueEntry(headlineGroup));
+            for (CnATreeElement e : rootObject.getChildren()) {
+                if (e instanceof ControlGroup) { // rootControlGroup
+                    if (!e.isChildrenLoaded()) {
+                        e = loadChildren(e);
+                    }
+                    for (CnATreeElement elmt : e.getChildren()) {
+                        if (elmt instanceof ControlGroup) {
+                            if (!elmt.isChildrenLoaded()) {
+                                elmt = loadChildren(elmt);
+                            }
+                            if (!isCnaTreeElementInList(values, elmt)) {
+                                if (elmt instanceof ControlGroup) {
+                                    ControlGroup g = (ControlGroup) elmt;
+                                    String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
+                                    if (isOverviewElementString != null && isOverviewElementString.equals("1")) {
+                                        values.add(createValueEntry(elmt));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else if(id == -10){
+            for (CnATreeElement e : rootObject.getChildren()) {
+                if (e instanceof ControlGroup) { // rootControlGroup
+                    if (!e.isChildrenLoaded()) {
+                        e = loadChildren(e);
+                    }
+                    for (CnATreeElement elmt : e.getChildren()) {
+                        if (elmt instanceof ControlGroup) {
+                            if (!elmt.isChildrenLoaded()) {
+                                elmt = loadChildren(elmt);
+                            }
+                            if (!isCnaTreeElementInList(values, elmt)) {
+                                if (elmt instanceof ControlGroup) {
+                                    ControlGroup g = (ControlGroup) elmt;
+                                    String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
+                                    if (isOverviewElementString != null && !isOverviewElementString.equals("1")) {
+                                        values.add(createValueEntry(elmt));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            CnATreeElement ce = null;
+            if (getCache().get(id) != null) {
+                ce = (CnATreeElement) getCache().get(id).getValue();
+            } else if (id.intValue() == -1) {
+                List<Object[]> id5Groups = computeChapters(-5); 
+                for (Object[] o : id5Groups) {
+                    int groupid = ((Integer) o[0]).intValue();
+                    for(ControlGroup rootChild : loadAllControlgroupChildren(rootObject)){
+                        if(rootChild.getDbId().intValue() == groupid){
+                            if(rootChild.getEntity().getValue(OVERVIEW_PROPERTY).equals("1")){
+                                values.add(createValueEntry(rootChild));
+                            }
+                        }
+                    }
+                }
+            } else {
+                LoadCnAElementById command1 = new LoadCnAElementById(ControlGroup.TYPE_ID, id);
+                try {
+                    command1 = ServiceFactory.lookupCommandService().executeCommand(command1);
+                    ce = command1.getFound();
+                    if (ce == null) {
+                        command1 = new LoadCnAElementById(SamtTopic.TYPE_ID, id);
+                        ce = command1.getFound();
+                    }
+                    if (ce != null)
+                        getCache().put(new Element(id, ce));
+                } catch (CommandException e) {
+                    log.error("Error while executing command", e);
+                }
+            }
+            if (ce != null) {
+                ControlGroup placeHolderGroup = new ControlGroup();
+                if (ce instanceof ControlGroup) {
+                    ControlGroup g = (ControlGroup) ce;
+                    if(g.getEntity().getValue(OVERVIEW_PROPERTY).equals("1")){
+                        String placeHolderIdString = String.valueOf(PLACEHOLDER_CONTROLGROUP_ID) + String.valueOf(g.getDbId());
+                        placeHolderGroup.setDbId(Integer.parseInt(placeHolderIdString));
+                        if(!g.isChildrenLoaded()){
+                            g = (ControlGroup)loadChildren(g);
+                        }
+                        placeHolderGroup.setChildren(g.getChildren());
+                        placeHolderGroup.setTitel("");
+                    }
+                    if (getLvlCountToRootAudit(g) == 2) { // groups for id = -5
+                        for (CnATreeElement elmt : g.getChildren()) {
+                            if (elmt instanceof ControlGroup) {
+                                values.add(createValueEntry(elmt));
+                            }
+                        }
+                    }
+                } 
+                if(values.size() == 0 && ce instanceof ControlGroup){
+                    values.add(createValueEntry(placeHolderGroup));
+                }
+            }
+        }
+        return values;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ControlGroup> loadAllControlgroupChildren(CnATreeElement elmt) {
+        ArrayList<ControlGroup> list = new ArrayList<ControlGroup>();
+        if (elmt.isChildrenLoaded()) {
+            if (getCache().get("controlgroupchildren" + elmt.getDbId()) != null) {
+                list = (ArrayList<ControlGroup>) getCache().get("controlgroupchildren" + elmt.getDbId()).getValue();
+            } else {
+                for (CnATreeElement child : elmt.getChildren()) {
+                    if (child instanceof ControlGroup) {
+                        list.add((ControlGroup) child);
+                        list.addAll(loadAllControlgroupChildren(child));
+                    }
+                }
+                getCache().put(new Element("controlgroupchildren" + elmt.getDbId(), list));
+            }
+        } else {
+            elmt = loadChildren(elmt);
+            list.addAll(loadAllControlgroupChildren(elmt));
+        }
+        return list;
+    }
+
+    private Object[] createValueEntry(CnATreeElement elmt) {
+        if (!elmt.isChildrenLoaded() && elmt.getDbId() > 0) {
+            elmt = loadChildren(elmt);
+        }
+        return new Object[] { elmt.getDbId(), elmt.getTitle() };
+    }
+
+    private CnATreeElement loadChildren(CnATreeElement el) {
+        if (el.isChildrenLoaded()) {
+            return el;
+        } else if (getCache().get(el.getUuid()) != null) {
+            return (CnATreeElement) getCache().get(el.getUuid()).getValue();
+        }
+        LoadChildrenForExpansion command;
+        command = new LoadChildrenForExpansion(el);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            CnATreeElement newElement = command.getElementWithChildren();
+            newElement.setChildrenLoaded(true);
+            getCache().put(new Element(el.getUuid(), newElement));
+            return newElement;
+        } catch (CommandException e) {
+            log.error("error while loading children of CnaTreeElment", e);
+        }
+        return null;
+    }
+
+    private boolean isCnaTreeElementInList(List<Object[]> list, CnATreeElement elmtToTest) {
+        boolean isInList = false;
+        for (Object[] o : list) {
+            if (((Integer) o[0]).intValue() == elmtToTest.getDbId()) {
+                isInList = true;
+                break;
+            }
+        }
+        return isInList;
+    }
+
+    private Cache getCache() {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            cache = createCache();
+        } else {
+            cache = manager.getCache(cacheId);
+        }
+        return cache;
+    }
+
+    private Cache createCache() {
+        cacheId = UUID.randomUUID().toString();
+        manager = CacheManager.create();
+        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        manager.addCache(cache);
+        return cache;
+    }
 }

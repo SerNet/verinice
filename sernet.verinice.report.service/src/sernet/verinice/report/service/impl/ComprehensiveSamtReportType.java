@@ -49,13 +49,14 @@ public class ComprehensiveSamtReportType implements IReportType {
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
-		
 		URL reportDesign = ComprehensiveSamtReportType.class.getResource("comprehensive-samt-report.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
 			IRunAndRenderTask task = brs.createTask(reportDesign);
-			brs.render(task, reportOptions);
+			for(int i = 0; i < 3; i++){
+			    brs.render(task, reportOptions);
+			}
 		}
 		else
 		{

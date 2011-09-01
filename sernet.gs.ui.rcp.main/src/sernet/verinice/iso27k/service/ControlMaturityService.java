@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -90,7 +89,7 @@ public class ControlMaturityService {
         int weight = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-                IControl control = (IControl) child;
+            	IControl control = (IControl) child;
                 weight += control.getWeight2();
             }
             if (child instanceof ControlGroup) {

@@ -34,6 +34,15 @@ public class LoadCnAElementById extends GenericCommand {
 		this.typeId= typeId;
 		this.id = id;
 	}
+	
+	public LoadCnAElementById(String typeId, String id){
+		this.typeId = typeId;
+		try {
+			this.id = Integer.parseInt(id);
+		} catch(NumberFormatException e) {
+			this.id=-1;
+		}
+	}
 
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);

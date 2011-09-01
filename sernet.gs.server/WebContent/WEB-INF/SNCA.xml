@@ -3029,6 +3029,11 @@ the value between <param></param> will be used directly if no string is found fo
             id="org_name" 
             focus="true"
             tags="Risk,VDA-ISA" />
+            
+        <huiproperty
+            name="Description"
+            id="org_description" 
+            tags="Risk,VDA-ISA" />
         
         <huiproperty
 	       name="Company Group" id="org_isa_compgroup" 
@@ -3890,6 +3895,14 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="controlgroup_name" />
+    	
+    	<!-- Flag to decide if a controlgroup is a group which contains only the controls of ISO 27001 annex A or not -->
+        <huiproperty
+        	name="isISOGroup"
+        	id="controlgroup_is_NoIso_group"
+        	inputtype="booleanoption" defaultValue="1"
+        	tags="VDA_ISA_Audit"
+        	/>
     </huientity>
 
     <huientity
@@ -4021,7 +4034,8 @@ the value between <param></param> will be used directly if no string is found fo
                 id="control_ownweight"
                  tags="Maturity" 
                 name="Used weight" 
-                editable="true"/>
+                editable="true"
+                />
             
             <huiproperty 
                 id="control_min1" name="Threshold 1" editable="false"  tags="Maturity" />
@@ -5175,7 +5189,7 @@ the value between <param></param> will be used directly if no string is found fo
                
           <huiproperty 
             id="samt_topic_name" 
-            editable="false" 
+            editable="false"
             />
           <huiproperty 
             id="samt_topic_abbr" 

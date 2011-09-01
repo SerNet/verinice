@@ -17,76 +17,154 @@
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
+
+import org.apache.log4j.Logger;
+
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Loads the worst finding for a given {@link CnATreeElement} (?).
- *
+ * 
  * TODO samt: Needs to be implemented in a way that it really finds out the
  * worst finding of a given element. It is not completely clear whether the
- * element of which this is being done is really a {@link CnATreeElement} or
- * a specific subclass. 
+ * element of which this is being done is really a {@link CnATreeElement} or a
+ * specific subclass.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
+ * @author Sebastian Hagedorn <sh@sernet.de>
  */
 @SuppressWarnings("serial")
 public class LoadWorstFindingsCommand extends GenericCommand {
 
-	private Object[][] result;
+    private Object[][] result;
 
-	private int id;
-	
-	static HashMap<Integer, Object[]> hardcodedData = new HashMap<Integer, Object[]>();
-	
-	static
-	{
-		// ISO/IEC entries
-		makeEntry(1001, "Security Policy", "finding", 0, 1, "measure");
-		makeEntry(1002, "Organization of Information Security",
-				"finding", 1, 2, "measure");
-		makeEntry(1003, "Asset Management", "finding", 2, 3, "measure");
-		makeEntry(1004, "Human Resources Security", "finding", 0, 0,
-				"measure");
-		makeEntry(1005, "Physical and Environmental Security",
-				"finding", 1, 0, "measure");
-		makeEntry(1006, "Communications and Operations Management",
-				"finding", 2, 2, "measure");
-		makeEntry(1007, "Access Control", "finding", 2, 1, "measure");
-		makeEntry(
-				1008,
-				"Information Systems Acquisition, Development and Maintenance",
-				"finding", 1, 1, "measure");
-		makeEntry(1009, "Information Security Incident Management",
-				"finding", 0, 2, "measure");
-		makeEntry(1010, "Business Continuity Management", "finding",
-				0, 0, "measure");
-		
-		// IT-Rooms entry
-		makeEntry(2000, "Serverroom #1", "Package material (combustible material) inside the data center.", 1, 3, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."); 
-		makeEntry(2001, "Serverroom #2", "Package material (combustible material) inside the data center.", 1, 2, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies."); 
-		makeEntry(2002, "Serverroom #3", "Package material (combustible material) inside the data center.", 1, 1, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies.");
-		makeEntry(2003, "Workstationroom #1", "Package material (combustible material) inside the data center.", 1, 0, "Remove package material.\nRecommendation:\nRemove own data center and move the server to the new data center, because of cost & security synergies.");
-	}
-	
-	private static void makeEntry(int id, String name, String finding,
-			int deviation, int risk, String measure) {
-		hardcodedData.put(id, new Object[] { id, name, finding, deviation, risk, measure + id });
-	}
+    private int id;
 
-	public LoadWorstFindingsCommand(int id) {
-		this.id = id;
-	}
+    private transient Logger log;
 
-	public Object[][] getResult() {
-		return result;
-	}
+    public static final String SAMT_PROP_FINDING = "samt_topic_audit_findings";
+    public static final String SAMT_PROP_MEASURE = "samt_topic_controlnote";
 
-	@Override
-	public void execute() {
-		result = new Object[][] { hardcodedData.get(id) };
-	}
+    private transient CacheManager manager = null;
+    private String cacheId = null;
+    private transient Cache cache = null;
+    
+    public LoadWorstFindingsCommand(int id) {
+        log = Logger.getLogger(LoadWorstFindingsCommand.class);
+        if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
+            String chapterIdString = String.valueOf(id);
+            chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
+            id = Integer.parseInt(chapterIdString);
+        }
+        this.id = id;
+    }
 
+    public Object[][] getResult() {
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<SamtTopic> getAllSamtTopicChildren(ControlGroup parent) {
+        Set<SamtTopic> set = new HashSet<SamtTopic>();
+        if (getCache().get(parent.getUuid()) != null) {
+            set = (Set<SamtTopic>) getCache().get(parent.getUuid()).getValue();
+        } else {
+            for (CnATreeElement e : parent.getChildren()) {
+                if (e instanceof ControlGroup) {
+                    set.addAll(getAllSamtTopicChildren((ControlGroup) e));
+                } else if (e instanceof SamtTopic) {
+                    set.add((SamtTopic) e);
+                }
+            }
+            getCache().put(new Element(parent.getUuid(), set));
+        }
+        return set;
+    }
+
+    @Override
+    public void execute() {
+        ControlGroup group = null;
+        if (getCache().get(id) != null) {
+            group = (ControlGroup) getCache().get(id).getValue();
+        } else {
+            try {
+                LoadCnAElementById command = new LoadCnAElementById(ControlGroup.TYPE_ID, id);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                group = (ControlGroup) command.getFound();
+                getCache().put(new Element(id, group));
+            } catch (CommandException e) {
+                log.error("Error while executing command", e);
+            }
+
+        }
+        int maxDev = -2; // minimum value is -1
+        int maxRisk = -2; // minimum value is -1
+        List<SamtTopic> worstTopics = new ArrayList<SamtTopic>();
+        Set<SamtTopic> allSamtTopics = getAllSamtTopicChildren(group);
+        for (SamtTopic topic : allSamtTopics) {
+            int curRisk = topic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_RISK_PROPERTY);
+            if (curRisk > maxRisk) {
+                maxRisk = curRisk;
+            }
+        }
+        for(SamtTopic topic : allSamtTopics){
+            if(topic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_RISK_PROPERTY) == maxRisk){
+                worstTopics.add(topic);
+            }
+        }
+        for(SamtTopic topic : worstTopics){
+            int curDev = topic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_DEVIATION_PROPERTY);
+            if(curDev > maxDev){
+                maxDev = curDev;
+            }
+        }
+        ArrayList<Object[]> arrayList = new ArrayList<Object[]>();
+        for(SamtTopic worstTopic : worstTopics){
+            if(worstTopic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_DEVIATION_PROPERTY) == maxDev){
+                String finding = worstTopic.getEntity().getValue(SAMT_PROP_FINDING);
+                String measure = worstTopic.getEntity().getValue(SAMT_PROP_MEASURE);
+                if(finding != null && !finding.equals(""))
+                    arrayList.add(new Object[]{worstTopic.getDbId(), worstTopic.getTitle(), finding, maxDev, maxRisk, measure});
+            }
+        }
+        result = arrayList.toArray(new Object[arrayList.size()][6]);
+    }
+
+    private Cache getCache() {
+        if (manager == null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache == null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            cache = createCache();
+        } else {
+            cache = manager.getCache(cacheId);
+        }
+        return cache;
+    }
+
+    private Cache createCache() {
+        cacheId = UUID.randomUUID().toString();
+        manager = CacheManager.create();
+        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        manager.addCache(cache);
+        return cache;
+    }
 }
