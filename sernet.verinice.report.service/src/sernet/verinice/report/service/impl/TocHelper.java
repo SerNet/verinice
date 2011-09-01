@@ -113,7 +113,7 @@ public class TocHelper {
 	    if(!item.equals("")){ // create no item for dummy groups
     		StringBuilder sb = new StringBuilder(depth + item.length());
     		for (int i = 0; i < depth; i++)
-    			sb.append("_");
+    			sb.append(" ");
     		sb.append(item);
     
     		items.add(sb.toString());
