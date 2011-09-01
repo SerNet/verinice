@@ -34,4 +34,5 @@ Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands,
  sernet.verinice.report.service.impl
 Service-Component: OSGI-INF/component.xml
-Import-Package: org.jfree.chart
+Import-Package: net.sf.ehcache,
+ org.jfree.chart
