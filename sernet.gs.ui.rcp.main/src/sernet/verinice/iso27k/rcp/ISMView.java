@@ -365,8 +365,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
      * @return a HideEmptyFilter
      */
     protected HideEmptyFilter createHideEmptyFilter() {
-        return null;
-        //return new HideEmptyFilter(viewer);
+        return new HideEmptyFilter(viewer);
     }
     
     /**
@@ -376,8 +375,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
      * @return a {@link TypeFilter}
      */
     protected TypeFilter createTypeFilter() {
-        return null;
-        //return new TypeFilter(viewer);
+        return new TypeFilter(viewer);
     }
 	
 	protected void fillToolBar() {
