@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.iso27k.service.CutService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.samt.audit.service.MoveLinks;
@@ -56,7 +57,7 @@ public class AuditCutService extends CutService {
          * @see sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(java.util.Map)
          */
         @Override
-        public void process(Map<String, String> sourceDestMap) {
+        public void process(List<String> copyUuidList,Map<String, String> sourceDestMap) {
             try {
                 MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap,linkTo);          
                 moveLinksCommand = getCommandService().executeCommand(moveLinksCommand);

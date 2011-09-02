@@ -21,9 +21,8 @@ package sernet.gs.ui.rcp.main.sync.commands;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,13 +30,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.CnATypeMapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
@@ -46,80 +42,23 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.ClientsKategorie;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.NKKategorie;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.PersonenKategorie;
-import sernet.verinice.model.bsi.RaeumeKategorie;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.ServerKategorie;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.SonstigeITKategorie;
-import sernet.verinice.model.bsi.TKKategorie;
-import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.ds.Datenverarbeitung;
-import sernet.verinice.model.ds.Personengruppen;
-import sernet.verinice.model.ds.StellungnahmeDSB;
-import sernet.verinice.model.ds.VerantwortlicheStelle;
-import sernet.verinice.model.ds.Verarbeitungsangaben;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Document;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.Finding;
-import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Incident;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.Interview;
-import sernet.verinice.model.iso27k.InterviewGroup;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.Record;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.Requirement;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.Response;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.CheckSourceId;
+import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.commands.LoadAttachmentByExternalId;
 import sernet.verinice.service.commands.LoadBSIModel;
@@ -136,7 +75,7 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
 @SuppressWarnings("serial")
-public class SyncInsertUpdateCommand extends GenericCommand {
+public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
 
@@ -147,10 +86,19 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return log;
     }
     
+    private transient Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
+
+    public Logger getLogrt() {
+        if (logrt == null) {
+            logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
+        }
+        return logrt;
+    }
+    
     private static HashMap<String, String> containerTypes = new HashMap<String, String>();
-  
 
     private String sourceId;
+    private boolean sourceIdExists;
     private SyncMapping syncMapping;
     private SyncData syncData;
     private String userName;
@@ -158,8 +106,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
 	private boolean insert, update;
     private List<String> errorList;
 
-    private int inserted = 0, updated = 0;
-
+    private int inserted = 0, updated = 0, merged = 0;
+    
+    private long globalStart = 0;
+    
     private Map<Class,CnATreeElement> containerMap = new HashMap<Class,CnATreeElement>(2);
 
     private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
@@ -169,7 +119,9 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private transient Map<String, Attachment> attachmentMap;
     
     private Integer format;
-
+    
+    private transient IAuthService authService;
+    
     public SyncInsertUpdateCommand(
     		String sourceId, 
     		SyncData syncData, 
@@ -205,17 +157,29 @@ public class SyncInsertUpdateCommand extends GenericCommand {
      */
     public void execute() {
         try {
-            for (SyncObject so : syncData.getSyncObject()) {
-                importObject(null, so);
+            if (getLogrt().isDebugEnabled()) {
+                globalStart = System.currentTimeMillis();
+            }
+            merged = 0;
+            CheckSourceId checkSourceId = new CheckSourceId(sourceId);
+            checkSourceId = getCommandService().executeCommand(checkSourceId);
+            sourceIdExists = checkSourceId.exists();
+            List<SyncObject> soList = syncData.getSyncObject();
+            
+            for (SyncObject so : soList) {
+                importObject(null, so);        
             } // for <syncObject>
+            if (getLogrt().isDebugEnabled()) {
+                getLogrt().debug("Elements: " + merged);
+            }
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 importLink(syncLink);
             }
         } catch (RuntimeException e) {
-            log.error("RuntimeException while importing", e);
+            getLog().error("RuntimeException while importing", e);
             throw e;
         } catch (Exception e) {
-            log.error("Exception while importing", e);
+            getLog().error("Exception while importing", e);
             throw new RuntimeCommandException(e);
         }
     }
@@ -223,6 +187,10 @@ public class SyncInsertUpdateCommand extends GenericCommand {
     private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
         String extId = so.getExtId();
         String extObjectType = so.getExtObjectType();
+        long start = 0;
+        if (getLogrt().isDebugEnabled()) {
+            start = System.currentTimeMillis();
+        }
         if (getLog().isDebugEnabled()) {
             getLog().debug("Importing element type: " + extObjectType + ", extId: " + extId + "...");
         }
@@ -241,8 +209,12 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         // this element "knows", which huientitytype is applicable and
         // how the associated properties have to be mapped!
         String veriniceObjectType = mot.getIntId();
-
-        CnATreeElement elementInDB = findDbElement(sourceId, extId);
+        
+        CnATreeElement elementInDB = null;
+        if(sourceIdExists) {
+            elementInDB = findDbElement(sourceId, extId);
+        }
+        
         if (elementInDB != null) {
             if (update) {
                 /*** UPDATE: ***/
@@ -259,23 +231,19 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                 setAttributes = false;
             }
         }
+        CnATypeMapper typeMapper = new CnATypeMapper();
+        Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
+        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(clazz);
         
         // If no previous object was found in the database and the 'insert'
         // flag is given, create a new object.
-        if (elementInDB == null && insert) {
-            // Each new object needs a parent. The top-level element(s) in the
-            // import set might not automatically have one. For those objects it is
-            // neccessary to use the 'import root object' instead.
-            CnATypeMapper typeMapper = new CnATypeMapper();
-            Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
+        if (elementInDB == null && insert) {                    
             parent = (parent == null) ? accessContainer(clazz) : parent;
 
             try {
                 // create new object in db...
-                CreateElement<CnATreeElement> newElement = new CreateElement<CnATreeElement>(parent, clazz, true, false);
-                newElement = getCommandService().executeCommand(newElement);
-                elementInDB = newElement.getNewElement();
-
+                elementInDB =createElement(dao, parent, clazz);
+                 
                 // ...and set its sourceId and extId:
                 elementInDB.setSourceId(sourceId);
                 elementInDB.setExtId(extId);
@@ -317,11 +285,24 @@ public class SyncInsertUpdateCommand extends GenericCommand {
                     String attrIntId = mat.getIntId();
                     elementInDB.getEntity().importProperties(huiTypeFactory,attrIntId, attrValues);
                     addElement(elementInDB);
-                }
-
+                }           
             } // for <syncAttribute>
-            IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(elementInDB.getTypeId());
-            elementInDB = dao.merge(elementInDB);
+           elementInDB = dao.merge(elementInDB);
+           parent.addChild(elementInDB);
+           elementInDB.setParent(parent);
+           merged++;
+           if(merged % 50 == 0 ) {
+               long flushstart = 0;
+               if (getLogrt().isDebugEnabled()) {
+                   flushstart = System.currentTimeMillis();
+               }
+               dao.flush();
+               dao.clear();
+               if (getLogrt().isDebugEnabled()) {
+                   long time = System.currentTimeMillis() - flushstart;
+                   getLogrt().debug("Flushed, runtime: " + time + " ms");
+               }
+           }
         } // if( null != ... )
 
         if(isVeriniceArchive()) {
@@ -330,6 +311,13 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         
         idElementMap.put(elementInDB.getExtId(), elementInDB);
         
+        if (getLogrt().isDebugEnabled()) {
+            long cur = System.currentTimeMillis();
+            long time = cur - start;
+            long globalTime = cur - globalStart;
+            long a = Math.round((globalTime*1.0)/merged);
+            getLogrt().debug("Element " + merged + ": " + time + "ms, ave.: " + a);
+        }
         // Handle all the child objects.
         for (SyncObject child : so.getChildren()) {
             // The object that was created or modified during the course of
@@ -342,6 +330,44 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         }
     }
     
+    private CnATreeElement createElement(IBaseDao<CnATreeElement, Serializable> dao, CnATreeElement parent, Class clazz) throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        CnATreeElement child;
+        // get constructor with parent-parameter and create new object:
+        if(clazz.equals(Organization.class)) {
+            child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class,boolean.class).newInstance(parent,false);
+        } else {
+            child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class).newInstance(parent);
+        }
+
+        if (authService.isPermissionHandlingNeeded()) {
+            addPermissions(parent,child);
+        }
+
+        return child;
+    }
+    
+    private void addPermissions(CnATreeElement parent, CnATreeElement child) {
+        // By default, inherit permissions from parent element but ITVerbund
+        // instances cannot do this, as its parents (BSIModel) is not visible
+        // and has no permissions. Therefore we use the name of the currently
+        // logged in user as a role which has read and write permissions for
+        // the new ITVerbund.
+        if (child instanceof ITVerbund || child instanceof Organization) {
+            addPermissions(child);           
+        } else {
+            child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
+        }
+    }
+    
+    private void addPermissions(/*not final*/ CnATreeElement element) {
+        HashSet<Permission> newperms = new HashSet<Permission>();
+        newperms.add(Permission.createPermission(element, authService.getUsername(), true, true));
+        element.setPermissions(newperms);
+        for (CnATreeElement child : element.getChildren()) {
+            addPermissions(child);
+        }
+    }
+
     /**
      * @param elementInDB
      * @param file
@@ -545,22 +571,7 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         }
         return result;
     }
-
-    /**
-     * Find appropriate Category within the tree for a given object type.
-     * 
-     * @param verbund
-     * @param veriniceObjectType
-     * @return the Category - CnATreeElement
-     */
-    private CnATreeElement findContainerFor(CnATreeElement root, String veriniceObjectType) {
-
-        // If in doubt the root for imported objects should always be used.
-        return root;
-    }
-
    
-
     /**
      * If during the import action an object has to be created for which no
      * parent is available (or can be found) the artificial 'rootImportObject'
@@ -647,15 +658,6 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return holder;
     }
     
-    private void addPermissions(CnATreeElement element) {
-        // We use the name of the currently
-        // logged in user as a role which has read and write permissions for
-        // the new Organization.
-        HashSet<Permission> auditPerms = new HashSet<Permission>();
-        auditPerms.add(Permission.createPermission(element, getUserName(), true, true));
-        element.setPermissions(auditPerms);
-    }
-    
     protected void addElement(CnATreeElement element) {
         if(elementSet==null) {
             elementSet = new HashSet<CnATreeElement>();
@@ -697,7 +699,21 @@ public class SyncInsertUpdateCommand extends GenericCommand {
         return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(format);
     }
 	
-	private HUITypeFactory getHuiTypeFactory() {
+	/**
+     * @return the authService
+     */
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    /**
+     * @param authService the authService to set
+     */
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+    }
+
+    private HUITypeFactory getHuiTypeFactory() {
 	    return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 	}
     

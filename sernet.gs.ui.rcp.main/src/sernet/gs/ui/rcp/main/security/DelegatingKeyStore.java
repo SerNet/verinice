@@ -26,7 +26,6 @@ import java.security.KeyStoreException;
 import java.security.KeyStoreSpi;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.KeyStore.Entry;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Date;
@@ -34,7 +33,7 @@ import java.util.Enumeration;
 
 import javax.security.auth.callback.PasswordCallback;
 
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import org.apache.log4j.Logger;
 
 /**
  * The delegating keystore allows bringing keystore handling under application control.
@@ -61,6 +60,8 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  */
 abstract class DelegatingKeyStore extends KeyStoreSpi {
 	
+    private static final Logger LOG = Logger.getLogger(DelegatingKeyStore.class);
+    
 	/** The {@link KeyStore} instance to which all methods delegate. */
 	private final KeyStore delegate;
 	
@@ -171,6 +172,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public Enumeration<String> engineAliases() {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineAliases()...");
+            }
 			return delegate.aliases();
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -180,6 +184,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public boolean engineContainsAlias(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineContainsAlias, alias: " + alias);
+            }
 			return delegate.containsAlias(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -188,12 +195,18 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 
 	@Override
 	public void engineDeleteEntry(String alias) throws KeyStoreException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("engineDeleteEntry, alias: " + alias);
+        }
 		delegate.deleteEntry(alias);
 	}
 
 	@Override
 	public Certificate engineGetCertificate(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+	            LOG.debug("engineGetCertificate, alias: " + alias);
+	        }
 			return delegate.getCertificate(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -203,6 +216,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public String engineGetCertificateAlias(Certificate cert) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineGetCertificateAlias...");
+            }
 			return delegate.getCertificateAlias(cert);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -212,6 +228,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public Certificate[] engineGetCertificateChain(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineGetCertificateChain, alias: " + alias);
+            }
 			return delegate.getCertificateChain(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -221,6 +240,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public Date engineGetCreationDate(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineGetCreationDate, alias: " + alias);
+            }
 			return delegate.getCreationDate(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -230,6 +252,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	private Key engineGetKeyImpl(String alias, char[] password)
 			throws NoSuchAlgorithmException, UnrecoverableKeyException {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineGetKeyImpl, alias: " + alias);
+            }
 			return delegate.getKey(alias, password);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -260,6 +285,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public Key engineGetKey(String alias, char[] password)
 			throws NoSuchAlgorithmException, UnrecoverableKeyException {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("engineGetKey, alias: " + alias);
+        }
 	    if(certificateAlias!=null && !certificateAlias.equals(alias)) {
 	        return null;
 	    }
@@ -299,6 +327,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public boolean engineIsCertificateEntry(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineIsCertificateEntry, alias: " + alias);
+            }
 			return delegate.isCertificateEntry(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -308,6 +339,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public boolean engineIsKeyEntry(String alias) {
 		try {
+		    if (LOG.isDebugEnabled()) {
+                LOG.debug("engineIsKeyEntry, alias: " + alias);
+            }
 			return delegate.isKeyEntry(alias);
 		} catch (KeyStoreException e) {
 			throw new RuntimeException(e);
@@ -318,12 +352,18 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	public void engineLoad(InputStream stream, char[] password)
 			throws IOException, NoSuchAlgorithmException,
 			CertificateException {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("engineLoad...");
+        }
 		delegate.load(stream, password);
 	}
 
 	@Override
 	public void engineSetCertificateEntry(String alias, Certificate cert)
 			throws KeyStoreException {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("engineSetCertificateEntry, alias: " + alias);
+        }
 		delegate.setCertificateEntry(alias, cert);
 	}
 
@@ -336,6 +376,9 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	@Override
 	public void engineSetKeyEntry(String alias, Key key, char[] password,
 			Certificate[] chain) throws KeyStoreException {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("engineSetKeyEntry, alias: " + alias);
+        }
 		delegate.setKeyEntry(alias, key, password, chain);
 	}
 

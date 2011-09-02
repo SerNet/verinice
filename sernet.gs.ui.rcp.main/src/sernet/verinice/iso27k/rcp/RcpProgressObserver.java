@@ -67,8 +67,10 @@ public class RcpProgressObserver implements IProgressObserver {
 	 * @see sernet.verinice.iso27k.service.IProgressObserver#beginTask(java.lang.String, int)
 	 */
 	public void beginTask(String name, int numberOfControls) {
-		monitor.beginTask(name, numberOfControls);
-		
+	    if(numberOfControls<0) {
+	        numberOfControls = IProgressMonitor.UNKNOWN;
+	    }
+		monitor.beginTask(name, numberOfControls);		
 	}
 
 	/* (non-Javadoc)

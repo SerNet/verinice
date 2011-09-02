@@ -22,10 +22,10 @@ package sernet.verinice.iso27k.service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.iso27k.rcp.RcpProgressObserver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -36,16 +36,6 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 public abstract class PasteService implements IProgressTask {
     
-    /**
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     *
-     */
-    public interface IPostProcessor {
-        
-        void process(Map<String, String> sourceDestMap);
-        
-    }
-
     protected CnATreeElement selectedGroup;
     
     protected List<CnATreeElement> elements;

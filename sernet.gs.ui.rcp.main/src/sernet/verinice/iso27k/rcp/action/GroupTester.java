@@ -28,6 +28,7 @@ import org.eclipse.core.expressions.PropertyTester;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.service.CopyService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CopyCommand;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -66,7 +67,7 @@ public class GroupTester extends PropertyTester {
 			}
 			if(object instanceof CnATreeElement) {
 				CnATreeElement element = (CnATreeElement) object;
-				if(CopyService.BLACKLIST.contains(element.getTypeId())) {
+				if(CopyCommand.BLACKLIST.contains(element.getTypeId())) {
 					enabled = false;
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("object is in blacklist: " + object);

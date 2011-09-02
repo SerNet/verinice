@@ -19,23 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.iso27k.service.CopyService;
-import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.samt.audit.service.CopyLinks;
 
@@ -69,13 +61,9 @@ public class AuditCopyService extends CopyService {
          * @see sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(java.util.Map)
          */
         @Override
-        public void process(Map<String, String> sourceDestMap) {
+        public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
             try {
-                Set<String> copyUuidSet = new HashSet<String>();
-                for (CnATreeElement element : getCopyElements()) {
-                    copyUuidSet.add(element.getUuid());
-                } 
-                CopyLinks copyLinksCommand = new CopyLinks(copyUuidSet,sourceDestMap,linkTo);          
+                CopyLinks copyLinksCommand = new CopyLinks(copyUuidList,sourceDestMap,linkTo);          
                 copyLinksCommand = getCommandService().executeCommand(copyLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while creating links on server.", e);

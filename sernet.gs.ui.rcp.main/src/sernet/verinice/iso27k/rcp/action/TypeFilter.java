@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -37,6 +38,8 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class TypeFilter extends ViewerFilter {
 
+    private static final Logger LOG = Logger.getLogger(TypeFilter.class);
+    
     public static String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"};
     
     private StructuredViewer viewer;
@@ -60,6 +63,9 @@ public class TypeFilter extends ViewerFilter {
         boolean visible = (visibleTypeSet.contains(ALL_TYPES));
         if (o instanceof CnATreeElement && !visible) {
             CnATreeElement element = (CnATreeElement) o;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("TypeFilter, checking: " + element.getTitle());
+            }
             visible = Organization.TYPE_ID.equals(element.getTypeId()) || (contains(visibleTypeSet,element.getTypeId()));
             if(!visible) {
                 CnATreeElement withChildren = Retriever.checkRetrieveChildren(element);

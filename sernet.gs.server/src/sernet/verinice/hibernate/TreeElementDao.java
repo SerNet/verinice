@@ -19,15 +19,12 @@ package sernet.verinice.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
@@ -35,7 +32,6 @@ import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.InheritLogger;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
@@ -224,26 +220,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             }
         }
         return result;
-    }
-
-    public List findByCallback(HibernateCallback hcb) {
-        return getHibernateTemplate().executeFind(hcb);
-    }
-
-    public Object executeCallback(HibernateCallback hcb) {
-        return getHibernateTemplate().execute(hcb);
-    }
-
-    public int updateByQuery(String hqlQuery, Object[] values) {
-        return getHibernateTemplate().bulkUpdate(hqlQuery, values);
-    }
-
-    public void initialize(Object proxy) {
-        getHibernateTemplate().initialize(proxy);
-    }
-
-    public void flush() {
-        getHibernateTemplate().flush();
     }
 
     public T merge(T entity, boolean fireChange) {

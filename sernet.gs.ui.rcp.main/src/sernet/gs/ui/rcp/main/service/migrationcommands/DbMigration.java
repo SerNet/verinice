@@ -20,11 +20,11 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.commands.SaveElement;
 
 public abstract class DbMigration extends GenericCommand {
 	public abstract double getVersion();

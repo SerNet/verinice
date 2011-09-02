@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2011 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,35 +17,33 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces;
+package sernet.verinice.service.commands;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
- * @param <T>
- * @param <ID>
  */
-public interface IDao<T, ID extends Serializable> {
-
-    public abstract void saveOrUpdate(T entity);
-
-    public abstract T merge(T entity);
-
-    public abstract void delete(T entity);
-
-    public abstract T findById(ID id);
-
-    public abstract List<T> findAll();
-
-    public abstract List findByQuery(String hqlQuery, Object[] params);
-
-    public abstract List findByCriteria(DetachedCriteria criteria);
-    
-    public abstract <T> T initializeAndUnproxy(T entity);
-
+public class Messages {
+    // property file is: package/name/messages.properties
+    private static final String BUNDLE_NAME = "sernet.verinice.service.commands.messages";
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    private Messages() {
+    }
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
+    public static String getString(String key, Object... params  ) {
+        try {
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

@@ -18,11 +18,20 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.Provider;
+import java.security.Security;
+import java.util.Enumeration;
+import java.util.Properties;
+
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -33,8 +42,6 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.equinox.internal.p2.console.ProvisioningHelper;
-import org.eclipse.equinox.p2.core.ProvisionException;
 import org.eclipse.equinox.p2.repository.IRepositoryManager;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
@@ -49,12 +56,12 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
-import org.springframework.osgi.service.importer.support.ServiceReferenceEditor;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
@@ -173,7 +180,32 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		CnAWorkspace.getInstance().prepareWorkDir();
 
 		Preferences prefs = getPluginPreferences();
-
+		
+		/*
+		if(prefs.getBoolean(PreferenceConstants.CRYPTO_IAIK)) {
+    		try {
+    		    String pkcs11Driver = prefs.getString(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH);
+    		    if (LOG.isDebugEnabled()) {
+                    LOG.debug("IAIK is eableded, using driver: " + pkcs11Driver);
+                }
+        		Properties pkcs11config = new Properties();   		
+        	    pkcs11config.put("PKCS11_NATIVE_MODULE", pkcs11Driver);
+        	    IAIKPkcs11 provider = new IAIKPkcs11(pkcs11config);
+        	    Security.addProvider(provider);
+    		} catch (Exception e) {
+                LOG.error("Error while registering IAIK security provider.", e);
+            }
+	    }
+		*/
+		
+		// May replace the JDK's built-in security settings
+        try {
+            VeriniceSecurityProvider.register(prefs);
+        } catch (Exception e) {
+            LOG.error("Error while registering verinice security provider.", e);
+        }
+		
+	    
 		// set service factory location to local / remote according to
 		// preferences:
 		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);

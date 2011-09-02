@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,14 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElement;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.service.commands.CopyCommand;
+import sernet.verinice.service.commands.CutCommand;
+import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.commands.UpdateElement;
 
 /**
  * A CutService is a job, which moves a list of elements from one to another Element-{@link Group}.
@@ -88,23 +92,19 @@ public class CutService extends PasteService implements IProgressTask {
 	public void run()  {
 		try {	
 			Activator.inheritVeriniceContextState();
-			this.numberOfElements = 0;
-			List<CnATreeElement> elementList = createInsertList(elements);		
-			progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);
-			numberProcessed = 0;
-			Map<String, String> sourceDestMap = new Hashtable<String, String>();
-			checkPermissions(elementList);
-			for (CnATreeElement element : elementList) {
-				CnATreeElement movedElement = move(progressObserver, selectedGroup, element);
-				// cut: source and dest is the same
-				sourceDestMap.put(movedElement.getUuid(),movedElement.getUuid());
-			}
-            for (IPostProcessor postProcessor : getPostProcessorList()) {
-                postProcessor.process(sourceDestMap);
-            }	
-            if(doFullReload) {
-                CnAElementFactory.getInstance().reloadModelFromDatabase();
-            }        
+			checkPermissions(this.elements);
+			List<String> uuidList = new ArrayList<String>(this.elements.size());
+            for (CnATreeElement element : this.elements) {
+                uuidList.add(element.getUuid());
+            }
+            numberOfElements = uuidList.size();
+            progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);  
+            numberProcessed = 0;
+            CutCommand cc = new CutCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList());
+            cc = getCommandService().executeCommand(cc);
+            numberOfElements = cc.getNumber();
+            progressObserver.setTaskName("Loading moved elements...");
+            CnAElementFactory.getInstance().reloadModelFromDatabase();            
 		} catch (PermissionException e) {
 			if (log.isDebugEnabled()) {
 				log.debug(e);

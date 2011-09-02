@@ -35,7 +35,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -49,6 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.SaveElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

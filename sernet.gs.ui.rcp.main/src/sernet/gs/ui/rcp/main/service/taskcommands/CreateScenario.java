@@ -23,7 +23,6 @@ import java.util.Set;
 import org.hibernate.proxy.HibernateProxyHelper;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -35,6 +34,7 @@ import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 
 /**

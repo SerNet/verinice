@@ -22,9 +22,9 @@ import java.util.List;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.service.commands.SaveElement;
 
 public class OwnGefaehrdungHome {
 	

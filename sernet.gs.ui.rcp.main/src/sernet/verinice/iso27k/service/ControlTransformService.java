@@ -26,7 +26,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
@@ -34,6 +33,7 @@ import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.service.commands.SaveElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

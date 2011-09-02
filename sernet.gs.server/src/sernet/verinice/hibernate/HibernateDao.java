@@ -23,7 +23,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.proxy.HibernateProxy;
+import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import sernet.verinice.interfaces.IDao;
@@ -105,6 +108,42 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     @Override
     public void saveOrUpdate(T entity) {
         getHibernateTemplate().saveOrUpdate(entity);
+    }
+    
+    public <T> T initializeAndUnproxy(T entity) {
+        if (entity == null) {
+            throw new NullPointerException("Entity passed for initialization is null");
+        }
+
+        Hibernate.initialize(entity);
+        if (entity instanceof HibernateProxy) {
+            entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer().getImplementation();
+        }
+        return entity;
+    }
+    
+    public List findByCallback(HibernateCallback hcb) {
+        return getHibernateTemplate().executeFind(hcb);
+    }
+
+    public Object executeCallback(HibernateCallback hcb) {
+        return getHibernateTemplate().execute(hcb);
+    }
+
+    public int updateByQuery(String hqlQuery, Object[] values) {
+        return getHibernateTemplate().bulkUpdate(hqlQuery, values);
+    }
+
+    public void initialize(Object proxy) {
+        getHibernateTemplate().initialize(proxy);
+    }
+
+    public void flush() {
+        getHibernateTemplate().flush();
+    }
+    
+    public void clear() {
+        getHibernateTemplate().clear();
     }
 
 }

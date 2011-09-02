@@ -49,9 +49,9 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinVorschlag;
+import sernet.verinice.service.commands.SaveElement;
 
 /**
  * Dialog to choose from a list of standard module assignments to target

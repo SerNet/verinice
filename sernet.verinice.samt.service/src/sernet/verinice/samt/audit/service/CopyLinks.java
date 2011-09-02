@@ -55,7 +55,7 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
         return log;
     }
     
-    Set<String> copyUuidSet;
+    List<String> copyUuidList;
     
     Map<String, String> sourceDestMap;
     
@@ -69,9 +69,9 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
 
     private String stationId;
     
-    public CopyLinks(Set<String> copyUuidSet, Map<String, String> sourceDestMap, CnATreeElement linkTo) {
+    public CopyLinks(List<String> copyUuidList, Map<String, String> sourceDestMap, CnATreeElement linkTo) {
         super();
-        this.copyUuidSet = copyUuidSet;
+        this.copyUuidList = copyUuidList;
         this.sourceDestMap = sourceDestMap;
         this.linkTo = linkTo;
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -99,7 +99,7 @@ public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, 
                 }
                 Set<CnALink> linkUpSet = element.getLinksUp();
                 allLinks.addAll(linkUpSet);
-                if(copyUuidSet.contains(uuidSource)) {
+                if(copyUuidList.contains(uuidSource)) {
                     // linkFrom was selected to copy             
                     linkTo = getCnaTreeElementDao().merge(linkTo);
                     // check if parent is already linked

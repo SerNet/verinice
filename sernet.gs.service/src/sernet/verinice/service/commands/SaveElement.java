@@ -15,8 +15,9 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,54 +28,68 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class UpdateElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
+/**
+ * Save element of type T to the database using its class to lookup
+ * the DAO from the factory.
+ * 
+ * @author koderman[at]sernet[dot]de
+ * @version $Rev$ $LastChangedDate$ 
+ * $LastChangedBy$
+ *
+ * @param <T>
+ */
+public class SaveElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
 
-	private T element;
-	private boolean fireupdates;
-	
-	private String stationId;
+	protected T element;
+	protected String stationId;
 
-	public UpdateElement(T element, boolean fireUpdates, String stationId) {
-		this.element = element;
-		this.fireupdates = fireUpdates;
-		this.stationId = stationId;
+	protected SaveElement() {
+	 
 	}
-
+	
+	public SaveElement(T element) {
+		this.element = element;
+		this.stationId = ChangeLogEntry.STATION_ID;
+	}
+	
 	public void execute() {
-		IBaseDao dao =  getDaoFactory().getDAOforTypedElement(element);
-		element = (T) dao.merge(element, fireupdates);
+		IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(element.getTypeId());
+		//dao.saveOrUpdate(element);
+		element = dao.merge(element);
 	}
 
 	public T getElement() {
 		return element;
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+	 */
+	public int getChangeType() {
+		return ChangeLogEntry.TYPE_INSERT;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+	 */
+	public List<CnATreeElement> getChangedElements() {
+		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
+		if (element instanceof CnATreeElement) {
+			list.add((CnATreeElement) element);
+		}
+		return list;
+	}
+
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+	 */
+	
 	public String getStationId() {
 		return stationId;
 	}
-
-	public void setStationId(String stationId) {
-		this.stationId = stationId;
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_UPDATE;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		if (element instanceof CnATreeElement) {
-			ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-			list.add((CnATreeElement) element);
-			return list;
-		}
-		return null;
+	
+	public void clear() {
+		
 	}
 
 }

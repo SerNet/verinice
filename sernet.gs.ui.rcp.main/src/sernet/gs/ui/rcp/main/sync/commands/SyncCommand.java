@@ -159,6 +159,12 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
 
     @Override
     public void execute() {
+        
+        long start = 0;
+        if (getLog().isInfoEnabled()) {
+           start = System.currentTimeMillis();
+        }
+        
         if (syncRequestSerialized == null) {
             throw new IllegalStateException("Command serialized but " + SyncRequest.class.getName() + " not provided pre-serialized. Check constructor usage!");
         }
@@ -231,6 +237,10 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
 
             deleted += cmdDelete.getDeleted();
         }
+        if (getLog().isInfoEnabled()) {
+            long time = System.currentTimeMillis() - start;
+            getLog().info("Runtime: " + time +" ms");
+         }
 
     }
 

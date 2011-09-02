@@ -24,7 +24,10 @@
  		
  		
  		<!-- Improve performance for collection inserts -->
-		<property name="hibernate.jdbc.batch_size">100</property>
+		<property name="hibernate.jdbc.batch_size">50</property>
+        <property name="hibernate.order_inserts">true</property>
+        <property name="hibernate.order_updates">true</property>
+
   
 
         <!-- JDBC connection pool -->

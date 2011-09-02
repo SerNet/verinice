@@ -340,8 +340,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				hideEmptyFilter,
 				typeFilter);
         contentProvider.addFilter(tagFilter);
-        contentProvider.addFilter(hideEmptyFilter);
-        contentProvider.addFilter(typeFilter);   
+        if(hideEmptyFilter!=null) {
+            contentProvider.addFilter(hideEmptyFilter);
+        }
+        if(typeFilter!=null) {
+            contentProvider.addFilter(typeFilter);
+        }
 		
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
@@ -361,7 +365,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
      * @return a HideEmptyFilter
      */
     protected HideEmptyFilter createHideEmptyFilter() {
-        return new HideEmptyFilter(viewer);
+        return null;
+        //return new HideEmptyFilter(viewer);
     }
     
     /**
@@ -371,7 +376,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
      * @return a {@link TypeFilter}
      */
     protected TypeFilter createTypeFilter() {
-        return new TypeFilter(viewer);
+        return null;
+        //return new TypeFilter(viewer);
     }
 	
 	protected void fillToolBar() {

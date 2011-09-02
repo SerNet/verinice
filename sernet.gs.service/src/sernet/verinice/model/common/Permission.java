@@ -178,6 +178,8 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 				return true;
 			if (obj == null)
 				return false;
+			if (!(obj instanceof Permission))
+			    return false;
 			Permission other = (Permission) obj;
 			if (cnaTreeElement == null) {
 				if (other.cnaTreeElement != null)

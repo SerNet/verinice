@@ -31,7 +31,6 @@ import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveElement;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.hui.common.connect.Entity;
@@ -50,6 +49,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.SaveElement;
 
 /**
  * The HUI framework has no knowledge aout the database, so this factory

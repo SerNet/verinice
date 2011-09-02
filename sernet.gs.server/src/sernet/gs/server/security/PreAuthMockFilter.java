@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -56,7 +57,9 @@ public class PreAuthMockFilter implements Filter {
 	/**
 	 * Values of HTTP header: user name in a pre auth senario
 	 */
-	private static String loggedInUserName = "u4"; 
+	private static final String DEFAULT_USER_NAME = "admin"; 
+	
+	private static final String USER_NAME_PARAM = "preauthMockUser";
 	
 	/**
 	 * Name of HTTP header
@@ -74,15 +77,22 @@ public class PreAuthMockFilter implements Filter {
 		if(log.isDebugEnabled()) {
 			log.debug("entered MockAuthFilter.doFilter() method");
 		}
-		if(this.filterConfig.getServletContext()==null && log.isDebugEnabled()){
+		String userName = DEFAULT_USER_NAME;
+		ServletContext context = this.filterConfig.getServletContext();
+		if(context==null && log.isDebugEnabled()){
 			log.debug("this.filterConfig.getServletContext()== NULL !!");
+		} else {
+		    if(context.getInitParameter(USER_NAME_PARAM)!=null) {
+		        userName = context.getInitParameter(USER_NAME_PARAM);
+		    }
 		}
+		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest((HttpServletRequest) request);
 		
-		if(mockRequest.getHeader(httpRequestHeaderName)==null || !mockRequest.getHeader(httpRequestHeaderName).equalsIgnoreCase(loggedInUserName)){
-			mockRequest.addHeader(httpRequestHeaderName, loggedInUserName);	
+		if(mockRequest.getHeader(httpRequestHeaderName)==null || !mockRequest.getHeader(httpRequestHeaderName).equalsIgnoreCase(userName)){
+			mockRequest.addHeader(httpRequestHeaderName, userName);	
 			if(log.isDebugEnabled()) {
-				log.debug("HTTP header added, name: " + httpRequestHeaderName + ", value: " + loggedInUserName);
+				log.debug("HTTP header added, name: " + httpRequestHeaderName + ", value: " + userName);
 			}
 		}
 		chain.doFilter(mockRequest, response);

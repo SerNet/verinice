@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CreateElement;
 
 public class CreateITVerbund extends CreateElement {
     
