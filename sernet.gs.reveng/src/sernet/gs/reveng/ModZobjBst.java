@@ -46,10 +46,25 @@ public class ModZobjBst implements java.io.Serializable {
 	private Short cmVerId2;
 	private Short cmStaId;
 	private Set modZobjBsts = new HashSet(0);
+	private Integer refZobId;
 
 	// Constructors
 
-	/** default constructor */
+	/**
+     * @return the refZobId
+     */
+    public Integer getRefZobId() {
+        return refZobId;
+    }
+
+    /**
+     * @param refZobId the refZobId to set
+     */
+    public void setRefZobId(Integer refZobId) {
+        this.refZobId = refZobId;
+    }
+
+    /** default constructor */
 	public ModZobjBst() {
 	}
 
@@ -85,7 +100,7 @@ public class ModZobjBst implements java.io.Serializable {
 			Integer mmtId, String erfasstDurch, Short bearbeitetOrg,
 			Date changedOn, String changedBy, Date cmTimestamp,
 			String cmUsername, Integer cmImpId, Integer cmVerId1,
-			Short cmVerId2, Short cmStaId, Set modZobjBsts) {
+			Short cmVerId2, Short cmStaId, Set modZobjBsts, Integer refzobid) {
 		this.id = id;
 		this.NZielobjektByFkZbZ = NZielobjektByFkZbZ;
 		this.modZobjBst = modZobjBst;
@@ -118,6 +133,7 @@ public class ModZobjBst implements java.io.Serializable {
 		this.cmVerId2 = cmVerId2;
 		this.cmStaId = cmStaId;
 		this.modZobjBsts = modZobjBsts;
+		this.refZobId = refzobid;
 	}
 
 	// Property accessors

@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -57,7 +58,11 @@ public class ImportGstoolNotesAction extends Action {
 		public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					setEnabled(true);
+				    // only enable in server mode:
+                    ServiceFactory.lookupAuthService();
+                    if (ServiceFactory.isPermissionHandlingNeeded()) {
+                        setEnabled(true);
+                    }
 				}
 			});
 		}

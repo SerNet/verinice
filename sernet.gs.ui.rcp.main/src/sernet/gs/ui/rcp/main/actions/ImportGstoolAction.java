@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -35,7 +36,9 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -63,7 +66,11 @@ public class ImportGstoolAction extends Action {
         public void loaded(final BSIModel model) {
             Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
-                    setEnabled(true);
+                    // only enable in server mode:
+                    ServiceFactory.lookupAuthService();
+                    if (ServiceFactory.isPermissionHandlingNeeded()) {
+                        setEnabled(true);
+                    }
                 }
             });
         }
@@ -89,6 +96,7 @@ public class ImportGstoolAction extends Action {
     @Override
     public void run() {
         try {
+            
             final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
 			if (dialog.open() != InputDialog.OK)
                 return;

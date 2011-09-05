@@ -56,10 +56,12 @@ public class CopyCommand extends GenericCommand {
         return log;
     }
     
-    public static List<String> BLACKLIST;
+    public static List<String> COPY_BLACKLIST;
+    public static List<String> CUT_BLACKLIST;
     
     static {
-        BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        COPY_BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        CUT_BLACKLIST = Arrays.asList("riskanalysis","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     
     String uuidGroup;
@@ -132,7 +134,7 @@ public class CopyCommand extends GenericCommand {
         CnATreeElement elementCopy = element;
         if(element!=null 
             && element.getTypeId()!=null 
-            && !BLACKLIST.contains(element.getTypeId()) 
+            && !COPY_BLACKLIST.contains(element.getTypeId()) 
             && group.canContain(element)) {
             elementCopy = saveCopy(group, element);     
             number++;

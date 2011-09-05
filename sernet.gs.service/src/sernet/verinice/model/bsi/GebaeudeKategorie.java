@@ -48,4 +48,5 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 			return true;
 		return false;
 	}
+	
 }

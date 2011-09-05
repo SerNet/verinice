@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -63,6 +64,7 @@ import com.heatonresearch.datamover.DataMover;
 import com.heatonresearch.datamover.db.Database;
 import com.heatonresearch.datamover.db.DerbyDatabase;
 import com.heatonresearch.datamover.db.MDBFileDatabase;
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
@@ -73,6 +75,8 @@ import com.heatonresearch.datamover.db.MDBFileDatabase;
  * 
  */
 public class ImportTask {
+    
+    private static final Logger LOG = Logger.getLogger(ImportTask.class);
 
 	public static final int TYPE_SQLSERVER = 1;
 	public static final int TYPE_MDB = 2;
@@ -212,6 +216,8 @@ public class ImportTask {
 	}
 
 	private void importZielobjekte() throws Exception {
+	    // generate a sourceId for objects created by this import:
+        String sourceId = UUID.randomUUID().toString().substring(0, 6);
 
 		List<ZielobjektTypeResult> zielobjekte;
 		try {
@@ -251,7 +257,7 @@ public class ImportTask {
 				alleZielobjekte.put(result.zielobjekt, itverbund);
 
 				transferData.transfer((ITVerbund) itverbund, result);
-				createBausteine(itverbund, result.zielobjekt);
+				createBausteine(sourceId, itverbund, result.zielobjekt, false);
 			}
 		}
 
@@ -260,6 +266,9 @@ public class ImportTask {
 		for (ZielobjektTypeResult result : zielobjekte) {
 			String typeId = ImportZielobjektTypUtil.translateZielobjektType(
 					result.type, result.subtype);
+			if (LOG.isDebugEnabled()) {
+                LOG.debug("GSTOOL type id " + result.type + " : " + result.subtype + " was translated to: " + typeId);
+            }
 			CnATreeElement element = CnAElementBuilder.getInstance()
 					.buildAndSave(neueVerbuende.get(0), typeId);
 			if (element != null) {
@@ -274,11 +283,19 @@ public class ImportTask {
 				transferData.transfer(element, result);
 				
 				monitor.subTask(element.getTitle());
-				createBausteine(element, result.zielobjekt);
+				createBausteine(sourceId, element, result.zielobjekt, false /* do not create references, but actual objects*/);
 				CnAElementHome.getInstance().update(element);
 			}
-			monitor.worked(1);
 		}
+		
+		for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
+		    CnATreeElement element = alleZielobjekte.get(zielobjekt);
+		    monitor.subTask(element.getTitle());
+		    createBausteine(sourceId, element, zielobjekt, true /* create references */);
+		    CnAElementHome.getInstance().update(element);
+		    monitor.worked(1);
+        }
+		
 
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
 
@@ -514,7 +531,7 @@ public class ImportTask {
 		return result;
 	}
 
-	private void createBausteine(CnATreeElement element, NZielobjekt zielobjekt)
+	private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt, boolean createReferences)
 			throws Exception {
 		if (!importBausteine)
 			return;
@@ -527,9 +544,9 @@ public class ImportTask {
 		this.monitor.subTask("Erstelle " + zielobjekt.getName() 
 				+ " mit " + bausteineMassnahmenMap.keySet().size() + " Bausteinen und "
 				+ getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massnahmen...");
-		ImportCreateBausteine command = new ImportCreateBausteine(
+		ImportCreateBausteine command = new ImportCreateBausteine(sourceId,
 				element, bausteineMassnahmenMap, zeiten,
-				kosten, importUmsetzung);
+				kosten, importUmsetzung, createReferences);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		
 		if (command.getAlleBausteineToBausteinUmsetzungMap()!=null)

@@ -52,10 +52,13 @@ public class GroupTester extends PropertyTester {
 		List cutList = CnPItems.getCutItems();
 		List activeList = Collections.EMPTY_LIST;
 		
+		boolean isCutOperation = false;
+		
 		if(!copyList.isEmpty()) {
 			activeList = copyList;
 		} else if(!cutList.isEmpty()) {
 			activeList = cutList;
+			isCutOperation = true; 
 		}
 		for (Object object : activeList) {
 			if(!selectedElement.canContain(object)) {
@@ -67,7 +70,17 @@ public class GroupTester extends PropertyTester {
 			}
 			if(object instanceof CnATreeElement) {
 				CnATreeElement element = (CnATreeElement) object;
-				if(CopyCommand.BLACKLIST.contains(element.getTypeId())) {
+				
+				
+				List<String> currentBlacklist;
+                if (isCutOperation) {
+                    currentBlacklist = CopyCommand.CUT_BLACKLIST;    
+				}
+				else {
+				    currentBlacklist = CopyCommand.COPY_BLACKLIST;
+				}
+				
+				if(currentBlacklist.contains(element.getTypeId())) {
 					enabled = false;
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("object is in blacklist: " + object);

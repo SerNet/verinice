@@ -52,6 +52,10 @@ import sernet.verinice.service.commands.LoadBSIModel;
 public class ImportNotesForZielobjekt extends GenericCommand {
     
     private static final Logger LOG = Logger.getLogger(ImportNotesForZielobjekt.class);
+    
+    private static final String QUERY = "from CnATreeElement elmt " +
+    "where elmt.objectType != 'massnahmen-umsetzung'" +
+    "and elmt.objectType != 'baustein-umsetzung' "; 
 
 	private String zielobjektName;
     private Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap;
@@ -67,15 +71,8 @@ public class ImportNotesForZielobjekt extends GenericCommand {
 
 
     public void execute() {
-	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-	    LoadBSIModel command = new LoadBSIModel();
-	    try {
-            command = getCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
-        }
-	    BSIModel model = command.getModel();
-	    List<CnATreeElement> allElements = model.getAllElementsFlatList(false);
+        IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+        List<CnATreeElement> allElements = dao.findByQuery(QUERY,  new Object[] {});
 	  
 	    for (CnATreeElement cnATreeElement : allElements) {
             if (cnATreeElement.getTitle().equals(zielobjektName)) {
@@ -117,7 +114,8 @@ public class ImportNotesForZielobjekt extends GenericCommand {
 
 
     /**
-     * Add notes to massnahmen of this bausteinumsetznug.
+     * Add notes to massnahmen of this bausteinumsetznug and to the bstumsetzung itself.
+     * 
      * @param bstUms
      * @param massnahmenNotizen
      * @return list of all notes that could not be applied
@@ -129,8 +127,8 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         
         List<MassnahmenUmsetzung> ums = bstUms.getMassnahmenUmsetzungen();
         for (MassnahmenUmsetzung mnums : ums) {
-            NotizenMassnahmeResult notizVorlage = TransferData.findMassnahmenVorlageNotiz(mnums, massnahmenNotizen);
-            if (notizVorlage != null) {
+            List<NotizenMassnahmeResult> notizVorlagen = TransferData.findMassnahmenVorlageNotiz(mnums, massnahmenNotizen);
+            for (NotizenMassnahmeResult notizVorlage : notizVorlagen) {
                 copy.remove(notizVorlage);
                 
                 LOG.debug("Adding note for " + bstUms.getTitle() + ", " + mnums.getKapitel());
@@ -142,7 +140,21 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                 saveNewNote(dbId, elmtTitle, noteTitle, text);
             }
         }
+        
         if (copy.size() > 0) {
+            List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData.findBausteinVorlageNotiz(bstUms, massnahmenNotizen);
+            for (NotizenMassnahmeResult bstNotizVorlage : bstNotizVorlagen) {
+                copy.remove(bstNotizVorlage);
+                
+                LOG.debug("Adding note for " + bstUms.getTitle());
+                Integer dbId = bstUms.getDbId();
+                String elmtTitle = bstUms.getTitle();
+                String noteTitle = "Notiz " + bstUms.getKapitel();
+                String text = bstNotizVorlage.notiz.getNotizText();
+                
+                saveNewNote(dbId, elmtTitle, noteTitle, text);
+            }
+            
             LOG.debug("Notes without target object: ");
             for (NotizenMassnahmeResult note : copy) {
                 Logger.getLogger(this.getClass()).debug(note.notiz.getNotizText());

@@ -21,6 +21,7 @@ package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -52,7 +53,9 @@ import sernet.verinice.service.commands.SaveElement;
 public class CopyService extends PasteService implements IProgressTask {
 	
 	private final Logger log = Logger.getLogger(CopyService.class);
-
+	
+	
+    
 	private List<CnATreeElement> elements;
 	
 	/**
@@ -66,7 +69,7 @@ public class CopyService extends PasteService implements IProgressTask {
     public CopyService(CnATreeElement group, List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
-        this.elements = elementList;
+        this.elements = elementList;    
     }
 	
 	/**
@@ -80,19 +83,19 @@ public class CopyService extends PasteService implements IProgressTask {
 	public CopyService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
-		this.elements = elementList;
+		this.elements = elementList;	
 	}
 
 	/* (non-Javadoc)
      * @see sernet.verinice.iso27k.service.IProgressTask#run()
      */
 	public void run()  {
-		try {			
-		    Activator.inheritVeriniceContextState();
+		try {	
+			Activator.inheritVeriniceContextState();
 		    List<String> uuidList = new ArrayList<String>(this.elements.size());
 			for (CnATreeElement element : this.elements) {
 			    uuidList.add(element.getUuid());
-            }
+				}
 			numberOfElements = uuidList.size();
 			// -1 means unknown runtime
 			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), -1);         //$NON-NLS-1$
@@ -100,7 +103,7 @@ public class CopyService extends PasteService implements IProgressTask {
 			cc = getCommandService().executeCommand(cc);
 			numberOfElements = cc.getNumber();
 			progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
-		    CnAElementFactory.getInstance().reloadModelFromDatabase();
+			    CnAElementFactory.getInstance().reloadModelFromDatabase();
 		} catch (Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$

@@ -87,6 +87,9 @@
         <property name="mmtId" type="java.lang.Integer">
             <column name="MMT_ID" not-null="true" />
         </property>
+         <property name="refZobId" type="java.lang.Integer" update="false" insert="false">
+            <column name="REF_ZOB_ID" not-null="false"  />
+        </property>
         <property name="erfasstDurch" type="java.lang.String">
             <column name="ERFASST_DURCH" length="128" />
         </property>

@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import org.apache.log4j.Logger;
+
+import com.sun.xml.messaging.saaj.util.LogDomainConstants;
+
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -41,6 +45,8 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class CnAElementBuilder {
 	private static CnAElementBuilder instance;
+	
+	private static final Logger LOG = Logger.getLogger(CnAElementBuilder.class);
 
 	private CnAElementBuilder() {
 	}
@@ -102,6 +108,9 @@ public class CnAElementBuilder {
 		}
 		
 		// else, build nothing:
+		if (LOG.isDebugEnabled()) {
+            LOG.debug("Could not create element for typeId: " + typeId);
+        }
 		return null;
 		
 	}

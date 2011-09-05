@@ -18,6 +18,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.rtf.RTFEditorKit;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
@@ -48,7 +49,7 @@ import sernet.gs.reveng.NmbNotiz;
 
 public class GSVampire {
     
-    
+    private static final Logger LOG = Logger.getLogger(GSVampire.class);
 
 	List<MSchutzbedarfkategTxt> allSchutzbedarf;
 
@@ -72,7 +73,7 @@ public class GSVampire {
 			+ "	NZielobjekt zo, "
 			+ "	MbBaust bst, "
 			+ "	MbMassn mn, "
-			+ "   ModZobjBst zo_bst "
+			+ " ModZobjBst zo_bst  "
 			+ "where zo.id.zobImpId = :zobImpId "
 			+ "and zo.id.zobId = :zobId "
 			+ "and umstxt.id.sprId = 1 "
@@ -109,6 +110,20 @@ public class GSVampire {
 		+ "and zo_bst.id.bauId = bst.id.bauId " +
 		  "and obm.notizId = notiz.id.notizId "
 		+ "and obm.loeschDatum = null ";
+	
+	private static final String QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME = "select bst, zo_bst, notiz "
+        + "from ModZobjBst zo_bst, "
+        + " NZielobjekt zo, "
+        + " MbBaust bst," +
+        		"NmbNotiz notiz "
+        + "where zo.name = :name "
+        + "and zo.id.zobImpId = 1 "
+        + "and zo_bst.id.zobImpId = zo.id.zobImpId "
+        + "and zo_bst.id.zobId     = zo.id.zobId "
+        + "and zo_bst.id.bauId     = bst.id.bauId "
+        + "and zo_bst.id.bauImpId = bst.id.bauImpId " +
+		  "and zo_bst.nmbNotiz.id.notizId = notiz.id.notizId "
+        + "and zo_bst.loeschDatum = null ";
 	
 	private static final String QUERY_MITARBEITER_FOR_MASSNAHME = "select mitarbeiter "
 			+ "from ModZobjBstMassMitarb obmm, "
@@ -194,6 +209,8 @@ public class GSVampire {
 		List<NotizenMassnahmeResult> result = new ArrayList<NotizenMassnahmeResult>();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
+
+		// get notes for massnahmen:
 		Query query = dao.getSession().createQuery(
 				QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
 		query.setParameter("name", name, Hibernate.STRING);
@@ -205,6 +222,22 @@ public class GSVampire {
 						(ModZobjBst) next[3], (ModZobjBstMass) next[4], (NmbNotiz) next[5])
 				);
 		}
+
+		// get notes for bausteine (bst, zo_bst, notiz)
+		query = dao.getSession().createQuery(
+                QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME);
+        query.setParameter("name", name, Hibernate.STRING);
+        iterate = query.iterate();
+        while (iterate.hasNext()) {
+                Object[] next = (Object[]) iterate.next();
+                result.add(new NotizenMassnahmeResult((MbBaust) next[0],
+                        null, null,
+                        (ModZobjBst) next[1], null, (NmbNotiz) next[2])
+                );
+        }
+		
+		
+		
 		transaction.commit();
 		dao.getSession().close();
 		return result;
@@ -376,7 +409,15 @@ public class GSVampire {
 			result.add(new BausteineMassnahmenResult((MbBaust) next[0],
 					(MbMassn) next[1], (MUmsetzStatTxt) next[2],
 					(ModZobjBst) next[3], (ModZobjBstMass) next[4]));
+			
+			ModZobjBst zobst = (ModZobjBst) next[3];
+			if (LOG.isDebugEnabled()) {
+			    if (zobst.getRefZobId() != null)
+			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
+            }
+			
 		}
+		
 		transaction.commit();
 		dao.getSession().close();
 		return result;

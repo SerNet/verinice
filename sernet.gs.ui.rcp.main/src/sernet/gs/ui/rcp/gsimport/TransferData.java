@@ -44,6 +44,7 @@ import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -311,17 +312,19 @@ public class TransferData {
      * @param mnums
      * @param massnahmenNotizen
      */
-    public static NotizenMassnahmeResult findMassnahmenVorlageNotiz(MassnahmenUmsetzung massnahmenUmsetzung, 
+    public static List<NotizenMassnahmeResult> findMassnahmenVorlageNotiz(MassnahmenUmsetzung massnahmenUmsetzung, 
     		List<NotizenMassnahmeResult> list) {
+        List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
+        
         for (NotizenMassnahmeResult result : list) {
-            if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
+            if (result.massnahme != null && massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme
                     .getMskId()
                     && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme
                             .getNr()) {
-                return result;
+                resultList.add(result);
             }
         }
-        return null;
+        return resultList;
     
     }
     
@@ -333,6 +336,29 @@ public class TransferData {
 
         String plainText = document.getText(0, document.getLength());
         return plainText;
+    }
+
+    /**
+     * Find notes that are connected to a baustein directly.
+     * 
+     * @param bstUms
+     * @param massnahmenNotizen
+     * @return
+     */
+    public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(BausteinUmsetzung bstUms, List<NotizenMassnahmeResult> list) {
+
+        List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
+        
+        for (NotizenMassnahmeResult result : list) {
+            if (result.massnahme == null ) {
+                Integer refZobId = result.zoBst.getRefZobId();
+                boolean stop = refZobId != null;
+                resultList.add(result);
+            }
+        }
+        return resultList;
+    
+    
     }
 
 }
