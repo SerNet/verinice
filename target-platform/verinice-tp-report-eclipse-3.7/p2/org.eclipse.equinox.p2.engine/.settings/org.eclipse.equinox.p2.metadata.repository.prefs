@@ -1,0 +1,12 @@
+#Mon Jun 13 20:06:14 EDT 2011
+repositories/http\:__download.eclipse.org_releases_indigo/nickname=Indigo
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/nickname=The Eclipse Project Updates
+repositories/http\:__download.eclipse.org_releases_indigo/enabled=true
+repositories/http\:__download.eclipse.org_releases_indigo/isSystem=false
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/count=1
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/uri=http\://download.eclipse.org/eclipse/updates/3.7
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/isSystem=false
+eclipse.preferences.version=1
+repositories/http\:__download.eclipse.org_releases_indigo/uri=http\://download.eclipse.org/releases/indigo
+repositories/http\:__download.eclipse.org_releases_indigo/count=1
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/enabled=true
