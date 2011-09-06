@@ -217,7 +217,8 @@ public class ImportTask {
 
 	private void importZielobjekte() throws Exception {
 	    // generate a sourceId for objects created by this import:
-        String sourceId = UUID.randomUUID().toString().substring(0, 6);
+
+	    String sourceId = UUID.randomUUID().toString().substring(0, 6);
 
 		List<ZielobjektTypeResult> zielobjekte;
 		try {
@@ -285,9 +286,11 @@ public class ImportTask {
 				monitor.subTask(element.getTitle());
 				createBausteine(sourceId, element, result.zielobjekt, false /* do not create references, but actual objects*/);
 				CnAElementHome.getInstance().update(element);
+				monitor.worked(1);
 			}
 		}
-		
+
+		monitor.beginTask("Lese Bausteinreferenzen...", zielobjekte.size());
 		for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
 		    CnATreeElement element = alleZielobjekte.get(zielobjekt);
 		    monitor.subTask(element.getTitle());
