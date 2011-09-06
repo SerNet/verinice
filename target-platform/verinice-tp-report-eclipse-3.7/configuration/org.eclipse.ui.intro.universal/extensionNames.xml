@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<contributor name="org.eclipse.ui.intro"/>
+<contributor name="org.eclipse.ui.intro.universal"/>
+<contributor name="org.eclipse.platform"/>
+</root>
