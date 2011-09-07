@@ -104,6 +104,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 
 		pass = new StringFieldEditor(PreferenceConstants.DB_PASS, Messages.getString("DatenbankPreferencePage.10"), //$NON-NLS-1$
 				getFieldEditorParent());
+		pass.getTextControl(getFieldEditorParent()).setEchoChar('*');
 		addField(pass);
 
 	}

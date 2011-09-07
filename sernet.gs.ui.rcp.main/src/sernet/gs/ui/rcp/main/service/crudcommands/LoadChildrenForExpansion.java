@@ -27,6 +27,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -61,26 +62,36 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setChildren(true).setChildrenProperties(true).setProperties(true).setLinksDown(false).setLinksUp(false);
+		ri.setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
 		parent = dao.retrieve(dbId,ri);
+	
+		/*
 		if(parent!=null) {
-			hydrate(parent);
 			
 			if (log.isDebugEnabled() && !filteredClasses.isEmpty())
 				log.debug("Skipping the following model classes: " + filteredClasses);
 			
 			Set<CnATreeElement> children = parent.getChildren();
 			for (CnATreeElement child : children) {
-				if (!filteredClasses.contains(child.getClass()))
-					hydrate(child);
+				//if (!filteredClasses.contains(child.getClass()))
+			    if(child instanceof BausteinUmsetzung ) {
+			        BausteinUmsetzung baustein = (BausteinUmsetzung) child;
+			        Set<CnATreeElement> massnahmenSet = baustein.getChildren();
+			        for (CnATreeElement cnATreeElement : massnahmenSet) {
+                        if(cnATreeElement instanceof MassnahmenUmsetzung) {
+                            ((MassnahmenUmsetzung)cnATreeElement).getUmsetzung();
+                        }
+                    }
+			    } 
 			}
 		}
+		*/
+		
 	}
 
 	private void hydrate(CnATreeElement element) {
 		if (element == null)
 			return;
-		
 		
 		if (element instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
@@ -102,8 +113,7 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getTypeId()), element, ri);
 		
 		// initialize all children:
-		if (element instanceof FinishedRiskAnalysis
-				|| element instanceof GefaehrdungsUmsetzung) {
+		if (element instanceof FinishedRiskAnalysis || element instanceof GefaehrdungsUmsetzung) {
 			Set<CnATreeElement> children = element.getChildren();
 			for (CnATreeElement child : children) {
 				hydrate(child);
@@ -120,18 +130,6 @@ public class LoadChildrenForExpansion extends GenericCommand {
 				hydrate(massnahme);
 			}
 		}
-		
-		/*
-		log.debug("Hydrating links down...");
-		if (element.getLinksDown().size() > 0 ) {
-			Set<CnALink> links = element.getLinks().getChildren();
-			for (CnALink link : links) {
-				link.getTitle();
-				link.getDependency().getUuid();
-			}
-		}
-		log.debug("Links down hydrated");
-		*/
 		
 	}
 	

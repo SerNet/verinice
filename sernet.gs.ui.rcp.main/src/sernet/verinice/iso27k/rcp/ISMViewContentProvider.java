@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -37,6 +39,8 @@ import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.action.TagFilter;
+import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -57,8 +61,10 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 
     private TreeViewerCache cache;
 
-    private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+    private List<IParameter> paramerterList = new ArrayList<IParameter>();
 
+    private List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+    
     private IParentLoader parentLoader;
 
     private IContentCommandFactory commandFactory;
@@ -99,17 +105,17 @@ public class ISMViewContentProvider implements ITreeContentProvider {
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object element) {
+    public Object[] getChildren(Object o) {
         CnATreeElement[] children = new CnATreeElement[] {};
 
         // replace object in event with the one actually displayed in the tree:
-        Object cachedObject = cache.getCachedObject(element);
+        Object cachedObject = cache.getCachedObject(o);
         if (cachedObject != null) {
-            element = cachedObject;
+            o = cachedObject;
         }
         try {
-            if (element instanceof List<?>) {
-                List<CnATreeElement> list = (List<CnATreeElement>) element;
+            if (o instanceof List<?>) {
+                List<CnATreeElement> list = (List<CnATreeElement>) o;
                 children = new CnATreeElement[list.size()];
                 int i = 0;
                 for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {
@@ -117,19 +123,19 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                     children[i] = loadChildren(cnATreeElement, true);
                     i++;
                 }
-            } else if (element instanceof CnATreeElement) {
-                CnATreeElement el = (CnATreeElement) element;
+            } else if (o instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) o;
                 CnATreeElement newElement;
 
-                if (!el.isChildrenLoaded()) {
-                    newElement = loadChildren(el);
+                if (!element.isChildrenLoaded()) {
+                    newElement = loadChildren(element);
                     if (newElement != null) {
-                        el.replace(newElement);
-                        el = newElement;
-                        children = el.getChildrenAsArray();
+                        element.replace(newElement);
+                        element = newElement;
+                        children = element.getChildrenAsArray();
                     }
                 } else {
-                    children = el.getChildrenAsArray();
+                    children = element.getChildrenAsArray();
                 }
                 Arrays.sort(children, comparator);
             }
@@ -229,6 +235,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         Logger.getLogger(this.getClass()).debug("Loading children from DB for " + el);
 
         RetrieveCnATreeElement command = commandFactory.createCommand(el, loadParent);
+        command.setParameter(getParameter());
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         CnATreeElement newElement = command.getElement();
 
@@ -244,13 +251,42 @@ public class ISMViewContentProvider implements ITreeContentProvider {
             }
 
             // replace with loaded object in cache:
-            Logger.getLogger(this.getClass()).debug("Replacing in cache: " + el + " replaced with " + newElement);
+            if (log.isDebugEnabled()) {
+                log.debug("Replacing in cache: " + el + " replaced with " + newElement);
+            }
             cache.addObject(newElement);
             if (loadParent && newElement.getParent() != null) {
                 cache.addObject(newElement.getParent());
             }
         }
         return newElement;
+    }
+
+    /**
+     * @return
+     */
+    private Map<String, Object> getParameter() {
+        Map<String, Object> result = null;
+        if(paramerterList!=null && !paramerterList.isEmpty()) {
+            result = new Hashtable<String, Object>();
+            for (IParameter filter : paramerterList) {
+               if(filter instanceof TypeFilter) {              
+                   Set<String[]> typeIdSet = (Set<String[]>) filter.getParameter();
+                   if(typeIdSet.size()>1 || !typeIdSet.iterator().next().equals(RetrieveCnATreeElement.ALL_TYPES)) {
+                       result.put(RetrieveCnATreeElement.PARAM_TYPE_IDS, typeIdSet);
+                   }                                
+               }
+               if(filter instanceof TagFilter ) {
+                   TagFilter tagFilter = (TagFilter) filter;
+                   String[] tagArray = tagFilter.getPattern();
+                   if(tagArray!=null && tagArray.length>0) {
+                       result.put(RetrieveCnATreeElement.PARAM_TAGS, tagFilter.getPattern());
+                       result.put(RetrieveCnATreeElement.PARAM_FILTER_ORGS, tagFilter.isFilterOrg());
+                   }
+               }
+            }
+        }
+        return result;
     }
 
     public Object getCachedObject(Object o) {
@@ -280,6 +316,10 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         cache.addObject(newInput);
     }
 
+    public void addParameter(IParameter filter) {
+        paramerterList.add(filter);
+    }
+    
     public void addFilter(ViewerFilter filter) {
         filterList.add(filter);
     }

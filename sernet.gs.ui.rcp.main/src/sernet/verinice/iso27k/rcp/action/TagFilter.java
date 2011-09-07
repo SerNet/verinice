@@ -18,49 +18,15 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 
-import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27Scope;
-import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.iso27k.rcp.IParameter;
 
-public class TagFilter extends ViewerFilter {
-
-    public static final String NO_TAG = Messages.getString("TagFilter.0"); //$NON-NLS-1$
-
+public class TagFilter implements IParameter {
+    
     String[] pattern;
-    private StructuredViewer viewer;
     private boolean filterOrgs;
 
     public TagFilter(StructuredViewer viewer) {
-        this.viewer = viewer;
-    }
-
-    @Override
-    public boolean select(Viewer viewer, Object parentElement, Object o) {
-        boolean result = true;
-        if (o instanceof IISO27kElement 
-            && !(o instanceof Group)
-            && (!(o instanceof IISO27Scope) || filterOrgs)
-            && pattern!=null) {
-            result = false;
-            IISO27kElement element = (IISO27kElement) o;
-            for (String tag : pattern) {
-                if (tag.equals(NO_TAG)) {
-                    if (element.getTags().size() < 1) {
-                        result = true;
-                    }
-                }
-                for (String zielTag : element.getTags()) {
-                    if (zielTag.equals(tag)) {
-                        result = true;
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     public String[] getPattern() {
@@ -68,21 +34,11 @@ public class TagFilter extends ViewerFilter {
     }
 
     public void setPattern(String[] newPattern) {
-        boolean active = pattern != null;
         if (newPattern != null && newPattern.length > 0) {
-            pattern = newPattern;
-            if (active) {
-                viewer.refresh();
-            } else {
-                viewer.addFilter(this);
-                active = true;
-            }
+            pattern = newPattern;          
         } else {
             // deactivate
-            pattern = null;
-            if (active) {
-                viewer.removeFilter(this);
-            }
+            pattern = null;      
         }
 
     }
@@ -98,5 +54,14 @@ public class TagFilter extends ViewerFilter {
 	public void setFilterOrgs(boolean filterOrgs) {
 		this.filterOrgs = filterOrgs;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.IParameter#getParameter()
+     */
+    @Override
+    public Object getParameter() {
+        return getPattern();
+    }
+
 
 }

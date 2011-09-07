@@ -54,6 +54,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
+import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -88,6 +89,7 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * 
@@ -102,7 +104,8 @@ public class ISMViewFilterDialog extends Dialog {
     public static final String[][] TYPES = new String[][] {
         new String[] {Asset.TYPE_ID,AssetGroup.TYPE_ID},
         new String[] {Audit.TYPE_ID,AuditGroup.TYPE_ID},
-        new String[] {Control.TYPE_ID,ControlGroup.TYPE_ID},        
+        new String[] {Control.TYPE_ID,ControlGroup.TYPE_ID},
+        new String[] {SamtTopic.TYPE_ID,ControlGroup.TYPE_ID},           
         new String[] {Document.TYPE_ID,DocumentGroup.TYPE_ID},        
         new String[] {Evidence.TYPE_ID,EvidenceGroup.TYPE_ID},        
         new String[] {Exception.TYPE_ID,ExceptionGroup.TYPE_ID},        
@@ -319,7 +322,7 @@ public class ISMViewFilterDialog extends Dialog {
         List<String> tags;
         try {
             tags = CnAElementHome.getInstance().getTags();
-            tags.add(0, TagFilter.NO_TAG);
+            tags.add(0, RetrieveCnATreeElement.NO_TAG);
             viewer.setInput(tags);
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.ISMViewFilterDialog_4);
@@ -343,7 +346,7 @@ public class ISMViewFilterDialog extends Dialog {
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
         if(typeList.size()>=TYPES.length) {
-            visibleTypes.add(TypeFilter.ALL_TYPES);
+            visibleTypes.add(RetrieveCnATreeElement.ALL_TYPES);
         } else {
             for (Object object : typeList) {
                 visibleTypes.add((String[]) object);        
@@ -388,7 +391,7 @@ class CheckStateProvider implements ICheckStateProvider  {
         boolean result = false;
         String[] element = (String[]) o;
         for (String[] type : visibleTypes) {
-            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(TypeFilter.ALL_TYPES)) {
+            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(RetrieveCnATreeElement.ALL_TYPES)) {
                 result=true;
                 break;
             } 

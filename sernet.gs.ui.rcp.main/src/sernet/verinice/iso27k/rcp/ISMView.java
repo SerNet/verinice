@@ -339,12 +339,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 				tagFilter,
 				hideEmptyFilter,
 				typeFilter);
-        contentProvider.addFilter(tagFilter);
+        contentProvider.addParameter(tagFilter);
         if(hideEmptyFilter!=null) {
             contentProvider.addFilter(hideEmptyFilter);
         }
         if(typeFilter!=null) {
-            contentProvider.addFilter(typeFilter);
+            contentProvider.addParameter(typeFilter);
         }
 		
 		metaDropAdapter = new MetaDropAdapter(viewer);

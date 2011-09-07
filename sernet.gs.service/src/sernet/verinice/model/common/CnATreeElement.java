@@ -540,26 +540,27 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 */
 	public void replace(CnATreeElement newElement) {
 		if (this == newElement) {
-//			Logger.getLogger(this.getClass()).debug("NOT replacing, same instance: " + newElement);
+		    if (getLog().isDebugEnabled()) {
+		        getLog().debug("NOT replacing, same instance: " + newElement);
+            }
 			return;
-		}
-		
+		}		
 		if (getParent() == null) {
 			// replace children of root element:
-
-//			Logger.getLogger(this.getClass()).debug("Replacing children of element " + this);
+		    if (getLog().isDebugEnabled()) {
+		        getLog().debug("Replacing children of element " + this);
+            }
 			this.children = newElement.getChildren();
 			this.setChildrenLoaded(true);
 			
 			return;
 		} else {
-//			Logger.getLogger(this.getClass()).debug("Replacing child " + this + "in parent " + getParent());
-			getParent().removeChild(this);
-//			CnAElementFactory.getLoadedModel().childRemoved(parent, this);
-			
+		    if (getLog().isDebugEnabled()) {
+		        getLog().debug("Replacing child " + this + "in parent " + getParent());
+            }
+			getParent().removeChild(this);		
 			getParent().addChild(newElement);
 			newElement.setParent(getParent());
-//			CnAElementFactory.getLoadedModel().childAdded(parent, newElement);
 		}
 		
 	}

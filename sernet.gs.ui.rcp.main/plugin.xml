@@ -1178,20 +1178,32 @@
 	          	<objectClass name="sernet.hui.common.connect.ITypedElement"/>
 	         </enablement>
 	      </decorator>
-       <decorator
-             adaptable="true"
-             icon="icons/overlays/vda.png"
-             id="sernet.verinice.rcp.IsaDecorator"
-             label="%decorator.label.2"
-             lightweight="true"
-             location="TOP_RIGHT"
-             state="true">
-          <enablement>
-             <objectClass
-                   name="sernet.verinice.model.samt.SamtTopic">
-             </objectClass>
-          </enablement>
-       </decorator>
+	       <decorator
+	             adaptable="true"
+	             icon="icons/overlays/vda.png"
+	             id="sernet.verinice.rcp.IsaDecorator"
+	             label="%decorator.label.2"
+	             lightweight="true"
+	             location="TOP_RIGHT"
+	             state="true">
+	          <enablement>
+	             <objectClass
+	                   name="sernet.verinice.model.samt.SamtTopic">
+	             </objectClass>
+	          </enablement>
+	       </decorator>
+	       <decorator
+	            adaptable="true"
+	            class="sernet.verinice.rcp.SiegelDecorator"
+	            id="sernet.verinice.rcp.vDecorator"
+	            label="importDecorator"
+	            lightweight="true"
+	            location="BOTTOM_RIGHT"
+	            state="true">
+	          <enablement>
+	          	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+	         </enablement>
+	      </decorator>
    </extension>
    <extension point="org.eclipse.core.net.authenticator">
      <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">

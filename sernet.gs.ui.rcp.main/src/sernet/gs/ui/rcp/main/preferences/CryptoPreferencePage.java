@@ -51,7 +51,8 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		Composite fep = getFieldEditorParent();
 		
 		// FIXME externalize strings
-		
+		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_IAIK, "Use IAIK-Provider", fep)); //$NON-NLS-1$
+        
 		// If this is checked the verinice security provider will take over the certificate/key management
 		// for SSL connections.
 		// Requires a restart of the application when changed.
@@ -59,10 +60,6 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 		
 		addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED, Messages.getString("CryptoPreferencePage.1"), fep)); //$NON-NLS-1$
 		
-		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE, Messages.getString("CryptoPreferencePage.2"), //$NON-NLS-1$
-				1, new String[][] { { Messages.getString("CryptoPreferencePage.3"), PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE }, //$NON-NLS-1$
-						{ Messages.getString("CryptoPreferencePage.4"), PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY } //$NON-NLS-1$
-				}, fep));
 		
 		addField(new RadioGroupFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE, Messages.getString("CryptoPreferencePage.5"), //$NON-NLS-1$
 				1, new String[][] { { Messages.getString("CryptoPreferencePage.6"), PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_NONE }, //$NON-NLS-1$
@@ -71,9 +68,8 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 				}, fep));
 		
 		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_KEYSTORE_FILE, Messages.getString("CryptoPreferencePage.9"), fep)); //$NON-NLS-1$
-		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE, Messages.getString("CryptoPreferencePage.10"), fep)); //$NON-NLS-1$
-		addField(new FileFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, Messages.getString("CryptoPreferencePage.11"), fep)); //$NON-NLS-1$
-		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_CERTIFICATE_ALIAS, "Certificate alias for authentication", fep)); //$NON-NLS-1$
+        addField(new FileFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH, Messages.getString("CryptoPreferencePage.11"), fep)); //$NON-NLS-1$
+		addField(new StringFieldEditor(PreferenceConstants.CRYPTO_PKCS11_CERTIFICATE_ALIAS, Messages.getString("CryptoPreferencePage.13"), fep)); //$NON-NLS-1$
         
 		// There is no option to decrypt by PKCS11 
 		//addField(new BooleanFieldEditor(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED, Messages.getString("CryptoPreferencePage.12"), fep)); //$NON-NLS-1$

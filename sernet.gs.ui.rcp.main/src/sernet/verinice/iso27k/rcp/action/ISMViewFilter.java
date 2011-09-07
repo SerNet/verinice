@@ -17,19 +17,31 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.iso27k.rcp.ISMViewFilterDialog;
+import sernet.verinice.report.rcp.Messages;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ISMViewFilter extends Action {
+    
+    private static final Logger LOG = Logger.getLogger(ISMViewFilter.class);
+    
     private Shell shell;
     private TagFilter tagFilter;
     private HideEmptyFilter hideEmptyFilter;
@@ -62,6 +74,18 @@ public class ISMViewFilter extends Action {
             tagFilter.setFilterOrgs(dialog.getFilterOrgs());
             hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
             typeFilter.setVisibleTypeSet(dialog.getVisibleTypes());
+            try {
+                PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        monitor.beginTask("Activating filter...", IProgressMonitor.UNKNOWN);
+                        CnAElementFactory.getInstance().reloadModelFromDatabase();
+                        monitor.done();
+                    }
+                 });
+            } catch (Exception e) {
+                LOG.error("Error while activating filter", e);
+            } 
+            
         }
         setUpCheckStatus();
     }

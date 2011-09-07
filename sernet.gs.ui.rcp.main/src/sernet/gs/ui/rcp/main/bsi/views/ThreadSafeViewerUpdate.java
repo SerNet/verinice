@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
@@ -31,6 +32,8 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
  */
 public class ThreadSafeViewerUpdate {
 
+    private static final Logger LOG = Logger.getLogger(ThreadSafeViewerUpdate.class);
+    
 	private TreeViewer viewer;
 
 	public ThreadSafeViewerUpdate(TreeViewer viewer) {
@@ -132,7 +135,7 @@ public class ThreadSafeViewerUpdate {
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				viewer.setInput(newModel);
+		        viewer.setInput(newModel);
 			}
 		});
 	}

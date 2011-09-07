@@ -56,17 +56,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
             obj = cachedObject;
         }
 
-        if (obj instanceof BausteinUmsetzung) {
-            BausteinUmsetzung bu = (BausteinUmsetzung) obj;
-            switch (bu.getErreichteSiegelStufe()) {
-            case 'A':
-                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_A);
-            case 'B':
-                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_B);
-            case 'C':
-                return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG_C);
-            }
-            // else return default image
+        if (obj instanceof BausteinUmsetzung) {         
             return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
         }
 
