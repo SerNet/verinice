@@ -128,7 +128,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	protected TreeViewer viewer;
 	
-	TreeViewerCache cache = new TreeViewerCache();
+	TreeViewerCache cache;
 	
 	ISMViewContentProvider contentProvider;
 
@@ -185,7 +185,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	protected void initView(Composite parent) {
 	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-	    
+	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
+	        CnAElementFactory.getInstance().reloadModelFromDatabase();
+	    }
+	    cache = new TreeViewerCache();
 		contentProvider = new ISMViewContentProvider(cache);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);

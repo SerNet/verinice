@@ -55,7 +55,6 @@ public class RuntimeLogger {
 					clock.stop();
 					final StringBuffer sb = new StringBuffer("Laufzeit ");
 					sb.append(simpleTargetClassName).append(".").append(targetMethodName).append(": ");
-					//sb.append(Hilfsmethoden.erzeugeLesbareDauer(clock.getTotalTimeMillis()));
 					sb.append(clock.getTotalTimeMillis());
 					targetLog.debug(sb.toString());
 				}

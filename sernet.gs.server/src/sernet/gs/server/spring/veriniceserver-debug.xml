@@ -15,7 +15,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		<aop:pointcut id="commandServiceMethods"
 			expression="execution(* sernet.verinice.service.HibernateCommandService.*(..))" />
 		<aop:pointcut id="daoMethods"
-			expression="execution(* sernet.verinice.interfaces.IBaseDao.retrieve(..))" />
+			expression="execution(* sernet.verinice.interfaces.IBaseDao.*(..))" />
 
 		<!-- Connect methods and runtimeLogger -->
 		<aop:aspect id="profilingAspect" ref="runtimeLogger">

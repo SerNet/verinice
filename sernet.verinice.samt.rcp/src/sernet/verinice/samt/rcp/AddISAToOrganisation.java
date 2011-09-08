@@ -20,6 +20,11 @@
 package sernet.verinice.samt.rcp;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,11 +32,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.actions.Messages;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.samt.audit.rcp.ElementView;
 
 /**
  * Action in SAMT/ISA view context menu added programmatically in {@link SamtView}.
@@ -52,6 +56,8 @@ public class AddISAToOrganisation extends Action implements ISelectionListener {
     
     private AuditGroup auditGroup = null;
     
+    private static ISchedulingRule iSchedulingRule = new Mutex();
+    
     public AddISAToOrganisation(IWorkbenchWindow window) {
         super();
         setText(sernet.verinice.samt.rcp.Messages.AddISAToOrganisation_0);
@@ -66,12 +72,21 @@ public class AddISAToOrganisation extends Action implements ISelectionListener {
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
-        try {
-            samtService.createSelfAssessment(this.auditGroup);
-        } catch (Exception e) {
-            LOG.error("Error while naturalizing element", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, sernet.verinice.samt.rcp.Messages.AddISAToOrganisation_3);
-        }
+        WorkspaceJob importJob = new WorkspaceJob(Messages.AddISAToOrganisation_0) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.setTaskName(Messages.AddISAToOrganisation_4);
+                    samtService.createSelfAssessment(AddISAToOrganisation.this.auditGroup);
+                } catch (Exception e) {
+                    LOG.error("Error while creating new ISA.", e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", sernet.verinice.samt.rcp.Messages.AddISAToOrganisation_3, e); //$NON-NLS-1$
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleJob(importJob, iSchedulingRule);
     }
     
     /* (non-Javadoc)

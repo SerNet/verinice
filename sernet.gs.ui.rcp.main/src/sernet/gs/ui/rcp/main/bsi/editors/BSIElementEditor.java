@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
@@ -74,197 +78,206 @@ import sernet.verinice.model.samt.SamtTopic;
  * 
  */
 public class BSIElementEditor extends EditorPart {
-	public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"; //$NON-NLS-1$
-	private HitroUIComposite huiComposite;
-	private boolean isModelModified = false;
-	private Boolean isWriteAllowed = null;
-	
-	// TODO the editor needs another way to determine whether or not to show the linkmaker so we can remove this reference to the SAMT bundle:
-	public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
-    // limit display in SAMT perspective to properties tagged as "VDA-ISA" (simplified view):
-	private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA";
-	
-	/** {
-	 * @link IEditorBehavior} instances implementing special "behavior" of this editor
-	 * See method addBehavior.
-	 */
-	List<IEditorBehavior> editorBehaviorList = new ArrayList<IEditorBehavior>(1);
-	
-	private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
-		public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-			// not relevant
-		}
+    public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"; //$NON-NLS-1$
+    private HitroUIComposite huiComposite;
+    private boolean isModelModified = false;
+    private Boolean isWriteAllowed = null;
 
-		public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-			modelChanged();
-		}
+    // TODO the editor needs another way to determine whether or not to show the
+    // linkmaker so we can remove this reference to the SAMT bundle:
+    public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
+    // limit display in SAMT perspective to properties tagged as "VDA-ISA"
+    // (simplified view):
+    private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA";
 
-		public void propertyChanged(PropertyChangedEvent evt) {
-			modelChanged();
-		}
+    /**
+     * {
+     * 
+     * @link IEditorBehavior} instances implementing special "behavior" of this
+     *       editor See method addBehavior.
+     */
+    List<IEditorBehavior> editorBehaviorList = new ArrayList<IEditorBehavior>(1);
 
-	};
-	private CnATreeElement cnAElement;
-	private LinkMaker linkMaker;
+    private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
-	public void doSave(IProgressMonitor monitor) {
-		if (isModelModified) {
+        public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
+            // not relevant
+        }
 
-			monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
-			save(true);
-			monitor.done();
+        public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
+            modelChanged();
+        }
 
-			// TODO akoderman we need a way to close (with save dialog) or
-			// update editors of objects that have been changed in the database,
-			// i.e. by triggers (protection level)
-			// // close all other open editors on save (but only the ones
-			// without changes):
-			IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-			ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
-			BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
+        public void propertyChanged(PropertyChangedEvent evt) {
+            modelChanged();
+        }
 
-			allEditors: for (IEditorReference editorReference : editorReferences) {
-				IEditorInput input;
-				try {
-					if (editorReference.isPinned() || editorReference.isDirty())
-						continue allEditors;
+    };
+    private CnATreeElement cnAElement;
+    private LinkMaker linkMaker;
 
-					input = editorReference.getEditorInput();
-					if (input instanceof BSIElementEditorInput) {
-						BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
-						if (!bsiInput.getId().equals(myInput.getId())) {
-							closeOthers.add(editorReference);
-						}
-					}
-				} catch (PartInitException e) {
-					ExceptionUtil.log(e, Messages.BSIElementEditor_2);
-				}
-			}
+    public void doSave(IProgressMonitor monitor) {
+        if (isModelModified) {
 
-			IEditorReference[] closeArray = (IEditorReference[]) closeOthers.toArray(new IEditorReference[closeOthers.size()]);
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true /*
-																												 * ask
-																												 * save
-																												 */);
-		}
-	}
+            monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
+            save(true);
+           
+            Job job = new RefreshJob("Refresh application...");
+            job.setRule(new RefreshJobRule());
+            // Start the Job
+            job.schedule();
 
-	private void save(boolean completeRefresh) {
-		if (!getIsWriteAllowed()) {
-			ExceptionUtil.log(new IllegalStateException(), Messages.BSIElementEditor_3);
-			return;
-		}
-		try {
-			// save element, refresh etc:
-			BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
-			CnAElementHome.getInstance().updateEntity(cnAElement);
-			isModelModified = false;
-			firePropertyChange(IEditorPart.PROP_DIRTY);
+            // TODO akoderman we need a way to close (with save dialog) or
+            // update editors of objects that have been changed in the database,
+            // i.e. by triggers (protection level)
+            // // close all other open editors on save (but only the ones
+            // without changes):
 
-			// notify all views of change:
-			CnAElementFactory.getModel(cnAElement).childChanged(cnAElement.getParent(), cnAElement);
+            IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+            ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
+            BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
 
-			// cause complete refresh, necessary for viewers to call getchildren
-			// etc.
-			if (completeRefresh) {			
-				CnAElementFactory.getModel(cnAElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
-			}
+            allEditors: for (IEditorReference editorReference : editorReferences) {
+                IEditorInput input;
+                try {
+                    if (editorReference.isPinned() || editorReference.isDirty())
+                        continue allEditors;
 
-		} catch (StaleObjectStateException se) {
-			// close editor, loosing changes:
-			ExceptionUtil.log(se, Messages.BSIElementEditor_0);
-		} catch (Exception e) {
-			ExceptionUtil.log(e, Messages.BSIElementEditor_5);
-		}
-	}
+                    input = editorReference.getEditorInput();
+                    if (input instanceof BSIElementEditorInput) {
+                        BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
+                        if (!bsiInput.getId().equals(myInput.getId())) {
+                            closeOthers.add(editorReference);
+                        }
+                    }
+                } catch (PartInitException e) {
+                    ExceptionUtil.log(e, Messages.BSIElementEditor_2);
+                }
+            }
 
-	@Override
-	public void doSaveAs() {
-		// not supported
-	}
+            IEditorReference[] closeArray = (IEditorReference[]) closeOthers.toArray(new IEditorReference[closeOthers.size()]);
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true);
+            
+            monitor.done();
+        }
+    }
 
-	void modelChanged() {
-		boolean wasDirty = isDirty();
-		isModelModified = true;
+    private void save(boolean completeRefresh) {
+        if (!getIsWriteAllowed()) {
+            ExceptionUtil.log(new IllegalStateException(), Messages.BSIElementEditor_3);
+            return;
+        }
+        try {
+            // save element, refresh etc:
+            BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
+            CnAElementHome.getInstance().updateEntity(cnAElement);
+            isModelModified = false;
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        } catch (StaleObjectStateException se) {
+            // close editor, loosing changes:
+            ExceptionUtil.log(se, Messages.BSIElementEditor_0);
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.BSIElementEditor_5);
+        }
+    }
 
-		if (!wasDirty)
-			firePropertyChange(IEditorPart.PROP_DIRTY);
-	}
+    private void refresh() {
+        // notify all views of change:
+        CnAElementFactory.getModel(cnAElement).childChanged(cnAElement.getParent(), cnAElement);
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		if (!(input instanceof BSIElementEditorInput))
-			throw new PartInitException("invalid input"); //$NON-NLS-1$
-		setSite(site);
-		setInput(input);
-		setPartName(input.getName());
-	}
+        // cause complete refresh, necessary for viewers to call getchildren
+        // etc.
+        CnAElementFactory.getModel(cnAElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
+    }
 
-	private void initContent() {
-		try {
-			
-			cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();		
-			editorBehaviorList.clear();
-			
-			LoadElementForEditor command = new LoadElementForEditor(cnAElement);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			cnAElement = command.getElement();
+    @Override
+    public void doSaveAs() {
+        // not supported
+    }
 
-			Entity entity = cnAElement.getEntity();
-			EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
+    void modelChanged() {
+        boolean wasDirty = isDirty();
+        isModelModified = true;
 
-			// Enable dirty listener only for writable objects:
-			if (getIsWriteAllowed()) {
-				// add listener to mark editor as dirty on changes:
-				entity.addChangeListener(this.modelListener);
-			} else {
-				// do not add listener, user will never be offered to save this editor, modify title to show this:
-				setPartName(getPartName() + Messages.BSIElementEditor_7);
-			}
+        if (!wasDirty)
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
 
-            String[] tags = BSIElementEditor.getEditorTags(); 
+    @Override
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+        if (!(input instanceof BSIElementEditorInput))
+            throw new PartInitException("invalid input"); //$NON-NLS-1$
+        setSite(site);
+        setInput(input);
+        setPartName(input.getName());
+    }
+
+    private void initContent() {
+        try {
+
+            cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
+            editorBehaviorList.clear();
+
+            LoadElementForEditor command = new LoadElementForEditor(cnAElement);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            cnAElement = command.getElement();
+
+            Entity entity = cnAElement.getEntity();
+            EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
+
+            // Enable dirty listener only for writable objects:
+            if (getIsWriteAllowed()) {
+                // add listener to mark editor as dirty on changes:
+                entity.addChangeListener(this.modelListener);
+            } else {
+                // do not add listener, user will never be offered to save this
+                // editor, modify title to show this:
+                setPartName(getPartName() + Messages.BSIElementEditor_7);
+            }
+
+            String[] tags = BSIElementEditor.getEditorTags();
 
             boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
 
-			// samt perspective offers a simple view, only showing properties tagged with "isa":
-			if (isSamtPerspective()) {
-                tags = new String[] {SAMT_PERSPECTIVE_DEFAULT_TAGS};
+            // samt perspective offers a simple view, only showing properties
+            // tagged with "isa":
+            if (isSamtPerspective()) {
+                tags = new String[] { SAMT_PERSPECTIVE_DEFAULT_TAGS };
                 strict = true;
-			}
-			
-			// create view of all properties, read only or read/write:
-			huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict);
-			InputHelperFactory.setInputHelpers(entityType, huiComposite);
-			huiComposite.resetInitialFocus();
-			
-			// create in place editor for links to other objects
-			// but not for simplified view:
-			if (linkMaker != null) {
-			    linkMaker.createPartControl(getIsWriteAllowed());
-			    linkMaker.setInputElmt(cnAElement);
-			}
-			
-			addBehavior();
-		} catch (Exception e) {
-			ExceptionUtil.log(e, Messages.BSIElementEditor_8);
-		}
+            }
 
-	}
-	
-	/**
-	 * Adds special behavior to this editor.
-	 * "Behaviors" are implemented in {@link IEditorBehavior} instances.
-	 * Every IEditorBehavior must be added to editorBehaviorList.
-	 */
-	private void addBehavior() {
-        if(cnAElement.getSchutzbedarfProvider()!=null) {
+            // create view of all properties, read only or read/write:
+            huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict);
+            InputHelperFactory.setInputHelpers(entityType, huiComposite);
+            huiComposite.resetInitialFocus();
+
+            // create in place editor for links to other objects
+            // but not for simplified view:
+            if (linkMaker != null) {
+                linkMaker.createPartControl(getIsWriteAllowed());
+                linkMaker.setInputElmt(cnAElement);
+            }
+
+            addBehavior();
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.BSIElementEditor_8);
+        }
+
+    }
+
+    /**
+     * Adds special behavior to this editor. "Behaviors" are implemented in
+     * {@link IEditorBehavior} instances. Every IEditorBehavior must be added to
+     * editorBehaviorList.
+     */
+    private void addBehavior() {
+        if (cnAElement.getSchutzbedarfProvider() != null) {
             IEditorBehavior behavior = new InheritanceBehavior(huiComposite);
             editorBehaviorList.add(behavior);
             behavior.addBehavior();
             behavior.init();
-        }       
+        }
     }
 
     /**
@@ -274,109 +287,114 @@ public class BSIElementEditor extends EditorPart {
     private static String[] split(String tags) {
         if (tags == null)
             return new String[] {};
-        
+
         tags.replaceAll("\\s+", "");
         return tags.split(",");
     }
 
-	/**
+    /**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
-	private void setIcon() {
-		Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-		if(cnAElement!=null) {
-			if(cnAElement instanceof Organization) {
-				icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
-			} else if(cnAElement instanceof Group) {
-			    // TODO - getChildTypes()[0] might be a problem for more than one type
-				icon = ImageCache.getInstance().getISO27kTypeImage(((Group)cnAElement).getChildTypes()[0]);
-			} else if(cnAElement instanceof IISO27kElement) {
-				icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
-			} else if(cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
-				icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
-			}
-		}
-		setTitleImage(icon);
-	}
+    @SuppressWarnings("unchecked")
+    private void setIcon() {
+        Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+        if (cnAElement != null) {
+            if (cnAElement instanceof Organization) {
+                icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
+            } else if (cnAElement instanceof Group) {
+                // TODO - getChildTypes()[0] might be a problem for more than
+                // one type
+                icon = ImageCache.getInstance().getISO27kTypeImage(((Group) cnAElement).getChildTypes()[0]);
+            } else if (cnAElement instanceof IISO27kElement) {
+                icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
+            } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
+                icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
+            }
+        }
+        setTitleImage(icon);
+    }
 
-	@Override
-	public boolean isDirty() {
-		return isModelModified;
-	}
+    @Override
+    public boolean isDirty() {
+        return isModelModified;
+    }
 
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
+    @Override
+    public boolean isSaveAsAllowed() {
+        return false;
+    }
 
-	public void setIsWriteAllowed(Boolean isWriteAllowed) {
-		this.isWriteAllowed = isWriteAllowed;
-	}
+    public void setIsWriteAllowed(Boolean isWriteAllowed) {
+        this.isWriteAllowed = isWriteAllowed;
+    }
 
-	public Boolean getIsWriteAllowed() {
-		if(isWriteAllowed==null) {		
-			isWriteAllowed = createIsWriteAllowed();
-		}
+    public Boolean getIsWriteAllowed() {
+        if (isWriteAllowed == null) {
+            isWriteAllowed = createIsWriteAllowed();
+        }
 
-//		// in samt perspective, edit only samttopics:
-//		if (isSamtPerspective()) {
-//		    if (!cnAElement.getTypeId().equals(SamtTopic.TYPE_ID)) {
-//		        return false;
-//		    }
-//		}
-		return isWriteAllowed;	
-	}
-	
-	public Boolean createIsWriteAllowed() {
-		isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
-		return isWriteAllowed;
-	}
+        // // in samt perspective, edit only samttopics:
+        // if (isSamtPerspective()) {
+        // if (!cnAElement.getTypeId().equals(SamtTopic.TYPE_ID)) {
+        // return false;
+        // }
+        // }
+        return isWriteAllowed;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite parent) {
-		FormLayout formLayout = new FormLayout();
-		parent.setLayout(formLayout);
-		
-		huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-		FormData formData = new FormData();
-		formData.top = new FormAttachment(0, 1);
-		formData.left = new FormAttachment(0, 1);
-		formData.right = new FormAttachment(100, -1);
-		if (isSamtPerspective() ) {
-		    formData.bottom = new FormAttachment(100, -1);
-		} else {
-		    formData.bottom = new FormAttachment(66, -1);
-		}
-		huiComposite.setLayoutData(formData);
-		
-		if (!isSamtPerspective()) {
-		    linkMaker = new LinkMaker(parent);
-		    FormData formData2 = new FormData();
-		    formData2.top = new FormAttachment(66, 1);
-		    formData2.left = new FormAttachment(0,1);
-		    formData2.right = new FormAttachment(100, -1);
-		    formData2.bottom = new FormAttachment(100, -1);
-		    linkMaker.setLayoutData(formData2);
-		}
-		
-		initContent();
-		setIcon();
-		
-//		// register model change listener:
-//		changeListener = new EditorModelChangelistener();
-//		  CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
-//	        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
-		
-		// if opened the first time, save initialized entity:
-		if (isDirty())
-			save(false);
-	}
+    public Boolean createIsWriteAllowed() {
+        isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
+        return isWriteAllowed;
+    }
 
-	/**
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
+     * .Composite)
+     */
+    @Override
+    public void createPartControl(Composite parent) {
+        FormLayout formLayout = new FormLayout();
+        parent.setLayout(formLayout);
+
+        huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(0, 1);
+        formData.left = new FormAttachment(0, 1);
+        formData.right = new FormAttachment(100, -1);
+        if (isSamtPerspective()) {
+            formData.bottom = new FormAttachment(100, -1);
+        } else {
+            formData.bottom = new FormAttachment(66, -1);
+        }
+        huiComposite.setLayoutData(formData);
+
+        if (!isSamtPerspective()) {
+            linkMaker = new LinkMaker(parent);
+            FormData formData2 = new FormData();
+            formData2.top = new FormAttachment(66, 1);
+            formData2.left = new FormAttachment(0, 1);
+            formData2.right = new FormAttachment(100, -1);
+            formData2.bottom = new FormAttachment(100, -1);
+            linkMaker.setLayoutData(formData2);
+        }
+
+        initContent();
+        setIcon();
+
+        // // register model change listener:
+        // changeListener = new EditorModelChangelistener();
+        // CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+        // CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
+
+        // if opened the first time, save initialized entity:
+        if (isDirty())
+            save(false);
+    }
+
+    /**
      * @return
      */
     private boolean isSamtPerspective() {
@@ -386,37 +404,37 @@ public class BSIElementEditor extends EditorPart {
     }
 
     public boolean isNotAskAndSave() {
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void setFocus() {
-		// huiComposite.setFocus();
-		huiComposite.resetInitialFocus();
-	}
+    @Override
+    public void setFocus() {
+        // huiComposite.setFocus();
+        huiComposite.resetInitialFocus();
+    }
 
-	@Override
-	public void dispose() {
-	    if (linkMaker != null) {
-	        linkMaker.dispose();
-	    }
-	    if(editorBehaviorList!=null) {
-	        for (IEditorBehavior behavior : editorBehaviorList) {
-	            behavior.removeBehavior();
+    @Override
+    public void dispose() {
+        if (linkMaker != null) {
+            linkMaker.dispose();
+        }
+        if (editorBehaviorList != null) {
+            for (IEditorBehavior behavior : editorBehaviorList) {
+                behavior.removeBehavior();
             }
-	    }
-		huiComposite.closeView();
-		cnAElement.getEntity().removeListener(modelListener);
-		EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
-		
-//		CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
-//        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
-        
-		super.dispose();
-	}
-	
-	public static final String[] getEditorTags() {
-	    String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+        }
+        huiComposite.closeView();
+        cnAElement.getEntity().removeListener(modelListener);
+        EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
+
+        // CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
+        // CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+
+        super.dispose();
+    }
+
+    public static final String[] getEditorTags() {
+        String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
         String[] tags = null;
         if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
             Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
@@ -426,6 +444,40 @@ public class BSIElementEditor extends EditorPart {
             tags = split(tagString);
         }
         return tags;
-	}
+    }
+
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class RefreshJobRule implements ISchedulingRule {
+        public boolean contains(ISchedulingRule rule) {
+            return rule.getClass() == RefreshJobRule.class;
+        }
+
+        public boolean isConflicting(ISchedulingRule rule) {
+            return rule.getClass() == RefreshJobRule.class;
+        }
+    }
+
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class RefreshJob extends Job {
+        /**
+         * @param name
+         */
+        private RefreshJob(String name) {
+            super(name);
+        }
+
+        @Override
+        protected IStatus run(IProgressMonitor monitor) {
+            monitor.setTaskName("Refresh application...");
+            refresh();
+            return Status.OK_STATUS;
+        }
+    }
 
 }

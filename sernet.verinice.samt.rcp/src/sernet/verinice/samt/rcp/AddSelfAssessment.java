@@ -20,6 +20,11 @@
 package sernet.verinice.samt.rcp;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
@@ -27,6 +32,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
 
 /**
  * Action in SAMT/ISA view toolbar registered in sernet.verinice.samt.rcp plugin.xml.
@@ -47,11 +54,11 @@ public class AddSelfAssessment implements IViewActionDelegate {
     public static final String TITEL_ORGANIZATION = Messages.AddSelfAssessment_0;
     public static final String TITEL = Messages.AddSelfAssessment_1;
 
-  
-
     private SamtView samtView = null;
     
     private CreateNewSelfAssessmentService samtService = new CreateNewSelfAssessmentService();
+    
+    private static ISchedulingRule iSchedulingRule = new Mutex();
     
     /*
      * (non-Javadoc)
@@ -72,20 +79,31 @@ public class AddSelfAssessment implements IViewActionDelegate {
      */
     @Override
     public void run(IAction action) {
-        try {
-            samtService.createSelfAssessment();
-            if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
-                Display.getDefault().syncExec(new Runnable() {
-                    public void run() {
-                        samtView.expand();
+        WorkspaceJob importJob = new WorkspaceJob(Messages.AddSelfAssessment_3) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
+                    samtService.createSelfAssessment();
+                    monitor.setTaskName(Messages.AddSelfAssessment_5);
+                    if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
+                        Display.getDefault().syncExec(new Runnable() {
+                            public void run() {
+                                samtView.expand();
+                            }
+                        });
                     }
-                });
+                } catch (Exception e) {
+                    LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
             }
-        } catch (Exception e) {
-            LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.AddSelfAssessment_2);
-        }
-
+        };
+        JobScheduler.scheduleJob(importJob, iSchedulingRule);
     }
 
    

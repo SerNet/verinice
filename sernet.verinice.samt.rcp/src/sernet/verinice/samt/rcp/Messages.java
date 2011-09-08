@@ -30,9 +30,13 @@ public class Messages extends NLS {
     public static String AddISAToOrganisation_0;
     public static String AddISAToOrganisation_1;
     public static String AddISAToOrganisation_3;
+    public static String AddISAToOrganisation_4;
     public static String AddSelfAssessment_0;
     public static String AddSelfAssessment_1;
     public static String AddSelfAssessment_2;
+    public static String AddSelfAssessment_3;
+    public static String AddSelfAssessment_4;
+    public static String AddSelfAssessment_5;
     public static String AddSelfAssessmentMenuAction_1;
     public static String AddSelfAssessmentMenuAction_2;
     public static String AssignAllIsaTopics_0;
