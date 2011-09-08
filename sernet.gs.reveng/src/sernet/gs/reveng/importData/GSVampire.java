@@ -410,11 +410,11 @@ public class GSVampire {
 					(MbMassn) next[1], (MUmsetzStatTxt) next[2],
 					(ModZobjBst) next[3], (ModZobjBstMass) next[4]));
 			
-			ModZobjBst zobst = (ModZobjBst) next[3];
-			if (LOG.isDebugEnabled()) {
-			    if (zobst.getRefZobId() != null)
-			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
-            }
+//			ModZobjBst zobst = (ModZobjBst) next[3];
+//			if (LOG.isDebugEnabled()) {
+//			    if (zobst.getRefZobId() != null)
+//			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
+//            }
 			
 		}
 		

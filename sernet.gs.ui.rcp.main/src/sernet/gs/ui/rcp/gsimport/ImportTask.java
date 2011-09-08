@@ -50,8 +50,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteinReferences;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportTransferSchutzbedarf;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -233,7 +235,7 @@ public class ImportTask {
 							.log(
 									sqlException.getSQLException(),
 									"Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? "
-											+ "\nEs wird nur der Import der letzten Version (>4.5) des GSTOOL unterstützt.");
+											+ "\nEs wird nur der Import der aktuellen Version (4.7) des GSTOOL unterstützt.");
 			}
 			throw e;
 		}
@@ -258,7 +260,7 @@ public class ImportTask {
 				alleZielobjekte.put(result.zielobjekt, itverbund);
 
 				transferData.transfer((ITVerbund) itverbund, result);
-				createBausteine(sourceId, itverbund, result.zielobjekt, false);
+				createBausteine(sourceId, itverbund, result.zielobjekt);
 			}
 		}
 
@@ -284,20 +286,13 @@ public class ImportTask {
 				transferData.transfer(element, result);
 				
 				monitor.subTask(element.getTitle());
-				createBausteine(sourceId, element, result.zielobjekt, false /* do not create references, but actual objects*/);
+				createBausteine(sourceId, element, result.zielobjekt);
+				
 				CnAElementHome.getInstance().update(element);
 				monitor.worked(1);
 			}
 		}
 
-		monitor.beginTask("Lese Bausteinreferenzen...", zielobjekte.size());
-		for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
-		    CnATreeElement element = alleZielobjekte.get(zielobjekt);
-		    monitor.subTask(element.getTitle());
-		    createBausteine(sourceId, element, zielobjekt, true /* create references */);
-		    CnAElementHome.getInstance().update(element);
-		    monitor.worked(1);
-        }
 		
 
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
@@ -313,11 +308,47 @@ public class ImportTask {
 
 		importSchutzbedarf();
 		monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+
+		monitor.beginTask("Lese Bausteinreferenzen...", zielobjekte.size());
+		for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
+		    CnATreeElement element = alleZielobjekte.get(zielobjekt);
+		    monitor.subTask(element.getTitle());
+		    if (!element.getTypeId().equals(ITVerbund.TYPE_ID)) {
+		        createBausteinReferences(sourceId, element, zielobjekt);
+		    }
+		    monitor.worked(1);
+		}
+		
+		
 		
 		monitor.done();
 	}
 
 	
+
+    /**
+     * @param sourceId
+     * @param element
+     * @param zielobjekt
+     * @throws CommandException 
+     */
+    private void createBausteinReferences(String sourceId, CnATreeElement element, NZielobjekt zielobjekt) throws CommandException {
+        if (!importBausteine)
+            return;
+
+        List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire
+                .findBausteinMassnahmenByZielobjekt(zielobjekt);
+
+        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
+
+        // TODO externalize strings
+        this.monitor.subTask("Erstelle Bausteinreferenzen für" + zielobjekt.getName() 
+                );
+        
+        ImportCreateBausteinReferences command = new ImportCreateBausteinReferences(sourceId,
+                element, bausteineMassnahmenMap);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+    }
 
     private void importSchutzbedarf() throws Exception {
 		if (!schutzbedarf)
@@ -534,7 +565,7 @@ public class ImportTask {
 		return result;
 	}
 
-	private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt, boolean createReferences)
+	private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt)
 			throws Exception {
 		if (!importBausteine)
 			return;
@@ -547,9 +578,10 @@ public class ImportTask {
 		this.monitor.subTask("Erstelle " + zielobjekt.getName() 
 				+ " mit " + bausteineMassnahmenMap.keySet().size() + " Bausteinen und "
 				+ getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massnahmen...");
+		
 		ImportCreateBausteine command = new ImportCreateBausteine(sourceId,
 				element, bausteineMassnahmenMap, zeiten,
-				kosten, importUmsetzung, createReferences);
+				kosten, importUmsetzung);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		
 		if (command.getAlleBausteineToBausteinUmsetzungMap()!=null)

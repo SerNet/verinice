@@ -87,7 +87,6 @@ public class ImportCreateBausteine extends GenericCommand {
 	private HashMap<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
 	private List<Baustein> bausteine;
     private String sourceId;
-    private boolean createReferencesOnly;
 
 	private static final short BST_BEARBEITET_JA = 1;
 	private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
@@ -111,20 +110,19 @@ public class ImportCreateBausteine extends GenericCommand {
 
 	public ImportCreateBausteine(String sourceId, CnATreeElement element,
 			Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
-			List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung, boolean createReferencesOnly) {
+			List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung) {
 		this.element = element;
 		this.bausteineMassnahmenMap = bausteineMassnahmenMap;
 		this.kosten = kosten;
 		this.importUmsetzung = importUmsetzung;
 		this.zeiten = zeiten;
 		this.sourceId = sourceId;
-		this.createReferencesOnly = createReferencesOnly;
 	}
 
 	public void execute() {
 		try {
 			IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
-			dao.reload(element, element.getDbId());
+			element = (CnATreeElement) dao.findById(element.getDbId());
 			
 			LoadBausteine command = new LoadBausteine();
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -133,7 +131,7 @@ public class ImportCreateBausteine extends GenericCommand {
 			Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
 			for (MbBaust mbBaust : keySet) {
 					createBaustein(element, mbBaust, bausteineMassnahmenMap
-							.get(mbBaust), createReferencesOnly);
+							.get(mbBaust));
 			}
 			
 		} catch (Exception e) {
@@ -143,8 +141,8 @@ public class ImportCreateBausteine extends GenericCommand {
 	}
 	
 	private BausteinUmsetzung createBaustein(CnATreeElement element,
-			MbBaust mbBaust, List<BausteineMassnahmenResult> list,
-			boolean createReferencesOnly)
+			MbBaust mbBaust, List<BausteineMassnahmenResult> list
+			 )
 			throws Exception {
 		Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
 		
@@ -158,7 +156,6 @@ public class ImportCreateBausteine extends GenericCommand {
 		
 		if (baustein != null) {
 		    if (refZobId == null) {
-		        if (!createReferencesOnly) {
 		            CreateBaustein command = new CreateBaustein(element, baustein);
 		            command = ServiceFactory.lookupCommandService().executeCommand(command);
 		            BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
@@ -169,27 +166,6 @@ public class ImportCreateBausteine extends GenericCommand {
 		                transferMassnahmen(bausteinUmsetzung, list);
 		            }
 		            return bausteinUmsetzung;
-		        }
-		    }
-		    else if (createReferencesOnly) {
-		        getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId) );
-		        LoadCnAElementByExternalID cmd = new LoadCnAElementByExternalID(sourceId, createExtId(baustein, refZobId));
-		        cmd = getCommandService().executeCommand(cmd);
-		        List<CnATreeElement> elements = cmd.getElements();
-		        if (elements != null && elements.iterator().hasNext()) {
-		            CnATreeElement previousBaustein = elements.iterator().next();
-		            ArrayList bausteinAsList = new ArrayList();
-		            bausteinAsList.add(previousBaustein);
-
-		            
-		            Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                    .getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
-		            if ( !possibleRelations.isEmpty()) {
-		                CreateLink cmd2 = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(element, previousBaustein, 
-		                        possibleRelations.iterator().next().getId(), LINK_NO_COMMENT);
-		                cmd2 = getCommandService().executeCommand(cmd2);
-		            }
-		        }
 		    }
 		}
 		return null;
