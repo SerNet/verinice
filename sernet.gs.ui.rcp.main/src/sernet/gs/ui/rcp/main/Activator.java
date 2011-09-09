@@ -22,16 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.Provider;
-import java.security.Security;
-import java.util.Enumeration;
-import java.util.Properties;
-
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -42,9 +32,13 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
+import org.eclipse.equinox.internal.p2.ui.ProvUI;
+import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.repository.IRepositoryManager;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
+import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
@@ -495,19 +489,15 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
 	private IArtifactRepositoryManager getArtifactRepositoryManager() {
 		//Load artifact manager
-        IArtifactRepositoryManager artifactManager = (IArtifactRepositoryManager) context.getService(context.getServiceReference(IArtifactRepositoryManager.class.getName()));                  
-        if(artifactManager == null) {
-        	// throw exception
-        }
+        final ProvisioningUI ui = ProvUIActivator.getDefault().getProvisioningUI();
+        IArtifactRepositoryManager artifactManager = ProvUI.getArtifactRepositoryManager(ui.getSession());
 		return artifactManager;
 	}
 
 	private IMetadataRepositoryManager getMetadataRepositoryManager() {
 		//Load repository manager
-        IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) context.getService(context.getServiceReference(IMetadataRepositoryManager.class.getName()));  
-        if(metadataManager == null) {
-        	// throw exception
-        }
+	    final ProvisioningUI ui = ProvUIActivator.getDefault().getProvisioningUI();
+	    IMetadataRepositoryManager metadataManager = ProvUI.getMetadataRepositoryManager(ui.getSession());
 		return metadataManager;
 	}
 	
