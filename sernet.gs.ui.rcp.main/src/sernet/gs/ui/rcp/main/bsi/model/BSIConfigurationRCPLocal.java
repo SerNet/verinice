@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
@@ -27,7 +28,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
-public class BSIConfigurationRCPLocal implements IBSIConfig {
+public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
 	
 	private String gsPath;
 	private String dsPath;

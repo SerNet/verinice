@@ -50,7 +50,7 @@ public class ImportGstoolNotesAction extends Action {
 		public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					setEnabled(false);
+//					setEnabled(false);
 				}
 			});
 		}
@@ -59,10 +59,10 @@ public class ImportGstoolNotesAction extends Action {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 				    // only enable in server mode:
-                    ServiceFactory.lookupAuthService();
-                    if (ServiceFactory.isPermissionHandlingNeeded()) {
-                        setEnabled(true);
-                    }
+//                    ServiceFactory.lookupAuthService();
+//                    if (ServiceFactory.isPermissionHandlingNeeded()) {
+//                        setEnabled(true);
+//                    }
 				}
 			});
 		}
@@ -78,7 +78,8 @@ public class ImportGstoolNotesAction extends Action {
 		this.window = window;
         setText(label);
 		setId(ID);
-		setEnabled(false);
+//		setEnabled(false); disable to make available on server only (see above)
+		setEnabled(true); // now works in standalone again
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
 	

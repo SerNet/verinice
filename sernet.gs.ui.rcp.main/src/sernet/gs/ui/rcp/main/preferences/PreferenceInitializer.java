@@ -45,7 +45,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		store.setDefault(PreferenceConstants.BSIZIPFILE, CnAWorkspace.getInstance()
 				.getWorkdir()
-				+ File.separator + "it-grundschutz2008_html_de_zip.zip"); //$NON-NLS-1$
+				+ File.separator + "it-grundschutz_el11_html_de.zip"); //$NON-NLS-1$
 
 		store.setDefault(PreferenceConstants.OOTEMPLATE, CnAWorkspace
 				.getInstance().getWorkdir()

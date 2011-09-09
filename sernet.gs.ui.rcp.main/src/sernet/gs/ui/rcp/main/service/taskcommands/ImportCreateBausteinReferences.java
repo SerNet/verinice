@@ -31,6 +31,10 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
+import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
@@ -55,6 +59,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private List<Baustein> bausteine;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private String sourceId;
+    private IBSIConfig bsiConfig;
     private static final String NO_COMMENT = "";
 
     public Logger getLog() {
@@ -70,6 +75,13 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         this.sourceId = sourceId;
     }
 
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig) {
+        this.element = element;
+        this.bausteineMassnahmenMap = bausteineMassnahmenMap;
+        this.sourceId = sourceId;
+        this.bsiConfig = bsiConfig;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -81,10 +93,34 @@ public class ImportCreateBausteinReferences extends GenericCommand {
             IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
             element = (CnATreeElement) dao.findById(element.getDbId());
 
-            LoadBausteine command = new LoadBausteine();
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            this.bausteine = command.getBausteine();
+            if (this.bsiConfig == null) {
+                // load bausteine from default config:
+                LoadBausteine command = new LoadBausteine();
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                this.bausteine = command.getBausteine();
+            } else {
+                // load bausteine from given config:
+                BSIMassnahmenModel model = GSScraperUtil.getInstance().getModel();
+                model.setBSIConfig(bsiConfig);
+                this.bausteine = model.loadBausteine(new IProgress() {
 
+                    public void beginTask(String name, int totalWork) {
+                    }
+
+                    public void done() {
+                    }
+
+                    public void setTaskName(String string) {
+                    }
+
+                    public void subTask(String string) {
+                    }
+
+                    public void worked(int work) {
+                    }
+                });
+            }
+            
             Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
             for (MbBaust mbBaust : keySet) {
                 createBausteinReference(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));

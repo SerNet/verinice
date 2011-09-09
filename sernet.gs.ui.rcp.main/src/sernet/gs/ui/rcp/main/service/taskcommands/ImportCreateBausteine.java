@@ -38,10 +38,15 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
+import sernet.gs.scraper.GSScraper;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
+import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
@@ -57,14 +62,13 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
- * Create BausteinUmsetzung objects during import for given target object and assigned Bausteine 
- * from source database. 
+ * Create BausteinUmsetzung objects during import for given target object and
+ * assigned Bausteine from source database.
  * 
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
 public class ImportCreateBausteine extends GenericCommand {
 
@@ -76,102 +80,127 @@ public class ImportCreateBausteine extends GenericCommand {
         }
         return log;
     }
-    
-	private CnATreeElement element;
-	private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
-	private boolean importUmsetzung;
-	private boolean kosten;
-	private HashMap<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
-	private HashMap<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-	private List<MbZeiteinheitenTxt> zeiten;
-	private HashMap<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
-	private List<Baustein> bausteine;
+
+    private CnATreeElement element;
+    private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
+    private boolean importUmsetzung;
+    private boolean kosten;
+    private HashMap<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
+    private HashMap<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
+    private List<MbZeiteinheitenTxt> zeiten;
+    private HashMap<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
+    private List<Baustein> bausteine;
     private String sourceId;
+    private IBSIConfig bsiConfig;
 
-	private static final short BST_BEARBEITET_JA = 1;
-	private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
-	private static final short BST_BEARBEITET_NEIN = 4;
-	
-	// umsetzungs patterns in verinice
-	// leaving out "unbearbeitet" since this is the default:
-	private static final String[] UMSETZUNG_STATI_VN = new String[] {
-			MassnahmenUmsetzung.P_UMSETZUNG_NEIN,
-			MassnahmenUmsetzung.P_UMSETZUNG_JA,
-			MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,
-			MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
+    private static final short BST_BEARBEITET_JA = 1;
+    private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
+    private static final short BST_BEARBEITET_NEIN = 4;
 
-	// umsetzungs patterns in gstool:
-	private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein",
-			"ja", "teilweise", "entbehrlich", };
-	
+    // umsetzungs patterns in verinice
+    // leaving out "unbearbeitet" since this is the default:
+    private static final String[] UMSETZUNG_STATI_VN = new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
+
+    // umsetzungs patterns in gstool:
+    private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein", "ja", "teilweise", "entbehrlich", };
+
     private static final String LINK_NO_COMMENT = "";
 
+    public ImportCreateBausteine(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung, IBSIConfig bsiConfig) {
+        this.element = element;
+        this.bausteineMassnahmenMap = bausteineMassnahmenMap;
+        this.kosten = kosten;
+        this.importUmsetzung = importUmsetzung;
+        this.zeiten = zeiten;
+        this.sourceId = sourceId;
+        this.bsiConfig = bsiConfig;
+    }
 
+    public ImportCreateBausteine(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung) {
+        this.element = element;
+        this.bausteineMassnahmenMap = bausteineMassnahmenMap;
+        this.kosten = kosten;
+        this.importUmsetzung = importUmsetzung;
+        this.zeiten = zeiten;
+        this.sourceId = sourceId;
+    }
 
-	public ImportCreateBausteine(String sourceId, CnATreeElement element,
-			Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
-			List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung) {
-		this.element = element;
-		this.bausteineMassnahmenMap = bausteineMassnahmenMap;
-		this.kosten = kosten;
-		this.importUmsetzung = importUmsetzung;
-		this.zeiten = zeiten;
-		this.sourceId = sourceId;
-	}
+    public void execute() {
+        try {
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Reloading element " + element.getTitle());
+            }
+            IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+            element = (CnATreeElement) dao.findById(element.getDbId());
 
-	public void execute() {
-		try {
-			IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
-			element = (CnATreeElement) dao.findById(element.getDbId());
-			
-			LoadBausteine command = new LoadBausteine();
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-			this.bausteine = command.getBausteine();
-			
-			Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
-			for (MbBaust mbBaust : keySet) {
-					createBaustein(element, mbBaust, bausteineMassnahmenMap
-							.get(mbBaust));
-			}
-			
-		} catch (Exception e) {
-			throw new RuntimeCommandException(e);
-		}
-		
-	}
-	
-	private BausteinUmsetzung createBaustein(CnATreeElement element,
-			MbBaust mbBaust, List<BausteineMassnahmenResult> list
-			 )
-			throws Exception {
-		Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
-		
-		Integer refZobId = null;
-		isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
+            if (this.bsiConfig == null) {
+                // load bausteine from default config:
+                LoadBausteine command = new LoadBausteine();
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                this.bausteine = command.getBausteine();
+            } else {
+                // load bausteine from given config:
+                BSIMassnahmenModel model = GSScraperUtil.getInstance().getModel();
+                model.setBSIConfig(bsiConfig);
+                this.bausteine = model.loadBausteine(new IProgress() {
+
+                    public void beginTask(String name, int totalWork) {
+                    }
+
+                    public void done() {
+                    }
+
+                    public void setTaskName(String string) {
+                    }
+
+                    public void subTask(String string) {
+                    }
+
+                    public void worked(int work) {
+                    }
+                });
+            }
+            
+            Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
+            for (MbBaust mbBaust : keySet) {
+                createBaustein(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeCommandException(e);
+        }
+
+    }
+
+    private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
+        Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
+
+        Integer refZobId = null;
+        isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
             if (refZobId != null) {
                 break isReference;
             }
         }
-		
-		if (baustein != null) {
-		    if (refZobId == null) {
-		            CreateBaustein command = new CreateBaustein(element, baustein);
-		            command = ServiceFactory.lookupCommandService().executeCommand(command);
-		            BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
-		            
-		            if (list.iterator().hasNext()) {
-		                BausteineMassnahmenResult queryresult = list.iterator().next();
-		                transferBaustein(baustein, bausteinUmsetzung, queryresult);
-		                transferMassnahmen(bausteinUmsetzung, list);
-		            }
-		            return bausteinUmsetzung;
-		    }
-		}
-		return null;
-	}
-	
-	/**
+
+        if (baustein != null) {
+            if (refZobId == null) {
+                CreateBaustein command = new CreateBaustein(element, baustein);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
+
+                if (list.iterator().hasNext()) {
+                    BausteineMassnahmenResult queryresult = list.iterator().next();
+                    transferBaustein(baustein, bausteinUmsetzung, queryresult);
+                    transferMassnahmen(bausteinUmsetzung, list);
+                }
+                return bausteinUmsetzung;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return
      */
     private String createExtId(Baustein baustein, Integer refZobId) {
@@ -179,144 +208,124 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     private Baustein findBausteinForId(String id) {
-		for (Baustein baustein : bausteine) {
-			if (baustein.getId().equals(id))
-				return baustein;
-		}
-		return null;
-	}
+        for (Baustein baustein : bausteine) {
+            if (baustein.getId().equals(id))
+                return baustein;
+        }
+        return null;
+    }
 
-	private void transferBaustein(Baustein baustein, BausteinUmsetzung bausteinUmsetzung,
-			BausteineMassnahmenResult vorlage) {
-		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG,
-				vorlage.zoBst.getBegruendung());
-		bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,
-				parseDate(vorlage.zoBst.getDatum()));
-		
-		// set zobID as extId to find baustein references linking to it later on:
-		bausteinUmsetzung.setSourceId(sourceId);
-		bausteinUmsetzung.setExtId( createExtId(baustein, vorlage.obm.getId().getZobId()) );
-		if (getLog().isDebugEnabled()) {
+    private void transferBaustein(Baustein baustein, BausteinUmsetzung bausteinUmsetzung, BausteineMassnahmenResult vorlage) {
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, vorlage.zoBst.getBegruendung());
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(vorlage.zoBst.getDatum()));
+
+        // set zobID as extId to find baustein references linking to it later
+        // on:
+        bausteinUmsetzung.setSourceId(sourceId);
+        bausteinUmsetzung.setExtId(createExtId(baustein, vorlage.obm.getId().getZobId()));
+        if (getLog().isDebugEnabled()) {
             getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
         }
-		
 
-		// remember baustein for later:
-		if (alleBausteineToBausteinUmsetzungMap == null)
-			alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
-		
-		if (alleBausteineToZoBstMap == null)
-			alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
-		
-		alleBausteineToBausteinUmsetzungMap.put(vorlage.baustein,
-				bausteinUmsetzung);
-		alleBausteineToZoBstMap.put(vorlage.baustein, vorlage.zoBst);
-	}
-	
-	private String parseDate(Date date) {
-		if (date != null)
-			return Long.toString(date.getTime());
-		return "";
-	}
-	
-	private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung,
-			String gst_status) {
-		for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
-			if (UMSETZUNG_STATI_GST[i].equals(gst_status)) {
-				massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
-				return;
-			}
-		}
+        // remember baustein for later:
+        if (alleBausteineToBausteinUmsetzungMap == null)
+            alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
 
-	}
-	
-	private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung,
-			List<BausteineMassnahmenResult> list) {
-		List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung
-				.getMassnahmenUmsetzungen();
-		for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
-			BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(
-					massnahmenUmsetzung, list);
-			if (vorlage != null) {
+        if (alleBausteineToZoBstMap == null)
+            alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
 
-				if (importUmsetzung) {
-					// copy umsetzung:
-					Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
-					if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH)
-						massnahmenUmsetzung
-								.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
-					else
-						setUmsetzung(massnahmenUmsetzung, vorlage.umstxt
-								.getName());
-				}
+        alleBausteineToBausteinUmsetzungMap.put(vorlage.baustein, bausteinUmsetzung);
+        alleBausteineToZoBstMap.put(vorlage.baustein, vorlage.zoBst);
+    }
 
-				// copy fields:
-				transferMassnahme(massnahmenUmsetzung, vorlage);
+    private String parseDate(Date date) {
+        if (date != null)
+            return Long.toString(date.getTime());
+        return "";
+    }
 
-			} else {
-				// wenn diese massnahme unbearbeitet ist und keine vorlage
-				// existiert,
-				// kann trotzdem der gesamte baustein auf entbehrlich gesetzt
-				// sein:
-				if (importUmsetzung) {
-					if (list.iterator().hasNext()) {
-						BausteineMassnahmenResult result = list.iterator()
-								.next();
-						if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH)
-							massnahmenUmsetzung
-									.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
-					}
-				}
-			}
-		}
-	}
-	
-	private void transferMassnahme(MassnahmenUmsetzung massnahmenUmsetzung,
-			BausteineMassnahmenResult vorlage) {
-		if (importUmsetzung) {
-			// erlaeuterung und termin:
-			massnahmenUmsetzung.setSimpleProperty(
-					MassnahmenUmsetzung.P_ERLAEUTERUNG, vorlage.obm
-							.getUmsBeschr());
-			massnahmenUmsetzung.setSimpleProperty(
-					MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(vorlage.obm
-							.getUmsDatBis()));
-		}
+    private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gst_status) {
+        for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
+            if (UMSETZUNG_STATI_GST[i].equals(gst_status)) {
+                massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
+                return;
+            }
+        }
 
-		// transfer kosten:
-		if (kosten) {
-			ImportKostenUtil.importKosten(massnahmenUmsetzung, vorlage, zeiten);
-		}
+    }
 
-		// remember massnahme for later:
-		if (alleMassnahmen == null)
-			alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
-		alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
+    private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung, List<BausteineMassnahmenResult> list) {
+        List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
+        for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
+            BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
+            if (vorlage != null) {
 
-	}
-	
+                if (importUmsetzung) {
+                    // copy umsetzung:
+                    Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
+                    if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH)
+                        massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+                    else
+                        setUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
+                }
 
-	
+                // copy fields:
+                transferMassnahme(massnahmenUmsetzung, vorlage);
 
-	public HashMap<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {
-		return alleBausteineToBausteinUmsetzungMap;
-	}
+            } else {
+                // wenn diese massnahme unbearbeitet ist und keine vorlage
+                // existiert,
+                // kann trotzdem der gesamte baustein auf entbehrlich gesetzt
+                // sein:
+                if (importUmsetzung) {
+                    if (list.iterator().hasNext()) {
+                        BausteineMassnahmenResult result = list.iterator().next();
+                        if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH)
+                            massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+                    }
+                }
+            }
+        }
+    }
 
-	public HashMap<MbBaust, ModZobjBst> getAlleBausteineToZoBstMap() {
-		return alleBausteineToZoBstMap;
-	}
+    private void transferMassnahme(MassnahmenUmsetzung massnahmenUmsetzung, BausteineMassnahmenResult vorlage) {
+        if (importUmsetzung) {
+            // erlaeuterung und termin:
+            massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG, vorlage.obm.getUmsBeschr());
+            massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(vorlage.obm.getUmsDatBis()));
+        }
 
-	public HashMap<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
-		return alleMassnahmen;
-	}
-	
-	@Override
-	public void clear() {
-		// empty elements for transfer to client:
-		element = null;
-		bausteineMassnahmenMap = null;
-		zeiten=null;
-		bausteine = null;
-	}
+        // transfer kosten:
+        if (kosten) {
+            ImportKostenUtil.importKosten(massnahmenUmsetzung, vorlage, zeiten);
+        }
+
+        // remember massnahme for later:
+        if (alleMassnahmen == null)
+            alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
+        alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
+
+    }
+
+    public HashMap<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {
+        return alleBausteineToBausteinUmsetzungMap;
+    }
+
+    public HashMap<MbBaust, ModZobjBst> getAlleBausteineToZoBstMap() {
+        return alleBausteineToZoBstMap;
+    }
+
+    public HashMap<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
+        return alleMassnahmen;
+    }
+
+    @Override
+    public void clear() {
+        // empty elements for transfer to client:
+        element = null;
+        bausteineMassnahmenMap = null;
+        zeiten = null;
+        bausteine = null;
+    }
 
 }

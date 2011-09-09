@@ -45,6 +45,7 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -345,8 +346,15 @@ public class ImportTask {
         this.monitor.subTask("Erstelle Bausteinreferenzen für" + zielobjekt.getName() 
                 );
         
-        ImportCreateBausteinReferences command = new ImportCreateBausteinReferences(sourceId,
-                element, bausteineMassnahmenMap);
+        ImportCreateBausteinReferences command;
+        ServiceFactory.lookupAuthService();
+        if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            command = new ImportCreateBausteinReferences(sourceId,
+                  element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal());
+        } else {
+            command = new ImportCreateBausteinReferences(sourceId,
+                    element, bausteineMassnahmenMap);
+        }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
     }
 
@@ -579,9 +587,19 @@ public class ImportTask {
 				+ " mit " + bausteineMassnahmenMap.keySet().size() + " Bausteinen und "
 				+ getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massnahmen...");
 		
-		ImportCreateBausteine command = new ImportCreateBausteine(sourceId,
-				element, bausteineMassnahmenMap, zeiten,
-				kosten, importUmsetzung);
+		
+		ImportCreateBausteine command;
+		  ServiceFactory.lookupAuthService();
+        if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            command = new ImportCreateBausteine(sourceId,
+                    element, bausteineMassnahmenMap, zeiten,
+                    kosten, importUmsetzung, new BSIConfigurationRCPLocal());
+        } else {
+            command = new ImportCreateBausteine(sourceId,
+                    element, bausteineMassnahmenMap, zeiten,
+                    kosten, importUmsetzung);
+        }
+		
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		
 		if (command.getAlleBausteineToBausteinUmsetzungMap()!=null)
