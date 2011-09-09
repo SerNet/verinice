@@ -123,10 +123,10 @@ public class BSIElementEditor extends EditorPart {
             monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
             save(true);
            
+            // Refresh other views in background
             Job job = new RefreshJob("Refresh application...");
             job.setRule(new RefreshJobRule());
-            // Start the Job
-            job.schedule();
+            job.schedule(Job.BUILD);
 
             // TODO akoderman we need a way to close (with save dialog) or
             // update editors of objects that have been changed in the database,

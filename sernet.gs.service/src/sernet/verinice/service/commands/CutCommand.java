@@ -126,13 +126,13 @@ public class CutCommand extends GenericCommand {
     }
     
     private CnATreeElement move(CnATreeElement group, CnATreeElement element) throws Exception {
- 
-        group.removeChild(element);
+        CnATreeElement parentOld = element.getParent();
+        parentOld.removeChild(element);
         
         // save old parent
-        UpdateElement command = new UpdateElement(group, true, ChangeLogEntry.STATION_ID);
+        UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
-        group = (CnATreeElement) command.getElement();
+        parentOld = (CnATreeElement) command.getElement();
           
         element.setParent(group);
         group.addChild(element);
@@ -160,7 +160,7 @@ public class CutCommand extends GenericCommand {
         int depth = 0;
         int removed = 0;
         for (String uuid : uuidList) {
-            CnATreeElement element = getDao().findByUuid(uuid, RetrieveInfo.getChildrenInstance());
+            CnATreeElement element = getDao().findByUuid(uuid, RetrieveInfo.getChildrenInstance().setParent(true));
             createInsertList(element,tempList,insertList, depth, removed);
         }
         return insertList;

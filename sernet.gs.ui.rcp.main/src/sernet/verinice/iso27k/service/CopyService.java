@@ -103,7 +103,7 @@ public class CopyService extends PasteService implements IProgressTask {
 			cc = getCommandService().executeCommand(cc);
 			numberOfElements = cc.getNumber();
 			progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
-			    CnAElementFactory.getInstance().reloadModelFromDatabase();
+			CnAElementFactory.getInstance().reloadModelFromDatabase();
 		} catch (Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$

@@ -19,10 +19,14 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import org.apache.log4j.Logger;
+import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
 import org.springframework.remoting.httpinvoker.SimpleHttpInvokerRequestExecutor;
+import org.springframework.remoting.support.RemoteInvocationResult;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -30,6 +34,8 @@ import org.springframework.remoting.httpinvoker.SimpleHttpInvokerRequestExecutor
  */
 public class RequestExecuter extends SimpleHttpInvokerRequestExecutor {
 
+    private static final Logger LOG = Logger.getLogger(RequestExecuter.class);
+    
     private int readTimeout = -1;
 
     /**
@@ -72,5 +78,16 @@ public class RequestExecuter extends SimpleHttpInvokerRequestExecutor {
      */
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.springframework.remoting.httpinvoker.SimpleHttpInvokerRequestExecutor#doExecuteRequest(org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration, java.io.ByteArrayOutputStream)
+     */
+    @Override
+    protected RemoteInvocationResult doExecuteRequest(HttpInvokerClientConfiguration config, ByteArrayOutputStream baos) throws IOException, ClassNotFoundException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("doExecuteRequest: " + config.getServiceUrl(), new RuntimeException());
+        }
+        return super.doExecuteRequest(config, baos);
     }
 }

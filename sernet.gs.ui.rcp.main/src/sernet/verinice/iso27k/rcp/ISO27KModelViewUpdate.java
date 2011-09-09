@@ -20,6 +20,11 @@
 package sernet.verinice.iso27k.rcp;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import com.sun.xml.messaging.saaj.util.LogDomainConstants;
@@ -256,12 +261,18 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
      */
     public void modelReload(ISO27KModel newModel) {
         try {
+            Object[] expandedElements = viewer.getExpandedElements();
             // remove listener from currently displayed model:
             getModel(viewer.getInput()).removeISO27KModelListener(this);
             newModel.addISO27KModelListener(this);
             cache.clear();
             updater.setInput(newModel);
             updater.refresh();
+            
+            // Expand elements in background
+            Job job = new ExpandJob(expandedElements);
+            job.setRule(new ExpandJobRule());
+            job.schedule(Job.DECORATE);
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);
         }
@@ -287,6 +298,44 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
         // input is not part of a proper tree / no BSIModel object could be
         // found as parent:
         return null;
+    }
+    
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class ExpandJobRule implements ISchedulingRule {
+        public boolean contains(ISchedulingRule rule) {
+            return rule.getClass() == ExpandJobRule.class;
+        }
+
+        public boolean isConflicting(ISchedulingRule rule) {
+            return rule.getClass() == ExpandJobRule.class;
+        }
+    }
+
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class ExpandJob extends Job {
+        
+        Object [] elements;
+        
+        /**
+         * @param name
+         */
+        private ExpandJob(Object [] elements) {
+            super("Expanding");
+            this.elements = elements;
+        }
+
+        @Override
+        protected IStatus run(IProgressMonitor monitor) {
+            monitor.setTaskName("Expanding element tree...");
+            viewer.setExpandedElements(elements);
+            return Status.OK_STATUS;
+        }
     }
 
 }
