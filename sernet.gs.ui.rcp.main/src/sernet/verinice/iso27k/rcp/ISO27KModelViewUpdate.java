@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
@@ -37,6 +39,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.PerspectiveSwitcher;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -49,6 +52,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
     private TreeViewer viewer;
     private TreeViewerCache cache;
     private ThreadSafeViewerUpdate updater;
+    Object[] expandedElements = null;
 
     public ISO27KModelViewUpdate(TreeViewer viewer, TreeViewerCache cache) {
         super();
@@ -261,7 +265,16 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
      */
     public void modelReload(ISO27KModel newModel) {
         try {
-            Object[] expandedElements = viewer.getExpandedElements();
+            Display.getDefault().syncExec(new Runnable() {
+                public void run() {
+                    try {
+                        expandedElements = viewer.getExpandedElements();
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            });
+            
             // remove listener from currently displayed model:
             getModel(viewer.getInput()).removeISO27KModelListener(this);
             newModel.addISO27KModelListener(this);
@@ -333,7 +346,15 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
         @Override
         protected IStatus run(IProgressMonitor monitor) {
             monitor.setTaskName("Expanding element tree...");
-            viewer.setExpandedElements(elements);
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    try {
+                        viewer.setExpandedElements(elements);
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            });         
             return Status.OK_STATUS;
         }
     }

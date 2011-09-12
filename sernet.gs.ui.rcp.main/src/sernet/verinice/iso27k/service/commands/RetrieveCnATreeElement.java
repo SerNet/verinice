@@ -134,7 +134,8 @@ public class RetrieveCnATreeElement extends GenericCommand {
                 filterSet.add(new TypeFilter(typeIdSet));
             }
             String[] tagArray = (String[]) parameter.get(PARAM_TAGS);
-            boolean filterOrgs = parameter.containsKey(PARAM_FILTER_ORGS);
+            Object filterOrgsParam = parameter.get(PARAM_FILTER_ORGS);
+            boolean filterOrgs = filterOrgsParam!=null && ((Boolean)filterOrgsParam).booleanValue();
             if(tagArray!=null && tagArray.length>0) {
                 filterSet.add(new TagFilter(tagArray,filterOrgs));
             }
@@ -247,22 +248,39 @@ public class RetrieveCnATreeElement extends GenericCommand {
          */
         @Override
         public boolean check(CnATreeElement element) {
-            boolean result = true; 
-            if (element instanceof IISO27kElement 
-                && !(element instanceof Group)
-                && (!(element instanceof IISO27Scope) || filterOrgs)
-                && tagArray!=null) {
-                result = false;
-                IISO27kElement iso = (IISO27kElement) element;
-                for (String tag : tagArray) {
-                    if (tag.equals(NO_TAG)) {
-                        if (iso.getTags().size() < 1) {
-                            result = true;
+            boolean result = true;
+            if(tagArray!=null && tagArray.length>0) {
+                if(filterOrgs && element instanceof IISO27Scope) {
+                    IISO27kElement iso = (IISO27kElement) element;
+                    result = false;
+                    for (String tag : tagArray) {
+                        if (tag.equals(NO_TAG)) {
+                            if (iso.getTags().size() < 1) {
+                                result = true;
+                            }
+                        }
+                        for (String zielTag : iso.getTags()) {
+                            if (zielTag.equals(tag)) {
+                                result = true;
+                            }
                         }
                     }
-                    for (String zielTag : iso.getTags()) {
-                        if (zielTag.equals(tag)) {
-                            result = true;
+                } else if (!filterOrgs
+                    &&   element instanceof IISO27kElement 
+                    && !(element instanceof Group)
+                    && !(element instanceof IISO27Scope)) {
+                    result = false;
+                    IISO27kElement iso = (IISO27kElement) element;
+                    for (String tag : tagArray) {
+                        if (tag.equals(NO_TAG)) {
+                            if (iso.getTags().size() < 1) {
+                                result = true;
+                            }
+                        }
+                        for (String zielTag : iso.getTags()) {
+                            if (zielTag.equals(tag)) {
+                                result = true;
+                            }
                         }
                     }
                 }

@@ -269,15 +269,15 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         Map<String, Object> result = null;
         if(paramerterList!=null && !paramerterList.isEmpty()) {
             result = new Hashtable<String, Object>();
-            for (IParameter filter : paramerterList) {
-               if(filter instanceof TypeFilter) {              
-                   Set<String[]> typeIdSet = (Set<String[]>) filter.getParameter();
+            for (IParameter param : paramerterList) {
+               if(param instanceof TypeFilter) {              
+                   Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
                    if(typeIdSet.size()>1 || !typeIdSet.iterator().next().equals(RetrieveCnATreeElement.ALL_TYPES)) {
                        result.put(RetrieveCnATreeElement.PARAM_TYPE_IDS, typeIdSet);
                    }                                
                }
-               if(filter instanceof TagFilter ) {
-                   TagFilter tagFilter = (TagFilter) filter;
+               if(param instanceof TagFilter ) {
+                   TagFilter tagFilter = (TagFilter) param;
                    String[] tagArray = tagFilter.getPattern();
                    if(tagArray!=null && tagArray.length>0) {
                        result.put(RetrieveCnATreeElement.PARAM_TAGS, tagFilter.getPattern());

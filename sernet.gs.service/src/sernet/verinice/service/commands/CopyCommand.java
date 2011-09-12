@@ -70,7 +70,7 @@ public class CopyCommand extends GenericCommand {
     
     List<String> uuidList;
     
-    private List<CnATreeElement> copyElements;
+    private transient List<CnATreeElement> copyElements;
     
     private List<IPostProcessor> postProcessorList;
     
@@ -162,10 +162,15 @@ public class CopyCommand extends GenericCommand {
                 newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
             }
         }
+        // Save element
         SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = (CnATreeElement) saveCommand.getElement();
         newElement.setParent(toGroup);
+        // Save group/parent
+        saveCommand = new SaveElement<CnATreeElement>(toGroup);
+        saveCommand = getCommandService().executeCommand(saveCommand);
+        toGroup = (CnATreeElement) saveCommand.getElement();
         if (getLog().isDebugEnabled()) {
             getLog().debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
         }
@@ -178,7 +183,7 @@ public class CopyCommand extends GenericCommand {
         CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(container, (Class<CnATreeElement>) element.getClass(), title, true, false);
         saveCommand = getCommandService().executeCommand(saveCommand);
         CnATreeElement child = saveCommand.getNewElement();
-        container.addChild(child);
+        container.addChild(element);
         child.setParent(container);
         return child;
     }
@@ -269,6 +274,20 @@ public class CopyCommand extends GenericCommand {
      */
     public void setUuidList(List<String> uuidList) {
         this.uuidList = uuidList;
+    }
+
+    /**
+     * @return the selectedGroup
+     */
+    public CnATreeElement getSelectedGroup() {
+        return selectedGroup;
+    }
+
+    /**
+     * @param selectedGroup the selectedGroup to set
+     */
+    public void setSelectedGroup(CnATreeElement selectedGroup) {
+        this.selectedGroup = selectedGroup;
     }
 
     /**
