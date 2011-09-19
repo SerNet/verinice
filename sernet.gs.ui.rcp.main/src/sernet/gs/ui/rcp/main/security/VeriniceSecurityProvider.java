@@ -37,6 +37,9 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.KeyManagerFactorySpi;
 import javax.net.ssl.ManagerFactoryParameters;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.TrustManagerFactorySpi;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
@@ -93,10 +96,12 @@ public final class VeriniceSecurityProvider extends Provider {
 			// the constructor and the init() method).
 			provider.init();
 			
-			// Routes KeyManager calls through our code.
+			// Routes Key- and TrustManager calls through our code.
 			Security.setProperty("ssl.KeyManagerFactory.algorithm", "verinice");
+			Security.setProperty("ssl.TrustManagerFactory.algorithm", "verinice");
 
-			// Routes KeyStore generation through our code.
+			// Routes Key- and TrustStore generation through our code.
+			System.setProperty("javax.net.ssl.trustStoreType", "verinice-ts");
 			System.setProperty("javax.net.ssl.keyStoreType", "verinice-ks");
 		} else if (prefs.getBoolean(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED))
 		{
@@ -118,8 +123,12 @@ public final class VeriniceSecurityProvider extends Provider {
 	private void init() {
 		putService(new Service(this, "KeyManagerFactory", "verinice",
 				DelegatingKeyManagerFactory.class.getName(), null, null));
+		putService(new Service(this, "TrustManagerFactory", "verinice",
+				DelegatingTrustManagerFactory.class.getName(), null, null));
 		putService(new Service(this, "KeyStore", "verinice-ks",
 				VeriniceKeyStore.class.getName(), null, null));
+		putService(new Service(this, "KeyStore", "verinice-ts",
+				VeriniceTrustStore.class.getName(), null, null));
 		
 		if (isPKCS11LibraryEnabled()) {
 		    if (LOG.isInfoEnabled()) {
@@ -177,6 +186,18 @@ public final class VeriniceSecurityProvider extends Provider {
 		return password;
 	}
 
+	void initTrustStore(KeyStore ks) throws NoSuchAlgorithmException,
+			CertificateException, IOException, UnrecoverableKeyException,
+			KeyStoreException {
+		// If no file is mentioned we cannot initialize the key store.
+		if (!useFileAsTrustStore())
+			return;
+
+		String trustStoreFile = getTrustStoreFile();
+
+		loadKeystore(ks, trustStoreFile, null);
+	}
+
 	char[] getKeyStorePassword(boolean wasWrong) {
 		return holder.getKeyStorePassword(wasWrong);
 	}
@@ -202,16 +223,28 @@ public final class VeriniceSecurityProvider extends Provider {
 
 	}
 
+	private boolean useFileAsTrustStore() {
+		return PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE.equals(prefs.getString(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE));
+	}
+
 	private boolean useFileAsKeyStore() {
 		return PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_FILE.equals(prefs.getString(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE));
 	}
 	
 	private boolean isPKCS11LibraryEnabled() {
-		return prefs.getBoolean(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED) || usePKCS11LibraryAsKeyStore();
+		return prefs.getBoolean(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_ENABLED) || usePKCS11LibraryAsKeyStore() || usePKCS11LibraryAsTrustStore();
+	}
+	
+	private boolean usePKCS11LibraryAsTrustStore() {
+		return PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY.equals(prefs.getString(PreferenceConstants.CRYPTO_TRUSTSTORE_SOURCE));
 	}
 
 	private boolean usePKCS11LibraryAsKeyStore() {
 		return PreferenceConstants.CRYPTO_KEYSTORE_SOURCE_FROM_PKCS11_LIBRARY.equals(prefs.getString(PreferenceConstants.CRYPTO_KEYSTORE_SOURCE));
+	}
+
+	private String getTrustStoreFile() {
+		return prefs.getString(PreferenceConstants.CRYPTO_TRUSTSTORE_FILE);
 	}
 
 	private String getKeyStoreFile() {
@@ -404,6 +437,109 @@ public final class VeriniceSecurityProvider extends Provider {
 	}
 
 	/**
+	 * A {@link TrustManagerFactorySpi} implementation that uses the {@link VeriniceSecurityProvider}
+	 * to initialize {@link KeyStore} objects but then delegates to the default implementation
+	 * called 'PKIX'.
+	 * 
+	 * <p>This approach allows defining our own way to retrieve the key store content and
+	 * credentials (for use with SSL connections).</p>
+	 * 
+	 * <p>A trust store is used to verify server certificates.</p>
+	 *
+	 */
+	public static class DelegatingTrustManagerFactory extends
+			TrustManagerFactorySpi {
+
+		TrustManager[] trustManagers;
+
+		public DelegatingTrustManagerFactory() {
+			// Default constructor
+		}
+
+		@Override
+		protected TrustManager[] engineGetTrustManagers() {
+			return trustManagers;
+		}
+
+		@Override
+		protected void engineInit(ManagerFactoryParameters spec)
+				throws InvalidAlgorithmParameterException {
+			throw new IllegalStateException("Not implemented");
+		}
+
+		@Override
+		protected void engineInit(KeyStore ks) throws KeyStoreException {
+			try {
+				// calling back into VeriniceSecurityProvider
+				INSTANCE.initTrustStore(ks);
+
+				// Like with the KeyManager the behavior is that of the reference implementation.
+				TrustManagerFactory tmf = TrustManagerFactory
+						.getInstance("PKIX");
+				tmf.init(ks);
+				trustManagers = tmf.getTrustManagers();
+
+			} catch (CertificateException e) {
+				throw new KeyStoreException(e);
+			} catch (IOException e) {
+				throw new KeyStoreException(e);
+			} catch (UnrecoverableKeyException e) {
+				throw new KeyStoreException(e);
+			} catch (NoSuchAlgorithmException e) {
+				throw new KeyStoreException(e);
+			}
+		}
+
+	}
+	
+	/**
+	 * Implementation of a {@link KeyStoreSpi} that delegates all its
+	 * call to another implementation. Which one that is depends the user's
+	 * configuration (and this is the sole reason for having this class in
+	 * the first place).
+	 * 
+	 * TODO: One could easily support other keystore formats (like pkcs#12) if
+	 * the type (right now: 'jks') could be changed to something else by the user.
+	 *
+	 */
+	public static class VeriniceTrustStore extends DelegatingKeyStore {
+		public VeriniceTrustStore() {
+			super();
+		}
+		
+		@Override
+		protected Configuration init() {
+			Configuration c = new Configuration();
+			try {
+				// If the user wants to use a smartcard/token for doing *server* certificate
+				// validation, the 'PKCS11' algorithm from the 'SunPKCS11-verinice' provider
+				// needs to be used. (The '-verinice' suffix is because of the 'name' attribute
+				// in the configuration file used by the SunPKCS class.
+				if (INSTANCE.usePKCS11LibraryAsTrustStore()) {
+					// Adding a password protection callback is not possible for this kind
+					// of keystore using the KeyStore.Builder API.
+					c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+				}
+				else {
+					// Although theoretically possible trust stores are supposed to be not password protected 
+					c.passwordHandler = null;
+					
+					// TODO: If the type would changeable one could load other storetypes as well (e.g. standardized
+					// pkcs#12 files)
+					c.keyStore = KeyStore.getInstance("jks");
+				}
+			} catch (KeyStoreException e) {
+				throw new RuntimeException(e);
+			}
+			catch (NoSuchProviderException e) {
+				throw new RuntimeException(e);
+			}
+			
+			return c;
+		}
+	}
+
+	/**
 	 * See {@link VeriniceTrustStore} for why this class exists and what it does.
 	 */
 	public static class VeriniceKeyStore extends DelegatingKeyStore {
@@ -426,35 +562,9 @@ public final class VeriniceSecurityProvider extends Provider {
 				// 'name' attribute
 				// in the configuration file used by the SunPKCS class.
 				if (INSTANCE.usePKCS11LibraryAsKeyStore()) {
-					
-				    if (LOG.isInfoEnabled()) {
-                        LOG.info("Using PKCS11 library as keystore");
-                    }
-				    
-				    String alias = INSTANCE.getCertificateAlias();
-				    if(alias!=null && alias.isEmpty()) {
-				        alias = null;
-				    }
-					c.certificateAlias = alias;
-					try {
-    					// Adding a password protection callback is not possible for this kind
-                        // of keystore using the KeyStore.Builder API.             
-                        c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
-    					
-    					// For other PKCS#11 driver than CardOS try this code to prompt for pin only once:
-                        /*
-    					char[] pin = INSTANCE.getKeyStorePassword(passwordWasWrong);
-    					KeyStore.PasswordProtection pp = new KeyStore.PasswordProtection(pin);			
-    				    c.keyStore = KeyStore.Builder.newInstance("PKCS11", Security.getProvider("SunPKCS11-verinice"), pp).getKeyStore();							    
-    				    c.keyStore.load(null, pin);
-    				    passwordWasWrong=false;				
-    		            */
-					} catch (Exception e) {
-                        //passwordWasWrong=true;
-                        LOG.error("Keystore exception", e);                                
-                    }
-		            
-
+					// Adding a password protection callback is not possible for this kind
+					// of keystore using the KeyStore.Builder API.
+					c.keyStore = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
 				} else {
 				    if (LOG.isDebugEnabled()) {
                         LOG.debug("Using jks key store");
@@ -470,7 +580,9 @@ public final class VeriniceSecurityProvider extends Provider {
 				}
 			} catch (KeyStoreException e) {
 				throw new RuntimeException(e);
-			} 
+			} catch (NoSuchProviderException e) {
+				throw new RuntimeException(e);
+			}
 			
 			return c;
 		}

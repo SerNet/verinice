@@ -175,23 +175,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
 		Preferences prefs = getPluginPreferences();
 		
-		/*
-		if(prefs.getBoolean(PreferenceConstants.CRYPTO_IAIK)) {
-    		try {
-    		    String pkcs11Driver = prefs.getString(PreferenceConstants.CRYPTO_PKCS11_LIBRARY_PATH);
-    		    if (LOG.isDebugEnabled()) {
-                    LOG.debug("IAIK is eableded, using driver: " + pkcs11Driver);
-                }
-        		Properties pkcs11config = new Properties();   		
-        	    pkcs11config.put("PKCS11_NATIVE_MODULE", pkcs11Driver);
-        	    IAIKPkcs11 provider = new IAIKPkcs11(pkcs11config);
-        	    Security.addProvider(provider);
-    		} catch (Exception e) {
-                LOG.error("Error while registering IAIK security provider.", e);
-            }
-	    }
-		*/
-		
 		// May replace the JDK's built-in security settings
         try {
             VeriniceSecurityProvider.register(prefs);

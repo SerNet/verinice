@@ -19,7 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -38,6 +41,13 @@ public class Initializer implements IStartup {
 		final StatusResult result = Activator.startServer();
 		Activator.initDatabase(JobScheduler.getInitMutex(),result);
 		Activator.createModel(JobScheduler.getInitMutex(),result);
+		 Display.getDefault().asyncExec(new Runnable() {
+             public void run() {
+                 MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Init", "Alle System hochgefahren.");
+             }
+         });
+		
+
 	}
 
 }

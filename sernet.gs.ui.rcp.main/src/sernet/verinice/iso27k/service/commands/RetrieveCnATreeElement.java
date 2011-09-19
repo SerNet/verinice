@@ -30,6 +30,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -250,7 +251,9 @@ public class RetrieveCnATreeElement extends GenericCommand {
         public boolean check(CnATreeElement element) {
             boolean result = true;
             if(tagArray!=null && tagArray.length>0) {
-                if(filterOrgs && element instanceof IISO27Scope) {
+                if(filterOrgs 
+                   && element instanceof IISO27Scope
+                   && !(element instanceof Audit) ) {
                     IISO27kElement iso = (IISO27kElement) element;
                     result = false;
                     for (String tag : tagArray) {
