@@ -41,13 +41,6 @@ public class Initializer implements IStartup {
 		final StatusResult result = Activator.startServer();
 		Activator.initDatabase(JobScheduler.getInitMutex(),result);
 		Activator.createModel(JobScheduler.getInitMutex(),result);
-		 Display.getDefault().asyncExec(new Runnable() {
-             public void run() {
-                 MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Init", "Alle System hochgefahren.");
-             }
-         });
-		
-
 	}
 
 }
