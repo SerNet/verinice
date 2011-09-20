@@ -33,7 +33,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MassnahmenSummaryHome {
-
+    
 	public Map<String, Integer> getNotCompletedZyklusSummary() throws CommandException {
 		IncompleteZyklusSummary command = new IncompleteZyklusSummary();
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -83,13 +83,29 @@ public class MassnahmenSummaryHome {
      * @throws CommandException 
      */
     public Map<String, Double> getControlGroups(ControlGroup elmt) throws CommandException {
-        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_IMPLEMENTATION);
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.TYPE_IMPLEMENTATION);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+    }
+
+    public Map<String, Double> getControlGroupsISR(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.ISR_TYPE_IMPLEMENTATION);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
     }
 
     public Map<String, Double> getControlMaxGroups(ControlGroup elmt) throws CommandException {
-        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_MAX);
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.TYPE_MAX);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+    }
+
+    public Map<String, Double> getControlMaxGroupsISR(ControlGroup elmt) throws CommandException {
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.ISR_TYPE_MAX);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
     }
@@ -100,7 +116,8 @@ public class MassnahmenSummaryHome {
      * @throws CommandException 
      */
     public Map<String, Double> getControlGoal1Groups(ControlGroup elmt) throws CommandException {
-        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD1);
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD1);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
 
@@ -117,7 +134,8 @@ public class MassnahmenSummaryHome {
      * @throws CommandException 
      */
     public Map<String, Double> getControlGoal2Groups(ControlGroup elmt) throws CommandException {
-        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD2);
+        MaturitySummary command = new MaturitySummary(elmt.getEntity().getEntityType(), 
+                elmt.getEntity().getDbId(), MaturitySummary.TYPE_THRESHOLD2);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
         

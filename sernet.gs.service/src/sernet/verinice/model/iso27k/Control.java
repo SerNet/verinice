@@ -33,7 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 @SuppressWarnings("serial")
-public class Control extends CnATreeElement implements IISO27kElement, IControl {
+public class Control extends CnATreeElement implements IISO27kElement, IControl, IISRControl {
 
 	public static final String TYPE_ID = "control"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "control_abbr"; //$NON-NLS-1$
@@ -50,7 +50,11 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
 	public static final String PROP_WEIGHT2 = "control_ownweight"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
-    public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
+
+	// ISR properties:
+	public static final String PROP_ISR_MATURITY = "control_isr_maturity"; //$NON-NLS-1$
+	public static final String PROP_ISR_MATURITY_QUANTITY = "control_isr_quantity_of_maturity"; //$NON-NLS-1$
 	
 	public static final String PROP_EFFECTIVENESS_CONFIDENTIALITY ="control_effectiveness_confidentiality"; 
     public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
@@ -217,6 +221,30 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl 
     @Override
     public String getMaturityPropertyId() {
         return PROP_MATURITY;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISRControl#getISRMaturity()
+     */
+    @Override
+    public int getISRMaturity() {
+        return getEntity().getInt(PROP_ISR_MATURITY);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISRControl#getISRMaturityQuantity()
+     */
+    @Override
+    public String getISRMaturityQuantity() {
+        return getEntity().getSimpleValue(PROP_ISR_MATURITY_QUANTITY);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IISRControl#getISRPropertyId()
+     */
+    @Override
+    public String getISRPropertyId() {
+        return PROP_ISR_MATURITY;
     }
 
 }

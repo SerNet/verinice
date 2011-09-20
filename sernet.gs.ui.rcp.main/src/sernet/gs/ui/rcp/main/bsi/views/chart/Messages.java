@@ -56,6 +56,12 @@ public class Messages extends NLS {
     public static String MaturitySpiderChart_3;
     public static String MaturitySpiderChart_4;
     public static String MaturitySpiderChart_5;
+    public static String ISRSpiderChart_0;
+    public static String ISRSpiderChart_1;
+    public static String ISRSpiderChart_2;
+    public static String ISRSpiderChart_3;
+    public static String ISRSpiderChart_4;
+    public static String ISRSpiderChart_5;
 	public static String RealisierungLineChart_0;
 	public static String RealisierungLineChart_1;
 	public static String RealisierungLineChart_2;

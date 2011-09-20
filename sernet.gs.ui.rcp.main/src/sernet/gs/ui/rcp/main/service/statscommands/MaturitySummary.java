@@ -44,6 +44,9 @@ public class MaturitySummary extends GenericCommand {
     public static final int TYPE_THRESHOLD1 = 1;
     public static final int TYPE_THRESHOLD2 = 2;
     public static final int TYPE_MAX = 3;
+
+    public static final int ISR_TYPE_IMPLEMENTATION = 4;
+    public static final int ISR_TYPE_MAX = 7;
     
     Map<String, Double> maturity = new HashMap<String, Double>();
     private Integer dbId;
@@ -95,7 +98,9 @@ public class MaturitySummary extends GenericCommand {
      * @param group
      */
     private void getSummary(ControlGroup group) {
-        ControlMaturityService maturityService = new ControlMaturityService();
+        ControlMaturityService maturityService = new ControlMaturityService(ControlMaturityService.TYPE_MATURITY);
+        ControlMaturityService isrService = new ControlMaturityService(ControlMaturityService.TYPE_ISR);
+        
         if (type == TYPE_MAX)
             maturity.put(group.getTitle(), maturityService.getMaxMaturityValue(group));
         else if (type == TYPE_IMPLEMENTATION)
@@ -104,6 +109,10 @@ public class MaturitySummary extends GenericCommand {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD1));
         else if (type == TYPE_THRESHOLD2)
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
+        else if (type == ISR_TYPE_MAX) 
+            maturity.put(group.getTitle(), isrService.getMaxMaturityValue(group));
+        else if (type == ISR_TYPE_IMPLEMENTATION) 
+            maturity.put(group.getTitle(), isrService.getMaturityByWeight(group));
     }
 
     

@@ -25,6 +25,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.IISRControl;
 
 /**
  * 
@@ -37,6 +38,20 @@ import sernet.verinice.model.iso27k.IControl;
  */
 public class ControlMaturityService {
     private static final Logger LOG = Logger.getLogger(ControlMaturityService.class);
+    
+    private int type = 0;
+    
+    public static final int TYPE_MATURITY = 0;
+    public static final int TYPE_ISR = 1;
+    
+    public ControlMaturityService() {
+        this(TYPE_MATURITY);
+    }
+    
+    public ControlMaturityService(int type) {
+        this.type = type;
+    }
+    
     
     /**
      * Calculate accumulated maturity times weight of each control contained in this group.
@@ -65,13 +80,23 @@ public class ControlMaturityService {
         int maturity = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-                maturity += ((IControl)child).getMaturity();
+                maturity += getMaturity((IControl)child);
             }
             if (child instanceof ControlGroup) {
                 maturity += getMaturity((ControlGroup) child);
             }
         }
         return maturity;
+    }
+    
+    public int getMaturity(IControl control) {
+        if (this.type == TYPE_ISR) {
+            IISRControl isrControl = (IISRControl) control;
+            return isrControl.getISRMaturity();
+        } 
+        else {
+            return control.getMaturity();
+        }
     }
     
     public Double getMaturityByWeight(ControlGroup cg) {
@@ -104,7 +129,7 @@ public class ControlMaturityService {
      * @return
      */
     public Integer getWeightedMaturity(IControl contr) {
-        int value = contr.getMaturity() * contr.getWeight2();
+        int value = getMaturity(contr) * contr.getWeight2();
         return value;
     }
     
@@ -138,7 +163,13 @@ public class ControlMaturityService {
     
     private Double getMaxMaturityValue(IControl control) {
         HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-        PropertyType propertyType = hui.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
+        PropertyType propertyType;
+        if (type == TYPE_MATURITY) {
+            propertyType = hui.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
+        }
+        else {
+            propertyType = hui.getPropertyType(control.getTypeId(), ((IISRControl)control).getISRPropertyId());
+        }
         return Double.valueOf(propertyType.getMaxValue());
     }
     
@@ -196,10 +227,10 @@ public class ControlMaturityService {
      */
     public String getImplementationState(IControl control) {
     	String state = IControl.IMPLEMENTED_NO;
-    	if (control.getMaturity() >= control.getThreshold1()) {
+    	if (getMaturity(control) >= control.getThreshold1()) {
     		state = IControl.IMPLEMENTED_PARTLY;
     	}
-    	if (control.getMaturity() >= control.getThreshold2()) {
+    	if (getMaturity(control) >= control.getThreshold2()) {
     		state = IControl.IMPLEMENTED_YES;
     	}
     	return state;
@@ -214,19 +245,10 @@ public class ControlMaturityService {
      */
     public String getIsaState(IControl control) {
         
-        if (control.getMaturity() == IControl.IMPLEMENTED_NOTEDITED_NUMERIC) {
+        if (getMaturity(control) == IControl.IMPLEMENTED_NOTEDITED_NUMERIC) {
             return IControl.IMPLEMENTED_NOTEDITED;
         }
         return IControl.IMPLEMENTED_YES;
-        
-//        
-//        if (control.getMaturity() >= control.getThreshold2()) {
-//            return IControl.IMPLEMENTED_YES;
-//        }
-//        if (control.getMaturity() >= control.getThreshold1()) {
-//            return IControl.IMPLEMENTED_PARTLY;
-//        }
-//        return IControl.IMPLEMENTED_PARTLY;
     }
     
       
