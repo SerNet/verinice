@@ -3029,7 +3029,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="org_name" 
             focus="true"
             tags="Risk,VDA-ISA" />
-            
+        
         <huiproperty
             name="Description"
             id="org_description" 
@@ -3852,7 +3852,39 @@ the value between <param></param> will be used directly if no string is found fo
             id="audit_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
-        <huiproperty 
+     	<huipropertygroup id="audit_isr_group" name="Information Security Reporting" tags="Information Security Reporting" >
+	 <huiproperty
+            id="audit_isr_approval"
+            name="Approval"
+            tags="Information Security Reporting" 
+           />
+	 <huiproperty
+            id="audit_isr_year"
+            name="Year of Report"
+            tags="Information Security Reporting" 
+            />
+	 <huiproperty
+            id="audit_isr_version"
+            name="Version of Catalog"
+            tags="Information Security Reporting" 
+           />
+	  <huiproperty 
+       		id="audit_isr_classfc" 
+		name="Classification" 
+        	inputtype="numericoption" 
+		min="0" 
+		max="3" 
+		defaultValue="2"
+		focus="true"
+	        tags="Information Security Reporting" >
+	       <option name="Strictly Confidential" id="audit_isr_classfc_strictly_confidential" value="3"/>
+	       <option name="Confidential" id="audit_isr_classfc_confidential" value="2"/>
+	       <option name="Internal Use" id="audit_isr_classfc_internal" value="1"/>
+	       <option name="Public" id="audit_isr_classfc_public" value="0"/>
+        </huiproperty>
+        </huipropertygroup>
+	
+	<huiproperty 
        		name="Type" id="audit_type" inputtype="singleoption">
 			<option name="1st Party" id="audit_type_1st" />       	
 			<option name="2nd Party" id="audit_type_2nd" />       	
@@ -3928,7 +3960,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             id="control_tag"
             name="Tags"
-            tooltip="List of tags, separated by comma or space"/>
+            tooltip="List of tags, separated by comma or space"
+            tags="Basic"/>
         <huiproperty
             name="Description"
             id="control_desc"
@@ -4028,20 +4061,21 @@ the value between <param></param> will be used directly if no string is found fo
                 id="control_weight"
                  tags="Maturity" 
                 name="Suggested weight"
+                inputtype="numericoption" min="0" max="10"
                 editable="false" />
             
             <huiproperty
                 id="control_ownweight"
                  tags="Maturity" 
                 name="Used weight" 
-                editable="true"
-                />
+                inputtype="numericoption" min="0" max="10"
+                editable="true"/>
             
             <huiproperty 
-                id="control_min1" name="Threshold 1" editable="false"  tags="Maturity" />
+                id="control_min1" name="Threshold 1" editable="false"  tags="Maturity" inputtype="numericoption" min="0" max="10"/>
             
             <huiproperty 
-                id="control_min2" name="Threshold 2" editable="false"  tags="Maturity" />
+                id="control_min2" name="Threshold 2" editable="false"  tags="Maturity" inputtype="numericoption" min="0" max="10"/>
             
             <huiproperty
                 id="control_maturity_comment"
@@ -4060,7 +4094,53 @@ the value between <param></param> will be used directly if no string is found fo
                     </defaultRule>
                 </huiproperty>
         </huipropertygroup>
-     	
+
+     	<huipropertygroup id="control_isr_information_security_reporting" name="Information Security Reporting" tags="Information Security Reporting" >
+			 
+          <huiproperty 
+            id="control_isr_maturity"      
+            inputtype="numericoption" 
+            min="-2" 
+            max="5" 
+            defaultValue="-2" 
+            tags="Information Security Reporting" 
+            focus="true"> 
+                <option id="control_isr_maturity_null"  value="-2" />
+                <option id="control_isr_maturity_na"  value="-1" />
+                <option id="control_isr_maturity_0"  value="0" />
+                <option id="control_isr_maturity_1"  value="1" />
+                <option id="control_isr_maturity_2"  value="2" />
+                <option id="control_isr_maturity_3"  value="3" />
+                <option id="control_isr_maturity_4"  value="4" />
+                <option id="control_isr_maturity_5"  value="5" />
+          </huiproperty>
+	  <huiproperty 
+            id="control_isr_quantity_of_maturity"      
+            inputtype="numericoption" 
+            min="0" 
+            max="4" 
+            tags="Information Security Reporting"
+            focus="true"> 
+                <option id="control_isr_quantity_of_maturity_0"  value="0" />
+                <option id="control_isr_quantity_of_maturity_25"  value="1" />
+                <option id="control_isr_quantity_of_maturity_50"  value="2" />
+                <option id="control_isr_quantity_of_maturity_75"  value="3" />
+                 <option id="control_isr_quantity_of_maturity_100"  value="4" />
+          </huiproperty>  
+            
+          <huiproperty 
+            id="control_isr_note_external" 
+            tags="Information Security Reporting"
+            inputtype="text"/>
+
+	  <huiproperty 
+            id="control_isr_note_internal" 
+            tags="Information Security Reporting"
+            inputtype="text"
+	    report="false" />
+               
+	</huipropertygroup>
+
      	<huipropertygroup id="control_revisiongroup" name="Revision" tags="Revision" >
      		<huiproperty
 				id="control_lastrev"
@@ -4163,7 +4243,7 @@ the value between <param></param> will be used directly if no string is found fo
 		</huipropertygroup>
 		
 		
-		<huipropertygroup id="control_isaaudit" name="ISA Audit" >
+		<huipropertygroup id="control_isaaudit" name="ISA Audit" tags="VDA_ISA_Audit">
 		
 		     <huiproperty
 	           id="control_isa_audit_findings" name="Findings" inputtype="text" tags="VDA_ISA_Audit"
@@ -5189,7 +5269,7 @@ the value between <param></param> will be used directly if no string is found fo
                
           <huiproperty 
             id="samt_topic_name" 
-            editable="false"
+            editable="false" 
             />
           <huiproperty 
             id="samt_topic_abbr" 
