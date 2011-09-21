@@ -4947,6 +4947,20 @@ columns(cols);</value>
             <property name="fontSize">larger</property>
         </style>
         <style name="TOC-level-1" id="2029"/>
+        <style name="riskAssetTable" id="2280">
+            <property name="borderBottomColor">#FFFFFF</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftColor">#FFFFFF</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightColor">#FFFFFF</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopColor">#FFFFFF</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="paddingTop">0pt</property>
+            <property name="paddingLeft">0pt</property>
+            <property name="paddingBottom">0pt</property>
+            <property name="paddingRight">0pt</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -5227,31 +5241,6 @@ columns(cols);</value>
                         <property name="dataSet">scope</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">org_name</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_name"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">org_tag</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_tag"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">org_created</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_created"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">org_abbr</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_abbr"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">org_description</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
                                 <property name="name">org_riskaccept_confid</property>
                                 <expression name="expression" type="javascript">dataSetRow["org_riskaccept_confid"]</expression>
                                 <property name="dataType">javaObject</property>
@@ -5264,11 +5253,6 @@ columns(cols);</value>
                             <structure>
                                 <property name="name">org_riskaccept_avail</property>
                                 <expression name="expression" type="javascript">dataSetRow["org_riskaccept_avail"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">org_riskaccept_expl</property>
-                                <expression name="expression" type="javascript">dataSetRow["org_riskaccept_expl"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
@@ -5303,6 +5287,7 @@ columns(cols);</value>
                                 <cell id="949">
                                     <property name="fontSize">12pt</property>
                                     <data name="riskacpt_c" id="969">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "confidentialityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_confid</property>
                                     </data>
                                 </cell>
@@ -5317,6 +5302,7 @@ columns(cols);</value>
                                 <cell id="952">
                                     <property name="fontSize">12pt</property>
                                     <data id="970">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "integrityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_integ</property>
                                     </data>
                                 </cell>
@@ -5331,6 +5317,7 @@ columns(cols);</value>
                                 <cell id="955">
                                     <property name="fontSize">12pt</property>
                                     <data id="971">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "availabilityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_avail</property>
                                     </data>
                                 </cell>
@@ -5510,10 +5497,19 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     </label>
                     <grid id="2006">
                         <property name="pageBreakInside">avoid</property>
-                        <column id="2007"/>
-                        <column id="2008"/>
+                        <property name="width">7.677777777777778in</property>
+                        <column id="2007">
+                            <property name="width">3.988888888888889in</property>
+                        </column>
+                        <column id="2008">
+                            <property name="width">3.688888888888889in</property>
+                        </column>
                         <row id="2009">
                             <cell id="2010">
+                                <property name="paddingTop">0pt</property>
+                                <property name="paddingLeft">0pt</property>
+                                <property name="paddingBottom">0pt</property>
+                                <property name="paddingRight">0pt</property>
                                 <label id="2143">
                                     <property name="style">head2</property>
                                     <property name="fontFamily">"Arial"</property>
@@ -5542,25 +5538,21 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <list-property name="boundDataColumns">
                                         <structure>
                                             <property name="name">0</property>
-                                            <text-property name="displayName">0</text-property>
                                             <expression name="expression" type="javascript">dataSetRow["0"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                         <structure>
                                             <property name="name">1</property>
-                                            <text-property name="displayName">1</text-property>
                                             <expression name="expression" type="javascript">dataSetRow["1"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                         <structure>
                                             <property name="name">2</property>
-                                            <text-property name="displayName">2</text-property>
                                             <expression name="expression" type="javascript">dataSetRow["2"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                         <structure>
                                             <property name="name">3</property>
-                                            <text-property name="displayName">3</text-property>
                                             <expression name="expression" type="javascript">dataSetRow["3"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
@@ -5641,26 +5633,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue" )) - 3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_confid"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -5675,26 +5667,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]-2</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" ) - 2</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_confid"]</expression>
+                                                            <expression name="value2" type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -5709,26 +5701,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]-2</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" ) - 2</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_confid"]</expression>
+                                                            <expression name="value2" type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -5742,26 +5734,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]-2</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" ) - 2</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_confid"]</expression>
+                                                            <expression name="value2" type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_confid"]</value>
+                                                                <value type="javascript">reportContext.getPersistentGlobalVariable( "confidentialityValue" )</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -7064,26 +7056,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]-4</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))-4</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_integ"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -7098,26 +7090,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]-4</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))-4</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_integ"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -7132,26 +7124,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]-4</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))-4</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_integ"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_integ"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "integrityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -8400,6 +8392,11 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                             <expression name="expression" type="javascript">dataSetRow["4"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
+                                        <structure>
+                                            <property name="name">row0</property>
+                                            <expression name="expression" type="javascript">dataSetRow["row0"]</expression>
+                                            <property name="dataType">javaObject</property>
+                                        </structure>
                                     </list-property>
                                     <column id="1925">
                                         <property name="width">0.8854166666666666in</property>
@@ -8480,26 +8477,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))-3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_avail"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+0+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+0+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -8514,26 +8511,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))-3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_avail"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+1+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+1+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -8548,26 +8545,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))-3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_avail"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+2+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+2+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -8581,26 +8578,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))-3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_avail"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+3+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+3+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
@@ -8614,26 +8611,26 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="highlightRules">
                                                         <structure>
                                                             <property name="operator">gt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+4</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+4</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_red</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">between</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+4</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+4</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]-3</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))-3</value>
                                                             </simple-property-list>
-                                                            <expression name="value2" type="javascript">row._outer["org_riskaccept_avail"]</expression>
+                                                            <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</expression>
                                                             <property name="style">bg_yellow</property>
                                                         </structure>
                                                         <structure>
                                                             <property name="operator">lt</property>
-                                                            <expression name="testExpr" type="javascript">row[0]+4+2</expression>
+                                                            <expression name="testExpr" type="javascript">Number(row[0])+4+2</expression>
                                                             <simple-property-list name="value1">
-                                                                <value type="javascript">row._outer["org_riskaccept_avail"]</value>
+                                                                <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "availabilityValue" ))</value>
                                                             </simple-property-list>
                                                             <property name="style">bg_green</property>
                                                         </structure>
