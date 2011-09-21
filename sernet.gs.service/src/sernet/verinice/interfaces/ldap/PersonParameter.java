@@ -4,12 +4,13 @@ import java.io.Serializable;
 
 public class PersonParameter implements Serializable {
 	
-	private String surname, title, department, company;
+	private String surname, givenName, title, department, company;
 
-	public PersonParameter( String surname, String title, String department, String company) {
+	public PersonParameter( String surname, String giveName, String title, String department, String company) {
 		super();
 		this.surname = surname;
-		this.title = title;
+		this.givenName = giveName;
+        this.title = title;
 		this.department = department;
 		this.company = company;
 	}
@@ -22,7 +23,21 @@ public class PersonParameter implements Serializable {
 		this.surname = surname;
 	}
 
-	public String getTitle() {
+	/**
+     * @return the givenName
+     */
+    public String getGivenName() {
+        return givenName;
+    }
+
+    /**
+     * @param givenName the givenName to set
+     */
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getTitle() {
 		return title;
 	}
 
@@ -49,6 +64,7 @@ public class PersonParameter implements Serializable {
 	public boolean isEmpty() {
 		return (getTitle()==null || getTitle().isEmpty())
 		&& (getSurname()==null || getSurname().isEmpty())
+        && (getGivenName()==null || getGivenName().isEmpty())
 		&& (getDepartment()==null || getDepartment().isEmpty())
 		&& (getCompany()==null || getCompany().isEmpty());
 	}

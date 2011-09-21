@@ -8,11 +8,16 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo>{
 	
 	private PersonIso person;
 	private String loginName;
+
+    private String title, department, company;
 	
-	public PersonInfo(PersonIso person, String loginName) {
+	public PersonInfo(PersonIso person, String loginName, String title, String department, String company) {
 		super();
 		this.person = person;
 		this.loginName = loginName;
+        this.title = title;
+        this.department = department;
+        this.company = company;
 	}
 
 	public PersonIso getPerson() {
@@ -31,7 +36,49 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo>{
 		this.loginName = loginName;
 	}
 	
-	@Override
+	/**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the department
+     */
+    public String getDepartment() {
+        return department;
+    }
+
+    /**
+     * @param department the department to set
+     */
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    /**
+     * @return the company
+     */
+    public String getCompany() {
+        return company;
+    }
+
+    /**
+     * @param company the company to set
+     */
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    @Override
 	public int compareTo(PersonInfo o) {
 		int result;
 		if(this.getPerson()!=null && this.getPerson().getTitle()!=null && !this.getPerson().getTitle().trim().isEmpty()
