@@ -1549,11 +1549,62 @@ columns(cols);</value>
             <property name="type">a4</property>
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="paddingTop">20pt</property>
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="923">
+                    <column id="924"/>
+                    <column id="925"/>
+                    <column id="926"/>
+                    <column id="927"/>
+                    <row id="928">
+                        <cell id="929">
+                            <grid id="930">
+                                <property name="fontSize">9pt</property>
+                                <property name="width">1.8677685950413223in</property>
+                                <column id="931">
+                                    <property name="width">0.2975206611570248in</property>
+                                </column>
+                                <column id="932">
+                                    <property name="width">0.2066115702479339in</property>
+                                </column>
+                                <column id="933">
+                                    <property name="width">1.3636363636363635in</property>
+                                </column>
+                                <row id="934">
+                                    <cell id="935">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="936">
+                                            <property name="textAlign">right</property>
+                                            <property name="type">page-number</property>
+                                        </auto-text>
+                                    </cell>
+                                    <cell id="937">
+                                        <property name="verticalAlign">bottom</property>
+                                        <text id="938">
+                                            <property name="textAlign">center</property>
+                                            <property name="contentType">plain</property>
+                                            <text-property name="content"><![CDATA[/]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="939">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="940">
+                                            <property name="type">total-page</property>
+                                        </auto-text>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="1994"/>
+                        <cell id="942"/>
+                        <cell id="1995">
+                            <property name="verticalAlign">bottom</property>
+                            <text id="1996">
+                                <property name="fontSize">9pt</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>

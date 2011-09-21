@@ -2251,11 +2251,62 @@ columns(cols);</value>
             <property name="type">a4</property>
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="paddingTop">20pt</property>
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="923">
+                    <column id="924"/>
+                    <column id="925"/>
+                    <column id="926"/>
+                    <column id="927"/>
+                    <row id="928">
+                        <cell id="929">
+                            <grid id="930">
+                                <property name="fontSize">9pt</property>
+                                <property name="width">1.8677685950413223in</property>
+                                <column id="931">
+                                    <property name="width">0.2975206611570248in</property>
+                                </column>
+                                <column id="932">
+                                    <property name="width">0.2066115702479339in</property>
+                                </column>
+                                <column id="933">
+                                    <property name="width">1.3636363636363635in</property>
+                                </column>
+                                <row id="934">
+                                    <cell id="935">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="936">
+                                            <property name="textAlign">right</property>
+                                            <property name="type">page-number</property>
+                                        </auto-text>
+                                    </cell>
+                                    <cell id="937">
+                                        <property name="verticalAlign">bottom</property>
+                                        <text id="938">
+                                            <property name="textAlign">center</property>
+                                            <property name="contentType">plain</property>
+                                            <text-property name="content"><![CDATA[/]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="939">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="940">
+                                            <property name="type">total-page</property>
+                                        </auto-text>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="1994"/>
+                        <cell id="942"/>
+                        <cell id="1995">
+                            <property name="verticalAlign">bottom</property>
+                            <text id="1996">
+                                <property name="fontSize">9pt</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>
@@ -3250,33 +3301,33 @@ columns(cols);</value>
         <SeriesPalette>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>166</Green>
-            <Blue>218</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>242</Red>
-            <Green>88</Green>
-            <Blue>106</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>232</Red>
-            <Green>172</Green>
-            <Blue>57</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
+            <Red>255</Red>
             <Green>255</Green>
-            <Blue>128</Blue>
+            <Blue>255</Blue>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>
-            <Red>64</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
+            <Red>179</Red>
+            <Green>179</Green>
+            <Blue>179</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>156</Red>
+            <Green>156</Green>
+            <Blue>156</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>102</Red>
+            <Green>102</Green>
+            <Blue>102</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>10</Red>
+            <Green>10</Green>
+            <Blue>10</Blue>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>
@@ -3603,33 +3654,33 @@ columns(cols);</value>
       <SeriesPalette>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>80</Red>
-          <Green>166</Green>
-          <Blue>218</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>242</Red>
-          <Green>88</Green>
-          <Blue>106</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>232</Red>
-          <Green>172</Green>
-          <Blue>57</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>128</Red>
+          <Red>255</Red>
           <Green>255</Green>
-          <Blue>128</Blue>
+          <Blue>255</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>64</Red>
-          <Green>128</Green>
-          <Blue>128</Blue>
+          <Red>179</Red>
+          <Green>179</Green>
+          <Blue>179</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>156</Red>
+          <Green>156</Green>
+          <Blue>156</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>102</Green>
+          <Blue>102</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>10</Red>
+          <Green>10</Green>
+          <Blue>10</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
@@ -4558,33 +4609,33 @@ columns(cols);</value>
         <SeriesPalette>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>
-            <Red>80</Red>
-            <Green>166</Green>
-            <Blue>218</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>242</Red>
-            <Green>88</Green>
-            <Blue>106</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>232</Red>
-            <Green>172</Green>
-            <Blue>57</Blue>
-          </Entries>
-          <Entries xsi:type="attribute:ColorDefinition">
-            <Transparency>255</Transparency>
-            <Red>128</Red>
+            <Red>255</Red>
             <Green>255</Green>
-            <Blue>128</Blue>
+            <Blue>255</Blue>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>
-            <Red>64</Red>
-            <Green>128</Green>
-            <Blue>128</Blue>
+            <Red>179</Red>
+            <Green>179</Green>
+            <Blue>179</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>156</Red>
+            <Green>156</Green>
+            <Blue>156</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>102</Red>
+            <Green>102</Green>
+            <Blue>102</Blue>
+          </Entries>
+          <Entries xsi:type="attribute:ColorDefinition">
+            <Transparency>255</Transparency>
+            <Red>10</Red>
+            <Green>10</Green>
+            <Blue>10</Blue>
           </Entries>
           <Entries xsi:type="attribute:ColorDefinition">
             <Transparency>255</Transparency>

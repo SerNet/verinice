@@ -4,6 +4,16 @@
     <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
     <text-property name="title">verinice - BSI Schutzbedarfszuordnung</text-property>
     <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">1324</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">775</property>
+        </structure>
+    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -29,8 +39,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -3618,11 +3628,62 @@ columns(cols);</value>
             <property name="type">a4</property>
             <property name="orientation">landscape</property>
             <page-footer>
-                <text id="3">
-                    <property name="paddingTop">20pt</property>
-                    <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
-                </text>
+                <grid id="923">
+                    <column id="924"/>
+                    <column id="925"/>
+                    <column id="926"/>
+                    <column id="927"/>
+                    <row id="928">
+                        <cell id="929">
+                            <grid id="930">
+                                <property name="fontSize">9pt</property>
+                                <property name="width">1.8677685950413223in</property>
+                                <column id="931">
+                                    <property name="width">0.2975206611570248in</property>
+                                </column>
+                                <column id="932">
+                                    <property name="width">0.2066115702479339in</property>
+                                </column>
+                                <column id="933">
+                                    <property name="width">1.3636363636363635in</property>
+                                </column>
+                                <row id="934">
+                                    <cell id="935">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="936">
+                                            <property name="textAlign">right</property>
+                                            <property name="type">page-number</property>
+                                        </auto-text>
+                                    </cell>
+                                    <cell id="937">
+                                        <property name="verticalAlign">bottom</property>
+                                        <text id="938">
+                                            <property name="textAlign">center</property>
+                                            <property name="contentType">plain</property>
+                                            <text-property name="content"><![CDATA[/]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="939">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="940">
+                                            <property name="type">total-page</property>
+                                        </auto-text>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="1953"/>
+                        <cell id="942"/>
+                        <cell id="1954">
+                            <property name="verticalAlign">bottom</property>
+                            <text id="1955">
+                                <property name="fontSize">9pt</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
             </page-footer>
         </simple-master-page>
     </page-setup>

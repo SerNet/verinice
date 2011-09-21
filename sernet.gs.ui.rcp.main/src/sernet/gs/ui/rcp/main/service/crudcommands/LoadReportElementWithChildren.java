@@ -1,31 +1,15 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Comparator;
 
-import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Loads an element with all its children.
@@ -64,7 +48,7 @@ public class LoadReportElementWithChildren extends GenericCommand {
 	    CnATreeElement root = command.getElements().get(0);
 	    
 	    loadChildren(root);
-	    
+	    sortResults();
 	}
 
 	/**
@@ -84,6 +68,24 @@ public class LoadReportElementWithChildren extends GenericCommand {
                 }
             }
         }
+    }
+    
+    private void sortResults(){
+    	if(result != null){
+    		Collections.sort(result, new Comparator<CnATreeElement>() {
+				@Override
+				public int compare(CnATreeElement o1, CnATreeElement o2) {
+					NumericStringComparator comparator = new NumericStringComparator();
+					if(o1 instanceof MassnahmenUmsetzung && o2 instanceof MassnahmenUmsetzung){
+						MassnahmenUmsetzung m1 = (MassnahmenUmsetzung)o1;
+						MassnahmenUmsetzung m2 = (MassnahmenUmsetzung)o2;
+						return comparator.compare(m1.getKapitel(), m2.getKapitel());
+					} else {
+						return comparator.compare(o1.getTitle(), o2.getTitle());
+					}
+				}
+			});
+    	}
     }
     
 
