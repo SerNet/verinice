@@ -79,7 +79,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	private TableViewer viewer;
 	
-	private Text surname, title, department, company;
+	private Text surname, givenName,  title, department, company;
 
 	private Set<PersonInfo> personSet;
 	
@@ -96,7 +96,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.LdapImportDialog_28);
-		newShell.setSize(460, 600);
+		newShell.setSize(700, 800);
 	}
 
 	@Override
@@ -130,6 +130,13 @@ public class LdapImportDialog extends TitleAreaDialog {
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		surname.setLayoutData(gridData);
+		
+		Label givenNameLabel = new Label(containerRoles, SWT.NONE);
+		givenNameLabel.setText(Messages.LdapImportDialog_0);
+        givenName = new Text(containerRoles, SWT.BORDER);
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        givenName.setLayoutData(gridData);
 		
 		Label titleLabel = new Label(containerRoles, SWT.NONE);
 		titleLabel.setText(Messages.LdapImportDialog_32);
@@ -254,7 +261,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 	
 	private PersonParameter getParameter() {
-		return new PersonParameter(surname.getText(), title.getText(), department.getText(), company.getText());
+		return new PersonParameter(surname.getText(), givenName.getText(), title.getText(), department.getText(), company.getText());
 	}
 
 	private void createViewer(Composite parent) {
@@ -278,8 +285,8 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
-		String[] titles = { Messages.LdapImportDialog_39, Messages.LdapImportDialog_40, Messages.LdapImportDialog_41 };
-		int[] bounds = { 70, 150, 150 };
+		String[] titles = { Messages.LdapImportDialog_39, Messages.LdapImportDialog_40, Messages.LdapImportDialog_41, Messages.LdapImportDialog_2, Messages.LdapImportDialog_3, Messages.LdapImportDialog_4 };
+		int[] bounds = { 80, 90, 130, 100, 100, 120 };
 
 		// First column: login name
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
@@ -307,6 +314,33 @@ public class LdapImportDialog extends TitleAreaDialog {
 				return ((PersonInfo) element).getPerson().getSurname();
 			}
 		});
+		
+		// 4. column: tile
+        col = createTableViewerColumn(titles[3], bounds[3], 3);
+        col.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((PersonInfo) element).getTitle();
+            }
+        });
+        
+        // 5. column: department
+        col = createTableViewerColumn(titles[4], bounds[4], 4);
+        col.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((PersonInfo) element).getDepartment();
+            }
+        });
+        
+        // 6. column: company
+        col = createTableViewerColumn(titles[5], bounds[5], 5);
+        col.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((PersonInfo) element).getCompany();
+            }
+        });
 	}
 
 	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {

@@ -16,39 +16,39 @@ public class PersonDaoMock implements IPersonDao {
 		
 		PersonIso person = new PersonIso();
 		person.setSurname("Müller");
-		personList.add(new PersonInfo(person, "am"));
+		personList.add(new PersonInfo(person, "am", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Mayer");
-		personList.add(new PersonInfo(person, "tm"));
+		personList.add(new PersonInfo(person, "tm", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Schmidt");
-		personList.add(new PersonInfo(person, "ms"));
+		personList.add(new PersonInfo(person, "ms", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Peters");
-		personList.add(new PersonInfo(person, "gp"));
+		personList.add(new PersonInfo(person, "gp", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Wagner");
-		personList.add(new PersonInfo(person, "rw"));
+		personList.add(new PersonInfo(person, "rw", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Rudolph");
-		personList.add(new PersonInfo(person, "mr"));
+		personList.add(new PersonInfo(person, "mr", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Koch");
-		personList.add(new PersonInfo(person, "tk"));
+		personList.add(new PersonInfo(person, "tk", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Richard");
-		personList.add(new PersonInfo(person, "sr"));
+		personList.add(new PersonInfo(person, "sr", null, null, null));
 		
 		person = new PersonIso();
 		person.setSurname("Schuster");
-		personList.add(new PersonInfo(person, "ds"));
+		personList.add(new PersonInfo(person, "ds", null, null, null));
 		
 		return personList;		
 	}

@@ -19,10 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.JobScheduler;

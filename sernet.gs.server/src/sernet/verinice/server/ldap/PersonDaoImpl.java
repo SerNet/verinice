@@ -67,8 +67,23 @@ public class PersonDaoImpl implements IPersonDao {
                            // AD
                            person.setEmail((String) attrs.get("mail").get());
                        }
+		               String title = null;
+		               if(attrs.get("title")!=null) {
+                           // AD
+		                   title = (String) attrs.get("title").get();
+                       }
+		               String department = null;
+                       if(attrs.get("department")!=null) {
+                           // AD
+                           department = (String) attrs.get("department").get();
+                       }
+                       String company = null;
+                       if(attrs.get("company")!=null) {
+                           // AD
+                           company = (String) attrs.get("company").get();
+                       }
 		               
-		               return new PersonInfo(person, login);
+		               return new PersonInfo(person, login, title, department, company);
 		            }
 
                     
@@ -108,6 +123,9 @@ public class PersonDaoImpl implements IPersonDao {
 			if(parameter.getSurname()!=null && !parameter.getSurname().isEmpty()) {
 				sb.append("(sn=").append(parameter.getSurname()).append("*)");
 			}
+			if(parameter.getGivenName()!=null && !parameter.getGivenName().isEmpty()) {
+                sb.append("(givenName=").append(parameter.getGivenName()).append("*)");
+            }
 			if(parameter.getTitle()!=null && !parameter.getTitle().isEmpty()) {
 				sb.append("(title=").append(parameter.getTitle()).append("*)");
 			}

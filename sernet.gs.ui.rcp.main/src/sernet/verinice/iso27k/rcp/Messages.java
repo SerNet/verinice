@@ -68,9 +68,12 @@ public class Messages extends NLS {
     public static String ISMViewFilterDialog_5;
     public static String ISMViewFilterDialog_6;
 	public static String ISMViewFilterDialog_7;
-	public static String LdapImportDialog_1;
-	public static String LdapImportDialog_28;
-	public static String LdapImportDialog_30;
+	public static String LdapImportDialog_0;
+    public static String LdapImportDialog_1;
+	public static String LdapImportDialog_2;
+    public static String LdapImportDialog_28;
+	public static String LdapImportDialog_3;
+    public static String LdapImportDialog_30;
 	public static String LdapImportDialog_31;
 	public static String LdapImportDialog_32;
 	public static String LdapImportDialog_33;
@@ -80,7 +83,8 @@ public class Messages extends NLS {
 	public static String LdapImportDialog_37;
 	public static String LdapImportDialog_38;
 	public static String LdapImportDialog_39;
-	public static String LdapImportDialog_40;
+	public static String LdapImportDialog_4;
+    public static String LdapImportDialog_40;
 	public static String LdapImportDialog_41;
 	public static String LdapImportDialog_42;
 	public static String LdapImportDialog_43;
