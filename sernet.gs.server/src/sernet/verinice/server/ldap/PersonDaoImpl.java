@@ -76,11 +76,17 @@ public class PersonDaoImpl implements IPersonDao {
                        if(attrs.get("department")!=null) {
                            // AD
                            department = (String) attrs.get("department").get();
+                       } else if(attrs.get("subDepartment")!=null) {
+                           // LDAP
+                           department = (String) attrs.get("subDepartment").get();
                        }
                        String company = null;
                        if(attrs.get("company")!=null) {
                            // AD
                            company = (String) attrs.get("company").get();
+                       } else if(attrs.get("companyCode")!=null)  {
+                           // LDAP
+                           company = (String) attrs.get("companyCode").get();
                        }
 		               
 		               return new PersonInfo(person, login, title, department, company);
@@ -130,10 +136,12 @@ public class PersonDaoImpl implements IPersonDao {
 				sb.append("(title=").append(parameter.getTitle()).append("*)");
 			}
 			if(parameter.getDepartment()!=null && !parameter.getDepartment().isEmpty()) {
-				sb.append("(department=").append(parameter.getDepartment()).append("*)");
+				sb.append("(|(department=").append(parameter.getDepartment()).append("*)");
+                sb.append("(subDepartment=").append(parameter.getDepartment()).append("*))");
 			}
 			if(parameter.getCompany()!=null && !parameter.getCompany().isEmpty()) {
-				sb.append("(company=").append(parameter.getCompany()).append("*)");
+				sb.append("(|(company=").append(parameter.getCompany()).append("*)");
+                sb.append("(companyCode=").append(parameter.getCompany()).append("*))");
 			}
 			sb.append(")");
 		}
