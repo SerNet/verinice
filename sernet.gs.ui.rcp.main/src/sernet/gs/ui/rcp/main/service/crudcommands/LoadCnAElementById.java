@@ -30,6 +30,7 @@ public class LoadCnAElementById extends GenericCommand {
 	private CnATreeElement found;
     private String typeId;
 
+
 	public LoadCnAElementById(String typeId, int id) {
 		this.typeId= typeId;
 		this.id = id;
@@ -42,6 +43,18 @@ public class LoadCnAElementById extends GenericCommand {
 		} catch(NumberFormatException e) {
 			this.id=-1;
 		}
+	}
+	
+	public LoadCnAElementById(){
+		// default constructor for use with JavaScript within BIRT
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
 	}
 
 	public void execute() {

@@ -1,0 +1,76 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-SymbolicName: org.apache.axis
+Require-Bundle: javax.xml.rpc;bundle-version="[1.1.0,2.0.0)",javax.xml
+ .soap;bundle-version="[1.2.0,2.0.0)",javax.wsdl;bundle-version="[1.5.
+ 1,2.0.0)",org.apache.commons.discovery;bundle-version="[0.2.0,1.0.0)"
+ ,org.apache.ant;resolution:=optional;bundle-version="[1.6.5,2.0.0)"
+Export-Package: org.apache.axis,org.apache.axis.attachments,org.apache
+ .axis.client,org.apache.axis.client.async,org.apache.axis.collections
+ ,org.apache.axis.components.compiler,org.apache.axis.components.encod
+ ing,org.apache.axis.components.image,org.apache.axis.components.jms,o
+ rg.apache.axis.components.logger,org.apache.axis.components.net,org.a
+ pache.axis.components.script,org.apache.axis.components.threadpool,or
+ g.apache.axis.components.uuid,org.apache.axis.configuration,org.apach
+ e.axis.constants,org.apache.axis.deployment.wsdd,org.apache.axis.depl
+ oyment.wsdd.providers,org.apache.axis.description,org.apache.axis.enc
+ oding,org.apache.axis.encoding.ser,org.apache.axis.encoding.ser.casto
+ r,org.apache.axis.enum,org.apache.axis.handlers,org.apache.axis.handl
+ ers.http,org.apache.axis.handlers.soap,org.apache.axis.holders,org.ap
+ ache.axis.i18n,org.apache.axis.management,org.apache.axis.management.
+ jmx,org.apache.axis.message,org.apache.axis.monitor,org.apache.axis.p
+ roviders,org.apache.axis.providers.java,org.apache.axis.schema,org.ap
+ ache.axis.security,org.apache.axis.security.servlet,org.apache.axis.s
+ ecurity.simple,org.apache.axis.server,org.apache.axis.session,org.apa
+ che.axis.soap,org.apache.axis.strategies,org.apache.axis.tools.ant.ax
+ is,org.apache.axis.tools.ant.foreach,org.apache.axis.tools.ant.wsdl,o
+ rg.apache.axis.transport.http,org.apache.axis.transport.java,org.apac
+ he.axis.transport.jms,org.apache.axis.transport.local,org.apache.axis
+ .transport.mail,org.apache.axis.types,org.apache.axis.utils,org.apach
+ e.axis.utils.bytecode,org.apache.axis.utils.cache,org.apache.axis.wsd
+ l,org.apache.axis.wsdl.fromJava,org.apache.axis.wsdl.gen,org.apache.a
+ xis.wsdl.symbolTable,org.apache.axis.wsdl.toJava
+Bundle-Version: 1.4.0.v201005080400
+Eclipse-BuddyPolicy: registered
+Bundle-ClassPath: lib/axis.jar,lib/axis-ant.jar,lib/
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Name: %Bundle-Name.0
+Import-Package: org.apache.commons.logging;version="[1.0.4,2.0.0)";res
+ olution:=optional,org.apache.commons.logging.impl;version="[1.0.4,2.0
+ .0)";resolution:=optional,javax.servlet;version="[2.4.0,3.0.0)";resol
+ ution:=optional,javax.servlet.http;version="[2.4.0,3.0.0)";resolution
+ :=optional,javax.activation;resolution:=optional,javax.mail;resolutio
+ n:=optional,javax.mail.internet;resolution:=optional
+Bundle-ManifestVersion: 2
+
+Name: lib/log4j.properties
+SHA1-Digest: hEW/luKP+64qdtDnJZzeLpIxAtA=
+
+Name: lib/axis-ant.jar
+SHA1-Digest: QgAIcCm6e8hTUeE2/bu3610ok4A=
+
+Name: about_files/NOTICE
+SHA1-Digest: Gw/OdDnEUGQQJ9V7EzZk2tTyTWA=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: M1yh6ypEH7aiF3JiaBs2vAuNi54=
+
+Name: about_files/LICENSE
+SHA1-Digest: Wn199lW6QEeProCmq6/Gr8Nvm2o=
+
+Name: lib/axis.jar
+SHA1-Digest: lKnOaBpC0DUrOtImWfZ4NeVg0Qc=
+
+Name: about_files/release-notes.html
+SHA1-Digest: XVHde380dA3ixuyR/RtaA33+gMA=
+
+Name: about_files/README
+SHA1-Digest: 4dv4MruxFAYsfeA4B1xQ4Rez0sU=
+
+Name: about.html
+SHA1-Digest: hRd8vRwkRRLJoK3cy9OKGEFySoI=
+
+Name: plugin.properties
+SHA1-Digest: ZfFCJuGuEhB9jTul1AZyK3KuIFQ=
+

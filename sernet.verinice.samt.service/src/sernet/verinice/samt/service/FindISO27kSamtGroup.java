@@ -54,11 +54,18 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     private ControlGroup selfAssessmentGroup = null;
 
     private boolean hydrateParent;
+    
+    private int dbId;
 
     private static final String CONTROLGROUP_IS27KGROUP_PROPERTY = "controlgroup_is_NoIso_group";
 
-    public FindISO27kSamtGroup(boolean hydrate) {
+    public FindISO27kSamtGroup(){
+    	// BIRT JavaScript Constructor for use with class.newInstance()
+    }
+    
+    public FindISO27kSamtGroup(boolean hydrate, int rootId) {
         hydrateParent = hydrate;
+        dbId = rootId;
     }
 
     /*
@@ -104,7 +111,7 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         if (resultList != null && !resultList.isEmpty()) {
             CnATreeElement parent = resultList.get(0).getParent();
             for (ControlGroup g : resultList) {
-                if (isISO27kControlGroup(g)) {
+                if (isParent(g, dbId)) {
                     selfAssessmentGroup = g;
                     if(g.getParent().getUuid().equals(parent.getUuid())){
                         parent = g.getParent();
@@ -213,6 +220,11 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
      */
     public void setAuthService(IAuthService service) {
         this.authService = service;
+    }
+    
+    public void setDBIDandHydrate(int dbId, boolean hydrate){
+    	this.dbId = dbId;
+    	this.hydrateParent = hydrate;
     }
 
 }

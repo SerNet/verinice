@@ -57,7 +57,15 @@ public class LoadReportControlGroups extends GenericCommand {
 	public LoadReportControlGroups(Integer orgDbId) {
 		this.dbId = orgDbId;
 	}
+	
+	public LoadReportControlGroups(){
+		// default constructor for use with JavaScript within BIRT
+	}
 
+	public void setDbId(Integer dbId) {
+		this.dbId = dbId;
+	}
+	
 	@Override
 	public void execute() {
 

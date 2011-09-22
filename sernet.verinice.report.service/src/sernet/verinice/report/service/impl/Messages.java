@@ -53,6 +53,14 @@ public class Messages extends NLS {
     public static String StrukturanalyseReport_2;
     public static String UserReportType_1;
     public static String UserReportType_3;
+    public static String ControlMaturityReport_0;
+    public static String ControlMaturityReport_2;
+    public static String SamtComplianceReport_0;
+    public static String SamtComplianceReport_2;
+    public static String InventoryOfAssetsReport_0;
+    public static String InventoryOfAssetsReport_2;
+    public static String StatementOfApplicabilityReport_0;
+    public static String StatementOfApplicabilityReport_2;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -253,9 +253,6 @@ public class Query implements IQuery
         }
         
         public Integer getRoot() {
-            if(vnRootElement.intValue() < 16000){
-                this.hashCode();
-            }
        		return vnRootElement;
         }
         
@@ -277,9 +274,7 @@ public class Query implements IQuery
         public byte[] createImageResult(BufferedImage im) throws IOException
         {
         	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
         	ImageIO.write(im, "png", bos);
-        	
         	return bos.toByteArray();
         }
         

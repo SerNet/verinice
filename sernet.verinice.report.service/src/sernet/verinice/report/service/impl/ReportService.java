@@ -42,6 +42,7 @@ public class ReportService implements IReportService {
 			reportTypes = new IReportType[] { 
 		        new UserReportType(), 
 		        new SamtReportType(), 
+		        new SamtComplianceReport(),
 		        
 		        new RiskByAssetReport(), // 27001 reports
 		        new RiskTreatmentReport(),
@@ -54,7 +55,10 @@ public class ReportService implements IReportService {
 		        new RisikoanalyseReport(),
 		        new RealisierungsplanReport(),
 		        new AuditberichtReport(),
-		        new ComprehensiveSamtReportType()
+		        new ComprehensiveSamtReportType(),
+		        new ControlMaturityReport(),
+		        new StatementOfApplicabilityReport(),
+		        new InventoryOfAssetsReport()
 		    };
 		
 		return reportTypes;

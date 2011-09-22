@@ -111,7 +111,7 @@ public class BIRTReportService {
 		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
 		
 		config.setAppContext(hm);
-
+		
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
 				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);

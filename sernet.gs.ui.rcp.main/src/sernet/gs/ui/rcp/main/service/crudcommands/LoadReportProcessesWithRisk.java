@@ -158,9 +158,12 @@ public class LoadReportProcessesWithRisk extends GenericCommand {
                     List<CnALink> links = command2.getLinkList();
                     
                     for (CnALink link : links) {
-                        totalRisk += link.getRiskConfidentiality();
-                        totalRisk += link.getRiskIntegrity();
-                        totalRisk += link.getRiskAvailability();
+                    	if(link.getRiskConfidentiality() != null)
+                    		totalRisk += link.getRiskConfidentiality();
+                    	if(link.getRiskIntegrity() != null)
+                    		totalRisk += link.getRiskIntegrity();
+                    	if(link.getRiskAvailability() != null)
+                    		totalRisk += link.getRiskAvailability();
                     }
                 }
                 

@@ -111,7 +111,7 @@ public class LoadChapterListCommand extends GenericCommand {
     }
 
     public Object[][] getResult() {
-        return result;
+    	return result;
     }
 
     @Override

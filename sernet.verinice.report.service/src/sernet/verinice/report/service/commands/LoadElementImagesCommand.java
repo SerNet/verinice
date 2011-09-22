@@ -26,9 +26,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -71,7 +70,7 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     private transient Logger log;
 
-    private List<byte[]> result;
+    private byte[] result;
 
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -79,6 +78,10 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     private final static int MAX_IMAGE_HEIGHT = 151;
     private final static int MAX_IMAGE_WIDTH = 310;
+    
+    public LoadElementImagesCommand(){
+    	// BIRT JavaScript Constructor for use with class.newInstance()
+    }
 
     public LoadElementImagesCommand(int id) {
         this.id = id;
@@ -90,7 +93,7 @@ public class LoadElementImagesCommand extends GenericCommand {
         this.imageNr = imageNr;
     }
 
-    public List<byte[]> getResult() {
+    public byte[] getResult() {
         return result;
     }
 
@@ -134,7 +137,6 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     @Override
     public void execute() {
-        result = new ArrayList<byte[]>();
         SamtTopic topic = null;
         try {
             LoadWorstFindingsCommand command = new LoadWorstFindingsCommand(id);
@@ -183,12 +185,15 @@ public class LoadElementImagesCommand extends GenericCommand {
                         }
                         if(baos !=  null){
                             ImageIO.write(imageToWorkWith, "jpeg", baos);
-                            result.add(baos.toByteArray());
+                            result = baos.toByteArray();
                         } else {
-                            result.add(attachmentFile.getFileData());
+                        	result = attachmentFile.getFileData();
                         }
                     }
                 }
+            }
+            if(result == null){
+            	setDummyImage();
             }
         } catch (CommandException e) {
             if (log == null) {
@@ -199,6 +204,31 @@ public class LoadElementImagesCommand extends GenericCommand {
         } catch (IOException e) {
             log.error("Error reading image from byte data", e);
         }
+    }
+    
+    private void setDummyImage(){
+    	URL url = getClass().getResource("onewhitepixel.jpg");
+    	InputStream is = null;
+    	ByteArrayOutputStream bais = new ByteArrayOutputStream();
+    	try{
+    		is = url.openStream();
+    		byte[] byteChunk = new byte[4096];
+    		int i = 0;
+    		while((i = is.read(byteChunk)) > 0){
+    			bais.write(byteChunk, 0, i);
+    		}
+    		result = bais.toByteArray();
+    	} catch(IOException e){
+    		log.error("I-/O-Exception", e);
+    	} finally {
+    		if(is != null){
+    			try {
+					is.close();
+				} catch (IOException e) {
+					log.error("I-/O-Exception", e);
+				}
+    		}
+    	}
     }
     
     private BufferedImage rotateImage(BufferedImage image, int radiant){
@@ -245,5 +275,13 @@ public class LoadElementImagesCommand extends GenericCommand {
         }
         return null;
     }
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setImageNr(int imageNr) {
+		this.imageNr = imageNr;
+	}
 
 }

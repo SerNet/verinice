@@ -85,7 +85,15 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
     }
     
     
-    /* (non-Javadoc)
+    public void setHydrateParent(boolean hydrateParent) {
+		this.hydrateParent = hydrateParent;
+	}
+
+	public void setDbId(Integer dbId) {
+		this.dbId = dbId;
+	}
+
+	/* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     @Override
