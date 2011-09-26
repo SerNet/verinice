@@ -20,6 +20,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
 
@@ -44,7 +45,7 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
         	if(rootObjects.size() == 1){
         		dialog = new GenerateReportDialog(shell, rootObjects.get(0));
         	} else {
-        		dialog = new GenerateReportDialog(shell, rootObjects);
+        		dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_AUDIT_REPORT);
         	}
             if (dialog.open() == Dialog.OK) {
                 final IReportOptions ro = new IReportOptions() {

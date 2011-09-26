@@ -23,14 +23,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.registry.WizardParameterValues.New;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -40,7 +38,6 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 
 public class GenerateReportDialog extends TitleAreaDialog {
@@ -87,6 +84,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private boolean userTemplate = true;
 
 	private List<CnATreeElement> preSelectedElments;
+	
+	private String useCase;
     
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 410;
@@ -112,12 +111,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
 	}
 	
+	public GenerateReportDialog(Shell parentShell, String useCase){
+		this(parentShell);
+		this.useCase = useCase;
+		filterReportTypes();
+	}
+	
 	/**
      * @param shell
      * @param audit
      */
     public GenerateReportDialog(Shell shell, Object audit) {
-        this(shell);
+        this(shell, IReportType.USE_CASE_ID_AUDIT_REPORT);
 
         CnATreeElement cnaElmt = (CnATreeElement) audit;
         
@@ -138,6 +143,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
 			elmts.add(cnaElmt);
 		}
     	this.preSelectedElments = elmts;
+    }
+    
+    public GenerateReportDialog(Shell shell, List<Object> objects, String useCase){
+    	this(shell, objects);
+    	this.useCase = useCase;
+    	filterReportTypes();
     }
 
 
@@ -582,6 +593,19 @@ public class GenerateReportDialog extends TitleAreaDialog {
             filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return filename;
+    }
+    
+    private void filterReportTypes(){
+		ArrayList<IReportType> list = new ArrayList<IReportType>();
+		boolean userReportAdded = false;
+		if(useCase != null && !useCase.equals("")){
+			for(IReportType rt : reportTypes){
+				if(rt.getUseCaseID().equals(useCase) || rt.getUseCaseID().equals(IReportType.USE_CASE_ID_ALWAYS_REPORT)){
+					list.add(rt);
+				}
+			}
+		}
+		reportTypes = list.toArray(new IReportType[list.size()]);
     }
     
 	

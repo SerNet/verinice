@@ -83,4 +83,9 @@ public class RisikoanalyseReport implements IReportType {
         
     }
 
+	@Override
+	public String getUseCaseID() {
+		return IReportType.USE_CASE_ID_GENERAL_REPORT;
+	}
+
 }

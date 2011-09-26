@@ -17,6 +17,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportType;
 
 @SuppressWarnings("restriction")
 public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
@@ -47,7 +48,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	public void run(IAction action) {
 	    try {
 	        if(dialog==null) {
-	            dialog = new GenerateReportDialog(shell);
+	            dialog = new GenerateReportDialog(shell, IReportType.USE_CASE_ID_GENERAL_REPORT);
 	        }
     		if (dialog.open() == Dialog.OK) {
     			final IReportOptions ro = new IReportOptions() {
