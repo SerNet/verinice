@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">Standard ISA-Report</text-property>
     <simple-property-list name="includeResource">
         <value>reports</value>
@@ -4106,6 +4106,12 @@ columns(cols);</value>
             <property name="orientation">portrait</property>
             <page-footer>
                 <grid id="868">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
                     <column id="869"/>
                     <column id="870"/>
                     <column id="871"/>
@@ -5250,11 +5256,15 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">width</property>
-                                <expression name="expression" type="javascript">600</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">600</value>
+                                </simple-property-list>
                             </structure>
                             <structure>
                                 <property name="paramName">height</property>
-                                <expression name="expression" type="javascript">300;</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">300;</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">

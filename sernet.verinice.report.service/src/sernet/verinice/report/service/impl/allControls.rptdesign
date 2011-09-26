@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">sncaUrl</property>
+            <property name="id">954</property>
+        </structure>
+        <structure>
+            <property name="name">serverURI</property>
+            <property name="id">954</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileName</property>
+            <property name="id">954</property>
+        </structure>
+        <structure>
+            <property name="name">OdaConnProfileStorePath</property>
+            <property name="id">954</property>
+        </structure>
+    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">90</property>
@@ -1666,6 +1684,12 @@ columns(cols);</value>
             </page-header>
             <page-footer>
                 <grid id="923">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
                     <column id="924"/>
                     <column id="925"/>
                     <column id="926"/>

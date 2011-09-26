@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">S. Hagedorn</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">Control Maturity Report</text-property>
     <simple-property-list name="includeResource">
         <value>reports</value>
@@ -1290,6 +1290,12 @@ columns(cols);</value>
             <property name="leftMargin">0.25in</property>
             <page-footer>
                 <grid id="868">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
                     <column id="869"/>
                     <column id="870"/>
                     <column id="871"/>
@@ -1506,7 +1512,9 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                                         <list-property name="paramBindings">
                                             <structure>
                                                 <property name="paramName">elmt_id</property>
-                                                <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                <simple-property-list name="expression">
+                                                    <value type="javascript">row["dbid"]</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <list-property name="boundDataColumns">

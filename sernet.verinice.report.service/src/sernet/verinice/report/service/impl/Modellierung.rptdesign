@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">verinice - BSI Modellierung</text-property>
     <property name="units">in</property>
     <list-property name="propertyBindings">
@@ -1025,6 +1025,12 @@ columns(cols);</value>
             <property name="orientation">portrait</property>
             <page-footer>
                 <grid id="923">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
                     <column id="924"/>
                     <column id="925"/>
                     <column id="926"/>
@@ -1664,7 +1670,9 @@ columns(cols);</value>
             <list-property name="paramBindings">
                 <structure>
                     <property name="paramName">root_object</property>
-                    <expression name="expression" type="javascript">params["root_object"].value</expression>
+                    <simple-property-list name="expression">
+                        <value type="javascript">params["root_object"].value</value>
+                    </simple-property-list>
                 </structure>
             </list-property>
             <list-property name="boundDataColumns">
@@ -1973,7 +1981,9 @@ columns(cols);</value>
                                         <list-property name="paramBindings">
                                             <structure>
                                                 <property name="paramName">elmt_id</property>
-                                                <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                <simple-property-list name="expression">
+                                                    <value type="javascript">row["dbid"]</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <list-property name="boundDataColumns">
@@ -2160,7 +2170,9 @@ columns(cols);</value>
                                         <list-property name="paramBindings">
                                             <structure>
                                                 <property name="paramName">dbid</property>
-                                                <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                <simple-property-list name="expression">
+                                                    <value type="javascript">row["dbid"]</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <list-property name="boundDataColumns">
