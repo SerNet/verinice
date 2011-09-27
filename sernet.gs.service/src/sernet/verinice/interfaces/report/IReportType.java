@@ -19,6 +19,11 @@ package sernet.verinice.interfaces.report;
 
 
 public interface IReportType {
+	
+	public final static String USE_CASE_ID_AUDIT_REPORT = "use_case_report_audit";
+	public final static String USE_CASE_ID_GENERAL_REPORT = "use_case_report_general";
+	public final static String USE_CASE_ID_ALWAYS_REPORT = "use_case_report_always";
+	
     
 	/**
 	 * Returns an application usable id.
@@ -59,4 +64,11 @@ public interface IReportType {
 	String getReportFile();
 	
 	void setReportFile(String file);
+	
+	/**
+	 * some Reports should only be used with a particular type of root element (e.g. csr only with audits)
+	 * this id should determine which report belongs to which type of action 
+	 * @return
+	 */
+	String getUseCaseID();
 }
