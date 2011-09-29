@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">SerNet GmbH</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">verinice - Information Risk Assessment</text-property>
     <simple-property-list name="includeResource">
         <value>riskbyasset</value>
@@ -3707,20 +3707,8 @@ columns(cols);</value>
                     <text-property name="displayName">org_isa_loc</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">org_isa_creatphone</property>
-                    <text-property name="displayName">org_isa_creatphone</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_isa_creatmail</property>
-                    <text-property name="displayName">org_isa_creatmail</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">org_description</property>
                     <text-property name="displayName">org_description</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_isa_creat</property>
-                    <text-property name="displayName">org_isa_creat</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_web</property>
@@ -3837,91 +3825,76 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">org_isa_creatphone</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">org_isa_creatmail</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
                         <property name="name">org_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
-                        <property name="name">org_isa_creat</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
+                        <property name="position">10</property>
                         <property name="name">org_isa_web</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">11</property>
                         <property name="name">org_isa_addr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">12</property>
                         <property name="name">org_isa_compgroup</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">16</property>
+                        <property name="position">13</property>
                         <property name="name">org_isa_cont</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">17</property>
+                        <property name="position">14</property>
                         <property name="name">org_isa_compdesc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">18</property>
+                        <property name="position">15</property>
                         <property name="name">org_riskaccept_confid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">16</property>
                         <property name="name">org_riskaccept_integ</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">17</property>
                         <property name="name">org_riskaccept_avail</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">18</property>
                         <property name="name">org_riskaccept_expl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">22</property>
+                        <property name="position">19</property>
                         <property name="name">org_class_asset_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">23</property>
+                        <property name="position">20</property>
                         <property name="name">org_class_asset_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">24</property>
+                        <property name="position">21</property>
                         <property name="name">org_class_asset_a</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">22</property>
                         <property name="name">org_class_threat</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">26</property>
+                        <property name="position">23</property>
                         <property name="name">org_class_vuln</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -3934,182 +3907,138 @@ columns(cols);</value>
                     <property name="name">org_name</property>
                     <property name="nativeName">org_name</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">org_isa_contphone</property>
                     <property name="nativeName">org_isa_contphone</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
                     <property name="name">org_tag</property>
                     <property name="nativeName">org_tag</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">org_created</property>
                     <property name="nativeName">org_created</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">org_abbr</property>
                     <property name="nativeName">org_abbr</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
                     <property name="name">org_isa_contmail</property>
                     <property name="nativeName">org_isa_contmail</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
                     <property name="name">org_isa_duns</property>
                     <property name="nativeName">org_isa_duns</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">8</property>
                     <property name="name">org_isa_loc</property>
                     <property name="nativeName">org_isa_loc</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">org_isa_creatphone</property>
-                    <property name="nativeName">org_isa_creatphone</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">org_isa_creatmail</property>
-                    <property name="nativeName">org_isa_creatmail</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
                     <property name="name">org_description</property>
                     <property name="nativeName">org_description</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
-                    <property name="name">org_isa_creat</property>
-                    <property name="nativeName">org_isa_creat</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
+                    <property name="position">10</property>
                     <property name="name">org_isa_web</property>
                     <property name="nativeName">org_isa_web</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">11</property>
                     <property name="name">org_isa_addr</property>
                     <property name="nativeName">org_isa_addr</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">12</property>
                     <property name="name">org_isa_compgroup</property>
                     <property name="nativeName">org_isa_compgroup</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">13</property>
                     <property name="name">org_isa_cont</property>
                     <property name="nativeName">org_isa_cont</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">14</property>
                     <property name="name">org_isa_compdesc</property>
                     <property name="nativeName">org_isa_compdesc</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">15</property>
                     <property name="name">org_riskaccept_confid</property>
                     <property name="nativeName">org_riskaccept_confid</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">16</property>
                     <property name="name">org_riskaccept_integ</property>
                     <property name="nativeName">org_riskaccept_integ</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">17</property>
                     <property name="name">org_riskaccept_avail</property>
                     <property name="nativeName">org_riskaccept_avail</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">18</property>
                     <property name="name">org_riskaccept_expl</property>
                     <property name="nativeName">org_riskaccept_expl</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">19</property>
                     <property name="name">org_class_asset_c</property>
                     <property name="nativeName">org_class_asset_c</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">20</property>
                     <property name="name">org_class_asset_i</property>
                     <property name="nativeName">org_class_asset_i</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">21</property>
                     <property name="name">org_class_asset_a</property>
                     <property name="nativeName">org_class_asset_a</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">22</property>
                     <property name="name">org_class_threat</property>
                     <property name="nativeName">org_class_threat</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">23</property>
                     <property name="name">org_class_vuln</property>
                     <property name="nativeName">org_class_vuln</property>
                     <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
@@ -5388,23 +5317,8 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">org_isa_creatphone</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatphone"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creatmail</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatmail"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">org_description</property>
                     <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creat</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creat"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -5532,7 +5446,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -6966,7 +6882,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -8352,7 +8270,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -12817,23 +12737,8 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">org_isa_creatphone</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatphone"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creatmail</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creatmail"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">org_description</property>
                     <expression name="expression" type="javascript">dataSetRow["org_description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_isa_creat</property>
-                    <expression name="expression" type="javascript">dataSetRow["org_isa_creat"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -13299,7 +13204,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                     <list-property name="paramBindings">
                                                         <structure>
                                                             <property name="paramName">elmt_id</property>
-                                                            <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                            <simple-property-list name="expression">
+                                                                <value type="javascript">row["dbid"]</value>
+                                                            </simple-property-list>
                                                         </structure>
                                                     </list-property>
                                                     <list-property name="boundDataColumns">
@@ -13826,6 +13733,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                     <property name="fontWeight">bold</property>
                                                                     <property name="textUnderline">underline</property>
                                                                     <property name="textAlign">center</property>
+                                                                    <structure name="toc"/>
                                                                     <property name="resultSetColumn">allrisk</property>
                                                                 </data>
                                                             </cell>
@@ -13993,7 +13901,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                     <list-property name="paramBindings">
                                                                         <structure>
                                                                             <property name="paramName">asset_id</property>
-                                                                            <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                                            <simple-property-list name="expression">
+                                                                                <value type="javascript">row["dbid"]</value>
+                                                                            </simple-property-list>
                                                                         </structure>
                                                                     </list-property>
                                                                     <list-property name="boundDataColumns">

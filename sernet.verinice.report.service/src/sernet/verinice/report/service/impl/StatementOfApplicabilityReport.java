@@ -28,7 +28,7 @@ public class StatementOfApplicabilityReport implements IReportType {
 
 	@Override
 	public IOutputFormat[] getOutputFormats() {
-		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new CSVOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat(), new ODTOutputFormat(), new ODSOutputFormat() };
+		return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat(), new ODTOutputFormat(), new ODSOutputFormat() };
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class StatementOfApplicabilityReport implements IReportType {
 		else
 		{
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
-			brs.extract(task, reportOptions, 1);
+			brs.extract(task, reportOptions, 0);
 		}
 	}
 

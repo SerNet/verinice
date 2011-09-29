@@ -4502,7 +4502,9 @@ columns(cols);</value>
             <column id="48"/>
             <row id="51">
                 <property name="height">3.125in</property>
+                <property name="textAlign">center</property>
                 <cell id="52">
+                    <property name="verticalAlign">middle</property>
                     <image name="companyLogo" id="46">
                         <property name="height">103px</property>
                         <property name="width">411px</property>
