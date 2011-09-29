@@ -26,7 +26,6 @@ import sernet.verinice.model.iso27k.IControl;
 /**
  * Class provides methods for getting properties of a control, that are numericProperties in SamtTopics,
  * which doesnt work for Controls.
- * @author hagedorn
  *
  */
 

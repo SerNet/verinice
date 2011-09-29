@@ -52,9 +52,9 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 		dao.reload(cnaElement, cnaElement.getDbId());
 		
 		Set<CnATreeElement> children = cnaElement.getChildren();
-		CollectBausteine: for (CnATreeElement cnATreeElement : children) {
+		for (CnATreeElement cnATreeElement : children) {
 			if (!(cnATreeElement instanceof BausteinUmsetzung))
-				continue CollectBausteine;
+				continue;
 
 			BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
 			Baustein baustein = findBausteinForId(bausteinUmsetzung.getKapitel());
@@ -83,9 +83,11 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 			alleBausteine = bstsCommand.getBausteine();
 		}
 		
-		for (Baustein baustein : alleBausteine) {
-			if (baustein.getId().equals(id))
-				return baustein;
+		if(alleBausteine != null){ 
+    		for (Baustein baustein : alleBausteine) {
+    			if (baustein.getId().equals(id))
+    				return baustein;
+    		}
 		}
 		return null;
 	}
