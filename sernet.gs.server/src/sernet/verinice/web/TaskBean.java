@@ -25,19 +25,29 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+
+import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 import org.richfaces.component.html.HtmlExtendedDataTable;
 import org.richfaces.model.selection.Selection;
 import org.richfaces.model.selection.SimpleSelection;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.bpm.TaskService;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskParameter;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.samt.SamtTopic;
 /**
@@ -246,9 +256,55 @@ public class TaskBean {
         if(auditList==null) {
             auditList = getTaskService().getAuditList();
         }
+        auditList = filterAuditListByUser(auditList);
         return auditList;
     }
 
+    public List<Audit> filterAuditListByUser(List<Audit> auditList){
+        ArrayList<Audit> filteredList = new ArrayList<Audit>(0);
+        ITaskService iService =  getTaskService();
+        TaskService service = null;
+        if(iService instanceof TaskService){
+            service = (TaskService)iService;
+        }
+        if(service != null){
+            String user = service.getAuthService().getUsername();
+            String admin = service.getAuthService().getAdminUsername();
+            if(!user.equals(admin)){ //admin is allowed to see unfiltered list
+                for(Audit audit : auditList){
+                    try{
+                        for(Permission p : loadPermission(audit)){
+                            if(user.equals(p.getRole())){
+                                filteredList.add(audit);
+                                break;
+                            }
+                        }
+                    }
+                    catch (RuntimeException re){
+                        LOG.warn("Error getting permissions for audit\nUser don't have the permission to acces this audit", re);
+                    }
+                }
+            } else {
+                for(Audit a : auditList){
+                    filteredList.add(a);
+                }
+            }
+        }
+        return filteredList;
+    }
+    
+    private Set<Permission> loadPermission(CnATreeElement firstElement) {
+        LoadPermissions lp = new LoadPermissions(firstElement);
+        try {
+            lp = ServiceFactory.lookupCommandService().executeCommand(lp);
+        } catch (CommandException e) {
+            throw new RuntimeException(e);
+        }
+        // clone the permissions because of hashcode trouble in set with instances created by hibernate
+        return Permission.clonePermissionSet(firstElement, lp.getPermissions());
+    }
+    
+    
     public void setAuditList(List<Audit> auditList) {
         this.auditList = auditList;
     }

@@ -19,20 +19,17 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -40,7 +37,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -59,11 +55,7 @@ import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
-import sernet.verinice.service.commands.CreateConfiguration;
-import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.ldap.LoadLdapUser;
 import sernet.verinice.service.ldap.PersonInfo;
 import sernet.verinice.service.ldap.SaveLdapUser;
@@ -195,7 +187,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 		gridData.horizontalSpan = 5;
 		gridData.horizontalAlignment = SWT.RIGHT;
 		buttonRemove.setLayoutData(gridData);
-
+		
 		return containerRoles;
 	}
 	
@@ -205,8 +197,17 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	    Button ok = getButton(IDialogConstants.OK_ID);
 	    ok.setText(Messages.LdapImportDialog_37);
-	    setButtonLayoutData(ok);  
+	    setButtonLayoutData(ok);
 	}
+	
+	/**
+	 * disables the assignment of a default button, so <enter> don't causes a click on the ok button 
+	 */
+	@Override
+	 protected Button createButton(Composite parent, int id, String label,
+	   boolean defaultButton) {
+	  return super.createButton(parent, id, label, false);
+	 }
 
 	protected void showInformation() {
 		setMessage(Messages.LdapImportDialog_38);
