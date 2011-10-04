@@ -114,10 +114,14 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
     public Integer getWeightedMaturity(IControl contr) {
         int value = 0;
         int maturity = contr.getMaturity();
-        // maturity less than 0 is counted a 0
+        // maturity less than 0 is counted as 0
         if(IControl.IMPLEMENTED_NA_NUMERIC!=maturity
            && IControl.IMPLEMENTED_NOTEDITED_NUMERIC!=maturity) {
             value = contr.getMaturity() * contr.getWeight2();
+            // value must never be more than weighted threshold
+            Integer weightedThreshold = getWeightedThreshold(contr);
+            if (value > weightedThreshold)
+                value = weightedThreshold;
         }
         return value;
     }
