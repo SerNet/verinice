@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.equinox.internal.p2.core.helpers.ServiceHelper;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.repository.IRepositoryManager;
@@ -177,7 +176,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		
 		// May replace the JDK's built-in security settings
         try {
-            VeriniceSecurityProvider.register(prefs);
+            String osName = System.getProperty("os.name");
+            String osArch = System.getProperty("os.arch");
+            if(!(osName.equals("win32") && osArch.equals("x86_64"))){
+                VeriniceSecurityProvider.register(prefs); // this fails on a win7/64 system
+            } else {
+                LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available");
+            }
         } catch (Exception e) {
             LOG.error("Error while registering verinice security provider.", e);
         }
