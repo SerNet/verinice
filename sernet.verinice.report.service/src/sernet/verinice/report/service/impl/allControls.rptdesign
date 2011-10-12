@@ -2043,7 +2043,7 @@ columns(cols);</value>
             <detail>
                 <row id="1226">
                     <property name="backgroundColor">#BFBFBF</property>
-                    <property name="fontFamily">fantasy</property>
+                    <property name="fontFamily">sans-serif</property>
                     <list-property name="highlightRules">
                         <structure>
                             <property name="operator">eq</property>

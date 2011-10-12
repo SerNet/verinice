@@ -1494,7 +1494,7 @@ columns(cols);</value>
     </page-setup>
     <body>
         <table id="610">
-            <property name="width">12.622222222222222in</property>
+            <property name="width">11.6in</property>
             <property name="dataSet">assets</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1723,7 +1723,16 @@ columns(cols);</value>
                 <property name="width">1.5777777777777777in</property>
             </column>
             <column id="793">
-                <property name="width">3.433333333333333in</property>
+                <property name="width">1.3555555555555556in</property>
+            </column>
+            <column id="955">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="961">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="958">
+                <property name="width">0.5in</property>
             </column>
             <header>
                 <row id="611">
@@ -1771,11 +1780,44 @@ columns(cols);</value>
                         </label>
                     </cell>
                     <cell id="620">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <label id="621">
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <text-property name="text">Description</text-property>
                         </label>
+                    </cell>
+                    <cell id="953">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <text id="962">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[C]]></text-property>
+                        </text>
+                    </cell>
+                    <cell id="959">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <text id="963">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[I]]></text-property>
+                        </text>
+                    </cell>
+                    <cell id="956">
+                        <text id="964">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <property name="contentType">auto</property>
+                            <text-property name="content"><![CDATA[A]]></text-property>
+                        </text>
                     </cell>
                 </row>
             </header>
@@ -1833,9 +1875,42 @@ columns(cols);</value>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="692">
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">asset_description</property>
+                        </data>
+                    </cell>
+                    <cell id="954">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="965">
+                            <property name="resultSetColumn">asset_riskvalue_c</property>
+                        </data>
+                    </cell>
+                    <cell id="960">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="966">
+                            <property name="resultSetColumn">asset_riskvalue_i</property>
+                        </data>
+                    </cell>
+                    <cell id="957">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <data id="967">
+                            <property name="resultSetColumn">asset_riskvalue_a</property>
                         </data>
                     </cell>
                 </row>

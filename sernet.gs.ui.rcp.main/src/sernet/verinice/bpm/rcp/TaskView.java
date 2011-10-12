@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -37,12 +40,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.events.TreeListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
@@ -198,12 +205,70 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         layout.addColumnData(new ColumnWeightData(15,false));
 
         tree.setLayout(layout);
+        
+        tree.addTreeListener(new TreeListener() {
+            @Override
+            public void treeExpanded(TreeEvent e) {
+                if(treeViewer.getContentProvider() instanceof TaskContentProvider){
+                    TaskContentProvider tcp = (TaskContentProvider)treeViewer.getContentProvider();
+                    Object[] o = tcp.getElements(null); // getRootElement
+                    Object[] children = tcp.getChildren(o[0]);
+                    String longestAudit = "", longestUser = "", longestDate = "", longestTask = "";
+                    for(Object child : children){
+                        if(child instanceof TaskInformation){
+                            TaskInformation ti = (TaskInformation)child;
+                            if(ti.getControlTitle().length() > longestAudit.length()){
+                                longestAudit = ti.getControlTitle();
+                            }
+                            if(ti.getAssignee().length() > longestUser.length()){
+                                longestUser = ti.getAssignee();
+                            }
+                            if(ti.getDueDate().toString().length() > longestDate.length()){
+                                longestDate = ti.getDueDate().toString();
+                            }
+                            if(ti.getName().length() > longestTask.length()){
+                                longestTask = ti.getName();
+                            }
+                        }
+                    }
+                    longestDate = longestDate.substring(0, longestDate.indexOf(" ")); // cut the time off
+                    GC gc = new GC(treeViewer.getTree());
+                    // compute used space
+                    int auditWidth = gc.textExtent(longestAudit, SWT.DRAW_MNEMONIC).x;
+                    int userWidth = gc.textExtent(longestUser + " (you)", SWT.DRAW_MNEMONIC).x;
+                    int dateWidth = gc.textExtent(longestDate , SWT.DRAW_MNEMONIC).x;
+                    int taskWidth = gc.textExtent(longestTask, SWT.DRAW_MNEMONIC).x;
+                    gc.dispose();
+                    // expand computed space by 10%
+                    double factor = 1.1;
+                    taskWidth *= factor;
+                    userWidth *= factor;
+                    auditWidth *= factor;
+                    // set new widths
+                    for(TreeColumn tc : treeViewer.getTree().getColumns()){
+                        if(tc.getText().equals("Audit / Control")){
+                            tc.setWidth(auditWidth);
+                        } else if(tc.getText().equals("Task")){
+                            tc.setWidth(taskWidth);
+                        } else if(tc.getText().equals("User")){
+                            tc.setWidth(userWidth);
+                        } else if(tc.getText().equals("Date")){
+                            tc.setWidth(dateWidth);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void treeCollapsed(TreeEvent e) {}
+        });
 
         /*** Tree table specific code ends ***/
 
         this.treeViewer.setContentProvider(new TaskContentProvider());
         labelProvider = new TaskLabelProvider(onlyMyTasks);
         this.treeViewer.setLabelProvider(labelProvider);
+        
+
     }
     
     private void makeActions() {
