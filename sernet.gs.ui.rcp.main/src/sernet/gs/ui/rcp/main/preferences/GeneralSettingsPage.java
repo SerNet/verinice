@@ -48,6 +48,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor infoDialogLdapImport;
 	private BooleanFieldEditor switchPerspectiveIsmView;
 	private BooleanFieldEditor switchPerspectiveCatalogView;
+	private BooleanFieldEditor showAlienDecorator;
 	
 	private ComboFieldEditor encodingFieldEditor;
 	private static final String[][] encodingComboValues = new String[][]{
@@ -109,12 +110,14 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(switchPerspectiveCatalogView);
 
+		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent());
+		addField(showAlienDecorator);
+
 		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 				"Zeichencodierung (Encoding) neuer Control Kataloge", 
 				encodingComboValues, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);
-		
 	}
 
 	@Override

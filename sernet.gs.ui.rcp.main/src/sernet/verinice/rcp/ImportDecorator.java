@@ -24,7 +24,9 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,7 +45,9 @@ public class ImportDecorator extends LabelProvider implements ILightweightLabelD
         if(o!=null && o instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) o;
             if(element.getSourceId()!=null) {
-                decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
+                if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SHOW_ALIEN_DECORATOR)){
+                    decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
+                }
                 decoration.addSuffix( new StringBuilder().append(" [")
                         .append(((CnATreeElement) o).getSourceId())
                         .append("]").toString() );
