@@ -31,6 +31,11 @@ public class Messages extends NLS {
     public static String StartIsaProcess_1;
     public static String StartIsaProcess_3;
     public static String StartIsaProcess_5;
+    public static String ButtonUserTasks;
+    public static String ButtonRefresh;
+    public static String ButtonCancel;
+    public static String ConfirmTaskDelete_0;
+    public static String ConfirmTaskDelete_1;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -30,9 +30,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessEngine;
+import org.jbpm.api.cmd.Command;
+import org.jbpm.api.cmd.Environment;
 import org.jbpm.api.task.Task;
 import org.jbpm.pvm.internal.task.TaskImpl;
 import org.jbpm.pvm.internal.type.Variable;
@@ -435,6 +438,29 @@ public class TaskService implements ITaskService{
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public void cancelTask(String taskId) {
+            List<Object> paramList = new LinkedList<Object>();
+            StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task ");
+            sb.append(" where ");
+            sb.append(" task.id=?" );
+            paramList.add(Long.valueOf(taskId));
+            final String hql = sb.toString();
+            String hql2 = "select execution from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?";
+            final List<Execution> executionList = getJbpmTaskDao().findByQuery(hql2,paramList.toArray());
+            final List<TaskImpl> jbpmTaskList = getJbpmTaskDao().findByQuery(hql,paramList.toArray());
+            getProcessEngine().execute(new Command<Object>() {
+                @Override
+                public Object execute(Environment arg0) throws Exception {
+                    for(TaskImpl t : jbpmTaskList){
+                        t.setExecution(executionList.get(0));
+                        t.cancelExecution(TaskImpl.STATE_SUSPENDED);
+                    }
+                    return null;
+                }
+            });
     }
 
 }

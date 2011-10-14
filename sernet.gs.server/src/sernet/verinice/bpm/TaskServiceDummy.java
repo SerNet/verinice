@@ -55,4 +55,7 @@ public class TaskServiceDummy implements ITaskService {
         return false;
     }
 
+    @Override
+    public void cancelTask(String taskId) {}
+
 }

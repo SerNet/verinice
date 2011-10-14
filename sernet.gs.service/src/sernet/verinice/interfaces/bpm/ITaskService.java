@@ -94,4 +94,6 @@ public interface ITaskService {
      */
     boolean isActive();
     
+    void cancelTask(String taskId);
+    
 }

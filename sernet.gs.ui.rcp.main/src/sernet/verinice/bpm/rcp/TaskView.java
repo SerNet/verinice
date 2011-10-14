@@ -23,21 +23,21 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.TreeEvent;
@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
@@ -71,6 +70,7 @@ import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
@@ -134,15 +134,20 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private Action myTasksAction;
     
+    private Action cancelTaskAction;
+    
     private ICommandService commandService;
     
     private boolean onlyMyTasks = true;
+    
+    private Composite parent = null;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void createPartControl(Composite parent) {
+        this.parent = parent;
         Composite container = createContainer(parent);
         //createViewer(container);
         createTreeViewer(container);
@@ -278,7 +283,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 loadTasks();
             }
         };
-        refreshAction.setText("Refresh");
+        refreshAction.setText(Messages.ButtonRefresh);
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         
         doubleClickAction = new Action() {
@@ -296,7 +301,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         };       
-        myTasksAction = new Action("Only my tasks", SWT.TOGGLE) {
+        myTasksAction = new Action(Messages.ButtonUserTasks, SWT.TOGGLE) {
             public void run() {
                 onlyMyTasks = !onlyMyTasks;
                 myTasksAction.setChecked(onlyMyTasks);   
@@ -305,7 +310,39 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         };
         myTasksAction.setChecked(onlyMyTasks);
-        myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));     
+        myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));   
+        
+        cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE){
+            public void run(){
+                try{
+                    cancelTask();
+                    refreshAction.run();
+                    this.setChecked(false);
+                }catch(Throwable e){
+                    log.error("Fehler:\t", e);
+                }
+            }
+        };
+        if(ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()){
+            if(isAdminUser(ServiceFactory.lookupAuthService().getUsername())){
+                cancelTaskAction.setEnabled(true);
+            }
+        } else {
+            cancelTaskAction.setEnabled(false);
+        }
+        cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
+    }
+    
+    private boolean isAdminUser(String username){
+        if(username.equals(ServiceFactory.lookupAuthService().getAdminUsername())){
+            return true;
+        } 
+        for(String role : ServiceFactory.lookupAuthService().getRoles()){
+            if(role.equals(ApplicationRoles.ROLE_ADMIN)){
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -336,6 +373,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
         if(hasRole) {
             manager.add(myTasksAction);
+            manager.add(cancelTaskAction);
         }
     }
     
@@ -426,5 +464,22 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public String getPerspectiveId() {
         return Iso27kPerspective.ID;
     }
-
+    
+    private void cancelTask(){
+        ISelection selection = getViewer().getSelection();
+        if(selection instanceof TreeSelection){
+            TreeSelection tSelection = (TreeSelection)selection;
+            Iterator<?> iter = tSelection.iterator();
+            if(tSelection.getFirstElement() instanceof TaskInformation && MessageDialog.openConfirm(parent.getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, tSelection.size()))){
+                while(iter.hasNext()){
+                    Object next = iter.next();
+                    if(parent != null){
+                        if(next instanceof TaskInformation){
+                            ServiceFactory.lookupTaskService().cancelTask(((TaskInformation)next).getId());
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
