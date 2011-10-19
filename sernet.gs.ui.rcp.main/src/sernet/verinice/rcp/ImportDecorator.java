@@ -47,10 +47,10 @@ public class ImportDecorator extends LabelProvider implements ILightweightLabelD
             if(element.getSourceId()!=null) {
                 if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SHOW_ALIEN_DECORATOR)){
                     decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
-                }
                 decoration.addSuffix( new StringBuilder().append(" [")
                         .append(((CnATreeElement) o).getSourceId())
                         .append("]").toString() );
+                }
             }
         }
     }

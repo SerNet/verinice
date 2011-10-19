@@ -180,7 +180,7 @@ public class TransferData {
 	}
 
 	private void typedTransfer(Person element, ZielobjektTypeResult result) {
-		element.setTitel(result.zielobjekt.getName());
+		element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_NAME),result.zielobjekt.getName());
 		element.setKuerzel(result.zielobjekt.getKuerzel());
 		element.setErlaeuterung(result.zielobjekt.getBeschreibung());
 		element.setAnzahl(result.zielobjekt.getAnzahl());

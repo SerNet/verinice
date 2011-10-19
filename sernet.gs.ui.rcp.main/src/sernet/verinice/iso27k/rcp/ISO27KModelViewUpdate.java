@@ -276,11 +276,15 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             });
             
             // remove listener from currently displayed model:
-            getModel(viewer.getInput()).removeISO27KModelListener(this);
+            ISO27KModel model = getModel(viewer.getInput());
+            if(model!=null) {
+                model.removeISO27KModelListener(this);
+            }
             newModel.addISO27KModelListener(this);
             cache.clear();
             updater.setInput(newModel);
             updater.refresh();
+            cache.addObject(newModel);
             
             // Expand elements in background
             Job job = new ExpandJob(expandedElements);

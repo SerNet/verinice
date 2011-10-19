@@ -290,25 +290,30 @@ public class LinkMaker extends Composite implements IRelationTable {
                 boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.LinkMaker_5, NLS.bind(Messages.LinkMaker_6, selection.size()));
                 if (!confirm)
                     return;
-
+                
+                CnALink link = null;                     
                 for (Object object : selection) {
-                    CnALink link = (CnALink) object;
+                    link = (CnALink) object;
                     try {
                         CnAElementHome.getInstance().remove(link);
                         //viewer.remove(link);
                         inputElmt.removeLinkDown(link);
 
-                        // notify local listeners:
-                        if (CnAElementFactory.isModelLoaded()) {
-                            CnAElementFactory.getLoadedModel().linkRemoved(link);
-                        }
-                        CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+                        
                     } catch (Exception e1) {
                         LOG.error("Error while removing link",e1);
                         ExceptionUtil.log(e1, Messages.LinkMaker_7);
                     }
                 }
-
+                
+                // calling linkRemoved for one link reloads all changed links
+                if(link!=null) {
+                    // notify local listeners:
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getLoadedModel().linkRemoved(link);
+                    }
+                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+                }
             }
         };
     }

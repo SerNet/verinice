@@ -47,25 +47,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				.getWorkdir()
 				+ File.separator + "it-grundschutz_el11_html_de.zip"); //$NON-NLS-1$
 
-		store.setDefault(PreferenceConstants.OOTEMPLATE, CnAWorkspace
-				.getInstance().getWorkdir()
-				+ File.separator + "office" + File.separator + "report.ods"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		store.setDefault(PreferenceConstants.OOTEMPLATE_TEXT, CnAWorkspace
-				.getInstance().getWorkdir()
-				+ File.separator + "office" + File.separator + "report.odt"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		if (System.getProperty("os.name").toLowerCase().matches(".*windows.*") //$NON-NLS-1$ //$NON-NLS-2$
-				|| System.getProperty("os.name").toLowerCase() //$NON-NLS-1$
-						.matches(".*nt.*")) { //$NON-NLS-1$
-			store.setDefault(PreferenceConstants.OODIR, "C:\\Programme"); //$NON-NLS-1$
-		} else {
-			store.setDefault(PreferenceConstants.OODIR, "/opt"); //$NON-NLS-1$
-		}
 
 		store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
 		store.setDefault(PreferenceConstants.FIRSTSTART, true);
 		store.setDefault(PreferenceConstants.INPUTHINTS, true);
+		store.setDefault(PreferenceConstants.SHOW_ALIEN_DECORATOR, true);
 
 		store.setDefault(PreferenceConstants.DB_DRIVER,
 				PreferenceConstants.DB_DRIVER_DERBY);

@@ -31,6 +31,7 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
     private String typeId;
     private RetrieveInfo ri;
 
+    private transient IBaseDao<T, Serializable> dao;
     
     
 	public LoadElementByUuid(String uuid) {
@@ -55,20 +56,28 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 		    ri = new RetrieveInfo();
 		}
 	}
-
-	public void execute() {
-	    IBaseDao<T, Serializable> dao;
-	    if(typeId==null) {
-	        dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
-	    } else {
-	        dao = getDaoFactory().getDAO(typeId);
-	    }
-		element = dao.findByUuid(this.uuid,ri);
-	}
+	
+    public void execute() {
+		element = getDao().findByUuid(this.uuid,ri);
+    }
 
 	public T getElement() {
 		return element;
 	}
+
+    /**
+     * @return the dao
+     */
+    public IBaseDao<T, Serializable> getDao() {
+        if(dao==null) {
+            if(typeId==null) {
+                dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
+            } else {
+                dao = getDaoFactory().getDAO(typeId);
+            }       
+        }
+        return dao;
+    }
 	
 
 }

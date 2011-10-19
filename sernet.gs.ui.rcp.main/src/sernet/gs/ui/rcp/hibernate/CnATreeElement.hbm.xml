@@ -55,6 +55,8 @@
 			not-null="false"
 			/>
 			
+		<property name="parentId" column="parent" insert="false" update="false"/>
+		
 		<many-to-one 
 			name="parent"
 			column="parent"

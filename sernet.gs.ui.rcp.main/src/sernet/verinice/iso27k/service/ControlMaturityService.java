@@ -80,7 +80,11 @@ public class ControlMaturityService {
         int maturity = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-                maturity += getMaturity((IControl)child);
+                int m = getMaturity((IControl)child);
+                // don't add maturity if maturity is NA
+                if(m!=IControl.IMPLEMENTED_NA_NUMERIC) {
+                    maturity += m;
+                }
             }
             if (child instanceof ControlGroup) {
                 maturity += getMaturity((ControlGroup) child);
@@ -177,10 +181,14 @@ public class ControlMaturityService {
         int result = 0;
         for (CnATreeElement child : group.getChildren()) {
             if (child instanceof IControl) {
-                result+= ((IControl)child).getThreshold1();
+                IControl control = (IControl)child;
+                // don't add threshold if maturity is NA
+                if(getMaturity(control)!=IControl.IMPLEMENTED_NA_NUMERIC) {
+                    result += control.getThreshold1();
+                }
             }
             if (child instanceof ControlGroup) {
-            	result+= getThreshold1((ControlGroup)child);
+            	result += getThreshold1((ControlGroup)child);
             }
         }
         return result;
@@ -190,7 +198,11 @@ public class ControlMaturityService {
         int result = 0;
         for (CnATreeElement child : group.getChildren()) {
             if (child instanceof IControl) {
-                result+= ((IControl)child).getThreshold2();
+                IControl control = (IControl)child;
+                // don't add threshold if maturity is NA
+                if(getMaturity(control)!=IControl.IMPLEMENTED_NA_NUMERIC) {
+                    result += control.getThreshold2();
+                }
             }
             if (child instanceof ControlGroup) {
             	result+= getThreshold2((ControlGroup)child);
@@ -226,12 +238,15 @@ public class ControlMaturityService {
      * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
      */
     public String getImplementationState(IControl control) {
-    	String state = IControl.IMPLEMENTED_NO;
+    	String state =  IControl.IMPLEMENTED_NO;
     	if (getMaturity(control) >= control.getThreshold1()) {
     		state = IControl.IMPLEMENTED_PARTLY;
     	}
     	if (getMaturity(control) >= control.getThreshold2()) {
     		state = IControl.IMPLEMENTED_YES;
+    	}
+    	if(getMaturity(control)==IControl.IMPLEMENTED_NA_NUMERIC) {
+    	    state = IControl.IMPLEMENTED_YES;
     	}
     	return state;
     }

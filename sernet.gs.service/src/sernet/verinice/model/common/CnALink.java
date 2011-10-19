@@ -30,6 +30,7 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.InheritLogger;
 
 /**
@@ -67,10 +68,24 @@ public class CnALink implements Serializable, ITypedElement {
 	 * @param link
 	 */
 	public static String getRelationObjectTitle(CnATreeElement inputElmt, CnALink link) {
-		if (CnALink.isDownwardLink(inputElmt, link))
-			return link.getDependency().getTitle();
-		else
-			return link.getDependant().getTitle();
+	    CnATreeElement element = null;
+		if (CnALink.isDownwardLink(inputElmt, link)) {
+		    element = link.getDependency();
+		} else {
+		    element = link.getDependant();
+		}
+		StringBuilder sb = new StringBuilder();
+		if(element instanceof IISO27kElement) {
+            String abbreviation = ((IISO27kElement)element).getAbbreviation();
+            if(abbreviation!=null && !abbreviation.isEmpty()) {
+                sb.append(abbreviation).append(" ");
+            }
+        }
+		String title = element.getTitle();
+        if(title!=null && !title.isEmpty()) {
+            sb.append(title);
+        }
+        return sb.toString();
 	}
 	
 	 /**

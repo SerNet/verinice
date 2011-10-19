@@ -164,6 +164,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             CheckSourceId checkSourceId = new CheckSourceId(sourceId);
             checkSourceId = getCommandService().executeCommand(checkSourceId);
             sourceIdExists = checkSourceId.exists();
+            if (sourceIdExists && getLog().isDebugEnabled()) {
+                getLog().debug("Source-Id exists in DB: " + sourceId);
+            }
             List<SyncObject> soList = syncData.getSyncObject();
             
             for (SyncObject so : soList) {
@@ -212,7 +215,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         
         CnATreeElement elementInDB = null;
         if(sourceIdExists) {
-            elementInDB = findDbElement(sourceId, extId);
+            elementInDB = findDbElement(sourceId, extId, true, true);
         }
         
         if (elementInDB != null) {
@@ -220,6 +223,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 /*** UPDATE: ***/
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
+                }
+                if(parent==null) {
+                    // Org. or IT-Verbund was found
+                    parent = elementInDB.getParent();
                 }
                 setAttributes = true;
                 updated++;
@@ -233,13 +240,13 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         CnATypeMapper typeMapper = new CnATypeMapper();
         Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
-        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(clazz);
+        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(clazz);      
+        
+        parent = (parent == null) ? accessContainer(clazz) : parent;
         
         // If no previous object was found in the database and the 'insert'
         // flag is given, create a new object.
-        if (elementInDB == null && insert) {                    
-            parent = (parent == null) ? accessContainer(clazz) : parent;
-
+        if (elementInDB == null && insert) {                          
             try {
                 // create new object in db...
                 elementInDB =createElement(dao, parent, clazz);
@@ -287,11 +294,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     addElement(elementInDB);
                 }           
             } // for <syncAttribute>
-           elementInDB = dao.merge(elementInDB);
-           parent.addChild(elementInDB);
-           elementInDB.setParent(parent);
-           merged++;
-           if(merged % 50 == 0 ) {
+            elementInDB = dao.merge(elementInDB);
+            parent.addChild(elementInDB);
+            elementInDB.setParent(parent);
+            merged++;
+            if(merged % 50 == 0 ) {
                long flushstart = 0;
                if (getLogrt().isDebugEnabled()) {
                    flushstart = System.currentTimeMillis();
@@ -302,7 +309,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                    long time = System.currentTimeMillis() - flushstart;
                    getLogrt().debug("Flushed, runtime: " + time + " ms");
                }
-           }
+            }
         } // if( null != ... )
 
         if(isVeriniceArchive()) {
@@ -454,7 +461,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
         if(dependant==null) {     
-        	dependant = findDbElement(this.sourceId, dependantId);
+        	dependant = findDbElement(this.sourceId, dependantId, true, true);
             if(dependant==null) {
                 getLog().error("Can not import link. dependant not found in xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
                 return;
@@ -464,7 +471,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
         if(dependency==null) { 
-        	dependency = findDbElement(this.sourceId, dependencyId);
+        	dependency = findDbElement(this.sourceId, dependencyId, true, true);
             if(dependency==null) {
                 getLog().error("Can not import link. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
                 return;
@@ -547,10 +554,23 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @return the CnATreeElement from the query or null, if nothing was found
      * @throws RuntimeException if more than one element is found
      */
-    private CnATreeElement findDbElement(String sourceId, String externalId) {
+    private CnATreeElement findDbElement(String sourceId, String externalId ) {
+        return findDbElement(sourceId, externalId, false, false);
+    }
+    
+    /**
+     * Query element (by externalID) from DB, which has been previously
+     * synchronized from the given sourceID.
+     * 
+     * @param sourceId
+     * @param externalId
+     * @return the CnATreeElement from the query or null, if nothing was found
+     * @throws RuntimeException if more than one element is found
+     */
+    private CnATreeElement findDbElement(String sourceId, String externalId, boolean fetchLinksDown, boolean fetchLinksUp) {
     	CnATreeElement result = null;
     	// use a new crudCommand (load by external, source id):
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId);
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId, fetchLinksDown, fetchLinksUp);
         try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {

@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,9 +44,9 @@ import sernet.verinice.model.bsi.BSIModel;
  */
 public class FindHuiUrls extends GenericCommand {
 
-	private static final long serialVersionUID = 3230058749744891441L;
+    private static final long serialVersionUID = 3230058749744891441L;
 
-	private static final Logger log = Logger.getLogger(FindHuiUrls.class);
+    private static final Logger log = Logger.getLogger(FindHuiUrls.class);
 
 	private HibernateCallback hcb = new FindURLsCallback();
 
@@ -68,13 +69,18 @@ public class FindHuiUrls extends GenericCommand {
 		 * editor for the document links.
 		 */
 		List<String> rawURLs = (List<String>) dao.findByCallback(hcb);
-
+		Set<String> urlSet = new HashSet<String>(rawURLs.size());
 		for (String rawURL : rawURLs) {
-			String name = URLUtil.getName(rawURL);
-			String url = URLUtil.getHref(rawURL);
-
-			list.add(new HuiUrl(name, url));
+		    if(rawURL!=null && rawURL.length()>0) {
+		        urlSet.add(rawURL);
+		    }		
 		}
+		for (String rawURL : urlSet) {
+		    String name = URLUtil.getName(rawURL);
+            String url = URLUtil.getHref(rawURL);
+            list.add(new HuiUrl(name, url));
+        }
+		
 	}
 
 	public List<HuiUrl> getList() {
@@ -93,10 +99,9 @@ public class FindHuiUrls extends GenericCommand {
 			 * have a non-enmpty value.
 			 */
 			Query query = session.createSQLQuery(
-					"select distinct propertyValue "
+					"select propertyValue "
 					+ "from properties "
-					+ "where propertytype in (:types) "
-					+ "and propertyvalue != ''")
+					+ "where propertytype in (:types)")
 					.addScalar("propertyvalue", Hibernate.STRING)
 					.setParameterList("types", allIDs, Hibernate.STRING);
 

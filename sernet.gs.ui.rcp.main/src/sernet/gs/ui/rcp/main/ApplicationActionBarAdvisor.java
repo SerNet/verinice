@@ -353,7 +353,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
-        fileMenu.add(testAction);
+        //fileMenu.add(testAction);
         return fileMenu;
     }
 

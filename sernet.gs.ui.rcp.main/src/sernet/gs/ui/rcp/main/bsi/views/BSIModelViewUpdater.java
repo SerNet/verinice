@@ -17,7 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -44,8 +51,11 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class BSIModelViewUpdater implements IBSIModelListener {
 
+    private static final Logger LOG = Logger.getLogger(BSIModelViewUpdater.class);
+    
 	private TreeViewer viewer;
 	private ThreadSafeViewerUpdate updater;
+    Object[] expandedElements = null;
 	
 	// cache to figure out if an element is currently displayed in the tree or not
 	private TreeViewerCache cache;
@@ -91,12 +101,33 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 	}
 	
 	public void modelReload(BSIModel newModel) {
-		// remove listener from currently displayed model:
-		getModel(viewer.getInput()).removeBSIModelListener(this);
-		newModel.addBSIModelListener(this);
-        cache.clear();
-		updater.setInput(newModel);
-		updater.refresh();
+	    
+	    try {
+            Display.getDefault().syncExec(new Runnable() {
+                public void run() {
+                    try {
+                        expandedElements = viewer.getExpandedElements();
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            });
+            BSIModel model = getModel(viewer.getInput());
+            if(model!=null) {
+                // remove listener from currently displayed model:
+                model.removeBSIModelListener(this);
+            }
+            newModel.addBSIModelListener(this);
+            cache.clear();
+            updater.setInput(newModel);
+            updater.refresh();
+            // Expand elements in background
+            Job job = new ExpandJob(expandedElements);
+            job.setRule(new ExpandJobRule());
+            job.schedule(Job.DECORATE);
+        } catch (Exception e) {
+            LOG.error("Error while updating treeview", e);
+        }
 	}
 
 	/**
@@ -185,5 +216,51 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 			updater.refresh();
 		}
 	}
+	
+	/**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class ExpandJobRule implements ISchedulingRule {
+        public boolean contains(ISchedulingRule rule) {
+            return rule.getClass() == ExpandJobRule.class;
+        }
+
+        public boolean isConflicting(ISchedulingRule rule) {
+            return rule.getClass() == ExpandJobRule.class;
+        }
+    }
+
+    /**
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     * 
+     */
+    private final class ExpandJob extends Job {
+        
+        Object [] elements;
+        
+        /**
+         * @param name
+         */
+        private ExpandJob(Object [] elements) {
+            super("Expanding");
+            this.elements = elements;
+        }
+
+        @Override
+        protected IStatus run(IProgressMonitor monitor) {
+            monitor.setTaskName("Expanding element tree...");
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    try {
+                        viewer.setExpandedElements(elements);
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            });         
+            return Status.OK_STATUS;
+        }
+    }
 	
 }

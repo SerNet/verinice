@@ -21,7 +21,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  * Helper to execute viewer updates from any thread.
@@ -128,16 +134,52 @@ public class ThreadSafeViewerUpdate {
 		//dmurygin, 2010-09-16:
 	    if (viewer.getControl().isDisposed())
 			return;
-		
+	    	    
+	    final Object newInput = getNewInput(newModel);
+	    
 		if (Display.getCurrent() != null) {
-			viewer.setInput(newModel);
+			viewer.setInput(newInput);
 			return;
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-		        viewer.setInput(newModel);
+		        viewer.setInput(newInput);
 			}
 		});
 	}
+
+    /**
+     * @param newModel
+     * @throws CommandException
+     */
+    private Object getNewInput(final Object newModel) {
+        Object returnValue = newModel;
+        Object oldInput = viewer.getInput();
+		if(oldInput!=null 
+		   && !oldInput.getClass().equals(newModel.getClass())
+		   && oldInput instanceof CnATreeElement) {
+		    CnATreeElement element = (CnATreeElement) oldInput;
+		    RetrieveInfo ri = new RetrieveInfo();
+	        ri.setProperties(true)
+	        .setPermissions(true)
+	        .setParent(true)
+	        .setChildren(true)
+	        .setSiblings(true);
+		    LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(element.getUuid(),ri);
+		    try {
+		        Activator.inheritVeriniceContextState();
+                loadByUuid = ServiceFactory.lookupCommandService().executeCommand(loadByUuid);
+                element = loadByUuid.getElement();
+                if(element.getParent()!=null) {
+                    element.getParent().setParent(null);
+                }
+                returnValue = element;
+            } catch (CommandException e) {
+                LOG.error("Error while reloading tree root", e);
+            }	    
+		}
+		return returnValue;
+    }
+
 
 }

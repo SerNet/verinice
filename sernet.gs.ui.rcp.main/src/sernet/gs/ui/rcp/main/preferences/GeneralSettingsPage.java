@@ -79,7 +79,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(errorPopups);
 
-		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent());
+		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inputHelperHints);
 
 		infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
@@ -110,11 +110,11 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(switchPerspectiveCatalogView);
 
-		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent());
+		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showAlienDecorator);
 
 		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
-				"Zeichencodierung (Encoding) neuer Control Kataloge", 
+		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
 				encodingComboValues, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);

@@ -116,36 +116,36 @@ public class LdapImportDialog extends TitleAreaDialog {
 		containerRoles.setLayout(layout);
 		containerRoles.setLayoutData(gd);
 		
-		Label nameLabel = new Label(containerRoles, SWT.NONE);
-		nameLabel.setText(Messages.LdapImportDialog_31);
-		surname = new Text(containerRoles, SWT.BORDER);
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		surname.setLayoutData(gridData);
-		
 		Label givenNameLabel = new Label(containerRoles, SWT.NONE);
 		givenNameLabel.setText(Messages.LdapImportDialog_0);
         givenName = new Text(containerRoles, SWT.BORDER);
-        gridData = new GridData();
+        GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         givenName.setLayoutData(gridData);
+        
+        Label nameLabel = new Label(containerRoles, SWT.NONE);
+        nameLabel.setText(Messages.LdapImportDialog_31);
+        surname = new Text(containerRoles, SWT.BORDER);
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        surname.setLayoutData(gridData);
 		
 		Label titleLabel = new Label(containerRoles, SWT.NONE);
-		titleLabel.setText(Messages.LdapImportDialog_32);
+		titleLabel.setText(Messages.LdapImportDialog_2);
 		title = new Text(containerRoles, SWT.BORDER);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		title.setLayoutData(gridData);
 		
 		Label departmentLabel = new Label(containerRoles, SWT.NONE);
-		departmentLabel.setText(Messages.LdapImportDialog_33);
+		departmentLabel.setText(Messages.LdapImportDialog_3);
 		department = new Text(containerRoles, SWT.BORDER);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		department.setLayoutData(gridData);
 		
 		Label companyLabel = new Label(containerRoles, SWT.NONE);
-		companyLabel.setText(Messages.LdapImportDialog_34);
+		companyLabel.setText(Messages.LdapImportDialog_4);
 		company = new Text(containerRoles, SWT.BORDER);	
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;

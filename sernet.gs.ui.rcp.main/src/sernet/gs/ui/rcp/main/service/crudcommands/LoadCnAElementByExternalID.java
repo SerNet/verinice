@@ -21,10 +21,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,17 +46,45 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
 	private String sourceID;
-
-	private static final String QUERY = "from CnATreeElement elmt where elmt.sourceId = ? and elmt.extId = ?"; 
 	
-	public LoadCnAElementByExternalID( String sourceID, String id) {
-		this.id = id;
-		this.sourceID = sourceID;
-	}
+	private boolean fetchLinksDown = false;
+    
+    private boolean fetchLinksUp = false;
 
-	public void execute() {
+	public LoadCnAElementByExternalID( String sourceID, String id) {
+		this(id,sourceID,false,false);
+	}
+	
+	/**
+     * @param id
+     * @param sourceID
+     * @param fetchLinksDown
+     * @param fetchLinksUp
+     */
+    public LoadCnAElementByExternalID(String sourceID ,String id, boolean fetchLinksDown, boolean fetchLinksUp) {
+        super();
+        this.id = id;
+        this.sourceID = sourceID;
+        this.fetchLinksDown = fetchLinksDown;
+        this.fetchLinksUp = fetchLinksUp;
+    }
+
+    public void execute() {
 		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-		list = dao.findByQuery(QUERY, new Object[] {sourceID, id});
+		DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class);
+		criteria.add(Restrictions.eq("sourceId", sourceID));
+        criteria.add(Restrictions.eq("extId", id));
+        criteria.setFetchMode("children", FetchMode.JOIN);
+        if(fetchLinksDown) {
+            criteria.setFetchMode("linksDown", FetchMode.JOIN);
+            criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
+        }
+        if(fetchLinksUp) {
+            criteria.setFetchMode("linksUp", FetchMode.JOIN);
+            criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
+        }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        list = dao.findByCriteria(criteria);
 	}
 
 	public List<CnATreeElement> getElements() {

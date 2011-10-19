@@ -66,7 +66,7 @@ public class ElementViewTreeCommandFactory implements IContentCommandFactory {
     public static RetrieveCnATreeElement getOrganizationISMViewInstance(CnATreeElement el, boolean loadParent) {
         RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(Organization.TYPE_ID, el.getDbId());
         RetrieveInfo retrieveInfo = new RetrieveInfo();
-        retrieveInfo.setPermissions(true).setProperties(true).setParent(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+        retrieveInfo.setProperties(true).setPermissions(true).setParent(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
         if(loadParent) {
             retrieveInfo.setParent(true).setParentPermissions(true).setSiblings(true);
         }
@@ -77,7 +77,7 @@ public class ElementViewTreeCommandFactory implements IContentCommandFactory {
     public static RetrieveCnATreeElement getGroupISMViewInstance(CnATreeElement el, boolean loadParent) {
         RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(el.getTypeId(), el.getDbId());
         RetrieveInfo retrieveInfo = new RetrieveInfo();
-        retrieveInfo.setProperties(true).setPermissions(true).setParent(true).setChildren(true).setChildrenPermissions(true).setChildrenProperties(true).setGrandchildren(true);
+        retrieveInfo.setProperties(true).setPermissions(true).setParent(true).setChildren(true).setChildrenProperties(true).setChildrenPermissions(true).setGrandchildren(true);
         if(loadParent) {
             retrieveInfo.setParent(true).setParentPermissions(true).setSiblings(true);
         }
@@ -88,7 +88,7 @@ public class ElementViewTreeCommandFactory implements IContentCommandFactory {
     public static RetrieveCnATreeElement getElementISMViewInstance(CnATreeElement el, boolean loadParent) {
         RetrieveCnATreeElement retrieveElement = new RetrieveCnATreeElement(el.getTypeId(), el.getDbId());
         RetrieveInfo retrieveInfo = new RetrieveInfo();
-        retrieveInfo.setPermissions(true).setProperties(true).setParent(true).setChildren(true);
+        retrieveInfo.setProperties(true).setPermissions(true).setParent(true).setChildren(true);
         if(loadParent) {
             retrieveInfo.setParent(true).setParentPermissions(true).setSiblings(true);
         }

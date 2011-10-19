@@ -62,7 +62,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 					}
 					if(securityFigure!=null) {
 					    StringBuilder sb = new StringBuilder();
-					    sb.append("[").append(getPercent(securityFigure)).append(" %") .append("]");
+					    sb.append(" [").append(getPercent(securityFigure)).append(" %") .append("]");
 					    decoration.addSuffix(sb.toString());
 					}
 				}

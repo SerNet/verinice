@@ -221,7 +221,7 @@
 											<h:outputLabel for="umsetzung" value="#{msg['todo.realization']}" styleClass="formLabel"/>
 										</td>
 										<td>
-											<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}" style="width:155px;">
+											<o:dropDownField value="#{toDo.umsetzung}" converter="#{toDo.umsetzungConverter}" style="width:170px; border-width: 1px; border-color: silver;">
 					  							<o:dropDownItems value="#{toDo.executionList}"/>
 					  						</o:dropDownField>
 										</td>
@@ -229,7 +229,7 @@
 											<h:outputLabel for="erlaeuterung" value="#{msg['todo.comment']}" styleClass="formLabel"/>					  					
 										</td>
 										<td rowspan="2">
-											<h:inputTextarea value="#{toDo.massnahmeUmsetzung.erlaeuterung}" style="width:330px;height:55px;"/>
+											<h:inputTextarea value="#{toDo.massnahmeUmsetzung.erlaeuterung}" style="width:320px;height:55px;"/>
 										</td>
 									</tr>
 									<tr>
@@ -237,7 +237,7 @@
 											<h:outputLabel for="umsetzungBis" value="#{msg['todo.until']}" styleClass="formLabel"/>
 										</td>
 										<td>
-											<rich:calendar id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" timeZone="#{toDo.timeZone}" datePattern="d. MMM. yyyy"  style="width: 100px"/>										
+											<rich:calendar id="umsetzungBis" value="#{toDo.massnahmeUmsetzung.umsetzungBis}" timeZone="#{toDo.timeZone}" datePattern="d. MMM. yyyy"  style="width: 80px"/>										
 										</td>
 									</tr>
 									<tr>

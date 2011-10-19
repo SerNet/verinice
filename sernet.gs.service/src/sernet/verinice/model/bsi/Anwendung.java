@@ -19,6 +19,8 @@ package sernet.verinice.model.bsi;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,6 +36,15 @@ import sernet.verinice.model.ds.Verarbeitungsangaben;
 public class Anwendung extends CnATreeElement 
 	implements IBSIStrukturElement {
 	
+    private transient Logger log = Logger.getLogger(Anwendung.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Anwendung.class);
+        }
+        return log;
+    }
+    
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 		= new SchutzbedarfAdapter(this);
 	
@@ -90,6 +101,10 @@ public class Anwendung extends CnATreeElement
 	public Anwendung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Anmeldung Kuerzel: " + getKuerzel());
+        }
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }

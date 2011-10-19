@@ -20,15 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
@@ -42,10 +36,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * 
@@ -114,6 +104,24 @@ public class PasswordDialog extends Dialog {
         formData2.left = new FormAttachment(33, 0);
         formData2.right = new FormAttachment(100, -5);
         text.setLayoutData(formData2);
+        text.addFocusListener(new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pwd = text.getText();
+                if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
+                    MessageDialog.openWarning(PasswordDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
+                    text.setText(""); //$NON-NLS-1$
+                    text2.setText(""); //$NON-NLS-1$
+                    text.setFocus();
+                }
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+                // nothing to do
+            }
+        });
 
         Label label2 = new Label(container, SWT.NULL);
         label2.setText(Messages.PasswordDialog_2);

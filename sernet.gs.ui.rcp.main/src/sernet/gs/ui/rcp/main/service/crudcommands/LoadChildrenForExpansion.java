@@ -62,75 +62,8 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		
 		RetrieveInfo ri = new RetrieveInfo();
-		ri.setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
-		parent = dao.retrieve(dbId,ri);
-	
-		/*
-		if(parent!=null) {
-			
-			if (log.isDebugEnabled() && !filteredClasses.isEmpty())
-				log.debug("Skipping the following model classes: " + filteredClasses);
-			
-			Set<CnATreeElement> children = parent.getChildren();
-			for (CnATreeElement child : children) {
-				//if (!filteredClasses.contains(child.getClass()))
-			    if(child instanceof BausteinUmsetzung ) {
-			        BausteinUmsetzung baustein = (BausteinUmsetzung) child;
-			        Set<CnATreeElement> massnahmenSet = baustein.getChildren();
-			        for (CnATreeElement cnATreeElement : massnahmenSet) {
-                        if(cnATreeElement instanceof MassnahmenUmsetzung) {
-                            ((MassnahmenUmsetzung)cnATreeElement).getUmsetzung();
-                        }
-                    }
-			    } 
-			}
-		}
-		*/
-		
-	}
-
-	private void hydrate(CnATreeElement element) {
-		if (element == null)
-			return;
-		
-		if (element instanceof MassnahmenUmsetzung) {
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) element;
-			mn.getKapitelValue();
-			mn.getTitle();	
-			mn.getUmsetzung();
-			mn.getUrl();
-			mn.getStand();
-			return;
-		}
-		
-		RetrieveInfo ri = null;
-		ri = new RetrieveInfo();
-		ri.setChildren(true).setLinksDown(false);
-		if (element instanceof BausteinUmsetzung) {
-			ri.setChildrenProperties(true).setInnerJoin(true);
-		}
-		
-		HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getTypeId()), element, ri);
-		
-		// initialize all children:
-		if (element instanceof FinishedRiskAnalysis || element instanceof GefaehrdungsUmsetzung) {
-			Set<CnATreeElement> children = element.getChildren();
-			for (CnATreeElement child : children) {
-				hydrate(child);
-			}
-		}
-		
-		if (element instanceof BausteinUmsetzung) {
-			IBaseDao<? extends BausteinUmsetzung, Serializable> dao = getDaoFactory().getDAO(BausteinUmsetzung.class);
-			
-			BausteinUmsetzung bst = (BausteinUmsetzung) element;
-			bst.getKapitel();
-			Set<CnATreeElement> massnahmen = bst.getChildren();
-			for (CnATreeElement massnahme : massnahmen) {
-				hydrate(massnahme);
-			}
-		}
-		
+		ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
+		parent = dao.retrieve(dbId,ri);	
 	}
 	
 	public CnATreeElement getElementWithChildren() {

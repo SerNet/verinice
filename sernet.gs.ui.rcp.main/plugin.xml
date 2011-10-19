@@ -784,10 +784,6 @@
             id="sernet.gs.ui.rcp.main.page2"
             name="%page.name.2"/>
       <page
-            class="sernet.gs.ui.rcp.main.preferences.ReportPreferencePage"
-            id="sernet.gs.ui.rcp.main.page3"
-            name="%page.name.3"/>
-      <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"
             name="%page.name.4">

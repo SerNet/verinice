@@ -35,10 +35,6 @@ public class PreferenceConstants {
 	public static final String DSZIPFILE = "cna_dszipfile"; //$NON-NLS-1$
 	public static final String BSIDIR = "cna_bsiurl"; //$NON-NLS-1$
 	
-	public static final String OODIR = "cna_oodir"; //$NON-NLS-1$
-	public static final String OOTEMPLATE = "cna_ootemplate"; //$NON-NLS-1$
-	public static final String OOTEMPLATE_TEXT = "cna_oodoctemplate"; //$NON-NLS-1$
-	
 	public static final String FIRSTSTART= "cna_derbywarning"; //$NON-NLS-1$
 	public static final String ERRORPOPUPS = "cna_errorpopups"; //$NON-NLS-1$
 	public static final String INPUTHINTS = "cna_inputhelperhints"; //$NON-NLS-1$

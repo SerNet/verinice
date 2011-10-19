@@ -50,7 +50,7 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
         // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        setSurname(getTypeFactory().getMessage(TYPE_ID));
     }
 	
 	/* (non-Javadoc)
@@ -69,21 +69,20 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 		StringBuilder sb = new StringBuilder();
 		final String surname = getEntity().getSimpleValue(PROP_SURNAME);
 		if(surname!=null && !surname.isEmpty()) {
-    		sb.append(surname).append(", ");
+    		sb.append(surname);
 		}
 		final String name = getEntity().getSimpleValue(PROP_NAME);
 		if(name!=null && !name.isEmpty()) {
+		    if(sb.length()>0) {
+		        sb.append(", ");
+		    }
 		    sb.append(name);
 		}
-		final String abbr = getEntity().getSimpleValue(PROP_ABBR);
-        if(abbr!=null && !abbr.isEmpty()) {
-            sb.append(" (").append(abbr).append(")");
-        }
 		return sb.toString();
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+	    // empty, otherwise title get scrambled while copying, bug 264
 	}
 	
 	public String getSurname() {

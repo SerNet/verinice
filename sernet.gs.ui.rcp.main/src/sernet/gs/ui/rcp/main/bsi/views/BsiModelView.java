@@ -482,7 +482,18 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		// create listener only once:
 		if (bsiModelListener == null) {
 			bsiModelListener = new BSIModelViewUpdater(viewer, cache);
+			Display.getDefault().asyncExec(new Runnable() {
+	            public void run() {
+	                try {
+	                    viewer.setInput(model);
+	                    viewer.refresh();
+	                } catch (Exception e) {
+	                    ExceptionUtil.log(e, Messages.BsiModelView_18);
+	                }
+	            }
+	        });
 		}
+		
 		if (model != null) {
 			// remove listener from old model:
 			model.removeBSIModelListener(bsiModelListener);
@@ -490,17 +501,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		
 		this.model = model2;
 		model.addBSIModelListener(bsiModelListener);
-
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					viewer.setInput(model);
-					viewer.refresh();
-				} catch (Exception e) {
-					ExceptionUtil.log(e, Messages.BsiModelView_18);
-				}
-			}
-		});
+		
 	}
 
 	public IStructuredSelection getSelection() {

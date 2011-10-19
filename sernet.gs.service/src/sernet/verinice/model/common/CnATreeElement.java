@@ -98,6 +98,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	private static final String ENTITY_TITLE = "ENTITY_";
 
+	private Integer parentId;
+	
 	private CnATreeElement parent;
 	
 	private Entity entity;
@@ -152,15 +154,18 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public void addChild(CnATreeElement child) {
 		if (!children.contains(child) && canContain(child)) {
 			children.add(child);
-//			Logger.getLogger(this.getClass()).debug("Added child to " + this);
-			if (getParent() != null)
-				getParent().childAdded(this, child);
-			else
+			if (getParent() != null) {			    
+				try {
+                    getParent().childAdded(this, child);
+                } catch (Exception e) {
+                    getLog().error("Error while adding child", e);
+                }
+			} else { 
 				this.childAdded(this, child);
-		} else {
-			Logger.getLogger(this.getClass()).debug(
-					"Element not added. Parent refuses " + child);
-		}
+			}
+		} else if (getLog().isDebugEnabled()) {
+		    getLog().debug("Element not added. Parent refuses " + child);
+        }
 	}
 
 	/**
@@ -170,7 +175,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 */
 	public void removeChild(CnATreeElement child) {
 		if (children.remove(child) && getParent()!=null) {
-			getParent().childRemoved(this, child);
+		    try {
+		        getParent().childRemoved(this, child);
+		    } catch(Exception e) {
+		        getLog().error("Error while removing child", e);
+		    }
 		}
 	}
 
@@ -254,7 +263,21 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		return parent;
 	}
 
-	public abstract String getTitle();
+	/**
+     * @return the parentId
+     */
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public abstract String getTitle();
 	
 	public void setTitel(String name) {
 		// override this method

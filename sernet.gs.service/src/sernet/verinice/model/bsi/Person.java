@@ -35,7 +35,7 @@ public class Person extends CnATreeElement
 implements IBSIStrukturElement {
 	
 	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
-	private static final String P_NAME = "nachname"; //$NON-NLS-1$
+	public static final String P_NAME = "nachname"; //$NON-NLS-1$
 	private static final String P_VORNAME = "vorname"; //$NON-NLS-1$
 	private static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
 	private static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
@@ -49,8 +49,9 @@ implements IBSIStrukturElement {
 	public Person(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized name via HUITypeFactory from message bundle
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), getTypeFactory().getMessage(TYPE_ID));
     }
 	
 	public String getKuerzel() {
@@ -69,7 +70,7 @@ implements IBSIStrukturElement {
 	}
 	
 	public void setTitel(String name) {
-		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), name);
+	    // empty, otherwise title get scrambled while copying, bug 264
 	}
 	
 	@Override

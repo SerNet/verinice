@@ -59,6 +59,18 @@ public class Retriever {
 		return element;
 	}
 	
+	public static CnATreeElement checkRetrievePermissions(CnATreeElement element) {
+        if(!arePermissionsInitialized(element)) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Loading permissions of element: " + element.getDbId());
+            }
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setPermissions(true);
+            element = retrieveElement(element,ri);
+        }
+        return element;
+    }
+	
 	public static CnATreeElement checkRetrieveElementAndChildren(final CnATreeElement element) {
 		RetrieveInfo ri = null;
 		CnATreeElement returnValue;
@@ -118,6 +130,11 @@ public class Retriever {
 	public static boolean areChildrenInitialized(CnATreeElement element) {
         return Hibernate.isInitialized(element) 
             && (element==null || Hibernate.isInitialized(element.getChildren()));
+    }
+	
+	public static boolean arePermissionsInitialized(CnATreeElement element) {
+        return Hibernate.isInitialized(element) 
+            && (element==null || Hibernate.isInitialized(element.getPermissions()));
     }
 	
 	public static CnATreeElement retrieveElement(final CnATreeElement element, RetrieveInfo ri)  {
