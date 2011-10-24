@@ -26,12 +26,8 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.commands.LoadUserConfiguration;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
+import sernet.gs.server.ServerInitializer;
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -46,47 +42,42 @@ import sernet.verinice.model.common.configuration.Configuration;
  * $LastChangedBy$
  *
  */
-public class DbUserDetailsService implements UserDetailsService {
+public class DbUserDetailsService extends UserLoader implements UserDetailsService {
 	
     private final Logger log = Logger.getLogger(DbUserDetailsService.class);
-    
-    // injected by spring
-	private ICommandService commandService;
-
-	// injected by spring
-	private LoadUserConfiguration loadUserConfigurationCommand;
 	
 	// injected by spring
 	private String adminuser = "";
 
 	// injected by spring
 	private String adminpass = "";
+	
+	
 
+	/* (non-Javadoc)
+	 * @see org.springframework.security.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+	 */
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
-		if (adminuser.length() > 0 && adminpass.length() > 0
-				&& username.equals(adminuser))
+		if (adminuser.length() > 0 && adminpass.length() > 0 && username.equals(adminuser)) {
 			return defaultUser();
-		
-		Logger.getLogger(this.getClass()).debug("Loading user from DB: " + username);
-
-		try {
-		    loadUserConfigurationCommand.setUsername(username);
-			commandService.executeCommand(loadUserConfigurationCommand);
-		} catch (Exception e) {
-		    log.error("Error while loading user configuration", e);
-			throw new RuntimeException("Failed to retrieve user configurations.", e);
 		}
 		
-		List<Entity> entities = loadUserConfigurationCommand.getEntities();
+		ServerInitializer.inheritVeriniceContextState();
+		List<Entity> entities = loadUserEntites(username);
 
 		for (Entity entity : entities) {
 			if (isUser(username, entity)) {
+			    if (log.isDebugEnabled()) {
+                    log.debug("User found: " + username);
+                }
 				return databaseUser(entity);
 			}
 		}
-		throw new UsernameNotFoundException(Messages
-				.getString("DbUserDetailsService.4")); //$NON-NLS-1$
+		if (log.isDebugEnabled()) {
+            log.debug("User *NOT* found: " + username);
+        }
+		throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.4")); //$NON-NLS-1$
 	}
 
 	private UserDetails defaultUser() {
@@ -122,9 +113,7 @@ public class DbUserDetailsService implements UserDetailsService {
 	}
 
 	public static boolean isUser(String username, Entity entity) {
-		boolean isUser = entity.getSimpleValue(Configuration.PROP_USERNAME).equals(
-				username);
-		return isUser;
+	    return entity.getSimpleValue(Configuration.PROP_USERNAME).equals(username);
 	}
 
 	public void setAdminuser(String adminuser) {
@@ -133,23 +122,6 @@ public class DbUserDetailsService implements UserDetailsService {
 
 	public void setAdminpass(String adminpass) {
 		this.adminpass = adminpass;
-	}
-
-	public LoadUserConfiguration getLoadUserConfigurationCommand() {
-		return loadUserConfigurationCommand;
-	}
-
-	public void setLoadUserConfigurationCommand(
-			LoadUserConfiguration loadUserConfigurationCommand) {
-		this.loadUserConfigurationCommand = loadUserConfigurationCommand;
-	}
-
-	public ICommandService getCommandService() {
-		return commandService;
-	}
-
-	public void setCommandService(ICommandService commandService) {
-		this.commandService = commandService;
 	}
 
 }

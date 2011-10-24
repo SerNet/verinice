@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.naming.ldap.InitialLdapContext;
 
-import org.richfaces.iterator.ForEachIterator;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.Authentication;
@@ -30,17 +29,14 @@ import org.springframework.security.BadCredentialsException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.providers.ldap.LdapAuthenticator;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
-import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.commands.LoadUserConfiguration;
+import sernet.gs.server.ServerInitializer;
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.configuration.Configuration;
 
-public class LdapAuthenticatorImpl implements LdapAuthenticator {
+public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticator {
     
     // injected by spring
     private DefaultSpringSecurityContextSource contextFactory;
@@ -84,27 +80,6 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
     // injected by spring
     private String adminpass = "";
 
-    
-    // injected by spring
-    private ICommandService commandService;
-
-    // injected by spring
-    private LoadUserConfiguration loadUserConfigurationCommand;
-    
-    /**
-     * @param commandService the commandService to set
-     */
-    public void setCommandService(ICommandService commandService) {
-        this.commandService = commandService;
-    }
-
-    /**
-     * @param loadUserConfigurationCommand the loadUserConfigurationCommand to set
-     */
-    public void setLoadUserConfigurationCommand(LoadUserConfiguration loadUserConfigurationCommand) {
-        this.loadUserConfigurationCommand = loadUserConfigurationCommand;
-    }
-
     public DirContextOperations authenticate(Authentication authentication) {
 
         // Grab the username and password out of the authentication object.
@@ -128,15 +103,8 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
             // authenticate against LDAP:
             InitialLdapContext ldapContext = (InitialLdapContext) contextFactory.getReadWriteContext(principal, password);
 
-            // if successfull, try to find user account in DB under same name:
-            try {
-                loadUserConfigurationCommand.setUsername(username);
-                commandService.executeCommand(loadUserConfigurationCommand);
-            } catch (CommandException e) {
-                throw new RuntimeException("Failed to retrieve user configuration.", e);
-            }
-            
-            List<Entity> entities = loadUserConfigurationCommand.getEntities();
+            ServerInitializer.inheritVeriniceContextState();
+            List<Entity> entities = loadUserEntites(username);
             
             if (entities != null && entities.size()>0) {
                 for (Entity entity : entities) {
@@ -149,13 +117,8 @@ public class LdapAuthenticatorImpl implements LdapAuthenticator {
             // no user found, we could have a guest account defined, in this case associate the authenticated ldap user 
             // with the guest account:
             if (guestUser != null && guestUser.length() > 0) {
-                try {
-                    loadUserConfigurationCommand.setUsername(guestUser);
-                    commandService.executeCommand(loadUserConfigurationCommand);
-                } catch (CommandException e) {
-                    throw new RuntimeException("Failed to retrieve guest user configuration.", e);
-                }
-                entities = loadUserConfigurationCommand.getEntities();
+                
+                entities = loadUserEntites(guestUser);
                 
                 if (entities != null && entities.size()>0) {
                     for (Entity entity : entities) {

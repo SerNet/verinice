@@ -79,7 +79,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
-	private Map<Person, Configuration> personCache = new HashMap<Person, Configuration>(); 
+	private Map<CnATreeElement, Configuration> personCache = new HashMap<CnATreeElement, Configuration>(); 
 	
 	public PrepareNotificationInfo() {
 		// Intentionally does nothing.
@@ -141,6 +141,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			lmu = (LoadCnAElementByType<MassnahmenUmsetzung>) getCommandService().executeCommand(lmu);
 		} catch (CommandException e) {
+		    log.error("Error in collectExpirationNotifees", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -158,7 +159,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		
 	}
 	
-	private Configuration retrieveConfiguration(Person p)
+	private Configuration retrieveConfiguration(CnATreeElement p)
 	{
 		Configuration result = personCache.get(p);
 		if (result == null)
@@ -334,7 +335,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		if (date != null)
 			deadline.setTime(date);
 
-		for (Person p : retrievePersonsDirectlyResponsible(mu, false))
+		for (CnATreeElement p : retrievePersonsDirectlyResponsible(mu, false))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -373,7 +374,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		if (date != null)
 			deadline.setTime(date);
 
-		for (Person p : retrievePersonsResponsibleForCompletion(mu))
+		for (CnATreeElement p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -440,7 +441,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void handleChangedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		for (Person p : retrievePersonsResponsibleForCompletion(mu))
+		for (CnATreeElement p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
@@ -533,7 +534,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 	
 	private void handleAssignedMeasure(MassnahmenUmsetzung mu, Set<Configuration> globalNotifees)
 	{
-		for (Person p : retrievePersonsResponsibleForCompletion(mu))
+		for (CnATreeElement p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
