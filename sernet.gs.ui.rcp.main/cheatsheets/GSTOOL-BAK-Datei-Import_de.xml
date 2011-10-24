@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="GSTOOL-BAK-Datei-Import">
+
+	<intro>
+		<description>
+		In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei mit der Endung "BAK" in verinice importieren k&#246;nnen. 
+		</description>
+	</intro>
+
+	<item title="BAK-Datei im GSTOOL erzeugen">
+		<description>
+		Als erstes ben&#246;tigen Sie eine BAK-Datei, die Sie im GSTOOL erzeugen m&#252;ssen. Dazu gehen Sie bitte im GSTOOL in der Men&#252;leiste auf "Datenbank"/"Daten sichern und wiederherstellen...". In diesem Fenster k&#246;nnen sie den Dateinamen und den Ort der Datei angeben. Gehen Sie auf den Button "Sichern", um eine Sicherung zu erzeugen. Nach diesem Durchlauf haben Sie bereits eine BAK-Datenbank-Datei erzeugt. Nun k&#246;nnen Sie mit dem n&#228;chsten Schritt in verinice fortfahren.
+		</description>
+	</item>
+	<item title="Einstellungen f&#252;r den BAK-Datei-Import in verinice vornehmen">
+		<description>
+		Zuerst m&#252;ssen Sie die Konnektivit&#228;t zur GSTOOL-Datenbank herstellen. Wie das geht, steht im Spickzettel "Import der Datenbank-Daten aus dem GSTOOL 4.5". Wenn Sie keine Konnektivit&#228;t zum GS-TOOL herstellen k&#246;nnen, weil es z.B. nicht mehr installiert ist, k&#246;nnen Sie alternativ eine MSDE (Microsoft Database Engine) installieren. Wie Sie dann vorgehen m&#252;ssen, kl&#228;rt ein FAQ-Eintrag auf den Seiten von verinice.
+		<br/><br/>
+		Gehen Sie bitte in der Men&#252;leiste auf "Bearbeiten" und dort auf "Einstellungen...". Vergessen Sie nach dem Vornehmen der Einstellungen nicht den Button "Anwenden" zu dr&#252;cken, weil erst dann die Einstellungen &#252;bernommen werden. Da Sie die Konnektivit&#228;t im Men&#252;punkt "GSTool Import" hergestellt haben, kann man nun zum Unterreiter "Sicherungsdatei wiederherstellen" gehen. Dort wird der Dateiname der BAK-Datei eingetragen, die Sie im GSTOOL vorher erzeugt haben. Dieser muss samt korrekten Pfad im ersten Feld "Datei mit Sicherung aus GSTOOL" stehen.
+		<br/><br/>
+		Achtung! Solange diese Datei auf dem Rechner liegt, auf dem Sie den Import durchf&#252;hren, haben Sie kein Problem. Wenn die BAK-Datei auf einem entfernten Host liegt, m&#252;ssen Sie daf&#252;r sorgen, dass Sie z.B. per Netzwerkfreigabe auf diese Datei zugreifen k&#246;nnen. Der "Durchsuchen"-Button funktioniert also nur dann, wenn Sie eine Netzwerkfreigabe auf diese Datei haben oder diese Datei lokal zu finden ist.
+		<br/><br/>
+		Jetzt k&#246;nnen Sie das zweite und dritte Feld mit einem beliebigen neuen Datenbanknamen und dessen Pfad ausf&#252;llen. Der Pfad ist nur f&#252;r den Import-Vorgang wichtig. Nach dem Import-Vorgang sind die Daten in der verinice-Datenbank enthalten und die Dateinen der wiederhergestellten Datenbank werden nicht mehr ben&#246;tigt.
+		</description>
+	</item>
+	<item title="Datenbank wiederherstellen">
+		<description>
+		Nachdem Sie alle Einstellungen des vorherigen Schritts vorgenommen haben, k&#246;nnen Sie auf den Button "Datenbank wiederherstellen" klicken. Nun startet der Wiederherstellungsprozess. Jetzt m&#252;ssen Sie die wiederhergestellten Daten in verinice importieren. Dazu m&#252;ssen Sie wieder in den &#252;bergeordenten Reiter "GSTool Import" zur&#252;ckgehen. Dort m&#252;ssen Sie statt der urspr&#252;nglichen Datenbankbezeichnung den neuen Namen (den Sie sich bei der Wiederherstellung ausgesucht haben) der Datenbank eintragen (hinter dem letzten Slash-Zeichen). Klicken Sie auf den "Anwenden"-Button und testen Sie die Konnektivit&#228;t mit Hilfe des Buttons "Teste Verbindung". Wenn Sie die Einstellung korrekt vorgenommen haben, ist der Test erfolgreich. Jetzt m&#252;ssen Sie nur noch den Import-Prozess ansto&#223;en.
+		</description>
+	</item>
+	<item title="Import-Prozess ansto&#223;en">
+		<description>
+		Der letze Schritt ist das Ansto&#223;en des Import-Prozesses. Daf&#252;r gehen Sie bitte in der Men&#252;leiste auf "Datei" und dort auf "GSTool-Daten importieren". Im erscheinenden Fenster k&#246;nnen Sie die gew&#252;nschten Importiertdaten ausw&#228;hlen. Klicken Sie auf den Button "OK", um den Import zu starten. Nach dem Import-Prozess erscheint ein weiterer IT-Verbund mit dem Namen "BSI" in Ihrem GS-Modell-Fenster. 
+		</description>
+	</item>
+		
+	
+</cheatsheet>

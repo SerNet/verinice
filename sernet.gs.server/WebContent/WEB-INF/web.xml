@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app id="veriniceserver_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<!--
+		This file configures the plain veriniceserver. It is not used for the
+		internal verinice server. To find its equivalent have a look at the
+		sernet.gs.server.InternalServer class.
+	-->
+
+	<display-name>veriniceserver</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+        	classpath:sernet/gs/server/spring/veriniceserver-common.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
+        	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
+            
+            <!-- Use this configuration for internal authentication: -->        
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml      
+            
+            <!-- Use this configuration for LDAP / Active Directory: -->
+            <!--
+        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml
+            -->
+        	
+            classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
+            classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
+            classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
+        </param-value>
+	</context-param>
+	
+	<!-- Webclient conf -->
+	<context-param>
+		<param-name>javax.faces.CONFIG_FILES</param-name>
+		<param-value>/WEB-INF/faces-config.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+    <context-param>
+        <param-name>facelets.LIBRARIES</param-name>
+        <param-value>/WEB-INF/verinice-taglib.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.richfaces.SKIN</param-name>
+        <param-value>ruby</param-value>
+    </context-param>
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+		<param-value>enable</param-value>
+	</context-param>
+	<!-- Webclient conf end -->
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter>
+		<filter-name>contextInitializer</filter-name>
+		<filter-class>sernet.gs.web.ContextInitializer</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/service/*</url-pattern>
+	</filter-mapping> 
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/todo/*</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/sync/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>contextInitializer</filter-name>
+		<url-pattern>/todo/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Webclient conf -->
+	<filter>
+		<display-name>Ajax4jsf Filter</display-name>
+		<filter-name>ajax4jsf</filter-name>
+		<filter-class>org.ajax4jsf.Filter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ajax4jsf</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+	<!-- OPENFACES RESOURCE FILTER -->
+	<filter>
+		<filter-name>ResourceFilter</filter-name>
+		<filter-class>org.openfaces.util.ResourceFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ResourceFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ResourceFilter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>ResourceFilter</filter-name>
+		<url-pattern>/openFacesResources/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<!-- Webclient conf end -->
+	
+	
+	<!-- Spring context loader -->
+	<servlet>
+		<servlet-name>context</servlet-name>
+		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>springDispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:sernet/gs/server/spring/springDispatcher-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<!-- Apache CXF Servlet -->
+	<servlet>
+		<servlet-name>cxfServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<description>Output HuiConfig from classpath.</description>
+		<display-name>GetHitroConfig</display-name>
+		<servlet-name>GetHitroConfig</servlet-name>
+		<servlet-class>sernet.gs.server.GetHitroConfig</servlet-class>
+		<init-param>
+			<param-name>snca.xml.path</param-name>
+			<param-value>/WEB-INF</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+    
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error/403.html</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500.html</location>
+    </error-page>
+
+	<servlet-mapping>
+		<servlet-name>springDispatcher</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>GetHitroConfig</servlet-name>
+		<url-pattern>/GetHitroConfig</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>cxfServlet</servlet-name>
+		<url-pattern>/sync/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Webclient conf -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<!-- Webclient conf end -->
+
+</web-app>

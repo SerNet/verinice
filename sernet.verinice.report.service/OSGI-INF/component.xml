@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="sernet.verinice.report.service">
+   <implementation class="sernet.verinice.report.service.impl.ReportService"/>
+   <service>
+      <provide interface="sernet.verinice.interfaces.report.IReportService"/>
+   </service>
+</scr:component>

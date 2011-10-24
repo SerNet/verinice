@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     15.03.2010 15:06:19                                                        
+
+     verinice    
+     ant buildfile to create a war file
+                   
+     author: Daniel Murygin - dm[at]sernet[dot]de                                                         
+     ====================================================================== -->
+<project name="verinice" default="war" basedir="../">
+    <description>
+            ant buildfile to create a war file
+    </description>
+
+    <!-- ================================= 
+          target: war              
+         ================================= -->	
+    <target name="war" depends="copy-jars" description="creates a war file">
+		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
+        	<fileset dir="WebContent">
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="WEB_INF/faces-config.xml"/>
+        		<exclude name="WEB_INF/faces-config-basic.xml"/>
+        		<exclude name="WEB_INF/web*.xml"/>
+        	</fileset>
+        	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
+        		<exclude name="server_hibernate*.cfg.xml"/>
+        	</zipfileset>
+        	<zipfileset file="bin/server_hibernate.cfg.xml" fullpath="WEB-INF/classes/server_hibernate.cfg.xml"/> 
+        	<zipfileset file="bin/server_hibernate_oracle.cfg.xml" fullpath="WEB-INF/classes/server_hibernate_oracle.cfg.xml"/>
+        </war>
+    </target>
+	
+	<!-- ================================= 
+	          target: war-no-web              
+	         ================================= -->
+	<target name="war-basic" depends="copy-jars" description="creates a war file">
+		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web-basic.xml">
+        	<fileset dir="WebContent">
+        		<exclude name="todo/task.xhtml"/>
+        		<exclude name="template"/>
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="error/403.html"/>
+        		<exclude name="error/404.html"/>
+            	<exclude name="error/500.html"/>
+        		<exclude name="WEB-INF/faces-config*.xml"/>
+        		<exclude name="WEB-INF/web*.xml"/>
+        	</fileset>
+        	<zipfileset file="WebContent/nav-basic.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav-basic.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact-basic.html" fullpath="portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download-basic.html" fullpath="portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config-basic.xml" fullpath="WEB-INF/faces-config.xml"/>       	     
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
+        		<exclude name="**/TaskBean*.class"/>
+        		<exclude name="**/EditBean*.class"/>
+        		<exclude name="**/LinkBean*.class"/>
+        		<exclude name="**/TaskService.class"/>
+        		<exclude name="**/TaskService$*.class"/>
+        		<exclude name="**/ProcessService.class"/>
+        		<exclude name="**/ProcessService$*.class"/>
+        		<exclude name="**/sernet/verinice/bpm/jbpm*"/>
+        		<exclude name="**/sernet/verinice/bpm/*jpdl*"/> 
+        		<exclude name="**/server_hibernate*.cfg.xml"/>
+        	</zipfileset>
+        	<zipfileset file="bin/server_hibernate-basic.cfg.xml" fullpath="WEB-INF/classes/server_hibernate.cfg.xml"/> 
+        	<zipfileset file="bin/server_hibernate_oracle-basic.cfg.xml" fullpath="WEB-INF/classes/server_hibernate_oracle.cfg.xml"/>       	        	
+        </war>
+	</target>
+	
+	<!-- ================================= 
+	          target: war-local            
+	         ================================= -->	
+    <target name="war-local" depends="copy-jars" description="creates a war file">
+		<property name="destination" location="${sp:destination}"/>
+		<echo message="Creating ${destination}/${filename}..."/>
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
+        	<fileset dir="WebContent">
+        		<exclude name="nav.xhtml"/>
+        		<exclude name="subNav.xhtml"/>
+        		<exclude name="nav-basic.xhtml"/>
+        		<exclude name="subNav-basic.xhtml"/>
+        		<exclude name="portal.verinice.private/*.html"/>
+        		<exclude name="error/*.html"/>
+        		<exclude name="WEB-INF/faces-config.xml"/>
+        		<exclude name="WEB-INF/faces-config-basic.xml"/>
+        	</fileset>
+        	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
+        	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="/portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="/portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="/portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
+        	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>
+        	<zipfileset file="WebContent/error/500.html" fullpath="error/500.html"/>
+        	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
+        	<zipfileset dir="bin" prefix="WEB-INF/classes">
+        		<exclude name="log4j-dev.xml"/>
+        		<exclude name="log4j-prod.xml"/>
+        	</zipfileset>
+        </war>
+    </target>
+
+	<!-- ================================= 
+          target: copy-jars              
+         ================================= -->
+	<target name="copy-jars" description="copies al releavant jar file to WEB-INF/lib">
+		<property name="destination" location="${sp:destination}"/>
+		<!-- delete old versions -->
+		<delete>
+			<fileset dir="${basedir}/WebContent/WEB-INF/lib/" includes="sernet.*.jar"/>
+		</delete>
+		<!-- copy current version to WEB-INF/lib -->
+		<copy todir="${basedir}/WebContent/WEB-INF/lib" flatten="true">
+			<fileset dir="${destination}/../">
+			  <!-- includes -->
+			  <include name="sernet.hui.common*.*/jar/sernet.hui.common*.jar"/>
+			  <include name="sernet.hui.swtclient*.*/jar/sernet.hui.swtclient*.jar"/>
+			  <include name="sernet.hui.server*.*/jar/sernet.hui.server*.jar"/>
+			  <include name="sernet.gs.ui.rcp.main*.*/jar/sernet.gs.ui.rcp.main*.jar"/>
+			  <include name="sernet.gs.service*.*/jar/sernet.gs.service*.jar"/>
+			  <include name="sernet.gs.reveng*.*/jar/sernet.gs.reveng*.jar"/>
+			  <include name="sernet.verinice.samt.service*.*/jar/sernet.verinice.samt.service*.jar"/>
+			  <include name="sernet.verinice.oda.driver*.*/jar/sernet.verinice.oda.driver*.jar"/>
+			  <include name="sernet.verinice.report.service*.*/jar/sernet.verinice.report.service*.jar"/>
+			  <!-- excludes -->	  
+			  <exclude name="sernet.gs.ui.rcp.main.feature*.*/jar/sernet.gs.ui.rcp.main.feature*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>

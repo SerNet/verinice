@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:rich="http://richfaces.org/rich"
+	  xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:vn="http://www.verinice.org/taglib">
+	<ui:composition>
+		<a4j:outputPanel id="editorPanel">
+			<a4j:form id="editorForm" rendered="#{edit.element!=null}">					    	
+		   		<div class="csc-header csc-header-n1" style="height:40px;">
+		    		<h1><h:outputText value="#{edit.title}"/></h1>
+		    	</div>
+		    	<div style="margin-bottom:4px; height:40px;">				      							      			
+		  			<a4j:commandButton id="submit" value="#{msgEdit['save']}" action="#{edit.save}" styleClass="button"/>
+		  			<a4j:repeat id="actionList" value="#{edit.actionHandler}" var="actionHandler">
+		  				<a4j:commandButton action="#{actionHandler.execute}" value="#{actionHandler.label}" reRender="editorPanel,completePanel,tablePanel" styleClass="button"/>  				
+		  			</a4j:repeat>
+		        </div>
+		   		<rich:simpleTogglePanel switchType="client" label="#{msgEdit['general']}" opened="#{edit.generalOpen}">
+		    		<vn:properties list="#{edit.labelPropertyList}" listNoLabel="#{edit.noLabelPropertyList}"/>
+		      	</rich:simpleTogglePanel>
+		     	<a4j:repeat id="groupList" value="#{edit.groupList}" var="group">
+		      		<rich:simpleTogglePanel  switchType="client" label="#{group.name}" opened="#{edit.groupOpen}">
+		     			<vn:properties list="#{group.labelPropertyList}" listNoLabel="#{group.noLabelPropertyList}" />     			
+		      		</rich:simpleTogglePanel>
+		     	</a4j:repeat>
+		     	<rich:simpleTogglePanel switchType="client" label="#{msgEdit['links']}" opened="#{edit.linkOpen}">	     		
+	      			<table>
+	      				<tr>
+	      					<td>
+	      						<rich:comboBox value="#{link.selectedLinkType}" suggestionValues="#{link.linkTypeList}" defaultLabel="#{msgEdit['selectType']}" enableManualInput="false" width="200" style="margin-bottom:5px;">
+	      							<a4j:support event="onselect" reRender="linkTarget" action="#{link.loadLinkTargets}"/>
+	      						</rich:comboBox>
+	      					</td>
+	      					<td><rich:comboBox id="linkTarget" value="#{link.selectedLinkTargetName}" suggestionValues="#{link.linkTargetNameList}" defaultLabel="#{msgEdit['selectTarget']}" enableManualInput="false" style="margin-bottom:5px"/></td>					      					
+	      					<td><a4j:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" reRender="editorPanel"/></td>
+	      				</tr>
+	      			</table>
+	      			<a4j:outputPanel id="linkPanel">		      						      			
+		      			<rich:extendedDataTable
+		     				value="#{link.linkList}" 
+			                var="item"
+			                selectionMode="single"
+			                binding="#{link.table}"
+		             		selection="#{link.selection}"
+			                height="150px"
+			                width="400px">
+			                <rich:column
+		     					sortable="true" 
+		     					sortBy="#{item.type}"
+			                    label="#{msgEdit['linkType']}"
+			                    width="200px">
+			                    <f:facet name="header">
+			                        <h:outputText value="#{msgEdit['linkType']}" />
+			                    </f:facet>
+			                    <h:outputText value="#{item.type}"/>
+			                </rich:column>				                
+			                <rich:column 
+		     					sortable="true" 
+		     					sortBy="#{item.targetName}"
+			                    label="#{msgEdit['linkTarget']}"
+			                    width="200px">
+			                    <f:facet name="header">
+			                        <h:outputText value="#{msgEdit['linkTarget']}" />
+			                    </f:facet>
+			                    <h:outputText value="#{item.targetName}"/>
+			                </rich:column>						                
+		              			<a4j:support action="#{link.selectLink}"
+		                   		event="onselectionchange" 
+		                   		reRender="linkDeletePanel"/>
+				        </rich:extendedDataTable>
+				    </a4j:outputPanel>
+				    <a4j:outputPanel id="linkDeletePanel">
+				        <table style="width: 400px;">
+		      				<tr>
+		      					<td style="text-align: right; vertical-align: middle;width: 330px;">
+		      						<h:outputText value="#{msgEdit['reallyDelete']}" rendered="#{link.deleteVisible}" style="margin-right: 5px;"/>
+		      					</td>
+		      					<td style="text-align: right; vertical-align: middle;width: 20px;">	
+		      						<a4j:commandLink value="#{msgEdit['yes']}" id="deleteConfirmLink" action="#{link.deleteLink}" reRender="linkPanel,linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 3px; color:#00aa00;"/>
+		      					</td>
+		      					<td style="text-align: left; vertical-align: middle;width: 25px;">	
+		      						<a4j:commandLink value="#{msgEdit['no']}" id="hideDeleteLink" action="#{link.hideDeleteLink}" reRender="linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 5px; color:#aa0000;"/>
+		      					</td>
+		      					<td style="text-align: right; vertical-align: middle;width: 25px;">
+		      						<a4j:commandLink id="deleteLink" action="#{link.showDeleteLink}" reRender="linkDeletePanel" rendered="#{link.selectedLink!=null}"><h:graphicImage value="/image/delete.png" rendered="#{link.selectedLink!=null}"/></a4j:commandLink>
+		      					</td>				      					
+		      				</tr>
+		      			</table>
+		      		 </a4j:outputPanel>
+		     	</rich:simpleTogglePanel> 							    		
+		   	</a4j:form>
+	   	</a4j:outputPanel>
+	</ui:composition>
+</html>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Die Audit Perspektive">
+   <intro>
+      <description>
+         Dieses Tutorial führt Sie durch die neue Audit-Perspektive in verinice. Die Audit-Perspektive erlaubt es Ihnen, alle für eine Sstichprobe gewünschten Assets und Controls für ein Audit aus einem existierenden ISMS zu extrahieren. Sie können aber auch eigene Objekte direkt für das Audit anlegen, vor allem wenn noch kein ISMS in verinice für die Organisation modelliert ist. Lassen Sie uns anfangen!
+      </description>
+   </intro>
+   <item
+         title="Wechseln zur Audit-Perspektive">
+      <description>
+         Wechseln Sie zur Audit-Perspektive indem Sie aus dem Hauptmenü auswählen: Ansicht -&gt; Perspektive -&gt; Audit-Perspektive
+      </description>
+   </item>
+   <item
+         title="Überblick über die Audit-Perspektive">
+      <description>
+         Die Audit-Perspektive enthält eine &quot;Drill-Down&quot; Ansicht, die Ihnen alles zeigt, was Sie bei Ihrem Audit benötigen. Die Ansicht erlaubt es Ihnen, von einer allgemeinen Übersicht zu einzelnen Details zu navigieren.
+	<br/><br/>
+Auf der linken Seite sehen Sie vier Fenster, die von oben nach unten folgende Elemente anzeigen: Geltugsbereich, Audits, Asets und Controls. Jedes Fenster zeigt die entsprechenden Objekte für ihre aktuelle Selektion, um also die Assets für ein Audit zu sehen, selektieren Sie zunächst den Geltungsbereich, dann das Audit.
+	<br/><br/>
+Diese sog. &quot;Drill Down&quot; Ansicht erlaubt es Ihnen, alle Aspekte des Audits zu beleihten. Z.B. können Sie mit dem Geltungsbereich beginnen, dann in ein bestimmtes Audit hineingehen um die betrachteten Controls zu sehen. Sie können aber auch einen anderen Weg wählen und zuerst die Personen, die im Rahmen des Audits befragt wurden anzeigen, und von dort zu den Controls gehen, die in jedem einzelnen Interview behandelt wurden.
+	<br/><br/>
+Das erlaubt es Ihnen, während eines Audits den vollständigen Geltungsbereich abzudecken ohne redundante Befragungen und Beobachtungen anzustellen - insbesonders wenn Sie gleichzeitig mehrere Standorte mit einem größeren Audit-Team prüfen.
+      </description>
+   </item>
+   <item
+         title="Ein neues Audit beginnen">
+      <description>
+         Zunächst müssen Sie einen Geltungsbereich (Scope) wählen, für den Sie ihr Audit durchführen.  Klicken Sie auf den Geltungsberiech im linken oberen Fenster. Wenn dort keine Geltungsbereiche angezeigt werden, müssen Sie zunächst im ISM-View einen neuen Geltungsbereich erzeugen. Den ISM View können Sie über das Hauptmenü &quot;Ansicht -&gt; Zeige View&quot; öffnen.
+	<br/><br/>
+Wenn Sie einen Geltungsbereich gewählt haben, können Sie ein neues Audit erzeugen. Gehen Sie zum Audits-Fenster (das zweite Fenster von oben) und klicken Sie auf den Button &quot;Neues Element&quot;. Ein neues Audit wird im selektierten Geltungsbereich erzeugt. Ändern Sie den Namen auf &quot;Audit 2010.06&quot;. Speichern Sie mti &quot;Str-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Assets hinzufügen">
+      <description>
+         Sie können die Assets anlegen, die Sie beim Audit berücksichtigt haben. Sie können dafür neue Assets anlegen oder bereits existierende aus dem ISM-View kopieren. Lassen Sie uns zuerst ein vollständig neues Asset anlegen.
+	<br/><br/>
+Selektieren Sie ihr neu angelegtes Audit indem Sie mit der linken Maustaste darauf klicken. Erzeugen Sie dann ein neues Asset indem sie den Button &quot;Neues Element&quot; im Asset View anklicken. Geben Sie ihrem neuen Asset den Namen &quot;Rechenzentrum&quot;. Speichern Sie mit &quot;Strg-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Controls zum Asset hinzufügen">
+      <description>
+         Zu guter letzt legen Sie die Controls an, die Sie auditieren möchten. Sie können Controls zu bestimmten Assets anlegen, oder einfach für das Audit allgemein ohne Sie mit einzelnen Assets zu verbinden.
+	<br/><br/>
+Lassen Sie uns ein Control zu einem Asset hinzufügen: selektieren Sie das Asset indem Sie einmal darauf klicken, dann selektieren Sie den Button &quot;Neues Element&quot; im Controls-View. Geben Sie dem Control den Namen &quot;Zugangskontrolle zum RZ&quot;. Speichern Sie mit &quot;Strg-S&quot;.
+      </description>
+   </item>
+   <item
+         title="Allgemeine Controls hinzufügen">
+      <description>
+         Sie können auch Controls hinzufügen, ohne Sie mit einem bestimmten Asset zu verbinden. Selektieren Sie dazu einfach noch einmal das Audit selbst und klicken dann direkt im Control-View auf den Button &quot;Neues Element&quot;.
+	<br/><br/>
+Dadurch wird ein neues Control direkt für das Audit erzeugt. Jetzt können Sie Controls für das Audit oder für einzelne Assets anzeigen, einfach indem sie das Audit oder ein Asset selektieren.
+      </description>
+   </item>
+   <item
+         title="Gruppen anlegen">
+      <description>
+         Wenn Sie viele Elemente haben - egal ob Audits, Controls, Assets oder andere - möchten Sie sie für mehr Übersicht gruppieren. Das können Sie tun, indem Sie die Option &quot;Neue Gruppe&quot; anklicken. Diese ist verfügbar, indem Sie nicht direkt auf den Button &quot;Neues Element&quot; klicken, sondern auf den kleinen Pfeil rechts daneben.
+	<br/><br/>
+Nachdem Sie eine Gruppe angelegt haben, können Sie Elemente in dieser Gruppe erzeugen. Selektieren Sie zuerst die Gruppe und klicken dann auf den Button &quot;Neues Element&quot;.
+      </description>
+   </item>
+   <item
+         title="Hinzufügen existierender Element aus dem ISMS">
+      <description>
+         Sie können Elemente aus einem existierenden ISMS-Modell hinzufügen. Öffnen Sie den ISM-View über das &quot;Ansicht&quot;-Menü, selektieren Sie dann ein oder mehrere Assets. Kopieren Sie diese über das Kontextmenü oder mit &quot;Strg-C&quot;.
+	<br/><br/>
+Gehen Sie zurück zur Audit-Perspektive und selektieren Sie das Audit, in dem Sie die Assets berücksichtigen wollen. Fügen Sie die Assets dort ein über das Kontextmenü oder mit &quot;Strg-V&quot;.
+	<br/><br/>
+Assets werden dabei immer als Kopien in ihrem Audit abgelegt, da mit Sie auch für späteres Nachvollziehen verfügbar bleiben, selbst wenn Sie im ISMS verändert oder gelöscht werden.
+	<br/><br/>
+Auf die beschriebene Art können Sie auch Controls übernehmen.
+      </description>
+   </item>
+   <item
+         title="Hinzufügen von Controls aus einem Katalog">
+      <description>
+         Meistens werden Sie nicht ihre eigenen Controls für jedes Audit anlegen sondern auf einen Katalog mit Controls oder Prüfungsfragen zurückgreifen. Ein Katalog enthält Controls aus einem Standard wie z.B. ISO 27002.
+	<br/><br/>
+Öffnen SIe den Catalog-View über das &quot;Ansicht&quot;-Menü. Selektieren Sie ein Audit oder ein Asset in der Audit-Perspektive. Ziehen Sie die gewünschten Controls per Drag-n-Drop aus dem Catalog-View in das Controls-Fenster, dass die Controls für das selektierte Objekt enthält. (Falls noch keine Controls erzuegt wurden, sit dieses Fenster logischerweise noch leer.)
+	<br/><br/>
+Die Controls werden in das Audit kopiert und Sie können damit beginnen, sie zu prüfen.
+      </description>
+   </item>
+   <item
+         title="Das ist noch nicht alles...">
+      <description>
+         Die Audit-Perspektive kann für fortgeschrittene Anforderungen genutzt werden, wie z.B. Follow-Up Audits, das Erzeugen von Auditberichten oder den Vergleich von Audits über einen Zeitverlauf. Wir ermutigen Sie, die vorhandenen Optionen in den Menüs einfach weiter zu erkunden, wenn Sie möchten.
+ &lt;onCompletion&gt;
+Hiermit endet die Einführung in die Audit-Perspektive.
+      &lt;/onCompletion&gt;
+      </description>
+   </item>
+</cheatsheet>

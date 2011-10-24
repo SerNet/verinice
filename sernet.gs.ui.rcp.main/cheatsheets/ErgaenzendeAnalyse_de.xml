@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Ergänzende Sicherheitsanalyse">
+
+	<intro 
+		>
+		<description>
+		Die ergänzende Sicherheitsanalyse
+		</description>
+	</intro>
+
+	<item title="Zweck">
+		<description>
+		An dieser Stelle entscheiden Sie für alle Objekte mit hohem oder sehr hohem
+		Schutzbedarf, sowie für alle Objekte, die sich nicht ausreichen modellieren lassen, 
+		ob eine Risikoanalyse erforderlich ist oder nicht.
+		</description>
+	</item>
+	
+	<item title="Auswahl">
+		<description>
+		Ale Objekte mit hohem Schutzbedarf sind automatisch in der Ergänzenden Risikoanalyse 
+		enthalten. Definieren Sie zusätzlich alle Zielobjekte, die sich mit den Grundschutz-Bausteinen 
+		nicht ausreichen modellieren lassen, oder deren Einsatzszenarien im Grundschutz nicht
+		vorgesehen sind.
+		<br/><br/>
+		Öffnen Sie den Mailserver per Doppelklick. Setzen Sie das Feld "Ergänzende Sicherheitsanalyse" 
+		auf "zusätzlich vormerken". Speichern Sie den Server (Strg-S).
+		</description>
+	</item>
+	
+	<item title="Report erstellen">
+		<description>
+		Erstellen Sie den Management-Report wie im Spickzettel "Reports" beschrieben. Sie sehen, dass 
+		die Anwendung "Buchhaltung" und der Server "Buchhaltungssystem" aufgrund ihres 
+		Schutzbedarfs enthalten sind, ebenso wie der zusätzlich vorgemerkte Mailserver.
+		</description>
+	</item>
+	
+	<item title="Management Entscheidung">
+		<description>
+		Nachdem Sie entschieden haben, für welche Zielobjekte eine Risikoanalyse erforderlich 
+		ist und ihr Management den Report verabschiedet hat, dokumentieren Sie ihre Entscheidung 
+		indem Sie für alle in der ergänzenden Sicherheitsanalyse enthaltenen Zielobjekte 
+		das Feld "Risikoanalyse" auf "nötig", bzw. "entbehrlich" setzen.
+		<br/><br/>
+		Begründen Sie ihre Entscheidung im Feld darunter.
+		</description>
+		
+		<onCompletion>
+		Fertig. Fahren Sie nun mit der Risikoanalyse fort.
+		</onCompletion>
+	</item>
+	
+	
+		
+	
+</cheatsheet>

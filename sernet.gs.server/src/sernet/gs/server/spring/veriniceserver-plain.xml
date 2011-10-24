@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!--
+	This application context does nothing more than initializing a PropertyPlaceholderConfigurer
+	that uses a different property file from the one in veriniceserver-osgi.xml .
+	
+	This file is referenced in the web.xml . 
+ -->
+
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="ignoreResourceNotFound" value="true"/>
+    <property name="locations">
+    	<list>
+        	<value>/WEB-INF/veriniceserver-plain.properties</value>
+        	<value>/WEB-INF/veriniceserver-plain.properties.local</value>
+        	<value>/WEB-INF/verinice-ldap.properties</value>
+        </list>
+    </property>
+</bean>
+
+<!-- Mail notification infrastructure -->
+<bean id="mailSender" 
+	class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="username" value="${veriniceserver.notification.smtp.username}"/>
+		<property name="password" value="${veriniceserver.notification.smtp.password}"/>
+		<property name="host" value="${veriniceserver.notification.smtp.host}"/>
+		<property name="port" value="${veriniceserver.notification.smtp.port}"/>
+</bean>
+
+<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+      <property name="velocityProperties">
+         <value>
+            resource.loader=class
+            class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+         </value>
+      </property>
+   </bean>
+
+
+<bean name="pniCommand" class="sernet.gs.server.commands.PrepareNotificationInfo"/>
+
+<bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+  <property name="jobClass" value="sernet.gs.server.MailJob" />
+  <property name="jobDataAsMap">
+    <map>
+      <entry key="mailSender" value-ref="mailSender" />
+      <entry key="commandService" value-ref="commandService" />
+      <entry key="pniCommand" value-ref="pniCommand" />
+      <entry key="notificationEnabled" value="${veriniceserver.notification.enabled}" />
+      <entry key="notificationEmailFrom" value="${veriniceserver.notification.email.from}" />
+      <entry key="notificationEmailReplyTo" value="${veriniceserver.notification.email.replyto}" />
+      <entry key="notificationEmailLinkTo" value="${veriniceserver.notification.email.linkto}" />
+      <entry key="notificationEmailDateFormat" value="${veriniceserver.notification.email.dateformat}" />
+    </map>
+  </property>
+</bean>
+
+<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="notificationJob" />
+    <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
+</bean>
+
+<!-- Spring/Quartz trigger bean to execute cron job processJob. -->
+<bean id="processJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="processJob" />
+    <!-- for debug only, execute every 2 minutes -->
+    <!-- <property name="cronExpression" value="0 */2 * * * ?" /> -->
+    <!-- execute every 30 minutes -->
+    <property name="cronExpression" value="0 */30 * * * ?" />
+</bean>
+
+<bean id="taskNotificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+     <property name="jobDetail" ref="taskNotificationJob" />
+     <!-- for debug only, execute every 2 minutes -->
+     <!--<property name="cronExpression" value="0 */2 * * * ?" />-->
+     <!-- set execution time in veriniceserver-plain.properties -->
+     <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
+</bean>
+
+<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+              <ref bean="cronTrigger" />
+              <ref bean="processJobTrigger" />
+              <ref bean="taskNotificationTrigger" />  
+            <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
+			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+				<property name="jobDetail" ref="notificationJob" />
+				<property name="startDelay" value="2000" />
+				<property name="repeatInterval" value="60000" />
+			</bean>
+			 -->
+        </list>
+    </property>
+</bean>
+
+
+</beans>

@@ -1,0 +1,59 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) stylesheet for screen layout
+ * (de) Stylesheet für das Bildschirm-Layout
+ *
+ * @creator       YAML Builder V1.2 (http://builder.yaml.de)
+ * @file          basemod.css
+ * @-yaml-minver  3.2
+ */
+
+@media screen, projection
+{
+  /** 
+   * (en) Forcing vertical scrollbars in IE8, Firefox, Webkit & Opera 
+   * (de) Erzwingen vertikaler Scrollbalken in IE8, Firefox, Webkit & Opera 
+   *
+   * @workaround
+   * @affected IE8, FF, Webkit, Opera
+   * @css-for all
+   * @valid CSS3
+   */
+
+  body { overflow-y: scroll; }
+
+  /*-------------------------------------------------------------------------*/
+
+  /* Layout Alignment | Layout-Ausrichtung */
+  .page_margins { margin: 0 auto; }
+
+  /* Layout Properties | Layout-Eigenschaften */
+  .page_margins { width: auto;  min-width: 1000px; max-width: 1000px;}
+  .page { padding: 10px; 
+  	}
+  #topnav { color: #aaa; background: transparent; }
+  #nav { overflow:hidden; }
+  div.hlist {  }
+  #main { margin: 10px 0; float:left; *float:none; width:100%;}
+
+  /* (en) navigation: horizontal adjustment | (de) horizontale Ausrichtung  */
+  #nav ul { margin-left: 20px; }
+
+  /*-------------------------------------------------------------------------*/
+
+  /**
+   * (en) Formatting content container
+   * (de) Formatierung der Inhalts-Container
+   *
+   */
+
+  #col1 { float: left; width: 205px;  margin:0 }
+  #col2 { float: right; width: 460px;  margin:0 }
+  #col3 { width: auto; margin: 0 480px 0 145px; *margin-right:0; *width:551px;}
+  #col1_content { padding: 0; height: 420px; }
+  #col2_content { padding: 0 }
+  #col3_content { padding: 0; height: 420px; }
+	
+  /*-------------------------------------------------------------------------*/
+}
