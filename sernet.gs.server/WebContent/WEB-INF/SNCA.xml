@@ -3029,10 +3029,11 @@ the value between <param></param> will be used directly if no string is found fo
             id="org_name" 
             focus="true"
             tags="Risk,VDA-ISA" />
-        
+                    
         <huiproperty
             name="Description"
-            id="org_description" 
+            id="org_description"
+           	inputtype="text"
             tags="Risk,VDA-ISA" />
         
         <huiproperty

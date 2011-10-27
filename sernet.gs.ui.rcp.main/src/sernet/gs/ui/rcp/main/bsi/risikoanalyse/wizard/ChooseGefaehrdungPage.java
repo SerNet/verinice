@@ -104,7 +104,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
         setControl(composite);
 
         /* CheckboxTableViewer */
-        viewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
+        viewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION);
         final Table table = viewer.getTable();
         GridData data1 = new GridData();
         data1.grabExcessHorizontalSpace = true;

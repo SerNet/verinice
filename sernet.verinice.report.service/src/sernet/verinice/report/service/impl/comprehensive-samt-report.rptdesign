@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">Comprehensive ISA Report</text-property>
     <property name="units">in</property>
     <list-property name="propertyBindings">
@@ -24,6 +24,26 @@ TocHelper.startRun();
 
 TocHelper.endRun();
 ]]></method>
+    <method name="afterRender"><![CDATA[// import necessary package for bundle import
+importPackage(Packages.org.eclipse.core.runtime);  
+importPackage(Packages.sernet.verinice.report.service.impl);
+
+// this ensures the removal of the local used cache at the end of one iteration of the report
+// if its not done, the garbage collector will run into an exception
+
+// import bundles
+var reportBundle = Packages.org.eclipse.core.runtime.Platform.getBundle( "sernet.verinice.report.service" );
+var odaBundle = Packages.org.eclipse.core.runtime.Platform.getBundle("sernet.verinice.oda.driver");
+
+// load classes from bundles
+helperSignature = odaBundle.loadClass("sernet.verinice.oda.driver.impl.ReportJavaScriptHelper");
+commandSignature = reportBundle.loadClass("sernet.verinice.report.service.commands.ClearCacheCommand");
+
+
+var helperInstance = helperSignature.newInstance();
+var commandInstance = commandSignature.newInstance();
+
+helperInstance.execute(commandInstance);]]></method>
     <method name="onPageStart"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
 
 TocHelper.increasePageNumber();]]></method>
@@ -2210,41 +2230,50 @@ inParameters(new String[] { "id", "root_object" });</value>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[id = inpv("id");
+            <xml-property name="queryText"><![CDATA[import sernet.verinice.oda.driver.impl;
+import sernet.verinice.report.service.impl;
 
-c = helper.execute(new sernet.verinice.report.service.commands.LoadAllFindingsCommand(id));
-
+id = inpv("id");
+c = new sernet.verinice.report.service.commands.LoadAllFindingsCommand(id);
+c = helper.execute(c);
+//c.getReportObjects();
 return c.getResult();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>no</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>no</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2262,8 +2291,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control</design:name>
-            <design:position>2</design:position>
+            <design:identifier>
+              <design:name>control</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2281,8 +2312,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>findings</design:name>
-            <design:position>3</design:position>
+            <design:identifier>
+              <design:name>findings</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2300,8 +2333,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>maturityLevel</design:name>
-            <design:position>4</design:position>
+            <design:identifier>
+              <design:name>maturityLevel</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2319,8 +2354,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>deviation</design:name>
-            <design:position>5</design:position>
+            <design:identifier>
+              <design:name>deviation</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2338,8 +2375,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>risk</design:name>
-            <design:position>6</design:position>
+            <design:identifier>
+              <design:name>risk</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2357,8 +2396,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>measure</design:name>
-            <design:position>7</design:position>
+            <design:identifier>
+              <design:name>measure</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2376,8 +2417,10 @@ return c.getResult();]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>personInCharge</design:name>
-            <design:position>8</design:position>
+            <design:identifier>
+              <design:name>personInCharge</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -4384,109 +4427,69 @@ columns(cols);</value>
                 </grid>
             </page-header>
             <page-footer>
-                <grid id="2029">
-                    <property name="verticalAlign">bottom</property>
-                    <property name="height">100%</property>
-                    <column id="2030"/>
-                    <column id="2031"/>
-                    <row id="2032">
-                        <property name="height">100%</property>
-                        <property name="fontSize">10pt</property>
-                        <property name="verticalAlign">bottom</property>
-                        <cell id="2033"/>
-                        <cell id="2034"/>
-                    </row>
-                </grid>
-            </page-footer>
-        </simple-master-page>
-        <simple-master-page name="reportPage" id="152">
-            <property name="type">a4</property>
-            <property name="orientation">landscape</property>
-            <property name="leftMargin">0.25in</property>
-            <page-header>
-                <grid id="2056">
-                    <column id="2057"/>
-                    <column id="2058"/>
-                    <column id="2059"/>
-                    <row id="2060">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <cell id="2061"/>
-                        <cell id="2062">
-                            <property name="textAlign">center</property>
-                        </cell>
-                        <cell id="2064"/>
-                    </row>
-                </grid>
-            </page-header>
-            <page-footer>
-                <grid id="154">
-                    <property name="textAlign">left</property>
-                    <property name="verticalAlign">top</property>
-                    <property name="height">0.3229166666666667in</property>
-                    <property name="width">7.84375in</property>
-                    <column id="155">
-                        <property name="width">6.239583333333333in</property>
+                <grid id="868">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <column id="869"/>
+                    <column id="870">
+                        <property name="width">5.4in</property>
                     </column>
-                    <column id="156">
-                        <property name="width">1.6041666666666667in</property>
+                    <column id="871">
+                        <property name="width">0.2222222222222222in</property>
                     </column>
-                    <row id="157">
-                        <property name="height">0.3229166666666667in</property>
-                        <cell id="158">
-                            <label id="2035">
+                    <column id="872"/>
+                    <row id="873">
+                        <cell id="874">
+                            <grid id="879">
                                 <property name="fontSize">9pt</property>
-                                <property name="textAlign">left</property>
-                                <text-property name="text">Classification: Confidential</text-property>
-                            </label>
-                        </cell>
-                        <cell id="159">
-                            <property name="textAlign">right</property>
-                            <grid id="161">
-                                <property name="fontSize">9pt</property>
-                                <property name="verticalAlign">bottom</property>
-                                <property name="canShrink">true</property>
-                                <property name="height">0.4479166666666667in</property>
-                                <property name="width">4.739583333333333in</property>
-                                <column id="173">
-                                    <property name="width">3.1770833333333335in</property>
+                                <property name="width">1.8677685950413223in</property>
+                                <column id="880">
+                                    <property name="width">0.2975206611570248in</property>
                                 </column>
-                                <column id="162">
-                                    <property name="width">0.625in</property>
+                                <column id="881">
+                                    <property name="width">0.2066115702479339in</property>
                                 </column>
-                                <column id="163">
-                                    <property name="width">0.3125in</property>
+                                <column id="882">
+                                    <property name="width">1.3636363636363635in</property>
                                 </column>
-                                <column id="164">
-                                    <property name="width">0.625in</property>
-                                </column>
-                                <row id="165">
-                                    <property name="height">0.4479166666666667in</property>
-                                    <cell id="172">
-                                        <text id="174">
-                                            <property name="contentType">plain</property>
-                                            <text-property name="content"><![CDATA[Page]]></text-property>
-                                        </text>
-                                    </cell>
-                                    <cell id="166">
-                                        <auto-text name="currentPage" id="167">
+                                <row id="883">
+                                    <cell id="884">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="885">
+                                            <property name="textAlign">right</property>
                                             <property name="type">page-number</property>
                                         </auto-text>
                                     </cell>
-                                    <cell id="168">
-                                        <text id="169">
+                                    <cell id="886">
+                                        <property name="verticalAlign">bottom</property>
+                                        <text id="887">
+                                            <property name="textAlign">center</property>
                                             <property name="contentType">plain</property>
-                                            <text-property name="content"><![CDATA[of]]></text-property>
+                                            <text-property name="content"><![CDATA[/]]></text-property>
                                         </text>
                                     </cell>
-                                    <cell id="170">
-                                        <auto-text name="currentPage1" id="177">
+                                    <cell id="888">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="889">
                                             <property name="type">total-page</property>
                                         </auto-text>
                                     </cell>
                                 </row>
                             </grid>
+                        </cell>
+                        <cell id="875"/>
+                        <cell id="2148"/>
+                        <cell id="2149">
+                            <property name="verticalAlign">bottom</property>
+                            <text id="2150">
+                                <property name="fontSize">9pt</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                            </text>
                         </cell>
                     </row>
                 </grid>
@@ -4512,7 +4515,9 @@ columns(cols);</value>
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">imageKey</property>
-                                <expression name="expression" type="javascript">"companyLogo"</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">"companyLogo"</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -5392,12 +5397,16 @@ TocHelper.increaseTocPageCount();]]></method>
                             <row id="2009">
                                 <cell id="2010">
                                     <label id="2024">
-                                        <text-property name="text">name</text-property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Name</text-property>
                                     </label>
                                 </cell>
                                 <cell id="2011">
                                     <label id="2026">
-                                        <text-property name="text">page</text-property>
+                                        <property name="fontWeight">bold</property>
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text">Page</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -5885,6 +5894,8 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
             </list-property>
             <method name="onRender"><![CDATA[// import necessary package for bundle import
 importPackage(Packages.org.eclipse.core.runtime);  
+importPackage(Packages.sernet.verinice.report.service.impl);
+
 // get root value
 var root = this.value;
 
@@ -5916,7 +5927,11 @@ var jFreeResult = chart.createBufferedImage(750, 400);
 
 var imageBytes = helperInstance.createImageResult(jFreeResult);
 
-reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]></method>
+reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )
+
+
+// adjust pagecount
+TocHelper.increasePageNumber();]]></method>
             <property name="resultSetColumn">root</property>
         </data>
         <grid id="1030">
@@ -5955,11 +5970,15 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">width</property>
-                                <expression name="expression" type="javascript">750</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">750</value>
+                                </simple-property-list>
                             </structure>
                             <structure>
                                 <property name="paramName">height</property>
-                                <expression name="expression" type="javascript">400</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">400</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -6011,11 +6030,15 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">chapterId</property>
-                                <expression name="expression" type="javascript">-1</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-1</value>
+                                </simple-property-list>
                             </structure>
                             <structure>
                                 <property name="paramName">chapterName</property>
-                                <expression name="expression" type="javascript">"ISO/IEC 27001 Conformity"</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">"ISO/IEC 27001 Conformity"</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -6522,7 +6545,9 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">id</property>
-                                <expression name="expression" type="javascript">-5</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-5</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -6568,7 +6593,9 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                                                                 <list-property name="paramBindings">
                                                                     <structure>
                                                                         <property name="paramName">id</property>
-                                                                        <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                        <simple-property-list name="expression">
+                                                                            <value type="javascript">row["chapterId"]</value>
+                                                                        </simple-property-list>
                                                                     </structure>
                                                                 </list-property>
                                                                 <list-property name="boundDataColumns">
@@ -6626,7 +6653,9 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                                                                                             <list-property name="paramBindings">
                                                                                                 <structure>
                                                                                                     <property name="paramName">id</property>
-                                                                                                    <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">row["chapterId"]</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="boundDataColumns">
@@ -6962,7 +6991,9 @@ reportContext.setPersistentGlobalVariable( "maturityImageBytes", imageBytes )]]>
                                                                                             <list-property name="paramBindings">
                                                                                                 <structure>
                                                                                                     <property name="paramName">findingId</property>
-                                                                                                    <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">row["chapterId"]</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="boundDataColumns">
@@ -7027,11 +7058,15 @@ reportContext.setPersistentGlobalVariable( "attachmentImage1", result )]]></meth
                                                                                             <list-property name="paramBindings">
                                                                                                 <structure>
                                                                                                     <property name="paramName">chapterId</property>
-                                                                                                    <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">row["chapterId"]</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="paramName">chapterName</property>
-                                                                                                    <expression name="expression" type="javascript">row["chapterName"]</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">row["chapterName"]</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="boundDataColumns">
@@ -7535,11 +7570,15 @@ reportContext.setPersistentGlobalVariable( "attachmentImage1", result )]]></meth
                                                                                             <list-property name="paramBindings">
                                                                                                 <structure>
                                                                                                     <property name="paramName">findingId</property>
-                                                                                                    <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">row["chapterId"]</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="paramName">imageNr</property>
-                                                                                                    <expression name="expression" type="javascript">2</expression>
+                                                                                                    <simple-property-list name="expression">
+                                                                                                        <value type="javascript">2</value>
+                                                                                                    </simple-property-list>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="boundDataColumns">
@@ -7608,7 +7647,7 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
         </grid>
         <grid id="1089">
             <property name="marginBottom">1cm</property>
-            <property name="pageBreakAfter">always</property>
+            <property name="pageBreakAfter">auto</property>
             <property name="width">11.010416666666666in</property>
             <column id="1090">
                 <property name="width">11.010416666666666in</property>
@@ -7631,7 +7670,9 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">id</property>
-                                <expression name="expression" type="javascript">-5</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-5</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -7667,7 +7708,9 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
                                         <list-property name="paramBindings">
                                             <structure>
                                                 <property name="paramName">id</property>
-                                                <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                <simple-property-list name="expression">
+                                                    <value type="javascript">row["chapterId"]</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <list-property name="boundDataColumns">
@@ -7687,9 +7730,20 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
                                             <row id="1948">
                                                 <cell id="1949">
                                                     <grid id="2130">
+                                                        <property name="pageBreakAfter">always</property>
                                                         <column id="2131"/>
                                                         <row id="2132">
                                                             <cell id="2133">
+                                                                <data id="2169">
+                                                                    <list-property name="visibility">
+                                                                        <structure>
+                                                                            <property name="format">all</property>
+                                                                            <expression name="valueExpr" type="javascript">true</expression>
+                                                                        </structure>
+                                                                    </list-property>
+                                                                    <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "chapterNameForTOC", this.value )]]></method>
+                                                                    <property name="resultSetColumn">chapterName</property>
+                                                                </data>
                                                                 <text-data id="2136">
                                                                     <expression name="valueExpr">"&lt;h3>" + row["chapterName"] + "&lt;/h3>"</expression>
                                                                     <property name="contentType">html</property>
@@ -7729,7 +7783,9 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
                                                                                 <list-property name="paramBindings">
                                                                                     <structure>
                                                                                         <property name="paramName">id</property>
-                                                                                        <expression name="expression" type="javascript">row["chapterId"]</expression>
+                                                                                        <simple-property-list name="expression">
+                                                                                            <value type="javascript">row["chapterId"]</value>
+                                                                                        </simple-property-list>
                                                                                     </structure>
                                                                                 </list-property>
                                                                                 <list-property name="boundDataColumns">
@@ -7774,6 +7830,7 @@ reportContext.setPersistentGlobalVariable( "attachmentImage2", result )]]></meth
                                                                                         <property name="dataType">javaObject</property>
                                                                                     </structure>
                                                                                 </list-property>
+                                                                                <property name="pageBreakInterval">9</property>
                                                                                 <column id="1994">
                                                                                     <property name="width">1.1145833333333333in</property>
                                                                                 </column>
@@ -8226,6 +8283,12 @@ Level]]></text-property>
             </row>
         </grid>
     </body>
+    <property name="pageVariables">
+        <variable-element name="tableWatcher">
+            <expression name="value" type="javascript">"0"</expression>
+            <property name="type">page</property>
+        </variable-element>
+    </property>
     <list-property name="images">
         <structure>
             <property name="name">design1.png</property>

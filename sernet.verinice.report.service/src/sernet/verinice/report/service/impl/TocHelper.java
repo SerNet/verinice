@@ -19,6 +19,8 @@ package sernet.verinice.report.service.impl;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 /**
  * The {@link TocHelper} class simplifies the generation of printable table of
  * contents from BIRT reports.
@@ -45,7 +47,7 @@ public class TocHelper {
 	 * 
 	 * The current value is stored along with a TOC entry.
 	 */
-	private static int pageNumber = 1;
+	private static int pageNumber = 0;
 
 	/** A counter for the amount of pages the TOC itself requires. This is the only possibility
 	 * to correctly calculate the actual page for a TOC entry.
@@ -89,7 +91,9 @@ public class TocHelper {
 	private static ArrayList<String> items = new ArrayList<String>();
 
 	private static ArrayList<Integer> pages = new ArrayList<Integer>();
-
+	
+	private static Logger log = Logger.getLogger(TocHelper.class);
+	
 	/**
 	 * Returns the amount of TOC items in the report.
 	 * 
@@ -100,7 +104,7 @@ public class TocHelper {
 	public static int getTocCount() {
 		return finalItems.size();
 	}
-
+	
 	/**
 	 * Adds a TOC item to the dataset.
 	 * 
@@ -152,7 +156,7 @@ public class TocHelper {
 	 * <p>It resets various internal counters.</p>
 	 */
 	public static void startRun() {
-		pageNumber = 1;
+		pageNumber = 0;
 		tocPageCount = 0;
 	}
 
@@ -230,5 +234,9 @@ public class TocHelper {
 	public static void increaseTocPageCount() {
 		tocPageCount++;
 	}
-
+	
+	public static void triggerLog(String msg){
+	    log.debug(msg);
+	}
+	
 }
