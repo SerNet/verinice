@@ -47,5 +47,16 @@
         </property>
     </bean>
     
+    <bean name="/rightsServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="rightsService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IRightsService</value>
+        </property>
+    </bean>
+    
 </beans>
 

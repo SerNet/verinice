@@ -72,6 +72,22 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
     </bean>
     
+    <bean id="rightsServiceExecuter"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/rightsServiceHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IRightsService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+    </bean>
+    
+    <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
+    	<property name="authService" ref="authService" />
+        <property name="rightsServiceExecuter" ref="rightsServiceExecuter" />
+    </bean>
+    
     <!-- timer bean to check for changes every x seconds: -->
      
     <bean id="quartzSchedulerFactory"
@@ -189,6 +205,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<entry key="webServiceClient" value-ref="webServiceClient" />
             <entry key="taskService" value-ref="taskService" />
             <entry key="processService" value-ref="processService" />
+            <entry key="rightsService" value-ref="rightsServiceClient" />
 		</map>
 	</property>
 	</bean>
