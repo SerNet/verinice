@@ -33,7 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
-public class ReloadAction extends Action {
+public class ReloadAction extends AbstractRightsEnabledAction {
 
     public static final String ID = "sernet.gs.ui.rcp.main.reloadaction"; //$NON-NLS-1$
 
@@ -48,12 +48,23 @@ public class ReloadAction extends Action {
                 setEnabled(false);
             }
             public void loaded(BSIModel model) {
-                setEnabled(true);
+                if(checkRights()){
+                    setEnabled(true);
+                }
             }
             public void loaded(ISO27KModel model) {
-                setEnabled(true);               
+                if(checkRights()){
+                    setEnabled(true);
+                }
             }
         });
+    }
+    
+    public ReloadAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        boolean rights = this.checkRights();
+        this.setEnabled(rights);
     }
 
     /*

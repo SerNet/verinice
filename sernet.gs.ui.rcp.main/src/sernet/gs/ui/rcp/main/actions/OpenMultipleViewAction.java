@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -25,7 +24,7 @@ import org.eclipse.ui.PartInitException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 
-public class OpenMultipleViewAction extends Action {
+public class OpenMultipleViewAction extends AbstractRightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;
@@ -43,6 +42,12 @@ public class OpenMultipleViewAction extends Action {
         // TODO add command ids for each view opened using this action
         // setActionDefinitionId(ICommandIds.CMD_OPEN);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(imageDesc));
+    }
+    
+    public OpenMultipleViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc, String rightID){
+        this(window, label, viewId, imageDesc);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

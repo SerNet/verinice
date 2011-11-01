@@ -20,8 +20,6 @@ package sernet.gs.ui.rcp.main.actions;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -33,15 +31,13 @@ import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 
-public class ImportGstoolNotesAction extends Action {
+public class ImportGstoolNotesAction extends AbstractRightsEnabledAction {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction";
 	private final IWorkbenchWindow window;
@@ -83,6 +79,11 @@ public class ImportGstoolNotesAction extends Action {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
 	
+	public ImportGstoolNotesAction(IWorkbenchWindow window, String label, String rightID){
+	    this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
+	}
 	
 	public void run() {
 		try {

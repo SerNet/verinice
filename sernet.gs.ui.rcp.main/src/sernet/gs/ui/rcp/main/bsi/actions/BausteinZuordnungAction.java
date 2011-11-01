@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -33,6 +32,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.AbstractRightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AutoBausteinDialog;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
@@ -42,7 +42,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class BausteinZuordnungAction extends Action implements ISelectionListener {
+public class BausteinZuordnungAction extends AbstractRightsEnabledAction implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(BausteinZuordnungAction.class);
 
@@ -58,6 +58,12 @@ public class BausteinZuordnungAction extends Action implements ISelectionListene
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.BausteinZuordnungAction_2);
+    }
+    
+    public BausteinZuordnungAction(IWorkbenchWindow window, String rightID){
+        this(window);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     @Override

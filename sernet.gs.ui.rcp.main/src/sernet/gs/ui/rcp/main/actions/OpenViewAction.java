@@ -24,7 +24,7 @@ import org.eclipse.ui.PartInitException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 
-public class OpenViewAction extends Action {
+public class OpenViewAction extends AbstractRightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;
@@ -41,6 +41,12 @@ public class OpenViewAction extends Action {
         // TODO add command ids for each view opened using this action
         // setActionDefinitionId(ICommandIds.CMD_OPEN);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(imageDesc));
+    }
+    
+    public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc, String rightID){
+        this(window, label, viewId, imageDesc);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /*

@@ -42,7 +42,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
-public class ImportGstoolAction extends Action {
+public class ImportGstoolAction extends AbstractRightsEnabledAction {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
 	private final IWorkbenchWindow window;
@@ -89,6 +89,12 @@ public class ImportGstoolAction extends Action {
 //        setEnabled(false); server only
         setEnabled(true); // now works in standalone again
         CnAElementFactory.getInstance().addLoadListener(loadListener);
+    }
+    
+    public ImportGstoolAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

@@ -52,7 +52,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * $LastChangedBy$
  *
  */
-public class ChangeOwnPasswordAction extends Action  {
+public class ChangeOwnPasswordAction extends AbstractRightsEnabledAction  {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.changeownpasswordaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -66,6 +66,12 @@ public class ChangeOwnPasswordAction extends Action  {
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText(Messages.ChangeOwnPasswordAction_0);
         setEnabled(true);
+    }
+    
+    public ChangeOwnPasswordAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

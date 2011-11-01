@@ -204,80 +204,80 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         register(closeOthersAction);
 
-        openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER);
+        openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         register(openBSIBrowserAction);
 
-        openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE);
+        openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         register(openNoteAction);
 
-        openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH);
+        openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
         register(openFileAction);
 
-        openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH);
+        openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH, ActionRightIDs.ISMCATALOG);
         register(openCatalogAction);
 
-        openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS);
+        openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS, ActionRightIDs.RELATIONS);
         register(openRelationViewAction);
 
-        openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN);
+        openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
         register(openBSIViewAction);
 
-        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL);
+        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMASSNAHMEN);
         register(openBSIModelViewAction);
 
-        openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW);
+        openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
         register(openISMViewAction);
 
-        openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL);
+        openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL, ActionRightIDs.DSMODELVIEW);
         register(openDSViewAction);
 
-        openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO);
+        openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
         register(openTodoViewAction);
 
-        openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT);
+        openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT, ActionRightIDs.DOCUMENTVIEW);
         register(openDocumentViewAction);
 
-        openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT);
+        openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
         register(openAuditViewAction);
         
-        openTaskViewAction = new OpenTaskViewAction(window);
+        openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         register(openTaskViewAction);
 
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
 
-        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
+        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15, ActionRightIDs.GSTOOLIMPORT);
         register(importGstoolAction);
         
-        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
+        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30, ActionRightIDs.IMPORTCSV);
         register(importCSVAction);
         
-        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
+        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32, ActionRightIDs.IMPORTLDAP);
         register(importPersonFromLdap);
 
-		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
+		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27, ActionRightIDs.GSNOTESIMPORT);
 		register(importGSNotesAction);
 
-        showPreferencesAction = new ShowPreferencesAction();
+        showPreferencesAction = new ShowPreferencesAction(ActionRightIDs.SHOWPREFERENCES);
         // showPreferencesAction = ActionFactory.PREFERENCES.create(window);
         register(showPreferencesAction);
 
-        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
+        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16, ActionRightIDs.BULKEDIT);
         register(bulkEditAction);
         
-        runRiskAnalysisAction = new RunRiskAnalysisAction(window);
+        runRiskAnalysisAction = new RunRiskAnalysisAction(window, ActionRightIDs.RISKANALYSIS);
         register(runRiskAnalysisAction);
 
-        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
+        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17, ActionRightIDs.ACCESSCONTROL);
         register(accessControlEditAction);
 
-        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
+        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18, ActionRightIDs.KONSOLIDATOR);
         register(konsolidatorAction);
 
-        bausteinZuordnungAction = new BausteinZuordnungAction(window);
+        bausteinZuordnungAction = new BausteinZuordnungAction(window, ActionRightIDs.BAUSTEINZUORDNUNG);
         register(bausteinZuordnungAction);
         
-        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
+        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31, ActionRightIDs.CHANGEPASSWORD);
         
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);

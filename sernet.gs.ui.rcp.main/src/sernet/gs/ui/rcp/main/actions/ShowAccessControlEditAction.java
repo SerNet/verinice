@@ -29,11 +29,9 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Robert Schuster <r.schuster@tarent.de>
  * 
  */
-public class ShowAccessControlEditAction extends Action implements ISelectionListener {
+public class ShowAccessControlEditAction extends AbstractRightsEnabledAction implements ISelectionListener {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -56,6 +54,12 @@ public class ShowAccessControlEditAction extends Action implements ISelectionLis
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);
+    }
+    
+    public ShowAccessControlEditAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

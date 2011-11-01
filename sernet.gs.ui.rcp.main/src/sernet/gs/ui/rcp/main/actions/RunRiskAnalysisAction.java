@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.actions;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -36,7 +35,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
-public class RunRiskAnalysisAction extends Action {
+public class RunRiskAnalysisAction extends AbstractRightsEnabledAction {
 
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
 
@@ -57,6 +56,12 @@ public class RunRiskAnalysisAction extends Action {
                 setEnabled(true);               
             }
         });
+    }
+    
+    public RunRiskAnalysisAction(IWorkbenchWindow window, String rightID){
+        this(window);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /*

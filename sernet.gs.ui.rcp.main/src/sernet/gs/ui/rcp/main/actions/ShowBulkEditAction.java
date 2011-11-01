@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -64,7 +63,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  *          2007) $ $LastChangedBy: koderman $
  * 
  */
-public class ShowBulkEditAction extends Action implements ISelectionListener {
+public class ShowBulkEditAction extends AbstractRightsEnabledAction implements ISelectionListener {
 
     // FIXME server: bulk edit does not notify changes on self
 
@@ -81,6 +80,12 @@ public class ShowBulkEditAction extends Action implements ISelectionListener {
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
+    }
+    
+    public ShowBulkEditAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     @Override

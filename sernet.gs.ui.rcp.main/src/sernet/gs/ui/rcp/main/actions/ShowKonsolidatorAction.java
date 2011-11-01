@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -45,7 +44,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
-public class ShowKonsolidatorAction extends Action implements ISelectionListener {
+public class ShowKonsolidatorAction extends AbstractRightsEnabledAction implements ISelectionListener {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showkonsolidatoraction"; //$NON-NLS-1$
 
@@ -59,6 +58,12 @@ public class ShowKonsolidatorAction extends Action implements ISelectionListener
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
+    }
+    
+    public ShowKonsolidatorAction(IWorkbenchWindow window, String label, String rightID){
+        this(window, label);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

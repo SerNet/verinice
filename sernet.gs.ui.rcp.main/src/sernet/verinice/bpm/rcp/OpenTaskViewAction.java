@@ -27,6 +27,12 @@ public class OpenTaskViewAction extends OpenViewAction {
         });
     }
     
+    public OpenTaskViewAction(IWorkbenchWindow window, String rightID){
+        this(window);
+        setRightID(rightID);
+        setEnabled(checkRights());
+    }
+    
     private boolean isActive() {
         if(isActive==null) {
             isActive = ServiceFactory.lookupProcessService().isActive();
