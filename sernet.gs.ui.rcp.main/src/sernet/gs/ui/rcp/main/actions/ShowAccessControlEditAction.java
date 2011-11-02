@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
@@ -41,7 +42,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Robert Schuster <r.schuster@tarent.de>
  * 
  */
-public class ShowAccessControlEditAction extends AbstractRightsEnabledAction implements ISelectionListener {
+public class ShowAccessControlEditAction extends RightsEnabledAction implements ISelectionListener {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -54,11 +55,7 @@ public class ShowAccessControlEditAction extends AbstractRightsEnabledAction imp
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);
-    }
-    
-    public ShowAccessControlEditAction(IWorkbenchWindow window, String label, String rightID){
-        this(window, label);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.ACCESSCONTROL);
         setEnabled(checkRights());
     }
 

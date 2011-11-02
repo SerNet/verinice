@@ -17,14 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 
-public class OpenViewAction extends AbstractRightsEnabledAction {
+public class OpenViewAction extends RightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;

@@ -64,9 +64,11 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -153,9 +155,9 @@ public class FileView extends ViewPart {
 	
 	private ISelectionListener selectionListener;
 
-	private Action addFileAction;
+	private RightsEnabledAction addFileAction;
 
-	private Action deleteFileAction;
+	private RightsEnabledAction deleteFileAction;
 
 	private Action doubleClickAction;
 	
@@ -390,7 +392,7 @@ public class FileView extends ViewPart {
 	}
 	
 	private void makeActions() {
-		addFileAction = new Action() {
+		addFileAction = new RightsEnabledAction(ActionRightIDs.ADDFILE) {
 			public void run() {
 				FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
 		        fd.setText(Messages.FileView_14);
@@ -421,7 +423,7 @@ public class FileView extends ViewPart {
 		addFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addFileAction.setEnabled(false);
 		
-		deleteFileAction = new Action() {
+		deleteFileAction = new RightsEnabledAction(ActionRightIDs.DELETEFILE) {
 			public void run() {
 				int count = ((IStructuredSelection) viewer.getSelection()).size();
 				boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), 

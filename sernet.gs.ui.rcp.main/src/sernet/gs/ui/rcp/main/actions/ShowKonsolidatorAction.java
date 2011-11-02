@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -44,7 +45,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
-public class ShowKonsolidatorAction extends AbstractRightsEnabledAction implements ISelectionListener {
+public class ShowKonsolidatorAction extends RightsEnabledAction implements ISelectionListener {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showkonsolidatoraction"; //$NON-NLS-1$
 
@@ -58,14 +59,10 @@ public class ShowKonsolidatorAction extends AbstractRightsEnabledAction implemen
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
-    }
-    
-    public ShowKonsolidatorAction(IWorkbenchWindow window, String label, String rightID){
-        this(window, label);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.KONSOLIDATOR);
         setEnabled(checkRights());
     }
-
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */

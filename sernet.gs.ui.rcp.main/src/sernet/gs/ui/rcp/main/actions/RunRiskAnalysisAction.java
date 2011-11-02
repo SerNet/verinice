@@ -24,6 +24,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -35,7 +36,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
-public class RunRiskAnalysisAction extends AbstractRightsEnabledAction {
+public class RunRiskAnalysisAction extends RightsEnabledAction {
 
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
 
@@ -44,24 +45,23 @@ public class RunRiskAnalysisAction extends AbstractRightsEnabledAction {
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
-        setEnabled(false);
+        setRightID(ActionRightIDs.RISKANALYSIS);
+        setEnabled(checkRights());
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
             public void closed(BSIModel model) {
                 setEnabled(false);
             }
             public void loaded(BSIModel model) {
-                setEnabled(true);
+                if(checkRights()){
+                    setEnabled(true);
+                }
             }
             public void loaded(ISO27KModel model) {
-                setEnabled(true);               
+                if(checkRights()){
+                    setEnabled(true);
+                }
             }
         });
-    }
-    
-    public RunRiskAnalysisAction(IWorkbenchWindow window, String rightID){
-        this(window);
-        setRightID(rightID);
-        setEnabled(checkRights());
     }
 
     /*

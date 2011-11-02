@@ -43,8 +43,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -73,7 +75,7 @@ public class NoteView extends ViewPart {
 	
 	private CnATreeElement currentCnaElement;
 	
-	private Action addNoteAction;
+	private RightsEnabledAction addNoteAction;
 
 	private IBSIModelListener modelListener;
 	
@@ -131,7 +133,9 @@ public class NoteView extends ViewPart {
 		try {
 			Object element = ((IStructuredSelection) selection).getFirstElement();
 			if(element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
-				addNoteAction.setEnabled(true);
+				if(addNoteAction.checkRights()){
+				    addNoteAction.setEnabled(true);
+				}
 				setCurrentCnaElement((CnATreeElement) element);
 				clear();
 				loadNotes();
@@ -152,7 +156,7 @@ public class NoteView extends ViewPart {
 	
 	private void makeActions() {
 
-		addNoteAction = new Action() {
+		addNoteAction = new RightsEnabledAction(ActionRightIDs.ADDNOTE) {
 			public void run() {
 				Note note = new Note();
 				note.setCnATreeElementId(getCurrentCnaElement().getDbId());

@@ -222,7 +222,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
         register(openBSIViewAction);
 
-        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMASSNAHMEN);
+        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMODELVIEW);
         register(openBSIModelViewAction);
 
         openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
@@ -240,44 +240,44 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
         register(openAuditViewAction);
         
-        openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
+        openTaskViewAction = new OpenTaskViewAction(window);
         register(openTaskViewAction);
 
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
 
-        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15, ActionRightIDs.GSTOOLIMPORT);
+        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         register(importGstoolAction);
         
-        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30, ActionRightIDs.IMPORTCSV);
+        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
         register(importCSVAction);
         
-        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32, ActionRightIDs.IMPORTLDAP);
+        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
         register(importPersonFromLdap);
 
-		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27, ActionRightIDs.GSNOTESIMPORT);
+		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
 		register(importGSNotesAction);
 
-        showPreferencesAction = new ShowPreferencesAction(ActionRightIDs.SHOWPREFERENCES);
+        showPreferencesAction = new ShowPreferencesAction();
         // showPreferencesAction = ActionFactory.PREFERENCES.create(window);
         register(showPreferencesAction);
 
-        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16, ActionRightIDs.BULKEDIT);
+        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
         register(bulkEditAction);
         
-        runRiskAnalysisAction = new RunRiskAnalysisAction(window, ActionRightIDs.RISKANALYSIS);
+        runRiskAnalysisAction = new RunRiskAnalysisAction(window);
         register(runRiskAnalysisAction);
 
-        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17, ActionRightIDs.ACCESSCONTROL);
+        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
         register(accessControlEditAction);
 
-        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18, ActionRightIDs.KONSOLIDATOR);
+        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
         register(konsolidatorAction);
 
-        bausteinZuordnungAction = new BausteinZuordnungAction(window, ActionRightIDs.BAUSTEINZUORDNUNG);
+        bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
         
-        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31, ActionRightIDs.CHANGEPASSWORD);
+        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
         
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);

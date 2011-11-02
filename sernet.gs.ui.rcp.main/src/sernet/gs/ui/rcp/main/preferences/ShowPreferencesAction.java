@@ -17,15 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.actions.AbstractRightsEnabledAction;
-
-public class ShowPreferencesAction extends AbstractRightsEnabledAction {
+public class ShowPreferencesAction extends Action {
 	
 	
 	private String prefPage = null;
@@ -52,12 +51,6 @@ public class ShowPreferencesAction extends AbstractRightsEnabledAction {
 		//setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.TOOL));
 	}
 	
-	public ShowPreferencesAction(String showPage, String rightID){
-	    this(showPage);
-        setRightID(rightID);
-        setEnabled(checkRights());
-	}
-
 	public void run() {
 
 		PreferenceManager manager = 

@@ -2,6 +2,7 @@ package sernet.verinice.bpm.rcp;
 
 import org.eclipse.ui.IWorkbenchWindow;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.OpenViewAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -25,11 +26,7 @@ public class OpenTaskViewAction extends OpenViewAction {
                 setEnabled(isActive());               
             }
         });
-    }
-    
-    public OpenTaskViewAction(IWorkbenchWindow window, String rightID){
-        this(window);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.TASKVIEW);
         setEnabled(checkRights());
     }
     

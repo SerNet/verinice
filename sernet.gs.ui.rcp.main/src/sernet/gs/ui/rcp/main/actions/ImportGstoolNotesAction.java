@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -37,7 +38,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 
-public class ImportGstoolNotesAction extends AbstractRightsEnabledAction {
+public class ImportGstoolNotesAction extends RightsEnabledAction {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction";
 	private final IWorkbenchWindow window;
@@ -75,14 +76,9 @@ public class ImportGstoolNotesAction extends AbstractRightsEnabledAction {
         setText(label);
 		setId(ID);
 //		setEnabled(false); disable to make available on server only (see above)
-		setEnabled(true); // now works in standalone again
+		setRightID(ActionRightIDs.GSNOTESIMPORT);
+		setEnabled(checkRights()); // now works in standalone again
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-	}
-	
-	public ImportGstoolNotesAction(IWorkbenchWindow window, String label, String rightID){
-	    this(window, label);
-        setRightID(rightID);
-        setEnabled(checkRights());
 	}
 	
 	public void run() {

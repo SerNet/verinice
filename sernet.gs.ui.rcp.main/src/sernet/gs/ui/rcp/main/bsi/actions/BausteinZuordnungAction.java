@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -30,9 +31,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.actions.AbstractRightsEnabledAction;
+import sernet.gs.ui.rcp.main.RightEnabledUserInteraction;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AutoBausteinDialog;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
@@ -42,13 +45,15 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class BausteinZuordnungAction extends AbstractRightsEnabledAction implements ISelectionListener {
+public class BausteinZuordnungAction extends RightsEnabledAction implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(BausteinZuordnungAction.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction"; //$NON-NLS-1$
 
     private final IWorkbenchWindow window;
+    
+    private String rightID  = null;
 
     public BausteinZuordnungAction(IWorkbenchWindow window) {
         this.window = window;
@@ -58,11 +63,7 @@ public class BausteinZuordnungAction extends AbstractRightsEnabledAction impleme
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.BausteinZuordnungAction_2);
-    }
-    
-    public BausteinZuordnungAction(IWorkbenchWindow window, String rightID){
-        this(window);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
         setEnabled(checkRights());
     }
 
@@ -129,7 +130,9 @@ public class BausteinZuordnungAction extends AbstractRightsEnabledAction impleme
                     return;
                 }
             }
-            setEnabled(true);
+            if(checkRights()){
+                setEnabled(true);
+            }
             return;
         }
         // no structured selection:

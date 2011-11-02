@@ -60,6 +60,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -401,7 +402,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
 		
-		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow(), ActionRightIDs.NATURALIZE);
 
 		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_15);
 

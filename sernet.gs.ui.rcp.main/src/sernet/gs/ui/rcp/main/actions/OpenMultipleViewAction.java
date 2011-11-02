@@ -24,7 +24,7 @@ import org.eclipse.ui.PartInitException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 
-public class OpenMultipleViewAction extends AbstractRightsEnabledAction {
+public class OpenMultipleViewAction extends RightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;

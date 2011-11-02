@@ -40,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -51,7 +52,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class NaturalizeAction extends Action implements ISelectionListener {
+public class NaturalizeAction extends RightsEnabledAction implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(NaturalizeAction.class);
     
@@ -68,6 +69,13 @@ public class NaturalizeAction extends Action implements ISelectionListener {
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
+    }
+    
+    
+    public NaturalizeAction(IWorkbenchWindow window, String rightID){
+        this(window);
+        setRightID(rightID);
+        setEnabled(checkRights());
     }
 
     /* (non-Javadoc)

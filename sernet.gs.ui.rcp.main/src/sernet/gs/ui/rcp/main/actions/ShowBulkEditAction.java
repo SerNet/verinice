@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -63,7 +64,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  *          2007) $ $LastChangedBy: koderman $
  * 
  */
-public class ShowBulkEditAction extends AbstractRightsEnabledAction implements ISelectionListener {
+public class ShowBulkEditAction extends RightsEnabledAction implements ISelectionListener {
 
     // FIXME server: bulk edit does not notify changes on self
 
@@ -80,11 +81,7 @@ public class ShowBulkEditAction extends AbstractRightsEnabledAction implements I
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
-    }
-    
-    public ShowBulkEditAction(IWorkbenchWindow window, String label, String rightID){
-        this(window, label);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.BULKEDIT);
         setEnabled(checkRights());
     }
 
@@ -228,7 +225,9 @@ public class ShowBulkEditAction extends AbstractRightsEnabledAction implements I
                         return;
                     }
                 }
-                setEnabled(true);
+                if(checkRights()){
+                    setEnabled(true);
+                }
                 return;
             }
 
@@ -267,7 +266,9 @@ public class ShowBulkEditAction extends AbstractRightsEnabledAction implements I
                     setEnabled(false);
                     return;
                 }
-                setEnabled(true);
+                if(checkRights()){
+                    setEnabled(true);
+                }
                 return;
             }
         }

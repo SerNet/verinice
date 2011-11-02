@@ -17,10 +17,18 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
 /**
  * List of all possible actions that should be controlable by right-management
  */
 public class ActionRightIDs {
+    
+    private static Logger LOG = Logger.getLogger(ActionRightIDs.class);
+    
     public static final String BSIBROWSER = "bsibrowser";
     public static final String NOTES = "notes";
     public static final String FILES = "files";
@@ -44,6 +52,22 @@ public class ActionRightIDs {
     public static final String ACCESSCONTROL = "accesscontrol";
     public static final String KONSOLIDATOR = "konsolidator";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
-    public static final String CHANGEPASSWORD = "changepassword";
+    public static final String ADDNOTE = "addnote";
+    public static final String ADDFILE = "addfile";
+    public static final String DELETEFILE = "deletefile";
+    public static final String NATURALIZE = "naturalize";
     
+    public static String[] getAllRightIDs(){
+        ArrayList<String> retVal = new ArrayList<String>(0);
+        for(Field f : ActionRightIDs.class.getDeclaredFields()){
+            try {
+                retVal.add((String)f.get(null));
+            } catch (IllegalArgumentException e) {
+                LOG.error("Error while getting rightIDs", e);
+            } catch (IllegalAccessException e) {
+                LOG.error("Error while getting rightIDs", e);
+            }
+        }
+        return retVal.toArray(new String[retVal.size()]);
+    }
 }

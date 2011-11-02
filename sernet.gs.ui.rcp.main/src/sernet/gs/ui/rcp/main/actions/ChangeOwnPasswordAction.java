@@ -52,7 +52,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * $LastChangedBy$
  *
  */
-public class ChangeOwnPasswordAction extends AbstractRightsEnabledAction  {
+public class ChangeOwnPasswordAction extends Action  {
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.changeownpasswordaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -68,12 +68,6 @@ public class ChangeOwnPasswordAction extends AbstractRightsEnabledAction  {
         setEnabled(true);
     }
     
-    public ChangeOwnPasswordAction(IWorkbenchWindow window, String label, String rightID){
-        this(window, label);
-        setRightID(rightID);
-        setEnabled(checkRights());
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */

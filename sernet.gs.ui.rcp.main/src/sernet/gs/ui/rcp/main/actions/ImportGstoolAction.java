@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
+import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
@@ -42,7 +43,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
-public class ImportGstoolAction extends AbstractRightsEnabledAction {
+public class ImportGstoolAction extends RightsEnabledAction {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
 	private final IWorkbenchWindow window;
@@ -89,14 +90,10 @@ public class ImportGstoolAction extends AbstractRightsEnabledAction {
 //        setEnabled(false); server only
         setEnabled(true); // now works in standalone again
         CnAElementFactory.getInstance().addLoadListener(loadListener);
-    }
-    
-    public ImportGstoolAction(IWorkbenchWindow window, String label, String rightID){
-        this(window, label);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.GSTOOLIMPORT);
         setEnabled(checkRights());
     }
-
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
@@ -180,5 +177,6 @@ public class ImportGstoolAction extends AbstractRightsEnabledAction {
 			ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
         }
     }
+    
 
 }
