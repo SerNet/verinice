@@ -43,6 +43,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.NaturalizeCommand;
@@ -69,15 +70,10 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
-    }
-    
-    
-    public NaturalizeAction(IWorkbenchWindow window, String rightID){
-        this(window);
-        setRightID(rightID);
+        setRightID(ActionRightIDs.NATURALIZE);
         setEnabled(checkRights());
     }
-
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.Action#run()
      */
@@ -142,7 +138,9 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                 break;
             }
         }
-        this.setEnabled(enabled);
+        if(enabled && checkRights()){
+            this.setEnabled(enabled);
+        }
     }
 
     public ICommandService getCommandService() {

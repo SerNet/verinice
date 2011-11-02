@@ -29,11 +29,11 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
-import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 

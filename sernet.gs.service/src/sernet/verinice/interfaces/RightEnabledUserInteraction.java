@@ -15,7 +15,7 @@
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main;
+package sernet.verinice.interfaces;
 
 /**
  *

@@ -19,9 +19,9 @@ package sernet.gs.ui.rcp.main.actions;
 
 import org.eclipse.jface.action.Action;
 
-import sernet.gs.ui.rcp.main.RightEnabledUserInteraction;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 public class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
     

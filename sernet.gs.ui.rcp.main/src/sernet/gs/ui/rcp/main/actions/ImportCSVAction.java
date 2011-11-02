@@ -4,8 +4,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.bsi.wizards.ImportCSVWizard;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class ImportCSVAction extends RightsEnabledAction {
 	public static final String ID = "sernet.gs.ui.rcp.main.importcsvaction";

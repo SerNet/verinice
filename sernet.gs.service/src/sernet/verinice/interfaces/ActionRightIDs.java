@@ -15,7 +15,7 @@
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main;
+package sernet.verinice.interfaces;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -56,6 +56,12 @@ public class ActionRightIDs {
     public static final String ADDFILE = "addfile";
     public static final String DELETEFILE = "deletefile";
     public static final String NATURALIZE = "naturalize";
+    public static final String ADDCATALOG = "addcatalog";
+    public static final String DELETECATALOG = "deletecatalog";  
+    public static final String OPENVIEW = "openview";
+    public static final String ISMCUT = "ismcut";
+    public static final String ISMCOPY = "ismcopy";
+    
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

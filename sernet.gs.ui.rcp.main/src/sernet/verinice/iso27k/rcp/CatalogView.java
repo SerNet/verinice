@@ -63,6 +63,7 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -70,6 +71,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.iso27k.IItem;
@@ -98,9 +100,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	
 	public static final DateFormat DATE_TIME_FORMAT_SHORT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
-	private Action addCatalogAction;
+	private RightsEnabledAction addCatalogAction;
 	
-	private Action deleteCatalogAction;
+	private RightsEnabledAction deleteCatalogAction;
 	
 	private Action expandAllAction;
 
@@ -320,16 +322,18 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
     }
 
 	private void makeActions() {
-		addCatalogAction = new Action() {
+		addCatalogAction = new RightsEnabledAction(ActionRightIDs.ADDCATALOG) {
 			public void run() {
 				importCatalog();
 			}
 		};
 		addCatalogAction.setText(Messages.CatalogView_11);
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-		addCatalogAction.setEnabled(true);
+		if(addCatalogAction.checkRights()){
+		    addCatalogAction.setEnabled(true);
+		}
 		
-		deleteCatalogAction = new Action() {
+		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
 			public void run() {
 				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
 				if (confirm)
@@ -523,7 +527,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				comboModel.add(attachment);
 				String[] labelArray = comboModel.getLabelArray();
 				comboCatalog.setItems(labelArray);
-				deleteCatalogAction.setEnabled(labelArray.length>0);
+				if(deleteCatalogAction.checkRights()){
+				    deleteCatalogAction.setEnabled(labelArray.length>0);
+				}
 				selectComboItem(attachment);
 			} catch (Exception e) {
 				LOG.error("Error while reading file data", e);

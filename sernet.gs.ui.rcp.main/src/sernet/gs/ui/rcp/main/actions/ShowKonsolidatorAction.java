@@ -32,7 +32,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -42,6 +41,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
 import sernet.hui.common.connect.EntityType;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
@@ -160,7 +160,9 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
                     return;
                 }
             }
-            setEnabled(true);
+            if(checkRights()){
+                setEnabled(true);
+            }
             return;
         }
         // no structured selection:

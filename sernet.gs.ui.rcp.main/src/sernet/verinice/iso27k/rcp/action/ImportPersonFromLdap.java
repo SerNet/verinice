@@ -3,9 +3,9 @@ package sernet.verinice.iso27k.rcp.action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import sernet.gs.ui.rcp.main.ActionRightIDs;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.LdapImportDialog;
 
 public class ImportPersonFromLdap extends RightsEnabledAction {
