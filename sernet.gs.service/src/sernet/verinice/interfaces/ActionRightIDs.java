@@ -67,7 +67,9 @@ public class ActionRightIDs {
         ArrayList<String> retVal = new ArrayList<String>(0);
         for(Field f : ActionRightIDs.class.getDeclaredFields()){
             try {
-                retVal.add((String)f.get(null));
+                if(f.get(null) instanceof String ) {
+                    retVal.add((String)f.get(null));
+                }
             } catch (IllegalArgumentException e) {
                 LOG.error("Error while getting rightIDs", e);
             } catch (IllegalAccessException e) {

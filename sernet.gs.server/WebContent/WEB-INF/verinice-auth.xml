@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<auth version="0"
+<auth version="0" type="blacklist"
 	xmlns="http://www.verinice.org/auth" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
 	<profiles>
-		<profile name="report">	
-			<action id="report" />		
-		</profile>
-		<profile name="importexport">
-			<action id="export" />
-			<action id="import" />
-		</profile>
-		<profile name="admin">
-		</profile>
-	</profiles>
-	<userprofiles>
-		<userprofile login="admin">
-			<profile name="admin" />				
-		</userprofile>
-		<userprofile login="ak" scope="org">
-			<profile name="admin" />		
-		</userprofile>
-		<userprofile login="dm" scope="org">
-			<profile name="report" />
-			<profile name="importexport" />	
-		</userprofile>
-	</userprofiles>
+        <profile name="user">
+            <action id="importldap" />
+        </profile>
+    </profiles>
+	<userprofiles/>
 </auth>

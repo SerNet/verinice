@@ -21,22 +21,13 @@ import org.eclipse.jface.action.Action;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
-public class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
+public abstract class AbstractRightsEnabledAction extends Action {
     
     private String rightID = null;
     
     /* TODO: implement logic for right management on orgs */
     private boolean orgRelatedCheck = false;
-    
-    public RightsEnabledAction(String rightID){
-        this.setRightID(rightID);
-    }
-    
-    public RightsEnabledAction(){
-    }
-   
 
     public boolean checkRights(){
         /**

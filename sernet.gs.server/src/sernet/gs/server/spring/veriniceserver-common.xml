@@ -250,8 +250,10 @@ This variant:
 	</bean>
 	
 	<bean id="rightsService" class="sernet.verinice.service.XmlRightsService">
+        <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
 		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
-		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>		
+		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
+        <property name="configurationDao" ref="configurationDao" />				
 	</bean>
 
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->

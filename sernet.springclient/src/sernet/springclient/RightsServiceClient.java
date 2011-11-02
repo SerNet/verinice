@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.springclient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
+import sernet.verinice.model.auth.ConfigurationType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
@@ -44,21 +46,27 @@ public class RightsServiceClient implements IRightsServiceClient{
     
     IAuthService authService;
     IRightsService rightsServiceExecuter;
-    Userprofile userprofile;
+    List<Userprofile> userprofile;
     Map<String, Action> actionMap;
     Profiles profiles;
     Map<String, Profile> profileMap;
     
-    public boolean containsAction(String actionId) {
-        boolean defaultValue = false;
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
+     */
+    public boolean isEnabled(String actionId) {
+        boolean returnValue = false;
         try {
+            returnValue = isBlacklist();
+        
             if(getUserprofile()!=null) {
-                return actionMap.get(actionId)!=null;
+                returnValue = actionMap.get(actionId)!=null && isWhitelist() || 
+                              actionMap.get(actionId)==null && isBlacklist();
             }
-            return defaultValue;
+            return returnValue;
         } catch (Exception e) {
-            LOG.error("Error while checking action.", e);
-            return defaultValue;
+            LOG.error("Error while checking action. Returning false", e);
+            return returnValue;
         }
     }
     
@@ -74,7 +82,7 @@ public class RightsServiceClient implements IRightsServiceClient{
      * @see sernet.verinice.interfaces.IRightsService#getUserprofile(java.lang.String)
      */
     @Override
-    public Userprofile getUserprofile(String username) {
+    public List<Userprofile> getUserprofile(String username) {
         return getRightsServiceExecuter().getUserprofile(username);
     }
 
@@ -82,7 +90,7 @@ public class RightsServiceClient implements IRightsServiceClient{
      * @see sernet.verinice.interfaces.IRightsServiceClient#getUserprofile()
      */
     @Override
-    public Userprofile getUserprofile() {
+    public List<Userprofile> getUserprofile() {
         if(userprofile==null) {
             userprofile = loadUserprofile();
         }
@@ -109,24 +117,33 @@ public class RightsServiceClient implements IRightsServiceClient{
         return profiles;
     }
     
-    private Userprofile loadUserprofile() {
-        Userprofile userprofile = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());
+    private  List<Userprofile> loadUserprofile() {
+        List<Userprofile> userprofileList = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());        
+        if(userprofileList==null || userprofileList.isEmpty() ) {
+            // no userprofile found, create an empty dummy userprofile
+            Userprofile userprofile = new Userprofile();
+            userprofile.setLogin(getAuthService().getUsername());
+            userprofileList = new ArrayList<Userprofile>(1);
+            userprofileList.add(userprofile);
+        }
         actionMap = new HashMap<String, Action>();
-        if(userprofile!=null) {
+        for (Userprofile userprofile : userprofileList) {  
             List<Profile> profileList = userprofile.getProfile();
-            for (Profile profile : profileList) {
-                Profile profileWithActions = getProfileMap().get(profile.getName());
-                if(profileWithActions!=null) {
-                    List<Action> actionList = profileWithActions.getAction();
-                    for (Action action : actionList) {
-                        actionMap.put(action.getId(), action);            
+            if(profileList!=null) {
+                for (Profile profile : profileList) {
+                    Profile profileWithActions = getProfileMap().get(profile.getName());
+                    if(profileWithActions!=null) {
+                        List<Action> actionList = profileWithActions.getAction();
+                        for (Action action : actionList) {
+                            actionMap.put(action.getId(), action);            
+                        }
+                    } else {
+                        LOG.error("Could not find profile " + profile.getName() + " of user " + getAuthService().getUsername());
                     }
-                } else {
-                    LOG.error("Could not find profile " + profile.getName() + " of user " + getAuthService().getUsername());
                 }
             }
         }
-        return userprofile;
+        return userprofileList;
     }
 
     /**
@@ -139,6 +156,13 @@ public class RightsServiceClient implements IRightsServiceClient{
         return profileMap;
     }
 
+    public boolean isBlacklist() {
+        return ConfigurationType.BLACKLIST.equals(getConfiguration().getType());
+    }
+    
+    public boolean isWhitelist() {
+        return ConfigurationType.WHITELIST.equals(getConfiguration().getType());
+    }
 
     /**
      * @return the authService

@@ -19,19 +19,43 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.List;
+
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 
 /**
+ * Service to read and change the authorization configuration of verinice.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public interface IRightsService {
 
+    /**
+     * Returns the authorization configuration
+     * which is defined in one or more 
+     * verinice-auth xml documents.
+     * 
+     * See schema verinice-auth.xsd for details.
+     * 
+     * @return the authorization configuration
+     */
     Auth getConfiguration();
     
-    Userprofile getUserprofile(String username);
+    /**
+     * Return the userprofiles of an user with name <i>username</i>.
+     * A userprofile can belong to an user or an user group.
+     * 
+     * @param username The login name of an user
+     * @return a {@link List} of userprofiles
+     */
+    List<Userprofile> getUserprofile(String username);
     
+    /**
+     * Returns all profiles of the authorization configuration
+     * 
+     * @return profiles of the authorization configuration
+     */
     Profiles getProfiles();
 }

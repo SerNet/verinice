@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.List;
+
 import sernet.verinice.model.auth.Userprofile;
 
 /**
@@ -33,7 +35,7 @@ public interface IRightsServiceClient extends IRightsService {
      * 
      * @return the Userprofile
      */
-    Userprofile getUserprofile();
+    List<Userprofile> getUserprofile();
     
-    boolean containsAction(String actionId);
+    boolean isEnabled(String actionId);
 }
