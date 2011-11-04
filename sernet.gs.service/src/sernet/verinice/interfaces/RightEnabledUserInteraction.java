@@ -38,10 +38,4 @@ public interface RightEnabledUserInteraction {
      */
     public void setRightID(String rightID);
     
-    /**
-     * TODO: probably not implemented here 
-     * @return
-     */
-    public boolean isOrgRelated();
-    
 }

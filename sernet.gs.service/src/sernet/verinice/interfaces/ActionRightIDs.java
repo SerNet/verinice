@@ -61,7 +61,7 @@ public class ActionRightIDs {
     public static final String OPENVIEW = "openview";
     public static final String ISMCUT = "ismcut";
     public static final String ISMCOPY = "ismcopy";
-    
+    public static final String ADDORG = "addorg";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);
