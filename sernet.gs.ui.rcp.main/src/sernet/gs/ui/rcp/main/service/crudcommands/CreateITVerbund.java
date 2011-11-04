@@ -39,7 +39,9 @@ public class CreateITVerbund extends CreateElement {
 			if(createChildren) {
 			    verbund.createNewCategories();
 			}
+			addPermissions(verbund);
 		}
+		
 	}
 	
 	@Override
