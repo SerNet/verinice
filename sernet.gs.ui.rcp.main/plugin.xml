@@ -1002,6 +1002,20 @@
    </extension>
    <extension
          point="org.eclipse.ui.viewActions">
+         <viewContribution
+      		id="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
+      		targetID="sernet.gs.ui.rcp.main.views.bsimodelview">
+             <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
+               icon="icons/note-new.png"
+               id="sernet.gs.ui.rcp.main.bsi.actions.AddITVerbundActionDelegate"
+               label="%action.label.11"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.11">
+         </action>
+      </viewContribution>
       <viewContribution
             id="sernet.verinice.iso27k.rcp.addOrganization"
             targetID="sernet.verinice.iso27k.rcp.ISMView">
@@ -1027,11 +1041,11 @@
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="%action.tooltip.21">
+               tooltip="%action.tooltip.g21">
          </action>
       </viewContribution>
       <viewContribution
-            id="sernet.verinice.iso27k.rcp.action..importItVerbund"
+            id="sernet.verinice.iso27k.rcp.action.importItVerbund"
             targetID="sernet.gs.ui.rcp.main.views.bsimodelview">
          <action
                class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
@@ -1072,7 +1086,7 @@
                tooltip="%action.tooltip.24">
          </action>
       </viewContribution>
-   </extension>
+     </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler
             class="sernet.verinice.iso27k.rcp.action.CopyHandler"

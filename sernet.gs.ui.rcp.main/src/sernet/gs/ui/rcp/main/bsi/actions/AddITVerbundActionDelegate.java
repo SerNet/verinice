@@ -18,6 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -26,8 +29,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class AddITVerbundActionDelegate extends AbstractAddCnATreeElementActionDelegate {
-
+public class AddITVerbundActionDelegate implements IViewActionDelegate  {
     /*
      * (non-Javadoc)
      * 
@@ -54,4 +56,16 @@ public class AddITVerbundActionDelegate extends AbstractAddCnATreeElementActionD
             ExceptionUtil.log(e, Messages.AddITVerbundActionDelegate_0);
         }
     }
+
+	@Override
+	public void selectionChanged(IAction arg0, ISelection arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void init(IViewPart arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
