@@ -142,7 +142,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         }
     }
     
-    private void addPermissions(/*not final*/ CnATreeElement element) {
+    protected void addPermissions(/*not final*/ CnATreeElement element) {
         HashSet<Permission> newperms = new HashSet<Permission>();
         newperms.add(Permission.createPermission(element, authService.getUsername(), true, true));
         element.setPermissions(newperms);
