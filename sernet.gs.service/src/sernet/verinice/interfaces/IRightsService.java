@@ -44,6 +44,14 @@ public interface IRightsService {
     Auth getConfiguration();
     
     /**
+     * Updates the configuration defined in <i>auth</i>. 
+     * Updated configuration is returned.
+     * 
+     * @param auth Authorization configuration
+     */
+    void updateConfiguration(Auth auth);
+    
+    /**
      * Return the userprofiles of an user with name <i>username</i>.
      * A userprofile can belong to an user or an user group.
      * 

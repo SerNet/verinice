@@ -73,6 +73,7 @@ import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
+import sernet.verinice.rcp.ProfileEditAction;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -138,6 +139,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ShowBulkEditAction bulkEditAction;
 
     private ShowAccessControlEditAction accessControlEditAction;
+    
+    private ProfileEditAction profileEditAction;
 
     private ChangeOwnPasswordAction changeOwnPasswordAction;
     
@@ -271,6 +274,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
         register(accessControlEditAction);
+        
+        profileEditAction = new ProfileEditAction(window, Messages.ApplicationActionBarAdvisor_33);
+        register(profileEditAction);
 
         konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
         register(konsolidatorAction);
@@ -283,7 +289,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
-        testAction = new TestAction(window, "test command", "asset", 152);
+        testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         
         register(openDocumentViewAction);
 
@@ -319,6 +325,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         editMenu.add(bulkEditAction);
         editMenu.add(runRiskAnalysisAction);
         editMenu.add(accessControlEditAction);
+        editMenu.add(profileEditAction);
         editMenu.add(konsolidatorAction);
         editMenu.add(new Separator());
         editMenu.add(copyAction);
@@ -421,6 +428,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator());
         myToolbar.add(bulkEditAction);
         myToolbar.add(accessControlEditAction);
+        myToolbar.add(profileEditAction);
         myToolbar.add(konsolidatorAction);
 
         myToolbar.add(reloadAction);

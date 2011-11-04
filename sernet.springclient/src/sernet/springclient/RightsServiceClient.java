@@ -50,6 +50,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     Map<String, Action> actionMap;
     Profiles profiles;
     Map<String, Profile> profileMap;
+    Auth auth;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
@@ -75,7 +76,19 @@ public class RightsServiceClient implements IRightsServiceClient{
      */
     @Override
     public Auth getConfiguration() {
-        return getRightsServiceExecuter().getConfiguration();
+        if(auth==null) {
+            auth=getRightsServiceExecuter().getConfiguration();
+        }
+        return auth;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)
+     */
+    @Override
+    public void updateConfiguration(Auth auth) {
+        getRightsServiceExecuter().updateConfiguration(auth);
+        this.auth = auth;
     }
 
     /* (non-Javadoc)

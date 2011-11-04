@@ -19,11 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
@@ -31,12 +34,16 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
+import org.xml.sax.SAXException;
 
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Auth;
+import sernet.verinice.model.auth.OriginType;
+import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.model.auth.Userprofiles;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -65,6 +72,10 @@ public class XmlRightsService implements IRightsService {
     
     Auth auth;
     
+    JAXBContext context;
+    
+    Schema schema;
+    
     private IBaseDao<Configuration, Integer> configurationDao;
 
     /* (non-Javadoc)
@@ -87,8 +98,7 @@ public class XmlRightsService implements IRightsService {
     private void logAuth(Auth auth) {
         try {
             if (log.isDebugEnabled()) {
-                JAXBContext context = JAXBContext.newInstance(Auth.class);
-                Marshaller marshaller = context.createMarshaller();
+                Marshaller marshaller = getContext().createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");  
                 StringWriter sw = new StringWriter();
@@ -108,11 +118,8 @@ public class XmlRightsService implements IRightsService {
      */
     private Auth loadConfiguration() {
         try {
-            JAXBContext context = JAXBContext.newInstance(Auth.class);
-            Unmarshaller um = context.createUnmarshaller();                 
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(getAuthConfigurationSchema().getURL());
-            um.setSchema(schema);
+            Unmarshaller um = getContext().createUnmarshaller();            
+            um.setSchema(getSchema());
             
             // read default configuration
             Auth auth = (Auth) um.unmarshal(getAuthConfigurationDefault().getInputStream());
@@ -121,6 +128,10 @@ public class XmlRightsService implements IRightsService {
             // check if configuration exists
             if(getAuthConfiguration().exists()) {
                 authUser = (Auth) um.unmarshal(getAuthConfiguration().getInputStream());
+                if (log.isDebugEnabled()) {
+                    log.debug("uri: " + getAuthConfiguration().getURI().getPath());
+                    log.debug("file path: " + getAuthConfiguration().getFile().getPath());
+                }
                 // invert default configuration if different type 
                 if(!auth.getType().equals(authUser.getType())) {
                     auth = AuthHelper.invert(auth);
@@ -136,6 +147,40 @@ public class XmlRightsService implements IRightsService {
         } catch (Exception e) {
             log.error("Error while reading verinice authorization definition from file: " + getAuthConfiguration().getFilename(), e);
             throw new RuntimeException(e);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)
+     */
+    @Override
+    public void updateConfiguration(Auth auth) {
+        // remove profiles from verinice-auth-default.xml
+        Profiles profilesMod = new Profiles();     
+        for (Profile profile : auth.getProfiles().getProfile()) {
+            if(!OriginType.DEFAULT.equals(profile.getOrigin())) {
+                profilesMod.getProfile().add(profile);
+            }
+        }
+        auth.setProfiles(profilesMod);
+        // remove userprofiles from verinice-auth-default.xml
+        Userprofiles userprofilesMod = new Userprofiles();     
+        for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {
+            if(!OriginType.DEFAULT.equals(userprofile.getOrigin())) {
+                userprofilesMod.getUserprofile().add(userprofile);
+            }
+        }
+        auth.setUserprofiles(userprofilesMod);
+        
+        Marshaller marshaller;
+        try {
+            marshaller = getContext().createMarshaller();       
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8"); 
+            marshaller.setSchema(getSchema());
+            marshaller.marshal( auth, new FileOutputStream( getAuthConfiguration().getFile().getPath() ) );
+        } catch (Exception e) {
+            log.error("", e);
         }
     }
 
@@ -248,7 +293,31 @@ public class XmlRightsService implements IRightsService {
     public void setConfigurationDao(IBaseDao<Configuration, Integer> configurationDao) {
         this.configurationDao = configurationDao;
     }
+
+    /**
+     * @return the context
+     */
+    private JAXBContext getContext() {
+        if(context==null) {
+            try {
+                context = JAXBContext.newInstance(Auth.class);
+            } catch (JAXBException e) {
+                log.error("Error while creating JAXB context.", e);
+            }
+        }
+        return context;
+    }
     
-   
+    private Schema getSchema() {
+        if(schema==null) {
+            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            try {
+                schema = sf.newSchema(getAuthConfigurationSchema().getURL());
+            } catch (Exception e) {
+                log.error("Error while creating schema.", e);
+            } 
+        }
+        return schema;
+    }
 
 }

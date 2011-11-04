@@ -15,7 +15,7 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.actions;
+package sernet.verinice.rcp;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
@@ -43,20 +44,20 @@ import sernet.verinice.rcp.UserprofileDialog;
  * @author Robert Schuster <r.schuster@tarent.de>
  * 
  */
-public class ShowAccessControlEditAction extends RightsEnabledAction implements ISelectionListener {
+public class ProfileEditAction extends RightsEnabledAction implements ISelectionListener {
 
-    public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
+    public static final String ID = "sernet.gs.ui.rcp.main.actions.profileeditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
 
-    public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
+    public ProfileEditAction(IWorkbenchWindow window, String label) {
         this.window = window;
         setText(label);
         setId(ID);
         setActionDefinitionId(ID);
-        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
-        setToolTipText(Messages.ShowAccessControlEditAction_1);
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PROFILES));
+        setToolTipText(Messages.ProfileEditAction_0);
         window.getSelectionService().addSelectionListener(this);
-        setRightID(ActionRightIDs.ACCESSCONTROL);
+        setRightID(ActionRightIDs.EDITPROFILE);
         setEnabled(checkRights());
     }
 
@@ -65,16 +66,11 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
      */
     @Override
     public void run() {
-        Activator.inheritVeriniceContextState();
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
-        if (selection == null || selection.size() < 1) {
+        Activator.inheritVeriniceContextState();      
+        final UserprofileDialog profiledialog = new UserprofileDialog(window.getShell());
+        if (profiledialog.open() != Window.OK) {
             return;
-        }
-        
-        final AccessControlEditDialog dialog = new AccessControlEditDialog(window.getShell(), selection);
-        if (dialog.open() != Window.OK) {
-            return;
-        }
+        }      
     }
 
     public void dispose() {
@@ -85,19 +81,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        // Conditions for availability of this action:
-        // - Database connection must be open (Implicitly assumes that login
-        // credentials have
-        // been transferred and that the server can be queried. This is
-        // neccessary since this
-        // method will be called before the server connection is enabled.)
-        // - permission handling is needed by IAuthService implementation
-        // - user has administrator privileges
-        boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
-        && CnAElementHome.getInstance().isOpen() 
-        && ServiceFactory.isPermissionHandlingNeeded() 
-        && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-        setEnabled(b);
+        
     }
 
 }

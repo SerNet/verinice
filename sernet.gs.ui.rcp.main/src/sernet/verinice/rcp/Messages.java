@@ -31,6 +31,7 @@ public class Messages extends NLS {
     public static String PerspectiveSwitcher_6;
     public static String PerspectiveSwitcher_7;
     public static String PerspectiveSwitcher_8;
+    public static String ProfileEditAction_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

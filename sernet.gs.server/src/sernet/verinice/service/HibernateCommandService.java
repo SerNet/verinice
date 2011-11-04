@@ -285,6 +285,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private boolean hasAdminRole(String[] roles)
 	{
+	    // FIXME : check scope
 		for (String r : roles)
 		{
 			if (ApplicationRoles.ROLE_ADMIN.equals(r))
