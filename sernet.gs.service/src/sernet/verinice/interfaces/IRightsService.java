@@ -39,7 +39,7 @@ public interface IRightsService {
      * 
      * See schema verinice-auth.xsd for details.
      * 
-     * @return the authorization configuration
+     * @return The authorization configuration
      */
     Auth getConfiguration();
     
@@ -56,14 +56,28 @@ public interface IRightsService {
      * A userprofile can belong to an user or an user group.
      * 
      * @param username The login name of an user
-     * @return a {@link List} of userprofiles
+     * @return A {@link List} of userprofiles
      */
     List<Userprofile> getUserprofile(String username);
     
     /**
      * Returns all profiles of the authorization configuration
      * 
-     * @return profiles of the authorization configuration
+     * @return Profiles of the authorization configuration
      */
     Profiles getProfiles();
+    
+    /**
+     * Returns a list with all user names
+     * 
+     * @return All user names
+     */
+    List<String> getUsernames();
+    
+    /**
+     * Returns a list with all group names
+     * 
+     * @return All group names
+     */
+    List<String> getGroupnames();
 }

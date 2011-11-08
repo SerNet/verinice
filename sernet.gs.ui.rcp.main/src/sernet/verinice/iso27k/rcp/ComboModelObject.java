@@ -19,16 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.text.Collator;
+
 /**
  * Object in a {@link ComboModel}
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ComboModelObject<T> {
+public class ComboModelObject<T> implements Comparable<ComboModelObject<T>> {
 
 	private T object;
 
 	private String label;
+	
+	Collator collator = Collator.getInstance();
 	
 	public ComboModelObject(T object, String label) {
 		super();
@@ -77,6 +81,21 @@ public class ComboModelObject<T> {
 			return false;
 		return true;
 	}
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ComboModelObject<T> o) {
+        int result = 1; // this is greater
+        if(this.getLabel()!=null) {
+            result = -1; // this is less
+            if(o!=null && o.getLabel()!=null) {
+                result = collator.compare(this.getLabel(), o.getLabel());
+            }
+        }
+        return result;
+    }
 	
 	
 }

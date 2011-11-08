@@ -1,53 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<auth version="0" type="whitelist"
-	xmlns="http://www.verinice.org/auth" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
-	<profiles>
-		<profile name="report">	
-			<action id="report" />
-			<action id="files" />
-		</profile>
-		<profile name="bsi">
-			<action id="bsimassnahmen" />
-			<action id="bsimodelview" />
-			<action id="bsibrowser" />
-			<action id="reload" />
-		</profile>
-		<profile name="importexport">
-			<action id="export" />
-			<action id="import" />
-		</profile>
-		<profile name="admin">
-			<action id="reload" />
-			<action id="showpreferences" />
-		</profile>
-		<profile name="ism">
-			<action id="ismcatalog" />
-			<action id="ismview" />
-			<action id="auditview" />
-			<action id="ismcopy" />
-		</profile>
-		<profile name="attachment">
-			<action id="addfile"/>
-		</profile>
-	</profiles>
-	<userprofiles>
-		<userprofile login="admin">
-			<profile name="admin" />
-			<profile name="ism" />				
-		</userprofile>
-		<userprofile login="ak" >
-			<profile name="admin" />		
-		</userprofile>
-		<userprofile login="dm">
-			<profile name="report" />
-			<profile name="importexport" />	
-		</userprofile>
-		<userprofile login="ab">
-			<profile name="report"/>
-			<profile name="bsi"/>
-			<profile name="attachment"/>
-		</userprofile>
-	</userprofiles>
-</auth>
+<p:auth version="0" type="whitelist" 
+    xmlns:p="http://www.verinice.org/auth" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
+  <p:profiles/>
+  <p:userprofiles/>
+</p:auth>

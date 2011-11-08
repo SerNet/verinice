@@ -33,6 +33,7 @@ import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.ConfigurationType;
 import sernet.verinice.model.auth.Profile;
+import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 
@@ -51,6 +52,8 @@ public class RightsServiceClient implements IRightsServiceClient{
     Profiles profiles;
     Map<String, Profile> profileMap;
     Auth auth;
+    List<String> userNameList;
+    List<String> groupNameList;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
@@ -89,6 +92,8 @@ public class RightsServiceClient implements IRightsServiceClient{
     public void updateConfiguration(Auth auth) {
         getRightsServiceExecuter().updateConfiguration(auth);
         this.auth = auth;
+        this.userprofile = null;
+        this.profiles = null;
     }
 
     /* (non-Javadoc)
@@ -121,6 +126,28 @@ public class RightsServiceClient implements IRightsServiceClient{
         return profiles;
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getUsernames()
+     */
+    @Override
+    public List<String> getUsernames() {
+        if(userNameList==null) {
+            userNameList = getRightsServiceExecuter().getUsernames();
+        }
+        return userNameList;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getGroupnames()
+     */
+    @Override
+    public List<String> getGroupnames() {
+        if(groupNameList==null) {
+            groupNameList = getRightsServiceExecuter().getGroupnames();
+        }
+        return groupNameList;
+    }
+    
     private Profiles loadProfiles() {
         Profiles profiles = getRightsServiceExecuter().getProfiles();   
         profileMap = new HashMap<String, Profile>();
@@ -141,17 +168,17 @@ public class RightsServiceClient implements IRightsServiceClient{
         }
         actionMap = new HashMap<String, Action>();
         for (Userprofile userprofile : userprofileList) {  
-            List<Profile> profileList = userprofile.getProfile();
+            List<ProfileRef> profileList = userprofile.getProfileRef();
             if(profileList!=null) {
-                for (Profile profile : profileList) {
-                    Profile profileWithActions = getProfileMap().get(profile.getName());
+                for (ProfileRef profileRef : profileList) {
+                    Profile profileWithActions = getProfileMap().get(profileRef.getName());
                     if(profileWithActions!=null) {
                         List<Action> actionList = profileWithActions.getAction();
                         for (Action action : actionList) {
                             actionMap.put(action.getId(), action);            
                         }
                     } else {
-                        LOG.error("Could not find profile " + profile.getName() + " of user " + getAuthService().getUsername());
+                        LOG.error("Could not find profile " + profileRef.getName() + " of user " + getAuthService().getUsername());
                     }
                 }
             }

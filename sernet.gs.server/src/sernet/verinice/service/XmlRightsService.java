@@ -20,7 +20,6 @@
 package sernet.verinice.service;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
-import org.xml.sax.SAXException;
 
+import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Auth;
@@ -77,6 +76,8 @@ public class XmlRightsService implements IRightsService {
     Schema schema;
     
     private IBaseDao<Configuration, Integer> configurationDao;
+    
+    private IBaseDao<Property, Integer> propertyDao;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -179,6 +180,8 @@ public class XmlRightsService implements IRightsService {
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8"); 
             marshaller.setSchema(getSchema());
             marshaller.marshal( auth, new FileOutputStream( getAuthConfiguration().getFile().getPath() ) );
+            // set auth to null, next call of getCofiguration will read it from disk
+            this.auth = null;
         } catch (Exception e) {
             log.error("", e);
         }
@@ -228,6 +231,30 @@ public class XmlRightsService implements IRightsService {
         Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_ROLES};        
         List<String> roleList = getConfigurationDao().findByQuery(HQL,params);
         return roleList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getUsernames()
+     */
+    @Override
+    public List<String> getUsernames() {
+        String HQL = "select props.propertyValue from Property as props " + //$NON-NLS-1$
+                "where props.propertyType = ?"; //$NON-NLS-1$
+        Object[] params = new Object[]{Configuration.PROP_USERNAME};  
+        List<String> usernameList = getPropertyDao().findByQuery(HQL,params);
+        return usernameList;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getGroupnames()
+     */
+    @Override
+    public List<String> getGroupnames() {
+        String HQL = "select props.propertyValue from Property as props " + //$NON-NLS-1$
+                "where props.propertyType = ?"; //$NON-NLS-1$
+        Object[] params = new Object[]{Configuration.PROP_ROLES};  
+        List<String> groupnameList = getPropertyDao().findByQuery(HQL,params);
+        return groupnameList;
     }
     
     /* (non-Javadoc)
@@ -292,6 +319,20 @@ public class XmlRightsService implements IRightsService {
      */
     public void setConfigurationDao(IBaseDao<Configuration, Integer> configurationDao) {
         this.configurationDao = configurationDao;
+    }
+
+    /**
+     * @return the propertyDao
+     */
+    public IBaseDao<Property, Integer> getPropertyDao() {
+        return propertyDao;
+    }
+
+    /**
+     * @param propertyDao the propertyDao to set
+     */
+    public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
+        this.propertyDao = propertyDao;
     }
 
     /**

@@ -31,15 +31,16 @@
             <action id="importldap" />
             <action id="accesscontrol" />
             <action id="gstoolimport" />
+            <action id="editprofile" />
         </profile>
     </profiles>
     <userprofiles>
         <userprofile login="user" origin="default">
-            <profile name="user" />
+            <profile-ref name="user" />
         </userprofile>
         <userprofile login="admin" origin="default">
-            <profile name="user" />
-            <profile name="admin" />
+            <profile-ref name="user" />
+            <profile-ref name="admin" />
         </userprofile>
     </userprofiles>
 </auth>

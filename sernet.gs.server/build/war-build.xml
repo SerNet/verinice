@@ -110,9 +110,9 @@
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
-        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="/portal.verinice.private/contact.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="/portal.verinice.private/download.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="/portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="portal.verinice.private/contact.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="portal.verinice.private/download.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="portal.verinice.private/index.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
         	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
         	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>

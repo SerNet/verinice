@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,6 +72,10 @@ public class ComboModel<T> {
 	public void clear() {
 		objectList.clear();
 		selectedIndex = -1;
+	}
+	
+	public void sort() {
+	    Collections.sort(objectList);
 	}
 	
 	public T getSelectedObject() {
