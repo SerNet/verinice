@@ -178,7 +178,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         try {
             String osName = System.getProperty("os.name");
             String osArch = System.getProperty("os.arch");
-            if(!(osName.equals("Windows 7") && osArch.contains("64"))){
+            if(!(osName.toLowerCase().contains("win") && osArch.contains("64"))){
                 VeriniceSecurityProvider.register(prefs); // this fails on a win7/64 system
             } else {
                 LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available");
