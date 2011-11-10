@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -54,6 +55,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     Auth auth;
     List<String> userNameList;
     List<String> groupNameList;
+    Properties messages;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
@@ -146,6 +148,30 @@ public class RightsServiceClient implements IRightsServiceClient{
             groupNameList = getRightsServiceExecuter().getGroupnames();
         }
         return groupNameList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
+     */
+    @Override
+    public String getMessage(String key) {
+        String defaultMessage = key;
+        if (LOG.isDebugEnabled()) {
+            // switch to debug in log4j.xml to find untranslated messages
+            defaultMessage = defaultMessage + " (!)";
+        }
+        return getAllMessages().getProperty(key, key);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getAllMessages()
+     */
+    @Override
+    public Properties getAllMessages() {
+        if(messages==null) {
+            messages = getRightsServiceExecuter().getAllMessages();
+        }
+        return messages;
     }
     
     private Profiles loadProfiles() {

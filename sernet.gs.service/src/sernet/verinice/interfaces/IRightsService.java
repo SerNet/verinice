@@ -20,6 +20,7 @@
 package sernet.verinice.interfaces;
 
 import java.util.List;
+import java.util.Properties;
 
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.Profiles;
@@ -80,4 +81,8 @@ public interface IRightsService {
      * @return All group names
      */
     List<String> getGroupnames();
+    
+    String getMessage(String key);
+    
+    Properties getAllMessages();
 }

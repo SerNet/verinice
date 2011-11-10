@@ -22,7 +22,6 @@ package sernet.verinice.rcp;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +30,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -56,14 +55,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.verinice.interfaces.IAuthService;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
@@ -82,6 +81,8 @@ public class UserprofileDialog extends TitleAreaDialog {
     
     private TableViewer tableSelected;
     private TableViewer table;
+    private TableViewer tableAction;
+     
     
     Button addAllButton;
     Button removeAllButton;
@@ -104,7 +105,7 @@ public class UserprofileDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText("Userprofiles");
+        newShell.setText(Messages.UserprofileDialog_0);
     }
 
 
@@ -113,8 +114,8 @@ public class UserprofileDialog extends TitleAreaDialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        setTitle("Userprofiles");
-        setMessage("Select profiles for users and groups.");
+        setTitle(Messages.UserprofileDialog_1);
+        setMessage(Messages.UserprofileDialog_2);
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.USERPROFILE_64));
         initializeDialogUnits(parent);
 
@@ -131,7 +132,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         comboComposite.setLayout(gridLayout);
         
         Label label = new Label(comboComposite, SWT.WRAP);
-        label.setText("User / Group");
+        label.setText(Messages.UserprofileDialog_3);
 
         comboLogin = new Combo(comboComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         //comboLogin.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -184,19 +185,29 @@ public class UserprofileDialog extends TitleAreaDialog {
         rightComposite.setLayout(gridLayout);
 
         Composite rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
+        gridData = new GridData(SWT.CENTER, SWT.FILL, false, true);
+        gridData.widthHint = convertWidthInCharsToPixels(20);
+        rightButtonComposite.setLayoutData(gridData);
+        gridLayout = new GridLayout(1, false);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        rightButtonComposite.setLayout(gridLayout);
+        
+        /*
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         rightButtonComposite.setLayout(gridLayout);
         rightButtonComposite.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
+        */
         
-        tableSelected = createTable(leftComposite, "Selected profiles:");
+        tableSelected = createTable(leftComposite, Messages.UserprofileDialog_4);
         tableSelected.setLabelProvider(new ProfileLabelProvider());
         tableSelected.setComparator(new ProfileRefTableComparator());
         tableSelected.setContentProvider(new ArrayContentProvider());     
         tableSelected.refresh(true);
        
-        table = createTable(rightComposite, "Unselected:");
+        table = createTable(rightComposite, Messages.UserprofileDialog_5);
         table.setLabelProvider(new ProfileLabelProvider());
         table.setComparator(new ProfileRefTableComparator());
         table.setContentProvider(new ArrayContentProvider());       
@@ -205,6 +216,12 @@ public class UserprofileDialog extends TitleAreaDialog {
       
         createButtons(centerComposite);
         createProfileButtons(rightButtonComposite);
+        
+        tableAction = createTable(rightButtonComposite, Messages.UserprofileDialog_6);
+        tableAction.setLabelProvider(new ProfileLabelProvider());
+        //table.setComparator(new ProfileRefTableComparator());
+        tableAction.setContentProvider(new ArrayContentProvider());       
+        tableAction.refresh(true);
         
         initializeContent();
         
@@ -302,11 +319,11 @@ public class UserprofileDialog extends TitleAreaDialog {
     private TableViewer createTable(Composite parent, String title) {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(title);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+        label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 
         TableViewer table = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         table.getControl().setLayoutData(gd);
 
         table.setUseHashlookup(true);
@@ -320,30 +337,38 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         final Button addButton = new Button(parent, SWT.PUSH);
         addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
-        addButton.setText("<- Add");
+        addButton.setText(Messages.UserprofileDialog_7);
         addButton.setEnabled(!table.getSelection().isEmpty());
         
         addAllButton = new Button(parent, SWT.PUSH);
         addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        addAllButton.setText("<- Add All");
+        addAllButton.setText(Messages.UserprofileDialog_8);
         addAllButton.setEnabled(!unselectedProfiles.isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
         removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        removeButton.setText("Remove ->");
+        removeButton.setText(Messages.UserprofileDialog_9);
         removeButton.setEnabled(!table.getSelection().isEmpty());
       
         removeAllButton = new Button(parent, SWT.PUSH);
         removeAllButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
-        removeAllButton.setText("Remove All ->");
+        removeAllButton.setText(Messages.UserprofileDialog_10);
         removeAllButton.setEnabled(!selectedProfiles.isEmpty());
 
         table.addSelectionChangedListener(new ISelectionChangedListener() {          
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                        addButton.setEnabled(!event.getSelection().isEmpty());
-                    }
-                });
+                IStructuredSelection selection = (IStructuredSelection) table.getSelection();
+                List selectionList = selection.toList();
+                addButton.setEnabled(!selectionList.isEmpty());
+                if(!selectionList.isEmpty()) {
+                    ProfileRef profileRef = (ProfileRef) selectionList.get(0);
+                    loadActions(profileRef.getName());
+                } else {
+                    loadActions(null);
+                }
+            }
+         });
 
         addButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -364,7 +389,15 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
                     public void selectionChanged(SelectionChangedEvent event) {
-                        removeButton.setEnabled(!event.getSelection().isEmpty());
+                        IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
+                        List selectionList = selection.toList();
+                        removeButton.setEnabled(!selectionList.isEmpty());
+                        if(!selectionList.isEmpty()) {
+                            ProfileRef profileRef = (ProfileRef) selectionList.get(0);
+                            loadActions(profileRef.getName());   
+                        } else {
+                            loadActions(null);
+                        }
                     }
                 });
 
@@ -417,22 +450,38 @@ public class UserprofileDialog extends TitleAreaDialog {
 
     }
     
+    /**
+     * @param name
+     */
+    protected void loadActions(String name) {
+        if(name!=null) {
+            for (Profile profile : allProfiles) {
+                if(profile.getName().equals(name)) {
+                    tableAction.setInput(profile.getAction());
+                    break;
+                }
+            }  
+        } else {
+            tableAction.setInput(Collections.<Action>emptyList());
+        }
+    }
+
     private void createProfileButtons(Composite parent) {
         Label spacer = new Label(parent, SWT.NONE);
-        spacer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        spacer.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false,false));
 
         final Button newButton = new Button(parent, SWT.PUSH);
         newButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
-        newButton.setText("New profile");
+        newButton.setText(Messages.UserprofileDialog_11);
         
         final Button editButton = new Button(parent, SWT.PUSH);
-        editButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        editButton.setText("Edit profile");
+        editButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        editButton.setText(Messages.UserprofileDialog_12);
         editButton.setEnabled(!table.getSelection().isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
-        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        removeButton.setText("Delete profile");
+        removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
+        removeButton.setText(Messages.UserprofileDialog_13);
         removeButton.setEnabled(!table.getSelection().isEmpty());
 
         table.addSelectionChangedListener(new ISelectionChangedListener() {          
@@ -484,8 +533,8 @@ public class UserprofileDialog extends TitleAreaDialog {
             
             for (Profile p : auth.getProfiles().getProfile()) {
                 if(p.getName().equals(selProfileRef.getName()) && p.getOrigin().equals(OriginType.DEFAULT)) {
-                    Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,"Undeletable profile", null);
-                    ErrorDialog.openError(this.getShell(), "Profile undeletable", "This is a system profile. You can not deleted it.", status);
+                    Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,"Undeletable profile", null); //$NON-NLS-1$
+                    ErrorDialog.openError(this.getShell(), Messages.UserprofileDialog_15, Messages.UserprofileDialog_16, status);
                     return;
                 }
             }
@@ -558,14 +607,20 @@ public class UserprofileDialog extends TitleAreaDialog {
          */
         @Override
         public String getText(Object element) {
-            String text = "unknown";
+            String text = Messages.UserprofileDialog_17;
             if (element instanceof ProfileRef) {
                 text = ((ProfileRef) element).getName();
             }
+            if (element instanceof Action) {
+                text = ((Action) element).getId();
+            }
+            // get lacalized message
+            text = getRightService().getMessage(text);
             return text;
         }
         
     }
+   
 
     class ProfileRefTableComparator extends ViewerComparator {
         private int propertyIndex;

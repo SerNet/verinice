@@ -31,7 +31,36 @@ public class Messages extends NLS {
     public static String PerspectiveSwitcher_6;
     public static String PerspectiveSwitcher_7;
     public static String PerspectiveSwitcher_8;
+    public static String ProfileDialog_0;
+    public static String ProfileDialog_1;
+    public static String ProfileDialog_10;
+    public static String ProfileDialog_11;
+    public static String ProfileDialog_2;
+    public static String ProfileDialog_3;
+    public static String ProfileDialog_4;
+    public static String ProfileDialog_5;
+    public static String ProfileDialog_6;
+    public static String ProfileDialog_7;
+    public static String ProfileDialog_8;
+    public static String ProfileDialog_9;
     public static String ProfileEditAction_0;
+    public static String UserprofileDialog_0;
+    public static String UserprofileDialog_1;
+    public static String UserprofileDialog_10;
+    public static String UserprofileDialog_11;
+    public static String UserprofileDialog_12;
+    public static String UserprofileDialog_13;
+    public static String UserprofileDialog_15;
+    public static String UserprofileDialog_16;
+    public static String UserprofileDialog_17;
+    public static String UserprofileDialog_2;
+    public static String UserprofileDialog_3;
+    public static String UserprofileDialog_4;
+    public static String UserprofileDialog_5;
+    public static String UserprofileDialog_6;
+    public static String UserprofileDialog_7;
+    public static String UserprofileDialog_8;
+    public static String UserprofileDialog_9;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

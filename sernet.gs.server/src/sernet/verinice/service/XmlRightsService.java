@@ -23,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -32,6 +34,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.io.Resource;
 
 import sernet.hui.common.connect.Property;
@@ -78,6 +82,8 @@ public class XmlRightsService implements IRightsService {
     private IBaseDao<Configuration, Integer> configurationDao;
     
     private IBaseDao<Property, Integer> propertyDao;
+    
+    private IRemoteMessageSource messages;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -264,6 +270,32 @@ public class XmlRightsService implements IRightsService {
     public Profiles getProfiles() {
         return getConfiguration().getProfiles();
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
+     */
+    @Override
+    public String getMessage(String key) {
+        String message;
+        try {
+            message= getMessages().getMessage(key, null, Locale.getDefault());
+        } catch (Exception e) {
+            log.warn("Message not found: " + key);
+            if (log.isDebugEnabled()) {
+                log.debug("Stacktrace: ", e);
+            }
+            message = key + " (!)";
+        }    
+        return message;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getAllMessages()
+     */
+    @Override
+    public Properties getAllMessages() {
+        return getMessages().getAllMessages();
+    }
 
     /**
      * @return the authConfigurationDefault
@@ -333,6 +365,20 @@ public class XmlRightsService implements IRightsService {
      */
     public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
         this.propertyDao = propertyDao;
+    }
+
+    /**
+     * @return the messages
+     */
+    public IRemoteMessageSource getMessages() {
+        return messages;
+    }
+
+    /**
+     * @param messages the messages to set
+     */
+    public void setMessages(IRemoteMessageSource messages) {
+        this.messages = messages;
     }
 
     /**

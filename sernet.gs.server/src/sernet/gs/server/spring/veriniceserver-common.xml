@@ -254,8 +254,15 @@ This variant:
 		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
 		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
         <property name="configurationDao" ref="configurationDao" />
-        <property name="propertyDao" ref="propertyDao" />             		
+        <property name="propertyDao" ref="propertyDao" />
+        <property name="messages" ref="rightsServiceMessages" />      		
 	</bean>
+    
+    <bean id="rightsServiceMessages" class="sernet.verinice.service.AuthMessageSource">
+        <property name="basename">
+            <value>/WEB-INF/verinice-auth-messages</value>
+        </property>
+    </bean>
 
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/>-->

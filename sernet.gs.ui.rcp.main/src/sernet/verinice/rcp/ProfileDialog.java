@@ -72,6 +72,7 @@ import sernet.verinice.model.auth.Userprofile;
 public class ProfileDialog extends TitleAreaDialog {
 
     private Text  textName;
+    private Label translated;
     
     private TableViewer tableSelected;
     private TableViewer table;
@@ -113,13 +114,13 @@ public class ProfileDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText("Profiles");
+        newShell.setText(Messages.ProfileDialog_0);
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        setTitle("Profiles");
-        setMessage("Select actions for profile.");
+        setTitle(Messages.ProfileDialog_1);
+        setMessage(Messages.ProfileDialog_2);
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.PROFILE_64));
         
         initializeDialogUnits(parent);
@@ -132,13 +133,13 @@ public class ProfileDialog extends TitleAreaDialog {
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         gridData.horizontalAlignment=GridData.HORIZONTAL_ALIGN_FILL;
         comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(2, false);
+        GridLayout gridLayout = new GridLayout(4, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
         
         Label label = new Label(comboComposite, SWT.WRAP);
-        label.setText("Name");       
+        label.setText(Messages.ProfileDialog_3);       
 
         textName = new Text(comboComposite,SWT.BORDER);
         gridData = new GridData(GridData.GRAB_HORIZONTAL);
@@ -156,6 +157,11 @@ public class ProfileDialog extends TitleAreaDialog {
                 // nothing to do
             }
         });
+        
+        Label labelTranslated = new Label(comboComposite, SWT.WRAP);
+        labelTranslated.setText(Messages.ProfileDialog_4);
+        
+        translated = new Label(comboComposite, SWT.WRAP);
         
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -191,14 +197,14 @@ public class ProfileDialog extends TitleAreaDialog {
         gridLayout.marginWidth = 0;
         rightComposite.setLayout(gridLayout);
         
-        tableSelected = createTable(leftComposite,"Selected actions");
-        tableSelected.setLabelProvider(new ProfileLabelProvider());
+        tableSelected = createTable(leftComposite,Messages.ProfileDialog_5);
+        tableSelected.setLabelProvider(new ActionLabelProvider());
         tableSelected.setComparator(new ActionTableComparator());
         tableSelected.setContentProvider(new ArrayContentProvider());     
         tableSelected.refresh(true);
        
-        table = createTable(rightComposite,"Unselected");
-        table.setLabelProvider(new ProfileLabelProvider());
+        table = createTable(rightComposite,Messages.ProfileDialog_6);
+        table.setLabelProvider(new ActionLabelProvider());
         table.setComparator(new ActionTableComparator());
         table.setContentProvider(new ArrayContentProvider());       
         table.refresh(true);
@@ -234,6 +240,7 @@ public class ProfileDialog extends TitleAreaDialog {
                     this.profile = profile;
                     selectedActions = profile.getAction();
                     textName.setText(profile.getName());
+                    translated.setText(getRightService().getMessage(profile.getName()));
                     break;
                 }
             }
@@ -315,22 +322,22 @@ public class ProfileDialog extends TitleAreaDialog {
 
         final Button addButton = new Button(parent, SWT.PUSH);
         addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,false));
-        addButton.setText("<- Add");
+        addButton.setText(Messages.ProfileDialog_7);
         addButton.setEnabled(!table.getSelection().isEmpty());
         
         addAllButton = new Button(parent, SWT.PUSH);
         addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        addAllButton.setText("<<- Add all");
+        addAllButton.setText(Messages.ProfileDialog_8);
         addAllButton.setEnabled(!unselectedActions.isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
         removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
-        removeButton.setText("Remove ->");
+        removeButton.setText(Messages.ProfileDialog_9);
         removeButton.setEnabled(!table.getSelection().isEmpty());
       
         removeAllButton = new Button(parent, SWT.PUSH);
         removeAllButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
-        removeAllButton.setText("Remove all ->>");
+        removeAllButton.setText(Messages.ProfileDialog_10);
         removeAllButton.setEnabled(!selectedActions.isEmpty());
 
         table.addSelectionChangedListener(new ISelectionChangedListener() {          
@@ -460,17 +467,19 @@ public class ProfileDialog extends TitleAreaDialog {
         return rightsService;
     }
 
-    class ProfileLabelProvider extends ColumnLabelProvider {
+    class ActionLabelProvider extends ColumnLabelProvider {
         
         /* (non-Javadoc)
          * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
          */
         @Override
         public String getText(Object element) {
-            String text = "unknown";
+            String text = Messages.ProfileDialog_11;
             if (element instanceof Action) {
                 text = ((Action) element).getId();
             }
+            // get translated message
+            text = getRightService().getMessage(text);
             return text;
         }
         

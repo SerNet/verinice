@@ -57,8 +57,7 @@ public class ActionRightIDs {
     public static final String DELETEFILE = "deletefile";
     public static final String NATURALIZE = "naturalize";
     public static final String ADDCATALOG = "addcatalog";
-    public static final String DELETECATALOG = "deletecatalog";  
-    public static final String OPENVIEW = "openview";
+    public static final String DELETECATALOG = "deletecatalog";
     public static final String ISMCUT = "ismcut";
     public static final String ISMCOPY = "ismcopy";
     public static final String ADDORG = "addorg";
