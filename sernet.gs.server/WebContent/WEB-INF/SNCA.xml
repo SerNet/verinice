@@ -3558,6 +3558,19 @@ the value between <param></param> will be used directly if no string is found fo
         	name="monitors" reversename="monitored by" tooltip="" />
         <huirelation to="control" id="rel_person_control_aud"
         	name="audits" reversename="audited by" tooltip="" />
+        <huirelation to="control" id="rel_person_control_interviewed"
+        	name="interviewed" reversename="interviewed about" tooltip="" />
+        	
+        <huirelation to="samt_topic" id="rel_person_samttopic_imp"
+        	name="implements" reversename="implemented by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samttopic_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samttopic_mon"
+        	name="monitors" reversename="monitored by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samttopic_aud"
+        	name="audits" reversename="audited by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samttopic_interviewed"
+        	name="interviewed" reversename="interviewed about" tooltip="" />
        
         <huirelation to="requirement" id="rel_person_requirement_responsible"
         	name="responsible for" reversename="responsible" tooltip="" />
