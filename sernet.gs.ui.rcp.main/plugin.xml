@@ -946,14 +946,12 @@
               contentFile="%cheatsheets.content.18"
               id="sernet.verinice.iso27k.cheatsheet3"
               name="%cheatsheets.18">
-           <description>
-              %cheatsheets.description.18
-           </description>
+           <description>%cheatsheets.description.18</description>
         </cheatsheet>
         <cheatsheet
               category="sernet.gs.ui.rcp.main.cheatSheets3"
               composite="false"
-              contentFile="ISO_27005_Risk_Assessment.xml"
+              contentFile="%cheatsheets.content.19"
               id="sernet.verinice.iso27k.cheatsheet_27005"
               name="Risk Management according to ISO 27005">
            <description>
