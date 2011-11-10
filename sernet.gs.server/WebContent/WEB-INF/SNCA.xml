@@ -3550,28 +3550,6 @@ the value between <param></param> will be used directly if no string is found fo
         	name="CISO of" reversename="CISO" tooltip="" />
 
        
-        <huirelation to="control" id="rel_person_control_imp"
-        	name="implements" reversename="implemented by" tooltip="" />
-        <huirelation to="control" id="rel_person_control_maint"
-        	name="maintains" reversename="maintained by" tooltip="" />
-        <huirelation to="control" id="rel_person_control_mon"
-        	name="monitors" reversename="monitored by" tooltip="" />
-        <huirelation to="control" id="rel_person_control_aud"
-        	name="audits" reversename="audited by" tooltip="" />
-        <huirelation to="control" id="rel_person_control_interviewed"
-        	name="interviewed" reversename="interviewed about" tooltip="" />
-        	
-        <huirelation to="samt_topic" id="rel_person_samttopic_imp"
-        	name="implements" reversename="implemented by" tooltip="" />
-        <huirelation to="samt_topic" id="rel_person_samttopic_maint"
-        	name="maintains" reversename="maintained by" tooltip="" />
-        <huirelation to="samt_topic" id="rel_person_samttopic_mon"
-        	name="monitors" reversename="monitored by" tooltip="" />
-        <huirelation to="samt_topic" id="rel_person_samttopic_aud"
-        	name="audits" reversename="audited by" tooltip="" />
-        <huirelation to="samt_topic" id="rel_person_samttopic_interviewed"
-        	name="interviewed" reversename="interviewed about" tooltip="" />
-       
         <huirelation to="requirement" id="rel_person_requirement_responsible"
         	name="responsible for" reversename="responsible" tooltip="" />
        
@@ -3975,8 +3953,20 @@ the value between <param></param> will be used directly if no string is found fo
         	name="reduces probability of " reversename="probability reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"
         	name="details" reversename="is detailed by" tooltip="" />
+      
         <huirelation to="person-iso" id="rel_control_person-iso"
             name="assignee" reversename="is responsible for" tooltip="" />
+            
+        <huirelation to="person-iso" id="rel_person_control_imp"
+            name="implements" reversename="implemented by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_control_maint"
+            name="maintains" reversename="maintained by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_control_mon"
+            name="monitors" reversename="monitored by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_control_aud"
+            name="audits" reversename="audited by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_control_interviewed"
+            name="interviewed" reversename="interviewed about" tooltip="" />
         	
         <huiproperty
             name="Title"
@@ -4935,10 +4925,16 @@ the value between <param></param> will be used directly if no string is found fo
         	name="corrective action" reversename="correction for" tooltip="" />
 		<huirelation to="audit" id="rel_finding_audit"
         	name="noted in" reversename="improvement note" tooltip="" />
+            
 		<huirelation to="control" id="rel_finding_control_nc"
         	name="failure in" reversename="reprimanded by" tooltip="" />
 		<huirelation to="control" id="rel_finding_control_action"
         	name="suggested control" reversename="suggested by" tooltip="" />
+      
+        <huirelation to="samt_topic" id="rel_finding_samt_topic_nc"
+            name="failure in" reversename="reprimanded by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_finding_samt_topic_action"
+            name="suggested control" reversename="suggested by" tooltip="" />
 
         <huiproperty
             name="Title"
@@ -5327,16 +5323,16 @@ the value between <param></param> will be used directly if no string is found fo
           <huirelation to="person-iso" id="rel_samttopic_person-iso_resp"
             	reversename="responsible" name="responsible for"  />
 
-          <!-- 
-          <huirelation to="person-iso" id="rel_samttopic_person_imp"
-                reversename="implements" name="implemented by" tooltip="" />
-          <huirelation to="person-iso" id="rel_samttopic_person_maint"
-                reversename="maintains" name="maintained by" tooltip="" />
-          <huirelation to="person-iso" id="rel_samttopic_person_mon"
-              reversename="monitors" name="monitored by" tooltip="" />
-          <huirelation to="person-iso" id="rel_samttopic_person_aud"
-                reversename="audits" name="audited by" tooltip="" />
-                 -->
+            <huirelation to="person-iso" id="rel_person_samttopic_imp"
+        	name="implements" reversename="implemented by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_samttopic_maint"
+        	name="maintains" reversename="maintained by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_samttopic_mon"
+        	name="monitors" reversename="monitored by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_samttopic_aud"
+        	name="audits" reversename="audited by" tooltip="" />
+        <huirelation to="person-iso" id="rel_person_samttopic_interviewed"
+        	name="interviewed" reversename="interviewed about" tooltip="" />
         
           <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
           <huiproperty 
