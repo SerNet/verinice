@@ -60,8 +60,8 @@ public class CopyCommand extends GenericCommand {
     public static List<String> CUT_BLACKLIST;
     
     static {
-        COPY_BLACKLIST = Arrays.asList("riskanalysis","bstumsetzung","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        CUT_BLACKLIST = Arrays.asList("riskanalysis","mnums"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        COPY_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        CUT_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     
     String uuidGroup;
