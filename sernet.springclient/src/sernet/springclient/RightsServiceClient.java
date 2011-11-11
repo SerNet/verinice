@@ -97,6 +97,17 @@ public class RightsServiceClient implements IRightsServiceClient{
         this.userprofile = null;
         this.profiles = null;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsServiceClient#reload()
+     */
+    public void reload() {
+        this.auth = null;
+        this.userprofile = null;
+        this.profiles = null;
+        this.userNameList = null;
+        this.groupNameList = null;
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getUserprofile(java.lang.String)

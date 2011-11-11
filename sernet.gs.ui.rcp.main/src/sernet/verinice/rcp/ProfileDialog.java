@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor.LayoutData;
@@ -82,8 +83,10 @@ public class ProfileDialog extends TitleAreaDialog {
     
     Auth auth;
     String profileName;
-    Profile profile;
-    private List<Action> selectedActions = new ArrayList<Action>();   
+    String profileNameOld;
+    Profile profile;  
+    private List<Action> selectedActions = new ArrayList<Action>(); 
+    private List<Action> selectedActionsOld = new ArrayList<Action>();   
     private List<Action> unselectedActions;
     private List<String> allActions;
     
@@ -149,7 +152,9 @@ public class ProfileDialog extends TitleAreaDialog {
             
             @Override
             public void focusLost(FocusEvent e) {
-                ProfileDialog.this.profile.setName(textName.getText());
+                if(ProfileDialog.this.profile!=null) {
+                    ProfileDialog.this.profile.setName(textName.getText());
+                }
             }
             
             @Override
@@ -239,7 +244,9 @@ public class ProfileDialog extends TitleAreaDialog {
                 if(profileName.equals(profile.getName())) {
                     this.profile = profile;
                     selectedActions = profile.getAction();
+                    selectedActionsOld = new ArrayList<Action>(selectedActions);
                     textName.setText(profile.getName());
+                    profileNameOld = profile.getName();
                     translated.setText(getRightService().getMessage(profile.getName()));
                     break;
                 }
@@ -284,6 +291,21 @@ public class ProfileDialog extends TitleAreaDialog {
             updateProfileRefs();
         }
         getRightService().updateConfiguration(auth);
+        super.okPressed();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
+     */
+    @Override
+    protected void cancelPressed() {
+        if(this.profile!=null) {
+            this.profile.setName(profileNameOld);
+            this.profile.getAction().clear();
+            for (Action action : selectedActionsOld) {
+                this.profile.getAction().add(action);
+            }
+        }
         super.okPressed();
     }
 
@@ -519,7 +541,7 @@ public class ProfileDialog extends TitleAreaDialog {
             int rc = 0;
             switch (propertyIndex) {
             case 0:            
-                rc = collator.compare(p1.getId(), p2.getId());
+                rc = collator.compare(getRightService().getMessage(p1.getId()), getRightService().getMessage(p2.getId()));
                 break;
             default:
                 rc = 0;

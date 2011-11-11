@@ -260,7 +260,7 @@ public class ImageCache {
 
 	public static final String NOALIENS = "noaliens.png";
 	
-	public static final String USERPROFILE = "userprofile.png";
+	public static final String USERPROFILE = "userprofile.gif";
 	
 	public static final String USERPROFILE_64 = "userprofile_64.png";
 	

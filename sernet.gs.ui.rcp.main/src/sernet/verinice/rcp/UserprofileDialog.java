@@ -28,8 +28,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -93,6 +95,8 @@ public class UserprofileDialog extends TitleAreaDialog {
     private List<ProfileRef> unselectedProfiles;
     private List<Profile> allProfiles;    
 
+    private ProfileRef selectedProfileRef;
+    
     IRightsServiceClient rightsService;
 
     public UserprofileDialog(Shell parent) {
@@ -193,23 +197,15 @@ public class UserprofileDialog extends TitleAreaDialog {
         gridLayout.marginWidth = 0;
         rightButtonComposite.setLayout(gridLayout);
         
-        /*
-        gridLayout = new GridLayout(1, false);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        rightButtonComposite.setLayout(gridLayout);
-        rightButtonComposite.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
-        */
-        
         tableSelected = createTable(leftComposite, Messages.UserprofileDialog_4);
         tableSelected.setLabelProvider(new ProfileLabelProvider());
-        tableSelected.setComparator(new ProfileRefTableComparator());
+        tableSelected.setComparator(new TableComparator());
         tableSelected.setContentProvider(new ArrayContentProvider());     
         tableSelected.refresh(true);
        
         table = createTable(rightComposite, Messages.UserprofileDialog_5);
         table.setLabelProvider(new ProfileLabelProvider());
-        table.setComparator(new ProfileRefTableComparator());
+        table.setComparator(new TableComparator());
         table.setContentProvider(new ArrayContentProvider());       
         table.refresh(true);
         
@@ -219,7 +215,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         
         tableAction = createTable(rightButtonComposite, Messages.UserprofileDialog_6);
         tableAction.setLabelProvider(new ProfileLabelProvider());
-        //table.setComparator(new ProfileRefTableComparator());
+        table.setComparator(new TableComparator());
         tableAction.setContentProvider(new ArrayContentProvider());       
         tableAction.refresh(true);
         
@@ -314,6 +310,15 @@ public class UserprofileDialog extends TitleAreaDialog {
     protected void okPressed() {    
         getRightService().updateConfiguration(auth);
         super.okPressed();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
+     */
+    @Override
+    protected void cancelPressed() {
+        getRightService().reload();
+        super.cancelPressed();
     }
 
     private TableViewer createTable(Composite parent, String title) {
@@ -485,10 +490,30 @@ public class UserprofileDialog extends TitleAreaDialog {
         removeButton.setEnabled(!table.getSelection().isEmpty());
 
         table.addSelectionChangedListener(new ISelectionChangedListener() {          
+            
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                editButton.setEnabled(!event.getSelection().isEmpty());
-                removeButton.setEnabled(!event.getSelection().isEmpty());
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                List selectionList = selection.toList();
+                if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
+                    selectedProfileRef = (ProfileRef)selectionList.get(0);
+                }
+                editButton.setEnabled(!selectionList.isEmpty());
+                removeButton.setEnabled(!selectionList.isEmpty());
+            }
+        });
+        
+        tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {          
+            
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                List selectionList = selection.toList();
+                if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
+                    selectedProfileRef = (ProfileRef)selectionList.get(0);
+                }
+                editButton.setEnabled(!selectionList.isEmpty());
+                removeButton.setEnabled(!selectionList.isEmpty());
             }
         });
 
@@ -513,10 +538,8 @@ public class UserprofileDialog extends TitleAreaDialog {
     }
     
     protected void editProfile() {
-        IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-        List selectionList = selection.toList();
-        if(selectionList!=null && selectionList.size()==1) {
-            final ProfileDialog profiledialog = new ProfileDialog(getShell(),this.auth,((ProfileRef)selectionList.get(0)).getName());
+        if(selectedProfileRef!=null) {
+            final ProfileDialog profiledialog = new ProfileDialog(getShell(),this.auth,selectedProfileRef.getName());
             if (profiledialog.open() == Window.OK) {
                 this.auth = profiledialog.getAuth();
                 loadProfiles();
@@ -526,28 +549,26 @@ public class UserprofileDialog extends TitleAreaDialog {
     }
 
     protected void deleteProfile() {
-        IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-        List selectionList = selection.toList();
-        if(selectionList!=null && selectionList.size()==1) {
-            ProfileRef selProfileRef = (ProfileRef)selectionList.get(0);
-            
+        if(selectedProfileRef!=null) {       
             for (Profile p : auth.getProfiles().getProfile()) {
-                if(p.getName().equals(selProfileRef.getName()) && p.getOrigin().equals(OriginType.DEFAULT)) {
-                    Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,"Undeletable profile", null); //$NON-NLS-1$
-                    ErrorDialog.openError(this.getShell(), Messages.UserprofileDialog_15, Messages.UserprofileDialog_16, status);
+                if(p.getName().equals(selectedProfileRef.getName()) && p.getOrigin().equals(OriginType.DEFAULT)) {
+                    MessageDialog.openError(this.getShell(), Messages.UserprofileDialog_15, Messages.UserprofileDialog_16);
                     return;
                 }
             }
             
-            Profile profile = new Profile();
-            profile.setName(selProfileRef.getName());
-            auth.getProfiles().getProfile().remove(profile);
-                    
-            for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {      
-                userprofile.getProfileRef().remove(selProfileRef);
+            if(MessageDialog.openConfirm(this.getShell(), 
+                    Messages.UserprofileDialog_14, 
+                    NLS.bind(Messages.UserprofileDialog_18, selectedProfileRef.getName()))) {
+                Profile profile = new Profile();
+                profile.setName(selectedProfileRef.getName());
+                auth.getProfiles().getProfile().remove(profile);
+                        
+                for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {      
+                    userprofile.getProfileRef().remove(selectedProfileRef);
+                }          
+                loadProfiles(); 
             }
-            
-            loadProfiles();         
         }
     }
 
@@ -622,14 +643,14 @@ public class UserprofileDialog extends TitleAreaDialog {
     }
    
 
-    class ProfileRefTableComparator extends ViewerComparator {
+    class TableComparator extends ViewerComparator {
         private int propertyIndex;
         private static final int ASCENDING = 0;
         private static final int DESCENDING = 1;
         private int direction = ASCENDING;
         Collator collator = Collator.getInstance();
 
-        public ProfileRefTableComparator() {
+        public TableComparator() {
             this.propertyIndex = 0;
             direction = ASCENDING;
         }
@@ -651,12 +672,23 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
-            ProfileRef p1 = (ProfileRef) e1;
-            ProfileRef p2 = (ProfileRef) e2;
+            String name1=null,name2=null;
+            if(e1 instanceof ProfileRef) {
+                name1 = ((ProfileRef) e1).getName();
+            }
+            if(e1 instanceof Action) {
+                name1 = ((Action) e1).getId();
+            }
+            if(e2 instanceof ProfileRef) {
+                name2 = ((ProfileRef) e2).getName();
+            }
+            if(e2 instanceof Action) {
+                name2 = ((Action) e2).getId();
+            }
             int rc = 0;
             switch (propertyIndex) {
             case 0:            
-                rc = collator.compare(p1.getName(), p2.getName());
+                rc = collator.compare(name1, name2);
                 break;
             default:
                 rc = 0;

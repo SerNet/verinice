@@ -38,4 +38,6 @@ public interface IRightsServiceClient extends IRightsService {
     List<Userprofile> getUserprofile();
     
     boolean isEnabled(String actionId);
+    
+    void reload();
 }

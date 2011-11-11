@@ -70,7 +70,6 @@ import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
