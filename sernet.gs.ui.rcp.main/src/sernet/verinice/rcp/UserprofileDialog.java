@@ -26,18 +26,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -45,6 +40,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -57,7 +53,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
@@ -66,6 +61,7 @@ import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
+import sernet.verinice.model.auth.ConfigurationType;
 import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
@@ -119,7 +115,14 @@ public class UserprofileDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         setTitle(Messages.UserprofileDialog_1);
-        setMessage(Messages.UserprofileDialog_2);
+        String message = Messages.UserprofileDialog_2;
+        if(auth.getType().equals(ConfigurationType.BLACKLIST)) {
+            message = message + Messages.UserprofileDialog_19;
+        }
+        if(auth.getType().equals(ConfigurationType.WHITELIST)) {
+            message = message + Messages.UserprofileDialog_20;
+        }
+        setMessage(message);
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.USERPROFILE_64));
         initializeDialogUnits(parent);
 
@@ -215,7 +218,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         
         tableAction = createTable(rightButtonComposite, Messages.UserprofileDialog_6);
         tableAction.setLabelProvider(new ProfileLabelProvider());
-        table.setComparator(new TableComparator());
+        tableAction.setComparator(new TableComparator());
         tableAction.setContentProvider(new ArrayContentProvider());       
         tableAction.refresh(true);
         
@@ -685,6 +688,8 @@ public class UserprofileDialog extends TitleAreaDialog {
             if(e2 instanceof Action) {
                 name2 = ((Action) e2).getId();
             }
+            name1 = getRightService().getMessage(name1);
+            name2 = getRightService().getMessage(name2);
             int rc = 0;
             switch (propertyIndex) {
             case 0:            
