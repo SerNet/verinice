@@ -329,9 +329,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		};
 		addCatalogAction.setText(Messages.CatalogView_11);
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-		if(addCatalogAction.checkRights()){
-		    addCatalogAction.setEnabled(true);
-		}
+	    addCatalogAction.setEnabled(addCatalogAction.checkRights());
 		
 		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
 			public void run() {

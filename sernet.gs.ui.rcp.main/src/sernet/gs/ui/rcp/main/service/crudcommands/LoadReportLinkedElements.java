@@ -46,12 +46,18 @@ public class LoadReportLinkedElements extends GenericCommand {
     // recurse down all levels of links to emelents of given type?
     private boolean goDeep = false;
     
+    private boolean doUpLinksAlso = true;
     
     public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
 	    this.goDeep= goDeep;
 	}
+    
+    public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep, boolean doUpLinksAlso){
+        this(typeId, rootElement, goDeep);
+        this.doUpLinksAlso = doUpLinksAlso;
+    }
 
     public LoadReportLinkedElements(String typeId, Integer rootElement) {
         this(typeId, rootElement, false);
@@ -73,7 +79,7 @@ public class LoadReportLinkedElements extends GenericCommand {
 	    CascadingTransaction ta = new CascadingTransaction();
 	    ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>();
 	    
-	    elements = getLinkedElements(ta, root, result);
+	    elements = getLinkedElements(ta, root, result, doUpLinksAlso);
 	    
 	    
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
@@ -93,7 +99,7 @@ public class LoadReportLinkedElements extends GenericCommand {
      * @param typeId2
      * @return
      */
-	private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, ArrayList<CnATreeElement> result) {
+	private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, ArrayList<CnATreeElement> result, boolean doUpLinksAlso) {
         // FIXME externalize strings in SNCA.xml!
         for (CnALink link : root.getLinksDown()) {
             if (link.getDependency().getTypeId().equals(this.typeId)) {
@@ -105,21 +111,23 @@ public class LoadReportLinkedElements extends GenericCommand {
                     }
                     result.add(link.getDependency());
                     if (goDeep)
-                        getLinkedElements(ta, link.getDependency(), result);
+                        getLinkedElements(ta, link.getDependency(), result, doUpLinksAlso);
                 }
             }
         }
-        for (CnALink link : root.getLinksUp()) {
-            if (link.getDependant().getTypeId().equals(this.typeId)) {
-                if (!ta.hasBeenVisited(link.getDependant())) {
-                    try {
-                        ta.enter(link.getDependant());
-                    } catch (TransactionAbortedException e) {
-                        return result;
+        if(doUpLinksAlso){
+            for (CnALink link : root.getLinksUp()) {
+                if (link.getDependant().getTypeId().equals(this.typeId)) {
+                    if (!ta.hasBeenVisited(link.getDependant())) {
+                        try {
+                            ta.enter(link.getDependant());
+                        } catch (TransactionAbortedException e) {
+                            return result;
+                        }
+                        result.add(link.getDependant());
+                        if (goDeep)
+                            getLinkedElements(ta, link.getDependant(), result, doUpLinksAlso);
                     }
-                    result.add(link.getDependant());
-                    if (goDeep)
-                        getLinkedElements(ta, link.getDependant(), result);
                 }
             }
         }

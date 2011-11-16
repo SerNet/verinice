@@ -31,25 +31,32 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CopyHandler extends AbstractHandler {
+public class CopyHandler extends AbstractHandler implements RightEnabledUserInteraction{
 
 	private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
 	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
+    public CopyHandler(){
+	    setBaseEnabled(checkRights());
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		changeSelection(HandlerUtil.getCurrentSelection(event));
+	    changeSelection(HandlerUtil.getCurrentSelection(event));
 		CnPItems.clearCutItems();
 		CnPItems.clearCopyItems();
 		CnPItems.setCopyItems(selectedElementList);	
@@ -72,5 +79,30 @@ public class CopyHandler extends AbstractHandler {
 			LOG.error("Could not execute selectionChanged", e);
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ISMCOPY;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO NOTHING
+    }
 
 }

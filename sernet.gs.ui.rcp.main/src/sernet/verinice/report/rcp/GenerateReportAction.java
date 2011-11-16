@@ -9,18 +9,24 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 @SuppressWarnings("restriction")
-public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
+public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
 	private static final Logger LOG = Logger.getLogger(GenerateReportAction.class);
 
@@ -36,6 +42,11 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
 	}
+	
+	@Override
+	public void init(IAction action){
+	    action.setEnabled(checkRights());
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -50,6 +61,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	        if(dialog==null) {
 	            dialog = new GenerateReportDialog(shell, IReportType.USE_CASE_ID_GENERAL_REPORT);
 	        }
+            
     		if (dialog.open() == Dialog.OK) {
     			final IReportOptions ro = new IReportOptions() {
     			    Integer rootElmt; 
@@ -84,5 +96,30 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	        LOG.error("Error while generation report", t); //$NON-NLS-1$
 	    }
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.GENERATEORGREPORT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO nothing, no need for an implementation              
+    }
 
 }

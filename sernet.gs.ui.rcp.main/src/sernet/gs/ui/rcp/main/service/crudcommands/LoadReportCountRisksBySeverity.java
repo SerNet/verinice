@@ -9,8 +9,11 @@ import java.util.Set;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -64,6 +67,8 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
     private char riskType;
 
     private int numYellowFields;
+    
+    private String ciaRelevantProperty;
 
     public LoadReportCountRisksBySeverity(Integer rootElement, char riskType, int numberOfYellowLevels) {
         this.rootElmt = rootElement;
@@ -74,6 +79,7 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
         }
     }
 
+    @SuppressWarnings("restriction")
     public void execute() {
         try {
             // determine max and tolerable risk values. initialize matrices to save value counts:
@@ -84,12 +90,15 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
             switch (this.riskType) {
             case 'c':
                 tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
+                ciaRelevantProperty = "scenario_value_method_confidentiality";
                 break;
             case 'i':
                 tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
+                ciaRelevantProperty = "scenario_value_method_integrity";
                 break;
             case 'a':
                 tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
+                ciaRelevantProperty = "scenario_value_method_availability";
                 break;
             }
 
@@ -111,7 +120,9 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
                     cmnd3 = getCommandService().executeCommand(cmnd3);
                     List<CnATreeElement> scenarios = cmnd3.getElements();
                     for (CnATreeElement scenario : scenarios) {
-                        countRisk(scenario, asset);
+                        if(scenario.getEntity().getProperties(ciaRelevantProperty).getProperty(0).getPropertyValue().equals("1")){
+                            countRisk(scenario, asset);
+                        }
                     }
                 }
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">A. Koderman</property>
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.2.v20100208 Build &lt;2.5.2.v20100210-0630></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">verinice - Information Risk Treatment</text-property>
     <simple-property-list name="includeResource">
         <value>riskbyasset</value>
@@ -7153,6 +7153,7 @@ columns(cols);</value>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
             <property name="orientation">portrait</property>
+            <property name="footerHeight">0.6in</property>
             <page-header>
                 <grid id="1570">
                     <property name="borderBottomColor">#000000</property>
@@ -7183,6 +7184,8 @@ columns(cols);</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
+                    <property name="verticalAlign">top</property>
+                    <property name="height">100%</property>
                     <property name="width">7.677685950413223in</property>
                     <property name="dataSet">scopeName</property>
                     <list-property name="boundDataColumns">
@@ -7199,6 +7202,7 @@ columns(cols);</value>
                         <property name="width">6.24793388429752in</property>
                     </column>
                     <row id="1530">
+                        <property name="height">100%</property>
                         <cell id="1531">
                             <label id="1543">
                                 <property name="fontSize">small</property>
@@ -7213,6 +7217,7 @@ columns(cols);</value>
                         </cell>
                     </row>
                     <row id="1533">
+                        <property name="height">100%</property>
                         <cell id="1534">
                             <label id="1544">
                                 <property name="fontSize">small</property>
@@ -7227,19 +7232,18 @@ columns(cols);</value>
                             </text>
                         </cell>
                     </row>
-                    <row id="1536">
-                        <cell id="1537"/>
-                        <cell id="1538"/>
-                    </row>
                     <row id="1539">
+                        <property name="height">100%</property>
                         <cell id="1540">
                             <grid id="1556">
                                 <property name="fontSize">small</property>
+                                <property name="height">100%</property>
                                 <property name="width">50%</property>
                                 <column id="1557"/>
                                 <column id="1558"/>
                                 <column id="1559"/>
                                 <row id="1560">
+                                    <property name="height">100%</property>
                                     <cell id="1561">
                                         <auto-text id="1562">
                                             <property name="type">page-number</property>
@@ -7751,7 +7755,9 @@ columns(cols);</value>
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -8308,7 +8314,9 @@ columns(cols);</value>
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -8762,7 +8770,9 @@ columns(cols);</value>
                                     <list-property name="paramBindings">
                                         <structure>
                                             <property name="paramName">root_object</property>
-                                            <expression name="expression" type="javascript">params["root_object"].value</expression>
+                                            <simple-property-list name="expression">
+                                                <value type="javascript">params["root_object"].value</value>
+                                            </simple-property-list>
                                         </structure>
                                     </list-property>
                                     <list-property name="boundDataColumns">
@@ -10428,7 +10438,9 @@ columns(cols);</value>
                                                     <list-property name="paramBindings">
                                                         <structure>
                                                             <property name="paramName">elmt_id</property>
-                                                            <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                            <simple-property-list name="expression">
+                                                                <value type="javascript">row["dbid"]</value>
+                                                            </simple-property-list>
                                                         </structure>
                                                     </list-property>
                                                     <list-property name="boundDataColumns">
@@ -11171,7 +11183,9 @@ columns(cols);</value>
                                                                     <list-property name="paramBindings">
                                                                         <structure>
                                                                             <property name="paramName">elmt_id</property>
-                                                                            <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                                            <simple-property-list name="expression">
+                                                                                <value type="javascript">row["dbid"]</value>
+                                                                            </simple-property-list>
                                                                         </structure>
                                                                     </list-property>
                                                                     <list-property name="boundDataColumns">
@@ -11350,7 +11364,9 @@ columns(cols);</value>
                                                                     <list-property name="paramBindings">
                                                                         <structure>
                                                                             <property name="paramName">asset_id</property>
-                                                                            <expression name="expression" type="javascript">row["dbid"]</expression>
+                                                                            <simple-property-list name="expression">
+                                                                                <value type="javascript">row["dbid"]</value>
+                                                                            </simple-property-list>
                                                                         </structure>
                                                                     </list-property>
                                                                     <list-property name="boundDataColumns">
@@ -11637,7 +11653,9 @@ columns(cols);</value>
                                                                                     <list-property name="paramBindings">
                                                                                         <structure>
                                                                                             <property name="paramName">elmt_id</property>
-                                                                                            <expression name="expression" type="javascript">row["scenarioDbId"]</expression>
+                                                                                            <simple-property-list name="expression">
+                                                                                                <value type="javascript">row["scenarioDbId"]</value>
+                                                                                            </simple-property-list>
                                                                                         </structure>
                                                                                     </list-property>
                                                                                     <list-property name="boundDataColumns">

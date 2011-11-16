@@ -27,8 +27,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.actions.OpenPerspectiveAction;
@@ -66,6 +68,7 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.bpm.rcp.TaskView;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -244,7 +247,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
         register(openAuditViewAction);
         
-        openTaskViewAction = new OpenTaskViewAction(window);
+        openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         register(openTaskViewAction);
 
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);

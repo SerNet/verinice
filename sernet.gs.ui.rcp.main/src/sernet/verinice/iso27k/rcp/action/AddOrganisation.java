@@ -21,27 +21,46 @@ package sernet.verinice.iso27k.rcp.action;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class AddOrganisation implements IViewActionDelegate {
+// TODO: is there any reason why this shouldnt extend actiondelegate (but exportaction does so) ?
+public class AddOrganisation extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
 	
 	private static final Logger LOG = Logger.getLogger(AddOrganisation.class);
+	
+	private IViewPart view = null;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
 	 */
 	public void init(IViewPart view) {
+	    this.view = view;
+	}
+	
+	@Override
+	public void init(IAction action){
+	    if(!checkRights()){
+	        action.setEnabled(false);
+	    }
 	}
 
 	/* (non-Javadoc)
@@ -49,11 +68,18 @@ public class AddOrganisation implements IViewActionDelegate {
 	 */
 	public void run(IAction action) {
 		try {
-			CnATreeElement newElement=null;	
-			newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getInstance().getISO27kModel(), Organization.TYPE_ID, null);
-			if (newElement != null) {
-				EditorFactory.getInstance().openEditor(newElement);
-			}
+		    if(checkRights()){
+    			CnATreeElement newElement=null;	
+    			newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getInstance().getISO27kModel(), Organization.TYPE_ID, null);
+    			if (newElement != null) {
+    				EditorFactory.getInstance().openEditor(newElement);
+    			}
+		    } else {
+		        throw new NotSufficientRightsException(Messages.getString("Action not allowed for user"));
+		    }
+		} catch (NotSufficientRightsException e){
+            LOG.error("Could not add element", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
 		} catch (Exception e) {
 			LOG.error("Could not add organization", e);
 			ExceptionUtil.log(e, "Could not add organization");
@@ -64,8 +90,34 @@ public class AddOrganisation implements IViewActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+            RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+       return ActionRightIDs.ADDISMORG;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO NOTHING
+        
+        
+    }
 	
 
 	

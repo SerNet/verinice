@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.HashMap;
+import java.util.Vector;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,9 +30,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -41,6 +51,8 @@ import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
 import sernet.gs.ui.rcp.main.bsi.views.OpenCataloguesJob;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
@@ -52,7 +64,7 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
  * 
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
-
+    
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
     }
@@ -89,6 +101,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
         showFirstSteps();
         preloadDBMapper();
+        for(IWorkbenchPage page : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()){
+            initPerspective(page.getPerspective().getId());
+        }
+        closeUnallowedViews();
     }
 
     private void preloadDBMapper() {
@@ -101,7 +117,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
         };
         job.schedule();
-
+        
     }
 
     private void showFirstSteps() {
@@ -143,5 +159,42 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             Logger.getLogger(this.getClass()).error(Messages.ApplicationWorkbenchWindowAdvisor_22, e);
         }
     }
-
+    
+    public void closeUnallowedViews(){
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(new PerspectiveAdapter(){
+           @Override
+           public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor descriptor){
+               super.perspectiveActivated(page, descriptor);
+               initPerspective(descriptor.getId());
+           }
+           @Override
+           public void perspectiveOpened(IWorkbenchPage page,
+                   IPerspectiveDescriptor perspective){
+               super.perspectiveOpened(page, perspective);
+               initPerspective(perspective.getId());
+           }
+        });
+    }
+    
+    private void initPerspective(String perspectiveID){
+        HashMap<String, String> viewRightIDs = null;
+        if(perspectiveID.equals(Iso27kPerspective.ID)){
+            viewRightIDs = Iso27kPerspective.viewsRightIDs;
+        } else if(perspectiveID.equals(Perspective.ID)){
+            viewRightIDs = Perspective.viewsRightIDs;
+        }
+        Vector<String> openViews = new Vector<String>();
+        for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
+            openViews.add(ref.getId());
+        }
+        Activator.inheritVeriniceContextState();
+        for(String id : viewRightIDs.keySet()){
+            IViewPart ref = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(id);
+            if(openViews.contains(id)){ //view is already opened, check if it needs to be closed
+                if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(viewRightIDs.get(id))){
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(ref);
+                }
+            }
+        }
+    }
 }

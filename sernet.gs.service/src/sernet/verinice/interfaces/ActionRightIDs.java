@@ -60,8 +60,15 @@ public class ActionRightIDs {
     public static final String DELETECATALOG = "deletecatalog";
     public static final String ISMCUT = "ismcut";
     public static final String ISMCOPY = "ismcopy";
-    public static final String ADDORG = "addorg";
+    public static final String ADDISMORG = "addismorg";
+    public static final String ADDISMELEMENT = "addismelement";
+    public static final String ADDISMGROUP = "addismgroup";
+    public static final String XMLEXPORT = "xmlexport";
+    public static final String XMLIMPORT = "xmlimport";
     public static final String EDITPROFILE = "editprofile";
+    public static final String GENERATEORGREPORT = "generateorgreport";
+    public static final String GENERATEAUDITREPORT = "generateauditreport";
+    public static final String ADDITVERBUND = "additverbund";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

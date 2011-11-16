@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -64,6 +65,8 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -73,6 +76,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * {@link Action} that exports assessment objects from the
@@ -80,7 +85,7 @@ import sernet.verinice.service.sync.VeriniceArchive;
  * {@link ExportDialog} to retrieve user selections.
  */
 @SuppressWarnings("restriction")
-public class ExportAction extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate
+public class ExportAction extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction
 {
 	public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
 	
@@ -106,6 +111,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	Organization selectedOrganization;
 	
+	private IViewPart view;
+	
 	 /*
      * (non-Javadoc)
      * 
@@ -113,6 +120,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public void init(IViewPart view) {
+        this.view = view;
     }
     
     /* (non-Javadoc)
@@ -122,6 +130,13 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     public void init(IWorkbenchWindow window) {
     }
 	
+    @Override
+    public void init(IAction action){
+        if(!checkRights()){
+            action.setEnabled(false);
+        }
+    }
+    
 	/*
 	 * @see
 	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
@@ -131,7 +146,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     public void run(IAction action) {
 		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selectedOrganization);
 		if(action instanceof ViewPluginAction) {
-			
+
 		}
 		if( dialog.open() == Dialog.OK )
 		{	     
@@ -359,6 +374,31 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         @Override
         public void sleeping(IJobChangeEvent event) {}
      
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.XMLEXPORT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO NOTHING          
     }
 
 }

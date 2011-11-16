@@ -17,18 +17,34 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.HashMap;
+
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class Perspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.perspective";
+	
+	public static HashMap<String, String> viewsRightIDs;
+	
+	static{
+	    viewsRightIDs = new HashMap<String, String>();
+	    viewsRightIDs.put(BSIMassnahmenView.ID, ActionRightIDs.BSIMASSNAHMEN);
+	    viewsRightIDs.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
+	    viewsRightIDs.put(BsiModelView.ID, ActionRightIDs.BSIMODELVIEW);
+	}
 
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
@@ -49,7 +65,6 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout folder = layout.createFolder("datails",IPageLayout.BOTTOM, 0.5f, editorArea);
 		folder.addView(BrowserView.ID);
 		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
+		
 	}
-	
-	
 }

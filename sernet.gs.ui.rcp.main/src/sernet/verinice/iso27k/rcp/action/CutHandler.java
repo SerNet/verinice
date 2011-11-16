@@ -31,6 +31,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -39,20 +43,25 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CutHandler extends AbstractHandler {
+public class CutHandler extends RightEnabledHandler {
 
 private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
 	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
+	private String rightID = null;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		changeSelection(HandlerUtil.getCurrentSelection(event));
-		CnPItems.clearCopyItems();
-		CnPItems.clearCutItems();
-		CnPItems.setCutItems(selectedElementList);	
+	    this.rightID = ActionRightIDs.ISMCUT;
+	    if(checkRights()){
+    		changeSelection(HandlerUtil.getCurrentSelection(event));
+    		CnPItems.clearCopyItems();
+    		CnPItems.clearCutItems();
+    		CnPItems.setCutItems(selectedElementList);
+	    }
 		return null;
 	}
 	
@@ -72,5 +81,6 @@ private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 			LOG.error("Could not execute selectionChanged", e);
 		}
 	}
+
 
 }

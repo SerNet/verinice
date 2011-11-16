@@ -17,17 +17,37 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.util.HashMap;
+
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.registry.ViewRegistry;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class Iso27kPerspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.verinice.iso27k.rcp.Iso27kPerspective";
 
+	public static HashMap<String, String> viewsRightIDs;
+	
+	static{
+	    viewsRightIDs = new HashMap<String, String>();
+	    viewsRightIDs.put(CatalogView.ID, ActionRightIDs.ISMCATALOG);
+	    viewsRightIDs.put(ISMView.ID, ActionRightIDs.ISMVIEW);
+	    viewsRightIDs.put(RelationView.ID, ActionRightIDs.RELATIONS);
+	    viewsRightIDs.put(FileView.ID, ActionRightIDs.FILES);
+	    viewsRightIDs.put(NoteView.ID, ActionRightIDs.NOTES);
+	}
+	
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
@@ -44,6 +64,5 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		layout.getViewLayout(CatalogView.ID).setCloseable(true);
 		layout.getViewLayout(ISMView.ID).setCloseable(true);
 	}
-	
 	
 }

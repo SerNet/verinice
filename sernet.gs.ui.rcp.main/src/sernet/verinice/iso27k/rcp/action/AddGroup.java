@@ -38,6 +38,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -60,12 +63,14 @@ import sernet.verinice.model.iso27k.RequirementGroup;
 import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class AddGroup extends Action implements IObjectActionDelegate {
+public class AddGroup extends Action implements IObjectActionDelegate, RightEnabledUserInteraction {
 	private IWorkbenchPart targetPart;
 
 	private static final Logger LOG = Logger.getLogger(AddGroup.class);
@@ -120,28 +125,35 @@ public class AddGroup extends Action implements IObjectActionDelegate {
      */
     public void run() {
     	try {
-			Object sel = null;
-			if(targetPart!=null) {
-				sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-				if(sel instanceof IISO27kGroup) {
-					parent = (IISO27kGroup) sel;
-				}
-			} 			
-			CnATreeElement newElement = null;
-			if( parent != null) {		   
-			    String currentType = this.typeId;
-			    if(currentType==null) {
-					// child groups have the same type as parents
-			    	currentType = parent.getTypeId();
-					if(parent instanceof Asset) {
-						currentType = ControlGroup.TYPE_ID;
-	                }
-			    }
-				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null);		
+    	    if(checkRights()){
+    			Object sel = null;
+    			if(targetPart!=null) {
+    				sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+    				if(sel instanceof IISO27kGroup) {
+    					parent = (IISO27kGroup) sel;
+    				}
+    			} 			
+    			CnATreeElement newElement = null;
+    			if( parent != null) {		   
+    			    String currentType = this.typeId;
+    			    if(currentType==null) {
+    					// child groups have the same type as parents
+    			    	currentType = parent.getTypeId();
+    					if(parent instanceof Asset) {
+    						currentType = ControlGroup.TYPE_ID;
+    	                }
+    			    }
+    				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null);		
+    			}
+    			if (newElement != null) {
+    				EditorFactory.getInstance().openEditor(newElement);
+    			}
+			} else {
+			    throw new NotSufficientRightsException("Action not allowed for user");
 			}
-			if (newElement != null) {
-				EditorFactory.getInstance().openEditor(newElement);
-			}
+    	} catch (NotSufficientRightsException e){
+            LOG.error("Could not add element", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
 		} catch (Exception e) {
 			LOG.error("Could not add element group", e); //$NON-NLS-1$
 			ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
@@ -188,5 +200,30 @@ public class AddGroup extends Action implements IObjectActionDelegate {
             }
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ADDISMGROUP;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+     // DO NOTHING
+    }
 
 }

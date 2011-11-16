@@ -112,6 +112,12 @@ public class LoadReportScenarioDetails extends GenericCommand {
         // get the reduced probability of the scenario:
         int probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
         
+        // get the CIA deciders
+        boolean isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
+        boolean isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
+        boolean isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
+
+        
         // initialize risk with base risk - with no controls:
         Integer treatedRiskC = Integer.parseInt(row.get(3));
         Integer treatedRiskI = Integer.parseInt(row.get(4));
@@ -191,9 +197,9 @@ public class LoadReportScenarioDetails extends GenericCommand {
         row.add(vulnTitle);
         row.add(threatDesc);
         row.add(vulnDesc);
-        row.add(treatedRiskC.toString());
-        row.add(treatedRiskI.toString());
-        row.add(treatedRiskA.toString());
+        row.add(isCRelevant ? treatedRiskC.toString() : "0");
+        row.add(isIRelevant ? treatedRiskI.toString() : "0");
+        row.add(isARelevant ? treatedRiskA.toString() : "0");
         row.add(scenario.getDbId().toString());
     }
 

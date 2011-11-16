@@ -1,43 +1,34 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
+import org.w3c.dom.stylesheets.LinkStyle;
+
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.bsi.views.chart.ISRSpiderChart;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.AssetValueService;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
  * Starting with all process for a given scope, load all linked assets and their
@@ -94,7 +85,6 @@ public class LoadReportAllRisksForScope extends GenericCommand {
 
     private int riskType = IRiskAnalysisService.RISK_PRE_CONTROLS;
    
-
     public LoadReportAllRisksForScope(Integer rootElement) {
         this(rootElement, false);
     }
@@ -110,6 +100,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         this(rootElement, distinct, IRiskAnalysisService.RISK_PRE_CONTROLS);
     }
         
+    @SuppressWarnings({ "restriction", "unchecked" })
     public void execute() {
         try {
             // determine max and tolerable risk values. initialize matrices to save value counts:
@@ -167,7 +158,6 @@ public class LoadReportAllRisksForScope extends GenericCommand {
                     }
                 }
             }
-
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
@@ -180,6 +170,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
      * @return
      * @throws CommandException 
      */
+    @SuppressWarnings("restriction")
     private List<String> makeRow(CnATreeElement scenario, CnATreeElement asset) throws CommandException {
         seenScenarios.add(scenario.getDbId());
         seenAssets.add(asset.getDbId());
@@ -208,12 +199,21 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         impactI = valueAdapter.getIntegritaet();
         impactA = valueAdapter.getVerfuegbarkeit();
         
+        boolean isCRelevant = false;
+        boolean isIRelevant = false;
+        boolean isARelevant = false;
+        
+        isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
+        isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
+        isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
+            
         Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         if (reducedImpact != null) {
             impactC = reducedImpact[0];
             impactI = reducedImpact[1];
             impactA = reducedImpact[2];
         }
+        
         
         // prob. / impact:
         row.add(Integer.toString(probability));
@@ -238,10 +238,15 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         row.add(scenario.getTitle());
         row.add(asset.getTitle());
         
-        riskMatrixC.increaseCount(probability, impactC);
-        riskMatrixI.increaseCount(probability, impactI);
-        riskMatrixA.increaseCount(probability, impactA);
-        
+        if(isCRelevant){
+            riskMatrixC.increaseCount(probability, impactC);
+        }
+        if(isIRelevant){
+            riskMatrixI.increaseCount(probability, impactI);
+        }
+        if(isARelevant){
+            riskMatrixA.increaseCount(probability, impactA);
+        }
         return row;
     }
 

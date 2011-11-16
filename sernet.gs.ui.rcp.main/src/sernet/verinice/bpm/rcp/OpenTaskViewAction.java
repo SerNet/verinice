@@ -23,11 +23,28 @@ public class OpenTaskViewAction extends OpenViewAction {
             public void loaded(BSIModel model) {             
             }
             public void loaded(ISO27KModel model) {
-                setEnabled(isActive());               
+                if(checkRights()){
+                    setEnabled(isActive());
+                }
             }
         });
         setRightID(ActionRightIDs.TASKVIEW);
         setEnabled(checkRights());
+    }
+    
+    public OpenTaskViewAction(IWorkbenchWindow window, String rightID){
+        super(window, "Tasks", TaskView.ID, ImageCache.VIEW_TASK, rightID);
+        CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+            public void closed(BSIModel model) {                
+            }
+            public void loaded(BSIModel model) {             
+            }
+            public void loaded(ISO27KModel model) {
+                if(checkRights()){
+                    setEnabled(isActive());
+                }
+            }
+        });        
     }
     
     private boolean isActive() {

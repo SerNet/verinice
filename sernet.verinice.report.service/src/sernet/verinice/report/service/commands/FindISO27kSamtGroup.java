@@ -15,7 +15,7 @@
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.samt.service;
+package sernet.verinice.report.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,6 +25,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -33,6 +36,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.samt.service.FindSamtGroup;
 
 /**
  *
@@ -78,18 +82,31 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
 
         // find all ControlGroups
-        StringBuilder sbHql = new StringBuilder();
-        sbHql.append("select distinct controlGroup from ControlGroup as controlGroup");
-
-        final String hql = sbHql.toString();
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("hql: " + hql);
+//        StringBuilder sbHql = new StringBuilder();
+//        sbHql.append("select distinct controlGroup from ControlGroup as controlGroup");
+        
+        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            log.error("Error while executing command");
         }
+        
 
-        List<ControlGroup> controlGroupList;
+//        final String hql = sbHql.toString();
+//        if (getLog().isDebugEnabled()) {
+//            getLog().debug("hql: " + hql);
+//        }
 
-        controlGroupList = dao.findByQuery(hql, null);
+//        List<ControlGroup> controlGroupList;
+        List<CnATreeElement> controlGroupList = null;
 
+//        controlGroupList = dao.findByQuery(hql, null);
+
+        if(command.getElements() != null && command.getElements().size() > 0){
+            controlGroupList = command.getElements();
+        }
+        
         if (controlGroupList == null) {
             controlGroupList = Collections.emptyList();
         }
@@ -101,34 +118,78 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         // check if parent is Audit and children are SamtTopics
         List<ControlGroup> resultList = new ArrayList<ControlGroup>();
         int count = 0;
-        for (ControlGroup controlGroup : controlGroupList) {
+        for (CnATreeElement elmt : controlGroupList) {
+            if(elmt instanceof ControlGroup){
+                ControlGroup controlGroup = (ControlGroup)elmt;
+            
             if (isISO27kControlGroup(controlGroup) && isSamtTopicCollection(controlGroup.getChildren())) {
                 resultList.add(controlGroup);
-            }
+            }}
             count++;
         }
 
         if (resultList != null && !resultList.isEmpty()) {
-            CnATreeElement parent = resultList.get(0).getParent();
-            for (ControlGroup g : resultList) {
-                if (isParent(g, dbId)) {
-                    selfAssessmentGroup = g;
-                    if(g.getParent().getUuid().equals(parent.getUuid())){
-                        parent = g.getParent();
-                    } else  {
-                        break;
-                    }
-                }
-            }
-            if(parent instanceof ControlGroup)
-                selfAssessmentGroup = (ControlGroup)parent;
+            selfAssessmentGroup = determineRootControlgroup(resultList);
+//            CnATreeElement parent = resultList.get(0).getParent();
+//            for (ControlGroup g : resultList) {
+//                if (isParent(g, dbId)) {
+//                    selfAssessmentGroup = g;
+//                    if(g.getParent().getUuid().equals(parent.getUuid())){
+//                        parent = g.getParent();
+//                    } else  {
+//                        break;
+//                    }
+//                }
+//            }
+//            if(parent instanceof ControlGroup)
+//                selfAssessmentGroup = (ControlGroup)parent;
             if(selfAssessmentGroup != null)
                 hydrate(selfAssessmentGroup);
         }
 
     }
-
-    private static int nullSaveSize(List<ControlGroup> controlGroupList) {
+    
+    private ControlGroup determineRootControlgroup(List<ControlGroup> list){
+        ArrayList<ControlGroup> cList = new ArrayList<ControlGroup>(0);
+        for(ControlGroup g : list){
+            if(hasSamtTopicChildrenOnly(g)){
+                if(g.getParent() instanceof ControlGroup){
+                    cList.add(g);
+                }
+            }
+        }
+        ControlGroup parent = null;
+        boolean errorOccured = false;
+        for(ControlGroup g : cList){
+            if(parent == null){
+                parent = (ControlGroup)g.getParent();
+            } else {
+                if(parent.getUuid().equals(g.getParent().getUuid())){
+                    continue;
+                } else {
+                    errorOccured = true;
+                    break;
+                }
+            }
+        }
+        if(errorOccured){
+            return null;
+        } else {
+            return parent;
+        }
+    }
+    
+    private boolean hasSamtTopicChildrenOnly(ControlGroup group){
+        boolean retVal = true;
+        for(CnATreeElement elmt : group.getChildren()){
+            if(!(elmt instanceof SamtTopic)){
+                retVal = false;
+                break;
+            }
+        }
+        return retVal;
+    }
+    private static int nullSaveSize(List<CnATreeElement> controlGroupList) {
         int size = 0;
         if (controlGroupList != null) {
             size = controlGroupList.size();

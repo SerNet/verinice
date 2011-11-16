@@ -35,6 +35,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -57,12 +60,14 @@ import sernet.verinice.model.iso27k.RequirementGroup;
 import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class AddElement implements IObjectActionDelegate {
+public class AddElement implements IObjectActionDelegate, RightEnabledUserInteraction {
 	private IWorkbenchPart targetPart;
 
 	private static final Logger LOG = Logger.getLogger(AddElement.class);
@@ -101,28 +106,36 @@ public class AddElement implements IObjectActionDelegate {
 	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
-			Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-			CnATreeElement newElement = null;
-
-			if (sel instanceof IISO27kGroup) {
-			    IISO27kGroup group = (IISO27kGroup) sel;
-			    String childType = null;
-				if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
-				    // TODO - getChildTypes()[0] problem for more than one type
-				    childType = group.getChildTypes()[0];
-				    if(group instanceof Asset) {
-				        childType = Control.TYPE_ID;
-				    }
-				} else {
-					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
-				}
-				if(childType!=null) {
-				    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null);           		
-				}
-			}
-			if (newElement != null) {
-				EditorFactory.getInstance().updateAndOpenObject(newElement);
-			}
+		    
+		    if(checkRights()){
+    			Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+    			CnATreeElement newElement = null;
+    
+    			if (sel instanceof IISO27kGroup) {
+    			    IISO27kGroup group = (IISO27kGroup) sel;
+    			    String childType = null;
+    				if(group.getChildTypes()!=null && group.getChildTypes().length>0) {
+    				    // TODO - getChildTypes()[0] problem for more than one type
+    				    childType = group.getChildTypes()[0];
+    				    if(group instanceof Asset) {
+    				        childType = Control.TYPE_ID;
+    				    }
+    				} else {
+    					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
+    				}
+    				if(childType!=null) {
+    				    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null);           		
+    				}
+    			}
+    			if (newElement != null) {
+    				EditorFactory.getInstance().updateAndOpenObject(newElement);
+    			}
+		    } else {
+		        throw new NotSufficientRightsException("Action not allowed for user");
+		    }
+		} catch (NotSufficientRightsException e){
+            LOG.error("Could not add element", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
 		} catch (Exception e) {
 			LOG.error("Could not add element", e); //$NON-NLS-1$
 			ExceptionUtil.log(e, Messages.getString("AddElement.19")); //$NON-NLS-1$
@@ -163,4 +176,29 @@ public class AddElement implements IObjectActionDelegate {
             }
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ADDISMELEMENT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO NOTHING
+    }
 }

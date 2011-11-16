@@ -32,8 +32,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -1101,7 +1101,7 @@ catch (Exception e) {
 }
 
 cols = helper.getAllPropertyTypes("asset");
-c2 = new LoadReportLinkedElements("asset", elmtid, true);
+c2 = new LoadReportLinkedElements("asset", elmtid, true, false);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -11668,7 +11668,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <Visible>false</Visible>
           </Label>
           <DataDefinition>
-            <Definition>row[&quot;RISK_C&quot;]+row[&quot;RISK_I&quot;]+row[&quot;RISK_A&quot;]</Definition>
+            <Definition>Number(row[&quot;RISK_C&quot;])+Number(row[&quot;RISK_I&quot;])+Number(row[&quot;RISK_A&quot;])</Definition>
             <Grouping>
               <GroupType>Text</GroupType>
               <AggregateExpression>Sum</AggregateExpression>

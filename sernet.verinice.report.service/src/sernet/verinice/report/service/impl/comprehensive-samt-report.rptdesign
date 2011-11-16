@@ -1386,6 +1386,7 @@ inParameters(new String[] { "chapterId", "chapterName", "root_object" });</value
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.gs.ui.rcp.main.bsi.views.chart.CSRMaturitySpiderChart;
 import sernet.verinice.model.iso27k.ControlGroup;
+// import sernet.verinice.report.service.commands.FindISO27kSamtGroup;
 import sernet.verinice.samt.service.FindISO27kSamtGroup;
 
 // set top level element for report:
@@ -4417,7 +4418,7 @@ columns(cols);</value>
                             <property name="textAlign">center</property>
                             <image id="2047">
                                 <property name="height">42px</property>
-                                <property name="width">170px</property>
+                                <property name="width">206px</property>
                                 <property name="source">embed</property>
                                 <property name="imageName">design1.png</property>
                             </image>
@@ -5390,7 +5391,7 @@ columns(cols);</value>
                         </list-property>
                         <method name="onPageBreak"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
 
-TocHelper.increaseTocPageCount();]]></method>
+//TocHelper.increaseTocPageCount();]]></method>
                         <column id="2021"/>
                         <column id="2022"/>
                         <header>
@@ -5900,6 +5901,7 @@ importPackage(Packages.sernet.verinice.report.service.impl);
 var root = this.value;
 
 // import bundles
+//var samtBundle = Packages.org.eclipse.core.runtime.Platform.getBundle( "sernet.verinice.report.service" );
 var samtBundle = Packages.org.eclipse.core.runtime.Platform.getBundle( "sernet.verinice.samt.service" );
 var odaBundle = Packages.org.eclipse.core.runtime.Platform.getBundle("sernet.verinice.oda.driver");
 var rcpMainBundle = Packages.org.eclipse.core.runtime.Platform.getBundle("sernet.gs.ui.rcp.main");
@@ -6537,10 +6539,13 @@ TocHelper.increasePageNumber();]]></method>
             </row>
         </grid>
         <grid id="2111">
+            <property name="width">100%</property>
             <column id="2112"/>
             <row id="2113">
                 <cell id="2114">
                     <table id="2115">
+                        <property name="pageBreakInside">avoid</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">chapterList</property>
                         <list-property name="paramBindings">
                             <structure>
@@ -6565,12 +6570,15 @@ TocHelper.increasePageNumber();]]></method>
                         <column id="2122"/>
                         <detail>
                             <row id="2118">
+                                <property name="pageBreakInside">avoid</property>
                                 <cell id="2119">
                                     <grid id="2123">
+                                        <property name="width">100%</property>
                                         <column id="2124"/>
                                         <row id="2125">
                                             <cell id="2126">
                                                 <text-data id="2129">
+                                                    <property name="pageBreakAfter">avoid</property>
                                                     <method name="onCreate"><![CDATA[addTOCItem(row["chapterName"], 4);
 ]]></method>
                                                     <expression name="valueExpr">"&lt;h2>" + row["chapterName"] + "&lt;/h2>"</expression>
@@ -6582,13 +6590,15 @@ TocHelper.increasePageNumber();]]></method>
                                             <cell id="2128">
                                                 <grid id="1069">
                                                     <property name="marginBottom">1cm</property>
-                                                    <property name="pageBreakAfter">always</property>
-                                                    <property name="width">8.020833333333334in</property>
+                                                    <property name="pageBreakAfter">auto</property>
+                                                    <property name="pageBreakBefore">auto</property>
+                                                    <property name="width">100%</property>
                                                     <column id="1070"/>
                                                     <row id="1075">
                                                         <cell id="1076">
                                                             <table id="1379">
                                                                 <property name="marginBottom">1pt</property>
+                                                                <property name="pageBreakAfter">auto</property>
                                                                 <property name="dataSet">chapterList</property>
                                                                 <list-property name="paramBindings">
                                                                     <structure>
@@ -6617,6 +6627,7 @@ TocHelper.increasePageNumber();]]></method>
                                                                             <grid id="1382">
                                                                                 <property name="marginBottom">1cm</property>
                                                                                 <property name="pageBreakAfter">always</property>
+                                                                                <property name="pageBreakInside">avoid</property>
                                                                                 <column id="1383"/>
                                                                                 <column id="1384"/>
                                                                                 <row id="1385">
@@ -7054,6 +7065,7 @@ reportContext.setPersistentGlobalVariable( "attachmentImage1", result )]]></meth
                                                                                             <property name="borderTopColor">#000000</property>
                                                                                             <property name="borderTopStyle">solid</property>
                                                                                             <property name="borderTopWidth">thin</property>
+                                                                                            <property name="pageBreakInside">avoid</property>
                                                                                             <property name="dataSet">deviationRiskTable</property>
                                                                                             <list-property name="paramBindings">
                                                                                                 <structure>
@@ -8287,6 +8299,10 @@ Level]]></text-property>
         <variable-element name="tableWatcher">
             <expression name="value" type="javascript">"0"</expression>
             <property name="type">page</property>
+        </variable-element>
+        <variable-element name="veriniceEngineIterations">
+            <expression name="value" type="javascript">3</expression>
+            <property name="type">report</property>
         </variable-element>
     </property>
     <list-property name="images">

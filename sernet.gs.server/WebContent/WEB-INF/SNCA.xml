@@ -3940,7 +3940,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
         	name="isISOGroup"
         	id="controlgroup_is_NoIso_group"
-        	inputtype="booleanoption" defaultValue="1"
+        	inputtype="booleanoption" defaultValue="0"
         	tags="VDA_ISA_Audit"
         	/>
     </huientity>
