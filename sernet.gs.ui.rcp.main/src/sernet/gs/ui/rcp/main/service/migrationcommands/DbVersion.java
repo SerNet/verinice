@@ -35,6 +35,7 @@ import sernet.verinice.service.commands.LoadBSIModel;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("restriction")
 public class DbVersion extends GenericCommand  {
 	
     private transient Logger log = Logger.getLogger(DbVersion.class);
@@ -103,6 +104,11 @@ public class DbVersion extends GenericCommand  {
                  DbMigration migration = new MigrateDbTo0_98();
                  getCommandService().executeCommand(migration);
              }
+			 
+			 if (dbVersion < 0.99D) {
+                 DbMigration migration = new MigrateDbTo0_99();
+                 getCommandService().executeCommand(migration);
+             }
 	}
 
 
@@ -113,7 +119,8 @@ public class DbVersion extends GenericCommand  {
 					+ ". Vorhandene Client Version: " + clientVersion);
 		}
 		
-		LoadBSIModel command = new LoadBSIModel();
+		
+        LoadBSIModel command = new LoadBSIModel();
 		double dbVersion;
 		try {
 			command = getCommandService().executeCommand(command);

@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -30,6 +31,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -77,6 +79,12 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	private VeriniceContext.State workObjects;
 	
 	private HashMap<String, Object[]> roleMap = new HashMap<String, Object[]>();
+	
+	private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
+	
+	private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
+	
+	IBaseDao<BSIModel, Serializable> dao;
 	
 	/**
 	 * This method is encapsulated in a transaction by the Spring container.
@@ -129,20 +137,21 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			// When a command is being executed that should be subject to access
 			// control (this is the default) and the logged in user is non-
 			// privileged the filter is configured and activated.
-			if (authService.isPermissionHandlingNeeded()
-					&& !(command instanceof INoAccessControl)
-					&& !hasAdminRole(authService.getRoles()))
-			{
-				if(log.isDebugEnabled()) {
-					log.debug("Enabling security access filter for user: " + authService.getUsername());
-				}
-				setAccessFilterEnabled(true);
+			if (authService.isPermissionHandlingNeeded() && !(command instanceof INoAccessControl) ) {
+			    if(!hasAdminRole(authService.getRoles())) {
+    				if(log.isDebugEnabled()) {
+    					log.debug("Enabling security access filter for user: " + authService.getUsername());
+    				}
+    				setAccessFilterEnabled(true);
+			    }
+			    configureScopeFilter();
 			}
 			
 			// execute actions, compute results:
 			command.execute();
 			
 			setAccessFilterEnabled(false);
+			disableScopeFilter();
 			
 			// log changes:
 			if (command instanceof IChangeLoggingCommand) {
@@ -167,7 +176,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		return command;
 	}
 
-	private void log(IChangeLoggingCommand notifyCommand) {
+
+    private void log(IChangeLoggingCommand notifyCommand) {
 		List<CnATreeElement> changedElements = notifyCommand.getChangedElements();
 		for (CnATreeElement changedElement : changedElements) {
 			
@@ -243,97 +253,118 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		return workObjects;
 	}
 	
-	private void setAccessFilterEnabled(boolean enable)
-	{
-		IBaseDao<BSIModel, Serializable> dao = daoFactory.getDAO(BSIModel.class);
 	
-		if (enable)
-		{
-		    final Object[] roles = getRolesAsParameterList(authService.getUsername());
-			
-			dao.executeCallback(new HibernateCallback()
-			{
-
-				public Object doInHibernate(Session session)
-						throws HibernateException, SQLException {
-
-					session.enableFilter("userAccessReadFilter")
-						.setParameterList("currentRoles",roles)
-						.setParameter("readAllowed", Boolean.TRUE);
-					return null;
-				}
-				
-			});
-		}
-		else
-		{
-			dao.executeCallback(new HibernateCallback()
-			{
-
-				public Object doInHibernate(Session session)
-						throws HibernateException, SQLException {
-					
-					session.disableFilter("userAccessReadFilter");
-					
-					return null;
-				}
-				
-			});
-			
-		}
-	}
+    
+    /**
+     * 
+     */
+    private void configureScopeFilter() {
+        if(isScopeOnly(authService.getUsername())) {
+            final Integer userScopeId = getScopeId(authService.getUsername());
+            getBsiModelDao().executeCallback(new HibernateCallback() {
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
+                    return null;
+                }
+            });        
+        } else {
+            getBsiModelDao().executeCallback(new HibernateCallback() {
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.disableFilter("scopeFilter");
+                    return null;
+                }
+            });
+        }
+    }
 	
-	private boolean hasAdminRole(String[] roles)
-	{
+    private void setAccessFilterEnabled(boolean enable) {
+        if (enable) {
+            final Object[] roles = getRoles(authService.getUsername());
+            getBsiModelDao().executeCallback(new HibernateCallback() {
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
+                    return null;
+                }
+            });
+        } else {
+            disableScopeFilter();
+        }
+    }
+
+
+    /**
+     * 
+     */
+    private void disableScopeFilter() {
+        getBsiModelDao().executeCallback(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                session.disableFilter("userAccessReadFilter");
+                return null;
+            }
+        });
+    }
+	
+	private boolean hasAdminRole(String[] roles) {
 	    // FIXME : check scope
-		for (String r : roles)
-		{
+		for (String r : roles) {
 			if (ApplicationRoles.ROLE_ADMIN.equals(r))
 				return true;
-		}
-		
+		}	
 		return false;
 	}
 	
-	private Object[] getRolesAsParameterList(String user)
-	{
-		Object[] result = roleMap.get(user);
-		if (result == null)
-		{
-		    
-		    
-			IBaseDao<Configuration, Serializable> dao = daoFactory.getDAO(Configuration.class);
-			List<Configuration> configurations = dao.findAll();
-			
-			for (Configuration c : configurations)
-			{
-				if (user.equals(c.getUser()) && result == null)
-				{
-					result = c.getRoles().toArray();
-					configurations.clear();
-					
-					// Put result into map and save asking the DB next time.
-					roleMap.put(user, result);
-					
-					// TODO: Whenever an admin modifies the roles the roleMap should be cleared.
-					// We could introduce a special command just for this.
-					
-					return result;
-				}
-			}
-			
-			// This should not happen because the login was done using an existing username
-			// and if that does not exist any more something must have gone wrong.
-			throw new IllegalStateException();
-
-		}
-		
-		return result;
-	}
+    private Object[] getRoles(String user) {
+        Object[] result = roleMap.get(user);
+        if (result == null) {
+            loadUserData();
+            result = roleMap.get(user);
+        }
+        return result;
+    }
+    
+    private boolean isScopeOnly(String user) {
+        Boolean result = scopeMap.get(user);
+        if (result == null) {
+            loadUserData();
+            result = scopeMap.get(user);
+        }
+        return (result==null) ? false : result;
+    }
+    
+    private Integer getScopeId(String user) {
+        Integer result = scopeIdMap.get(user);
+        if (result == null) {
+            loadUserData();
+            result = scopeIdMap.get(user);
+        }
+        return result;
+    }
+    
+    private void loadUserData() {
+        IBaseDao<Configuration, Serializable> dao = daoFactory.getDAO(Configuration.class);
+        List<Configuration> configurations = dao.findAll(RetrieveInfo.getPropertyInstance());
+        for (Configuration c : configurations) {
+            Object[] roleArray = c.getRoles().toArray();
+            String user = c.getUser();
+            // Put result into map and save asking the DB next time.
+            roleMap.put(user, roleArray);           
+            scopeMap.put(user, c.isScopeOnly());     
+            scopeIdMap.put(user, c.getPerson().getScopeId());  
+        } 
+    }
 	
-	public void discardRoleMap()
+	public void discardUserData()
 	{
 		roleMap.clear();
+		scopeMap.clear();
+        scopeIdMap.clear();
+	}
+	
+	private IBaseDao<BSIModel, Serializable> getBsiModelDao() {
+	    if(dao==null) {
+	        dao = daoFactory.getDAO(BSIModel.class);
+	    }
+	    return dao;
 	}
 	
 }

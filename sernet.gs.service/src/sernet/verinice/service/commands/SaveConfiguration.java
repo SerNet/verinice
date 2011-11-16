@@ -94,7 +94,7 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 			// The roles may have been modified. As such the server needs to throw
 			// away its
 			// cached role data.
-			getCommandService().discardRoleMap();
+			getCommandService().discardUserData();
 		} catch(UsernameExistsRuntimeException uere) {
 			// already logged in checkUsername
 			throw uere;

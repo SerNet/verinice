@@ -21,13 +21,14 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
 
+@SuppressWarnings({ "serial", "restriction", "unchecked", "rawtypes" })
 public class CreateITVerbund extends CreateElement {
     
 	public CreateITVerbund(CnATreeElement container, Class type) {
 		super(container,type,true,true);
 	}
 	
-	public CreateITVerbund(CnATreeElement container, Class type, boolean createChildren) {
+    public CreateITVerbund(CnATreeElement container, Class type, boolean createChildren) {
         super(container, type, true, createChildren);
     }
 	
@@ -40,6 +41,10 @@ public class CreateITVerbund extends CreateElement {
 			    verbund.createNewCategories();
 			}
 			addPermissions(verbund);
+			child.setScopeId(child.getDbId());
+			for (CnATreeElement group : child.getChildren()) {
+			    group.setScopeId(child.getDbId());
+	        }
 		}
 		
 	}

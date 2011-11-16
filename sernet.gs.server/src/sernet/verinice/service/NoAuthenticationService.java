@@ -77,4 +77,13 @@ public final class NoAuthenticationService implements IAuthService {
     public String getAdminUsername() {
         return getUsername();
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isScopeOnly()
+     */
+    @Override
+    public boolean isScopeOnly() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

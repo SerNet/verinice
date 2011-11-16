@@ -39,5 +39,5 @@ package sernet.verinice.interfaces;
 public interface ICommandService {
 	public  <T extends ICommand> T executeCommand(T command) throws CommandException;
 
-	public void discardRoleMap();
+	public void discardUserData();
 }

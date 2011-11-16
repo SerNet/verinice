@@ -203,7 +203,7 @@ public class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
+        CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title, true, true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         return saveCommand.getNewElement();
     }

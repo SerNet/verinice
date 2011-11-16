@@ -27,15 +27,21 @@ import org.springframework.security.userdetails.UserDetails;
 @SuppressWarnings("serial")
 public class VeriniceUserDetails implements UserDetails {
 
-	public VeriniceUserDetails(String user, String pass) {
-		super();
-		this.user = user;
-		this.pass = pass;
-	}
-
 	private String user;
 	private String pass;
 	private List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+	private boolean scopeOnly;
+	
+	public VeriniceUserDetails(String user, String pass) {
+        this(user,pass,false);
+    }
+	
+	public VeriniceUserDetails(String user, String pass , boolean scopeOnly) {
+        super();
+        this.user = user;
+        this.pass = pass;
+        this.scopeOnly = scopeOnly;
+    }
 	
 	public GrantedAuthority[] getAuthorities() {
 		return (GrantedAuthority[]) roles.toArray(new GrantedAuthority[roles.size()]);
@@ -49,7 +55,14 @@ public class VeriniceUserDetails implements UserDetails {
 		return user;
 	}
 
-	public boolean isAccountNonExpired() {
+	/**
+     * @return the scopeOnly
+     */
+    public boolean isScopeOnly() {
+        return scopeOnly;
+    }
+
+    public boolean isAccountNonExpired() {
 		return true;
 	}
 

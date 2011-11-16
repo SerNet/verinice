@@ -98,6 +98,7 @@ public class UserprofileDialog extends TitleAreaDialog {
     public UserprofileDialog(Shell parent) {
         super(parent);
         auth = getRightService().getConfiguration();
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         allProfiles = auth.getProfiles().getProfile();
         unselectedProfiles = new ArrayList<ProfileRef>(allProfiles.size());    
     }
@@ -126,9 +127,9 @@ public class UserprofileDialog extends TitleAreaDialog {
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.USERPROFILE_64));
         initializeDialogUnits(parent);
 
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite composite = new Composite(parent, SWT.FILL);
         composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);

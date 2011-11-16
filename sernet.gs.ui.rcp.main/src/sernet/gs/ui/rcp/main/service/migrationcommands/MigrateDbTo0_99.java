@@ -20,37 +20,49 @@ package sernet.gs.ui.rcp.main.service.migrationcommands;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.UpdateScopeId;
 
 /**
- * Nothing to do in this command when updating to 0.98 except updating the version itself.
- * Everything else is done in sernet.gs.server.SchemaCreator
- * and by Hibernate.
+ * New column scope_id is added in version 0.99.
+ * Columns contains the scope or org-id of the element.
+ * This command sets the scope id for all existing elements.
+ * 
+ * In the end is updates the version itself.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *  @version $Rev$ $LastChangedDate$ 
+ * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
  */
-@SuppressWarnings("serial")
-public class MigrateDbTo0_98 extends DbMigration {
+@SuppressWarnings({ "serial", "restriction" })
+public class MigrateDbTo0_99 extends DbMigration {
 
-    private transient Logger log = Logger.getLogger(MigrateDbTo0_98.class);
+    private transient Logger log = Logger.getLogger(MigrateDbTo0_99.class);
 
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(MigrateDbTo0_98.class);
+            log = Logger.getLogger(MigrateDbTo0_99.class);
         }
         return log;
     }
     
 	@Override
 	public double getVersion() {
-		return 0.98D;
+		return 0.99D;
 	}
 
 	public void execute() throws RuntimeCommandException {
 	    if (getLog().isDebugEnabled()) {
-	        getLog().debug("Updating database version to 0.98");
+	        getLog().debug("Updating database version to 0.99");
         }
+	    UpdateScopeId updateScopeId = new UpdateScopeId();
+	    try {
+	        updateScopeId = getCommandService().executeCommand(updateScopeId);
+            super.updateVersion();
+        } catch (CommandException e) {
+            throw new RuntimeCommandException(e);
+        }
+	    
 		super.updateVersion();
 	}
 

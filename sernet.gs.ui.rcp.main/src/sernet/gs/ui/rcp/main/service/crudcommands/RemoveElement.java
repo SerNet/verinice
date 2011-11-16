@@ -199,7 +199,7 @@ public class RemoveElement<T extends CnATreeElement> extends GenericCommand impl
             // When a Configuration instance got deleted the server needs to
             // update
             // its cached role map. This is done here.
-            getCommandService().discardRoleMap();
+            getCommandService().discardUserData();
         }
 
     }

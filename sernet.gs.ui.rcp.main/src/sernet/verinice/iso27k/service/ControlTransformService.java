@@ -38,6 +38,7 @@ import sernet.verinice.service.commands.SaveElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class ControlTransformService {
 	
 	private final Logger log = Logger.getLogger(ControlTransformService.class);
@@ -132,7 +133,7 @@ public class ControlTransformService {
 			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
 			if (group.canContain(element)) {
 				group.addChild(element);
-				element.setParent(group);
+				element.setParent(group);			
 				if (log.isDebugEnabled()) {
                	 log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
            	 	}	

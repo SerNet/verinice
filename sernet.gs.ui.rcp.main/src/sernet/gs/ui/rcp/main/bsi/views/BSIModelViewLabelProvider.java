@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.LinkKategorie;
@@ -95,7 +96,11 @@ public class BSIModelViewLabelProvider extends LabelProvider {
                 if (el.getKuerzel() != null && el.getKuerzel().length() > 0) {
                     title.append(el.getKuerzel()).append(" ");
                 }
-                return title.append(el2.getTitle()).toString();
+                title.append(el2.getTitle());
+                if (LOG.isDebugEnabled()) {
+                    title.append(" (").append(((CnATreeElement)el).getScopeId()).append(")");
+                }
+                return title.toString();
             }
     
             else if (obj instanceof LinkKategorie) {
@@ -106,7 +111,11 @@ public class BSIModelViewLabelProvider extends LabelProvider {
             }
     
             CnATreeElement el = (CnATreeElement) obj;
-            return el.getTitle();
+            StringBuilder title = new StringBuilder(el.getTitle());
+            if (LOG.isDebugEnabled()) {
+                title.append(" (").append(((CnATreeElement)el).getScopeId()).append(")");
+            }
+            return title.toString();
         } catch( Exception e ) {
             LOG.error("Error while getting label", e);
             return "";

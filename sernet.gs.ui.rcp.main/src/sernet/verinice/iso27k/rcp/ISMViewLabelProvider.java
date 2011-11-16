@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.hibernate.dialect.function.CastFunction;
@@ -42,6 +43,8 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  */
 public class ISMViewLabelProvider extends LabelProvider  {
 
+    private static final Logger LOG = Logger.getLogger(ISMViewLabelProvider.class);
+    
 	public ISMViewLabelProvider(TreeViewerCache cache) {
 		super();
 		this.cache = cache;
@@ -125,6 +128,10 @@ public class ISMViewLabelProvider extends LabelProvider  {
                 if(sb.length()>0) {
                     text = ItemControlTransformer.truncate(sb.toString(),80) ;
                 }
+                if (LOG.isDebugEnabled()) {
+                    text = text + " (" + element.getScopeId() + ")";
+                }
+                
 			}
 		}
 		return text;

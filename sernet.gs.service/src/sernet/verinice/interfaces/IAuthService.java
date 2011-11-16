@@ -61,5 +61,7 @@ public interface IAuthService {
 	public boolean isPermissionHandlingNeeded();
 	
 	public String getAdminUsername();
+	
+	public boolean isScopeOnly();
 
 }

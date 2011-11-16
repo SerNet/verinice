@@ -19,11 +19,13 @@ package sernet.verinice.hibernate;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -48,7 +50,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	private IBaseDao<Permission, Integer> permissionDao;
 
 	
-	private static HashMap<String, String[]> roleMap = new HashMap<String, String[]>();
+	private static Map<String, String[]> roleMap = new HashMap<String, String[]>();
+	private static Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
+	private static Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
 
 	/**
 	 * @param type
@@ -96,46 +100,70 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
 	    if (log.isDebugEnabled()) {
             log.debug("Checking rights for entity: " + entity + " and username: " + username);
-        }
-	    String[] roleArray = getDynamicRoles(username);
-	    if (getAuthService().isPermissionHandlingNeeded() && !hasAdminRole(roleArray)) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < roleArray.length; i++) {
-                sb.append("'").append(roleArray[i]).append("'");
-                if(i<roleArray.length-1) {
-                    sb.append(",");
-                }           
-            }
-            String roleParam = sb.toString();
-            
-            sb = new StringBuilder();
-            sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
-            // workaraound, because adding roles as ? param does not work
-            sb.append(roleParam);
-            sb.append(") and p.writeAllowed = ?");
-            String hql = sb.toString();
-            
-            Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
-            if (log.isDebugEnabled()) {
-                log.debug("checkRights, hql: " + hql);
-                log.debug("checkRights, entity db-id: " + entity.getDbId() );
-            }
-            List<Integer> idList = getPermissionDao().findByQuery(hql, params);
-            if (log.isDebugEnabled()) {
-                log.debug("checkRights, permission ids: ");
-                for (Integer integer : idList) {
-                    log.debug(integer);
+        } 
+	    if (getAuthService().isPermissionHandlingNeeded()) {
+	        String[] roleArray = getDynamicRoles(username);
+	        if(!hasAdminRole(roleArray)) {	    
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < roleArray.length; i++) {
+                    sb.append("'").append(roleArray[i]).append("'");
+                    if(i<roleArray.length-1) {
+                        sb.append(",");
+                    }           
                 }
-            }
-            if(idList==null | idList.isEmpty()) {
-                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
-                log.warn(message);
-                throw new SecurityException(message);
-            }
-        }
-	}
+                String roleParam = sb.toString();
+                
+                sb = new StringBuilder();
+                sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+                // workaraound, because adding roles as ? param does not work
+                sb.append(roleParam);
+                sb.append(") and p.writeAllowed = ?");
+                String hql = sb.toString();
+                
+                Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+                if (log.isDebugEnabled()) {
+                    log.debug("checkRights, hql: " + hql);
+                    log.debug("checkRights, entity db-id: " + entity.getDbId() );
+                }
+                List<Integer> idList = getPermissionDao().findByQuery(hql, params);
+                if (log.isDebugEnabled()) {
+                    log.debug("checkRights, permission ids: ");
+                    for (Integer integer : idList) {
+                        log.debug(integer);
+                    }
+                }
+                if(idList==null | idList.isEmpty()) {
+                    final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+                    log.warn(message);
+                    throw new SecurityException(message);
+                }
+	        }
+	        if(isScopeOnly(username)
+	           && !entity.getScopeId().equals(scopeIdMap.get(username))) {
+	                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+                    log.warn(message);
+                    throw new SecurityException(message);
+	        }
+	    }
+    }
 	
 	/**
+     * @param username
+     * @return
+     */
+    private boolean isScopeOnly(String username) {
+        Boolean result = scopeMap.get(username);
+        if(result==null) {
+            initUserData();
+            result = scopeMap.get(username);
+        }
+        if(result==null) {
+            result = false;
+        }
+        return result;
+    }
+
+    /**
 	 * @param entity
 	 */
 	public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
@@ -158,27 +186,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		        result = new String[]{user,ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
 		        roleMap.put(user, result);
 		    }
-			List<Configuration> configurations = getConfigurationDao().findAll();
-			String[] current = null;
-			for (Configuration c : configurations) {
-			    // Put result into map and save asking the DB next time.
-			    Set<String> roleSet = c.getRoles();
-			    if(c.isAdminUser()) {
-			        roleSet.add(ApplicationRoles.ROLE_ADMIN);
-			    }
-			    if(c.isWebUser()) {
-                    roleSet.add(ApplicationRoles.ROLE_WEB);
-                }
-			    if(c.isRcpUser()) {
-                    roleSet.add(ApplicationRoles.ROLE_USER);
-                }
-			    current = roleSet.toArray(new String[roleSet.size()]);
-                roleMap.put(c.getUser(), current);
-				if (user.equals(c.getUser()) && result == null) {
-					result = current;
-				}
-			}
-			configurations.clear();
+		    initUserData();
+		    result = roleMap.get(user);
 			if(result==null) {
     			// This should not happen because the login was done using an
     			// existing username
@@ -191,6 +200,28 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         // must be cleared.
         // We could introduce a special command just for this.
 		return result;
+	}
+	
+	private void initUserData() {
+        List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
+        String[] current = null;
+        for (Configuration c : configurations) {
+            // Put result into map and save asking the DB next time.
+            Set<String> roleSet = c.getRoles();
+            if(c.isAdminUser()) {
+                roleSet.add(ApplicationRoles.ROLE_ADMIN);
+            }
+            if(c.isWebUser()) {
+                roleSet.add(ApplicationRoles.ROLE_WEB);
+            }
+            if(c.isRcpUser()) {
+                roleSet.add(ApplicationRoles.ROLE_USER);
+            }
+            current = roleSet.toArray(new String[roleSet.size()]);
+            roleMap.put(c.getUser(), current); 
+            scopeMap.put(c.getUser(), c.isScopeOnly());
+            scopeIdMap.put(c.getUser(), c.getPerson().getScopeId());
+        }
 	}
 
 	public void setAuthService(IAuthService authService) {

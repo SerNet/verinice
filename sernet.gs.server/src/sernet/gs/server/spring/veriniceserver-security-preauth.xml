@@ -58,7 +58,8 @@
     <!-- A programmatic way to access authenticated roles. Its methods are protected against unauthorized access: -->
     <bean id="authService" class="sernet.gs.server.security.BasicAuthenticationService">      
         <property name="guestUser" value="${ldap.guestuser}" />       
-        <property  name="adminUsername" value="${admin.username}" />   
+        <property  name="adminUsername" value="${admin.username}" />
+        <property name="configurationDao" ref="configurationDao" />   
         <security:intercept-methods>
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.getRoles"

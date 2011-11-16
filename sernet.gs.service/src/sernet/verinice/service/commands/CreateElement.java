@@ -121,12 +121,27 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
             container.addChild(child);
             child.setParent(container);
 
+            if(clazz.equals(Organization.class)) {
+                setScope((Organization)child);
+            }
+            
             // initialize UUID, used to find container in display in views:
             container.getUuid();
         } catch (Exception e) {
             getLogger().error("Error while creating element", e);
             throw new RuntimeCommandException(e);
         }
+    }
+
+    /**
+     * @param child2
+     */
+    private void setScope(Organization org) {
+        org.setScopeId(org.getDbId());
+        for (CnATreeElement child : org.getChildren()) {
+            child.setScopeId(org.getDbId());
+        }
+        
     }
 
     private void addPermissions() {

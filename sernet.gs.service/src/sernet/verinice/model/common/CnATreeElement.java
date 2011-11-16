@@ -72,6 +72,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
 	private Integer dbId;
 	
+	private Integer scopeId;
+	
 	private String extId;
 
 	private String sourceId;
@@ -248,6 +250,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
+		if(parent!=null && this.getScopeId()==null) {
+		    this.setScopeId(parent.getScopeId());
+		}
 	}
 
 	protected CnATreeElement() {
@@ -290,7 +295,21 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			return getEntity().getId();
 	}
 
-	public abstract String getTypeId();
+	/**
+     * @return the scopeId
+     */
+    public Integer getScopeId() {
+        return scopeId;
+    }
+
+    /**
+     * @param scopeId the scopeId to set
+     */
+    public void setScopeId(Integer scopeId) {
+        this.scopeId = scopeId;
+    }
+
+    public abstract String getTypeId();
 
 	public String getObjectType() {
 		return objectType;
@@ -336,6 +355,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public void setParent(CnATreeElement parent) {
 		this.parent = parent;
+		if(parent!=null && parent.getScopeId()!=null) {
+		    this.setScopeId(parent.getScopeId());
+		}	
 	}
 
 	public boolean containsBausteinUmsetzung(String kapitel) {

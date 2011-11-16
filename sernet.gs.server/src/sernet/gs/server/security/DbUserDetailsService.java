@@ -28,6 +28,7 @@ import org.springframework.security.userdetails.UsernameNotFoundException;
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.server.ServerInitializer;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.Property;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -88,10 +89,17 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
 		return user;
 	}
 
-	private UserDetails databaseUser(Entity entity) {
-		VeriniceUserDetails userDetails = new VeriniceUserDetails(entity
-				.getSimpleValue(Configuration.PROP_USERNAME), entity
-				.getSimpleValue(Configuration.PROP_PASSWORD));
+	private UserDetails databaseUser(Entity entity) {	    
+	    boolean scopeOnly = false;
+	    Property p = entity.getProperties(Configuration.PROP_SCOPE).getProperty(0);
+        if (p != null) {
+            scopeOnly = Configuration.PROP_SCOPE_YES.equals(p.getPropertyValue());
+        }
+
+		VeriniceUserDetails userDetails = new VeriniceUserDetails(
+		        entity.getSimpleValue(Configuration.PROP_USERNAME), 
+		        entity.getSimpleValue(Configuration.PROP_PASSWORD),
+		        scopeOnly);
 		
 		// All users without explicitly set Configuration.PROP_RCP==Configuration.PROP_RCP_NO
 		// get ROLE_USER, user with ROLE_USER can access the RCP client 

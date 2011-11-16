@@ -297,6 +297,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             elementInDB = dao.merge(elementInDB);
             parent.addChild(elementInDB);
             elementInDB.setParent(parent);
+            
+            // set the scope id of orgs. and it-verbunds.
+            if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
+                elementInDB.setScopeId(elementInDB.getDbId());
+            }
+            
             merged++;
             if(merged % 50 == 0 ) {
                long flushstart = 0;

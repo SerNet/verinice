@@ -101,23 +101,43 @@ public final class DigestAuthenticationService implements IAuthService {
 	 */
 	public String getUsername() {
 		try {
-			SecurityContext context = SecurityContextHolder.getContext();
-			Authentication authentication = context.getAuthentication();
-			Object principal = authentication.getPrincipal();
-			if (principal instanceof VeriniceUserDetails) {
-				VeriniceUserDetails details = (VeriniceUserDetails) principal;
-				return details.getUsername();
-			}
+			return getUserDetails().getUsername();
 		} catch (Exception e) {
 			// do nothing, just return no user name
-			Logger.getLogger( this.getClass() ).error( Messages.getString("AuthenticationService.1"), e ); //$NON-NLS-1$
+			log.error( Messages.getString("AuthenticationService.1"), e ); //$NON-NLS-1$
 		}
 		// no user authenticated:
 		return ""; //$NON-NLS-1$
+	}
+	
+	private VeriniceUserDetails getUserDetails() {
+	    VeriniceUserDetails details = null;
+	    SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof VeriniceUserDetails) {
+            details = (VeriniceUserDetails) principal;
+        }
+        return details;
 	}
 
 	public boolean isPermissionHandlingNeeded()
 	{
 		return true;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isScopeOnly()
+     */
+    @Override
+    public boolean isScopeOnly() {
+        try {
+            return getUserDetails().isScopeOnly();
+        } catch (Exception e) {
+            // do nothing, just return no user name
+            log.error( "Error while getting scope only value.", e ); //$NON-NLS-1$
+        }
+        // no user authenticated:
+        return false;
+    }
 }

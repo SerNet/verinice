@@ -19,8 +19,12 @@
 			<generator class="native" />
 		</id>
 
-
 		<discriminator column="OBJECT_TYPE" type="string"/>	
+        
+        <property name="scopeId" 
+            type="java.lang.Integer" 
+            column="scope_id">
+        </property>
         
         <property
             name="objectType"
@@ -77,6 +81,11 @@
 	  			name="userAccessReadFilter"
 	  			condition="exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed )"
 	 		/>
+            
+            <filter 
+                name="scopeFilter"
+                condition="scope_id=:scopeId"
+            />
 			
 		</set>
 		
@@ -464,6 +473,11 @@
   		name="userAccessReadFilter"
   		condition="(object_type='bsimodel' or object_type='iso27kmodel' or exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed))"
  	/>
+    
+    <filter
+        name="scopeFilter"
+        condition="(object_type='bsimodel' or object_type='iso27kmodel' or scope_id=:scopeId)"
+    />
 
 	</class>
 
@@ -481,6 +495,10 @@
 		<filter-param name="currentRoles" type="string"/>
 		<filter-param name="readAllowed" type="boolean"/>
 	</filter-def>
+    
+    <filter-def name="scopeFilter">
+        <filter-param name="scopeId" type="int"/>
+    </filter-def>
 
 	
 </hibernate-mapping>
