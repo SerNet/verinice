@@ -38,12 +38,14 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CutHandler extends RightEnabledHandler {
+public class CutHandler extends AbstractHandler implements RightEnabledUserInteraction {
 
 private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
@@ -81,6 +83,31 @@ private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 			LOG.error("Could not execute selectionChanged", e);
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ISMCUT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO nothing
+    }
 
 
 }
