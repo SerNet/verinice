@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.util.HashMap;
+
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -29,6 +31,7 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.verinice.samt.audit.rcp.AssetView;
 import sernet.verinice.samt.audit.rcp.ControlView;
 import sernet.verinice.samt.audit.rcp.ElementView;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -37,6 +40,15 @@ import sernet.verinice.samt.audit.rcp.ElementView;
 public class AuditPerspective implements IPerspectiveFactory {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.AuditPerspective";
+    
+    public static HashMap<String, String> viewRightIDs = null;
+    
+    static{
+        viewRightIDs = new HashMap<String, String>();
+        viewRightIDs.put(SimpleAuditView.ID, ActionRightIDs.SIMPLEAUDITVIEW);
+        viewRightIDs.put(RelationView.ID, ActionRightIDs.RELATIONS);
+        viewRightIDs.put(FileView.ID, ActionRightIDs.FILES);
+    }
     
     /*
      * (non-Javadoc)

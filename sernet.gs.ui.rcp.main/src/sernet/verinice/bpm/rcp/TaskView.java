@@ -58,6 +58,8 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -71,6 +73,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * RCP view to display task loaded by instances of {@link ITaskService}.
@@ -276,6 +279,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     }
     
     private void makeActions() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         refreshAction = new Action() {
             @Override
             public void run() {
@@ -309,6 +313,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         };
         myTasksAction.setChecked(onlyMyTasks);
+        myTasksAction.setEnabled(service.isEnabled(ActionRightIDs.TASKSHOWALL));
         myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));   
         
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE){
@@ -322,13 +327,14 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         };
-        if(ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()){
-            if(isAdminUser(ServiceFactory.lookupAuthService().getUsername())){
-                cancelTaskAction.setEnabled(true);
-            }
-        } else {
-            cancelTaskAction.setEnabled(false);
-        }
+//        if(ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()){
+//            if(isAdminUser(ServiceFactory.lookupAuthService().getUsername())){
+//                cancelTaskAction.setEnabled(true);
+//            }
+//        } else {
+//            cancelTaskAction.setEnabled(false);
+//        }
+        cancelTaskAction.setEnabled(service.isEnabled(ActionRightIDs.TASKDELETE));
         cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
     }
     

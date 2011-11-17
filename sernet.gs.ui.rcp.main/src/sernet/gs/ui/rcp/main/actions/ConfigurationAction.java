@@ -35,27 +35,33 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.PasswordException;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.SaveConfiguration;
+import sernet.verinice.interfaces.ActionRightIDs;
 
-public class ConfigurationAction implements IObjectActionDelegate {
+public class ConfigurationAction implements IObjectActionDelegate,  RightEnabledUserInteraction{
 
 	// FIXME: externalize strings
 	
@@ -74,11 +80,11 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		Activator.inheritVeriniceContextState();
-
 		// If this code is run then something is wrong, because the action
 		// should have been
 		// disabled programmatically. See method selectionChanged().
@@ -230,7 +236,7 @@ public class ConfigurationAction implements IObjectActionDelegate {
 			    && ServiceFactory.isPermissionHandlingNeeded() 
 			    && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
 
-			action.setEnabled(b);
+			action.setEnabled(b & checkRights());
 		}
 	}
 	
@@ -244,5 +250,29 @@ public class ConfigurationAction implements IObjectActionDelegate {
 	private ICommandService createCommandServive() {
 		return ServiceFactory.lookupCommandService();
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ACCOUNTSETTINGS;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO nothing
+    }
 
 }

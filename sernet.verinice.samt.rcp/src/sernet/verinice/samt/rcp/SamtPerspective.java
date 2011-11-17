@@ -19,10 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
+import java.util.HashMap;
+
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
+import sernet.gs.ui.rcp.main.bsi.views.FileView;
+import sernet.gs.ui.rcp.main.bsi.views.NoteView;
+import sernet.gs.ui.rcp.main.bsi.views.RelationView;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.ISMView;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
@@ -31,6 +39,15 @@ import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 public class SamtPerspective implements IPerspectiveFactory {
 
     public static final String ID = "sernet.verinice.samt.rcp.SamtPerspective";
+    
+    public static HashMap<String, String> viewsRightIDs;
+    
+    static{
+        viewsRightIDs = new HashMap<String, String>();
+        viewsRightIDs.put(SamtView.ID, ActionRightIDs.SAMTVIEW);
+        viewsRightIDs.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
+        viewsRightIDs.put(SpiderChartView.ID, ActionRightIDs.SHOWCHARTVIEW);
+    }
     
     /*
      * (non-Javadoc)

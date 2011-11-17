@@ -48,11 +48,15 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
+import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
+import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.OpenCataloguesJob;
+import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
@@ -178,10 +182,24 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     private void initPerspective(String perspectiveID){
         HashMap<String, String> viewRightIDs = null;
+        String samtPerspectiveID = "sernet.verinice.samt.rcp.SamtPerspective";
         if(perspectiveID.equals(Iso27kPerspective.ID)){
             viewRightIDs = Iso27kPerspective.viewsRightIDs;
         } else if(perspectiveID.equals(Perspective.ID)){
             viewRightIDs = Perspective.viewsRightIDs;
+        } else if(PerspectiveDS.ID.equals(perspectiveID)){
+            viewRightIDs = PerspectiveDS.viewsRightIDs;
+        // TODO find a clever way to avoid hardcoded IDs for the following perspectives from SAMT Plugin
+        } else if(perspectiveID.equals(samtPerspectiveID)){
+            viewRightIDs = new HashMap<String, String>();
+            viewRightIDs.put("sernet.verinice.samt.rcp.views.SamtView", ActionRightIDs.SAMTVIEW);
+            viewRightIDs.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
+            viewRightIDs.put("sernet.verinice.samt.rcp.SpiderChartView", ActionRightIDs.SHOWCHARTVIEW);
+        } else if(perspectiveID.equals("sernet.verinice.samt.audit.rcp.AuditPerspective")){
+            viewRightIDs = new HashMap<String, String>();
+            viewRightIDs.put("sernet.verinice.samt.rcp.views.SimpleAuditView", ActionRightIDs.SIMPLEAUDITVIEW);
+            viewRightIDs.put(RelationView.ID, ActionRightIDs.RELATIONS);
+            viewRightIDs.put(FileView.ID, ActionRightIDs.FILES);            
         }
         Vector<String> openViews = new Vector<String>();
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){

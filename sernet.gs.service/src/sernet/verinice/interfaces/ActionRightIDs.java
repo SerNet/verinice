@@ -42,6 +42,8 @@ public class ActionRightIDs {
     public static final String DOCUMENTVIEW = "documentview";
     public static final String AUDITVIEW = "auditview";
     public static final String TASKVIEW = "taskview";
+    public static final String TASKDELETE = "taskdelete";
+    public static final String TASKSHOWALL = "taskshowall";
     public static final String GSTOOLIMPORT = "gstoolimport";
     public static final String IMPORTCSV = "importcsv";
     public static final String IMPORTLDAP = "importldap";
@@ -69,6 +71,10 @@ public class ActionRightIDs {
     public static final String GENERATEORGREPORT = "generateorgreport";
     public static final String GENERATEAUDITREPORT = "generateauditreport";
     public static final String ADDITVERBUND = "additverbund";
+    public static final String SAMTVIEW = "samtview";
+    public static final String SHOWCHARTVIEW = "showchartview";
+    public static final String ACCOUNTSETTINGS = "accountsettings";
+    public static final String SIMPLEAUDITVIEW = "simpleauditview";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

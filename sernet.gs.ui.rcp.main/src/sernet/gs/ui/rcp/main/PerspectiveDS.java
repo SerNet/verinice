@@ -17,13 +17,23 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.HashMap;
+
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class PerspectiveDS implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.dsperspective";
+	
+    public static HashMap<String, String> viewsRightIDs;
+    
+    static{
+        viewsRightIDs = new HashMap<String, String>();
+        viewsRightIDs.put(DSModelView.ID, ActionRightIDs.DSMODELVIEW);
+    }
 	
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();

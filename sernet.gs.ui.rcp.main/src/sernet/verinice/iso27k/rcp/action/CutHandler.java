@@ -51,19 +51,18 @@ private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
 	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
-	private String rightID = null;
+	public CutHandler(){
+	    setBaseEnabled(checkRights());
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-	    this.rightID = ActionRightIDs.ISMCUT;
-	    if(checkRights()){
-    		changeSelection(HandlerUtil.getCurrentSelection(event));
-    		CnPItems.clearCopyItems();
-    		CnPItems.clearCutItems();
-    		CnPItems.setCutItems(selectedElementList);
-	    }
+	    changeSelection(HandlerUtil.getCurrentSelection(event));
+	    CnPItems.clearCopyItems();
+	    CnPItems.clearCutItems();
+	    CnPItems.setCutItems(selectedElementList);
 		return null;
 	}
 	
