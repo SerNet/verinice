@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 
@@ -31,7 +32,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
  * $LastChangedBy$
  *
  */
-public abstract class ShowSomeViewAction implements IWorkbenchWindowActionDelegate {
+public abstract class ShowSomeViewAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
 
     private IWorkbenchWindow window;
 
