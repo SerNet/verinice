@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -96,7 +97,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
 
     public void execute() {
         IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
-        IBaseDao<Object, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
+        IBaseDao<CnATreeElement, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
 
         try {
             if (!skipReload)
@@ -114,7 +115,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
             }
 
             if (authService.isPermissionHandlingNeeded()) {
-                addPermissions();
+                addPermissions(containerDAO);
             }
 
             child = dao.merge(child, false);
@@ -144,7 +145,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         
     }
 
-    private void addPermissions() {
+    private void addPermissions(IBaseDao<CnATreeElement, Serializable> containerDAO) {
         // By default, inherit permissions from parent element but ITVerbund
         // instances cannot do this, as its parents (BSIModel) is not visible
         // and has no permissions. Therefore we use the name of the currently
@@ -153,7 +154,10 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         if (child instanceof ITVerbund || child instanceof Organization) {
             addPermissions(child);           
         } else {
-            child.setPermissions(Permission.clonePermissionSet(child, container.getPermissions()));
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setPermissions(true);
+            CnATreeElement elementPerm = containerDAO.retrieve(container.getDbId(), ri);
+            child.setPermissions(Permission.clonePermissionSet(child, elementPerm.getPermissions()));
         }
     }
     

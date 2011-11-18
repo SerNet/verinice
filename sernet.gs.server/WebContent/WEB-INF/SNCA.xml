@@ -1271,6 +1271,10 @@ the value between <param></param> will be used directly if no string is found fo
      <huientity
         name="Sonstiges IT-System"
         id="sonstit" >
+        
+        <huirelation to="raum" id="sonstit_raum_located" 
+            name="Standort" reversename="beinhaltet" />
+        
 	    <huiproperty	
             name="Kürzel"
             id="sonstit_kuerzel"
@@ -1478,7 +1482,44 @@ the value between <param></param> will be used directly if no string is found fo
 	<huientity
 		name="Mitarbeiter"
 		id="person">
-		<huiproperty
+        
+        <huirelation to="raum" id="rel_person_raum" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+		<huirelation to="server" id="rel_person_server" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="tkkomponente" id="rel_person_tkkomponente" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="netzkomponente" id="rel_person_netzkomponente" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+     
+        <huirelation to="itverbund" id="rel_person_itverbund" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="client" id="rel_person_client" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="sonstit" id="rel_person_sonstit" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="gebaeude" id="rel_person_gebaeude" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="bstumsetzung" id="rel_person_bstumsetzung" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="gefaehrdungsumsetzung" id="rel_person_gefaehrdungsumsetzung" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="mnums" id="rel_person_mnums" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huirelation to="anwendung" id="rel_person_anwendung" 
+            name="verantwortlich für" reversename="Verantwortlicher" />
+        
+        <huiproperty
 			name="Kürzel"
 			id="person_kuerzel"
 			focus="true">
