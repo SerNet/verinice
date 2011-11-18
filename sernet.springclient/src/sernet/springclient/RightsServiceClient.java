@@ -145,7 +145,11 @@ public class RightsServiceClient implements IRightsServiceClient{
     @Override
     public List<String> getUsernames() {
         if(userNameList==null) {
-            userNameList = getRightsServiceExecuter().getUsernames();
+            if(getAuthService().isScopeOnly()) {
+                userNameList = getUsernames(getAuthService().getUsername());
+            } else {
+                userNameList = getRightsServiceExecuter().getUsernames();
+            }
         }
         return userNameList;
     }
@@ -154,11 +158,31 @@ public class RightsServiceClient implements IRightsServiceClient{
      * @see sernet.verinice.interfaces.IRightsService#getGroupnames()
      */
     @Override
-    public List<String> getGroupnames() {
+    public List<String> getGroupnames() {   
         if(groupNameList==null) {
-            groupNameList = getRightsServiceExecuter().getGroupnames();
+            if(getAuthService().isScopeOnly()) {
+                groupNameList = getGroupnames(getAuthService().getUsername());
+            } else {
+                groupNameList = getRightsServiceExecuter().getGroupnames();
+            }
         }
         return groupNameList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getUsernames(java.lang.Integer)
+     */
+    @Override
+    public List<String> getUsernames(String username) {
+        return getRightsServiceExecuter().getUsernames(username);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getGroupnames(java.lang.Integer)
+     */
+    @Override
+    public List<String> getGroupnames(String username) {
+        return getRightsServiceExecuter().getGroupnames(username);
     }
     
     /* (non-Javadoc)

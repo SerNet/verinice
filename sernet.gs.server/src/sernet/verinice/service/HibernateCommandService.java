@@ -21,9 +21,7 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -31,7 +29,6 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -48,7 +45,6 @@ import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 
 /**
@@ -78,11 +74,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private VeriniceContext.State workObjects;
 	
-	private HashMap<String, Object[]> roleMap = new HashMap<String, Object[]>();
-	
-	private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
-	
-	private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
+	private IConfigurationService configurationService;
 	
 	IBaseDao<BSIModel, Serializable> dao;
 	
@@ -145,6 +137,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     				setAccessFilterEnabled(true);
 			    }
 			    configureScopeFilter();
+			} else {
+			    disableScopeFilter();
 			}
 			
 			// execute actions, compute results:
@@ -256,11 +250,27 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
     
     /**
+     * @return the configurationService
+     */
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+
+    /**
+     * @param configurationService the configurationService to set
+     */
+    public void setConfigurationService(IConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
+
+
+    /**
      * 
      */
     private void configureScopeFilter() {
-        if(isScopeOnly(authService.getUsername())) {
-            final Integer userScopeId = getScopeId(authService.getUsername());
+        if(getConfigurationService().isScopeOnly(authService.getUsername())) {
+            final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
             getBsiModelDao().executeCallback(new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
@@ -279,7 +289,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
     private void setAccessFilterEnabled(boolean enable) {
         if (enable) {
-            final Object[] roles = getRoles(authService.getUsername());
+            final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
             getBsiModelDao().executeCallback(new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
@@ -298,7 +308,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     private void disableScopeFilter() {
         getBsiModelDao().executeCallback(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                session.disableFilter("userAccessReadFilter");
+                session.disableFilter("scopeFilter");
                 return null;
             }
         });
@@ -313,51 +323,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		return false;
 	}
 	
-    private Object[] getRoles(String user) {
-        Object[] result = roleMap.get(user);
-        if (result == null) {
-            loadUserData();
-            result = roleMap.get(user);
-        }
-        return result;
-    }
-    
-    private boolean isScopeOnly(String user) {
-        Boolean result = scopeMap.get(user);
-        if (result == null) {
-            loadUserData();
-            result = scopeMap.get(user);
-        }
-        return (result==null) ? false : result;
-    }
-    
-    private Integer getScopeId(String user) {
-        Integer result = scopeIdMap.get(user);
-        if (result == null) {
-            loadUserData();
-            result = scopeIdMap.get(user);
-        }
-        return result;
-    }
-    
-    private void loadUserData() {
-        IBaseDao<Configuration, Serializable> dao = daoFactory.getDAO(Configuration.class);
-        List<Configuration> configurations = dao.findAll(RetrieveInfo.getPropertyInstance());
-        for (Configuration c : configurations) {
-            Object[] roleArray = c.getRoles().toArray();
-            String user = c.getUser();
-            // Put result into map and save asking the DB next time.
-            roleMap.put(user, roleArray);           
-            scopeMap.put(user, c.isScopeOnly());     
-            scopeIdMap.put(user, c.getPerson().getScopeId());  
-        } 
-    }
-	
-	public void discardUserData()
-	{
-		roleMap.clear();
-		scopeMap.clear();
-        scopeIdMap.clear();
+	public void discardUserData(){
+	    getConfigurationService().discardUserData();
 	}
 	
 	private IBaseDao<BSIModel, Serializable> getBsiModelDao() {

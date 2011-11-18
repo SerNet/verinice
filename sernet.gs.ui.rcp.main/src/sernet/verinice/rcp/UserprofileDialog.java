@@ -23,8 +23,10 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -244,14 +246,23 @@ public class UserprofileDialog extends TitleAreaDialog {
         
         setUnselected();
         table.setInput(unselectedProfiles);
-              
+        
+        Set<String> nameSet = new HashSet<String>();
         for (String username : getRightService().getUsernames()) {
-            comboModel.add(username);
+            if(username!=null && !username.isEmpty()) {
+                nameSet.add(username);
+            }
         }
         
         for (String groupname : getRightService().getGroupnames()) {
-            comboModel.add(groupname);
+            if(groupname!=null && !groupname.isEmpty()) {
+                nameSet.add(groupname);
+            }
         }
+        for (String name : nameSet) {
+            comboModel.add(name);
+        }
+        
         comboModel.sort();
         comboLogin.setItems(comboModel.getLabelArray());      
     }

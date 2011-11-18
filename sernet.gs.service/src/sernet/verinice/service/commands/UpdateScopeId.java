@@ -30,12 +30,13 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.interfaces.INoAccessControl;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class UpdateScopeId extends GenericCommand {
+public class UpdateScopeId extends GenericCommand implements INoAccessControl {
 
     private transient Logger log = Logger.getLogger(UpdateScopeId.class);
 

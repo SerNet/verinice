@@ -1,46 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<auth version="0" type="whitelist" 
+<auth version="0" type="blacklist" 
     xmlns="http://www.verinice.org/auth" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
     <profiles>
-        <profile name="user" origin="default">
-            <action id="bsibrowser" />
-            <action id="notes" />
-            <action id="files" />
-            <action id="ismcatalog" />
-            <action id="relations" />
-            <action id="bsimassnahmen" />
-            <action id="bsimodelview" />
-            <action id="ismview" />
-            <action id="dsmodelview" />
-            <action id="todo" />
-            <action id="documentview" />
-            <action id="auditview" />
-            <action id="taskview" />
-            <action id="importcsv" />
-            <action id="gsnotesimport" />
-            <action id="showpreferences" />
-            <action id="bulkedit" />
-            <action id="riskanalysis" />
-            <action id="konsolidator" />
-            <action id="bausteinzuordnung" />
-            <action id="changepassword" />
-        </profile>
-        <profile name="admin" origin="default">
-            <action id="importldap" />
+        <profile name="user-default-profile" origin="default">
+            <action id="accountsettings" />
             <action id="accesscontrol" />
-            <action id="gstoolimport" />
             <action id="editprofile" />
+            <action id="taskdelete" />
+            <action id="taskshowall" />
         </profile>
+        <profile name="admin-default-profile" origin="default"/>
     </profiles>
     <userprofiles>
-        <userprofile login="user" origin="default">
-            <profile-ref name="user" />
+        <userprofile login="user-default-group" origin="default">
+            <profile-ref name="user-default-profile" />
+        </userprofile>
+        <userprofile login="admin-default-group" origin="default">
+            <profile-ref name="admin-default-profile" />
         </userprofile>
         <userprofile login="admin" origin="default">
-            <profile-ref name="user" />
-            <profile-ref name="admin" />
+            <profile-ref name="admin-default-profile" />
         </userprofile>
     </userprofiles>
 </auth>

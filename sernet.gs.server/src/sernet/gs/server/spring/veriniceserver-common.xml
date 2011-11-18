@@ -236,9 +236,10 @@ This variant:
 		<property name="exceptionHandler" ref="serverExceptionHandler" />
 		<property name="authService" ref="authService" />
 		<property name="ldapService" ref="ldapService" />
-        <property name="processService" ref="processService" />
+        <property name="processService" ref="processService" />  
+        <property name="configurationService" ref="configurationService" />
 	</bean>
-
+    
 	<bean id="commandService" parent="baseTxProxy">
 		<property name="target" ref="hibernateCommandService" />
 		<property name="transactionAttributes">
@@ -246,8 +247,20 @@ This variant:
 				<prop key="executeCommand">PROPAGATION_REQUIRED,-sernet.gs.ui.rcp.main.service.commands.UsernameExistsException</prop>
 			</props>
 		</property>
-
 	</bean>
+    
+    <bean id="configurationServiceImpl" class="sernet.verinice.service.ConfigurationService">
+        <property name="configurationDao" ref="configurationDao" />
+    </bean>
+    
+    <bean id="configurationService" parent="baseTxProxy">
+        <property name="target" ref="configurationServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="loadUserData">PROPAGATION_SUPPORTS,readOnly</prop>
+            </props>
+        </property>
+    </bean>
 	
 	<bean id="rightsService" class="sernet.verinice.service.XmlRightsService">
         <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
@@ -255,7 +268,8 @@ This variant:
 		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
         <property name="configurationDao" ref="configurationDao" />
         <property name="propertyDao" ref="propertyDao" />
-        <property name="messages" ref="rightsServiceMessages" />      		
+        <property name="configurationService" ref="configurationService" />
+        <property name="messages" ref="rightsServiceMessages" />   		
 	</bean>
     
     <bean id="rightsServiceMessages" class="sernet.verinice.service.AuthMessageSource">

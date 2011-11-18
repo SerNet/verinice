@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.AddDefaultGroups;
 import sernet.verinice.service.commands.UpdateScopeId;
 
 /**
@@ -58,8 +59,16 @@ public class MigrateDbTo0_99 extends DbMigration {
 	    UpdateScopeId updateScopeId = new UpdateScopeId();
 	    try {
 	        updateScopeId = getCommandService().executeCommand(updateScopeId);
-            super.updateVersion();
         } catch (CommandException e) {
+            getLog().error("Error while updating scope id.", e);
+            throw new RuntimeCommandException(e);
+        }
+	    
+	    AddDefaultGroups addDefaultGroups = new AddDefaultGroups();
+        try {
+            addDefaultGroups = getCommandService().executeCommand(addDefaultGroups);
+        } catch (CommandException e) {
+            getLog().error("Error while adding default groups.", e);
             throw new RuntimeCommandException(e);
         }
 	    

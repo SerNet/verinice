@@ -22,9 +22,13 @@ package sernet.verinice.service;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,8 +38,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.core.io.Resource;
 
 import sernet.hui.common.connect.Property;
@@ -47,7 +53,10 @@ import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 import sernet.verinice.model.auth.Userprofiles;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * Service to read and change the authorization configuration of verinice.
@@ -78,6 +87,12 @@ public class XmlRightsService implements IRightsService {
     JAXBContext context;
     
     Schema schema;
+    
+    Map<String,List<String>> usernameMap = new Hashtable<String, List<String>>();
+    
+    Map<String,List<String>> groupnameMap = new Hashtable<String, List<String>>();
+    
+    private IConfigurationService configurationService;
     
     private IBaseDao<Configuration, Integer> configurationDao;
     
@@ -264,6 +279,70 @@ public class XmlRightsService implements IRightsService {
     }
     
     /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getProfiles(java.lang.Integer)
+     */
+    @Override
+    public List<String> getGroupnames(String username) {
+        List<String> groupnameList = groupnameMap.get(username);
+        if(groupnameList==null) {
+            loadUserAndGroupNames(username);
+            groupnameList = groupnameMap.get(username);
+        }
+        return groupnameList;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getUsernames(java.lang.String)
+     */
+    @Override
+    public List<String> getUsernames(String username) {
+        List<String> usernameList = usernameMap.get(username);
+        if(usernameList==null) {
+            loadUserAndGroupNames(username);
+            usernameList = usernameMap.get(username);
+        }
+        return usernameList;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsService#getUsernames(java.lang.Integer)
+     */
+    public void loadUserAndGroupNames(String username) {
+        Integer scopeId = getConfigurationService().getScopeId(username);
+        
+        String HQL = "from CnATreeElement c " + //$NON-NLS-1$           
+                "where c.scopeId = ? " + //$NON-NLS-1$
+                "and (c.objectType = ? or c.objectType = ?)"; //$NON-NLS-1$
+        Object[] params = new Object[]{scopeId,PersonIso.TYPE_ID,Person.TYPE_ID};  
+        List<CnATreeElement> elementList = getPropertyDao().findByQuery(HQL,params);
+        Object[] idList = new Object[elementList.size()];;
+        int i=0;
+        for (CnATreeElement person : elementList) {
+            idList[i]=person.getDbId();
+            i++;
+        }
+        DetachedCriteria crit = DetachedCriteria.forClass(Configuration.class);
+        crit.setFetchMode("entity", FetchMode.JOIN); //$NON-NLS-1$
+        crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN); //$NON-NLS-1$
+        crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN); //$NON-NLS-1$
+        crit.setFetchMode("person", FetchMode.JOIN); //$NON-NLS-1$
+        crit.add(Restrictions.in("person.id", idList)); //$NON-NLS-1$
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        //params = new Object[]{idList};  
+        List<Configuration> confList = getPropertyDao().findByCriteria(crit);     
+        Set<String> usernameList = new HashSet<String>(confList.size());
+        Set<String> groupnameList = new HashSet<String>(confList.size());
+        for (Configuration configuration : confList) {
+            if(configuration.getUser()!=null && !configuration.getUser().trim().isEmpty()) {
+                usernameList.add(configuration.getUser());
+            }
+            groupnameList.addAll(configuration.getRoles());
+        }
+        this.usernameMap.put(username, new ArrayList<String>(usernameList));
+        this.groupnameMap.put(username, new ArrayList<String>(groupnameList));
+    }
+    
+    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getProfiles()
      */
     @Override
@@ -337,6 +416,20 @@ public class XmlRightsService implements IRightsService {
      */
     public void setAuthConfigurationSchema(Resource authConfigurationSchema) {
         this.authConfigurationSchema = authConfigurationSchema;
+    }
+
+    /**
+     * @return the configurationService
+     */
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+    /**
+     * @param configurationService the configurationService to set
+     */
+    public void setConfigurationService(IConfigurationService configurationService) {
+        this.configurationService = configurationService;
     }
 
     /**

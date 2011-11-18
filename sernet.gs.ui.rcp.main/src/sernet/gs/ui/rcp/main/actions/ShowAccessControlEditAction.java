@@ -94,10 +94,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         // - permission handling is needed by IAuthService implementation
         // - user has administrator privileges
         boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
-        && CnAElementHome.getInstance().isOpen() 
-        && ServiceFactory.isPermissionHandlingNeeded() 
-        && AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-        setEnabled(b);
+        && CnAElementHome.getInstance().isOpen();
+        setEnabled(b && checkRights());
     }
 
 }

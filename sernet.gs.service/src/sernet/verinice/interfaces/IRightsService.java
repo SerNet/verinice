@@ -76,11 +76,28 @@ public interface IRightsService {
     List<String> getUsernames();
     
     /**
+     * Returns a list with all user names for one scope of an user.
+     * 
+     * @param username An user name
+     * @return Usernames for one scope
+     */
+    List<String> getUsernames(String username);
+    
+    /**
      * Returns a list with all group names
      * 
      * @return All group names
      */
     List<String> getGroupnames();
+    
+  
+    /**
+     * Returns a list with all group names for the scope of an user.
+     * 
+     * @param username An user name
+     * @return Group names for one scope
+     */
+    List<String> getGroupnames(String username);
     
     String getMessage(String key);
     
