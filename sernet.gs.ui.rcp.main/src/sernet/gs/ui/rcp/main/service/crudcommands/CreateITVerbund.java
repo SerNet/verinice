@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.util.Set;
+
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
@@ -40,7 +42,10 @@ public class CreateITVerbund extends CreateElement {
 			if(createChildren) {
 			    verbund.createNewCategories();
 			}
-			addPermissions(verbund);
+			Set<CnATreeElement> children = verbund.getChildren();
+			for (CnATreeElement child : children) {
+                addPermissions(child);
+            }
 			child.setScopeId(child.getDbId());
 			for (CnATreeElement group : child.getChildren()) {
 			    group.setScopeId(child.getDbId());
