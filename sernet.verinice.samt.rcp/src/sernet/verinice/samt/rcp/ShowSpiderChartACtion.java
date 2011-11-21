@@ -4,9 +4,12 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.internal.cheatsheets.data.IActionItem;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import org.eclipse.jface.action.IAction;
 
@@ -22,8 +25,21 @@ public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewAc
     }
     
     @Override
-    public void init(IAction action){
-        action.setEnabled(checkRights());
+    public void init(final IAction action){
+        if(Activator.getDefault().isStandalone()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        action.setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
+        }
     }
 
     /* (non-Javadoc)

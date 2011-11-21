@@ -69,14 +69,13 @@ public class ImportXMLAction extends ActionDelegate implements IViewActionDelega
     }
     
     @Override
-    public void init(IAction action){
+    public void init(final IAction action){
         if(Activator.getDefault().isStandalone()){
-            final IAction fAction = action;
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if(e.isStarted()){
-                        fAction.setEnabled(checkRights());
+                        action.setEnabled(checkRights());
                     }
                 }
 
