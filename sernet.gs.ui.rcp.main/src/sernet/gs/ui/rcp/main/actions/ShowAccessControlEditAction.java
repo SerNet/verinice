@@ -33,6 +33,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.UserprofileDialog;
 
@@ -57,7 +59,20 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.ACCESSCONTROL);
-        setEnabled(checkRights());
+        if(Activator.getDefault().isStandalone()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setEnabled(checkRights());
+        }
     }
 
     /* (non-Javadoc)

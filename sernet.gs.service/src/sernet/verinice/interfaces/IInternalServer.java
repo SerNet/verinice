@@ -33,4 +33,8 @@ public interface IInternalServer {
 	void stop();
 	
 	boolean isRunning();
+	
+	void addInternalServerStatusListener(IInternalServerStartListener listener);
+	
+	void removeInternalServerStatusListener(IInternalServerStartListener listener);
 }

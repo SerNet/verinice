@@ -43,6 +43,8 @@ import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
 import sernet.hui.common.connect.EntityType;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 public class ShowKonsolidatorAction extends RightsEnabledAction implements ISelectionListener {
@@ -60,7 +62,20 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
         setRightID(ActionRightIDs.KONSOLIDATOR);
-        setEnabled(checkRights());
+        if(Activator.getDefault().isStandalone()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setEnabled(checkRights());
+        }
     }
     
     /* (non-Javadoc)

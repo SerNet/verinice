@@ -58,6 +58,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class NoteView extends ViewPart {
 
@@ -83,7 +84,11 @@ public class NoteView extends ViewPart {
 
 	public NoteView() {
 	}
-
+	
+	public String getRightID(){
+	    return ActionRightIDs.NOTES;
+	}
+	
 	@Override
 	public void createPartControl(Composite parent) {
 	

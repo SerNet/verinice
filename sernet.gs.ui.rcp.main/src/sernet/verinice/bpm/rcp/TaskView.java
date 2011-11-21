@@ -158,6 +158,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         addActions();
         addListener();
     }
+    
+    public String getRightID(){
+        return ActionRightIDs.TASKVIEW;
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
@@ -338,6 +342,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
     }
     
+    @Deprecated
     private boolean isAdminUser(String username){
         if(username.equals(ServiceFactory.lookupAuthService().getAdminUsername())){
             return true;

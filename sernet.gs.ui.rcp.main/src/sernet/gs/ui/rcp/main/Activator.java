@@ -61,6 +61,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServer;
+import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
@@ -102,6 +103,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	private BundleContext context;
 	
 	private boolean runsAsApplication = false;
+	
+	private boolean standalone = false;
 	
 	/**
 	 * The constructor
@@ -190,7 +193,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	    
 		// set service factory location to local / remote according to
 		// preferences:
-		boolean standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+		standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
 
 		// Start server only when it is needed.
 		if (standalone) {
@@ -626,6 +629,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 			// Intentionally do nothing.
 		}
 
+        public void addInternalServerStatusListener(IInternalServerStartListener listener) {
+            // Intentionally do nothing.
+            
+        }
+
+        public void removeInternalServerStatusListener(IInternalServerStartListener listener) {
+            // Intentionally do nothing.
+            
+        }
+
 	}
 
 	/**
@@ -659,5 +672,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
 					null);
 		}
 	}
+
+    public boolean isStandalone() {
+        return standalone;
+    }
 	
 }

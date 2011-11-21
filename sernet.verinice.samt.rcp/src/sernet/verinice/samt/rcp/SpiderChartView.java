@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListene
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
@@ -62,7 +63,12 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
     public SpiderChartView() {
         super();     
     }
-
+    
+    
+    public String getRightID(){
+        return ActionRightIDs.SHOWCHARTVIEW;
+    }
+    
     /*
      * (non-Javadoc)
      * 

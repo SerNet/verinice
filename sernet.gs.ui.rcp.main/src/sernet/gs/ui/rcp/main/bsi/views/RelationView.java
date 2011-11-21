@@ -46,6 +46,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 
 /**
@@ -80,6 +81,10 @@ public class RelationView extends ViewPart implements IRelationTable {
 	public RelationView() {
 	}
 
+	public String getRightID(){
+	    return ActionRightIDs.RELATIONS;
+	}
+	
 	/**
 	 * @param elmt
 	 */

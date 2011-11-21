@@ -30,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.ops4j.pax.web.service.WebContainer;
@@ -41,6 +42,8 @@ import org.springframework.web.context.ContextLoaderServlet;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import sernet.verinice.interfaces.IInternalServer;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 
 /**
  * Implementation of the {@link IInternalServer} interface which allows managing
@@ -66,6 +69,8 @@ public class InternalServer implements IInternalServer {
 	private WebContainer wc;
 
 	private HttpContext ctx;
+	
+	private EventListenerList listeners = new EventListenerList();
 
 	/**
 	 * Applies the given database credentials to the verinice server and checks
@@ -155,6 +160,7 @@ public class InternalServer implements IInternalServer {
 		if (log.isInfoEnabled()) {
 			log.info("Internal server is running now");
 		}
+		notifyStatusChange(new InternalServerEvent(this, true));
 	}
 
 	/**
@@ -216,7 +222,8 @@ public class InternalServer implements IInternalServer {
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml"); //$NON-NLS-1$
+				+ "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml \n" //$NON-NLS-1$
+		        + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml"); //NON-NLS-1$
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
 
@@ -292,6 +299,19 @@ public class InternalServer implements IInternalServer {
 
 			w.flush();
 		}
-
+	}
+	
+	protected synchronized void notifyStatusChange(InternalServerEvent event){
+	    for(IInternalServerStartListener l : listeners.getListeners(IInternalServerStartListener.class)){
+	        l.statusChanged(event);
+	    }
+	}
+	
+	public void addInternalServerStatusListener(IInternalServerStartListener listener){
+	    listeners.add(IInternalServerStartListener.class, listener);
+	}
+	
+	public void removeInternalServerStatusListener(IInternalServerStartListener listener){
+	        listeners.remove(IInternalServerStartListener.class, listener);
 	}
 }

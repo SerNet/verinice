@@ -33,6 +33,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.RunRiskAnalysisCommand;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -46,7 +48,20 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
         setRightID(ActionRightIDs.RISKANALYSIS);
-        setEnabled(checkRights());
+        if(Activator.getDefault().isStandalone()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setEnabled(checkRights());
+        }
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
             public void closed(BSIModel model) {
                 setEnabled(false);

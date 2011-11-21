@@ -76,6 +76,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.ActionRightIDs;
 
@@ -132,8 +134,20 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
     @Override
     public void init(IAction action){
-        if(!checkRights()){
-            action.setEnabled(false);
+        if(Activator.getDefault().isStandalone()){
+            final IAction fAction = action;
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        fAction.setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
         }
     }
     

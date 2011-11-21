@@ -47,6 +47,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 public class DocumentView extends ViewPart {
 	
@@ -86,6 +87,10 @@ public class DocumentView extends ViewPart {
 
 	public DocumentView() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public String getRightID(){
+	    return ActionRightIDs.DOCUMENTVIEW;
 	}
 	
 	protected void setInput() {

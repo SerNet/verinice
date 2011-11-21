@@ -45,8 +45,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbench;
@@ -66,6 +64,9 @@ import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
@@ -168,6 +169,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	private ISO27KModelViewUpdate modelUpdateListener;
 	
+	private boolean checkRights(){
+	    return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
+	}
+	
+	public String getRightID(){
+	    return ActionRightIDs.ISMVIEW;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -180,7 +189,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			LOG.error("Error while creating organization view", e); //$NON-NLS-1$
 			ExceptionUtil.log(e, Messages.ISMView_2);
 		}
-		
 	}
 
 	protected void initView(Composite parent) {

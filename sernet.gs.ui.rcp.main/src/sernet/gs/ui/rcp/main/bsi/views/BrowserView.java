@@ -18,14 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
@@ -50,12 +45,12 @@ import sernet.gs.ui.rcp.main.StatusLine;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
@@ -84,7 +79,11 @@ public class BrowserView extends ViewPart {
 			ExceptionUtil.log(e, Messages.BrowserView_3);
 		}
 	}
-
+	
+	public String getRightID(){
+	    return ActionRightIDs.BSIBROWSER;
+	}
+	
 	private String defaultImage() {
 		return String.format("file:///%s/html/about.html", CnAWorkspace
 				.getInstance().getWorkdir()); //$NON-NLS-1$

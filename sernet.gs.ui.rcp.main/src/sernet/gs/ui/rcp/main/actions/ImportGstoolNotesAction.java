@@ -34,6 +34,8 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
@@ -77,7 +79,20 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 		setId(ID);
 //		setEnabled(false); disable to make available on server only (see above)
 		setRightID(ActionRightIDs.GSNOTESIMPORT);
-		setEnabled(checkRights()); // now works in standalone again
+		if(Activator.getDefault().isStandalone()){
+		    IInternalServerStartListener listener = new IInternalServerStartListener(){
+		        @Override
+		        public void statusChanged(InternalServerEvent e) {
+		            if(e.isStarted()){
+		                setEnabled(checkRights());
+		            }
+		        }
+
+		    };
+		    Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+		} else {
+		    setEnabled(checkRights());
+		}
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
 	

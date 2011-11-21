@@ -87,6 +87,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement.
@@ -175,7 +176,11 @@ public class FileView extends ViewPart {
 	
 	public FileView() {
 	}
-
+	
+	public String getRightID(){
+	    return ActionRightIDs.FILES;
+	}
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		initView(parent);

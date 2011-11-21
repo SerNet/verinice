@@ -54,6 +54,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * View that allows editing of applications' privacy ("Datenschutz") properties.
@@ -196,6 +197,10 @@ public class DSModelView extends ViewPart {
 	 */
 	public DSModelView() {
 		this.cache = new TreeViewerCache();
+	}
+	
+	public String getRightID(){
+	    return ActionRightIDs.DSMODELVIEW;
 	}
 
 	public void createPartControl(Composite parent) {

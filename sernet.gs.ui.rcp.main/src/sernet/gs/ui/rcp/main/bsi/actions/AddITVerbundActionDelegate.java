@@ -24,6 +24,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionDelegate;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -31,6 +32,8 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.ActionRightIDs;
 
@@ -76,7 +79,21 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
 	
 	@Override
 	public void init(IAction action){
-	    action.setEnabled(checkRights());
+	    if(Activator.getDefault().isStandalone()){
+	        final IAction fAction = action;
+	        IInternalServerStartListener listener = new IInternalServerStartListener(){
+	            @Override
+	            public void statusChanged(InternalServerEvent e) {
+	                if(e.isStarted()){
+	                    fAction.setEnabled(checkRights());
+	                }
+	            }
+
+	        };
+	        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+	    } else {
+	        action.setEnabled(checkRights());
+	    }
 	}
 
     /* (non-Javadoc)

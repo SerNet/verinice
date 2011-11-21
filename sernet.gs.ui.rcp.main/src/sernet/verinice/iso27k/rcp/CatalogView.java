@@ -74,6 +74,8 @@ import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.model.bsi.Attachment;
@@ -87,6 +89,7 @@ import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -148,7 +151,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		}	
 	}
 
-
+	public String getRightID(){
+	    return ActionRightIDs.ISMCATALOG;
+	}
 
 	/**
 	 * 
@@ -329,8 +334,20 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		};
 		addCatalogAction.setText(Messages.CatalogView_11);
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-	    addCatalogAction.setEnabled(addCatalogAction.checkRights());
-		
+		if(Activator.getDefault().isStandalone()){
+		    IInternalServerStartListener listener = new IInternalServerStartListener(){
+		        @Override
+		        public void statusChanged(InternalServerEvent e) {
+		            if(e.isStarted()){
+		                addCatalogAction.setEnabled(addCatalogAction.checkRights());
+		            }
+		        }
+
+		    };
+		    Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+		} else {
+		    addCatalogAction.setEnabled(addCatalogAction.checkRights());
+        }
 		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
 			public void run() {
 				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);

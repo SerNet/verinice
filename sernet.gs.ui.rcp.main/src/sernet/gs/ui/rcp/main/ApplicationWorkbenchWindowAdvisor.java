@@ -17,7 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -30,7 +31,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
@@ -38,7 +38,6 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -48,15 +47,13 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ViewIntroAdapterPart;
 
 import sernet.gs.ui.rcp.main.actions.ShowCheatSheetAction;
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
-import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.OpenCataloguesJob;
-import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
@@ -68,6 +65,8 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
  * 
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
+    
+    private static Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
     
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -181,36 +180,52 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     private void initPerspective(String perspectiveID){
-        HashMap<String, String> viewRightIDs = null;
-        String samtPerspectiveID = "sernet.verinice.samt.rcp.SamtPerspective";
-        if(perspectiveID.equals(Iso27kPerspective.ID)){
-            viewRightIDs = Iso27kPerspective.viewsRightIDs;
-        } else if(perspectiveID.equals(Perspective.ID)){
-            viewRightIDs = Perspective.viewsRightIDs;
-        } else if(PerspectiveDS.ID.equals(perspectiveID)){
-            viewRightIDs = PerspectiveDS.viewsRightIDs;
-        // TODO find a clever way to avoid hardcoded IDs for the following perspectives from SAMT Plugin
-        } else if(perspectiveID.equals(samtPerspectiveID)){
-            viewRightIDs = new HashMap<String, String>();
-            viewRightIDs.put("sernet.verinice.samt.rcp.views.SamtView", ActionRightIDs.SAMTVIEW);
-            viewRightIDs.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
-            viewRightIDs.put("sernet.verinice.samt.rcp.SpiderChartView", ActionRightIDs.SHOWCHARTVIEW);
-        } else if(perspectiveID.equals("sernet.verinice.samt.audit.rcp.AuditPerspective")){
-            viewRightIDs = new HashMap<String, String>();
-            viewRightIDs.put("sernet.verinice.samt.rcp.views.SimpleAuditView", ActionRightIDs.SIMPLEAUDITVIEW);
-            viewRightIDs.put(RelationView.ID, ActionRightIDs.RELATIONS);
-            viewRightIDs.put(FileView.ID, ActionRightIDs.FILES);            
-        }
+        Activator.inheritVeriniceContextState();
         Vector<String> openViews = new Vector<String>();
+        String rightID = "";
+        IViewReference chosenRef = null;
+        RightsServiceClient rService = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
-        }
-        Activator.inheritVeriniceContextState();
-        for(String id : viewRightIDs.keySet()){
-            IViewPart ref = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(id);
-            if(openViews.contains(id)){ //view is already opened, check if it needs to be closed
-                if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(viewRightIDs.get(id))){
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(ref);
+            IViewPart part = ref.getView(true);
+            for(Method m : part.getClass().getDeclaredMethods()){
+                if(m.getName().equals("getRightID")){
+                    try {
+                        Object o = m.invoke(part, null);
+                        if(o instanceof String){
+                            rightID = (String)o;
+                            chosenRef = ref;
+                            break;
+                        }
+                    } catch (InvocationTargetException e) {
+                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
+                    } catch (IllegalArgumentException e) {
+                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
+                    } catch (IllegalAccessException e) {
+                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
+                    }
+                }
+            }
+            final String rID = rightID;
+            final IViewReference rRef = chosenRef;
+            if(Activator.getDefault().isStandalone()){
+                IInternalServerStartListener listener = new IInternalServerStartListener(){
+                    @Override
+                    public void statusChanged(InternalServerEvent e) {
+                        if(e.isStarted()){
+                            Activator.inheritVeriniceContextState();
+                            if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
+                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
+                            }
+                        }
+                    }
+
+                };
+                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+            } else {
+                Activator.inheritVeriniceContextState();
+                if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
                 }
             }
         }

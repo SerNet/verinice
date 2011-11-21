@@ -21,6 +21,8 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ISMView;
@@ -45,7 +47,21 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	
 	@Override
 	public void init(IAction action){
-	    action.setEnabled(checkRights());
+	    if(Activator.getDefault().isStandalone()){
+	    final IAction fAction = action;
+        IInternalServerStartListener listener = new IInternalServerStartListener(){
+            @Override
+            public void statusChanged(InternalServerEvent e) {
+                if(e.isStarted()){
+                    fAction.setEnabled(checkRights());
+                }
+            }
+            
+        };
+        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
+        }
 	}
 
 	/*

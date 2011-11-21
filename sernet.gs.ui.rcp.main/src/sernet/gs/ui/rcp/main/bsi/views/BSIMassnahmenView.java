@@ -63,6 +63,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * View for parsed BSI IT-Grundschutz catalogues.
@@ -90,6 +91,10 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	private Action expandAllAction;
 
 	private Action collapseAction;
+	
+	public String getRightID(){
+	    return ActionRightIDs.BSIMASSNAHMEN;
+	}
 
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);

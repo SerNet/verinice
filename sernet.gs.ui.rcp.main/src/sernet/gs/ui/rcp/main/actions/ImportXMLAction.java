@@ -23,12 +23,15 @@ import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dialogs.XMLImportDialog;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 public class ImportXMLAction extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
@@ -67,7 +70,21 @@ public class ImportXMLAction extends ActionDelegate implements IViewActionDelega
     
     @Override
     public void init(IAction action){
-        action.setEnabled(checkRights());
+        if(Activator.getDefault().isStandalone()){
+            final IAction fAction = action;
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        fAction.setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
+        }
     }
 
     /* (non-Javadoc)

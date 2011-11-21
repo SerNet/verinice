@@ -40,6 +40,8 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -52,6 +54,8 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Delete items on user request.
@@ -64,6 +68,8 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
     private static final Logger LOG = Logger.getLogger(DeleteActionDelegate.class);
     
     private IWorkbenchPart targetPart;
+    
+    private String rightID;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
@@ -135,7 +141,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                                     ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12), Messages.DeleteActionDelegate_13);
                                     return;
                                 }
-                                
+                                                  
                                 CnATreeElement el = (CnATreeElement) sel;                            
                                 monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
                                 el.getParent().removeChild(el);
@@ -205,6 +211,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
+        boolean allowed = ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(ActionRightIDs.DELETEITEM);
         // Realizes that the action to delete an element is greyed out,
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
@@ -215,9 +222,11 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
             // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml
             if (action.isEnabled()) {
-                action.setEnabled(b);
+                action.setEnabled(b & allowed);
             }
         }
     }
+
+
 
 }
