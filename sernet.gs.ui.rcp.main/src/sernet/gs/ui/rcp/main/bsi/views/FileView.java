@@ -278,7 +278,7 @@ public class FileView extends ViewPart {
 		if (part == this) {
 			openAction.setEnabled(element!=null);
 			saveCopyAction.setEnabled(element!=null);
-			deleteFileAction.setEnabled(element!=null);
+			deleteFileAction.setEnabled(element!=null && deleteFileAction.checkRights());
 			return;
 		}
 			
@@ -300,7 +300,7 @@ public class FileView extends ViewPart {
 			Attachment att = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 			openAction.setEnabled(att!=null);
 			saveCopyAction.setEnabled(att!=null);
-			deleteFileAction.setEnabled(att!=null);
+			deleteFileAction.setEnabled(att!=null && deleteFileAction.checkRights());
 			
 		} catch (Exception e) {
 			LOG.error("Error while loading notes", e); //$NON-NLS-1$

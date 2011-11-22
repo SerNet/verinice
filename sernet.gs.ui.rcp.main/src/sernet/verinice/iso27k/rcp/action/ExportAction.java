@@ -130,11 +130,12 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public void init(IWorkbenchWindow window) {
+        
     }
 	
     @Override
     public void init(final IAction action){
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
@@ -313,6 +314,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
       if(selection instanceof ITreeSelection) {
           ITreeSelection treeSelection = (ITreeSelection) selection;
           Object selectedElement = treeSelection.getFirstElement();

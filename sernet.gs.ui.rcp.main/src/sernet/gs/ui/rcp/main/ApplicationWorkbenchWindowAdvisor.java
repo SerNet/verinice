@@ -208,7 +208,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
             final String rID = rightID;
             final IViewReference rRef = chosenRef;
-            if(Activator.getDefault().isStandalone()){
+            if(Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
                 IInternalServerStartListener listener = new IInternalServerStartListener(){
                     @Override
                     public void statusChanged(InternalServerEvent e) {
@@ -222,7 +222,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
                 };
                 Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-            } else {
+            }  else {
                 Activator.inheritVeriniceContextState();
                 if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);

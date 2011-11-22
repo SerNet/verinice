@@ -195,7 +195,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		      public void widgetSelected(SelectionEvent e) {
 		    	  comboModel.setSelectedIndex(comboCatalog.getSelectionIndex());
 		    	  openCatalog();
-		    	  deleteCatalogAction.setEnabled(true);
+		    	  deleteCatalogAction.setEnabled(deleteCatalogAction.checkRights());
 		      }
 		    });
 		comboModel = new ComboModel<Attachment>(new ComboModelLabelProvider<Attachment>() {
@@ -334,7 +334,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		};
 		addCatalogAction.setText(Messages.CatalogView_11);
 		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-		if(Activator.getDefault().isStandalone()){
+		if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
 		    IInternalServerStartListener listener = new IInternalServerStartListener(){
 		        @Override
 		        public void statusChanged(InternalServerEvent e) {

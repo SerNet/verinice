@@ -6,14 +6,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
-public abstract class AbstractAddCnATreeElementActionDelegate implements IObjectActionDelegate {
+public abstract class AbstractAddCnATreeElementActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     public final void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
         // Realizes that the action to create a new element is greyed out,
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
@@ -25,6 +30,29 @@ public abstract class AbstractAddCnATreeElementActionDelegate implements IObject
                 action.setEnabled(b);
             }
         }
+    }
+    
+    @Override
+    public String getRightID(){
+        return ActionRightIDs.ADDBSIELEMENT;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // do nothing
+        
     }
 
 }

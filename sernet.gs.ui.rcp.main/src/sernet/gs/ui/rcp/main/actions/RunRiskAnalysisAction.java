@@ -48,7 +48,7 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
         setRightID(ActionRightIDs.RISKANALYSIS);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {

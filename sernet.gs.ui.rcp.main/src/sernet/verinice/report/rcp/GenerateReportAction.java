@@ -47,7 +47,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	
 	@Override
 	public void init(final IAction action){
-	    if(Activator.getDefault().isStandalone()){
+	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
         IInternalServerStartListener listener = new IInternalServerStartListener(){
             @Override
             public void statusChanged(InternalServerEvent e) {

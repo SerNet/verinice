@@ -60,17 +60,22 @@ public class ProfileEditAction extends RightsEnabledAction implements ISelection
         setToolTipText(Messages.ProfileEditAction_0);
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.EDITPROFILE);
-        if(Activator.getDefault().isStandalone()){
-        IInternalServerStartListener listener = new IInternalServerStartListener(){
-            @Override
-            public void statusChanged(InternalServerEvent e) {
-                if(e.isStarted()){
-                    setEnabled(checkRights());
-                }
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            if(!Activator.getDefault().getInternalServer().isRunning()){
+                IInternalServerStartListener listener = new IInternalServerStartListener(){
+                    @Override
+                    public void statusChanged(InternalServerEvent e) {
+                        if(e.isStarted()){
+                            //always disabled in standalone mode
+                            setEnabled(false);
+                        }
+                    }
+
+                };
+                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+            } else {
+                setEnabled(false);
             }
-            
-        };
-        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
             setEnabled(checkRights());
         }

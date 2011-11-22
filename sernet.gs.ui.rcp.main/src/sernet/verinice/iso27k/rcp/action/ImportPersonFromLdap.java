@@ -24,7 +24,7 @@ public class ImportPersonFromLdap extends RightsEnabledAction {
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
 		setToolTipText(Messages.getString("ImportPersonFromLdap.1")); //$NON-NLS-1$
 		setRightID(ActionRightIDs.IMPORTLDAP);
-		if(Activator.getDefault().isStandalone()){
+		if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
 		    IInternalServerStartListener listener = new IInternalServerStartListener(){
 		        @Override
 		        public void statusChanged(InternalServerEvent e) {

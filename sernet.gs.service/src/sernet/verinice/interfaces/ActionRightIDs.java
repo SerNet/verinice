@@ -76,6 +76,8 @@ public class ActionRightIDs {
     public static final String ACCOUNTSETTINGS = "accountsettings";
     public static final String SIMPLEAUDITVIEW = "simpleauditview";
     public static final String DELETEITEM = "deleteitem";
+    public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
+    public static final String ADDBSIELEMENT = "addbsielement";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

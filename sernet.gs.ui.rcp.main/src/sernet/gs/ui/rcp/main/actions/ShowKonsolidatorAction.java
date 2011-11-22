@@ -62,7 +62,7 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
         setRightID(ActionRightIDs.KONSOLIDATOR);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {

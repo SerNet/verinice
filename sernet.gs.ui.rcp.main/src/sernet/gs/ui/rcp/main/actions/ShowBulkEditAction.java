@@ -84,7 +84,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
         setRightID(ActionRightIDs.BULKEDIT);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {

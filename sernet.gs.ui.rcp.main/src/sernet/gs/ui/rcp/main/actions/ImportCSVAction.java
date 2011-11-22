@@ -16,7 +16,7 @@ public class ImportCSVAction extends RightsEnabledAction {
         setText(label);
 		setId(ID);
 		setRightID(ActionRightIDs.IMPORTCSV);
-		if(Activator.getDefault().isStandalone()){
+		if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
 		    IInternalServerStartListener listener = new IInternalServerStartListener(){
 		        @Override
 		        public void statusChanged(InternalServerEvent e) {

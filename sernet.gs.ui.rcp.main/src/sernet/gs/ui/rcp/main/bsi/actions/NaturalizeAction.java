@@ -73,7 +73,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.NATURALIZE);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {

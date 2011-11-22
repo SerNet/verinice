@@ -30,8 +30,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.ActionDelegate;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 
@@ -47,7 +54,7 @@ import sernet.verinice.iso27k.rcp.Mutex;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")
-public class AddSelfAssessment implements IViewActionDelegate {
+public class AddSelfAssessment extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(AddSelfAssessment.class);
 
@@ -71,6 +78,25 @@ public class AddSelfAssessment implements IViewActionDelegate {
             samtView = (SamtView) view;
         }
     }
+    
+    @Override
+    public void init(final IAction action){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        action.setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
+        }
+    }
+
 
     /*
      * (non-Javadoc)
@@ -79,31 +105,33 @@ public class AddSelfAssessment implements IViewActionDelegate {
      */
     @Override
     public void run(IAction action) {
-        WorkspaceJob importJob = new WorkspaceJob(Messages.AddSelfAssessment_3) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
-                    samtService.createSelfAssessment();
-                    monitor.setTaskName(Messages.AddSelfAssessment_5);
-                    if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
-                        Display.getDefault().syncExec(new Runnable() {
-                            public void run() {
-                                samtView.expand();
-                            }
-                        });
+        if(checkRights()){
+            WorkspaceJob importJob = new WorkspaceJob(Messages.AddSelfAssessment_3) {
+                @Override
+                public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                    IStatus status = Status.OK_STATUS;
+                    try {
+                        monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
+                        samtService.createSelfAssessment();
+                        monitor.setTaskName(Messages.AddSelfAssessment_5);
+                        if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
+                            Display.getDefault().syncExec(new Runnable() {
+                                public void run() {
+                                    samtView.expand();
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
+                        status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
+                    } finally {
+                        monitor.done();
                     }
-                } catch (Exception e) {
-                    LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
-                    status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
-                } finally {
-                    monitor.done();
+                    return status;
                 }
-                return status;
-            }
-        };
-        JobScheduler.scheduleJob(importJob, iSchedulingRule);
+            };
+            JobScheduler.scheduleJob(importJob, iSchedulingRule);
+        }
     }
 
    
@@ -117,8 +145,34 @@ public class AddSelfAssessment implements IViewActionDelegate {
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        // TODO Auto-generated method stub
+        action.setEnabled(checkRights());
 
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ADDSECURITYASSESSMENT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO nothing
+        
     }
 
    

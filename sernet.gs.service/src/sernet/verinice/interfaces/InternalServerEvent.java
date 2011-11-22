@@ -32,6 +32,7 @@ public class InternalServerEvent extends EventObject {
      */
     public InternalServerEvent(Object source, boolean serverStarted) {
         super(source);
+        started = serverStarted;
     }
 
     public boolean isStarted() {

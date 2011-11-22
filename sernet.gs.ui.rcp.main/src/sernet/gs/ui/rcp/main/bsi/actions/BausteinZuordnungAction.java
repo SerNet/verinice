@@ -67,7 +67,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.BausteinZuordnungAction_2);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {

@@ -57,7 +57,7 @@ public class OpenViewAction extends RightsEnabledAction {
     public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc, String rightID){
         this(window, label, viewId, imageDesc);
         setRightID(rightID);
-        if(Activator.getDefault().isStandalone()){
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
