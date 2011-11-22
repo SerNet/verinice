@@ -55,5 +55,7 @@ public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 	public void checkRights(T entity, String username) /*throws SecurityException*/ ;
 	
 	public void clear();
+	
+	public boolean contains(T entity);
 
 }

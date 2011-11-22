@@ -100,8 +100,9 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
         IBaseDao<CnATreeElement, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
 
         try {
-            if (!skipReload)
+            if (!skipReload && !containerDAO.contains(container)) {
                 containerDAO.reload(container, container.getDbId());
+            }
 
             // get constructor with parent-parameter and create new object:
             if(clazz.equals(Organization.class)) {

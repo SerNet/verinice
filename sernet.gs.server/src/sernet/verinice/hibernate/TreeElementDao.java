@@ -242,12 +242,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return mergedElement;
     }
 
-    public void reload(T element, Serializable id) {
-        // FIXME ak we need to get rid of load() becuase it does not check read
-        // access!
-        getHibernateTemplate().load(element, id);
-    }
-
     /**
      * Causes changes in protection level (schutzbedarf) to be propagated.
      * 

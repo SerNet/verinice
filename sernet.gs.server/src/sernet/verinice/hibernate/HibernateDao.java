@@ -145,5 +145,15 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     public void clear() {
         getHibernateTemplate().clear();
     }
+    
+    public void reload(T element, Serializable id) {
+        // FIXME ak we need to get rid of load() becuase it does not check read
+        // access!
+        getHibernateTemplate().load(element, id);
+    }
+    
+    public boolean contains(T element) {
+        return getHibernateTemplate().contains(element);
+    }
 
 }
