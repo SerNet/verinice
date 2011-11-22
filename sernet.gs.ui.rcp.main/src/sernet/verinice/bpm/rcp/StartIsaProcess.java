@@ -36,15 +36,19 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class StartIsaProcess implements IObjectActionDelegate {
+public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartIsaProcess.class);
     
@@ -100,6 +104,7 @@ public class StartIsaProcess implements IObjectActionDelegate {
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
         if(isActive()) {
             if(selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
@@ -119,6 +124,30 @@ public class StartIsaProcess implements IObjectActionDelegate {
             isActive = ServiceFactory.lookupProcessService().isActive();
         }
         return isActive.booleanValue();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.CREATEISATASKS;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
     }
 
 }

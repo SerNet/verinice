@@ -173,6 +173,7 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
 	 */
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(IAction action, ISelection selection) {
+	    action.setEnabled(checkRights());
 		if(selection instanceof IStructuredSelection) {
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
 			boolean allowed = false;

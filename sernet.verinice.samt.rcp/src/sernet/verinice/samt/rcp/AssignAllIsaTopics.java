@@ -25,6 +25,8 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -32,9 +34,11 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 @SuppressWarnings("restriction")
-public class AssignAllIsaTopics implements IObjectActionDelegate {
+public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(AssignAllIsaTopics.class);
     
@@ -114,6 +118,7 @@ public class AssignAllIsaTopics implements IObjectActionDelegate {
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
         if(selection instanceof IStructuredSelection) {
             selectedElementList.clear();
             for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator.hasNext();) {
@@ -121,9 +126,33 @@ public class AssignAllIsaTopics implements IObjectActionDelegate {
                 if (sel instanceof CnATreeElement) {
                     selectedElementList.add((CnATreeElement)sel);
                 }
-                
             }
         }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ASSIGNALLISATOPICS;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // Do nothing
     }
 
 }

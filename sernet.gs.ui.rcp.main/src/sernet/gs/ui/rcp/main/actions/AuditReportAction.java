@@ -18,13 +18,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
-public class AuditReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate {
+public class AuditReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
     private static final Logger LOG = Logger.getLogger(AuditReportAction.class);
     Shell shell;
     private GenerateReportDialog dialog;
@@ -86,10 +90,36 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
         if(selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();
         }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.GENERATEAUDITREPORT;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // DO nothing
     }
 
   

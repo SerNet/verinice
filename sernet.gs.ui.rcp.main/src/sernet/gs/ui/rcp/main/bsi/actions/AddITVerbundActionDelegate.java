@@ -67,8 +67,7 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
 
 	@Override
 	public void selectionChanged(IAction arg0, ISelection arg1) {
-		// TODO Auto-generated method stub
-		
+		arg0.setEnabled(checkRights());
 	}
 
 	@Override

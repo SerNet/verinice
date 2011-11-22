@@ -78,6 +78,8 @@ public class ActionRightIDs {
     public static final String DELETEITEM = "deleteitem";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
     public static final String ADDBSIELEMENT = "addbsielement";
+    public static final String ASSIGNALLISATOPICS = "assignallisatopics";
+    public static final String CREATEISATASKS = "createisatasks";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);
