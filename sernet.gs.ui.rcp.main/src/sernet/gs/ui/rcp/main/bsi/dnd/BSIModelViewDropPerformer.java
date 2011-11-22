@@ -34,6 +34,8 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -41,6 +43,8 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Handles drop events of objects to create links between them.
@@ -51,7 +55,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  * $LastChangedBy$
  *
  */
-public class BSIModelViewDropPerformer implements DropPerformer {
+public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUserInteraction {
 
 	private static final Logger LOG = Logger.getLogger(BSIModelViewDropPerformer.class);
 	
@@ -145,7 +149,10 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 //		if (LOG.isDebugEnabled()) {
 //			LOG.debug("validateDrop, target: " + target);
 //		}
-
+	    
+	    if(!checkRights())
+	        return false;
+	    
 		if (target == null)
 			return isActive=false;
 
@@ -219,5 +226,30 @@ public class BSIModelViewDropPerformer implements DropPerformer {
 	public boolean isActive() {
 		return isActive;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.BSIDND;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // Do nothing
+    }
 
 }

@@ -129,7 +129,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     }
 
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-
+        setEnabled(checkRights());
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
 
