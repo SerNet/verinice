@@ -39,6 +39,7 @@
             classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
             classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
             classpath:sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml
+            classpath:sernet/gs/server/spring/veriniceserver-rightmanagement.xml
         </param-value>
 	</context-param>
 	
