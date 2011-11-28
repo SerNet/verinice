@@ -17,10 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Point;
@@ -49,6 +51,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.interfaces.IAuthService;
 
 public class AccountDialog extends TitleAreaDialog {
+    
+    private static final Logger LOG = Logger.getLogger(AccountDialog.class);
     
     private EntityType entType;
     private Entity entity = null;
@@ -81,7 +85,7 @@ public class AccountDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(title);
-        newShell.setSize(404, 870);
+        newShell.setSize(429, 640);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
@@ -103,9 +107,18 @@ public class AccountDialog extends TitleAreaDialog {
     		gd.verticalAlignment = GridData.FILL;
     		container.setLayoutData(gd);
 
-    		createPasswordComposite(container);
+    		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.V_SCROLL);
+            scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+            scrolledComposite.setExpandHorizontal(true);
+            
+            Composite innerComposite = new Composite (scrolledComposite, SWT.NONE); 
+            scrolledComposite.setContent(innerComposite); 
+            innerComposite.setLayoutData(new GridData (SWT.FILL, SWT.FILL,true, false)); 
+            innerComposite.setLayout(new GridLayout (1, false));
     		
-            HitroUIComposite huiComposite = new HitroUIComposite(container, SWT.NULL, false);
+    		createPasswordComposite(innerComposite);
+    		
+            HitroUIComposite huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
             try {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
@@ -121,15 +134,21 @@ public class AccountDialog extends TitleAreaDialog {
                
                 
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
-                return huiComposite;
+                //return huiComposite;
             } catch (DBException e) {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
-
+            
+            scrolledComposite.setVisible(true);
+            Point size = innerComposite.computeSize(SWT.DEFAULT,SWT.DEFAULT);
+            innerComposite.setSize(size); 
+            container.layout(); 
+            return container;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Error while creating account dialog", e);
+            return null;
         }
-        return null;
+        
     }
 
 	/**
