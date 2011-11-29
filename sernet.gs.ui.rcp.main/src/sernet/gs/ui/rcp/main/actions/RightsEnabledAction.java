@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.actions;
 
 import org.eclipse.jface.action.Action;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
@@ -54,6 +55,7 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
         * right management enabled, check rights and return true if right enabled / false if not
         */
         } else {
+            Activator.inheritVeriniceContextState();
             RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
             return service.isEnabled(getRightID());
         }
