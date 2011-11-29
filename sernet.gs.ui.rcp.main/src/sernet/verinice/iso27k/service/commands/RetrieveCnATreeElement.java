@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.service.commands;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +42,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
+@SuppressWarnings("restriction")
 public class RetrieveCnATreeElement extends GenericCommand {
 
     public static final String NO_TAG = "NO_TAG"; //$NON-NLS-1$
@@ -252,17 +254,16 @@ public class RetrieveCnATreeElement extends GenericCommand {
             boolean result = true;
             if(tagArray!=null && tagArray.length>0) {
                 if(filterOrgs 
-                   && element instanceof IISO27Scope
-                   && !(element instanceof Audit) ) {
-                    IISO27kElement iso = (IISO27kElement) element;
+                   && Organization.TYPE_ID.equals(element.getTypeId()) ) {
                     result = false;
+                    Collection<String> tagList = TagHelper.getTags(element.getEntity().getSimpleValue(Organization.PROP_TAG));
                     for (String tag : tagArray) {
                         if (tag.equals(NO_TAG)) {
-                            if (iso.getTags().size() < 1) {
+                            if (tagList.size() < 1) {
                                 result = true;
                             }
                         }
-                        for (String zielTag : iso.getTags()) {
+                        for (String zielTag : tagList) {
                             if (zielTag.equals(tag)) {
                                 result = true;
                             }
