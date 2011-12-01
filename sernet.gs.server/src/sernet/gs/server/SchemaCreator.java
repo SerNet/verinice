@@ -52,6 +52,8 @@ public class SchemaCreator implements InitializingBean {
 	private DataSource dataSource;
 	
 	private IDBUpdate dbUpdate97To98;
+    
+    private IDBUpdate dbUpdate98To99;
 
 	/**
 	 * Use this mnethod to update database.
@@ -92,6 +94,12 @@ public class SchemaCreator implements InitializingBean {
 		            log.info("Updating database from version 0.97 to 0.98");
 		        }
 			    getDbUpdate97To98().update();
+            }
+			if (dbVersion == 0.98D) {
+                if (log.isInfoEnabled()) {
+                    log.info("Updating database from version 0.98 to 0.99");
+                }
+                getDbUpdate98To99().update();
             }
 		} catch (Exception e) {
 		    log.error("Exception while updating database.", e);
@@ -175,6 +183,20 @@ public class SchemaCreator implements InitializingBean {
 
     public void setDbUpdate97To98(IDBUpdate dbUpdate97To98) {
         this.dbUpdate97To98 = dbUpdate97To98;
+    }
+
+    /**
+     * @return the dbUpdate98To99
+     */
+    public IDBUpdate getDbUpdate98To99() {
+        return dbUpdate98To99;
+    }
+
+    /**
+     * @param dbUpdate98To99 the dbUpdate98To99 to set
+     */
+    public void setDbUpdate98To99(IDBUpdate dbUpdate98To99) {
+        this.dbUpdate98To99 = dbUpdate98To99;
     }
 
 

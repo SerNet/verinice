@@ -40,7 +40,7 @@ import sernet.verinice.model.common.Permission;
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class UpdatePermissions extends GenericCommand implements IChangeLoggingCommand {
 	
 	private String cteTypeId;
@@ -110,11 +110,23 @@ public class UpdatePermissions extends GenericCommand implements IChangeLoggingC
 			}
 			element.getPermissions().clear();
 		}
+		// flush, to delete old entries before inserting new ones
+		getPermissionDao().flush();
 		for (Permission permission : permissionSetNew) {
 			// remove old version
-			element.getPermissions().remove(permission);
-			permission = Permission.clonePermission(element, permission);
-			element.getPermissions().add(permission);	
+			boolean isNew = true;
+		    for (Permission oldPermission : element.getPermissions()) {
+                if(oldPermission.getRole().equals(permission.getRole())) {
+                    oldPermission.setReadAllowed(permission.isReadAllowed());
+                    oldPermission.setWriteAllowed(permission.isWriteAllowed());
+                    isNew = false;
+                    break;
+                }
+            }
+			if(isNew){
+			    permission = Permission.clonePermission(element, permission);
+	            element.getPermissions().add(permission);
+			}			
 			getDao().saveOrUpdate(element);	
 		}
 	}

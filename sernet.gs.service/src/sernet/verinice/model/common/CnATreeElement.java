@@ -139,17 +139,17 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		CnATreeElement that = (CnATreeElement) obj;
 		boolean result = false;
 		try {
-		    result = this.uuid.equals(that.uuid);
+		    result = this.getUuid().equals(that.getUuid());
         } catch (Exception e) {
-            getLog().error("Error in equals, this uuid: " + this.uuid, e);
+            getLog().error("Error in equals, this uuid: " + this.getUuid(), e);
         }
 		return result;
 	}
 	
 	@Override
 	public int hashCode() {
-		if (uuid != null)
-			return uuid.hashCode();
+		if (getUuid() != null)
+			return getUuid().hashCode();
 		return super.hashCode(); // basically only used during migration of old objects (without hashcode)
 	}
 
@@ -689,7 +689,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 */
 	@Override
 	public String toString() {
-	    return new StringBuilder("uuid: ").append(uuid).toString();
+	    return new StringBuilder("uuid: ").append(getUuid()).toString();
 	}
 
 }
