@@ -51,7 +51,8 @@ public class ConfigurationService implements IConfigurationService {
             roleMap.put(user, roleArray);           
             scopeMap.put(user, c.isScopeOnly());     
             scopeIdMap.put(user, c.getPerson().getScopeId());  
-        } 
+        }
+        getConfigurationDao().clear();
     }
     
     public void discardUserData() {
