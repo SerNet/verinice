@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.service;
 
 import java.util.HashMap;
 
+import sernet.gs.reveng.importData.GSVampire;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
@@ -95,6 +96,10 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class CnATypeMapper {
     private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
+    
+    private static HashMap<String, String> descriptionPropertyMap = new HashMap<String, String>();
+
+  
 
     static {
         typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
@@ -167,6 +172,20 @@ public class CnATypeMapper {
         typeIdClass.put(Finding.TYPE_ID, Finding.class);
 
         typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
+        
+        
+        // map for description properties:
+        descriptionPropertyMap.put(Client.TYPE_ID, Client.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(Gebaeude.TYPE_ID, Gebaeude.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(Server.TYPE_ID, Server.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(SonstIT.TYPE_ID, SonstIT.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(TelefonKomponente.TYPE_ID, TelefonKomponente.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(Person.TYPE_ID, Person.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(NetzKomponente.TYPE_ID, NetzKomponente.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(Raum.TYPE_ID, Raum.PROP_ERLAEUTERUNG);
+        descriptionPropertyMap.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.P_ERLAEUTERUNG);
+        descriptionPropertyMap.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_ERLAEUTERUNG);
+        
     }
     
  // this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
@@ -244,6 +263,10 @@ public class CnATypeMapper {
         }
 
         return klass;
+    }
+    
+    public String getDescriptionPropertyForType(String typeId) {
+        return descriptionPropertyMap.get(typeId);
     }
 }
 

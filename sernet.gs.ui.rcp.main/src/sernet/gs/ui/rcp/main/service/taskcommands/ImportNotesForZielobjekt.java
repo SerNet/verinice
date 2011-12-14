@@ -32,7 +32,10 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
+import sernet.gs.ui.rcp.main.service.CnATypeMapper;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -87,7 +90,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                             List<NotizenMassnahmeResult> remainingNotes = addNotes(bstUms, massnahmenNotizen);
                             if (remainingNotes != null && remainingNotes.size()>0) {
                                 addNotes(cnATreeElement, remainingNotes);
-                            }
+                            } 
                         } catch (CommandException e) {
                             throw new RuntimeCommandException(e);
                         }
@@ -109,9 +112,48 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         for (NotizenMassnahmeResult notiz : remainingNotes) {
             LOG.debug("Adding note for " + cnATreeElement.getTitle());
             saveNewNote(cnATreeElement.getDbId(), cnATreeElement.getTitle(), cnATreeElement.getTitle(), notiz.notiz.getNotizText());
+            appendDescription(cnATreeElement, notiz.notiz.getNotizText());
         }
     }
 
+    @SuppressWarnings("restriction")
+    public void appendDescription(CnATreeElement element, String description) {
+           // do not save empty text:
+           if (description == null || description.length()==0 )
+               return;
+            Pattern pattern = Pattern.compile("^\\s+$");
+            Matcher matcher = pattern.matcher(description);
+            if (matcher.matches())
+                return;
+            
+            String convertedText;
+            try {
+                convertedText = TransferData.convertRtf(description);
+            } catch (Exception e) {
+                convertedText = "!Konvertierungsfehler, Originaltext: " + description;
+                LOG.debug(e);
+            }
+            
+           
+           String typeId = element.getTypeId();
+           CnATypeMapper mapper = new CnATypeMapper();
+           String descriptionPropId = mapper.getDescriptionPropertyForType(typeId);
+
+           if (descriptionPropId == null)
+               return;
+           
+           PropertyList properties = element.getEntity().getProperties(descriptionPropId);
+           if (properties == null || properties.getProperties().size()==0)
+               return;
+           Property property = properties.getProperty(0);
+           
+           StringBuilder sb = new StringBuilder();
+           sb.append(property.getPropertyValue());
+           // FIXME externalize strings
+           sb.append("\n\n***Neue Notiz *** ***\n");
+           sb.append(convertedText);
+           property.setPropertyValue(sb.toString());
+   }
 
     /**
      * Add notes to massnahmen of this bausteinumsetznug and to the bstumsetzung itself.
@@ -138,6 +180,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                 String text = notizVorlage.notiz.getNotizText();
                 
                 saveNewNote(dbId, elmtTitle, noteTitle, text);
+                appendDescription(mnums, notizVorlage.notiz.getNotizText());
             }
         }
         
