@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.equinox.p2.user.ui"
+      label="%featureName"
+      version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg"
+      
+      >
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="org.eclipse.equinox.p2.core.feature"
+         version="1.0.0.v20110519-8290FZ-FWmE7gdAgmOPL2_C"/>     
+ 
+   <includes
+         id="org.eclipse.equinox.p2.extras.feature"
+         version="1.0.0.v20110519-7A4FD3DiVOManmZvpLOsnBhnPQM3"/>
+         
+    <includes
+         id="org.eclipse.equinox.p2.rcp.feature"
+         version="1.0.0.v20110519-782EoBqNKGUkVQrqOf0z-BhnPQM3"/>
+  
+   <plugin
+         id="org.eclipse.equinox.p2.updatesite"
+         download-size="0"
+         install-size="0"
+         version="1.0.300.v20110510"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui.importexport"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20110511"
+         unpack="false"/>
+
+</feature>

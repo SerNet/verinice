@@ -1,0 +1,111 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:vn="http://www.verinice.org/taglib"
+      template="/layout.xhtml">
+	<ui:define name="content">
+		<a4j:queue requestDelay="500" ignoreDupResponce="true"/>
+		<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
+		<div id="col3_content">
+			<h:form id="tableForm">
+				<div class="csc-header csc-header-n1" style="height:40px;">
+					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
+				</div>
+				<a4j:outputPanel id="tablePanel">
+					 <div style="margin-bottom:4px; height:40px;">
+					 	 <a4j:outputPanel id="completePanel">
+							<a4j:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
+						    	<a4j:commandButton id="complete" action="#{task.completeTask}" value="#{outcome.value}" reRender="tablePanel,editorPanel" styleClass="button">
+						    		<a4j:actionparam name="outcomeId" value="#{outcome.key}" assignTo="#{task.outcomeId}"/>
+						    	</a4j:commandButton>						    
+						    </a4j:repeat>
+						    <a4j:commandButton id="completeAll" action="#{task.completeAllTask}" value="#{msgTask['completeAll']}" reRender="tablePanel,editorPanel" styleClass="button">
+						    	<a4j:support event="onclick" action="#{message.showInfo}" reRender="massagePanel">
+						    		<a4j:actionparam value="Completing all tasks. Please wait..." assignTo="#{message.info}"/>
+						    	</a4j:support>
+						    </a4j:commandButton>
+						 </a4j:outputPanel>
+					 	 <table>
+					 	 	<tr>
+					 	 		<td><h:outputText value="#{msgTask['isa']}" style="margin-right:4px;"/></td>
+					 	 		<td>
+					 	 			<rich:comboBox value="#{task.selectedAuditName}" suggestionValues="#{task.auditNameList}" defaultLabel="#{msgTask['selectFilter']}" enableManualInput="false"  style="margin-right:10px;">
+			   							<a4j:support event="onselect" reRender="tablePanel,editPanel" action="#{task.selectAudit}"/>
+			   						 </rich:comboBox>
+					 	 		</td>
+					 	 		<td>
+					 	 			<h:selectBooleanCheckbox id="readCheckbox" value="#{task.showRead}">	  			
+							  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel"/>
+							  		</h:selectBooleanCheckbox>
+							  		<h:outputText value="#{msgTask['read']}" style="margin-right:10px;"/>
+					 	 		</td>
+					 	 		<td>
+					 	 			<h:selectBooleanCheckbox id="unreadCheckbox" value="#{task.showUnread}" style="text-align: right;">	  			
+							  			<a4j:support action="#{task.loadTasks}" event="onclick" reRender="tablePanel,editPanel" style="text-align: right;"/>
+							  		</h:selectBooleanCheckbox>
+							  		<h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/>
+					 	 		</td>
+					 	 	</tr>
+					 	 </table>
+			  		 </div>    
+      				 <rich:extendedDataTable
+      				 	id="taskTable"
+		                value="#{task.taskList}" 
+		                var="item"
+		                binding="#{task.table}"
+		                selectionMode="single"
+		                selection="#{task.selection}"
+		                width="500px"
+		                height="500px">						                
+		                <rich:column id="colTitle"
+      						sortable="true" 
+      						sortBy="#{item.name}"
+		                    label="#{msgTask['title']}"
+		                    width="166">
+		                    <f:facet name="header">
+		                        <h:outputText value="#{msgTask['title']}"/>
+		                    </f:facet>
+		                    <h:outputText value="#{item.name}" styleClass="#{item.style}"/>
+		                </rich:column>
+		                <rich:column id="colElement"
+      						sortable="true" 
+      						sortBy="#{item.sortValue}"
+		                    label="#{msgTask['control']}"
+		                    width="250">
+		                    <f:facet name="header">
+		                        <h:outputText value="#{msgTask['control']}" />
+		                    </f:facet>
+		                    <h:outputText value="#{item.controlTitle}" styleClass="#{item.style}"/>
+		                </rich:column>			                
+		                <rich:column id="colDate"
+      						sortable="true" 
+      						sortBy="#{item.dueDate}"
+		                    label="bis"
+		                    width="84">
+		                    <f:facet name="header">
+		                        <h:outputText value="#{msgTask['dueDate']}" />
+		                    </f:facet>
+		                    <h:outputText value="#{item.dueDate}" styleClass="#{item.style}">
+						    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{task.timeZone}" />
+						    </h:outputText>
+		                </rich:column>
+		                <a4j:support reRender="editorPanel,completePanel,tablePanel"
+			                    action="#{task.openTask}"
+			                    event="onselectionchange" />					 
+		            </rich:extendedDataTable>				
+				</a4j:outputPanel>
+			</h:form>
+		</div>
+		</div>
+		<div id="col2">
+		<div id="col2_content">									    				
+	    	<vn:editor />    		 				    			    							
+		</div>
+		</div>
+		<!-- #main - Ende -->
+	</ui:define>
+</ui:composition>

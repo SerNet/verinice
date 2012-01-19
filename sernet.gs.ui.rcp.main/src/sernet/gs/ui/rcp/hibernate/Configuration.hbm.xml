@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Configuration items.
+	@author koderman@sernet.de
+ -->
+<hibernate-mapping package="sernet.verinice.model.common.configuration">
+	<class name="Configuration" table="configuration">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<many-to-one name="entity"
+			column="entity_id"
+			class="sernet.hui.common.connect.Entity"
+			cascade="all"
+			fetch="join" />
+		
+		<many-to-one name="person"
+			column="person_id" />
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Arbeiten mit dem ISO 27001-Modell unter verinice.">
+	<intro>
+		<description>
+			In dieser Einführung lernen Sie die grundsätzlichen Arbeitsvorgänge 
+			beim Umgang mit der ISO 27001-Ansicht in verinice kennen.
+			<br/>
+		</description>
+	</intro>
+	<item title="Anlegen von Assets">
+		<description>
+		Im Fenster &quot;Information Security Model&quot; können Sie nun Objekte und 
+		Objektgruppen anlegen. 
+		Die vorgegebenen Kategorien für Objekte werden Ihnen angezeigt, wenn Sie ein neues Wurzelobjekt 
+		anlegen. Klicken Sie dazu 
+		auf den Button &quot;add new organization&quot;, der sich oben rechts am Fensterrand befindet. Mit einer Organisaton ist ein Scope, 
+		eine Abteilung oder eben die gesamte Organisation gemeint.
+		Die Unterteilung Ihrer Infrastruktur in Organisationsobjekte 
+		obliegt ganz Ihren Wünschen und Zielen. 
+		<br/>
+		<br/>
+		Legen Sie nun eine Gruppe von Assets an. Klicken Sie dazu die rechte Maustaste auf die 
+		Kategorie &quot;Assets&quot;. Es erscheint ein Kontextmenü, in dem Sie &quot;Add Asset 
+		Group...&quot; auswählen. Nun haben Sie eine Gruppe von Assets angelegt. Eine Gruppe entspricht einem Ordner im Datesystem und dient dazu, mehr Übersicht zu schaffen.
+		Dieses Objekt kann weitere
+		Assets oder weitere Asset-Gruppen enthalten. Sie können die Objektgruppen und Objekte 
+		also völlig individuell hierarchisch aufbauen.
+		<br/>
+		Benennen Sie die eben angelegte Asset-Gruppe, indem Sie im links erschienenen 
+		Formularfenster für &quot;Title&quot; den Text &quot;Client-PCs&quot; eintragen. 
+		Speichern Sie durch Drücken der Tastenkombination &quot;Strg&quot; + &quot;S&quot;. 
+		<br/>
+		<br/>
+		Erstellen Sie nun in der Gruppe &quot;Client-PCs&quot; ein Asset durch Rechtsklick auf dieses 
+		Gruppenobjekt. Wählen Sie aus dem Kontextmenü &quot;Add Asset...&quot; aus.
+		<br/>
+		Nun wird ein Asset-Objekt erstellt
+		und unter das vorher erstellte Gruppenobjekt angehängt. Das Formularfenster 
+		zum Eintragen der Daten für das neue Asset erscheint automatisch. Tragen Sie hier
+		einige fiktive Daten ein und speichern Sie mit der Tastenkombination &quot;Strg&quot; + &quot;S&quot; oder aber 
+		durch Schliessen des Formularfensters. Beim Schliessen von nicht gespeicherten Fensterinhalten
+		werden Sie automatisch gefragt, ob Sie diese Speichern wollen.
+		</description>
+	</item>
+	<item title="Modellieren von Controls">
+		<description>
+		Um Controls ins &quot;Information Security Model&quot; einzubauen, brauchen Sie die gewünschten 
+		Controls per &quot;Drag And Drop&quot; lediglich aus dem Catalogs-Fenster unter die Gruppe Controls im 
+		Fenster &quot;Information Security Model&quot; hinzuziehen. Tun Sie dies mit dem Control 
+		&quot;11.5 Responsibility for Assets&quot; aus dem Katalog &quot;ISO 27001 Implementation Guidance&quot;. Diesen Katalog finden Sie auf http://v.de unter Downloads, Sie müssen ihn zunächst im Katalogfenster importieren.
+		<br/><br/> Durch Doppelklicken des eingefügten 
+		Controls können Sie nun im links erscheinenden Formularfenster Angaben 
+		des Controls bearbeiten. Tragen Sie dort für das Feld &quot;Implemented&quot; ein &quot;Yes&quot; ein, indem
+		Sie die Drop-Down-Box anklicken. 
+		</description>
+	</item>
+	<item title="Erstellen von Relationen">
+		<description>
+		In verinice sind vielfältige Relationen zwischen den Objekten möglich. 
+		Um eine einfache Relation zu 
+		erstellen, verbinden Sie einfach das eben angelegte Asset-Objekt mit dem eben 
+		eingebauten Control per &quot;Drag and Drop&quot;. Sie sehen, dass im unteren 
+		Relationsfenster die eben
+		erstellte Relation mit einem passenden Relationstyp sichtbar wird. 
+		Durch Doppelklicken auf das 
+		referenzierte Objekt im Relationsfenster, wird das referenzierte Objekt im Editor zur Bearbeitung geöffnet.
+		<br/> 
+		<br/>
+		Nun können Sie selbstständig üben, weitere Objekte und deren Relationen anzulegen. 
+		Erforschen Sie, welche Relationstypen möglich sind. Falls Ihnen Relationen fehlen, können diese leicht hinzugefügt oder auch vorhandene verändert werden. Eine Anleitung hierfür finden Sie bald auf http://v.de, wir helfen Ihnen aber auch gern direkt weiter: schreiben Sie einfach eine kurze Mail an verinice@sernet.de! 
+		</description>
+	</item>
+ <item
+       title="Ablage von Dokumenten">
+    <description>
+       Stellen Sie sich vor, Sie haben soeben für einen Kunden eine Geheimhaltungsvereinbarung (&quot;NDA&quot;) unterschrieben. Darin verpflichten Sie sich zu einer hohen Konventionalstrafe, wenn die Ihnen überlassenen Daten in falsche Hände geraten. Der Kunde verpflichtet Sie zudem, die Daten stets zu verschlüsseln.
+<br/><br/>
+Zunächst legen wir das Dokument in verinice ab, damit es nicht verloren geht! Klicken Sie rechts im ISM View auf &quot;Document&quot;. Evtl. müssen zuvor erst eine neue Organisation mit dem Button rechts oben angelegt haben. Wählen Sie &quot;New Document&quot;.
+    </description>
+    <subitem
+          label="Geben Sie dem neuen Dokument den Namen &quot;NDA Kunde1&quot;. Ändern Sie den Typ auf &quot;Contract&quot;. Öffnen Sie den Attachment View über das Ansichts-Menü. Wählen Sie das Dokument erneut aus, falls es nicht bereits im Attachment-View selektiert ist. Ziehen Sie dann ein beliebiges PDF Dokument als Platzhalter für unsere NDA in den Attachment-View.">
+    </subitem>
+    <subitem
+          label="Sie können jetzt Metainformationen wie z.B. die Version des Dokuments angeben. Sobald Sie Strg-S drücken, wird das Dokument hochgeladen und ist ab sofort mit dem Objekt im ISM-View verknüpft. Sie können es jederzeit herunterladen und ändern, oder einfach durch Klick auf den Button &quot;Anzeigen&quot; öffnen. Wenn Sie den verinice.PRO Server einsetzen, ist das Dokument sofort für jeden verfügbar, der in Ihrer Organisation Zugriff darauf benötigt.">
+    </subitem>
+ </item>
+ <item
+       title="Modellieren von Anforderungen">
+    <description>
+       Die NDA verlangte das Verschlüsseln der Kundendaten. Klicken Sie also rechts auf &quot;Requirements&quot;, dann auf &quot;New Requirement&quot;. Ändern Sie die Bezeichnung auf &quot;Encryption&quot;. Nun verknüpfen Sie per DragnDrop die Anforderung mit dem eben erzeugten Dokument. Im Relation-View wird die Verknüpfung sichtbar.
+    </description>
+ </item>
+ <item
+       title="Erfüllen von Anforderungen mit Controls">
+    <description>
+       Klicken Sie rechts auf &quot;Controls&quot;, wählen Sie &quot;New Control&quot;. Ändern Sie die Bezeichnung in &quot;Encrypt customer data&quot;. Speichern Sie mit Strg-S. Verknüpfen Sie per DragnDrop die Control mit der Anforderung &quot;Enryption&quot;. Der Relation-View zeigt an, dass diese Anforderung jetzt durch das Control erfüllt wird.
+    </description>
+ </item>
+ <item
+       title="Weitere Beziehungen modellieren">
+    <description>
+       Auf die beschriebene Weise können Sie jetzt weitere Abhängigkeiten modellieren, z.B. angeben, welche Person für die Erfüllung der Maßnahme verantwortlich ist. Sie sollten auch die Kundendaten noch als Asset erfassen und eine Person als &quot;Owner&quot; bestimmen. Wenn der von verinice automatisch erkannte Verknüpfungstyp nicht korrekt ist &quot;z.B. &quot;Autor&quot; für eine Person statt &quot;Freigabe durch&quot;, können Sie diesen Typ im RelationView ändern. Klicken Sie einfach auf den Bezeihungstyp, wenn es Alternativen gibt, werden Ihnen diese zur Auswahl angeboten.
+    </description>
+ </item>
+ <item
+       title="Dankeschön">
+    <description>
+       Dies war eine kurze Übersicht über die neuen Funktionen von verinice zur Unterstützung von ISO 27001. Mehr Informationen erhalten Sie auf unserer Webseite http://v.de.
+    </description>
+ </item>
+</cheatsheet>
