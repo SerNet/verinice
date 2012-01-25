@@ -103,7 +103,7 @@ public class CutService extends PasteService implements IProgressTask {
             CutCommand cc = new CutCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList());
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
-            progressObserver.setTaskName("Loading moved elements...");
+            progressObserver.setTaskName(Messages.getString("CutService.3"));
             CnAElementFactory.getInstance().reloadModelFromDatabase();            
 		} catch (PermissionException e) {
 			if (log.isDebugEnabled()) {
@@ -126,9 +126,7 @@ public class CutService extends PasteService implements IProgressTask {
 		for (CnATreeElement element : elementList) {
 			if(!CnAElementHome.getInstance().isDeleteAllowed(element)) {
 				ok = false;
-				// FIXME: externalize Strings
-				// this message must be multi lingual			
-				throw new PermissionException("No permission to move elment: " + getTitle(element));
+				throw new PermissionException(Messages.getString("CutService.4") + getTitle(element));
 			}
 		}
 		return ok;
@@ -167,7 +165,7 @@ public class CutService extends PasteService implements IProgressTask {
 		command = getCommandService().executeCommand(command);
 		parentOld = (CnATreeElement) command.getElement();
 		  
-		element.setParent(group);
+		element.setParentAndScope(group);
         group.addChild(element);
 		
 		// save element

@@ -56,11 +56,15 @@ public class BSIModelViewContentProvider implements ITreeContentProvider {
 		// Logger.getLogger(this.getClass()).debug("getChildren " +parent);
 
 		// replace object in event with the one actually displayed in the tree:
-		Object cachedObject = cache.getCachedObject(parent);
+	    Object cachedObject = null;
+	    if (parent instanceof CnATreeElement) {
+	        cachedObject = cache.getCachedObject((CnATreeElement) parent);
+	    }
 		// Logger.getLogger(this.getClass()).debug("Retrieved from view cache: "
 		// + cachedObject);
-		if (cachedObject != null)
+		if (cachedObject != null) {
 			parent = cachedObject;
+		}
 
 		if (parent instanceof NullModel) {
 			NullModel model = (NullModel) parent;

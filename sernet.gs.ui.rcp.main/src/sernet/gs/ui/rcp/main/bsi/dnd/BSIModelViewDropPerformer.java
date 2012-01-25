@@ -146,9 +146,9 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 	}
 
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-//		if (LOG.isDebugEnabled()) {
-//			LOG.debug("validateDrop, target: " + target);
-//		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("validateDrop, target: " + target);
+		}
 	    
 	    if(!checkRights())
 	        return false;
@@ -174,7 +174,7 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
-					return isActive=true;
+					return isActive=true;  
 			}
 			if (target instanceof IBSIStrukturElement) {
 				return isActive=true;
@@ -185,9 +185,9 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 		// link drop:
 		if (items.get(0) instanceof IBSIStrukturElement || items.get(0) instanceof IISO27kElement) {
 			for (Object item : items) {
-//				if (LOG.isDebugEnabled()) {
-//					LOG.debug("validateDrop, draged item: " + item );
-//				}
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("validateDrop, draged item: " + item );
+				}
 				if (target.equals(item))
 					return isActive=false;
 
@@ -199,9 +199,9 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 						return isActive=false;
 				}
 			}
-//			if (LOG.isDebugEnabled()) {
-//				LOG.debug("validateDrop, validated!");
-//			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("validateDrop, validated!");
+			}
 			return isActive=true;
 		}
 

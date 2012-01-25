@@ -51,6 +51,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author koderman[at]sernet[dot]de
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class ISMViewContentProvider implements ITreeContentProvider {
 
     private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
@@ -109,10 +110,14 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         CnATreeElement[] children = new CnATreeElement[] {};
 
         // replace object in event with the one actually displayed in the tree:
-        Object cachedObject = cache.getCachedObject(o);
-        if (cachedObject != null) {
-            o = cachedObject;
+        Object cachedObject = null;
+        if(o instanceof CnATreeElement) {
+            cachedObject = cache.getCachedObject((CnATreeElement) o);
+            if (cachedObject != null) {             
+                o = cachedObject;
+            }
         }
+        
         try {
             if (o instanceof List<?>) {
                 List<CnATreeElement> list = (List<CnATreeElement>) o;
@@ -154,9 +159,17 @@ public class ISMViewContentProvider implements ITreeContentProvider {
     public boolean hasChildren(Object parent) {
         boolean hasChildren = false;
         if (parent instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) parent;
             try {
-                CnATreeElement el = Retriever.checkRetrieveChildren((CnATreeElement) parent);
-                Set<CnATreeElement> children = el.getChildren();
+                // replace object in event with the one actually displayed in the tree:
+                CnATreeElement cachedObject = cache.getCachedObject(element);
+                if (cachedObject != null) {
+                    element = cachedObject;
+                }
+                if(!element.isChildrenLoaded()) {
+                    //element = Retriever.checkRetrieveChildren((CnATreeElement) parent);
+                }
+                Set<CnATreeElement> children = element.getChildren();
                 if(children!=null) {
                     hasChildren = !children.isEmpty();
                 }
@@ -289,8 +302,8 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         return result;
     }
 
-    public Object getCachedObject(Object o) {
-        return cache.getCachedObject(o);
+    public CnATreeElement getCachedObject(CnATreeElement e) {
+        return cache.getCachedObject(e);
     }
 
     public void addCachedObject(Object o) {

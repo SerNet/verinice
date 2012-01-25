@@ -91,17 +91,20 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 		if(children!=null && children.length>0) {
 			expandedElements.addAll(Arrays.asList(children));
 			for (Object child : children) {
-				Object cachedObject = contentProvider.getCachedObject(child);
-				if (cachedObject == null) {
-					contentProvider.addCachedObject(child);
-				} else {
-					child = cachedObject;
-				}
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("child: " + ((CnATreeElement)child).getTitle());
-				}
-				
-				addChildren((CnATreeElement) child, expandedElements);
+			    if(child instanceof CnATreeElement) {
+			        CnATreeElement e = (CnATreeElement) child;
+			        CnATreeElement cachedObject = contentProvider.getCachedObject(e);
+    				if (cachedObject == null) {
+    					contentProvider.addCachedObject(child);
+    				} else {
+    					child = cachedObject;
+    				}
+    				if (LOG.isDebugEnabled()) {
+    					LOG.debug("child: " + ((CnATreeElement)child).getTitle());
+    				}
+    				
+    				addChildren((CnATreeElement) child, expandedElements);
+			    }
 			}
 		}
 		

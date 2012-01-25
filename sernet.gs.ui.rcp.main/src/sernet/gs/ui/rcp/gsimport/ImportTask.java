@@ -342,8 +342,7 @@ public class ImportTask {
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
-        // TODO externalize strings
-        this.monitor.subTask("Erstelle Bausteinreferenzen für" + zielobjekt.getName() 
+        this.monitor.subTask(Messages.Import_Task_1 + zielobjekt.getName() 
                 );
         
         ImportCreateBausteinReferences command;

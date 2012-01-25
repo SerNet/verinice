@@ -24,8 +24,10 @@ import java.util.List;
 import sernet.verinice.model.auth.Userprofile;
 
 /**
+ * Extends the {@link IRightsService} to the use
+ * for clients.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public interface IRightsServiceClient extends IRightsService {
 
@@ -37,6 +39,13 @@ public interface IRightsServiceClient extends IRightsService {
      */
     List<Userprofile> getUserprofile();
     
+    /**
+     * Returns true if the action with id <code>actionId</code>
+     * is enabled for the current user.
+     * 
+     * @param actionId The id of an action
+     * @return True if an action is enabled for an user
+     */
     boolean isEnabled(String actionId);
     
     void reload();

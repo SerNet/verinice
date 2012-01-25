@@ -88,24 +88,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	private String useCase;
     
     // estimated size of dialog for placement (doesnt have to be exact):
-    private static final int SIZE_X = 410;
-    private static final int SIZE_Y = 540;
-    
-    @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
-        newShell.setText(Messages.GenerateReportDialog_4);
-        newShell.setSize(SIZE_Y,SIZE_X);
-        
-        // open the window right under the mouse pointer:
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));
-    
-    }
-    
+    private static final int SIZE_X = 700;
+    private static final int SIZE_Y = 430;
 
 	public GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
 		this.auditId=null;
         this.auditName = null;
 		reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
@@ -136,7 +124,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     public GenerateReportDialog(Shell shell, List<Object> objects) {
     	this(shell);
-    	
     	List<CnATreeElement> elmts = new ArrayList<CnATreeElement>();
     	for (Object object : objects) {
 			CnATreeElement cnaElmt = (CnATreeElement) object;
@@ -149,6 +136,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
     	this(shell, objects);
     	this.useCase = useCase;
     	filterReportTypes();
+    }
+    
+    @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(Messages.GenerateReportDialog_4);
+        newShell.setSize(SIZE_X, SIZE_Y);
+        
+        // open the window right under the mouse pointer:
+        Point cursorLocation = Display.getCurrent().getCursorLocation();
+        newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));
+    
     }
 
 
@@ -450,7 +449,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     protected void enableFileSelection() {
         userTemplate = false;
-        if (reportTypes[comboReportType.getSelectionIndex()].getReportFile() != null) {
+        if (reportTypes[comboReportType.getSelectionIndex()].getReportFile() == null || reportTypes[comboReportType.getSelectionIndex()].getReportFile().equals("")) {
             userTemplate = true;
         }
         textReportTemplateFile.setEnabled(userTemplate);
@@ -487,8 +486,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
     }
     
-    protected String getDefaultOutputFilename() {     
-        StringBuilder sb = new StringBuilder("unknown");
+    protected String getDefaultOutputFilename() {
+        String outputFileName = chosenReportType.getReportFile();
+        if(outputFileName == null || outputFileName.equals("")){
+            outputFileName = "unknown";
+        }
+        StringBuilder sb = new StringBuilder(outputFileName);
         if(chosenOutputFormat!=null) {
             sb.append(".").append(chosenOutputFormat.getFileSuffix());
         }

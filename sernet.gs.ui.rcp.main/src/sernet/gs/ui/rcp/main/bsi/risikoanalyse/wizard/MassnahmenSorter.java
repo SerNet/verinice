@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.model.Massnahme;
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
@@ -34,20 +35,24 @@ public class MassnahmenSorter extends ViewerSorter {
 
     @Override
     public int compare(Viewer viewer, Object e1, Object e2) {
+        NumericStringComparator numComp = new NumericStringComparator();
         if (e1 instanceof Massnahme && e2 instanceof Massnahme) {
             // sort chapters correctly by converting 2.45, 2.221, 3.42
             // to 2045, 2221, 3024
+            
+//            return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
+            return numComp.compare(((Massnahme)e1).getId(), ((Massnahme)e2).getId());
 
-            return (Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue()));
         }
 
         if (e1 instanceof MassnahmenUmsetzung && e2 instanceof MassnahmenUmsetzung) {
             // sort chapters correctly by converting 2.45, 2.221, 3.42
             // to 2045, 2221, 3024
-            int[] kap1 = ((MassnahmenUmsetzung) e1).getKapitelValue();
-            int[] kap2 = ((MassnahmenUmsetzung) e2).getKapitelValue();
-            return (Integer.valueOf(kap1[0] * 1000 + kap1[1]).compareTo((kap2[0] * 1000 + kap2[1])));
+            return numComp.compare(((MassnahmenUmsetzung)e1).getEntity().getSimpleValue(MassnahmenUmsetzung.P_KAPITEL), ((MassnahmenUmsetzung)e2).getEntity().getSimpleValue(MassnahmenUmsetzung.P_KAPITEL));
         }
+        
+        
+        
 
         // else, consider elements as equal:
         return 0;

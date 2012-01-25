@@ -92,8 +92,6 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  */
 public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
 
-    // FIXME externalize Strings
-    
 	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -805,7 +803,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
      * @return
      */
     private void createLoadMoreAction() {
-        loadMoreAction = new LoadMoreAction(this, "Load more...");
+        loadMoreAction = new LoadMoreAction(this, Messages.GenericMassnahmenView_11);
     }
     
     /**
@@ -823,7 +821,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
             }
         };
         toggleDateAction.setChecked(isDateSet);
-        toggleDateAction.setText("mit Termin");
+        toggleDateAction.setText(Messages.GenericMassnahmenView_12);
         toggleDateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE));
     }
 

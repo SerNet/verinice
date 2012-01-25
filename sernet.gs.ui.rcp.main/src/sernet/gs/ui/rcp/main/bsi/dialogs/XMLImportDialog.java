@@ -228,6 +228,20 @@ public class XMLImportDialog extends Dialog {
         GridLayout pbeLayout = new GridLayout(3, false);
         cryptGroup.setLayout(pbeLayout);
         
+        final Button useNoEncryptionRadio = new Button(cryptGroup, SWT.RADIO);
+        useNoEncryptionRadio.setText(Messages.XMLImportDialog_36);
+        useNoEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e){
+                selectedEncryptionMethod = null;
+            }
+        });
+        // by default, no encryption is selected
+        useNoEncryptionRadio.setSelection(true);
+
+        // insert two placeholder
+        new Label(cryptGroup, SWT.NONE);
+        new Label(cryptGroup, SWT.NONE);
 
         // ==== Password Based Encryption controls
         final Button passwordEncryptionRadio = new Button(cryptGroup, SWT.RADIO);

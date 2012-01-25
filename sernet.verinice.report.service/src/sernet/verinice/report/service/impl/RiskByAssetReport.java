@@ -69,7 +69,7 @@ public class RiskByAssetReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.RiskByAssetReport_3;
     }
 
     /* (non-Javadoc)

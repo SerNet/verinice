@@ -71,7 +71,7 @@ public class RealisierungsplanReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.RealisierungsplanReport_3;
     }
 
     /* (non-Javadoc)

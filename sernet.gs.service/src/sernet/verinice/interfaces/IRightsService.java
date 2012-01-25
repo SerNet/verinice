@@ -45,8 +45,7 @@ public interface IRightsService {
     Auth getConfiguration();
     
     /**
-     * Updates the configuration defined in <i>auth</i>. 
-     * Updated configuration is returned.
+     * Updates the configuration defined in <code>auth</code>.
      * 
      * @param auth Authorization configuration
      */
@@ -76,10 +75,10 @@ public interface IRightsService {
     List<String> getUsernames();
     
     /**
-     * Returns a list with all user names for one scope of an user.
+     * Returns a list with all user names of one scope for an user.
      * 
      * @param username An user name
-     * @return Usernames for one scope
+     * @return User names of the scope for an user
      */
     List<String> getUsernames(String username);
     
@@ -92,10 +91,10 @@ public interface IRightsService {
     
   
     /**
-     * Returns a list with all group names for the scope of an user.
+     * Returns a list with all group names of the scope for an user.
      * 
      * @param username An user name
-     * @return Group names for one scope
+     * @return Group names of the scope for an user
      */
     List<String> getGroupnames(String username);
     

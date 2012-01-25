@@ -82,8 +82,9 @@ public class BSIModelViewUpdater implements IBSIModelListener {
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, "Fehler beim Aktualisieren der Baumansicht.");
 			}
+			child = cachedObject; 
 		}
-		updater.refresh();
+		updater.refresh(child);
 	}
 
 	public void childRemoved(CnATreeElement category, CnATreeElement child) {

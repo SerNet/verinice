@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.samt.service;
 
-import java.awt.image.TileObserver;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,6 +34,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.CsvFile;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -53,6 +52,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
@@ -120,18 +120,12 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
     public void execute() {
         try {
             changedElements = new ArrayList<CnATreeElement>();
-            if(auditGroup==null) {
-                organization = new Organization(model,true);
-                if (titleOrganization != null) {
-                    organization.setTitel(titleOrganization);
-                }
-                model.addChild(organization);
-                addPermissions(organization);
+            if(auditGroup==null) { 
+                organization = saveNewOrganisation(model, titleOrganization);                           
                 changedElements.add(organization);
                 
                 // Create the audit add it to organization
                 auditGroup = getAuditGroup(organization);
-                addPermissions(auditGroup);
                 changedElements.add(auditGroup);
             }
             
@@ -168,19 +162,29 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             CnALink link = new CnALink(organization,isaAudit,"rel_org_audit",null);
             organization.addLinkDown(link);
             isaAudit.addLinkUp(link);
-            daoLink.saveOrUpdate(link);
             
             Set<CnATreeElement> isaCategories = controlGroup.getChildren();
             for (CnATreeElement categorie : isaCategories) {
                 link = new CnALink(isaAudit,categorie,"rel_audit_control",null);
                 isaAudit.addLinkDown(link);
                 categorie.addLinkUp(link);
-                daoLink.saveOrUpdate(link);
             }
         } catch (Exception e) {
             getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         }
+    }
+    
+    public Organization saveNewOrganisation(CnATreeElement container, String title) throws Exception {
+        if(title==null) {
+            title = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);   
+        }
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container, Organization.class, title, false, true);
+        saveCommand = getCommandService().executeCommand(saveCommand);
+        Organization child = saveCommand.getNewElement();
+        container.addChild(child);
+        child.setParentAndScope(container);
+        return child;
     }
 
     /**
@@ -214,16 +218,16 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             if (item.getItems() != null && item.getItems().size() > 0) {
                 // create a group
                 element = ItemControlTransformer.transformToGroup(item, new ControlGroup());
+                element.setParentAndScope(group);
                 importCatalogItems(element, item.getItems());
             } else {
                 // create an element
                 element = ItemControlTransformer.transformGeneric(item, new SamtTopic());
+                element.setParentAndScope(group);
             }
             if (element !=null) {
-                addPermissions(element);
-                
+                addPermissions(element);             
                 group.addChild(element);
-                element.setParent(group);
                 changedElements.add(element);
             }
         }

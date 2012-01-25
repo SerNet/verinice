@@ -77,7 +77,7 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 		this.window = window;
         setText(label);
 		setId(ID);
-//		setEnabled(false); disable to make available on server only (see above)
+		setEnabled(true); // now works in standalone again
 		setRightID(ActionRightIDs.GSNOTESIMPORT);
 		if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
 		    IInternalServerStartListener listener = new IInternalServerStartListener(){

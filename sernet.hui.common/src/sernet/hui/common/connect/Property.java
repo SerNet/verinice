@@ -86,14 +86,6 @@ public class Property implements Serializable, ITypedElement {
 		setPropertyValue(propertyValue, true, null);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
-	}
-	
     public String getPropertyTypeID(){
         return propertyType;
     }
@@ -121,4 +113,49 @@ public class Property implements Serializable, ITypedElement {
 	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+        result = prime * result + ((propertyType == null) ? 0 : propertyType.hashCode());
+        result = prime * result + ((propertyValue == null) ? 0 : propertyValue.hashCode());
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Property other = (Property) obj;
+        if (dbId == null) {
+            if (other.dbId != null)
+                return false;
+        } else if (!dbId.equals(other.dbId))
+            return false;
+        if (propertyType == null) {
+            if (other.propertyType != null)
+                return false;
+        } else if (!propertyType.equals(other.propertyType))
+            return false;
+        if (propertyValue == null) {
+            if (other.propertyValue != null)
+                return false;
+        } else if (!propertyValue.equals(other.propertyValue))
+            return false;
+        return true;
+    }
+
+    
 }

@@ -85,7 +85,7 @@ public class AccountDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(title);
-        newShell.setSize(429, 640);
+        newShell.setSize(460, 640);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();

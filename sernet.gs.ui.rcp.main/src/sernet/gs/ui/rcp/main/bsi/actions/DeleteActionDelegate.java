@@ -35,18 +35,17 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -54,8 +53,6 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Delete items on user request.
@@ -63,6 +60,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * @author akoderman[at]sernet[dot]de
  * 
  */
+@SuppressWarnings("restriction")
 public class DeleteActionDelegate implements IObjectActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(DeleteActionDelegate.class);
@@ -216,7 +214,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
         if (sel instanceof CnATreeElement) {
-        	CnATreeElement element = (CnATreeElement) sel;
+            CnATreeElement element = (CnATreeElement) sel;
             boolean b = CnAElementHome.getInstance().isDeleteAllowed(element);
 
             // Only change state when it is enabled, since we do not want to

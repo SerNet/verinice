@@ -79,7 +79,7 @@ public class SaveLdapUser extends GenericCommand implements IChangeLoggingComman
 				checkUsername(personInfo.getLoginName());
 				// create person
 				PersonIso person = personInfo.getPerson();
-				person.setParent(loadContainer(person.getClass()));
+				person.setParentAndScope(loadContainer(person.getClass()));
 				setImportRootObject(person.getParent());
 				IBaseDao<PersonIso, Integer> dao = getDaoFactory().getDAO(person.getTypeId());
 				person = dao.merge(person);

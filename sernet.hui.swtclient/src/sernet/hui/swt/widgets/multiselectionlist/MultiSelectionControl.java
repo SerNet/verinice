@@ -53,8 +53,6 @@ import sernet.snutils.AssertException;
 public class MultiSelectionControl implements IHuiControl {
 	
 	
-	// FIXME: externalize Strings
-	
 	private Entity entity;
 	private PropertyType type;
 	private Composite parent;
@@ -115,7 +113,7 @@ public class MultiSelectionControl implements IHuiControl {
 		fgColor = text.getForeground();
 		
 		Button editBtn = new Button(container, SWT.PUSH);
-		editBtn.setText("Ändern...");
+		editBtn.setText(Messages.MultiSelectionControl_1);
 		editBtn.setToolTipText(this.type.getTooltiptext());
 		editBtn.setEnabled(editable);
 		editBtn.addSelectionListener(new SelectionListener() {
@@ -131,7 +129,7 @@ public class MultiSelectionControl implements IHuiControl {
 		if (crudButtons) {
 			// create buttons to add / delete new properties:
 			Button addBtn = new Button(container, SWT.PUSH);
-			addBtn.setText("Hinzufügen...");
+			addBtn.setText(Messages.MultiSelectionControl_2);
 			addBtn.setEnabled(editable);
 			addBtn.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent arg0) {
@@ -224,10 +222,10 @@ public class MultiSelectionControl implements IHuiControl {
 	}
 	
 	void showAddDialog() {
-		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), "Neue Rolle", "Neue Rolle anlegen", "", new IInputValidator() {
+		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), Messages.MultiSelectionControl_3, Messages.MultiSelectionControl_4, "", new IInputValidator() {
 			public String isValid(String newText) {
 				if (newText.length()<1)
-					return "Namen für neue Rolle angeben.";
+					return Messages.MultiSelectionControl_5;
 				return null;
 			}
 		});

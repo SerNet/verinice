@@ -69,7 +69,7 @@ public class AllItemsReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.AllItemsReport_3;
     }
 
     /* (non-Javadoc)

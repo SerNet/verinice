@@ -46,6 +46,6 @@ public interface IDao<T, ID extends Serializable> {
 
     public abstract List findByCriteria(DetachedCriteria criteria);
     
-    public abstract <T> T initializeAndUnproxy(T entity);
+    public abstract <E> E initializeAndUnproxy(E entity);
 
 }

@@ -53,7 +53,7 @@ public class ControlMaturityReport implements IReportType {
 	@Override
 	public String getReportFile() {
 		// TODO Auto-generated method stub
-		return null;
+		return Messages.ControlMaturityReport_3;
 	}
 
 	@Override

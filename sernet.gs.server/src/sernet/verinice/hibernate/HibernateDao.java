@@ -110,14 +110,14 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         getHibernateTemplate().saveOrUpdate(entity);
     }
     
-    public <T> T initializeAndUnproxy(T entity) {
+    public <E> E initializeAndUnproxy(E entity) {
         if (entity == null) {
             throw new NullPointerException("Entity passed for initialization is null");
         }
 
         Hibernate.initialize(entity);
         if (entity instanceof HibernateProxy) {
-            entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer().getImplementation();
+            entity = (E) ((HibernateProxy) entity).getHibernateLazyInitializer().getImplementation();
         }
         return entity;
     }

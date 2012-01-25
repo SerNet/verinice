@@ -121,7 +121,7 @@ public class CreateElement<T extends CnATreeElement> extends GenericCommand impl
 
             child = dao.merge(child, false);
             container.addChild(child);
-            child.setParent(container);
+            child.setParentAndScope(container);
 
             if(clazz.equals(Organization.class)) {
                 setScope((Organization)child);

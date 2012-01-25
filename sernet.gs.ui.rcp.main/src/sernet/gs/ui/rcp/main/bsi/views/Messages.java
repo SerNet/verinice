@@ -166,6 +166,10 @@ public class Messages extends NLS {
 	public static String GenericMassnahmenView_1;
 
 	public static String GenericMassnahmenView_10;
+	
+	public static String GenericMassnahmenView_11;
+	
+	public static String GenericMassnahmenView_12;
 
 	public static String GenericMassnahmenView_2;
 
@@ -186,6 +190,12 @@ public class Messages extends NLS {
 	public static String TodoView_11;
 
 	public static String TodoView_12;
+	
+    public static String TodoView_13;
+
+    public static String TodoView_14;
+
+    public static String TodoView_15;
 
 	public static String TodoView_2;
 

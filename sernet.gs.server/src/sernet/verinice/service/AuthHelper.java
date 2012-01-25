@@ -32,8 +32,10 @@ import sernet.verinice.model.auth.Userprofile;
 import sernet.verinice.model.auth.Userprofiles;
 
 /**
- * Static helper methods to handle 
- * authorization configurations.
+ * Static helper methods to handle authorization configurations.
+ * 
+ * This class is used in a multi threaded web server environment.
+ * Never ever define any member vars. in this class.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

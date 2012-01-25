@@ -30,9 +30,11 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -107,7 +109,7 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
                         linkChildren((ControlGroup) child, personList);
                     }
                     if( child instanceof IControl ) {
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(child, personList);
+                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(child, personList,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
                         numberOfTopics++;
                     }
                 }

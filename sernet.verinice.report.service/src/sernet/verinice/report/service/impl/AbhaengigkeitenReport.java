@@ -71,7 +71,7 @@ public class AbhaengigkeitenReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.AbhaengigkeitenReport_3;
     }
 
     /* (non-Javadoc)

@@ -67,7 +67,7 @@ public class NegativeEstimateGefaehrdung extends GenericCommand {
 			.merge(gefaehrdungsUmsetzung);
 
 		finishedRiskAnalysis.addChild(gefaehrdungsUmsetzung);
-		gefaehrdungsUmsetzung.setParent(finishedRiskAnalysis);
+		gefaehrdungsUmsetzung.setParentAndScope(finishedRiskAnalysis);
 		gefaehrdungsUmsetzung.setOkay(false);
 		lists.getAllGefaehrdungsUmsetzungen().add(gefaehrdungsUmsetzung);
 		

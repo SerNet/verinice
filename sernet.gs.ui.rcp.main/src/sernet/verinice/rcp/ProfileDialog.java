@@ -26,11 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -53,8 +56,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.springframework.transaction.config.TxNamespaceHandler;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -72,6 +75,8 @@ import sernet.verinice.model.auth.Userprofile;
 @SuppressWarnings("restriction")
 public class ProfileDialog extends TitleAreaDialog {
 
+    private static final Logger LOG = Logger.getLogger(ProfileDialog.class);
+    
     private Text  textName;
     private Label translated;
     
@@ -95,6 +100,7 @@ public class ProfileDialog extends TitleAreaDialog {
 
     public ProfileDialog(Shell parent) {
         super(parent);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         auth = getRightService().getConfiguration();
         allActions = Arrays.asList(ActionRightIDs.getAllRightIDs());
         unselectedActions = new ArrayList<Action>(allActions.size());    
@@ -108,6 +114,7 @@ public class ProfileDialog extends TitleAreaDialog {
      */
     public ProfileDialog(Shell parent, Auth auth, String profileName) {
         super(parent);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.auth = auth;
         this.profileName = profileName;
         allActions = Arrays.asList(ActionRightIDs.getAllRightIDs());
@@ -128,9 +135,9 @@ public class ProfileDialog extends TitleAreaDialog {
         
         initializeDialogUnits(parent);
 
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite composite = new Composite(parent, SWT.FILL);
         composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
@@ -287,11 +294,17 @@ public class ProfileDialog extends TitleAreaDialog {
      */
     @Override
     protected void okPressed() {
-        if(!this.profile.getName().equals(this.profileName)) {
-            updateProfileRefs();
+        try {
+            if(!this.profile.getName().equals(this.profileName)) {
+                updateProfileRefs();
+            }
+            getRightService().updateConfiguration(auth);   
+            super.okPressed();
+        } catch(Exception e) {           
+            final String message = "Error while saving profiles.";
+            LOG.error(message, e);
+            MessageDialog.openError(this.getShell(), "Error", message);
         }
-        getRightService().updateConfiguration(auth);
-        super.okPressed();
     }
     
     /* (non-Javadoc)

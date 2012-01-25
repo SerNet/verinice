@@ -150,8 +150,7 @@ public class CnALink implements Serializable, ITypedElement {
         HuiRelation relation = getTypeFactory().getRelation(link.getRelationId());
         String name;
         if (relation == null) {
-            // FIXME externalize strings
-            name = isDownwardLink(fromElement, link) ? "hängt ab von" : "nötig für"; //$NON-NLS-1$ //$NON-NLS-2$
+            name = isDownwardLink(fromElement, link) ? Messages.getString("CnALink.0") : Messages.getString("CnALink.5"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
             name = isDownwardLink(fromElement, link) ? relation.getName() : relation.getReversename();

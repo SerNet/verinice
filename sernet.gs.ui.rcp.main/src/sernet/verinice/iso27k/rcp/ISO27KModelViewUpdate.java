@@ -158,8 +158,12 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             if (cachedObject != child) {
                 // update entity of cached object:
                 CnAElementHome.getInstance().refresh(cachedObject);
+                child = cachedObject; 
             }
-            updater.refresh();
+            updater.refresh(child);
+            if(category.getParent()!=null) {
+                childChanged(category.getParent(), category);
+            }
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);
         }

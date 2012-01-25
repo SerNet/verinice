@@ -386,7 +386,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 			
 			list.add(syncObject);
 			childList = syncObject.getChildren();
-			exportedObjectIDs.put( element.getId(), new String() );
+			exportedObjectIDs.put( element.getUuid(), new String() );
 			
 			/**
 			 * Save source and external id to re-import element later
@@ -430,7 +430,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
     }
 
 	private boolean checkElement(CnATreeElement element) {
-		return exportedObjectIDs.get(element.getId()) == null
+		return exportedObjectIDs.get(element.getUuid()) == null
 		 && (entityTypesToBeExported == null || entityTypesToBeExported.get(element.getTypeId()) != null)
 		 && (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
 		 && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);

@@ -326,7 +326,7 @@ public abstract class ElementView extends ViewPart {
                 CnATreeElement parent = Retriever.retrieveElement(child.getParent(), ri);
                 cache.clear(parent);      
                 cache.addObject(parent);
-                child.setParent(parent);
+                child.setParentAndScope(parent);
                 super.databaseChildAdded(child);
             }
          };

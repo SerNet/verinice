@@ -160,7 +160,7 @@ public class BasicAuthenticationService implements IAuthService {
                 "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
                 "inner join propertyList2.properties as scopeprops " + //$NON-NLS-1$
                 "where props.propertyType = ? " + //$NON-NLS-1$
-                "and props.propertyValue = ? " + //$NON-NLS-1$
+                "and props.propertyValue like ? " + //$NON-NLS-1$
                 "and scopeprops.propertyType = ?";   //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME,getUsername(),Configuration.PROP_SCOPE};                
         List<String> resultList = getConfigurationDao().findByQuery(HQL,params);

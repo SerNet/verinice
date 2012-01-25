@@ -57,6 +57,8 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     private final IWorkbenchWindow window;
     
     private String rightID  = null;
+    
+    private boolean serverIsRunning = true;
 
     public BausteinZuordnungAction(IWorkbenchWindow window) {
         this.window = window;
@@ -68,10 +70,12 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         setToolTipText(Messages.BausteinZuordnungAction_2);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            serverIsRunning = false;
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if(e.isStarted()){
+                        serverIsRunning = true;
                         setEnabled(checkRights());
                     }
                 }
@@ -129,7 +133,9 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     }
 
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        setEnabled(checkRights());
+        if (serverIsRunning) {
+            setEnabled(checkRights());
+        }
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
 

@@ -17,8 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -66,4 +74,32 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 	}
 	
+	public void postStartup(){
+	    removeUnneededPrefPages();
+	}
+	
+	/**
+	 * removes prefPages that were loaded from plugins but not needed
+	 * currently thats:
+	 *     -   org.eclipse.datatools.connectivity.ui.preferences.dataNode
+	 *     -   org.eclipse.birt.report.designer.ui.preferences
+	 */
+	private void removeUnneededPrefPages(){
+	    PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+	    // add id of prefPage to remove here
+	    String[] prefPageIDsToRemove = new String[]{
+	            "org.eclipse.datatools.connectivity.ui.preferences.dataNode",
+	            "org.eclipse.birt.report.designer.ui.preferences"
+	    };
+	    Set<String> idSet = new HashSet<String>();
+	    for(String s : prefPageIDsToRemove){
+	        idSet.add(s);
+	    }
+	    for (IPreferenceNode node : pm.getRootSubNodes()){
+	        if(idSet.contains(node.getId())){
+	            // removing prefPages
+	            pm.remove(node);
+	        }
+	    }
+	}
 }

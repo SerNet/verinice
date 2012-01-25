@@ -50,8 +50,6 @@ public class TodoView extends GenericMassnahmenView {
 
     TableSorter tableSorter = new TableSorter();
 
-    // FIXME: externalize Strings
-    
     @Override
     protected void createPartControlImpl(Composite parent) {
         Table table = viewer.getTable();
@@ -109,7 +107,7 @@ public class TodoView extends GenericMassnahmenView {
 
     @Override
     protected String getMeasureLoadJobLabel() {
-        return "Lade alle Massnahmen für Realisierungsplan";
+        return Messages.TodoView_13;
     }
 
     @Override
@@ -119,7 +117,7 @@ public class TodoView extends GenericMassnahmenView {
 
     @Override
     protected String getMeasureLoadPlaceholderLabel() {
-        return "Lade Maßnahmen";
+        return Messages.TodoView_14;
     }
 
     @Override
@@ -129,12 +127,12 @@ public class TodoView extends GenericMassnahmenView {
 
     @Override
     protected String getTaskErrorLabel() {
-        return "Fehler beim Erstellen des Realisierungsplans.";
+        return Messages.TodoView_15;
     }
 
     @Override
     protected String getMeasureLoadTaskLabel() {
-        return "Lade Massnahmen";
+        return Messages.TodoView_14;
     }
     
     /* (non-Javadoc)

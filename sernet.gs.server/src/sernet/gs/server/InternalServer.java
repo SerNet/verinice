@@ -25,6 +25,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +72,7 @@ public class InternalServer implements IInternalServer {
 
 	private HttpContext ctx;
 	
-	private EventListenerList listeners = new EventListenerList();
+	private List<IInternalServerStartListener> listeners = new LinkedList<IInternalServerStartListener>();
 
 	/**
 	 * Applies the given database credentials to the verinice server and checks
@@ -245,6 +247,9 @@ public class InternalServer implements IInternalServer {
 	 * @throws NamespaceException
 	 */
 	private void setupSpringServlets() throws ServletException, NamespaceException {
+	    if (log.isDebugEnabled()) {
+	        log.debug("setupSpringServlets...");
+        }
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict = new Hashtable<String, String>();
 		dict.put("servlet-name", "context"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -257,7 +262,9 @@ public class InternalServer implements IInternalServer {
 		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
 		dispatcherServlet = new DispatcherServlet();
 		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
-				
+		if (log.isDebugEnabled()) {
+            log.debug("setupSpringServlets finished");
+        }		
 	}
 
 	/**
@@ -302,16 +309,16 @@ public class InternalServer implements IInternalServer {
 	}
 	
 	protected synchronized void notifyStatusChange(InternalServerEvent event){
-	    for(IInternalServerStartListener l : listeners.getListeners(IInternalServerStartListener.class)){
+	    for(IInternalServerStartListener l : listeners){
 	        l.statusChanged(event);
 	    }
 	}
 	
 	public void addInternalServerStatusListener(IInternalServerStartListener listener){
-	    listeners.add(IInternalServerStartListener.class, listener);
+	    listeners.add(listener);
 	}
 	
 	public void removeInternalServerStatusListener(IInternalServerStartListener listener){
-	        listeners.remove(IInternalServerStartListener.class, listener);
+	        listeners.remove(listener);
 	}
 }

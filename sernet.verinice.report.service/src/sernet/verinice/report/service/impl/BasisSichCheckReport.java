@@ -71,7 +71,7 @@ public class BasisSichCheckReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.BasisSichCheckReport_3;
     }
 
     /* (non-Javadoc)

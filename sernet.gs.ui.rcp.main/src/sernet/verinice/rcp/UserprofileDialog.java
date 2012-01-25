@@ -28,7 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -55,6 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
@@ -76,6 +81,8 @@ import sernet.verinice.model.auth.Userprofile;
 @SuppressWarnings("restriction")
 public class UserprofileDialog extends TitleAreaDialog {
 
+    private static final Logger LOG = Logger.getLogger(UserprofileDialog.class);
+    
     private Combo comboLogin;
     private ComboModel<String> comboModel;
     
@@ -322,10 +329,17 @@ public class UserprofileDialog extends TitleAreaDialog {
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
-    protected void okPressed() {    
-        getRightService().updateConfiguration(auth);
-        super.okPressed();
-    }
+    protected void okPressed() {
+        try {
+            getRightService().updateConfiguration(auth);          
+        } catch(Exception e) {
+            final String message = "Error while saving userprofiles.";
+            LOG.error(message, e);
+            MessageDialog.openError(this.getShell(), "Error", message);
+        } finally {
+            super.okPressed();
+        }
+     }
     
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()

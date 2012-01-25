@@ -70,7 +70,9 @@
             
         <property
             name="adminUsername"
-            value="${admin.username}" />   
+            value="${admin.username}" />
+            
+        <property name="configurationDao" ref="configurationDao" />     
 
         <security:intercept-methods>
             <security:protect

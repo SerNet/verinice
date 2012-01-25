@@ -165,8 +165,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
 	private ShowKonsolidatorAction konsolidatorAction;
 
-	private Action selectLinksAction;
-
 	private TreeViewerCache cache;
 
 	private BausteinZuordnungAction bausteinZuordnungAction;
@@ -300,7 +298,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
 		manager.add(selectEqualsAction);
-		manager.add(selectLinksAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
 		manager.add(konsolidatorAction);
 		manager.add(bausteinZuordnungAction);
@@ -323,8 +320,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
 		manager.add(this.filterAction);
-		// manager.add(expandAllAction);
-
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 	}
@@ -389,21 +384,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 			}
 		};
 		selectEqualsAction.setText(Messages.BsiModelView_11);
-
-		selectLinksAction = new Action() {
-			@Override
-			public void run() {
-				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				Object o = sel.getFirstElement();
-				if (o instanceof IBSIStrukturElement && o instanceof CnATreeElement) {
-					CnATreeElement elmt = (CnATreeElement) o;
-					Set<CnALink> links = elmt.getLinksUp();
-					CnALink[] foundLinks = links.toArray(new CnALink[links.size()]);
-					viewer.setSelection(new StructuredSelection(foundLinks));
-				}
-			}
-		};
-		selectLinksAction.setText(Messages.BsiModelView_12);
 
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_13);
 

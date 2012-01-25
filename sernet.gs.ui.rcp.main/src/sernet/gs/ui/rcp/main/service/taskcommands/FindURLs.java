@@ -132,7 +132,6 @@ public class FindURLs extends GenericCommand {
 			StringBuilder sb = new StringBuilder();
 			sb.append("SELECT p.propertyValue,pl.entityId FROM PropertyList as pl INNER JOIN pl.properties as p ");
 			sb.append("WHERE p.propertyType IN (:types) ");
-			sb.append("AND p.propertyValue != '')");
 			final String hql = sb.toString();
 			if (log.isDebugEnabled()) {
 				log.debug("hql: " + hql);

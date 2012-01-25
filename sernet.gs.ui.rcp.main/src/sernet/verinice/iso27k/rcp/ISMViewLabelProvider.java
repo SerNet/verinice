@@ -97,12 +97,17 @@ public class ISMViewLabelProvider extends LabelProvider  {
 	public String getText(Object obj) {
 		String text = "unknown";
 		if (obj != null) {	
-			Object cachedObject = cache.getCachedObject(obj);
-			if (cachedObject == null) {
-				cache.addObject(obj);
-			} else {
-				obj = cachedObject;
-			}
+		    
+		    Object cachedObject = null;
+            if(obj instanceof CnATreeElement) {
+                cachedObject = cache.getCachedObject((CnATreeElement) obj);
+                if (cachedObject == null) {
+                    cache.addObject(obj);
+                } else {
+                    obj = cachedObject;
+                }
+            }
+            
 			if (obj instanceof CnATreeElement) {
 				CnATreeElement element = (CnATreeElement) obj;
 				StringBuilder sb = new StringBuilder();

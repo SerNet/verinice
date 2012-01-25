@@ -128,7 +128,7 @@ public class GS2BSITransformService {
 			        monitor.setTaskName(getText(numberOfControls,numberProcessed,e.getTitle()));
 			        if (group.canContain(e)) {
 					    group.addChild(e);
-					    e.setParent(group);
+					    e.setParentAndScope(group);
 					    if (LOG.isDebugEnabled()) {
 					        LOG.debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
 					    }
@@ -153,7 +153,7 @@ public class GS2BSITransformService {
 			                throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
 			            }
 			            e = (CnATreeElement) command.getElement();
-			            e.setParent(group);
+			            e.setParentAndScope(group);
 			            modelUpdater.childAdded(group, e);
 			            monitor.processed(1);
 			            numberProcessed++;

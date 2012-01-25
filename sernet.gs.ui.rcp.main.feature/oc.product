@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.4.1.91" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.5.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
       <text>
-         SerNet verinice 1.4.0 &apos;Mavericks&apos;
+         SerNet verinice 1.5.0 - Teahuo&apos;o
 
 (c) SerNet Service Network GmbH and others
-1996-2011
+1996-2012
 
 Contact the authors:
 verinice@sernet.de
@@ -26,7 +26,7 @@ Marek Seeger			&lt;ms@sernet.de&gt;
 Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;
 Robert Schuster			&lt;r.schuster@tarent.de&gt;
 Daniel Murygin			&lt;dm@sernet.de&gt;
-Sebastian Engel 			&lt;s.engel@tarent.de&gt;
+Sebastian Engel 		&lt;s.engel@tarent.de&gt;
 Markus Joos				&lt;markus.joos@T-ONLINE.DE&gt;
 Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@HS-FURTWANGEN.DE&gt;
 Christian Ganzmann 		&lt;christian.ganzmann@HS-FURTWANGEN.DE&gt;

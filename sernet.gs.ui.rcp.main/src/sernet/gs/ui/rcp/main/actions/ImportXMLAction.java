@@ -2,31 +2,17 @@
 
 package sernet.gs.ui.rcp.main.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dialogs.XMLImportDialog;
-import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -34,24 +20,10 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
+@SuppressWarnings("restriction")
 public class ImportXMLAction extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.importxmlaction";
-	private IViewPart view;
-	private Action action = null;
-	
-	public ImportXMLAction() {
-//        setText("Import...");
-//        setId(ID);
-//        setEnabled(true);
-    }
-	
-	public ImportXMLAction(IWorkbenchWindow window, String label) {
-//        setText(label);
-//		setId(ID);
-//		action = this;
-//		setEnabled(true);
-	}
 
 	public void run() {
 		final XMLImportDialog dialog = new XMLImportDialog(Display.getCurrent().getActiveShell());	
@@ -68,6 +40,9 @@ public class ImportXMLAction extends ActionDelegate implements IViewActionDelega
         run();
     }
     
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.actions.ActionDelegate#init(org.eclipse.jface.action.IAction)
+     */
     @Override
     public void init(final IAction action){
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
@@ -84,6 +59,7 @@ public class ImportXMLAction extends ActionDelegate implements IViewActionDelega
         } else {
             action.setEnabled(checkRights());
         }
+        super.init(action);
     }
 
     /* (non-Javadoc)

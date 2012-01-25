@@ -53,12 +53,11 @@ public class LoadReportLinkedElements extends GenericCommand {
 	    this.rootElement = rootElement;
 	    this.goDeep= goDeep;
 	}
-    
+
     public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep, boolean doUpLinksAlso){
         this(typeId, rootElement, goDeep);
         this.doUpLinksAlso = doUpLinksAlso;
     }
-
     public LoadReportLinkedElements(String typeId, Integer rootElement) {
         this(typeId, rootElement, false);
     }

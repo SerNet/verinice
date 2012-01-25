@@ -28,6 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -47,8 +48,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
@@ -151,7 +155,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public void createPartControl(Composite parent) {
         this.parent = parent;
         Composite container = createContainer(parent);
-        //createViewer(container);
         createTreeViewer(container);
         loadTasks();
         makeActions();     
@@ -197,89 +200,90 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         tree.setHeaderVisible(true);
         tree.setLinesVisible(true);
         
-        TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText("Audit / Control");   
-        
-        treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText("Task");
-        
-        treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText("User");
-        
-        treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText("Date");
-        
         TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(50,true));
-        layout.addColumnData(new ColumnWeightData(25,false));
-        layout.addColumnData(new ColumnWeightData(10,false));
+        TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText(Messages.TaskViewColumn_0);   
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText(Messages.TaskViewColumn_1);
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText(Messages.TaskViewColumn_2);
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText(Messages.TaskViewColumn_3);
+        
+        //set initial column widths
+        layout.addColumnData(new ColumnWeightData(40,true));
+        layout.addColumnData(new ColumnWeightData(30,false));
+        layout.addColumnData(new ColumnWeightData(15,false));
         layout.addColumnData(new ColumnWeightData(15,false));
 
         tree.setLayout(layout);
         
-        tree.addTreeListener(new TreeListener() {
-            @Override
-            public void treeExpanded(TreeEvent e) {
-                if(treeViewer.getContentProvider() instanceof TaskContentProvider){
-                    TaskContentProvider tcp = (TaskContentProvider)treeViewer.getContentProvider();
-                    Object[] o = tcp.getElements(null); // getRootElement
-                    Object[] children = tcp.getChildren(o[0]);
-                    String longestAudit = "", longestUser = "", longestDate = "", longestTask = "";
-                    for(Object child : children){
-                        if(child instanceof TaskInformation){
-                            TaskInformation ti = (TaskInformation)child;
-                            if(ti.getControlTitle().length() > longestAudit.length()){
-                                longestAudit = ti.getControlTitle();
-                            }
-                            if(ti.getAssignee().length() > longestUser.length()){
-                                longestUser = ti.getAssignee();
-                            }
-                            if(ti.getDueDate().toString().length() > longestDate.length()){
-                                longestDate = ti.getDueDate().toString();
-                            }
-                            if(ti.getName().length() > longestTask.length()){
-                                longestTask = ti.getName();
-                            }
-                        }
-                    }
-                    longestDate = longestDate.substring(0, longestDate.indexOf(" ")); // cut the time off
-                    GC gc = new GC(treeViewer.getTree());
-                    // compute used space
-                    int auditWidth = gc.textExtent(longestAudit, SWT.DRAW_MNEMONIC).x;
-                    int userWidth = gc.textExtent(longestUser + " (you)", SWT.DRAW_MNEMONIC).x;
-                    int dateWidth = gc.textExtent(longestDate , SWT.DRAW_MNEMONIC).x;
-                    int taskWidth = gc.textExtent(longestTask, SWT.DRAW_MNEMONIC).x;
-                    gc.dispose();
-                    // expand computed space by 10%
-                    double factor = 1.1;
-                    taskWidth *= factor;
-                    userWidth *= factor;
-                    auditWidth *= factor;
-                    // set new widths
-                    for(TreeColumn tc : treeViewer.getTree().getColumns()){
-                        if(tc.getText().equals("Audit / Control")){
-                            tc.setWidth(auditWidth);
-                        } else if(tc.getText().equals("Task")){
-                            tc.setWidth(taskWidth);
-                        } else if(tc.getText().equals("User")){
-                            tc.setWidth(userWidth);
-                        } else if(tc.getText().equals("Date")){
-                            tc.setWidth(dateWidth);
-                        }
-                    }
-                }
-            }
-            @Override
-            public void treeCollapsed(TreeEvent e) {}
-        });
+        for(TreeColumn tc : tree.getColumns()){
+            tc.pack();
+        }
+        
+        tree.addListener(SWT.Expand, getCollapseExpandListener());
+        tree.addListener(SWT.Collapse, getCollapseExpandListener());
 
         /*** Tree table specific code ends ***/
 
         this.treeViewer.setContentProvider(new TaskContentProvider());
         labelProvider = new TaskLabelProvider(onlyMyTasks);
         this.treeViewer.setLabelProvider(labelProvider);
-        
+    }
+    
+    private Listener getCollapseExpandListener(){
+        Listener listener = new Listener(){
+            
+            @Override
+            public void handleEvent(Event e){
+                final TreeItem treeItem = (TreeItem)e.item;
+                Display.getDefault().asyncExec(new Runnable(){
+                   @Override
+                   public void run(){
+                       for(TreeColumn tc : treeItem.getParent().getColumns()){
+                           tc.pack();
+                       }
+                   }
+                });
+            }
+        };
+        return listener;
+    }
+    
+    private Listener getResizeListener(){
+        Listener listener = new Listener(){
 
+            @Override
+            public void handleEvent(Event event) {
+                final TreeItem treeItem = (TreeItem)event.item;
+                Display.getDefault().asyncExec(new Runnable(){
+                   @Override
+                   public void run(){
+                       int parentWidth = treeItem.getParent().getParent().getSize().x;
+                       for(TreeColumn tc : treeItem.getParent().getColumns()){
+                           if(tc.getText().equals(Messages.TaskViewColumn_0)){
+                               tc.setWidth(computeColumnWidth(0.5, parentWidth));
+                           } else if(tc.getText().equals(Messages.TaskViewColumn_1)){
+                               tc.setWidth(computeColumnWidth(0.25, parentWidth));
+                           } else if(tc.getText().equals(Messages.TaskViewColumn_2)){
+                               tc.setWidth(computeColumnWidth(0.1, parentWidth));
+                           } else if(tc.getText().equals(Messages.TaskViewColumn_3)){
+                               tc.setWidth(computeColumnWidth(0.15, parentWidth));
+                           }
+                       }
+                   }
+                });
+            }
+        };
+        return listener;
+    }
+    
+    private int computeColumnWidth(double percentage, int parentWidth){
+        return Integer.valueOf(String.valueOf(parentWidth * percentage));
     }
     
     private void makeActions() {
@@ -331,13 +335,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         };
-//        if(ServiceFactory.lookupAuthService().isPermissionHandlingNeeded()){
-//            if(isAdminUser(ServiceFactory.lookupAuthService().getUsername())){
-//                cancelTaskAction.setEnabled(true);
-//            }
-//        } else {
-//            cancelTaskAction.setEnabled(false);
-//        }
         cancelTaskAction.setEnabled(service.isEnabled(ActionRightIDs.TASKDELETE));
         cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
     }

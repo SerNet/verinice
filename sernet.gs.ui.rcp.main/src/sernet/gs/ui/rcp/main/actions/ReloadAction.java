@@ -24,6 +24,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -36,7 +37,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 public class ReloadAction extends Action {
 
     public static final String ID = "sernet.gs.ui.rcp.main.reloadaction"; //$NON-NLS-1$
-
+    
     public ReloadAction(IWorkbenchWindow window, String label) {
         setText(label);
         setId(ID);
@@ -64,17 +65,28 @@ public class ReloadAction extends Action {
     @Override
     public void run() {
         Activator.inheritVeriniceContextState();
-        try {
             // close editors:
+        try{
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+            IRunnableWithProgress operation = new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    CnAElementFactory.getInstance().reloadModelFromDatabase();
+                    try{
+                        monitor.beginTask(Messages.ReloadAction_2, IProgressMonitor.UNKNOWN);
+                        CnAElementFactory.getInstance().reloadModelFromDatabase();
+                    } catch (Exception e){
+                        ExceptionUtil.log(e, Messages.ReloadAction_1);
+                    } finally {
+                        monitor.done();
+                    }
                 }
-            });
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.ReloadAction_1);
+            };
+            progressService.run(true, true, operation);
+        } catch (InvocationTargetException e)  {
+            ExceptionUtil.log(e, Messages.ReloadAction_1); //$NON-NLS-1$
+        } catch (InterruptedException e) {
+            ExceptionUtil.log(e, Messages.ReloadAction_1); //$NON-NLS-1$
         }
     }
-
 }

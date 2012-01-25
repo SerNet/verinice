@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
@@ -43,7 +45,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.ControlTransformOperation;
 import sernet.verinice.iso27k.service.ItemTransformException;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Threat;
@@ -77,6 +78,7 @@ public class ControlDropPerformer implements DropPerformer {
 		if (!validateDropObjects(target)) {
 			return false;
 		}
+		TreeSelection oldSelection = (TreeSelection)viewer.getSelection();
 		boolean success = isActive();
 		if (isActive()) {
 			if (LOG.isDebugEnabled()) {
@@ -87,6 +89,12 @@ public class ControlDropPerformer implements DropPerformer {
 				Group group = (Group) target;
 				if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
 					ControlTransformOperation operation = new ControlTransformOperation(group);
+	                // set target to current treeselection if it isnt already selected
+					if(viewer.getSelection() != target || viewer.getSelection() == null){
+	                    if(viewer.getSelection() instanceof TreeSelection){
+	                        viewer.setSelection(new StructuredSelection(target));
+	                    }
+	                }
 					IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 					progressService.run(true, true, operation);
 					IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
@@ -101,6 +109,10 @@ public class ControlDropPerformer implements DropPerformer {
 				} else if (LOG.isDebugEnabled()) {
 					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
 				}
+				// Restore old selection in tree
+//				if(!oldSelection.isEmpty()){
+				    viewer.setSelection(oldSelection);
+//				}
 			 } catch (ItemTransformException e) {
                 LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
                 showException(e);
@@ -191,13 +203,19 @@ public class ControlDropPerformer implements DropPerformer {
 	 */
 	private boolean isCorrectItemsForGroup(Collection<IItem> items, int type) {
 		boolean valid = true;
-		for (IItem item : items) {
-			// only check leaf nodes for type:
-			if (item.getItems() != null && item.getItems().size() > 0) {
-				valid = isCorrectItemsForGroup(item.getItems(), type);
-			} else {
-				valid = (item.getTypeId() == type);
+		try{
+			for (IItem item : items) {
+				// only check leaf nodes for type:
+				if (item.getItems() != null && item.getItems().size() > 0) {
+					valid = isCorrectItemsForGroup(item.getItems(), type);
+				} else {
+					valid = (item.getTypeId() == type);
+				}
 			}
+		}
+		catch (ClassCastException e){
+			LOG.error("Wrong type of item dropped");
+			valid = false;
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("isCorrectItemsForGroup result: " + valid); //$NON-NLS-1$

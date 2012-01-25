@@ -156,7 +156,7 @@ public class CnAElementFactory {
 	private abstract class ElementBuilder implements IElementBuilder{
 	    protected void init( CnATreeElement container,CnATreeElement child ) {
 	        container.addChild(child);
-            child.setParent(container);
+            child.setParentAndScope(container);
 	    }
 	}
 
@@ -403,7 +403,7 @@ public class CnAElementFactory {
 					return null;
 
 				container.addChild(bu);
-				bu.setParent(container);
+				bu.setParentAndScope(container);
 				return bu;
 			}
 		});
@@ -722,7 +722,7 @@ public class CnAElementFactory {
         saveCommand = getCommandService().executeCommand(saveCommand);
         CnATreeElement child = saveCommand.getNewElement();
         container.addChild(child);
-        child.setParent(container);
+        child.setParentAndScope(container);
         // notify all listeners:
         if (fireUpdates) {
             CnAElementFactory.getModel(child).childAdded(container, child);

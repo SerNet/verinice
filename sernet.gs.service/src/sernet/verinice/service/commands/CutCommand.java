@@ -30,9 +30,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
+import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -44,7 +46,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 public class CutCommand extends GenericCommand {
  
     private transient Logger log = Logger.getLogger(CutCommand.class);
-
+    
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(CutCommand.class);
@@ -63,6 +65,19 @@ public class CutCommand extends GenericCommand {
     private List<IPostProcessor> postProcessorList;
     
     private transient IBaseDao<CnATreeElement, Serializable> dao;
+    
+    /**
+     * returns a list of classes that can contain persons or personIsos as children
+     * @return
+     */
+    private static List<String> getPersonContainingTypeIDs(){
+        ArrayList<String> list = new ArrayList<String>();
+        list.add(sernet.verinice.model.bsi.Person.TYPE_ID);
+        list.add(sernet.verinice.model.iso27k.Audit.TYPE_ID);
+        list.add(sernet.verinice.model.iso27k.PersonGroup.TYPE_ID);
+        list.add(sernet.verinice.model.iso27k.PersonIso.TYPE_ID);
+        return list;
+    }
     
     /**
      * @param uuidGroup
@@ -94,11 +109,28 @@ public class CutCommand extends GenericCommand {
             List<CnATreeElement> elementList = createInsertList(uuidList); 
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
             Map<String, String> sourceDestMap = new Hashtable<String, String>();
+            boolean isPersonMoved = false;
             for (CnATreeElement element : elementList) {
                 CnATreeElement movedElement = move(selectedGroup, element);
                 // cut: source and dest is the same
                 sourceDestMap.put(movedElement.getUuid(),movedElement.getUuid());
+                for(String s : getPersonContainingTypeIDs()){
+                    if(selectedGroup.getTypeId().equals(s)){
+                        isPersonMoved = true;
+                        break;
+                    }
+                }
             }
+            if(isPersonMoved){
+                getCommandService().discardUserData();
+            }
+            
+            // set scope id of all elements and it's subtrees
+            for (CnATreeElement element : elementList) {
+                UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(), selectedGroup.getScopeId());
+                updateScopeId = getCommandService().executeCommand(updateScopeId);
+            }
+            
             
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
                 List<String> copyElementUuidList = new ArrayList<String>(elementList.size());
@@ -123,6 +155,7 @@ public class CutCommand extends GenericCommand {
             getLog().error("Error while copying element", e);
             throw new RuntimeException("Error while copying element", e);
         }
+        
     }
     
     private CnATreeElement move(CnATreeElement group, CnATreeElement element) throws Exception {
@@ -134,7 +167,8 @@ public class CutCommand extends GenericCommand {
         command = getCommandService().executeCommand(command);
         parentOld = (CnATreeElement) command.getElement();
           
-        element.setParent(group);
+        element.setParentAndScope(group);
+        
         group.addChild(element);
         
         // save element

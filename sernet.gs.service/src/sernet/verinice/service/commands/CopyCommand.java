@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 /**
  * Copies a list of elements with all children to a group.
@@ -60,8 +61,8 @@ public class CopyCommand extends GenericCommand {
     public static List<String> CUT_BLACKLIST;
     
     static {
-        COPY_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        CUT_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    	COPY_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$
+        CUT_BLACKLIST = Arrays.asList("riskanalysis"); //$NON-NLS-1$
     }
     
     String uuidGroup;
@@ -165,7 +166,7 @@ public class CopyCommand extends GenericCommand {
         SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = (CnATreeElement) saveCommand.getElement();
-        newElement.setParent(toGroup);
+        newElement.setParentAndScope(toGroup);
         if (getLog().isDebugEnabled()) {
             getLog().debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
         }
@@ -179,7 +180,7 @@ public class CopyCommand extends GenericCommand {
         saveCommand = getCommandService().executeCommand(saveCommand);
         CnATreeElement child = saveCommand.getNewElement();
         container.addChild(child);
-        child.setParent(container);
+        child.setParentAndScope(container);
         return child;
     }
     
@@ -209,7 +210,9 @@ public class CopyCommand extends GenericCommand {
             if(depth==0) {
                 insertList.add(element);
             }
-            if(element instanceof IISO27kGroup && element.getChildren()!=null) {
+            if((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung) && element.getChildren()!=null) {
+
+//            if(element instanceof IISO27kGroup && element.getChildren()!=null) {
                 depth++;
                 for (CnATreeElement child : element.getChildren()) {
                     createInsertList(child,tempList,insertList,depth,removed);

@@ -21,11 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
+
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Auth;
-import sernet.verinice.model.auth.ConfigurationType;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -35,7 +43,10 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class DummyRightsService implements IRightsService{
     
+    private final Logger log = Logger.getLogger(XmlRightsService.class);
+
     Auth auth;
+    
     List<Userprofile> userprofile;
     
     private IBaseDao<Configuration, Integer> configurationDao;
@@ -43,15 +54,22 @@ public class DummyRightsService implements IRightsService{
     private IBaseDao<Property, Integer> propertyDao;
     
     private IRemoteMessageSource messages;
-
+    
+    Resource authConfigurationDefault;
+    
+    Resource authConfigurationSchema;
+    
+    Schema schema;
+    
+    JAXBContext context;
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
      */
     @Override
     public Auth getConfiguration() {
         if(auth == null){
-            auth = new Auth();
-            auth.setType(ConfigurationType.BLACKLIST);
+            auth = loadConfiguration();
         }
         return auth;
     }
@@ -69,13 +87,17 @@ public class DummyRightsService implements IRightsService{
      */
     @Override
     public List<Userprofile> getUserprofile(String username) {
-        if(userprofile == null){
-            userprofile = new ArrayList<Userprofile>();
+        List<String> roleList = getRoleList(username);
+        // add the username to the list
+        roleList.add(username);   
+        List<Userprofile> userprofileList = new ArrayList<Userprofile>(1);
+        List<Userprofile> allUserprofileList = getConfiguration().getUserprofiles().getUserprofile();
+        for (Userprofile userprofile : allUserprofileList) {
+            if(roleList.contains(userprofile.getLogin())) {
+                userprofileList.add(userprofile);
+            }
         }
-        Userprofile profile = new Userprofile();
-        profile.setLogin(username);
-        userprofile.add(profile);
-        return userprofile;
+        return userprofileList;
     }
 
     /* (non-Javadoc)
@@ -83,7 +105,7 @@ public class DummyRightsService implements IRightsService{
      */
     @Override
     public Profiles getProfiles() {
-        return null;
+        return getConfiguration().getProfiles();
     }
 
     /* (non-Javadoc)
@@ -157,6 +179,99 @@ public class DummyRightsService implements IRightsService{
     @Override
     public List<String> getGroupnames(String username) {
         return null;
+    }
+
+    public Resource getAuthConfigurationDefault() {
+        return authConfigurationDefault;
+    }
+
+    public void setAuthConfigurationDefault(Resource authConfigurationDefault) {
+        this.authConfigurationDefault = authConfigurationDefault;
+    }
+    
+    /**
+     * Loads the configuration by merging the default and installation configuration
+     * 
+     * @return the authorization configuration
+     */
+    private Auth loadConfiguration() {
+        try {
+            Unmarshaller um = getContext().createUnmarshaller();            
+            um.setSchema(getSchema());
+            
+            // read default configuration
+            return auth = (Auth) um.unmarshal(getAuthConfigurationDefault().getInputStream());
+            
+        } catch (RuntimeException e) {
+            log.error("Error while reading verinice authorization definition from file: " + getAuthConfigurationDefault().getFilename(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Error while reading verinice authorization definition from file: " + getAuthConfigurationDefault().getFilename(), e);
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private Schema getSchema() {
+        if(schema==null) {
+            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            try {
+                schema = sf.newSchema(getAuthConfigurationSchema().getURL());
+            } catch (Exception e) {
+                log.error("Error while creating schema.", e);
+            } 
+        }
+        return schema;
+    }
+
+    public JAXBContext getContext() {
+        if(context==null) {
+            try {
+                context = JAXBContext.newInstance(Auth.class);
+            } catch (JAXBException e) {
+                log.error("Error while creating JAXB context.", e);
+            }
+        }
+        return context;
+    }
+
+    public void setContext(JAXBContext context) {
+        this.context = context;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
+    public Resource getAuthConfigurationSchema() {
+        return authConfigurationSchema;
+    }
+
+    public void setAuthConfigurationSchema(Resource authConfigurationSchema) {
+        this.authConfigurationSchema = authConfigurationSchema;
+    }
+    
+    /**
+     * Returns an list with the role/groups of an user. 
+     * The returned list contains the user name.
+     * 
+     * @param username an username
+     * @return the role/groups of an user
+     */
+    private List<String> getRoleList(String username) {
+        // select all groups of the user
+        String HQL = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+                "inner join conf.entity as entity " + //$NON-NLS-1$
+                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                "inner join propertyList.properties as props " + //$NON-NLS-1$
+                "inner join conf.entity as entity2 " + //$NON-NLS-1$
+                "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+                "inner join propertyList2.properties as roleprops " + //$NON-NLS-1$
+                "where props.propertyType = ? " + //$NON-NLS-1$
+                "and props.propertyValue like ? " + //$NON-NLS-1$
+                "and roleprops.propertyType = ?"; //$NON-NLS-1$
+        Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_ROLES};        
+        List<String> roleList = getConfigurationDao().findByQuery(HQL,params);
+        return roleList;
     }
 
 }

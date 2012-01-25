@@ -24,6 +24,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -68,13 +70,19 @@ import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
 
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.util.tracker.ServiceTracker;
+
 
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("restriction")
 public class Activator extends AbstractUIPlugin implements IMain {
 
 	private static final Logger LOG = Logger.getLogger(Activator.class);
+	
+	private  ServiceTracker proxyTracker;
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
@@ -159,7 +167,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	 */
 	@SuppressWarnings("restriction")
 	void startApplication() throws BundleException
-	{
+	{	    
 		runsAsApplication = true;
 		
 		Bundle bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
@@ -174,7 +182,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		
 		// set workdir preference:
 		CnAWorkspace.getInstance().prepareWorkDir();
-
+		setProxy();
+		
 		Preferences prefs = getPluginPreferences();
 		
 		// May replace the JDK's built-in security settings
@@ -297,6 +306,49 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		repositoryJob.schedule();	
 	}
 
+    /**
+     * Load proxy params from the RCP settings dialog and sets
+     * these params as sxstem properties
+     * 
+     * @throws URISyntaxException
+     */
+    private void setProxy() {
+        try {
+            Preferences prefs = Activator.getDefault().getPluginPreferences(); 
+            String operationMode = prefs.getString(PreferenceConstants.OPERATION_MODE);
+    	    if (operationMode!=null && operationMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+                URI serverUri = new URI(prefs.getString(PreferenceConstants.VNSERVER_URI));
+                IProxyService proxyService = getProxyService();
+                IProxyData[] proxyDataForHost = proxyService.select(serverUri);
+                if(proxyDataForHost==null || proxyDataForHost.length==0) {
+                    System.setProperty("http.proxySet", "false");
+                    System.clearProperty("http.proxyHost");            
+                    System.clearProperty("http.proxyPort");
+                    System.clearProperty("http.proxyName");
+                    System.clearProperty("http.proxyPassword");
+                } else {
+                    for (IProxyData data : proxyDataForHost) {
+                        if (data.getHost() != null) {
+                            System.setProperty("http.proxySet", "true");
+                            System.setProperty("http.proxyHost", data.getHost());            
+                            System.setProperty("http.proxyPort", String.valueOf(data.getPort()));
+                            if(data.getUserId()!=null && !data.getUserId().isEmpty()) {
+                                System.setProperty("http.proxyName", data.getUserId());
+                            }
+                            if(data.getPassword()!=null && !data.getPassword().isEmpty()) {
+                                System.setProperty("http.proxyPassword", data.getPassword());
+                            }
+                        }
+                    }
+                }
+                // Close the service and close the service tracker
+                proxyService = null;
+            }
+        } catch(Throwable t) {
+            LOG.error("Error while setting proxy.", t);
+        }
+    }
+
 
 	/*
 	 * (non-Javadoc)
@@ -309,6 +361,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	public void stop(BundleContext context) throws Exception {
 		CnAElementHome.getInstance().close();
 		plugin = null;
+		if(proxyTracker!=null) {
+		    proxyTracker.close();
+		}
 		super.stop(context);
 	}
 	
@@ -675,6 +730,21 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     public boolean isStandalone() {
         return standalone;
+    }
+    
+    public IProxyService getProxyService() {
+        return (IProxyService) getProxyTracker().getService();
+    }
+
+    /**
+     * @return
+     */
+    private ServiceTracker getProxyTracker() {
+        if(proxyTracker==null) {
+            proxyTracker = new ServiceTracker(FrameworkUtil.getBundle(this.getClass()).getBundleContext(), IProxyService.class.getName(), null);
+            proxyTracker.open();
+        }
+        return proxyTracker;
     }
 	
 }

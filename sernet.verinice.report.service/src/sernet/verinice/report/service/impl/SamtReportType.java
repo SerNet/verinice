@@ -70,7 +70,7 @@ public class SamtReportType implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.SamtReportType_3;
     }
 
     /* (non-Javadoc)

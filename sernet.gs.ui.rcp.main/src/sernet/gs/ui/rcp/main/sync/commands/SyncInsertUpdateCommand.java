@@ -74,11 +74,13 @@ import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
 
+    private static final int flushLevel = 50;
+    
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(SyncInsertUpdateCommand.class);
@@ -121,6 +123,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private Integer format;
     
     private transient IAuthService authService;
+    
+    private transient Map<Class,IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
     
     public SyncInsertUpdateCommand(
     		String sourceId, 
@@ -178,6 +182,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 importLink(syncLink);
             }
+            finalizeDaos();
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while importing", e);
             throw e;
@@ -185,6 +190,13 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             getLog().error("Exception while importing", e);
             throw new RuntimeCommandException(e);
         }
+    }
+
+    /**
+     * 
+     */
+    private void finalizeDaos() {
+        daoMap.clear();
     }
 
     private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
@@ -240,7 +252,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         CnATypeMapper typeMapper = new CnATypeMapper();
         Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
-        IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(clazz);      
+        IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);      
         
         parent = (parent == null) ? accessContainer(clazz) : parent;
         
@@ -296,15 +308,15 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
             parent.addChild(elementInDB);
-            elementInDB.setParent(parent);
+            elementInDB.setParentAndScope(parent);
             
             // set the scope id of orgs. and it-verbunds.
             if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
                 elementInDB.setScopeId(elementInDB.getDbId());
             }
-            
+     
             merged++;
-            if(merged % 50 == 0 ) {
+            if(merged % flushLevel == 0 ) {
                long flushstart = 0;
                if (getLogrt().isDebugEnabled()) {
                    flushstart = System.currentTimeMillis();
@@ -341,6 +353,19 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
             importObject(elementInDB, child);
         }
+    }
+
+    /**
+     * @param clazz
+     * @return
+     */
+    private <T> IBaseDao<T, Serializable>  getDao(Class clazz) {
+        IBaseDao<T, Serializable> dao = daoMap.get(clazz);
+        if(dao==null) {
+            dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
+            daoMap.put(clazz, dao);
+        }
+        return dao;
     }
     
     private CnATreeElement createElement(IBaseDao<CnATreeElement, Serializable> dao, CnATreeElement parent, Class clazz) throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -447,7 +472,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         
         for (String fileName : fileNameList) {
             Attachment attachment = attachmentMap.get(fileName);
-            IBaseDao<AttachmentFile, Serializable> dao = (IBaseDao<AttachmentFile, Serializable>) getDaoFactory().getDAO(AttachmentFile.class);
+            IBaseDao<AttachmentFile, Serializable> dao = getDao(AttachmentFile.class);
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
             attachmentFile.setFileData(fileDataMap.get(fileName));
             fileDataMap.remove(fileName);
@@ -505,7 +530,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 	        if (getLog().isDebugEnabled()) {
 	        	getLog().debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
 			}
-	        getDaoFactory().getDAO(CnALink.class).saveOrUpdate(link);
+	        getDao(CnALink.class).saveOrUpdate(link);
         } else if (getLog().isDebugEnabled()) {
         	getLog().debug("Link exists: " + titleDependant + " to: " + titleDependency);
 		}
@@ -527,7 +552,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     			link.getDependency().getDbId(),
     			relationId,
     			relationId2};
-    	List result = getDaoFactory().getDAO(CnALink.class).findByQuery(hql, paramArray); 	
+    	List result = getDao(CnALink.class).findByQuery(hql, paramArray); 	
 		return result==null || result.isEmpty();
 	}
 
@@ -657,7 +682,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             holder = new ImportBsiGroup(model);
             addPermissions(holder);
-            getDaoFactory().getDAO(ImportBsiGroup.class).saveOrUpdate(holder);
+            getDao(ImportBsiGroup.class).saveOrUpdate(holder);
         } catch (Exception e1) {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
@@ -677,7 +702,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             holder = new ImportIsoGroup(model);
             addPermissions(holder);
-            getDaoFactory().getDAO(ImportIsoGroup.class).saveOrUpdate(holder);
+            getDao(ImportIsoGroup.class).saveOrUpdate(holder);
         } catch (Exception e1) {
             throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
         }

@@ -68,11 +68,14 @@ public class ElementViewContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parent) {
 		CnATreeElement[] children = new CnATreeElement[]{};
 
-		// replace object in event with the one actually displayed in the tree:
-		Object cachedObject = cache.getCachedObject(parent);
-		if (cachedObject != null) {
-			parent = cachedObject;
-		}
+		Object cachedObject = null;
+        if(parent instanceof CnATreeElement) {
+            cachedObject = cache.getCachedObject((CnATreeElement) parent);
+            if (cachedObject != null) {         
+                parent = cachedObject;
+            }
+        }
+				
 		try {
     		if(parent instanceof List) {
     			List<CnATreeElement> list = (List<CnATreeElement>)parent;
@@ -139,7 +142,7 @@ public class ElementViewContentProvider implements ITreeContentProvider {
 		return newElement;
 	}
 	
-	public Object getCachedObject(Object o) {
+	public CnATreeElement getCachedObject(CnATreeElement o) {
 		return cache.getCachedObject(o);
 	}
 	

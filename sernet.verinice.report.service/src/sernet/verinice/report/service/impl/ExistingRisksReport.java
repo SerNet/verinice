@@ -79,7 +79,7 @@ public class ExistingRisksReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.ExistingRisksReport_3;
     }
 
     /* (non-Javadoc)

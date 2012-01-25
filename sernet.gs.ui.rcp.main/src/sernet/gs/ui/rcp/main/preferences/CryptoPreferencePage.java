@@ -50,7 +50,6 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 	public void createFieldEditors() {
 		Composite fep = getFieldEditorParent();
 		
-		// FIXME externalize strings
 		
 		// If this is checked the verinice security provider will take over the certificate/key management
 		// for SSL connections.

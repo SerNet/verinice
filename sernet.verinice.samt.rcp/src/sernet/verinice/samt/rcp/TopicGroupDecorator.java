@@ -38,6 +38,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 			    Double securityFigure = null;
 			    if(element instanceof Audit) {
 			        Audit audit = (Audit) element;
+			        audit = (Audit) Retriever.checkRetrieveChildren(audit);
 			        group = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
 			        group = (ControlGroup) Retriever.checkRetrieveChildren(group);
 			        TotalSecurityFigureCommand command = new TotalSecurityFigureCommand(audit.getDbId());
@@ -45,7 +46,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 			        securityFigure = command.getResult();
 			    }
 			    if(element instanceof ControlGroup) {	
-    				group = (ControlGroup) element;	
+    				group = (ControlGroup) Retriever.checkRetrieveChildren((CnATreeElement) element);	
 			    }
 				// add a decorator if at least one isa topic child exists
 				boolean addDecorator = retrieveChildren(group);

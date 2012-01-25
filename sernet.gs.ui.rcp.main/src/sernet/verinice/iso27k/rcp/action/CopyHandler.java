@@ -31,9 +31,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
@@ -49,7 +52,20 @@ public class CopyHandler extends AbstractHandler implements RightEnabledUserInte
 	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
     public CopyHandler(){
-	    setBaseEnabled(checkRights());
+	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setBaseEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setBaseEnabled(checkRights());
+        }
 	}
 	
 	/* (non-Javadoc)

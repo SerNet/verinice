@@ -51,6 +51,7 @@ public class Messages extends NLS {
     public static String ManageUpdatesAction_2;
     public static String OpenMultipleViewAction_2;
     public static String ReloadAction_1;
+    public static String ReloadAction_2;
     public static String RunRiskAnalysisAction_0;
     public static String RunRiskAnalysisAction_1;
     public static String RunRiskAnalysisAction_2;

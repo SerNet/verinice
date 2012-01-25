@@ -63,8 +63,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 
 public class ConfigurationAction implements IObjectActionDelegate,  RightEnabledUserInteraction{
 
-	// FIXME: externalize strings
-	
 	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration"; //$NON-NLS-1$
@@ -193,13 +191,11 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 		boolean updated = false;
 		final String oldName = configuration.getUser();
 		if(isNewName(oldName,name) && (newPassword==null || newPassword.isEmpty())) {
-			// Exception message must be translated here
 			throw new PasswordException(Messages.ConfigurationAction_9);
 		}	
 		configuration.setUser(name);
 		if(newPassword!=null && !newPassword.isEmpty()) {
 			if(!newPassword.equals(newPassword2)) {
-				// Exception message must be translated here
 				throw new PasswordException(Messages.ConfigurationAction_10);
 			}
 			configuration.setPass(newPassword);

@@ -18,9 +18,14 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.List;
+import java.util.UUID;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.Statistics;
+import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 
@@ -38,57 +43,77 @@ import sernet.verinice.model.common.CnATreeElement;
  * $LastChangedBy$
  *
  */
+@SuppressWarnings("restriction")
 public class TreeViewerCache {
 
     private static final Logger LOG = Logger.getLogger(TreeViewerCache.class);
-    
-	private Map<Object, Object> cache;
 	
-	private static final Object PRESENT = new Object();
+	private transient CacheManager manager = null;
+    private String cacheId = null;
+    private transient Cache cache = null;
 	
 	public TreeViewerCache() {
-		clear();
+		createCache();
 	}
 	
 	public void addObject(Object o) {
-	    try {
-	        if(o!=null) {
-	            this.cache.put(o, PRESENT);
-	        } else {
-	            LOG.warn("Object is null. Will not add this to cache.");
-	        }
-	    } catch(Throwable t) {
-	        LOG.error("Error while adding object",t);
-	    }
+	    if(o!=null && o instanceof CnATreeElement) {
+	        addObject((CnATreeElement)o);
+	    } else {
+            LOG.warn("Object is null or not an CnATreeElement. Will not add this to cache.");
+        }
  	}
 	
-	public void clear() {
-		this.cache = Collections.synchronizedMap(new WeakHashMap<Object, Object>());
+	public void addObject(CnATreeElement e) {
+	    try {
+            if(e!=null) {
+                getCache().put(new Element(e.getUuid(), e));
+                if (LOG.isDebugEnabled()) {
+                    Statistics s = getCache().getStatistics();
+                    LOG.debug("Element added, uuid: " + e.getUuid() + ", size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
+                }
+            } else {
+                LOG.warn("Object is null. Will not add this to cache.");
+            }
+        } catch(Throwable t) {
+            LOG.error("Error while adding object",t);
+        }
 	}
 	
-	public <T> T getCachedObject(T o) {
+	public void clear() {
+		manager.clearAll();
+		if (LOG.isDebugEnabled()) {
+		    Statistics s = getCache().getStatistics();
+            LOG.debug("Cache cleared, size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
+        }
+	}
+	
+	public CnATreeElement getCachedObject(CnATreeElement e) {
 	    try {
-    	    synchronized(cache) {
-    			for (Object elmt : cache.keySet()) {
-    			    if(elmt!=null) {
-        				if (elmt.equals(o)) {
-        					return (T) elmt;
-        				}
-    			    } else {
-    			        LOG.warn("Null found in cache.");
-    			    }
-    			}
-    			return null;
-    		}
+	        CnATreeElement value = null;
+	        if(e!=null) {
+    	        Element element = getCache().get(e.getUuid());
+    	        if(element!=null) {
+    	            value = (CnATreeElement) element.getObjectValue();
+    	            if (LOG.isDebugEnabled()) {
+                        if(value!=null) {
+                            LOG.debug("Cache hit for uuid: " + e.getUuid() + ", children loaded: " + e.isChildrenLoaded());
+                        } else {
+                            LOG.debug("No cached element for uuid: " + e.getUuid());
+                        }
+                    }
+    	        }   
+	        }
+    	    return value;
     	} catch(Throwable t) {
             LOG.error("Error while getting object",t);
             return null;
         }
 	}
 
-	public void clear(Object oldElement) {
+	public void clear(CnATreeElement oldElement) {
 	    try {
-	        this.cache.remove(oldElement);
+	        getCache().remove(oldElement.getUuid());
         } catch(Throwable t) {
             LOG.error("Error while adding object",t);
         }	
@@ -101,9 +126,11 @@ public class TreeViewerCache {
 	public CnATreeElement getCachedObjectById(Integer id) {
 	    try {
     		synchronized(cache) {
-    			for (Object elmt : cache.keySet()) {
-    				if (elmt instanceof CnATreeElement) {
-    					CnATreeElement cnaElmt = (CnATreeElement) elmt;
+    		    List<String> keyList = getCache().getKeys();
+    			for (String key : keyList) {
+    			   Element element =  getCache().get(key);
+    				if (element.getObjectValue() instanceof CnATreeElement) {
+    					CnATreeElement cnaElmt = (CnATreeElement) element.getObjectValue();
     					if (cnaElmt.getDbId().equals(id))
     						return cnaElmt;
     				}
@@ -115,6 +142,39 @@ public class TreeViewerCache {
             return null;
         }
 	}
+	
+	private Cache getCache() {     
+        if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+            cache = createCache();
+        } else {
+            cache = manager.getCache(cacheId);
+        }
+        return cache;
+    }
+    
+    private Cache createCache() {
+        shutdownCache();
+        cacheId = UUID.randomUUID().toString();
+        manager = CacheManager.create();
+        cache = new Cache(cacheId, 5000, false, false, 3600, 3600);
+        manager.addCache(cache);
+        return cache;
+    }
+
+    private void shutdownCache() {
+        if(manager!=null && !Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
+            manager.shutdown();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        shutdownCache();
+        super.finalize();
+    }
 
 	
 }

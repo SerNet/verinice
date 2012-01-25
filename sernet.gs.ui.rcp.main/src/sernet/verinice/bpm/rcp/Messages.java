@@ -36,6 +36,10 @@ public class Messages extends NLS {
     public static String ButtonCancel;
     public static String ConfirmTaskDelete_0;
     public static String ConfirmTaskDelete_1;
+    public static String TaskViewColumn_0;
+    public static String TaskViewColumn_1;
+    public static String TaskViewColumn_2;
+    public static String TaskViewColumn_3;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -70,6 +70,12 @@ public class ConfigurationService implements IConfigurationService {
         if (result == null) {
             loadUserData();
             result = scopeMap.get(user);
+            if(result==null) {
+                // prevent calling loadUserData() again
+                // if user was not found in db
+                result = false;
+                scopeMap.put(user,result);
+            }
         }
         return (result==null) ? false : result;
     }

@@ -17,6 +17,26 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+/**
+ * Base class of all command.
+ * 
+ * See this for details about commands and the command pattern:
+ * http://en.wikipedia.org/wiki/Command_pattern
+ * 
+ * Lifecycle of a command:
+ * A command is created an the client,
+ * serialized,
+ * send to the server, 
+ * deserialized,
+ * executed,
+ * serialized and
+ * send back to the client.
+ * 
+ * Use <code>transient</code> for all member variables, 
+ * whichz are only used on the server site at execution time.
+ * 
+ * @author Alexander Koderman <ak[at]sernet[dot]de>
+ */
 @SuppressWarnings("serial")
 public abstract class GenericCommand implements ICommand {
 	

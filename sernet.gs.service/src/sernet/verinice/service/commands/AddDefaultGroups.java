@@ -45,9 +45,9 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
 
     private transient Logger log = Logger.getLogger(AddDefaultGroups.class);
 
-    public static final String DEFAULT_USER_GROUP = "user-default-group";
+    public static final String USER_DEFAULT_GROUP = "user-default-group";
 
-    public static final String DEFAULT_ADMIN_GROUP = "admin-default-group";
+    public static final String ADMIN_DEFAULT_GROUP = "admin-default-group";
     
     IBaseDao<Configuration, Serializable> configurationDao;
     
@@ -68,13 +68,13 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
         boolean addUserGroup = false;
         boolean addAdminGroup = false;
         try {
-            checkGroupName(DEFAULT_USER_GROUP);
+            checkGroupName(USER_DEFAULT_GROUP);
             addUserGroup = true;
         } catch(GroupExistsException e) {
             getLog().warn(e.getMessage());
         }
         try {
-            checkGroupName(DEFAULT_ADMIN_GROUP);
+            checkGroupName(ADMIN_DEFAULT_GROUP);
             addAdminGroup = true;
         } catch(GroupExistsException e) {
             getLog().warn(e.getMessage());
@@ -83,10 +83,10 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
         for (Configuration conf : configurationList) {
             if(conf.isAdminUser()) {
                 if(addAdminGroup) {
-                    conf.getEntity().createNewProperty(getRolePropertyType(), DEFAULT_ADMIN_GROUP);
+                    conf.getEntity().createNewProperty(getRolePropertyType(), ADMIN_DEFAULT_GROUP);
                 }
             } else if(addUserGroup) {
-                conf.getEntity().createNewProperty(getRolePropertyType(), DEFAULT_USER_GROUP);
+                conf.getEntity().createNewProperty(getRolePropertyType(), USER_DEFAULT_GROUP);
             }
         }
     }
@@ -104,7 +104,7 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
     private void checkGroupName(String name) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
         criteria.add(Restrictions.eq("propertyType", Configuration.PROP_ROLES));
-        criteria.add(Restrictions.eq("propertyValue", name));
+        criteria.add(Restrictions.like("propertyValue", name));
         List<Property> result = getPropertyDao().findByCriteria(criteria);
         if(result!=null && !result.isEmpty()) {
             throw new GroupExistsException("Default user group name already exists: " + name);

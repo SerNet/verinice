@@ -41,7 +41,7 @@ public class DNDItems {
 	private static List dndItems = new ArrayList();
 	private static Set<String> typeIdSet = new HashSet<String>(1);
 
-	public static void setItems(List items) {
+	public static synchronized void setItems(List items) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("setItems, list: " + items);
 		}
@@ -54,7 +54,7 @@ public class DNDItems {
         }
 	}
 
-	public static List getItems() {
+	public static synchronized List getItems() {
 		return dndItems;
 	}
 	

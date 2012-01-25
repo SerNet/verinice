@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
@@ -36,8 +37,13 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.action.AddOrganisation;
 
+@SuppressWarnings("restrictions")
 public class AddITVerbundActionDelegate extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction  {
+    
+    private static final Logger LOG = Logger.getLogger(AddITVerbundActionDelegate.class);
+    
     /*
      * (non-Javadoc)
      * 
@@ -66,13 +72,24 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
     }
 
 	@Override
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-		arg0.setEnabled(checkRights());
+	public void selectionChanged(final IAction action, ISelection arg1) {
+	       if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+	            IInternalServerStartListener listener = new IInternalServerStartListener(){
+	                @Override
+	                public void statusChanged(InternalServerEvent e) {
+	                    if(e.isStarted()){
+	                        action.setEnabled(checkRights());
+	                    }
+	                }
+	            };
+	            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+	       } else {
+	           action.setEnabled(checkRights());
+	       }
 	}
 
 	@Override
 	public void init(IViewPart arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	

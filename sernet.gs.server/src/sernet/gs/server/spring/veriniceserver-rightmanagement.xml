@@ -13,7 +13,8 @@
         <property name="configurationDao" ref="configurationDao" />
         <property name="propertyDao" ref="propertyDao" />
         <property name="messages" ref="rightsServiceMessages" />    
-        <property name="configurationService" ref="configurationService" />  		
+        <property name="configurationService" ref="configurationService" />  
+        <property name="authService" ref="authService" />
 	</bean>
 	
 </beans>

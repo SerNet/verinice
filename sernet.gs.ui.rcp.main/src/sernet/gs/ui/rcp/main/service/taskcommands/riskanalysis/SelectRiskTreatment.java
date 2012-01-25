@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
@@ -66,8 +65,7 @@ public class SelectRiskTreatment extends GenericCommand {
 		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung)
 			.merge(gefaehrdungsUmsetzung);
 		
-		// commented out,  due to NotUniqueObject-Exceptions from hibernate
-//		dao.reload(riskAnalysis, riskAnalysis.getDbId());
+		getDaoFactory().getDAOforTypedElement(riskAnalysis).reload(riskAnalysis, riskAnalysis.getDbId());
 		
 		gefaehrdungsUmsetzung.setAlternative(this.gefaehrdungAlternative);
 		

@@ -352,9 +352,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
 		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
 	}
-
+	
 	public void setParent(CnATreeElement parent) {
-		this.parent = parent;
+        this.parent = parent;
+    }
+
+	public void setParentAndScope(CnATreeElement parent) {
+		setParent(parent);
 		if(parent!=null && parent.getScopeId()!=null) {
 		    this.setScopeId(parent.getScopeId());
 		}	
@@ -605,7 +609,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             }
 			getParent().removeChild(this);		
 			getParent().addChild(newElement);
-			newElement.setParent(getParent());
+			newElement.setParentAndScope(getParent());
 		}
 		
 	}

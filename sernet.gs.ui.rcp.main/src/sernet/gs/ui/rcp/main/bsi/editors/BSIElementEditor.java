@@ -126,7 +126,7 @@ public class BSIElementEditor extends EditorPart {
             // Refresh other views in background
             Job job = new RefreshJob("Refresh application...");
             job.setRule(new RefreshJobRule());
-            job.schedule(Job.BUILD);
+            job.schedule();
 
             // TODO akoderman we need a way to close (with save dialog) or
             // update editors of objects that have been changed in the database,
@@ -186,10 +186,9 @@ public class BSIElementEditor extends EditorPart {
         // notify all views of change:
         CnAElementFactory.getModel(cnAElement).childChanged(cnAElement.getParent(), cnAElement);
 
-        // cause complete refresh, necessary for viewers to call getchildren
-        // etc.
-        CnAElementFactory.getModel(cnAElement).refreshAllListeners(IBSIModelListener.SOURCE_EDITOR);
-    }
+        // removed CnAElementFactory.getModel(cnAElement).refreshAllListeners here
+        // before release 1.4.2
+   }
 
     @Override
     public void doSaveAs() {

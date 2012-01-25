@@ -71,7 +71,7 @@ public class ComprehensiveSamtReportType implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return null;
+        return Messages.ComprehensiveSamtReportType_3;
     }
 
     /* (non-Javadoc)

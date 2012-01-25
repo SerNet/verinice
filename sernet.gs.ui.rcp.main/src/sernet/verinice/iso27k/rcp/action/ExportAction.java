@@ -115,6 +115,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private IViewPart view;
 	
+	private boolean serverIsRunning = true;
+	
 	 /*
      * (non-Javadoc)
      * 
@@ -136,10 +138,12 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     @Override
     public void init(final IAction action){
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            serverIsRunning = false;
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if(e.isStarted()){
+                        serverIsRunning = true;
                         action.setEnabled(checkRights());
                     }
                 }
@@ -314,14 +318,16 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        action.setEnabled(checkRights());
-      if(selection instanceof ITreeSelection) {
-          ITreeSelection treeSelection = (ITreeSelection) selection;
-          Object selectedElement = treeSelection.getFirstElement();
-          if(selectedElement instanceof Organization) {
-              selectedOrganization = (Organization) selectedElement;
-          }
-      }
+        if (serverIsRunning) {
+            action.setEnabled(checkRights());
+        }
+        if (selection instanceof ITreeSelection) {
+            ITreeSelection treeSelection = (ITreeSelection) selection;
+            Object selectedElement = treeSelection.getFirstElement();
+            if (selectedElement instanceof Organization) {
+                selectedOrganization = (Organization) selectedElement;
+            }
+        }
     }
     
     public static String addExtension(String exportPath,String extension) {

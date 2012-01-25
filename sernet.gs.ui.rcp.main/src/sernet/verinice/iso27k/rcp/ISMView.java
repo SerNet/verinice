@@ -68,6 +68,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
+import sernet.verinice.iso27k.rcp.action.BSIModelDropPerformer;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
@@ -361,8 +362,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
 		bsiDropAdapter = new BSIModelViewDropPerformer();
+		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(this);
 		metaDropAdapter.addAdapter(controlDropAdapter);
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
+		metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
 		
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 		

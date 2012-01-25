@@ -416,9 +416,10 @@ public class LinkMaker extends Composite implements IRelationTable {
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reload()
      */
     public void reload(CnALink oldLink, CnALink newLink) {
-        newLink.setDependant(oldLink.getDependant());
-        newLink.setDependency(oldLink.getDependency());
-
+        if(newLink != null){
+            newLink.setDependant(oldLink.getDependant());
+            newLink.setDependency(oldLink.getDependency());
+        }
         boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
         boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
         if (removedLinkUp)

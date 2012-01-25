@@ -51,8 +51,7 @@ public class StatementOfApplicabilityReport implements IReportType {
 
 	@Override
 	public String getReportFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return Messages.StatementOfApplicabilityReport_3;
 	}
 
 	@Override

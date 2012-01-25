@@ -52,8 +52,7 @@ public class SamtComplianceReport implements IReportType {
 
 	@Override
 	public String getReportFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return Messages.SamtComplianceReport_3;
 	}
 
 	@Override

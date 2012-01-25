@@ -110,7 +110,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.AccessControlEditDialog_6);
-		newShell.setSize(560, 600);
+		newShell.setSize(650, 610);
 	}
 
 	@Override

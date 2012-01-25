@@ -67,6 +67,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.service.commands.CreateElement;
@@ -354,7 +355,7 @@ public class CnAElementHome {
 
         // ITVerbund instances can be removed when
         // one has write access to it (There is no parent to check).
-        if (cte instanceof ITVerbund) {
+        if (cte instanceof ITVerbund || cte instanceof Organization) {
             return isWriteAllowed(cte);
         }
 
@@ -442,6 +443,10 @@ public class CnAElementHome {
     }
     
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
+        createLinksAccordingToBusinessLogic(dropTarget, toDrop, null);
+    }
+    
+    public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop, final String linkId) {
         if (log.isDebugEnabled()) {
             log.debug("createLink..."); //$NON-NLS-1$
         }
@@ -470,23 +475,25 @@ public class CnAElementHome {
                                 threat = (Threat) dragged;
                                 createScenario(threat, vuln);
                             }
+                            String linkIdParam = linkId;
+                            if(linkIdParam==null) {
+                                // use first relation type since param linkId is null
+                                linkIdParam = getFirstLinkdId(dragged, dropTarget);
+                            }
                             
-                            Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                                .getPossibleRelations(dropTarget.getEntityType().getId(), dragged.getEntityType().getId());
-                            // try to link from target to dragged elements first:
-                            // use first relation type (user can change it later):
-                            if (!possibleRelations.isEmpty()) {
-                                boolean linkCreated = createTypedLink(newLinks, dropTarget, dragged, possibleRelations.iterator().next().getId(), LINK_NO_COMMENT);
+                            // try to link from target to dragged elements first:                            
+                            if (linkIdParam!=null) {
+                                boolean linkCreated = createTypedLink(newLinks, dropTarget, dragged, linkIdParam, LINK_NO_COMMENT);
                                 if (linkCreated)
                                     continue allDragged;
                             }
-                            
-                            // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
-                            possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                                .getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
-                            if ( !possibleRelations.isEmpty()) {
+                                                   
+                            if(linkIdParam==null) {
+                                linkIdParam = getFirstLinkdId(dropTarget, dragged);
+                            }
+                            if ( linkIdParam!=null ) {
                                 // use first relation type (user can change it later):
-                                boolean linkCreated = createTypedLink(newLinks, dragged, dropTarget, possibleRelations.iterator().next().getId(), LINK_NO_COMMENT);
+                                boolean linkCreated = createTypedLink(newLinks, dragged, dropTarget, linkIdParam, LINK_NO_COMMENT);
                                 if (linkCreated)
                                     continue allDragged;
                             }
@@ -496,23 +503,24 @@ public class CnAElementHome {
                         if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement) {
                             CnATreeElement from = dropTarget;
                             CnATreeElement to = dragged;
-                            Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                                .getPossibleRelations(from.getEntityType().getId(), to.getEntityType().getId());
-                            if (possibleRelations.isEmpty()) {
+                            String linkIdParam = linkId;
+                            if(linkIdParam==null) {
+                                linkIdParam = getFirstLinkdId(to, from);
+                            }
+                            if (linkIdParam==null) {
                                 // try again for reverse direction:
                                 from = dragged;
                                 to = dropTarget;
-                                possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                                .getPossibleRelations(from.getEntityType().getId(), to.getEntityType().getId());
+                                linkIdParam = getFirstLinkdId(to, from);
                             }
-                            if (possibleRelations.isEmpty()) {
+                            if (linkIdParam==null) {
                                 //still nothing found, create untyped link:
                                 CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
                                 newLinks.add(link);
                             }
                             else {
                                 // create link with type:
-                                createTypedLink(newLinks, from, to, possibleRelations.iterator().next().getId(), LINK_NO_COMMENT);
+                                createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
                             }
                         }
                     } catch (Exception e) {
@@ -539,6 +547,23 @@ public class CnAElementHome {
                     }                 
                 }
                 DNDItems.clear();
+            }
+
+            /**
+             * @param dropTarget
+             * @param dragged
+             * @param linkIdParam
+             * @return
+             */
+            private String getFirstLinkdId(final CnATreeElement dropTarget, CnATreeElement dragged) {
+                String linkIdParam = null;
+                // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
+                Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
+                    .getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
+                if ( !possibleRelations.isEmpty()) {
+                    linkIdParam = possibleRelations.iterator().next().getId();
+                }
+                return linkIdParam;
             }
         });
     }

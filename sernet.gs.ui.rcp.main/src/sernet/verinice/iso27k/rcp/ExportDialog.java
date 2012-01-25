@@ -97,6 +97,7 @@ public class ExportDialog extends TitleAreaDialog {
      */
     public ExportDialog(Shell activeShell, Organization selectedOrganization) {
         super(activeShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         selectedElement = selectedOrganization;
     }
 
@@ -113,8 +114,7 @@ public class ExportDialog extends TitleAreaDialog {
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = 10;
         layout.marginHeight = 10;
-        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);
         
         /*
@@ -148,7 +148,7 @@ public class ExportDialog extends TitleAreaDialog {
         groupOrganization.setText(Messages.SamtExportDialog_2);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         groupOrganization.setLayout(groupOrganizationLayout);
-        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         gd.minimumWidth = 662;
         gd.heightHint = 200; 
         groupOrganization.setLayoutData(gd);
@@ -172,6 +172,7 @@ public class ExportDialog extends TitleAreaDialog {
 	                selectedElementSet.add(selectedElement);
 	                if(txtLocation!=null) {
 	                    filePath = selectedElement.getTitle() + getDefaultExtension();
+	                    filePath = System.getProperty("user.dir") + File.separatorChar +  filePath;
 	                    txtLocation.setText(filePath);
 	                }
 	                setSourceId(selectedElement);
@@ -215,7 +216,7 @@ public class ExportDialog extends TitleAreaDialog {
         final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
         sourceIdComposite.setLayout(new GridLayout(3,false));
         ((GridLayout) sourceIdComposite.getLayout()).marginTop = 15;
-        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
         gd.grabExcessHorizontalSpace=true;
         sourceIdComposite.setLayoutData(gd);
         
@@ -263,7 +264,7 @@ public class ExportDialog extends TitleAreaDialog {
         final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
         labelLocation.setText(Messages.SamtExportDialog_6);
         txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd = new GridData(SWT.FILL, SWT.TOP, true,false);
         gd.grabExcessHorizontalSpace=true;
         gd.minimumWidth = 302;
         txtLocation.setLayoutData(gd);
@@ -287,6 +288,7 @@ public class ExportDialog extends TitleAreaDialog {
                 dialog.setText(Messages.SamtExportDialog_3);
                 if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
                     try {
+                        dialog.setFilterPath(System.getProperty("user.dir"));
                         dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
                     } catch (Exception e1) {
                         LOG.warn(Messages.ExportDialog_1, e1);
@@ -338,6 +340,7 @@ public class ExportDialog extends TitleAreaDialog {
         
         if(selectedElement!=null) {
             filePath = selectedElement.getTitle() + getDefaultExtension();
+            filePath = System.getProperty("user.dir") + File.separatorChar + filePath;
             txtLocation.setText(filePath);
         }
         

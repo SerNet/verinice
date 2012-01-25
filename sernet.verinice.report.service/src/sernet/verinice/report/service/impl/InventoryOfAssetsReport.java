@@ -51,8 +51,7 @@ public class InventoryOfAssetsReport implements IReportType {
 
 	@Override
 	public String getReportFile() {
-		// TODO Auto-generated method stub
-		return null;
+		return Messages.InventoryOfAssetsReport_3;
 	}
 
 	@Override

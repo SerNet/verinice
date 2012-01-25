@@ -82,7 +82,7 @@ public class AddMassnahmeToGefaherdung extends GenericCommand implements IAuthAw
 		}
 		
 		parent.addGefaehrdungsBaumChild(child);
-		child.setParent(parent);
+		child.setParentAndScope(parent);
 	}
 
 	public RisikoMassnahmenUmsetzung getChild() {

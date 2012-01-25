@@ -20,8 +20,6 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -33,8 +31,24 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.interfaces.INoAccessControl;
 
 /**
+ * This command set the scope-id of CnaTreeElements.
+ * 
+ * You can use this in two different ways:
+ * <ul>
+ *  <li>
+ *    If you want to set all scope-ids in your database, use the 
+ *    constructor without params.
+ *  </li>
+ *  <li>
+ *    If you want to set all scope-ids of an subtree, use the 
+ *    constructor with params {@link Integer} and {@link Integer}.
+ *  </li>
+ * </ul>
+ * 
+ * Command is used for update from Db-Version 0.98 to 0.99
+ * and while moving elements from one scope to another.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class UpdateScopeId extends GenericCommand implements INoAccessControl {
 
@@ -46,22 +60,72 @@ public class UpdateScopeId extends GenericCommand implements INoAccessControl {
         }
         return log;
     }
+      
+    private Integer elementId;
     
-    IBaseDao<Organization, Serializable> orgDao;
+    private Integer scopeId;
+
+    private transient IBaseDao<Organization, Serializable> orgDao;
     
-    IBaseDao<ITVerbund, Serializable> itverbundDao;
+    private transient IBaseDao<ITVerbund, Serializable> itverbundDao;
     
+    private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
+    
+      
+    /**
+     * Use this constructor, if you want to set all scope-ids in the database
+     */
+    public UpdateScopeId() {
+        super();
+    }
+    
+    /**
+     * Use this constructor, if you want to set the scope-id of <code>element</code>
+     * and all elements in it's subtree.
+     * 
+     * @param elementId Id of a subtree root. All scope-id in this subtree will be set.
+     * @param scopeId A scope-id (Db-Id of an organization or IT-Verbund)
+     */
+    public UpdateScopeId(Integer elementId, Integer scopeId) {
+        super();
+        if(elementId==null || scopeId==null) {
+            throw new IllegalArgumentException("Param elementId or scopeId is null. Please pass an element id and a scope id.");
+        }
+        this.elementId = elementId;
+        this.scopeId = scopeId;
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
+        if(getElementId()==null) {
+            updateAllElements();
+        } else {
+            updateSubtree();
+        }
+    }
+
+    
+    /**
+     * Sets the scope-id of all elements the database.
+     */
+    private void updateAllElements() {
         for (Organization org : getOrgDao().findAll()) {
             update(org,org.getDbId());            
         }
         for (ITVerbund itverbund : getItverbundDao().findAll()) {
             update(itverbund,itverbund.getDbId());            
         }
+    }
+    
+    /**
+     * Set the scope-id of a subtree
+     */
+    private void updateSubtree() {
+        CnATreeElement element = getCnaTreeElementDao().findById(getElementId());
+        update(element, getScopeId());
     }
 
     private void update(CnATreeElement element, Integer scopeId) {
@@ -73,6 +137,23 @@ public class UpdateScopeId extends GenericCommand implements INoAccessControl {
             update(child, scopeId);
         }
     }
+
+   
+    /**
+     * @return the elementId
+     */
+    public Integer getElementId() {
+        return elementId;
+    }
+
+
+    /**
+     * @return the scopeId
+     */
+    public Integer getScopeId() {
+        return scopeId;
+    }
+
 
     public IBaseDao<Organization, Serializable> getOrgDao() {
         if(orgDao==null) {
@@ -87,5 +168,13 @@ public class UpdateScopeId extends GenericCommand implements INoAccessControl {
         }
         return itverbundDao;
     }
+
+    public IBaseDao<CnATreeElement, Serializable> getCnaTreeElementDao() {
+        if(cnaTreeElementDao==null) {
+            cnaTreeElementDao = getDaoFactory().getDAO(CnATreeElement.class);
+        }
+        return cnaTreeElementDao;
+    }
+
 
 }

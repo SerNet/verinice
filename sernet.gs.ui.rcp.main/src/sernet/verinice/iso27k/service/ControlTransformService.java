@@ -133,7 +133,7 @@ public class ControlTransformService {
 			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
 			if (group.canContain(element)) {
 				group.addChild(element);
-				element.setParent(group);			
+				element.setParentAndScope(group);			
 				if (log.isDebugEnabled()) {
                	 log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
            	 	}	
@@ -147,7 +147,7 @@ public class ControlTransformService {
 			monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));			
 			if (group.canContain(element)) {
 				group.addChild(element);
-				element.setParent(group);
+				element.setParentAndScope(group);
 				if (log.isDebugEnabled()) {
 			    	log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
 			
@@ -169,7 +169,7 @@ public class ControlTransformService {
 		
 		
 		element = (CnATreeElement) command.getElement();
-		element.setParent(group);
+		element.setParentAndScope(group);
 		if(!doFullRefresh) {
 		    modelUpdater.childAdded(group, element);
 		}

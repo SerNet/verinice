@@ -73,7 +73,7 @@ public class StrukturanalyseReport implements IReportType {
      */
     @Override
     public String getReportFile() {
-       return null;
+       return Messages.StrukturanalyseReport_3;
     }
 
     /* (non-Javadoc)
