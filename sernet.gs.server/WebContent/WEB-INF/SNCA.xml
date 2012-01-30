@@ -2092,102 +2092,9 @@ the value between <param></param> will be used directly if no string is found fo
             name="Dokument"
             id="mnums_dokument"
             isURL="true" />
-                 
-		<huipropertygroup
-			id="mnums_group_umsetzung"
-			name="Umsetzung">
-			<huiproperty
-				id="mnums_umsetzung"
-				name="Umsetzung"
-                focus="true"
-                required="true"
-				inputtype="singleoption">
-				<option
-					id="mnums_umsetzung_nein"
-					name="Nein" />
-				<option
-					id="mnums_umsetzung_ja"
-					name="Ja" />
-				<option
-					id="mnums_umsetzung_teilweise"
-					name="Teilweise" />
-				<option
-					id="mnums_umsetzung_entbehrlich"
-					name="Entbehrlich" />
-			</huiproperty>
-			<huiproperty
-				id="mnums_erlaeuterung"
-				name="Erläuterung"
-                required="false"
-				inputtype="text" />
-			<huiproperty
-				id="mnums_umsetzungbis"
-				name="Umsetzung bis"
-				inputtype="date">
-                <defaultRule class="Today">
-                    <param id="mnums_umsetzungbis_changeField">MONTH</param>
-                    <param id="mnums_umsetzungbis_timeDifference">2</param>
-                </defaultRule>
-            </huiproperty>
-			<huiproperty
-			id="mnums_umsetzungdurch_link"
-			name="Umsetzung durch"
-			inputtype="reference" 
-			required="true">
-				<references 
-					entitytype="person"/>
-			</huiproperty>
-			<huiproperty
-			id="mnums_initdurch_link"
-			name="Initiierung durch"
-			inputtype="reference" 
-			required="false">
-				<references 
-					entitytype="person"/>
-			</huiproperty>
-		</huipropertygroup>
-			
-		<huipropertygroup
-			id="mnums_group_revision"
-			name="Revision">
-			<huiproperty
-			id="mnums_letzterevisiondurch_link"
-			name="Letzte Revision durch"
-			inputtype="reference" 
-			required="true">
-				<references 
-					entitytype="person"/>
-			</huiproperty>
-			<huiproperty 
-				id="mnums_letzterevisionam"
-				name="Letzte Revision am"
-				inputtype="date">
-            <defaultRule class="Today" />
-            </huiproperty>
-			<huiproperty
-				id="mnums_bemerkungen"
-				name="Bemerkungen"
-				inputtype="text" />
-			<huiproperty
-			id="mnums_naechsterevisiondurch_link"
-			name="Nächste Revision durch"
-			inputtype="reference" 
-			required="true">
-				<references 
-					entitytype="person"/>
-			</huiproperty>
-			<huiproperty
-				id="mnums_naechsterevisionam"
-				name="Nächste Revision am"
-				inputtype="date" >
-                <defaultRule class="Today">
-                    <param id="mnums_naechsterevisionam_changeField">YEAR</param>
-                    <param id="mnums_naechsterevisionam_timeDifference">2</param>
-                </defaultRule>
-            </huiproperty>
-		</huipropertygroup>
-        
-		<huipropertygroup id="mnums_gsaudit" name="GS Audit" tags="GS-Audit" >
+            
+        <huipropertygroup id="mnums_gsaudit" name="GS Audit" tags="GS-Audit" >
+
 
             <huiproperty
                name="Auditor" id="mnums_gsaudit_auditor" tags="GS-Audit" />
@@ -2275,11 +2182,66 @@ the value between <param></param> will be used directly if no string is found fo
                name="Auditor-Votum" id="mnums_gsaudit_votum" tags="GS-Audit" inputtype="text" textrows="10" />
 
         </huipropertygroup>
-        
-        <huipropertygroup
-            id="mnums_group_kosten"
+            
+            
+		<huipropertygroup
+			id="mnums_group_umsetzung"
+			name="Umsetzung">
+			<huiproperty
+				id="mnums_umsetzung"
+				name="Umsetzung"
+                focus="true"
+                required="true"
+				inputtype="singleoption">
+				<option
+					id="mnums_umsetzung_nein"
+					name="Nein" />
+				<option
+					id="mnums_umsetzung_ja"
+					name="Ja" />
+				<option
+					id="mnums_umsetzung_teilweise"
+					name="Teilweise" />
+				<option
+					id="mnums_umsetzung_entbehrlich"
+					name="Entbehrlich" />
+			</huiproperty>
+			<huiproperty
+				id="mnums_erlaeuterung"
+				name="Erläuterung"
+                required="false"
+				inputtype="text" />
+			<huiproperty
+				id="mnums_umsetzungbis"
+				name="Umsetzung bis"
+				inputtype="date">
+                <defaultRule class="Today">
+                    <param id="mnums_umsetzungbis_changeField">MONTH</param>
+                    <param id="mnums_umsetzungbis_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+			<huiproperty
+			id="mnums_umsetzungdurch_link"
+			name="Umsetzung durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty
+			id="mnums_initdurch_link"
+			name="Initiierung durch"
+			inputtype="reference" 
+			required="false">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+		</huipropertygroup>
+		
+		<huipropertygroup
+			id="mnums_group_kosten"
             tags="Finance"
-            name="Kosten">
+			name="Kosten">
             <huiproperty
                 id="mnums_kosten_ptfix"
                 tags="Finance"
@@ -2289,26 +2251,26 @@ the value between <param></param> will be used directly if no string is found fo
                 tags="Finance"
                 name="Personalkosten var. EUR"/>
             <huiproperty
-                id="mnums_kosten_ptperiod"
+				id="mnums_kosten_ptperiod"
                 tags="Finance"
-                name="Zeitraum"
-                inputtype="singleoption">
-                <option
-                    id="mnums_kosten_ptperiod_tag"
-                    name="Tag" />
-                <option
-                    id="mnums_kosten_ptperiod_woche"
-                    name="Woche" />
-                <option
-                    id="mnums_kosten_ptperiod_monat"
-                    name="Monat" />
-                <option
-                    id="mnums_kosten_ptperiod_quartal"
-                    name="Quartal" />
-                <option
-                    id="mnums_kosten_ptperiod_jahr"
-                    name="Jahr" />
-            </huiproperty>
+				name="Zeitraum"
+				inputtype="singleoption">
+				<option
+					id="mnums_kosten_ptperiod_tag"
+					name="Tag" />
+				<option
+					id="mnums_kosten_ptperiod_woche"
+					name="Woche" />
+				<option
+					id="mnums_kosten_ptperiod_monat"
+					name="Monat" />
+				<option
+					id="mnums_kosten_ptperiod_quartal"
+					name="Quartal" />
+				<option
+					id="mnums_kosten_ptperiod_jahr"
+					name="Jahr" />
+			</huiproperty>
             <huiproperty
                 id="mnums_kosten_sachfix"
                 tags="Finance"
@@ -2318,27 +2280,69 @@ the value between <param></param> will be used directly if no string is found fo
                 tags="Finance"
                 name="Sachkosten var. EUR"/>
             <huiproperty
-                id="mnums_kosten_sachperiod"
+				id="mnums_kosten_sachperiod"
                 tags="Finance"
-                name="Zeitraum"
-                inputtype="singleoption">
-                <option
-                    id="mnums_kosten_sachperiod_tag"
-                    name="Tag" />
-                <option
-                    id="mnums_kosten_sachperiod_woche"
-                    name="Woche" />
-                <option
-                    id="mnums_kosten_sachperiod_monat"
-                    name="Monat" />
-                <option
-                    id="mnums_kosten_sachperiod_quartal"
-                    name="Quartal" />
-                <option
-                    id="mnums_kosten_sachperiod_jahr"
-                    name="Jahr" />
+				name="Zeitraum"
+				inputtype="singleoption">
+				<option
+					id="mnums_kosten_sachperiod_tag"
+					name="Tag" />
+				<option
+					id="mnums_kosten_sachperiod_woche"
+					name="Woche" />
+				<option
+					id="mnums_kosten_sachperiod_monat"
+					name="Monat" />
+				<option
+					id="mnums_kosten_sachperiod_quartal"
+					name="Quartal" />
+				<option
+					id="mnums_kosten_sachperiod_jahr"
+					name="Jahr" />
+			</huiproperty>
+		</huipropertygroup>
+		
+		
+		<huipropertygroup
+			id="mnums_group_revision"
+			name="Revision">
+			<huiproperty
+			id="mnums_letzterevisiondurch_link"
+			name="Letzte Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty 
+				id="mnums_letzterevisionam"
+				name="Letzte Revision am"
+				inputtype="date">
+            <defaultRule class="Today" />
             </huiproperty>
-        </huipropertygroup>
+			<huiproperty
+				id="mnums_bemerkungen"
+				name="Bemerkungen"
+				inputtype="text" />
+			<huiproperty
+			id="mnums_naechsterevisiondurch_link"
+			name="Nächste Revision durch"
+			inputtype="reference" 
+			required="true">
+				<references 
+					entitytype="person"/>
+			</huiproperty>
+			<huiproperty
+				id="mnums_naechsterevisionam"
+				name="Nächste Revision am"
+				inputtype="date" >
+                <defaultRule class="Today">
+                    <param id="mnums_naechsterevisionam_changeField">YEAR</param>
+                    <param id="mnums_naechsterevisionam_timeDifference">2</param>
+                </defaultRule>
+            </huiproperty>
+		</huipropertygroup>
+		
 	</huientity>
 
     <huientity
@@ -3287,7 +3291,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="asset_document"
             isURL="true" />
 
-    
+    <!-- TODO externalize strings -->
 		<huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
             <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
             <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
@@ -4013,6 +4017,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="person-iso" id="rel_person_control_interviewed"
             name="interviewed" reversename="interviewed about" tooltip="" />
         	
+         <huirelation to="samt_topic" id="rel_control_samt_topic" />
+            
         <huiproperty
             name="Title"
             id="control_name" 
@@ -5049,6 +5055,7 @@ the value between <param></param> will be used directly if no string is found fo
             isURL="true" />
             
             
+       <!-- TODO externalize strings -->
         <huipropertygroup id="process_bcm_group" name="Business Continuity" tags="BCM" >
             <huiproperty id="process_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
             <huiproperty id="process_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
