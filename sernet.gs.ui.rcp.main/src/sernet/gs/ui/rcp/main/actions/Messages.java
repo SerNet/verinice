@@ -68,6 +68,7 @@ public class Messages extends NLS {
     public static String ShowBulkEditAction_11;
     public static String ShowBulkEditAction_12;
     public static String ShowBulkEditAction_13;
+    public static String ShowBulkEditAction_14;
     public static String ShowCheatSheetAction_5;
     public static String ShowExportWizardAction_1;
     public static String ShowExportWizardAction_2;
