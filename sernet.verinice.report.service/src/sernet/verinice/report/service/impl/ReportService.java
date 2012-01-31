@@ -52,6 +52,7 @@ public class ReportService implements IReportService {
 		        new AllItemsReport(), // this is report ID "schutzbedarf"
 		        new ModellierungReport(),
 		        new BasisSichCheckReport(),
+		        new ErgaenzendeSicherheitsanalyseReport(),
 		        new RisikoanalyseReport(),
 		        new RealisierungsplanReport(),
 		        new AuditberichtReport(),

@@ -34,6 +34,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * This report prints out the inventory of all recorded
  * IT assets such as clients, applications, rooms etc.
  * 
+ * DEPRECTED Use the BIRT Reporting Engine instead!
+ * 
  * @author koderman[at]sernet[dot]de
  *
  */

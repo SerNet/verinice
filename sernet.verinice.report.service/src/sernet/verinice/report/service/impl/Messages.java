@@ -78,6 +78,9 @@ public class Messages extends NLS {
     public static String StatementOfApplicabilityReport_0;
     public static String StatementOfApplicabilityReport_2;
     public static String StatementOfApplicabilityReport_3;
+    public static String ErgaenzendeSicherheitsanalyseReport_0;
+    public static String ErgaenzendeSicherheitsanalyseReport_1;
+    public static String ErgaenzendeSicherheitsanalyseReport_2;
     public static String ExistingRisksReport_0;
     public static String ExistingRisksReport_1;
     public static String ExistingRisksReport_3;
