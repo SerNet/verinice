@@ -32,14 +32,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.ICommandService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
-    <bean name="httpExecuter" class="sernet.springclient.RequestExecuter">
-        <!-- Request-timeout in ms -->
-        <property name="readTimeout" value="900000"/>
+    <bean name="veriniceCommonsExecuter" class="sernet.springclient.CommonsExecuter" init-method="init">
+        <!-- Request-timeout in ms 30min = 30*60*1000 = 1.800.000-->
+        <property name="readTimeout" value="1800000"/>
     </bean>
-    
+
      <bean id="authService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
@@ -48,6 +48,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IAuthService</value>
         </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
     <bean id="taskService"
@@ -58,7 +59,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.bpm.ITaskService</value>         
         </property>
-        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
     <bean id="processService"
@@ -69,7 +70,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.bpm.IProcessService</value>         
         </property>
-        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
     <bean id="rightsServiceExecuter"
@@ -80,7 +81,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IRightsService</value>         
         </property>
-        <property name="httpInvokerRequestExecutor" ref="httpExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
