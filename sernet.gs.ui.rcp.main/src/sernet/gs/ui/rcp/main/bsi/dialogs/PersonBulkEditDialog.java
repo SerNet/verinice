@@ -18,9 +18,12 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,7 +31,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -58,6 +63,10 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     private boolean isScopeOnly;
     private boolean useRules = true;
     private Entity entity;
+    private Text textPassword2;
+    private String password2;
+    private Text textPassword;
+    private String password;
     
     private PersonBulkEditDialog(Shell parent){
         super(parent);
@@ -113,11 +122,13 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
             scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
             scrolledComposite.setExpandHorizontal(true);
             
+            
             Composite innerComposite = new Composite (scrolledComposite, SWT.NONE); 
             scrolledComposite.setContent(innerComposite); 
             innerComposite.setLayoutData(new GridData (SWT.FILL, SWT.FILL,true, false)); 
             innerComposite.setLayout(new GridLayout (1, false));
             
+            createPasswordComposite(innerComposite);
             HitroUIComposite huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
             try {
                 // is always Configuration here
@@ -152,6 +163,14 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
    
 
     
+    public String getPassword2() {
+        return password2;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     /**
      * @param field
      */
@@ -166,12 +185,61 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     
     @Override
     protected void okPressed() {
+        password=textPassword.getText();
+        password2=textPassword2.getText();
         super.okPressed();
     }
     
     
     public Entity getEntity() {
         return entity;
+    }
+    
+    private void createPasswordComposite(final Composite composite) {
+        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+        gd.grabExcessVerticalSpace = true;
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.FILL;
+        final Composite compositePassword = new Composite(composite, SWT.NONE);
+        GridLayout layoutPassword = new GridLayout(2, false);
+        compositePassword.setLayout(layoutPassword);
+        compositePassword.setLayoutData(gd);
+        
+        GridData gdText = new GridData(GridData.GRAB_HORIZONTAL);
+        gdText.grabExcessHorizontalSpace = true;
+        gdText.horizontalAlignment = GridData.FILL;
+        
+        Label labelPassword = new Label(compositePassword, SWT.NONE);
+        labelPassword.setText(Messages.AccountDialog_2);
+        
+        textPassword = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
+        textPassword.setLayoutData(gdText);
+        textPassword.addFocusListener(new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pwd = textPassword.getText();
+                if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
+                    MessageDialog.openWarning(PersonBulkEditDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
+                    textPassword.setText(""); //$NON-NLS-1$
+                    textPassword2.setText(""); //$NON-NLS-1$
+                    textPassword.setFocus();
+                }
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+                // nothing to do
+            }
+        });
+        
+        Label labelPassword2 = new Label(compositePassword, SWT.NONE);
+        labelPassword2.setText(Messages.AccountDialog_3);
+        
+        textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
+        textPassword2.setLayoutData(gdText);
+
     }
     
 }

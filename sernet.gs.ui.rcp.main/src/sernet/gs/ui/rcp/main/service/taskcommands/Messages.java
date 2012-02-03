@@ -28,6 +28,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.service.taskcommands.messages"; //$NON-NLS-1$
     public static String CreateScenario_2;
+    public static String ConfigurationBulkEdit_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
