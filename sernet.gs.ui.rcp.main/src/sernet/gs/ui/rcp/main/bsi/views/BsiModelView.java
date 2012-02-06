@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -54,6 +55,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
@@ -71,6 +74,7 @@ import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
@@ -88,7 +92,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -110,7 +116,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class BsiModelView extends ViewPart implements IAttachedToPerspective {
+public class BsiModelView extends ViewPart implements IAttachedToPerspective, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(BsiModelView.class);
 	
@@ -127,33 +133,12 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private BSIModelViewFilterAction filterAction;
 
 	private BSIModelViewContentProvider contentProvider;
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-	 */
-	@Override
-	public void dispose() {
-		model.removeBSIModelListener(bsiModelListener);
-		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
-		super.dispose();
-	}
-
-	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if ((event.getProperty().equals(PreferenceConstants.DB_URL) || event.getProperty().equals(PreferenceConstants.DB_USER) || event.getProperty().equals(PreferenceConstants.DB_DRIVER) || event.getProperty().equals(PreferenceConstants.DB_PASS))) {
-				CnAElementFactory.getInstance().closeModel();
-				setNullModel();
-			}
-		}
-	};
-	
-	
 
 	private Action expandAllAction;
 
 	private Action collapseAction;
+    
+    private Action linkWithEditorAction;
 
 	private ShowBulkEditAction bulkEditAction;
 
@@ -174,7 +159,31 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	private IModelLoadListener modelLoadListener;
 
 	private BSIModelViewUpdater bsiModelListener;
+    
+    private boolean linkingActive = false;
+    
+    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        model.removeBSIModelListener(bsiModelListener);
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
+        super.dispose();
+    }
+
+    private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent event) {
+            if ((event.getProperty().equals(PreferenceConstants.DB_URL) || event.getProperty().equals(PreferenceConstants.DB_USER) || event.getProperty().equals(PreferenceConstants.DB_DRIVER) || event.getProperty().equals(PreferenceConstants.DB_PASS))) {
+                CnAElementFactory.getInstance().closeModel();
+                setNullModel();
+            }
+        }
+    };
+    
 	public void setNullModel() {
 		model = new NullModel();
 		Display.getDefault().asyncExec(new Runnable() {
@@ -209,6 +218,9 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		try {
@@ -239,6 +251,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		addBSIFilter();
 		fillLocalToolBar();
 		Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
+		getSite().getPage().addPartListener(linkWithEditorPartListener);
 		setNullModel();
 	}
 	
@@ -322,6 +335,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 		manager.add(this.filterAction);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
+        manager.add(linkWithEditorAction);
 	}
 
 	private void hookContextMenu() {
@@ -441,6 +455,14 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 
 		dropAdapter = new MetaDropAdapter(viewer);
 		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
+		
+		linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                toggleLinking(isChecked());
+            }
+        };
+        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
 	}
 
 	private void expandAll() {
@@ -504,4 +526,32 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective {
 	public String getPerspectiveId() {
 		return Perspective.ID;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void editorActivated(IEditorPart editor) {
+        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
+            return;
+        }
+        CnATreeElement element = BSIElementEditorInput.extractElement(editor);
+        if(element==null) {
+            return;
+        }
+        
+        viewer.setSelection(new StructuredSelection(element),true);
+     
+    }
+    
+    protected void toggleLinking(boolean checked) {
+        this.linkingActive = checked;
+        if (checked) {
+            editorActivated(getSite().getPage().getActiveEditor());
+        }
+    }
+    
+    protected boolean isLinkingActive() {
+        return linkingActive;
+    }
 }

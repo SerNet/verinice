@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -36,6 +37,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -47,8 +49,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -59,14 +65,17 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.iso27k.rcp.action.BSIModelDropPerformer;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -119,7 +128,8 @@ import sernet.verinice.rcp.IAttachedToPerspective;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ISMView extends ViewPart implements IAttachedToPerspective {
+@SuppressWarnings("restriction")
+public class ISMView extends ViewPart implements IAttachedToPerspective, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
@@ -148,6 +158,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	private Action collapseAllAction;
 	
+	private Action linkWithEditorAction;
+	
+	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+	
 	private ISMViewFilter filterAction;
 	
 	protected HideEmptyFilter hideEmptyFilter;
@@ -169,6 +183,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	private Object mutex = new Object();
 
 	private ISO27KModelViewUpdate modelUpdateListener;
+	
+	private boolean linkingActive = false;
+	
+	private ICommandService commandService;
 	
 	private boolean checkRights(){
 	    return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
@@ -192,6 +210,9 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		}
 	}
 
+	/**
+	 * @param parent
+	 */
 	protected void initView(Composite parent) {
 	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
 	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
@@ -211,6 +232,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		addActions();
 		fillToolBar();
 		hookDNDListeners();
+		
+		getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 
     /**
@@ -218,7 +241,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	 */
 	protected void startInitDataJob() {
 	    if (LOG.isDebugEnabled()) {
-            LOG.debug("ISMview: startInitDataJob");
+            LOG.debug("ISMview: startInitDataJob"); //$NON-NLS-1$
         }
 		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -240,7 +263,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 
 	protected void initData() {	
 	    if (LOG.isDebugEnabled()) {
-            LOG.debug("ISMVIEW: initData");
+            LOG.debug("ISMVIEW: initData"); //$NON-NLS-1$
         }
 	    synchronized (mutex) {
 	        if(CnAElementFactory.isIsoModelLoaded()) {
@@ -258,7 +281,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	            }
 	        } else if(modelLoadListener==null) {
 	            if (LOG.isDebugEnabled()) {
-                    LOG.debug("ISMView No model loaded, adding model load listener.");
+                    LOG.debug("ISMView No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
 	            // model is not loaded yet: add a listener to load data when it's loaded
 	            modelLoadListener = new IModelLoadListener() {
@@ -290,6 +313,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	public void dispose() {
 		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
 		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+		getSite().getPage().removePartListener(linkWithEditorPartListener);
 		super.dispose();
 	}
 
@@ -370,6 +394,15 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 		
 		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+		
+		linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                toggleLinking(isChecked());
+            }
+        };
+        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+
 	}
 
     /**
@@ -399,6 +432,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		manager.add(collapseAllAction);
 		drillDownAdapter.addNavigationActions(manager);
 		manager.add(filterAction);
+		manager.add(linkWithEditorAction);
 	}
 	
 
@@ -446,7 +480,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 			if(sel instanceof Organization) {
 				Organization element = (Organization) sel;
 				if(CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) element)) {
-					MenuManager submenuNew = new MenuManager("&New","content/new");
+					MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
 					submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
 					submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
 					submenuNew.add(new AddGroup(element,ControlGroup.TYPE_ID,Control.TYPE_ID));
@@ -483,6 +517,41 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 		drillDownAdapter.addNavigationActions(manager);	
 	}
 	
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    public void editorActivated(IEditorPart editor) {
+        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
+            return;
+        }
+        CnATreeElement element = BSIElementEditorInput.extractElement(editor);
+        if(element==null) {
+            return;
+        }
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
+            LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
+        }
+   
+        viewer.setSelection(new StructuredSelection(element),true);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Tree is expanded."); //$NON-NLS-1$
+        } 
+    }
+    
+    protected void toggleLinking(boolean checked) {
+        this.linkingActive = checked;
+        if (checked) {
+            editorActivated(getSite().getPage().getActiveEditor());
+        }
+    }
+
+    protected boolean isLinkingActive() {
+        return linkingActive;
+    }
+	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 * 
@@ -503,5 +572,15 @@ public class ISMView extends ViewPart implements IAttachedToPerspective {
 	public String getPerspectiveId() {
 		return Iso27kPerspective.ID;
 	}
+	
+	public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandService();
+        }
+        return commandService;
+    }
 
+    private ICommandService createCommandService() {
+        return ServiceFactory.lookupCommandService();
+    }
 }

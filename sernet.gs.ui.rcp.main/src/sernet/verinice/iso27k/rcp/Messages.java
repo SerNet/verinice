@@ -53,6 +53,7 @@ public class Messages extends NLS {
 	public static String ISMView_12;
 	public static String ISMView_2;
 	public static String ISMView_4;
+    public static String ISMView_5;
 	public static String ISMView_6;
 	public static String ISMView_7;
 	public static String ISMView_8;

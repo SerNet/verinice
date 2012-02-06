@@ -20,25 +20,17 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.PermissionException;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.CutCommand;
-import sernet.verinice.service.commands.SaveElement;
-import sernet.verinice.service.commands.UpdateElement;
 
 /**
  * A CutService is a job, which moves a list of elements from one to another Element-{@link Group}.
@@ -46,13 +38,10 @@ import sernet.verinice.service.commands.UpdateElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class CutService extends PasteService implements IProgressTask {
 	
 	private final Logger log = Logger.getLogger(CutService.class);
-	
-	private int numberProcessed;
-	
-	private boolean doFullReload = false;
 	
 	   /**
      * Creates a new CopyService
@@ -66,7 +55,6 @@ public class CutService extends PasteService implements IProgressTask {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
         this.elements = elementList;
-        doFullReload = (this.elements!=null && this.elements.size()>9);
     }
 	
 	/**
@@ -80,8 +68,7 @@ public class CutService extends PasteService implements IProgressTask {
 	public CutService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
-		this.elements = elementList;  
-        doFullReload = (this.elements!=null && this.elements.size()>9);	
+		this.elements = elementList;
 	}
 
 	/**
@@ -99,7 +86,6 @@ public class CutService extends PasteService implements IProgressTask {
             }
             numberOfElements = uuidList.size();
             progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);  
-            numberProcessed = 0;
             CutCommand cc = new CutCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList());
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
@@ -142,57 +128,5 @@ public class CutService extends PasteService implements IProgressTask {
 		return title;
 	}
 
-	/**
-	 * @param monitor
-	 * @param group 
-	 * @param element
-	 * @throws Exception 
-	 */
-	@SuppressWarnings("unchecked")
-	private CnATreeElement move(IProgressObserver monitor, CnATreeElement group, CnATreeElement element) throws Exception {
-		if(monitor.isCanceled()) {
-			log.warn("Copying canceled. " + numberProcessed + " of " + numberOfElements + " elements copied.");
-			return null;
-		}
-		monitor.setTaskName(getText(numberOfElements,numberProcessed,element.getTitle()));
-		CnATreeElement elementOld = Retriever.retrieveElement(element,new RetrieveInfo().setParent(true).setProperties(true));
-		CnATreeElement parentOld = elementOld.getParent();
-		parentOld = Retriever.retrieveElement(parentOld,RetrieveInfo.getChildrenInstance().setParent(true));
-		parentOld.removeChild(element);
-		
-		// save old parent
-		UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
-		command = getCommandService().executeCommand(command);
-		parentOld = (CnATreeElement) command.getElement();
-		  
-		element.setParentAndScope(group);
-        group.addChild(element);
-		
-		// save element
-		SaveElement saveElementCommand = new SaveElement(element);
-		saveElementCommand = getCommandService().executeCommand(saveElementCommand);
-		CnATreeElement savedElement = (CnATreeElement) saveElementCommand.getElement();
-		
-		if(!doFullReload) {
-    		CnAElementFactory.getModel(parentOld).childRemoved(parentOld, elementOld);
-            CnAElementFactory.getModel(elementOld).databaseChildRemoved(elementOld);
-    		CnAElementFactory.getModel(savedElement).childAdded(group, savedElement);
-    		CnAElementFactory.getModel(savedElement).databaseChildAdded(savedElement);
-		}
-		
-		monitor.processed(1);
-		numberProcessed++;
-		return savedElement;
-	}
-
-
-	/**
-	 * @param n
-	 * @param i
-	 * @param title
-	 */
-	private String getText(int n, int i, String title) {
-		return Messages.getString("CutService.2", i, n, title);
-	}
 
 }

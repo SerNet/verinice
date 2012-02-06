@@ -28,7 +28,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import sernet.verinice.iso27k.service.CutService;
 import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
 
 /**
  * Operation with copies elements and adds them to a group.
@@ -37,6 +36,7 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class CutOperation implements IRunnableWithProgress {
 
 	private static final Logger LOG = Logger.getLogger(CutOperation.class);

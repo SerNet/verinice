@@ -1,18 +1,17 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,16 +22,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -40,13 +40,15 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 
 /**
@@ -57,7 +59,8 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * $LastChangedBy$
  *
  */
-public class RelationView extends ViewPart implements IRelationTable {
+@SuppressWarnings("restriction")
+public class RelationView extends ViewPart implements IRelationTable, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 
@@ -66,7 +69,6 @@ public class RelationView extends ViewPart implements IRelationTable {
 	
 	private TableViewer viewer;
 	private Action jumpToAction;
-//	private Action action2;
 	private Action doubleClickAction;
 	private ISelectionListener selectionListener;
 	private CnATreeElement inputElmt;
@@ -74,6 +76,12 @@ public class RelationView extends ViewPart implements IRelationTable {
 	private RelationViewContentProvider contentProvider;
 
 	private IModelLoadListener loadListener;
+	
+	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+    
+    private Action linkWithEditorAction;
+
+    private boolean linkingActive = false;
 
 	/**
 	 * The constructor.
@@ -89,23 +97,18 @@ public class RelationView extends ViewPart implements IRelationTable {
 	 * @param elmt
 	 */
 	public void loadLinks(final CnATreeElement elmt) {
-
 		if (!CnAElementHome.getInstance().isOpen()
 		        || inputElmt == null) {
 			return;
 		}
 
-
-
 		WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
-
-				try {
-				
+				try {			
 				 Display.getDefault().asyncExec(new Runnable() {
                         public void run() {
-                            viewer.setInput(new PlaceHolder("Lade Relationen..."));
+                            viewer.setInput(new PlaceHolder(Messages.RelationView_0));
                         }
                     });
                     
@@ -127,7 +130,6 @@ public class RelationView extends ViewPart implements IRelationTable {
 							viewer.setInput(new PlaceHolder(Messages.RelationView_3));
 						}
 					});
-
 					ExceptionUtil.log(e, Messages.RelationView_4);
 				}
 				return Status.OK_STATUS;
@@ -288,7 +290,9 @@ public class RelationView extends ViewPart implements IRelationTable {
 		 * Uses the viewer for all other methods.
 		 */
 		getSite().setSelectionProvider(viewer);
+		
 
+        getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 	
 	/* (non-Javadoc)
@@ -299,6 +303,7 @@ public class RelationView extends ViewPart implements IRelationTable {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
 		removeModelListeners();
 		getSite().getPage().removePostSelectionListener(selectionListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
 		super.dispose();
 	}
 	
@@ -335,19 +340,17 @@ public class RelationView extends ViewPart implements IRelationTable {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(jumpToAction);
 		manager.add(new Separator());
-//		manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(jumpToAction);
-//		manager.add(action2);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(jumpToAction);
-//		manager.add(action2);
+        manager.add(this.linkWithEditorAction);
 	}
 
 	private void makeActions() {
@@ -369,16 +372,6 @@ public class RelationView extends ViewPart implements IRelationTable {
 		jumpToAction.setToolTipText(Messages.RelationView_11);
 		jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 		
-//		action2 = new Action() {
-//			public void run() {
-//				showMessage("Action 2 executed");
-//			}
-//		};
-//		action2.setText("Action 2");
-//		action2.setToolTipText("Action 2 tooltip");
-//		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
@@ -392,6 +385,15 @@ public class RelationView extends ViewPart implements IRelationTable {
 					EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
 			}
 		};
+		
+		linkWithEditorAction = new Action(Messages.RelationView_2, IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                toggleLinking(isChecked());
+            }
+        };
+        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction.setChecked(isLinkingActive());
 	}
 
 	private void hookDoubleClickAction() {
@@ -400,12 +402,6 @@ public class RelationView extends ViewPart implements IRelationTable {
 				doubleClickAction.run();
 			}
 		});
-	}
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			Messages.RelationView_12,
-			message);
 	}
 
 	/**
@@ -452,4 +448,30 @@ public class RelationView extends ViewPart implements IRelationTable {
 	public void reloadAll() {
 		loadLinks(inputElmt);
 	}
+
+	protected void toggleLinking(boolean checked) {
+        this.linkingActive = checked;
+        if (checked) {
+            editorActivated(getSite().getPage().getActiveEditor());
+        }
+    }
+    
+    protected boolean isLinkingActive() {
+        return linkingActive;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void editorActivated(IEditorPart activeEditor) {
+        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
+            return;
+        }
+        CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
+        if(element==null) {
+            return;
+        }
+        setNewInput(element);
+    }
 }

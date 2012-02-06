@@ -27,9 +27,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.ui.rcp.main.bsi.views.ThreadSafeViewerUpdate;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
@@ -39,12 +36,12 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.rcp.PerspectiveSwitcher;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
+@SuppressWarnings("restriction")
 public class ISO27KModelViewUpdate implements IISO27KModelListener {
 
     private static final Logger LOG = Logger.getLogger(ISO27KModelViewUpdate.class);

@@ -17,8 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -34,6 +36,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class BSIElementEditorInput implements IEditorInput {
 
+    private static final Logger LOG = Logger.getLogger(BSIElementEditorInput.class);
+    
 	private CnATreeElement element;
 	
 
@@ -83,7 +87,33 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	
-
+	/**
+	 * Extracts and returns the CnATreeElement from an Editor.
+	 * 
+	 * If there is no CnATreeElement in the editor input null is returned.
+	 * 
+	 * @param editor An editor
+	 * @return The CnATreeElement from there editor or null
+	 */
+	public static CnATreeElement extractElement(IEditorPart editor) {
+	    if(editor==null) {
+	        return null;
+	    }
+        IEditorInput input = editor.getEditorInput();
+        if (!(input instanceof BSIElementEditorInput)) {
+            // only BSIElementEditorInput will be observed
+            return null;
+        }
+        
+        BSIElementEditorInput elementInput = (BSIElementEditorInput) input;
+        if (elementInput==null || elementInput.getCnAElement()==null) {
+            LOG.warn("Element in editor input is null.");
+            return null;
+        }
+        
+        CnATreeElement element = elementInput.getCnAElement();
+        return element;
+    }
 	
 
 }

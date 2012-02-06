@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.hibernate.Hibernate;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -135,7 +136,19 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 if (!element.isChildrenLoaded()) {
                     newElement = loadChildren(element);
                     if (newElement != null) {
-                        element.replace(newElement);
+                        
+                        // TODO dm: check if it's ok to ignore non initialized elements here
+                        if(Hibernate.isInitialized(element) && Hibernate.isInitialized(element.getChildren())) {
+                            element.replace(newElement);
+                        } else {
+                            final String message = "Element or children are not initialized. This might be a problem. uuid is: " + element.getUuid();
+                            log.warn(message);
+                            if (log.isDebugEnabled()) {
+                                log.debug("stacktrace: ", new RuntimeException(message));
+                            }
+                        }
+                        
+                        
                         element = newElement;
                         children = element.getChildrenAsArray();
                     }
@@ -171,7 +184,17 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 }
                 Set<CnATreeElement> children = element.getChildren();
                 if(children!=null) {
-                    hasChildren = !children.isEmpty();
+                    if(Hibernate.isInitialized(children)) {
+                        hasChildren = !children.isEmpty();
+                    } else {
+                        final String message = "Can not determine if element has children, assuming: yes, uuid id is: " + element.getUuid();
+                        log.error(message);
+                        if (log.isDebugEnabled()) {
+                            log.debug("stacktrace: ", new RuntimeException(message));
+                        }
+                        hasChildren = true;
+                    }
+                        
                 }
                 // to be correct we have to check by tree filter if children are correctly displayed
                 // this is extremly inperformant

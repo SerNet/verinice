@@ -95,7 +95,7 @@ public class DbVersion extends GenericCommand  {
 				 throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
 			 }
 			 
-			 if (dbVersion < 0.98D) {
+			 if (dbVersion < 0.97D) {
 				 DbMigration migration = new MigrateDbTo0_97();
 				 getCommandService().executeCommand(migration);
 			 }

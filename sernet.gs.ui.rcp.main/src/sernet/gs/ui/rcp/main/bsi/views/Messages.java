@@ -44,7 +44,9 @@ public class Messages extends NLS {
 
 	public static String AuditView_9;
 
-	public static String BrowserView_3;
+	public static String BrowserView_0;
+
+    public static String BrowserView_3;
 
 	public static String BrowserView_4;
 
@@ -95,6 +97,8 @@ public class Messages extends NLS {
 	
 	public static String BsiModelView_5;
 
+    public static String BsiModelView_6;
+
     public static String BsiModelView_7;
 
     public static String BsiModelView_9;
@@ -125,7 +129,7 @@ public class Messages extends NLS {
 
 	public static String FileView_0;
 
-	public static String FileView_13;
+    public static String FileView_13;
 
 	public static String FileView_14;
 
@@ -205,7 +209,9 @@ public class Messages extends NLS {
 
 	public static String TodoView_9;
 	
-	public static String NoteView_12;
+	public static String NoteView_0;
+
+    public static String NoteView_12;
 
 	public static String NoteView_2;
 
@@ -231,11 +237,13 @@ public class Messages extends NLS {
 
 	public static String RelationView_0;
 
-	public static String RelationView_10;
+    public static String RelationView_10;
 
 	public static String RelationView_11;
 
 	public static String RelationView_12;
+
+    public static String RelationView_2;
 
 	public static String RelationView_3;
 

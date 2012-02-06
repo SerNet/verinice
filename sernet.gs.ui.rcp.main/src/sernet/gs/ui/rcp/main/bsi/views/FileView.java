@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -59,8 +58,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
@@ -69,6 +69,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -78,16 +79,16 @@ import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement.
@@ -97,7 +98,8 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * @see LoadAttachments - Command for loading files
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class FileView extends ViewPart {
+@SuppressWarnings("restriction")
+public class FileView extends ViewPart implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(FileView.class);
 	
@@ -168,11 +170,13 @@ public class FileView extends ViewPart {
 	
 	private Action toggleLinkAction;
 	
-	private boolean linkToElements = true;
+	private boolean isLinkingActive = true;
 	
 	private CnATreeElement currentCnaElement;
 	
 	private IModelLoadListener modelLoadListener;
+	
+	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 	
 	public FileView() {
 	}
@@ -201,6 +205,8 @@ public class FileView extends ViewPart {
 		hookActions();
 		hookDND();
 		fillLocalToolBar();
+		
+		getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 
 	/**
@@ -274,7 +280,7 @@ public class FileView extends ViewPart {
 	}
 	
 	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-		Object element = ((IStructuredSelection) selection).getFirstElement();
+	    Object element = ((IStructuredSelection) selection).getFirstElement();
 		if (part == this) {
 			openAction.setEnabled(element!=null);
 			saveCopyAction.setEnabled(element!=null);
@@ -288,23 +294,27 @@ public class FileView extends ViewPart {
 			deleteFileAction.setEnabled(false);
 			return;
 		}
-		try {
-			if(element instanceof CnATreeElement) {
-				addFileAction.setEnabled(true);		
-				setCurrentCnaElement((CnATreeElement) element);
-				loadFiles();
-				
-			} else {
-				addFileAction.setEnabled(false);
-			}
-			Attachment att = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-			openAction.setEnabled(att!=null);
-			saveCopyAction.setEnabled(att!=null);
-			deleteFileAction.setEnabled(att!=null && deleteFileAction.checkRights());
-			
-		} catch (Exception e) {
-			LOG.error("Error while loading notes", e); //$NON-NLS-1$
-		}
+		elementSelected(element);
+	}
+	
+	protected void elementSelected(Object element) {
+	    try {
+            if(element instanceof CnATreeElement) {
+                addFileAction.setEnabled(true);     
+                setCurrentCnaElement((CnATreeElement) element);
+                loadFiles();
+                
+            } else {
+                addFileAction.setEnabled(false);
+            }
+            Attachment att = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            openAction.setEnabled(att!=null);
+            saveCopyAction.setEnabled(att!=null);
+            deleteFileAction.setEnabled(att!=null && deleteFileAction.checkRights());
+            
+        } catch (Exception e) {
+            LOG.error("Error while loading notes", e); //$NON-NLS-1$
+        }
 	}
 	
 	protected void startInitDataJob() {
@@ -330,7 +340,7 @@ public class FileView extends ViewPart {
 	public void loadFiles() {
 		try {
 			Integer id = null;
-			if(linkToElements && getCurrentCnaElement()!=null) {
+			if(isLinkingActive() && getCurrentCnaElement()!=null) {
 				id = getCurrentCnaElement().getDbId();
 			}
 			LoadAttachments command = new LoadAttachments(id);		
@@ -486,8 +496,8 @@ public class FileView extends ViewPart {
 		
 		toggleLinkAction = new Action(Messages.FileView_24, SWT.TOGGLE) {
 			public void run() {
-				linkToElements=!linkToElements;
-				toggleLinkAction.setChecked(linkToElements);
+				isLinkingActive=!isLinkingActive;
+				toggleLinkAction.setChecked(isLinkingActive());
 				if(CnAElementFactory.isModelLoaded()) {
 					loadFiles();
 				} else if(modelLoadListener==null) {
@@ -513,7 +523,7 @@ public class FileView extends ViewPart {
 			}
 		};
 		toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-		toggleLinkAction.setChecked(linkToElements);
+		toggleLinkAction.setChecked(isLinkingActive());
 	}
 	
 	private void openFile() {
@@ -591,6 +601,7 @@ public class FileView extends ViewPart {
 	public void dispose() {
 		super.dispose();
 		getSite().getPage().removePostSelectionListener(selectionListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
 	}
 	
 	
@@ -760,4 +771,32 @@ public class FileView extends ViewPart {
 	public TableViewer getViewer() {
 		return this.viewer;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void editorActivated(IEditorPart editor) {
+        if (!isLinkingActive() 
+            || !getViewSite().getPage().isPartVisible(this)
+            || editor == null) {
+            return;
+        }
+        CnATreeElement element = BSIElementEditorInput.extractElement(editor);
+        if(element==null) {
+            return;
+        }      
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Element in editor :" + element.getUuid());
+            LOG.debug("Loading attached files of element now..."); //$NON-NLS-1$
+        }
+        elementSelected(element);
+    }
+
+    /**
+     * @return
+     */
+    private boolean isLinkingActive() {
+        return isLinkingActive;
+    }
 }

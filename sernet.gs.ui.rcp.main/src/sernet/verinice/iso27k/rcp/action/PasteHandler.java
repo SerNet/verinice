@@ -54,7 +54,7 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "restriction" })
 public class PasteHandler extends AbstractHandler {
 
 	private static final Logger LOG = Logger.getLogger(PasteHandler.class);

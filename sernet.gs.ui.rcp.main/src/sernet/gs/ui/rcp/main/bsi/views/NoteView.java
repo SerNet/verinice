@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,6 +40,8 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
@@ -46,6 +49,7 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -54,13 +58,15 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadNotes;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
+import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.interfaces.ActionRightIDs;
 
-public class NoteView extends ViewPart {
+@SuppressWarnings("restriction")
+public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(NoteView.class);
 	
@@ -81,6 +87,12 @@ public class NoteView extends ViewPart {
 	private IBSIModelListener modelListener;
 	
 	List<Note> noteList;
+	
+	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+    
+    private Action linkWithEditorAction;
+
+    private boolean linkingActive = true;
 
 	public NoteView() {
 	}
@@ -126,7 +138,7 @@ public class NoteView extends ViewPart {
 			}
 		};
 		getSite().getPage().addPostSelectionListener(selectionListener);
-
+		getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 
 	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -137,26 +149,33 @@ public class NoteView extends ViewPart {
 			return;
 		try {
 			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if(element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
-				if(addNoteAction.checkRights()){
-				    addNoteAction.setEnabled(true);
-				}
-				setCurrentCnaElement((CnATreeElement) element);
-				clear();
-				loadNotes();
-				//parent.setSize(300,200);
-			} else {
-				addNoteAction.setEnabled(false);
-			}
+			elementSelected(element);
 		} catch (Exception e) {
 			LOG.error("Error while loading notes", e); //$NON-NLS-1$
 		}
 	}
+
+    /**
+     * @param element
+     */
+    private void elementSelected(Object element) {
+        if(element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
+        	if(addNoteAction.checkRights()){
+        	    addNoteAction.setEnabled(true);
+        	}
+        	setCurrentCnaElement((CnATreeElement) element);
+        	clear();
+        	loadNotes();
+        } else {
+        	addNoteAction.setEnabled(false);
+        }
+    }
 	
 	private void fillLocalToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
 		manager.add(this.addNoteAction);
+		manager.add(this.linkWithEditorAction);
 	}
 	
 	private void makeActions() {
@@ -179,6 +198,15 @@ public class NoteView extends ViewPart {
 		addNoteAction.setText(Messages.NoteView_3);
 		addNoteAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 		addNoteAction.setEnabled(false);
+		
+		linkWithEditorAction = new Action(Messages.NoteView_0, IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                toggleLinking(isChecked());
+            }
+        };
+        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction.setChecked(isLinkingActive());
 	}
 
 	public void loadNotes() {
@@ -308,7 +336,34 @@ public class NoteView extends ViewPart {
 		getSite().getPage().removePostSelectionListener(selectionListener);
 		BSIModel model = CnAElementFactory.getLoadedModel();
 		model.removeBSIModelListener(modelListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
 		super.dispose();
 	}
+	
+	protected void toggleLinking(boolean checked) {
+        this.linkingActive = checked;
+        if (checked) {
+            editorActivated(getSite().getPage().getActiveEditor());
+        }
+    }
+    
+    protected boolean isLinkingActive() {
+        return linkingActive;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void editorActivated(IEditorPart activeEditor) {
+        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
+            return;
+        }
+        CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
+        if(element==null) {
+            return;
+        }
+        elementSelected(element);       
+    }
 
 }
