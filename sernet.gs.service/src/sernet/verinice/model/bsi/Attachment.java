@@ -46,7 +46,7 @@ public class Attachment extends Addition implements Serializable{
 	
 	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
 	
-	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
 	public static String[] PDF_MIME_TYPES = new String[] {"pdf"}; //$NON-NLS-1$
 	
