@@ -30,14 +30,14 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.interfaces.IRightsServiceClient;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -127,8 +127,13 @@ public class CutCommand extends GenericCommand {
             
             // set scope id of all elements and it's subtrees
             for (CnATreeElement element : elementList) {
-                UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(), selectedGroup.getScopeId());
-                updateScopeId = getCommandService().executeCommand(updateScopeId);
+                if(selectedGroup.getScopeId() != null){
+                    UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(), selectedGroup.getScopeId());
+                    updateScopeId = getCommandService().executeCommand(updateScopeId);
+                } else {
+                    if(!(selectedGroup instanceof Organization) && !(selectedGroup instanceof ITVerbund))
+                        getLog().warn("cut&paste target has no scopeID");
+                }
             }
             
             

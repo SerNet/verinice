@@ -55,6 +55,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.interfaces.IAuthService;
 
 /**
  * Workbench Window advisor.
@@ -87,11 +88,22 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IPreferenceStore apiStore = PlatformUI.getPreferenceStore();
         apiStore.setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
         configurer.setShowPerspectiveBar(true);
+        configurer.setTitle(getCurrentUserName());
         // Set the preference toolbar to the left place
         // If other menus exists then this will be on the left of them
         apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
         apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
         apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, 360);
+    }
+    
+    private String getCurrentUserName(){
+        String titleString = "verinice";
+        boolean standalone =  Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if(!standalone){
+            IAuthService service = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+            titleString = titleString + ".PRO - " + service.getUsername();
+        }
+        return titleString;
     }
 
     @Override
@@ -215,11 +227,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                         if(e.isStarted()){
                             Activator.inheritVeriniceContextState();
                             if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
+                                Display.getDefault().asyncExec(new Runnable() { // execute in ui thread
+                                    @Override
+                                    public void run() {
+                                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
+                                    }
+                                });
                             }
                         }
                     }
-
                 };
                 Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
             }  else {
