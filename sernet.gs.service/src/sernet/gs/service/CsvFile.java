@@ -68,7 +68,7 @@ public class CsvFile implements Serializable{
 		setFileContent(fileContent);
 	}
 
-	public void readFile(Charset charset) throws IOException {
+	public final void readFile(Charset charset) throws IOException {
 		if( getFilePath()!=null) {
 			File file = new File(getFilePath());
 			byte[] content = FileUtils.readFileToByteArray(file);
@@ -83,7 +83,7 @@ public class CsvFile implements Serializable{
 		return fileContent;
 	}
 
-	public void setFileContent(byte[] fileContent) {
+	public final void setFileContent(byte[] fileContent) {
 		this.fileContent = fileContent;
 	}
 

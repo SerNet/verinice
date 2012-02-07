@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class InheritLogger {
+public final class InheritLogger {
     
     private final String classLog;
     

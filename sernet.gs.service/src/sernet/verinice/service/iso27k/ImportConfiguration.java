@@ -161,11 +161,11 @@ public class ImportConfiguration implements Serializable {
 		}
 	}
 	
-	public char getSeperator() {
+	public final char getSeperator() {
 		return seperator;
 	}
 
-	public void setSeperator(char seperator) {
+	public final void setSeperator(char seperator) {
 		this.seperator = seperator;
 	}
 
@@ -181,7 +181,7 @@ public class ImportConfiguration implements Serializable {
 		return isEmpty;
 	}
 
-	public void setEmpty(boolean isEmpty) {
+	public final void setEmpty(boolean isEmpty) {
 		this.isEmpty = isEmpty;
 	}
 

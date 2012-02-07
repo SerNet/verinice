@@ -59,7 +59,7 @@ import sernet.verinice.model.iso27k.InheritLogger;
 @SuppressWarnings("serial")
 public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
-    private transient Logger log = Logger.getLogger(CnATreeElement.class);
+    private transient Logger log = Logger.getLogger(CnATreeElement.class); // NOPMD by dm on 07.02.12 12:36
     
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
@@ -228,7 +228,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			getModelChangeListener().childChanged(category, child);
 	}
 	
-	public boolean canContain(Object obj) {
+	public boolean canContain(Object obj) { // NOPMD by dm on 07.02.12 12:39
 		return false;
 	}
 
@@ -284,7 +284,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public abstract String getTitle();
 	
-	public void setTitel(String name) {
+	public void setTitel(String name) { // NOPMD by dm on 07.02.12 12:38
 		// override this method
 	}
 	
@@ -298,14 +298,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	/**
      * @return the scopeId
      */
-    public Integer getScopeId() {
+    public final Integer getScopeId() {
         return scopeId;
     }
 
     /**
      * @param scopeId the scopeId to set
      */
-    public void setScopeId(Integer scopeId) {
+    public final void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
 
@@ -473,7 +473,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		};
 	}
 
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public ISchutzbedarfProvider getSchutzbedarfProvider() { // NOPMD by dm on 07.02.12 12:38
 		return null;
 	}
 
@@ -666,7 +666,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		return permissions.remove(permission);
 	}
 	
-	public void refreshAllListeners(Object source) {
+	public void refreshAllListeners(Object source) { // NOPMD by dm on 07.02.12 12:39
 		// override this in model classes
 	}
 	
