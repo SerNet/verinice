@@ -335,8 +335,10 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 
     private void addParentToCache(CnATreeElement element) {
         if (element != null) {
-            cache.addObject(element);
-            addParentToCache(element.getParent());
+            // commented out due to bug 460, just a workaround, not really a solution
+            // TODO: observe perfomance 
+//            cache.addObject(element);
+//            addParentToCache(element.getParent());
         }
     }
 
