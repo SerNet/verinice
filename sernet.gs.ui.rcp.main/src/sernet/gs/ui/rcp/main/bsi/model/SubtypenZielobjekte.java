@@ -20,11 +20,10 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -32,34 +31,34 @@ import sernet.verinice.model.bsi.BausteinVorschlag;
 
 public class SubtypenZielobjekte {
 
-		List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(50);
-	
-		private Properties properties;
-		
-		private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
+    private static final Logger LOG = Logger.getLogger(SubtypenZielobjekte.class);
 
-		public SubtypenZielobjekte() {
-			properties = new Properties();
-			InputStream stream = getClass().getClassLoader().getResourceAsStream(SUBTYP_MAPPING_FILE);
-			try {
-				properties.load(stream);
-			} catch (IOException e) {
-				Logger.getLogger(this.getClass())
-					.error(Messages.SubtypenZielobjekte_1, e);
-			}
+    List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(50);
 
-			Set<Entry<Object, Object>> entrySet = properties.entrySet();
-			for (Entry<Object, Object> entry : entrySet) {
-				String name = entry.getKey().toString();
-				String property = entry.getValue().toString();
-				BausteinVorschlag vorschlag = new BausteinVorschlag(name, property);
-				mapping.add(vorschlag);
-			}
-			
-		}
+    private Properties properties;
 
+    private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
 
-		public List<BausteinVorschlag> getMapping() {
-			return mapping;
-		}
+    public SubtypenZielobjekte() {
+        properties = new Properties();
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(SUBTYP_MAPPING_FILE);
+        try {
+            properties.load(stream);
+        } catch (IOException e) {
+            LOG.error(Messages.SubtypenZielobjekte_1, e);
+        }
+
+        Set<Entry<Object, Object>> entrySet = properties.entrySet();
+        for (Entry<Object, Object> entry : entrySet) {
+            final String name = entry.getKey().toString();
+            String property = entry.getValue().toString();
+            BausteinVorschlag vorschlag = new BausteinVorschlag(name, property);
+            mapping.add(vorschlag);
+        }
+
+    }
+
+    public List<BausteinVorschlag> getMapping() {
+        return mapping;
+    }
 }

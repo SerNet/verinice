@@ -162,7 +162,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         if (tags == null)
             return new String[] {};
         
-        tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        tags = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
         return tags.split(","); //$NON-NLS-1$
     }
 

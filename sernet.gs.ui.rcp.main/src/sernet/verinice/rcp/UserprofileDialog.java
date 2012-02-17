@@ -527,8 +527,8 @@ public class UserprofileDialog extends TitleAreaDialog {
                 if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
                     selectedProfileRef = (ProfileRef)selectionList.get(0);
                 }
-                editButton.setEnabled(!selectionList.isEmpty());
-                removeButton.setEnabled(!selectionList.isEmpty());
+                editButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
+                removeButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
             }
         });
         
@@ -541,8 +541,8 @@ public class UserprofileDialog extends TitleAreaDialog {
                 if(selectionList!=null && selectionList.size()==1 && selectionList.get(0) instanceof ProfileRef) {
                     selectedProfileRef = (ProfileRef)selectionList.get(0);
                 }
-                editButton.setEnabled(!selectionList.isEmpty());
-                removeButton.setEnabled(!selectionList.isEmpty());
+                editButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
+                removeButton.setEnabled(selectionList!=null && !selectionList.isEmpty());
             }
         });
 

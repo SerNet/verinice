@@ -310,7 +310,8 @@ public class ISMViewContentProvider implements ITreeContentProvider {
             for (IParameter param : paramerterList) {
                if(param instanceof TypeFilter) {              
                    Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
-                   if(typeIdSet.size()>1 || !typeIdSet.iterator().next().equals(RetrieveCnATreeElement.ALL_TYPES)) {
+                   String[] typeIdArray = typeIdSet.iterator().next();
+                   if(typeIdSet.size()>1 || !Arrays.equals(typeIdArray,RetrieveCnATreeElement.ALL_TYPES)) {
                        result.put(RetrieveCnATreeElement.PARAM_TYPE_IDS, typeIdSet);
                    }                                
                }

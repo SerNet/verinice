@@ -141,7 +141,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			lmu = (LoadCnAElementByType<MassnahmenUmsetzung>) getCommandService().executeCommand(lmu);
 		} catch (CommandException e) {
-		    log.error("Error in collectExpirationNotifees", e);
+		    getLog().error("Error in collectExpirationNotifees", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -291,7 +291,8 @@ public class PrepareNotificationInfo extends GenericCommand {
 			}
 			catch (CommandException ce)
 			{
-				new RuntimeException(ce);
+			    getLog().error("Error while executing command: LoadCnAElementsByEntityIds", ce);
+				throw new RuntimeException("Error while executing command: LoadCnAElementsByEntityIds", ce);
 			}
 			
 			return le.getElements();

@@ -63,7 +63,9 @@ public class LayerSummary extends CompletedLayerSummary {
 			
 			Baustein baustein = getBaustein(chapter);
 			if (baustein == null) {
-				Logger.getLogger(this.getClass()).debug("Kein Baustein gefunden für ID" + baustein.getId());
+			    if (log.isDebugEnabled()) {
+			        log.debug("Kein Baustein gefunden für chapter: " + chapter);
+                }				
 				continue;
 			}
 			

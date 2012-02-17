@@ -28,13 +28,13 @@ import sernet.hui.common.connect.ITypedElement;
 @SuppressWarnings("serial")
 public class Permission implements Serializable, ITypedElement, Comparable<Permission> {
 
-	private transient Logger log = Logger.getLogger(Permission.class);
-
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Permission.class);
+	private transient static Logger LOG = Logger.getLogger(Permission.class);
+	
+    private static Logger getLog() {
+        if (LOG == null) {
+            LOG = Logger.getLogger(Permission.class);
         }
-        return log;
+        return LOG;
     }
 	
 	private Integer dbId;
@@ -133,10 +133,9 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 	public static Set<Permission> clonePermissionSet(CnATreeElement cte, Set<Permission> perms) {
 		HashSet<Permission> clone = null;
 		if(cte==null) {
-			 Logger.getLogger(Permission.class).warn("Element is null");
-		}
-		if(cte.getUuid()==null) {
-			 Logger.getLogger(Permission.class).warn("Element uuid is null");
+			 getLog().warn("Element is null");
+		} else if(cte.getUuid()==null) {
+		     getLog().warn("Element uuid is null");
 		}
 		if(perms!=null) {
 			clone = new HashSet<Permission>(perms.size());	

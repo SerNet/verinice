@@ -363,20 +363,21 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void initNamesForCombo() {
-        if (allPossibleRelations == null)
-            names = new String[0];
-
         namesAndIds = new TreeMap<String, String>();
-
-        for (HuiRelation huiRelation : allPossibleRelations) {
-            // from or to element, show other side respectively:
-            String targetEntityTypeID = huiRelation.getTo();
-            String sourceEntityTypeID = huiRelation.getFrom();
-
-            if (sourceEntityTypeID.equals(this.inputElmt.getEntity().getEntityType())) {
-                namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(targetEntityTypeID).getName(), targetEntityTypeID);
-            } else {
-                namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(sourceEntityTypeID).getName(), sourceEntityTypeID);
+        
+        if (allPossibleRelations == null) {
+            names = new String[0];
+        } else {
+            for (HuiRelation huiRelation : allPossibleRelations) {
+                // from or to element, show other side respectively:
+                String targetEntityTypeID = huiRelation.getTo();
+                String sourceEntityTypeID = huiRelation.getFrom();
+    
+                if (sourceEntityTypeID.equals(this.inputElmt.getEntity().getEntityType())) {
+                    namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(targetEntityTypeID).getName(), targetEntityTypeID);
+                } else {
+                    namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(sourceEntityTypeID).getName(), sourceEntityTypeID);
+                }
             }
         }
 

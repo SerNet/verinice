@@ -388,7 +388,7 @@ public class HUITypeFactory {
         if (tags == null || tags.length()<1)
             return;
         
-        tags.replaceAll("\\s+", "");
+        tags = tags.replaceAll("\\s+", "");
         String[] individualTags = tags.split(",");
         allTags.addAll(Arrays.asList(individualTags));
     }

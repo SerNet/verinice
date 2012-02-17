@@ -17,23 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-import org.hibernate.LazyInitializationException;
-
-import sernet.gs.ui.rcp.main.bsi.views.chart.MaturitySpiderChart;
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.iso27k.service.ControlMaturityService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -45,6 +34,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
  * @author koderman[at]sernet[dot]de
  *
  */
+@SuppressWarnings("restriction")
 public class ControlMaturityRow implements IOOTableRow, ICnaItemRow {
 
 	private CnATreeElement item;

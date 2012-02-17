@@ -73,13 +73,16 @@ public class TransactionLogWatcher {
 
 			lastChecked = command.getLastChecked();
 			List<ChangeLogEntry> entries = command.getEntries();
-			if (log.isDebugEnabled() && (entries==null || entries.isEmpty()) ) {
-				log.debug("No changes");
-			}
-			for (ChangeLogEntry changeLogEntry : entries) {
-				Integer elementId = changeLogEntry.getElementId();
-				CnATreeElement changedElement = command.getChangedElements().get(elementId);
-				process(changeLogEntry, changedElement);
+			if(entries==null || entries.isEmpty() ) {
+    			if(log.isDebugEnabled()) {
+    				log.debug("No changes");
+    			}
+			} else {
+    			for (ChangeLogEntry changeLogEntry : entries) {
+    				Integer elementId = changeLogEntry.getElementId();
+    				CnATreeElement changedElement = command.getChangedElements().get(elementId);
+    				process(changeLogEntry, changedElement);
+    			}
 			}
 
 		} catch (CommandException e) {

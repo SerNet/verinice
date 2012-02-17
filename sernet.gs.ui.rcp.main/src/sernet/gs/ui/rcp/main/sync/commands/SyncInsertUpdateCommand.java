@@ -334,7 +334,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             importFileList(elementInDB, so.getFile());
         }
         
-        idElementMap.put(elementInDB.getExtId(), elementInDB);
+        if(elementInDB!=null) {
+            idElementMap.put(elementInDB.getExtId(), elementInDB);
+        }
         
         if (getLogrt().isDebugEnabled()) {
             long cur = System.currentTimeMillis();

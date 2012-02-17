@@ -145,8 +145,10 @@ public class CopyCommand extends GenericCommand {
                     copy(elementCopy,child,sourceDestMap);
                 }
             }
-        } else {
+        } else if(element!=null) {
             getLog().warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+            getLog().warn("Can not copy element. Element is null");
         }
         return elementCopy;
     }

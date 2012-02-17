@@ -53,7 +53,7 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 		if(ri!=null) {
 		    this.ri=ri;
 		} else {
-		    ri = new RetrieveInfo();
+		    this.ri = new RetrieveInfo();
 		}
 	}
 	

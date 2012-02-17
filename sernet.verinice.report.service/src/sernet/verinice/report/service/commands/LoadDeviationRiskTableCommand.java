@@ -163,19 +163,21 @@ public class LoadDeviationRiskTableCommand extends GenericCommand {
             
             deviationProperty = SAMT_DEVIATION_PROPERTY;
             riskProperty = SAMT_RISK_PROPERTY;
-            for (CnATreeElement elmt : cList) {
-                int deviVal = elmt.getNumericProperty(deviationProperty);
-                int riskVal = elmt.getNumericProperty(riskProperty);
-                int deviField = -2;
-                int riskField = -2;
-                if (deviVal >= -1) {
-                    deviField = deviVal + 1;
-                }
-                if (riskVal >= -1) {
-                    riskField = riskVal + 1;
-                }
-                if (deviField > -1 && riskField > -1) {
-                    chapterValues.increaseCount(deviField, riskField);
+            if(cList!=null) {
+                for (CnATreeElement elmt : cList) {
+                    int deviVal = elmt.getNumericProperty(deviationProperty);
+                    int riskVal = elmt.getNumericProperty(riskProperty);
+                    int deviField = -2;
+                    int riskField = -2;
+                    if (deviVal >= -1) {
+                        deviField = deviVal + 1;
+                    }
+                    if (riskVal >= -1) {
+                        riskField = riskVal + 1;
+                    }
+                    if (deviField > -1 && riskField > -1) {
+                        chapterValues.increaseCount(deviField, riskField);
+                    }
                 }
             }
 

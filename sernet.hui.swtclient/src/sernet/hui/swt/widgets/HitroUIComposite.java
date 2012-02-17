@@ -191,7 +191,7 @@ public class HitroUIComposite extends ScrolledComposite {
 	}
 	
 	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly) throws DBException {
-	    tags.replaceAll("\\s+", "");
+	    tags = tags.replaceAll("\\s+", "");
         String[] individualTags = tags.split(",");
         huiView.createView(entity, editable, useRules, individualTags, taggedOnly);
     }

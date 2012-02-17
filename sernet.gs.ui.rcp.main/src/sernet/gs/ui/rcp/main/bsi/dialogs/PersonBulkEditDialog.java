@@ -70,7 +70,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     
     private PersonBulkEditDialog(Shell parent){
         super(parent);
-        this.entType = entType;
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
         isScopeOnly = authService.isScopeOnly();

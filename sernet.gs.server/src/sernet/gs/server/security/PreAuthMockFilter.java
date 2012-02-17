@@ -79,8 +79,8 @@ public class PreAuthMockFilter implements Filter {
 		}
 		String userName = DEFAULT_USER_NAME;
 		ServletContext context = this.filterConfig.getServletContext();
-		if(context==null && log.isDebugEnabled()){
-			log.debug("this.filterConfig.getServletContext()== NULL !!");
+		if(context==null){
+			log.warn("this.filterConfig.getServletContext()== NULL !!");
 		} else {
 		    if(context.getInitParameter(USER_NAME_PARAM)!=null) {
 		        userName = context.getInitParameter(USER_NAME_PARAM);

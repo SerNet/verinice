@@ -127,8 +127,15 @@ public class Query implements IQuery
     		
     		
 		} catch (EvalError e) {
-			new RuntimeException("Unable to set BSH variable 'properties'.", e);
-		}
+		    log.error("Error while evaluating a BeanShell script for an ODA query.", e);
+			throw new RuntimeException("Error while evaluating a BeanShell script for an ODA query.", e);
+		} catch (RuntimeException e) {
+            log.error("RuntimeException while creating an ODA query.", e);
+            throw e;
+        } catch (Exception e) {
+		    log.error("Exception while creating an ODA query.", e);
+            throw new RuntimeException("Error while evaluating a BeanShell script for an ODA query.", e);
+        } 
     }
     
     /**

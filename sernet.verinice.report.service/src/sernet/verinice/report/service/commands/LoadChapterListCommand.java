@@ -190,9 +190,11 @@ public class LoadChapterListCommand extends GenericCommand {
                         log.error("Error while executing command", e);
                     }
                 }
-                for (CnATreeElement e : g.getChildren()) {
-                    if (e instanceof ControlGroup) {
-                        values.add(createValueEntry(e));
+                if(g!=null && g.getChildren()!=null) {
+                    for (CnATreeElement e : g.getChildren()) {
+                        if (e instanceof ControlGroup) {
+                            values.add(createValueEntry(e));
+                        }
                     }
                 }
                 break;

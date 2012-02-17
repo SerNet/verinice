@@ -38,7 +38,7 @@ public class ElementViewParentLoader implements IParentLoader {
         if(child!=null) {
             child = retrieveParent(child);
         }
-        return child.getParent(); 
+        return (child!=null) ? child.getParent() : null; 
     }
     
     private CnATreeElement retrieveParent(CnATreeElement element) {

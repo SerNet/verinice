@@ -287,7 +287,7 @@ public class BSIElementEditor extends EditorPart {
         if (tags == null)
             return new String[] {};
 
-        tags.replaceAll("\\s+", "");
+        tags = tags.replaceAll("\\s+", "");
         return tags.split(",");
     }
 
