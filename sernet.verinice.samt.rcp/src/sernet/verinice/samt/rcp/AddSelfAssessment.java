@@ -67,6 +67,8 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
     
     private static ISchedulingRule iSchedulingRule = new Mutex();
     
+    private boolean serverIsRunning = true;
+    
     /*
      * (non-Javadoc)
      * 
@@ -82,22 +84,23 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
     @Override
     public void init(final IAction action){
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            serverIsRunning = false;
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if(e.isStarted()){
+                        serverIsRunning = true;
                         action.setEnabled(checkRights());
                     }
                 }
-
+                
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
             action.setEnabled(checkRights());
         }
     }
-
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -145,8 +148,9 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        action.setEnabled(checkRights());
-
+        if(serverIsRunning) {
+            action.setEnabled(checkRights());
+        }
     }
 
     /* (non-Javadoc)

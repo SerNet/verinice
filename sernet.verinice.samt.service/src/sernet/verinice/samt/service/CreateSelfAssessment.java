@@ -135,6 +135,9 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             }
             addPermissions(isaAudit);
             auditGroup.addChild(isaAudit);
+            IBaseDao<Audit, Serializable> auditDao = getDaoFactory().getDAO(Audit.class);
+            auditDao.saveOrUpdate(isaAudit);
+            
             changedElements.add(isaAudit);
             changedElements.addAll(isaAudit.getChildren());
             
@@ -159,15 +162,19 @@ public class CreateSelfAssessment extends GenericCommand implements IChangeLoggi
             // Link all controls of audit to audit
             IBaseDao<CnALink, Serializable> daoLink = getDaoFactory().getDAO(CnALink.class);
             
+            auditDao.flush();
+            
             CnALink link = new CnALink(organization,isaAudit,"rel_org_audit",null);
             organization.addLinkDown(link);
             isaAudit.addLinkUp(link);
+            daoLink.saveOrUpdate(link);
             
             Set<CnATreeElement> isaCategories = controlGroup.getChildren();
             for (CnATreeElement categorie : isaCategories) {
                 link = new CnALink(isaAudit,categorie,"rel_audit_control",null);
                 isaAudit.addLinkDown(link);
                 categorie.addLinkUp(link);
+                daoLink.saveOrUpdate(link);
             }
         } catch (Exception e) {
             getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
