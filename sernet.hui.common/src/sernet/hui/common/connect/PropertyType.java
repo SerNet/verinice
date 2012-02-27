@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.hui.common.connect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,7 +35,7 @@ import sernet.hui.common.rules.NullRule;
  * @author prack
  * @version $Id: PropertyType.java,v 1.6 2006/10/20 14:55:16 aprack Exp $
  */
-public class PropertyType implements IMLPropertyType, IEntityElement, Comparable<PropertyType> {
+public class PropertyType implements IMLPropertyType, IEntityElement, Comparable<PropertyType>, Serializable {
 
 	private final Logger log = Logger.getLogger(PropertyType.class);
 

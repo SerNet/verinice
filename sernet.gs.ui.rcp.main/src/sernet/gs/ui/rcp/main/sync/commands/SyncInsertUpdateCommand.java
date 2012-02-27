@@ -58,7 +58,6 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CheckSourceId;
-import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.commands.LoadAttachmentByExternalId;
 import sernet.verinice.service.commands.LoadBSIModel;
@@ -74,12 +73,20 @@ import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
+/**
+ * This command is used as a sub-command of {@link SyncCommand} to insert and update
+ * elements during the import process.
+ * 
+ * It's not a standalone-command.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 @SuppressWarnings({ "serial", "restriction" })
 public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
 
-    private static final int flushLevel = 50;
+    private static final int FLUSH_LEVEL = 50;
     
     public Logger getLog() {
         if (log == null) {
@@ -96,13 +103,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         return logrt;
     }
-    
-    private static HashMap<String, String> containerTypes = new HashMap<String, String>();
 
     private String sourceId;
     private boolean sourceIdExists;
-    private SyncMapping syncMapping;
-    private SyncData syncData;
+    private transient SyncMapping syncMapping;
+    private transient SyncData syncData;
     private String userName;
 
 	private boolean insert, update;
@@ -135,6 +140,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     		boolean update, 
     		Integer format,
     		List<String> errorList) {
+        super();
         this.sourceId = sourceId;
         this.syncData = syncData;
         this.syncMapping = syncMapping;
@@ -316,7 +322,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
      
             merged++;
-            if(merged % flushLevel == 0 ) {
+            if(merged % FLUSH_LEVEL == 0 ) {
                long flushstart = 0;
                if (getLogrt().isDebugEnabled()) {
                    flushstart = System.currentTimeMillis();
@@ -676,8 +682,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-            errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
+            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
+            getLog().error(message,e);
+            errorList.add(message);
+            throw new RuntimeCommandException(message,e );
         }
         BSIModel model = cmdLoadModel.getModel();
         ImportBsiGroup holder = null;
@@ -686,7 +694,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             addPermissions(holder);
             getDao(ImportBsiGroup.class).saveOrUpdate(holder);
         } catch (Exception e1) {
-            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
+            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
+            getLog().error(message,e1);
+            errorList.add(message);
+            throw new RuntimeCommandException(message,e1 );
         }
         return holder;
     }
@@ -696,8 +707,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-            errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-            throw new RuntimeCommandException("Fehler beim Anlegen des Behaelters für importierte Objekte.");
+            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
+            getLog().error(message,e);
+            errorList.add(message);
+            throw new RuntimeCommandException(message,e );
         }
         ISO27KModel model = cmdLoadModel.getModel();
         ImportIsoGroup holder = null;
@@ -706,7 +719,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             addPermissions(holder);
             getDao(ImportIsoGroup.class).saveOrUpdate(holder);
         } catch (Exception e1) {
-            throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
+            getLog().error(message, e1);
+            errorList.add(message);
+            throw new RuntimeCommandException(message,e1 );
         }
         return holder;
     }

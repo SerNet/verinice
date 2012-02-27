@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.server.commands;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
-public class NotificationInfo {
+public class NotificationInfo implements Serializable{
 
 	final Configuration configuration;
 	

@@ -345,18 +345,18 @@ public class Configuration implements Serializable, ITypedElement {
 		return dbId.hashCode();
 	}
 	
-	public boolean equals(Object o)
-	{
-		try
-		{
+	public boolean equals(Object o) {
+	    if(o==null) {
+	        return false;
+	    }
+		try {
 			Configuration that = (Configuration) o;
 			
 			// TODO rschuster: Comparing non-saved Configuration instances is troublesome.
 			
 			return this.dbId.equals(that.dbId);
 		}
-		catch (ClassCastException cce)
-		{
+		catch (ClassCastException cce) {
 			return false;
 		}
 	}

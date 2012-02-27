@@ -22,6 +22,8 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -32,6 +34,8 @@ import de.sernet.sync.sync_service.SyncService;
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public class SyncServiceImpl implements SyncService {
 	
+    private static final Logger LOG = Logger.getLogger(SyncServiceImpl.class);
+    
 	private ICommandService commandService;
 	
     @Override
@@ -47,6 +51,7 @@ public class SyncServiceImpl implements SyncService {
         	errors.addAll(command.getErrors());
     	} catch (CommandException ce)
     	{
+    	    LOG.error("Error while executing command: SyncCommand", ce);
     		errors.add(ce.getLocalizedMessage());
     	}
     	

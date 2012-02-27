@@ -39,7 +39,7 @@ public class SamtWorkspace extends CnAWorkspace {
 
     private static final Logger LOG = Logger.getLogger(SamtWorkspace.class);
 
-    private static SamtWorkspace instance;
+    private static volatile SamtWorkspace instance;
 
     /**
      * Classloader-relative path to the resources folder of this bundle without

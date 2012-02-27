@@ -48,7 +48,6 @@ import sernet.verinice.model.iso27k.Organization;
 public class SwitchElementMenuCreater implements IViewActionDelegate, IMenuCreator {
     
     private IAction action;
-    private Menu menu;
     private GenericElementView groupView;
     private LinkedList<SwitchElementAction> handlerList;
     private Iterator<SwitchElementAction> handlerIterator;
@@ -100,12 +99,7 @@ public class SwitchElementMenuCreater implements IViewActionDelegate, IMenuCreat
     /* (non-Javadoc)
      * @see org.eclipse.jface.action.IMenuCreator#dispose()
      */
-    public void dispose()
-    {
-      if (menu != null)
-      {
-        menu.dispose();
-      }
+    public void dispose(){
     }
 
 

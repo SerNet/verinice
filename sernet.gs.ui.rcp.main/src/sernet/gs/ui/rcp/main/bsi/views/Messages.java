@@ -19,7 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import org.eclipse.osgi.util.NLS;
 
-public class Messages extends NLS {
+@SuppressWarnings("restriction")
+public final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.messages"; //$NON-NLS-1$
 
 	public static String AuditView_1;

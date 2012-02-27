@@ -12,6 +12,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -33,6 +34,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  */
 public class CertificateUtils {
 
+    private static final Logger LOG = Logger.getLogger(CertificateUtils.class);
+    
 	// Add the BouncyCastle security provider if not available yet
 	static {
 		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -66,9 +69,13 @@ public class CertificateUtils {
 
 		// Check availablity and readability of the given file first
 		if (!x509CertificateFile.exists()) {
-			throw new IOException("The given file \"" + x509CertificateFile + "\" does not exist.");
+		    String message = "The given file \"" + x509CertificateFile + "\" does not exist.";
+		    LOG.error(message);
+			throw new IOException(message);
 		} else if (!x509CertificateFile.canRead()) {
-			throw new IOException("The given file \"" + x509CertificateFile + "\" cannot be read.");
+		    String message = "The given file \"" + x509CertificateFile + "\" cannot be read.";
+		    LOG.error(message);
+			throw new IOException(message);
 		}
 		
 		// Since the file seems to be ok, try to make a X509 certificate from it.
@@ -78,15 +85,20 @@ public class CertificateUtils {
 		} catch (NoSuchProviderException e) {
 			// Shouldn't happen, since the BouncyCastle provider was added on class loading
 			// or even before
-			e.printStackTrace();
+			LOG.error("Certificate provider not found.", e);
+		    throw new RuntimeException("Certificate provider not found.", e);
 		}
 
 		Certificate certificate = certificateFactory.generateCertificate(new FileInputStream(x509CertificateFile));
 		if (certificate == null) {
-            throw new CertificateException("The given file \"" + x509CertificateFile + "\" does not contain a X.509 certificate.");
+		    String message = "The given file \"" + x509CertificateFile + "\" does not contain a X.509 certificate.";
+		    LOG.error(message);
+            throw new CertificateException(message);
         }
 		if (!certificate.getType().equalsIgnoreCase("x.509")) {
-			throw new CertificateException("The certificate contained in the given file \"" + x509CertificateFile + "\" is not a X.509 certificate.");
+		    String message = "The certificate contained in the given file \"" + x509CertificateFile + "\" is not a X.509 certificate.";
+		    LOG.error(message);
+			throw new CertificateException(message);
 		}
 		
 		X509Certificate x509Certificate = (X509Certificate) certificate;

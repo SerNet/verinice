@@ -104,8 +104,6 @@ public class ImportCreateBausteine extends GenericCommand {
     // umsetzungs patterns in gstool:
     private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein", "ja", "teilweise", "entbehrlich", };
 
-    private static final String LINK_NO_COMMENT = "";
-
     public ImportCreateBausteine(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung, IBSIConfig bsiConfig) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;

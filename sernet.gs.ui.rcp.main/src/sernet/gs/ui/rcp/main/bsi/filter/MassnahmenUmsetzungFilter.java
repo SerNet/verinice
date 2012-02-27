@@ -87,8 +87,11 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 		return umsetzungPattern.contains(mn.getUmsetzung());
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerFilter#isFilterProperty(java.lang.Object, java.lang.String)
+	 */
 	public boolean isFilterProperty(Object element, String property) {
-		return property == UMSETZUNG_PROPERTY;
+		return UMSETZUNG_PROPERTY.equals(property);
 	}
 	
 }

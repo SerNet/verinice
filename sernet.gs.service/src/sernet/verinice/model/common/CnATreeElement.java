@@ -298,14 +298,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	/**
      * @return the scopeId
      */
-    public final Integer getScopeId() {
+    public Integer getScopeId() {
         return scopeId;
     }
 
     /**
      * @param scopeId the scopeId to set
      */
-    public final void setScopeId(Integer scopeId) {
+    public void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
 

@@ -23,25 +23,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 
 import sernet.verinice.iso27k.rcp.RcpProgressObserver;
-import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.iso27k.service.PasteService;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
+@SuppressWarnings("restriction")
 public class PasteOperation implements IProgressRunnable {
-    
-    /**
-     * 
-     */
-    private IProgressObserver progressObserver;      
+         
     private PasteService service;
     private String message;
     private String id;
     
-    @SuppressWarnings("unchecked")
     public PasteOperation(PasteService service, String message, String id) {
         this.service = service;
         this.message =  message;
+        this.id = id;
     }
       
     /* (non-Javadoc)
