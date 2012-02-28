@@ -215,7 +215,8 @@ public class AccountDialog extends TitleAreaDialog {
 		
 		if(getEntity()!=null 
 			&& getEntity().getProperties(Configuration.PROP_USERNAME)!=null
-			&& getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0)!=null) {
+			&& getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) !=null
+		    && getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue() !=null) {
 			textName.setText(getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue());
 		}
 	}
