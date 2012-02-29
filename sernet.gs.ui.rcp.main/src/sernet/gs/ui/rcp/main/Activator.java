@@ -71,6 +71,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
 
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.util.tracker.ServiceTracker;
 
 
@@ -171,12 +172,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		runsAsApplication = true;
 		
 		Bundle bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
-		if (bundle == null)
-		{
+		if (bundle == null){
 			LOG.warn("Report service bundle is not available!");
 		}
-		else
-		{
+		else {
 			bundle.start();
 		}
 		
@@ -219,9 +218,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 				throw new IllegalStateException("Cannot retrieve internal server service."); //$NON-NLS-1$
 
 			internalServer = (IInternalServer) context.getService(sr);
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Preference " + PreferenceConstants.OPERATION_MODE + "=" + PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER + ": Using internal server."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
+			
 		} else {
 			internalServer = new ServerDummy();
 			if (LOG.isDebugEnabled()) {
@@ -303,7 +300,12 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
 		    };
 		};
-		repositoryJob.schedule();	
+		repositoryJob.schedule();
+			
+		// Log the system and application configuration
+		ConfigurationLogger.logSystemProperties();
+		ConfigurationLogger.logApplicationProperties();
+        ConfigurationLogger.logProxyPreferences();	
 	}
 
     /**

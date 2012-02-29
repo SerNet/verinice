@@ -78,22 +78,29 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         return new ApplicationActionBarAdvisor(configurer);
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#preWindowOpen()
+     */
     @Override
     public void preWindowOpen() {
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-        configurer.setInitialSize(new Point(1100, 768));
-        configurer.setShowCoolBar(true);
-        configurer.setShowStatusLine(true);
-        configurer.setShowProgressIndicator(true);
-        IPreferenceStore apiStore = PlatformUI.getPreferenceStore();
-        apiStore.setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
-        configurer.setShowPerspectiveBar(true);
-        configurer.setTitle(getCurrentUserName());
-        // Set the preference toolbar to the left place
-        // If other menus exists then this will be on the left of them
-        apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
-        apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
-        apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, 360);
+        try {
+            IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+            configurer.setInitialSize(new Point(1100, 768));
+            configurer.setShowCoolBar(true);
+            configurer.setShowStatusLine(true);
+            configurer.setShowProgressIndicator(true);
+            IPreferenceStore apiStore = PlatformUI.getPreferenceStore();
+            apiStore.setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
+            configurer.setShowPerspectiveBar(true);
+            configurer.setTitle(getCurrentUserName());
+            // Set the preference toolbar to the left place
+            // If other menus exists then this will be on the left of them
+            apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
+            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
+            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, 360);
+        } catch(Throwable t) {
+            LOG.error("Error while configuring window.", t);
+        }
     }
     
     private String getCurrentUserName(){

@@ -16,8 +16,8 @@
         <!-- <param name="Threshold" value="INFO" /> -->
         <param name="File" value="${user.home}/verinice/verinice-client.log" />
         <param name="Append" value="true" />
-        <param name="MaxFileSize" value="10000KB" />
-        <param name="MaxBackupIndex" value="5" />
+        <param name="MaxFileSize" value="1000KB" />
+        <param name="MaxBackupIndex" value="20" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
         </layout>
@@ -26,6 +26,11 @@
     <!-- Pax logs superfluous warning on system startup -->
     <logger name="org.ops4j.pax.web.service.internal.ConfigurationImpl">
         <level value="ERROR" />
+    </logger>
+    
+    <!-- Logs system configuration on startup -->
+    <logger name="sernet.gs.ui.rcp.main.ConfigurationLogger">
+        <level value="INFO" />
     </logger>
 
     <!-- Add settings for packages here  -->

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import org.apache.log4j.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
@@ -25,26 +26,39 @@ import org.eclipse.ui.PlatformUI;
 /**
  * This class controls all aspects of the application's execution
  */
+@SuppressWarnings("restriction")
 public class Application implements IApplication {
     
-	public Object start(IApplicationContext context) throws Exception {
+	/* (non-Javadoc)
+	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
+	 */
+	public Object start(IApplicationContext context) throws Exception {	    
+	    ConfigurationLogger.logStart();
+	        
 		Activator.getDefault().startApplication();
 		Activator.inheritVeriniceContextState();
 		
 		Display display = PlatformUI.createDisplay();
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(display,
-					new ApplicationWorkbenchAdvisor());
+			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART) {
 				return IApplication.EXIT_RESTART;
 			}
 			return IApplication.EXIT_OK;
 		} finally {
+		    ConfigurationLogger.logStop();
 			display.dispose();
 		}
 	}
 
+    /* (non-Javadoc)
+	 * @see org.eclipse.equinox.app.IApplication#stop()
+	 */
 	public void stop() {
-		// do nothing special
+	    // nothing to do
 	}
+	
+	
+	
+	
 }
