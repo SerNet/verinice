@@ -147,6 +147,7 @@
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
+	        <action id="derivestatus"/>
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
             <action id="editprofile" />
@@ -201,6 +202,7 @@
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
+	        <action id="derivestatus"/>
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
             <action id="editprofile" />

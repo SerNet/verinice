@@ -40,6 +40,7 @@ public class ActionRightIDs {
     public static final String ADDITVERBUND = "additverbund";
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
+    public static final String ADDSECURITYASSESSMENTWC = "addsecurityassessmentwc";
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
@@ -52,6 +53,7 @@ public class ActionRightIDs {
     public static final String DELETECATALOG = "deletecatalog";
     public static final String DELETEFILE = "deletefile";
     public static final String DELETEITEM = "deleteitem";
+    public static final String DERIVESTATUS = "derivestatus";
     public static final String DOCUMENTVIEW = "documentview";
     public static final String DSMODELVIEW = "dsmodelview";
     public static final String EDITPROFILE = "editprofile";

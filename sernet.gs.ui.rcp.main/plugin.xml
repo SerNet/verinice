@@ -627,6 +627,21 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
+            id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
+            objectClass="sernet.verinice.model.iso27k.ControlGroup">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.model.iso27k.ExportOrganization.menu"
+               label="%action.label.28"
+               menubarPath="additions"
+               style="push"
+               tooltip="%action.tooltip.20">
+         </action>
+      </objectContribution>      
+      <objectContribution
+            adaptable="false"
             id="sernet.verinice.model.iso27k.Person"
             objectClass="sernet.verinice.model.iso27k.PersonIso">
          <action
