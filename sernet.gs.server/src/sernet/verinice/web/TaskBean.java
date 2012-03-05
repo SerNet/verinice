@@ -63,13 +63,13 @@ public class TaskBean {
 
     private EditBean editBean;
     
-    List<Audit> auditList;
+    List<CnATreeElement> auditList;
     
-    Audit selectedAudit;
+    CnATreeElement selectedAudit;
     
     String selectedAuditName;
     
-    Map<String, Audit> nameAuditMap;
+    Map<String, CnATreeElement> nameAuditMap;
     
     List<ITask> taskList;
     
@@ -218,10 +218,10 @@ public class TaskBean {
         return new ArrayList<String>(nameAuditMap.keySet());
     }
     
-    private Map<String, Audit> createNameAuditMap() {    
-        List<Audit> auditList = getAuditList();
-        nameAuditMap = new Hashtable<String, Audit>(auditList.size());
-        for (Audit audit : auditList) {
+    private Map<String, CnATreeElement> createNameAuditMap() {    
+        List<CnATreeElement> auditList = getAuditList();
+        nameAuditMap = new Hashtable<String, CnATreeElement>(auditList.size());
+        for (CnATreeElement audit : auditList) {
             if(audit!=null) {
                 String name = getUniqueName(audit.getTitle(),0);
                 nameAuditMap.put(name,audit);
@@ -252,16 +252,16 @@ public class TaskBean {
         this.editBean = editBean;
     }
 
-    public List<Audit> getAuditList() {
+    public List<CnATreeElement> getAuditList() {
         if(auditList==null) {
-            auditList = getTaskService().getAuditList();
+            auditList = getTaskService().getElementList();
         }
         auditList = filterAuditListByUser(auditList);
         return auditList;
     }
 
-    public List<Audit> filterAuditListByUser(List<Audit> auditList){
-        ArrayList<Audit> filteredList = new ArrayList<Audit>(0);
+    public List<CnATreeElement> filterAuditListByUser(List<CnATreeElement> auditList){
+        ArrayList<CnATreeElement> filteredList = new ArrayList<CnATreeElement>(0);
         ITaskService iService =  getTaskService();
         TaskService service = null;
         if(iService instanceof TaskService){
@@ -271,7 +271,7 @@ public class TaskBean {
             String user = service.getAuthService().getUsername();
             String admin = service.getAuthService().getAdminUsername();
             if(!user.equals(admin)){ //admin is allowed to see unfiltered list
-                for(Audit audit : auditList){
+                for(CnATreeElement audit : auditList){
                     try{
                         for(Permission p : loadPermission(audit)){
                             if(user.equals(p.getRole())){
@@ -285,7 +285,7 @@ public class TaskBean {
                     }
                 }
             } else {
-                for(Audit a : auditList){
+                for(CnATreeElement a : auditList){
                     filteredList.add(a);
                 }
             }
@@ -305,7 +305,7 @@ public class TaskBean {
     }
     
     
-    public void setAuditList(List<Audit> auditList) {
+    public void setAuditList(List<CnATreeElement> auditList) {
         this.auditList = auditList;
     }
 
@@ -320,7 +320,7 @@ public class TaskBean {
         this.taskList = taskList;
     }
 
-    public Audit getSelectedAudit() {
+    public CnATreeElement getSelectedAudit() {
         return selectedAudit;
     }
 

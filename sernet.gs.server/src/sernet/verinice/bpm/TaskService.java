@@ -229,14 +229,14 @@ public class TaskService implements ITaskService{
      * @see sernet.verinice.interfaces.bpm.ITaskService#getAuditList()
      */
     @Override
-    public List<Audit> getAuditList() {
+    public List<CnATreeElement> getElementList() {
         ServerInitializer.inheritVeriniceContextState();
         String hql = "select distinct var.string from Variable var where var.key = ?";
         String[] param = new String[]{IIsaExecutionProcess.VAR_AUDIT_UUID};
         List<String> uuidAuditList = getJbpmVariableDao().findByQuery(hql, param);
-        List<Audit> auditList = new ArrayList<Audit>();
+        List<CnATreeElement> auditList = new ArrayList<CnATreeElement>();
         for (String uuid : uuidAuditList) {
-            Audit audit = getAuditDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance());
+            CnATreeElement audit = getElementDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance());
             if(audit!=null) {
                 auditList.add(audit);
             }

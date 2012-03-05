@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.ProcessInformation;
@@ -14,14 +14,14 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * Empty dummy implementation of {@link IProcessService}
+ * Empty dummy implementation of {@link IProcessServiceIsa}
  * for verinice.PRO with no process features.
  * 
- * See {@link ProcessService} for the real implementation.
+ * See {@link ProcessServiceIsa} for the real implementation.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ProcessServiceDummy implements IProcessService {
+public class ProcessServiceDummy implements IProcessServiceIsa {
 
     @Override
     public void deleteProcess(String id) {
@@ -62,7 +62,7 @@ public class ProcessServiceDummy implements IProcessService {
     /**
      * False, because this is not a real implementation.
      * 
-     * @see sernet.verinice.interfaces.bpm.IProcessService#isActive()
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
      */
     @Override
     public boolean isActive() {

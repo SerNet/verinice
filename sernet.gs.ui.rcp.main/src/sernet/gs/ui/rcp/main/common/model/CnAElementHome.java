@@ -41,7 +41,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateControlEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
@@ -621,13 +620,7 @@ public class CnAElementHome {
      * @return update command
      */
     private UpdateElementEntity<? extends CnATreeElement> createCommand(CnATreeElement element) {
-        UpdateElementEntity<? extends CnATreeElement>  command = null;
-        if(Control.TYPE_ID.equals(element.getTypeId())) {
-            command = new UpdateControlEntity((Control) element, true, ChangeLogEntry.STATION_ID);
-        } else {
-            command = new UpdateElementEntity<CnATreeElement>(element, true, ChangeLogEntry.STATION_ID);
-        }
-        return command;
+        return new UpdateElementEntity<CnATreeElement>(element, true, ChangeLogEntry.STATION_ID);
     }
 
    

@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -39,7 +39,7 @@ public class ControlProcessCreator implements IProcessCreater {
 
     private final Logger log = Logger.getLogger(ControlProcessCreator.class);
     
-    IProcessService processService;
+    IProcessServiceIsa processService;
     IBaseDao<Control, Integer> controlDao;
     
     /* (non-Javadoc)
@@ -59,11 +59,11 @@ public class ControlProcessCreator implements IProcessCreater {
     }
 
 
-    public IProcessService getProcessService() {
+    public IProcessServiceIsa getProcessService() {
         return processService;
     }
 
-    public void setProcessService(IProcessService processService) {
+    public void setProcessService(IProcessServiceIsa processService) {
         this.processService = processService;
     }
 

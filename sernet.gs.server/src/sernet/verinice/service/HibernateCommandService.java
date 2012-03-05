@@ -38,8 +38,7 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.INoAccessControl;
-import sernet.verinice.interfaces.bpm.IProcessCommand;
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.model.bsi.BSIModel;
@@ -67,8 +66,6 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	private IAuthService authService;
 	
 	private ILdapService ldapService;
-	
-	private IProcessService processService;
     
 	private boolean dbOpen = false;
 	
@@ -120,11 +117,6 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 				}
 				ldapCommand.setLdapService(getLdapService());
 			}
-			
-			// inject process service if command is aware of it:
-            if (command instanceof IProcessCommand) {
-                ((IProcessCommand) command).setProcessService(getProcessService());
-            }
 			
 			// When a command is being executed that should be subject to access
 			// control (this is the default) and the logged in user is non-
@@ -230,14 +222,6 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	public void setLdapService(ILdapService ldapService) {
 		this.ldapService = ldapService;
 	}
-
-	public IProcessService getProcessService() {
-        return processService;
-    }
-
-    public void setProcessService(IProcessService processService) {
-        this.processService = processService;
-    }
 
     public void setWorkObjects(VeriniceContext.State workObjects) {
 		this.workObjects = workObjects;

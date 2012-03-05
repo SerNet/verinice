@@ -8,7 +8,7 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -16,7 +16,7 @@ public class ProcessValidator implements IProcessCreater {
 
     private final Logger log = Logger.getLogger(ProcessValidator.class);
     
-    private IProcessService processService;
+    private IProcessServiceGeneric processService;
     
     private HibernateDao<ExecutionImpl, Integer> jbpmExecutionDao;
     
@@ -57,11 +57,11 @@ public class ProcessValidator implements IProcessCreater {
         getProcessService().deleteProcess(processId);      
     }
 
-    public IProcessService getProcessService() {
+    public IProcessServiceGeneric getProcessService() {
         return processService;
     }
 
-    public void setProcessService(IProcessService processService) {
+    public void setProcessService(IProcessServiceGeneric processService) {
         this.processService = processService;
     }
 

@@ -25,9 +25,10 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
+@SuppressWarnings("restriction")
 public abstract class ServiceFactory {
 	
 	private static final String WORK_OBJECTS = "workObjects";
@@ -92,7 +93,7 @@ public abstract class ServiceFactory {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
     
-    /** Retrieves the application's IProcessService instance.
+    /** Retrieves the application's IProcessServiceIsa instance.
      * 
      * <p>The method works on the server as well as the client.</p>
      * 
@@ -102,8 +103,8 @@ public abstract class ServiceFactory {
      * 
      * @return
      */
-    public static IProcessService lookupProcessService() {
-        return (IProcessService) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE);
+    public static IProcessServiceIsa lookupProcessServiceIsa() {
+        return (IProcessServiceIsa) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE_ISA);
     }
 	
 	public static boolean isPermissionHandlingNeeded() {

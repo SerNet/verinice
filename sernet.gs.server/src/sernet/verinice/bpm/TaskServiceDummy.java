@@ -6,7 +6,7 @@ import java.util.List;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Empty dummy implementation of {@link ITaskService}
@@ -27,7 +27,7 @@ public class TaskServiceDummy implements ITaskService {
     }
 
     @Override
-    public List<Audit> getAuditList() {
+    public List<CnATreeElement> getElementList() {
         return Collections.emptyList();
     }
 

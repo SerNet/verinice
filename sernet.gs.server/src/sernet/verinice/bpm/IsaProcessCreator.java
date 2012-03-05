@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.bpm.IProcessService;
+import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 
@@ -40,7 +40,7 @@ public class IsaProcessCreator implements IProcessCreater {
 
     private final Logger log = Logger.getLogger(IsaProcessCreator.class);
     
-    IProcessService processService;
+    IProcessServiceIsa processService;
     IBaseDao<SamtTopic, Integer> samtTopicDao;
     
     /* (non-Javadoc)
@@ -60,11 +60,11 @@ public class IsaProcessCreator implements IProcessCreater {
     }
 
 
-    public IProcessService getProcessService() {
+    public IProcessServiceIsa getProcessService() {
         return processService;
     }
 
-    public void setProcessService(IProcessService processService) {
+    public void setProcessService(IProcessServiceIsa processService) {
         this.processService = processService;
     }
 

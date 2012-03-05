@@ -80,7 +80,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
                     @Override
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         Activator.inheritVeriniceContextState();
-                        IProcessStartInformation info = ServiceFactory.lookupProcessService().startProcessForIsa(selectedAudit.getUuid());           
+                        IProcessStartInformation info = ServiceFactory.lookupProcessServiceIsa().startProcessForIsa(selectedAudit.getUuid());           
                         numberOfProcess=0;
                         if(info!=null) {
                             numberOfProcess=info.getNumber();
@@ -121,7 +121,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     
     private boolean isActive() {
         if(isActive==null) {
-            isActive = ServiceFactory.lookupProcessService().isActive();
+            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
         }
         return isActive.booleanValue();
     }

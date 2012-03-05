@@ -241,7 +241,6 @@ This variant:
 		<property name="exceptionHandler" ref="serverExceptionHandler" />
 		<property name="authService" ref="authService" />
 		<property name="ldapService" ref="ldapService" />
-        <property name="processService" ref="processService" />  
         <property name="configurationService" ref="configurationService" />
 	</bean>
     

@@ -49,7 +49,7 @@ public class OpenTaskViewAction extends OpenViewAction {
     
     private boolean isActive() {
         if(isActive==null) {
-            isActive = ServiceFactory.lookupProcessService().isActive();
+            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
         }
         return isActive.booleanValue();
     }

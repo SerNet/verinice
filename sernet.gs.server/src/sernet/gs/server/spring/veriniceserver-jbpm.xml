@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
-<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
-<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<!-- Spring configuration for business process engine JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration                                 -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration                     -->
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
@@ -10,11 +10,15 @@
         <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
     </bean>
 
-    <bean id="processEngine" factory-bean="springHelper"
-        factory-method="createProcessEngine" />
+    <bean id="processEngine" factory-bean="springHelper" factory-method="createProcessEngine" />
 
-    <!-- Process definitions listet in processDefinitions are loaded and intialized on startup. -->
-    <bean id="processService" class="sernet.verinice.bpm.ProcessService" init-method="init">
+    <!-- Provides methods handle ISA processes.                                                 -->
+    <!-- Server side implementation of the IProcessServiceIsa interface.                        -->
+    <!-- Process definitions listet in set processDefinitions are loaded and intialized on      -->
+    <!-- startup.                                                                               -->
+    <!-- processServiceIsa is accessible from verinice client by Spring remoting, configured in    -->
+    <!-- springDispatcher-servlet.xml and veriniceclient.xml                                    -->
+    <bean id="processServiceIsa" class="sernet.verinice.bpm.ProcessServiceIsa" init-method="init">
         <property name="processEngine" ref="processEngine" />
         <property name="processDefinitions">
             <set>
@@ -31,6 +35,10 @@
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
+    <!-- Provides methods to interact with jBPM tasks.                                          -->
+    <!-- Server side implementation of the ITaskService interface.                              -->
+    <!-- TaskService is accessible from verinice client by Spring remoting, configured in       -->
+    <!-- springDispatcher-servlet.xml and veriniceclient.xml                                    -->
     <bean id="taskService" class="sernet.verinice.bpm.TaskService">
         <property name="processEngine" ref="processEngine" />
         <property name="authService" ref="authService" />
@@ -40,7 +48,8 @@
         <property name="auditDao" ref="auditDAO" />
     </bean>
     
-    <!-- Sends a notification to users with assigned tasks. -->
+    <!-- Cron job which sends a notification to users with assigned tasks.                      -->
+    <!-- See trigger configuration in veriniceserver-plain.xml.                                 -->  
 	<bean name="taskNotificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 	    <property name="jobClass" value="sernet.verinice.bpm.NotificationJob" />
 	    <property name="jobDataAsMap">
@@ -60,8 +69,9 @@
 	    </property>
 	</bean>
     
-    <!-- Creates jBPM processes by IProcessCreater implementations. -->
-    <!-- Add a new IProcessCreater to processCreaterSet to create more processes. -->
+    <!-- Creates, checks or deletes jBPM process instances by IProcessCreater implementations.  -->
+    <!-- You can add new IProcessCreater to processCreaterSet                                   -->
+    <!-- See trigger configuration in veriniceserver-plain.xml.                                 -->  
     <bean name="processJob" class="org.springframework.scheduling.quartz.JobDetailBean">
         <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
         <property name="jobDataAsMap">
@@ -80,7 +90,7 @@
     
     <!-- Checks if element with UUID of process exists, deletes process if not -->
     <bean name="processValidator" class="sernet.verinice.bpm.ProcessValidator">
-        <property name="processService" ref="processService" />
+        <property name="processService" ref="processServiceIsa" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
@@ -89,17 +99,20 @@
     <!-- Creates one control-execution processes for every control. -->
     <!--
     <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
-        <property name="processService" ref="processService" />
+        <property name="processService" ref="processServiceIsa" />
         <property name="controlDao" ref="controlDAO" />
     </bean>
     -->
     <!-- Creates one isa-execution processes for every isa/samt topic. -->
     <!--
     <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
-        <property name="processService" ref="processService" />
+        <property name="processService" ref="processServiceIsa" />
         <property name="samtTopicDao" ref="samtTopicDAO" />
     </bean>
     -->
+
+
+    <!-- Dao configuration - sessionFactory is defined in veriniceserver-common.xml.            -->
 
     <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
         <constructor-arg>

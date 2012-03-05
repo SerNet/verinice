@@ -124,7 +124,21 @@ public class CommonsExecuter extends CommonsHttpInvokerRequestExecutor {
                 LOG.debug("Debug Stacktrace: ", new RuntimeException("This is not an error. Exception is thrown for debug only."));
             }
         }
-        return super.doExecuteRequest(config, baos);
+        try {
+            return super.doExecuteRequest(config, baos);
+        } catch (IOException e) {
+            LOG.error("IOException while executing request.", e);
+            throw e;
+        } catch (ClassNotFoundException e) {
+            LOG.error("ClassNotFoundException while executing request.", e);
+            throw e;
+        } catch (RuntimeException re) {
+            LOG.error("Error while executing request.", re);
+            throw re;
+        } catch (Exception t) {
+            LOG.error("Error while executing request.", t);
+            throw new RuntimeException(t);
+        }
     }
     
     /**

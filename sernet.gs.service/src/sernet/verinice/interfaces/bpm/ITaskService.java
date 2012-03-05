@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Interface to tasks of the jBPM process engine.
- * Is used on the client site as a service interface
- * of a Spring HttpInvokerProxyFactoryBean and for the remote implementation
- * of the service.
+ * Interface to handle tasks of the jBPM process engine.
+ * 
+ * Task service is accessible from verinice client by Spring remoting, configured in
+ * springDispatcher-servlet.xml and veriniceclient.xml
  * 
  * You can wire instances of this interface to your Spring beans, 
  * see veriniceclient.xml for examples. Outside of the Spring context
@@ -74,11 +74,11 @@ public interface ITaskService {
     List<ITask> getTaskList(ITaskParameter parameter);
     
     /**
-     * Returns all audits in a list which are related to a task.
+     * Returns all elements which are related to a task.
      * 
      * @return a list with audits
      */
-    List<Audit> getAuditList();
+    List<CnATreeElement> getElementList();
     
     void completeTask(String taskId);
     

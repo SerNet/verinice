@@ -22,10 +22,10 @@ package sernet.verinice.interfaces.bpm;
 import java.io.Serializable;
 
 /**
- * Information about started processes by {@link IProcessService}
+ * Information about started processes by {@link IProcessServiceIsa}
  * instances.
  * 
- * @see IProcessService
+ * @see IProcessServiceIsa
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IProcessStartInformation extends Serializable {

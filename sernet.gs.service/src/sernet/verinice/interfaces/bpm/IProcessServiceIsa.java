@@ -20,7 +20,6 @@
 package sernet.verinice.interfaces.bpm;
 
 import java.util.List;
-import java.util.Map;
 
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
@@ -29,78 +28,57 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
+ * Interface to handle ISA processes.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
-public interface IProcessService {
-
-    /**
-     * @param processDefinitionKey
-     * @param variables
-     */
-    void startProcess(String processDefinitionKey, Map<java.lang.String,?> variables);
+public interface IProcessServiceIsa extends IProcessServiceGeneric {    
     
     /**
-     * Starts a process for every Isa-Topic ({@link SamtTopic}) of an
+     * Searches for existing process executions for an ISA / SAMT topic.
+     * Returns an empty list if no process exists.
+     * 
+     * @param uuidIsaTopic UUID of a ISA topic
+     * @return A list of process executions
+     */
+    List<ExecutionImpl> findIsaExecution(String uuidIsaTopic);
+    
+    /**
+     * Starts a process for every ISA topic ({@link SamtTopic}) of an
      * Information Security Assessment (ISA) if no process exists for this topic before.
      * 
      * Parameter is an UUID of an audit, since internally an ISA is an {@link Audit}.
      * 
      * @param uuidAudit UUID of an {@link Audit} / ISA
      */
-    IProcessStartInformation startProcessForIsa(final String uuidAudit);
+    IProcessStartInformation startProcessForIsa(String uuidAudit);
     
     /**
-     * Returns the latest process definition id
-     * for a process definition key if any.
-     * 
-     * If there is no process definition found null is returned
-     * 
-     * @param processDefinitionKey  a process definition key
-     * @return latest process definition id or null
-     */
-    String findProcessDefinitionId(String processDefinitionKey);
-    
-    /**
-     * @param uuidControl
-     * @return
-     */
-    List<ExecutionImpl> findControlExecution(final String uuidControl);
-    
-    /**
-     * @param uuidSamtTopic
-     * @return
-     */
-    List<ExecutionImpl> findIsaExecution(final String uuidSamtTopic);
-    
-    /**
-     * @param control
-     */
-    void handleControl(Control control);
-
-    /**
-     * Handles a SAMT / ISA topic and creates an process if necessary.
+     * Handles a ISA / SAMT topic and creates a process for this topic if necessary.
      * If a new process is created true is returned, if not false.
      * 
-     * @param control
-     * @return true if a new process is created
+     * @param control A ISA topic
+     * @return True if a new process is created, false if not
      */
     void handleSamtTopic(SamtTopic control);
     
     /**
-     * Deletes a process including sub-processes with process id.
-     * The process id is column id_ (not db-id) of table jbpm4_execution. 
+     * Searches for existing process executions for a control.
+     * Returns an empty list if no process exists.
      * 
-     * @param id a process id
+     * @param uuidControl UUID of a control
+     * @return A list of process executions
      */
-    void deleteProcess(String id);
+    List<ExecutionImpl> findControlExecution(String uuidControl);
     
     /**
-     * Returns true id this process is really active.
-     * Used to determine if it is dummy implementation.
+     * Handles a control and creates a process for this control if necessary.
+     * If a new process is created true is returned, if not false.
      * 
-     * @return true id this process is really active
+     * @param control A control
+     * @return True if a new process is created, false if not
      */
-    boolean isActive();
+    void handleControl(Control control); 
+    
 }
 

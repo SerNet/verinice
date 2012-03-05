@@ -94,7 +94,7 @@ public class VeriniceContext {
 	
 	public static String TASK_SERVICE = "taskService";
 
-    public static String PROCESS_SERVICE = "processService";
+    public static String PROCESS_SERVICE_ISA = "processServiceIsa";
     
     public static String RIGHTS_SERVICE = "rightsService";
     
