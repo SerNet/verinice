@@ -18,7 +18,6 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,12 +47,21 @@ import sernet.verinice.model.samt.SamtTopic;
 
 
 /**
- *
+ *  Command determines all generic and specific measures (controls) that are
+ *  linked to an isa question (samttopic) and transfers the maturity of the question
+ *  to the measures, if maturity not unset or NA.
+ *  For existing specific measures, that are set NA (by the user), always the linked generic measure
+ *  is set to implemented_yes. otherwise, the specific measure will be marked implemented_yes
+ *  and the generic one will be marked implemented_na. 
+ *  for maturity of 4 or 5, all measures up to lvl3 will be set
+ *  for maturity of 0, all measures will stay implemented_not_set, but the generic ones which are link
+ *  to a specific measure, which will be marked implemented_na.
  */
 
 @SuppressWarnings("serial")
 public class DeriveStatusCommand extends GenericCommand implements IChangeLoggingCommand {
     
+    // 0,4,5 only here for future use
     private static String TAG_MATURITY_LVL_0 = "ISA_MATLVL_0";
     private static String TAG_MATURITY_LVL_1 = "ISA_MATLVL_1";
     private static String TAG_MATURITY_LVL_2 = "ISA_MATLVL_2";
@@ -68,6 +76,7 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
     private transient Cache cache = null;
     private List<CnATreeElement> changedElements;
     private String stationId;
+    
     private int samtTopicCount = 0;
 
     private int measureCount = 0;
@@ -99,47 +108,53 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
     private IBaseDao<CnATreeElement, Serializable> createDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
-
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         if(!selectedControlgroup.isChildrenLoaded()){
-            selectedControlgroup = (ControlGroup) hydrate(selectedControlgroup, null);
+            selectedControlgroup = (ControlGroup) hydrate(selectedControlgroup, RetrieveInfo.getPropertyChildrenInstance());
         }
         List<SamtTopic> list = getAllSamtTopics((ControlGroup)selectedControlgroup);
         if(list.size() > 0){
             for(SamtTopic t : list){
-                RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true);
+                RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true).setChildrenProperties(true).setParent(true);
                 t = (SamtTopic)hydrate(t, ri);
                 String maturity = t.getEntity().getSimpleValue(SamtTopic.PROP_MATURITY);
-                if(Integer.parseInt(maturity) == 0){
+                if(Integer.parseInt(maturity) == 0){ // special case maturity equals 0
                     setMaturityZeroMeasures(t);
                 }
                 else if(maturity != null && !maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){
                     Integer matVal = Integer.parseInt(maturity);
-                    if(matVal >= 0 && matVal <= 3){
+                    if(matVal > 0 && matVal <= 5){ // standard case,maturity between 1 and 5
                         setControlDone(getAllMeasuresToSet(t, maturity), matVal.intValue());
                     }
-                } else if(maturity != null && maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){
+                } else if(maturity != null && maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){ // special case, maturity equals NA
                     setAllLinksNA(t);
                 }
             }
         }
     }
     
+    /**
+     * sets all with SamtTopic t linked generic/specific measures to implemented_no
+     * used for case: maturity equals 0 
+     * @param t
+     */
     private void setMaturityZeroMeasures(SamtTopic t){
-        t = (SamtTopic)hydrate(t, null);
+        RetrieveInfo info = new RetrieveInfo().setChildren(true).setChildrenProperties(true).setLinksUp(true).setLinksUpProperties(true).setParent(true);
+        t = (SamtTopic)hydrate(t, info);
         for(CnALink link : t.getLinksUp()){
             CnATreeElement elmt = link.getRelationObject(t, link);
-            RetrieveInfo info = new RetrieveInfo().setChildren(true).setLinksDown(true).setLinksUp(true);
+            info = new RetrieveInfo().setChildren(true).setLinksDown(true).setLinksUp(true).setChildrenProperties(true).setParent(true);
             elmt = hydrate(elmt, info);
             Set<CnALink> links = elmt.getLinksUp();
             links.addAll(elmt.getLinksDown());
             for(CnALink link2 : links){
                 CnATreeElement msElmt = link2.getRelationObject(elmt, link2);
-                info = new RetrieveInfo().setChildren(true).setChildrenProperties(true);
+                info = new RetrieveInfo().setChildren(true).setChildrenProperties(true).setParent(true);
                 msElmt = hydrate(msElmt, info);
                 if(msElmt instanceof Control){
                     elmt.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NO);
@@ -150,16 +165,23 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         }
     }
     
+    /**
+     * sets all with SamtTopic t linked generic/specific measures to implemented_na
+     * used for case: maturity equals na
+     * @param t
+     */
     private void setAllLinksNA(SamtTopic t){
         for(CnALink mgLink : t.getLinksUp()){
             CnATreeElement dependant = mgLink.getRelationObject(t, mgLink);
             if(dependant instanceof Control){
-                RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true).setLinksDown(true);
+                RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true).setLinksDown(true).setParent(true);
                 dependant = hydrate(dependant, ri);
                 dependant.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NA); // set generic measure to na
                 changedElements.add(dependant);
                 for(CnATreeElement msDep : getAllMeasures(dependant, getAllLinks(dependant), true)){
                     if(msDep instanceof Control){
+                        ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
+                        msDep = hydrate(msDep, ri);
                         msDep.getEntity().setSimpleValue(getImplPropertyType(), Control.IMPLEMENTED_NA);
                         changedElements.add(msDep);
                     }
@@ -168,6 +190,12 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         }
     }
     
+    /**
+     * sets all measures with maturity <= matToSet to implemented_yes
+     * the rest is set to implemented_no if old value was not implemented_not_set (or non existant)
+     * @param measures
+     * @param matToSet
+     */
     private void setControlDone(Set<Control> measures, int matToSet){
         for(Control c : measures){
             Integer tagMat = Integer.parseInt(getMaturityValueByTag(c));
@@ -214,44 +242,51 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         return set;
     }
     
+    /**
+     * returns all (generic and specific) measures linked from a given isa question and 
+     * a maturity that needs to be derived
+     * @param topic
+     * @param maturity
+     * @return
+     */
     private Set<Control> getAllMeasuresToSet(SamtTopic topic, String maturity){
         Set<Control> list = new HashSet<Control>();
         boolean counterIncreased = false;
         for(CnALink mglink : getAllLinks(topic)){
-            CnATreeElement dependant = mglink.getRelationObject(topic, mglink);
-            RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksDown(true).setLinksUp(true);
-            dependant = hydrate(dependant, ri);
-            if(dependant instanceof Control){
-                Set<CnATreeElement> specificMeasures = getAllMeasures(dependant, getAllLinks(dependant), true);
+            CnATreeElement genericMeasure = mglink.getRelationObject(topic, mglink);
+            RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksDown(true).setLinksUp(true).setChildrenProperties(true).setParent(true);
+            genericMeasure = hydrate(genericMeasure, ri);
+            if(genericMeasure instanceof Control){ // check/add for specific measures
+                Set<CnATreeElement> specificMeasures = getAllMeasures(genericMeasure, getAllLinks(genericMeasure), true);
                 if(specificMeasures.size() > 0){
-                    for(CnATreeElement e : specificMeasures){
-                        if(!e.isChildrenLoaded()){
-                            ri = new RetrieveInfo().setChildren(true).setChildrenProperties(true);
-                            e = hydrate(e, ri);
+                    for(CnATreeElement specificMeasure : specificMeasures){
+                        if(!specificMeasure.isChildrenLoaded()){
+                            ri = new RetrieveInfo().setChildren(true).setChildrenProperties(true).setParent(true);
+                            specificMeasure = hydrate(specificMeasure, ri);
                         }
-                        String optVal = e.getEntity().getOptionValue(Control.PROP_IMPL);
+                        String optVal = specificMeasure.getEntity().getOptionValue(Control.PROP_IMPL);
                         // adds specific measure if fits to maturity condition
-                        if(e instanceof Control && (Integer.parseInt(getMaturityValueByTag((Control)e)) <= Integer.parseInt(maturity) &&
+                        if(specificMeasure instanceof Control && (Integer.parseInt(getMaturityValueByTag((Control)specificMeasure)) <= Integer.parseInt(maturity) &&
                                 (optVal == null || !optVal.equals(Control.IMPLEMENTED_NA)))){
-                            list.add((Control)e);
+                            list.add((Control)specificMeasure);
                             if(!counterIncreased){
                                 counterIncreased = true;
                                 samtTopicCount++;
                             }
                         } else if(optVal != null && optVal.equals(Control.IMPLEMENTED_NA)){ // specific measure is na, so take generic measure
-                            list.add((Control)dependant);
+                            list.add((Control)genericMeasure);
                             if(!counterIncreased){
                                 counterIncreased = true;
                                 samtTopicCount++;
                             }
                         }
                     }
-                } else {
-                    String optVal = dependant.getEntity().getOptionValue(Control.PROP_IMPL);
+                } else { //check for/add generic measures
+                    String optVal = genericMeasure.getEntity().getOptionValue(Control.PROP_IMPL);
                     // adds generic measure if fits to maturity condition
-                    if(dependant instanceof Control && (Integer.parseInt(getMaturityValueByTag((Control)dependant)) <= Integer.parseInt(maturity) ||
+                    if(genericMeasure instanceof Control && (Integer.parseInt(getMaturityValueByTag((Control)genericMeasure)) <= Integer.parseInt(maturity) ||
                             (optVal == null))){
-                        list.add((Control)dependant);
+                        list.add((Control)genericMeasure);
                         if(!counterIncreased){
                             counterIncreased = true;
                             samtTopicCount++;
@@ -263,6 +298,12 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         return list;
     }
     
+    /**
+     * measures are tagged for maturity lvl, edit this
+     * if lvl 4 or 5 will be relevant in future versions
+     * @param c
+     * @return
+     */
     private String getMaturityValueByTag(Control c){
         String maturity = "-1";
         for(String tag : c.getTags()){
@@ -277,12 +318,15 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         return maturity;
     }
     
+    /**
+     * returns (recursive) all samttopics contained in a controlgroup 
+     * @param group
+     * @return
+     */
     private List<SamtTopic> getAllSamtTopics(ControlGroup group){
         LinkedList<SamtTopic> list = new LinkedList<SamtTopic>();
-        if(!group.isChildrenLoaded()){
-            RetrieveInfo ri = new RetrieveInfo().setChildren(true);
-            group = (ControlGroup)hydrate(group, ri);
-        }
+        RetrieveInfo ri = new RetrieveInfo().setChildren(true).setParent(true).setChildrenProperties(true);
+        group = (ControlGroup)hydrate(group, ri);
         for(CnATreeElement child : group.getChildren()){
             if(child instanceof SamtTopic){
                 list.add((SamtTopic)child);
@@ -346,6 +390,7 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
             ri.setLinksUp(true);
             ri.setLinksDownProperties(true);
             ri.setLinksUpProperties(true);
+            ri.setParent(true);
         }
         
         Element cachedElement = getCache().get(element.getUuid());
@@ -373,6 +418,15 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         return cache;
     }
     
+    private CnATreeElement getElementFromCache(String uuid){
+        Element cachedElement = getCache().get(uuid);
+        if(cachedElement != null){
+            return (CnATreeElement)cachedElement.getValue();
+        } else {
+            return null;
+        }
+    }
+    
     private Cache createCache() {
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
@@ -380,5 +434,5 @@ public class DeriveStatusCommand extends GenericCommand implements IChangeLoggin
         manager.addCache(cache);
         return cache;
     }
-
+    
 }

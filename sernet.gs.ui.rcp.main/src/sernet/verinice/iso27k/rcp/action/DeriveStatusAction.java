@@ -28,6 +28,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -51,9 +52,7 @@ import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.service.commands.DeriveStatusCommand;
-import sernet.verinice.service.commands.LoadElementWithRetrieveInfoByUUID;
-import sernet.verinice.iso27k.rcp.action.Messages;
-import org.eclipse.osgi.util.NLS;
+import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  *
@@ -184,7 +183,7 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
 
     private CnATreeElement loadChildren(CnATreeElement element, RetrieveInfo info) {
         try {
-            LoadElementWithRetrieveInfoByUUID command = new LoadElementWithRetrieveInfoByUUID(info, element.getUuid());
+            LoadElementByUuid command = new LoadElementByUuid(element.getUuid(), info);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             return command.getElement();
         } catch (CommandException e) {
@@ -214,17 +213,15 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
         }
     }
 
+    @SuppressWarnings("restriction")
     private void updateModel(List<CnATreeElement> changedElementList) {
         if (changedElementList != null && !changedElementList.isEmpty()) {
-            if (changedElementList.size() > 9) {
-                // if more than 9 elements changed or added do a complete reload
-                CnAElementFactory.getInstance().reloadModelFromDatabase();
-            } else {
-                for (CnATreeElement cnATreeElement : changedElementList) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
-                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
-                }
+            for (CnATreeElement cnATreeElement : changedElementList) {
+//                avoid lazy exceptions here and use childChanged/databaseChildChanged again
+//                CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+//                CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
             }
+            CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
     }
 }
