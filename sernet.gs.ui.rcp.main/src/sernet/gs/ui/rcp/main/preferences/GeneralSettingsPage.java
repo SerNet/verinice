@@ -49,6 +49,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor switchPerspectiveIsmView;
 	private BooleanFieldEditor switchPerspectiveCatalogView;
 	private BooleanFieldEditor showAlienDecorator;
+	private BooleanFieldEditor infoDialogStatusDerivation;
 	
 	private ComboFieldEditor encodingFieldEditor;
 	private static final String[][] encodingComboValues = new String[][]{
@@ -102,6 +103,9 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(infoDialogLdapImport);
 
+		infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent());
+		addField(infoDialogStatusDerivation);
+
 		switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(switchPerspectiveIsmView);
@@ -118,6 +122,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				encodingComboValues, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);
+        
 	}
 
 	@Override

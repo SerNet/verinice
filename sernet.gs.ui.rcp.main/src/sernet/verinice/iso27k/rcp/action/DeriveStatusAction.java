@@ -40,6 +40,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -48,9 +49,11 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.iso27k.rcp.action.Messages;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.DeriveStatusCommand;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -160,8 +163,8 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
                         monitor.done();
                     }
                 });
-                
-                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}));
+                InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}), Messages.getString("DeriveStatus.6"), PreferenceConstants.INFO_STATUS_DERIVED);
+//                MessageDialog.openInformation(Display.getDefault().getActiveShell(),  NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}));
             } catch (Throwable e) {
                 LOG.error("Error while derivating status.", e); //$NON-NLS-1$
             }
