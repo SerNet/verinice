@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.core.exception.BirtException;
@@ -49,6 +50,8 @@ import org.eclipse.birt.report.model.api.ModuleOption;
 
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
+import sernet.verinice.report.service.Activator;
 
 public class BIRTReportService {
 	
@@ -112,6 +115,19 @@ public class BIRTReportService {
 		
 		config.setAppContext(hm);
 		
+		VeriniceOdaDriver driver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
+		boolean useReportLogging = driver.getReportLoggingState();
+		
+		if(useReportLogging){
+		    String pref = driver.getLogFile();
+		    String logDir = pref.substring(0, pref.lastIndexOf(File.separator));
+		    String logFile = pref.substring(pref.lastIndexOf(File.separator) + 1);
+		    config.setLogConfig(logDir, Level.parse(driver.getLogLvl()));
+		    config.setLogFile(logFile);
+		    config.setLogMaxBackupIndex(10);
+		    config.setLogRollingSize(3000000); // equals 3MB
+		    
+		}
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
 				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
@@ -224,7 +240,6 @@ public class BIRTReportService {
 	{
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
-		//renderOptions.setOutputFormat("doc");
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
 		if(options.getRootElement() != null){
 			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());

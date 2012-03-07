@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Sebastian Hagedorn <sh@sernet.de> - additions for report logging
  ******************************************************************************/
 package sernet.verinice.oda.driver;
 
@@ -25,16 +26,18 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.ServiceTracker;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
+import sernet.verinice.oda.driver.preferences.ReportPreferencePage;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends Plugin {
+public class Activator extends AbstractUIPlugin {
 	
 	private static Logger log = Logger.getLogger(Activator.class);
 

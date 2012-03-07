@@ -99,5 +99,16 @@
             id="org.eclipse.datatools.connectivity.oda.IConnection">
       </connectionFactory>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="sernet.verinice.oda.driver.preferences.ReportPreferencePage"
+            id="sernet.verinice.oda.driver.preferences.reportpreferencepage"
+            name="%page.name"/>
+   </extension> 
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="sernet.verinice.oda.driver.preferences.PreferenceInitializer"/>
+   </extension>  
 
 </plugin>

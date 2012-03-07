@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ *     Sebastian Hagedorn <sh@sernet.de> - report logging
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
@@ -25,6 +26,7 @@ import org.osgi.service.component.ComponentContext;
 import sernet.verinice.interfaces.oda.IImageProvider;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
+import sernet.verinice.oda.driver.preferences.PreferenceConstants;
 
 public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 
@@ -66,6 +68,18 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	@Override
 	public Map<String, Object> getScriptVariables() {
 		return vars;
+	}
+	
+	public boolean getReportLoggingState(){
+	    return Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.REPORT_LOGGING_ENABLED);
+	}
+	
+	public String getLogLvl(){
+	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOGGING_LVL);
+	}
+	
+	public String getLogFile(){
+	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE);
 	}
 
 }
