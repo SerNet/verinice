@@ -29,10 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -59,7 +56,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
@@ -103,6 +99,8 @@ public class UserprofileDialog extends TitleAreaDialog {
     private ProfileRef selectedProfileRef;
     
     IRightsServiceClient rightsService;
+    
+    private Composite rightButtonComposite = null;
 
     public UserprofileDialog(Shell parent) {
         super(parent);
@@ -193,7 +191,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         centerComposite.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
 
         Composite rightComposite = new Composite(fourColumnComposite, SWT.NONE);
-        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
         gridData.widthHint = convertWidthInCharsToPixels(40);
         rightComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
@@ -201,9 +199,9 @@ public class UserprofileDialog extends TitleAreaDialog {
         gridLayout.marginWidth = 0;
         rightComposite.setLayout(gridLayout);
 
-        Composite rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
+        rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.CENTER, SWT.FILL, false, true);
-        gridData.widthHint = convertWidthInCharsToPixels(20);
+        gridData.widthHint = convertWidthInCharsToPixels(40);
         rightButtonComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;

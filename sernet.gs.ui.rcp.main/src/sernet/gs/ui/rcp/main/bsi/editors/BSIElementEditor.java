@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -59,14 +58,12 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -173,6 +170,7 @@ public class BSIElementEditor extends EditorPart {
             BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
             CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
+            this.setPartName(cnAElement.getTitle());
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
