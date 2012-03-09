@@ -28,6 +28,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
@@ -48,9 +49,9 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 	
 	CnATreeElement selectedElement;
 	
-	ISMViewContentProvider contentProvider;
+	ITreeContentProvider contentProvider;
 	
-	public ExpandAction(TreeViewer viewer, ISMViewContentProvider contentProvider) {
+	public ExpandAction(TreeViewer viewer, ITreeContentProvider contentProvider) {
 		this.viewer = viewer;
 		this.contentProvider = contentProvider;
 	}
@@ -92,6 +93,7 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 			expandedElements.addAll(Arrays.asList(children));
 			for (Object child : children) {
 			    if(child instanceof CnATreeElement) {
+			        /*
 			        CnATreeElement e = (CnATreeElement) child;
 			        CnATreeElement cachedObject = contentProvider.getCachedObject(e);
     				if (cachedObject == null) {
@@ -99,6 +101,7 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
     				} else {
     					child = cachedObject;
     				}
+    				*/
     				if (LOG.isDebugEnabled()) {
     					LOG.debug("child: " + ((CnATreeElement)child).getTitle());
     				}

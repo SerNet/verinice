@@ -103,7 +103,7 @@ public class AddAction extends Action implements ISelectionListener {
                         LOG.debug("New element linked - type: " + groupView.getElementToLink().getObjectType() + ", title: " + groupView.getElementToLink().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                     // link is created asynchron
-                    // editor is opened in ISO27KModelViewUpdate of ElmentView
+                    // editor is opened in TreeUpdateListener of ElmentView
                     // when linkAdded event is fired
                     groupView.registerforEdit(newElement);
                 } else {

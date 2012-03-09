@@ -21,9 +21,11 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -100,9 +102,12 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                         Activator.inheritVeriniceContextState();
                         if(selectedElementList!=null && !selectedElementList.isEmpty()) {
                             Set<String> uuidSet = new HashSet<String>(selectedElementList.size());
+                            Map<String, CnATreeElement> uuidElementMap = new Hashtable<String, CnATreeElement>(selectedElementList.size());
+                            
                             for (CnATreeElement element : selectedElementList) {
                                 if(element!=null && element.getSourceId()!=null) {
                                     uuidSet.add(element.getUuid()); 
+                                    uuidElementMap.put(element.getUuid(), element);
                                 }
                             }
                             NaturalizeCommand command = new NaturalizeCommand(uuidSet);
@@ -111,7 +116,10 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                                                
                             if(changedElements!=null) {
                                 if(changedElements.size()<10) {
-                                    for (CnATreeElement element : changedElements) {
+                                    for (CnATreeElement elementFromServer : changedElements) {
+                                        CnATreeElement element = uuidElementMap.get(elementFromServer.getUuid());
+                                        element.setSourceId(elementFromServer.getSourceId());
+                                        element.setExtId(elementFromServer.getExtId());
                                         CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
                                     }
                                 } else {

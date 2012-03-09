@@ -176,13 +176,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 * @param child
 	 */
 	public void removeChild(CnATreeElement child) {
-		if (children.remove(child) && getParent()!=null) {
-		    try {
-		        getParent().childRemoved(this, child);
-		    } catch(Exception e) {
-		        getLog().error("Error while removing child", e);
-		    }
-		}
+	    try {
+    	    if (children.remove(child)) {	    
+    	        childRemoved(this, child);	    
+    		}
+	    } catch(Exception e) {
+            getLog().error("Error while removing child", e);
+        }
 	}
 
 	/**

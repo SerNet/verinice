@@ -49,12 +49,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
@@ -67,7 +65,6 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -88,6 +85,8 @@ import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.TypeParameter;
+import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -101,6 +100,7 @@ import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
@@ -123,6 +123,10 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.tree.ElementManager;
+import sernet.verinice.rcp.tree.TreeContentProvider;
+import sernet.verinice.rcp.tree.TreeLabelProvider;
+import sernet.verinice.rcp.tree.TreeUpdateListener;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -140,10 +144,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 
 	protected TreeViewer viewer;
 	
-	TreeViewerCache cache;
+	//ISMViewContentProvider contentProvider;
+	TreeContentProvider contentProvider;
+	ElementManager elementManager;
 	
-	ISMViewContentProvider contentProvider;
-
 	private DrillDownAdapter drillDownAdapter;
 
 	private Action doubleClickAction; 
@@ -166,7 +170,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	protected HideEmptyFilter hideEmptyFilter;
 	
-	protected TypeFilter typeFilter;
+	protected TypeParameter typeParameter;
     
 	private MetaDropAdapter metaDropAdapter;
 
@@ -182,7 +186,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private Object mutex = new Object();
 
-	private ISO27KModelViewUpdate modelUpdateListener;
+	private IISO27KModelListener modelUpdateListener;
 	
 	private boolean linkingActive = false;
 	
@@ -218,13 +222,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
 	        CnAElementFactory.getInstance().reloadModelFromDatabase();
 	    }
-	    cache = new TreeViewerCache();
-		contentProvider = new ISMViewContentProvider(cache);
+		//contentProvider = new ISMViewContentProvider(cache);
+	    elementManager = new ElementManager();
+	    contentProvider = new TreeContentProvider(elementManager);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(contentProvider);
-		viewer.setLabelProvider(new DecoratingLabelProvider(new ISMViewLabelProvider(cache), workbench.getDecoratorManager()));
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
 		
 		getSite().setSelectionProvider(viewer);
 		hookContextMenu();
@@ -271,7 +276,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	                // modellistener should only be created once!
 	                if (LOG.isDebugEnabled())
 	                    Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
-	                modelUpdateListener = new ISO27KModelViewUpdate(viewer,cache);
+	                modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
 	                CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
 	                Display.getDefault().syncExec(new Runnable(){
 	                    public void run() {
@@ -311,6 +316,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	 */
 	@Override
 	public void dispose() {
+	    elementManager.clearCache();
 		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
 		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 		getSite().getPage().removePartListener(linkWithEditorPartListener);
@@ -341,6 +347,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 		
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
 	
+		// TODO: remove comments
 		expandAction = new ExpandAction(viewer, contentProvider);
 		expandAction.setText(Messages.ISMView_7);
 		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
@@ -368,21 +375,19 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 		
 		hideEmptyFilter = createHideEmptyFilter();
-		typeFilter = createTypeFilter();
-		TagFilter tagFilter = new TagFilter(viewer);
+		typeParameter = createTypeParameter();
+		TagParameter tagParameter = new TagParameter();
         filterAction = new ISMViewFilter(viewer,
 				Messages.ISMView_12,
-				tagFilter,
+				tagParameter,
 				hideEmptyFilter,
-				typeFilter);
-        contentProvider.addParameter(tagFilter);
-        if(hideEmptyFilter!=null) {
-            contentProvider.addFilter(hideEmptyFilter);
-        }
-        if(typeFilter!=null) {
-            contentProvider.addParameter(typeFilter);
-        }
-		
+				typeParameter);    
+       
+        elementManager.addParameter(tagParameter);
+        if(typeParameter!=null) {
+            elementManager.addParameter(typeParameter);
+        }	
+        
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(this);
 		bsiDropAdapter = new BSIModelViewDropPerformer();
@@ -419,10 +424,10 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
      * Override this in subclasses to hide empty groups
      * on startup.
      * 
-     * @return a {@link TypeFilter}
+     * @return a {@link TypeParameter}
      */
-    protected TypeFilter createTypeFilter() {
-        return new TypeFilter(viewer);
+    protected TypeParameter createTypeParameter() {
+        return new TypeParameter();
     }
 	
 	protected void fillToolBar() {
@@ -466,6 +471,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 				doubleClickAction.run();
 			}
 		});
+		
 		viewer.addSelectionChangedListener(expandAction);
 		viewer.addSelectionChangedListener(collapseAction);
 	}
@@ -560,10 +566,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
-	}
-	
-	public ISMViewContentProvider getContentProvider() {
-		return contentProvider;
 	}
 
 	/* (non-Javadoc)

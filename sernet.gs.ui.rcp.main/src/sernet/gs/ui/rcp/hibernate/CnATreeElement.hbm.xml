@@ -71,7 +71,7 @@
 			cascade="all"
 			inverse="true"
 			batch-size="10"
-			fetch="subselect"
+			fetch="join"
 			>
 			<cache usage="read-write" />
 			<key column="parent"  not-null="false"/>

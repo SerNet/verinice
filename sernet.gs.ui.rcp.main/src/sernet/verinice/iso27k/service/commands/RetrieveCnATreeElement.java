@@ -20,21 +20,13 @@
 package sernet.verinice.iso27k.service.commands;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27Scope;
-import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -44,15 +36,6 @@ import sernet.verinice.model.iso27k.Organization;
  */
 @SuppressWarnings("restriction")
 public class RetrieveCnATreeElement extends GenericCommand {
-
-    public static final String NO_TAG = "NO_TAG"; //$NON-NLS-1$
-    
-    public static final String PARAM_TYPE_IDS = "type_ids";
-    public static final String PARAM_TAGS = "tags";
-    public static final String PARAM_FILTER_ORGS = "filter_orgs";
-    
-    
-    public static String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"};
     
 	private CnATreeElement element;
 	
@@ -69,7 +52,6 @@ public class RetrieveCnATreeElement extends GenericCommand {
 		this.dbId = dbId;
 	}
 	
-
 	public RetrieveCnATreeElement(String typeId, Integer dbId, RetrieveInfo retrieveInfo) {
 	    this.typeId = typeId;
 		this.dbId = dbId;
@@ -126,45 +108,8 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		element = dao.retrieve(dbId,getRetrieveInfo());
-		applyParameter();
+		ElementFilter.applyParameter(element, parameter);
 	}
-
-    private void applyParameter() {
-        if(parameter!=null && element!=null && !parameter.isEmpty()) {
-            Set<IFilter> filterSet = new HashSet<IFilter>();
-            Set<String[]> typeIdSet = (Set<String[]>) parameter.get(PARAM_TYPE_IDS);
-            if(typeIdSet!=null && !typeIdSet.isEmpty()) {
-                filterSet.add(new TypeFilter(typeIdSet));
-            }
-            String[] tagArray = (String[]) parameter.get(PARAM_TAGS);
-            Object filterOrgsParam = parameter.get(PARAM_FILTER_ORGS);
-            boolean filterOrgs = filterOrgsParam!=null && ((Boolean)filterOrgsParam).booleanValue();
-            if(tagArray!=null && tagArray.length>0) {
-                filterSet.add(new TagFilter(tagArray,filterOrgs));
-            }
-            Set<CnATreeElement> children = element.getChildren();
-            Set<CnATreeElement> childrenFiltered = new HashSet<CnATreeElement>();
-            for (CnATreeElement child : children) {
-                if(checkElement(child, filterSet)) {
-                    childrenFiltered.add(child);
-                }
-            }
-            element.setChildren(childrenFiltered);
-            
-        }
-        
-    }
-    
-    private boolean checkElement(CnATreeElement element, Set<IFilter> filterSet) {
-        boolean result = true;
-        for (IFilter filter : filterSet) {
-            if(!filter.check(element)) {
-                result = false;
-                break;
-            }
-        }
-        return result;
-    }
 
     public void setElement(CnATreeElement element) {
 		this.element = element;
@@ -182,118 +127,18 @@ public class RetrieveCnATreeElement extends GenericCommand {
 		return retrieveInfo;
 	}
 
-
     /**
      * @return the parameter
      */
     public Map<String, Object> getParameter() {
         return parameter;
     }
-
-
+    
     /**
      * @param parameter the parameter to set
      */
     public void setParameter(Map<String, Object> parameter) {
         this.parameter = parameter;
     }
-    
-    class TypeFilter implements IFilter {
-
-        Set<String[]> visibleTypeSet;
-
-        /**
-         * @param visibleTypeSet
-         */
-        public TypeFilter(Set<String[]> visibleTypeSet) {
-            super();
-            this.visibleTypeSet = visibleTypeSet;
-        }
-
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice.model.common.CnATreeElement)
-         */
-        @Override
-        public boolean check(CnATreeElement element) {
-            return contains(visibleTypeSet,element.getTypeId());
-        }
-        
-        private boolean contains(Set<String[]> visibleTypeSet, String typeId) {
-            boolean result = Organization.TYPE_ID.equals(typeId) || ISO27KModel.TYPE_ID.equals(typeId);
-            if(!result) {
-                for (Iterator<String[]> iterator = visibleTypeSet.iterator(); iterator.hasNext() && !result;) {
-                    String[] strings = iterator.next();
-                    result = strings[0].equals(RetrieveCnATreeElement.ALL_TYPES[0]) || strings[0].equals(typeId) || strings[1].equals(typeId);          
-                }
-            }
-            return result;
-        }
-        
-    }
-    
-    class TagFilter implements IFilter {
-
-        String[] tagArray;
-        boolean filterOrgs;
-
-        /**
-         * @param filterOrgs 
-         * @param visibleTypeSet
-         */
-        public TagFilter(String[] tagArray, boolean filterOrgs) {
-            super();
-            this.tagArray = tagArray;
-            this.filterOrgs = filterOrgs;
-        }
-
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice.model.common.CnATreeElement)
-         */
-        @Override
-        public boolean check(CnATreeElement element) {
-            boolean result = true;
-            if(tagArray!=null && tagArray.length>0) {
-                if(filterOrgs 
-                   && Organization.TYPE_ID.equals(element.getTypeId()) ) {
-                    result = false;
-                    Collection<String> tagList = TagHelper.getTags(element.getEntity().getSimpleValue(Organization.PROP_TAG));
-                    for (String tag : tagArray) {
-                        if (tag.equals(NO_TAG)) {
-                            if (tagList.size() < 1) {
-                                result = true;
-                            }
-                        }
-                        for (String zielTag : tagList) {
-                            if (zielTag.equals(tag)) {
-                                result = true;
-                            }
-                        }
-                    }
-                } else if (!filterOrgs
-                    &&   element instanceof IISO27kElement 
-                    && !(element instanceof Group)
-                    && !(element instanceof IISO27Scope)) {
-                    result = false;
-                    IISO27kElement iso = (IISO27kElement) element;
-                    for (String tag : tagArray) {
-                        if (tag.equals(NO_TAG)) {
-                            if (iso.getTags().size() < 1) {
-                                result = true;
-                            }
-                        }
-                        for (String zielTag : iso.getTags()) {
-                            if (zielTag.equals(tag)) {
-                                result = true;
-                            }
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
-    }
-
-	
-
+ 
 }

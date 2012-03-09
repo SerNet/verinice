@@ -15,19 +15,15 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp.action;
-
-import org.eclipse.jface.viewers.StructuredViewer;
+package sernet.verinice.model.common;
 
 import sernet.verinice.interfaces.IParameter;
 
-public class TagFilter implements IParameter {
+public class TagParameter implements IParameter {
     
     String[] pattern;
     private boolean filterOrgs;
 
-    public TagFilter(StructuredViewer viewer) {
-    }
 
     public String[] getPattern() {
         return pattern;
@@ -42,7 +38,6 @@ public class TagFilter implements IParameter {
         }
 
     }
-
     public boolean isActive() {
         return getPattern() != null && getPattern().length > 0;
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Daniel Murygin.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,15 +17,24 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
-
-import sernet.verinice.model.common.CnATreeElement;
+package sernet.verinice.rcp.tree;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IFilter {
+public enum ChildrenExist {
+    YES, NO, UNKNOWN;
     
-    boolean check(CnATreeElement element);
+    public static ChildrenExist convert(Boolean hasChildren) {
+        ChildrenExist childrenState = ChildrenExist.UNKNOWN;
+        if(hasChildren!=null) {
+            if(hasChildren.booleanValue()) {
+                childrenState = ChildrenExist.YES;
+            } else {
+                childrenState = ChildrenExist.NO;
+            }
+        }
+        return childrenState;
+    }
 }

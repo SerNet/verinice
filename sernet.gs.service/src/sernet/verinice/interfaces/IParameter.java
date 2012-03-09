@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.interfaces;
 
 /**
  * A search parameter for filtering the tree of {@link ISMView}

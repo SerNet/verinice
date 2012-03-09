@@ -29,13 +29,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  * 
  */
+@SuppressWarnings("restriction")
 public class HideEmptyFilter extends ViewerFilter {
 
     private static final Logger LOG = Logger.getLogger(HideEmptyFilter.class);

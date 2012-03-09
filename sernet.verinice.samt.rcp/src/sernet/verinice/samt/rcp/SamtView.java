@@ -30,6 +30,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
+import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
@@ -138,8 +139,8 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
      * @see sernet.verinice.iso27k.rcp.ISMView#createTypeFilter()
      */
     @Override
-    protected TypeFilter createTypeFilter() {
-        TypeFilter filter = new TypeFilter(viewer);
+    protected TypeParameter createTypeParameter() {
+        TypeParameter filter = new TypeParameter();
         filter.addType(new String[]{Audit.TYPE_ID,AuditGroup.TYPE_ID});
         filter.addType(new String[]{Control.TYPE_ID,ControlGroup.TYPE_ID});
         filter.addType(new String[]{SamtTopic.TYPE_ID,ControlGroup.TYPE_ID});

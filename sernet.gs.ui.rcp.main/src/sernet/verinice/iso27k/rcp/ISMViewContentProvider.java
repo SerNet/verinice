@@ -20,7 +20,6 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -34,17 +33,19 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.hibernate.Hibernate;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ElementComparator;
+import sernet.verinice.model.common.ElementFilter;
 
 /**
  * Content provider for BSI model elements.
@@ -311,16 +312,16 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                if(param instanceof TypeFilter) {              
                    Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
                    String[] typeIdArray = typeIdSet.iterator().next();
-                   if(typeIdSet.size()>1 || !Arrays.equals(typeIdArray,RetrieveCnATreeElement.ALL_TYPES)) {
-                       result.put(RetrieveCnATreeElement.PARAM_TYPE_IDS, typeIdSet);
+                   if(typeIdSet.size()>1 || !Arrays.equals(typeIdArray,ElementFilter.ALL_TYPES)) {
+                       result.put(ElementFilter.PARAM_TYPE_IDS, typeIdSet);
                    }                                
                }
                if(param instanceof TagFilter ) {
                    TagFilter tagFilter = (TagFilter) param;
                    String[] tagArray = tagFilter.getPattern();
                    if(tagArray!=null && tagArray.length>0) {
-                       result.put(RetrieveCnATreeElement.PARAM_TAGS, tagFilter.getPattern());
-                       result.put(RetrieveCnATreeElement.PARAM_FILTER_ORGS, tagFilter.isFilterOrg());
+                       result.put(ElementFilter.PARAM_TAGS, tagFilter.getPattern());
+                       result.put(ElementFilter.PARAM_FILTER_ORGS, tagFilter.isFilterOrg());
                    }
                }
             }
@@ -361,28 +362,6 @@ public class ISMViewContentProvider implements ITreeContentProvider {
     
     public void addFilter(ViewerFilter filter) {
         filterList.add(filter);
-    }
-
-    class ElementComparator implements Comparator<CnATreeElement> {
-        NumericStringComparator numericStringComparator = new NumericStringComparator();
-
-        public int compare(CnATreeElement o1, CnATreeElement o2) {
-            int FIRST_IS_LESS = -1;
-            int EQUAL = 0;
-            int FIRST_IS_GREATER = 1;
-            int result = FIRST_IS_LESS;
-            if (o1 != null && o1.getTitle() != null) {
-                if (o2 != null && o2.getTitle() != null) {
-                    result = numericStringComparator.compare(o1.getTitle().toLowerCase(), o2.getTitle().toLowerCase());
-                } else {
-                    result = FIRST_IS_GREATER;
-                }
-            } else if (o2 == null) {
-                result = EQUAL;
-            }
-            return result;
-        }
-
     }
 
     class DefaultParentLoader implements IParentLoader {

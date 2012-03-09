@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -167,7 +168,6 @@ public class BSIElementEditor extends EditorPart {
         }
         try {
             // save element, refresh etc:
-            BSIElementEditorInput editorinput = (BSIElementEditorInput) getEditorInput();
             CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
             this.setPartName(cnAElement.getTitle());

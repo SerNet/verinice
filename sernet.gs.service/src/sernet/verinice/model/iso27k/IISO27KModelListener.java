@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;

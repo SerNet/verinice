@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 import sernet.verinice.interfaces.CommandException;
@@ -46,7 +47,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * $LastChangedBy$
  *
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class GetChangesSince extends GenericCommand implements INoAccessControl {
 
 	private static final String QUERY = "from ChangeLogEntry entry " + 
@@ -132,25 +133,49 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		if (entries2.size()<1)
 			return;
 		
-		List<Integer> IDs = new ArrayList<Integer>(entries2.size());
+		List<Integer> dbIdList = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		// get IDs of changed items:
 		for (ChangeLogEntry logEntry : entries2) {
 			if (logEntry.getElementId() != null)
-				IDs.add(logEntry.getElementId());
+				dbIdList.add(logEntry.getElementId());
 		}
-		Integer[] IDArray = (Integer[]) IDs.toArray(new Integer[IDs.size()]);
 		
-		// 
-		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(IDArray);
-		command = getCommandService().executeCommand(command);
+		List<CnATreeElement> elements = loadElementsWithDao(dbIdList);
 		
-		List<CnATreeElement> elements = command.getElements();
 		for (CnATreeElement elmt : elements) {
 			changedElements.put(elmt.getDbId(), elmt);
 		}
 	}
+	
+	/**
+     * @param dbIdList
+     * @return
+     * @throws CommandException
+     */
+    private List<CnATreeElement> loadElementsWithDao(List<Integer> dbIdList) throws CommandException {
+        List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
+        IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+        RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
+        for (Integer dbId : dbIdList) {
+            elements.add(dao.retrieve(dbId, ri));
+        }
+        return elements;
+    }
+
+    /**
+     * @param dbIdList
+     * @return
+     * @throws CommandException
+     */
+    private List<CnATreeElement> loadElements(List<Integer> dbIdList) throws CommandException {
+        Integer[] dbIdArray = (Integer[]) dbIdList.toArray(new Integer[dbIdList.size()]);
+		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(dbIdArray);
+		command = getCommandService().executeCommand(command);	
+		List<CnATreeElement> elements = command.getElements();
+        return elements;
+    }
 
 	public Date getLastChecked() {
 		return lastChecked;

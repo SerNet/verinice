@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster[at]tarent.de> - rewritten to use set of classes
- *     Daniel Murygin <dm[at]sernet[dot]de> - TypeFilter Added, RCP Layout
+ *     Daniel Murygin <dm[at]sernet[dot]de> - TypeParameter Added, RCP Layout
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
@@ -55,6 +55,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
+import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -140,10 +141,10 @@ public class ISMViewFilterDialog extends Dialog {
     public ISMViewFilterDialog(Shell parent, ISMViewFilter ismViewFilter) {
         super(parent);
         setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
-        this.tagPattern = ismViewFilter.getTagFilter().getPattern();
-        this.filterOrg = ismViewFilter.getTagFilter().isFilterOrg();
+        this.tagPattern = ismViewFilter.getTagParameter().getPattern();
+        this.filterOrg = ismViewFilter.getTagParameter().isFilterOrg();
         this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
-        this.visibleTypes = ismViewFilter.getTypeFilter().getVisibleTypeSet();
+        this.visibleTypes = ismViewFilter.getTypeParameter().getVisibleTypeSet();
     }
 
     @Override
@@ -322,7 +323,7 @@ public class ISMViewFilterDialog extends Dialog {
         List<String> tags;
         try {
             tags = CnAElementHome.getInstance().getTags();
-            tags.add(0, RetrieveCnATreeElement.NO_TAG);
+            tags.add(0, ElementFilter.NO_TAG);
             viewer.setInput(tags);
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.ISMViewFilterDialog_4);
@@ -346,7 +347,7 @@ public class ISMViewFilterDialog extends Dialog {
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
         if(typeList.size()>=TYPES.length) {
-            visibleTypes.add(RetrieveCnATreeElement.ALL_TYPES);
+            visibleTypes.add(ElementFilter.ALL_TYPES);
         } else {
             for (Object object : typeList) {
                 visibleTypes.add((String[]) object);        
@@ -391,7 +392,7 @@ class CheckStateProvider implements ICheckStateProvider  {
         boolean result = false;
         String[] element = (String[]) o;
         for (String[] type : visibleTypes) {
-            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(RetrieveCnATreeElement.ALL_TYPES)) {
+            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(ElementFilter.ALL_TYPES)) {
                 result=true;
                 break;
             } 

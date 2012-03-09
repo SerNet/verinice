@@ -29,51 +29,52 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.verinice.model.common.TypeParameter;
+import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.iso27k.rcp.ISMViewFilterDialog;
-import sernet.verinice.report.rcp.Messages;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class ISMViewFilter extends Action {
     
     private static final Logger LOG = Logger.getLogger(ISMViewFilter.class);
     
     private Shell shell;
-    private TagFilter tagFilter;
+    private TagParameter tagParameter;
     private HideEmptyFilter hideEmptyFilter;
-    private TypeFilter typeFilter;
+    private TypeParameter typeParameter;
 
     public ISMViewFilter(
             StructuredViewer viewer, 
             String title, 
-            TagFilter tagFilter, 
+            TagParameter tagFilter, 
             HideEmptyFilter hideEmptyFilter,
-            TypeFilter typeFilter) {
+            TypeParameter typeFilter) {
         super(title, SWT.TOGGLE);
         shell = new Shell();
-        this.tagFilter = tagFilter;
+        this.tagParameter = tagFilter;
         this.hideEmptyFilter = hideEmptyFilter;
-        this.typeFilter = typeFilter;
+        this.typeParameter = typeFilter;
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
         setUpCheckStatus();
     }
     
     public void setUpCheckStatus() {
-        this.setChecked(tagFilter.isActive() || hideEmptyFilter.isActive());
+        this.setChecked(tagParameter.isActive() || hideEmptyFilter.isActive());
     }
 
     @Override
     public void run() {
         ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell, this);
         if (dialog.open() == InputDialog.OK) {
-            tagFilter.setPattern(dialog.getCheckedElements());
-            tagFilter.setFilterOrgs(dialog.getFilterOrgs());
+            tagParameter.setPattern(dialog.getCheckedElements());
+            tagParameter.setFilterOrgs(dialog.getFilterOrgs());
             hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
-            typeFilter.setVisibleTypeSet(dialog.getVisibleTypes());
+            typeParameter.setVisibleTypeSet(dialog.getVisibleTypes());
             try {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -90,15 +91,15 @@ public class ISMViewFilter extends Action {
         setUpCheckStatus();
     }
 
-    public TagFilter getTagFilter() {
-        return tagFilter;
+    public TagParameter getTagParameter() {
+        return tagParameter;
     }
 
     public HideEmptyFilter getHideEmptyFilter() {
         return hideEmptyFilter;
     }
     
-    public TypeFilter getTypeFilter() {
-        return typeFilter;
+    public TypeParameter getTypeParameter() {
+        return typeParameter;
     }
 }

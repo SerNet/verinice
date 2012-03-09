@@ -34,51 +34,48 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class LoadPolymorphicCnAElementById extends GenericCommand {
-	
-	public LoadPolymorphicCnAElementById(Integer[] ds) {
-		ids = ds;
-	}
 
-	private Integer[] ids;
+    private Integer[] ids;
 
-	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
-	
-	@SuppressWarnings("unchecked")
-	public void execute() {
-		if (ids == null || ids.length == 0 || ids[0] == null)
-			return;
-		
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-		
-		list = (List<CnATreeElement>) dao.findByCallback(new Callback(ids));
-		HydratorUtil.hydrateElements(dao, list, false);
-	}
+    private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
-	public List<CnATreeElement> getElements() {
-		return list;
-	}
+    public LoadPolymorphicCnAElementById(Integer[] ds) {
+        ids = ds;
+    }
 
-	private static class Callback implements HibernateCallback, Serializable {
-		
-		Integer[] ids;
-		
-		Callback(Integer[] ids)
-		{
-			this.ids = ids;
-		}
+    @Override
+    public void execute() {
+        if (ids == null || ids.length == 0 || ids[0] == null) {
+            return;
+        }
 
-		public Object doInHibernate(Session session) throws HibernateException,
-				SQLException {
-			
-			Query query = session.createQuery(
-					"from CnATreeElement cte "
-					+ "where cte.dbId in (:ids)")
-					.setParameterList("ids", ids);
-			
-			return query.list();
-		}
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 
-	}
+        list = dao.findByCallback(new Callback(ids));
+        HydratorUtil.hydrateElements(dao, list, false);
+    }
+
+    public List<CnATreeElement> getElements() {
+        return list;
+    }
+
+    private static class Callback implements HibernateCallback, Serializable {
+
+        Integer[] ids;
+
+        Callback(Integer[] ids) {
+            this.ids = ids;
+        }
+
+        @Override
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+
+            Query query = session.createQuery("from CnATreeElement cte " + "where cte.dbId in (:ids)").setParameterList("ids", ids);
+
+            return query.list();
+        }
+
+    }
 }

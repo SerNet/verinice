@@ -38,7 +38,7 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * Listener to check for model changes and update the connected tree viewer.
  * 
- * Uses cache to resolve objects being updated. This cache is shared between ContentProvider, LabelProvider and 
+ * Uses cache to resolve objects being updated. This cache is shared between ContentProvider, TreeLabelProvider and 
  * Updater (this class) to update only actually displayed objects based on object identity 
  * (as defined by the objects' equals() method.
  * 
