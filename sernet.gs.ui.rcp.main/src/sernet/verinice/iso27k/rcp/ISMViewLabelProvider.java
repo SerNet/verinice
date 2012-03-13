@@ -33,13 +33,14 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.
  * 
+ * @deprecated Use {@link TreeLabelProvider}
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
  */
 public class ISMViewLabelProvider extends LabelProvider  {
 

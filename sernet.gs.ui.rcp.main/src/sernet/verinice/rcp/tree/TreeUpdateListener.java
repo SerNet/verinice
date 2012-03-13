@@ -28,6 +28,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -39,7 +41,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  * 
  */
 @SuppressWarnings("restriction")
-public class TreeUpdateListener implements IISO27KModelListener {
+public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener {
 
     private static final Logger LOG = Logger.getLogger(TreeUpdateListener.class);
 
@@ -109,6 +111,14 @@ public class TreeUpdateListener implements IISO27KModelListener {
           *  
           *  This method is empty, action is done in childAdded
           */
+    }
+    
+    /**
+     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+     * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh()
+     */
+    @Override
+    public void modelRefresh() {
     }
 
     /*
@@ -235,6 +245,22 @@ public class TreeUpdateListener implements IISO27KModelListener {
      */
     @Override
     public void modelReload(ISO27KModel newModel) {
+        doModelReload(newModel);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.model.bsi.BSIModel)
+     */
+    @Override
+    public void modelReload(BSIModel newModel) {
+        doModelReload(newModel);      
+    }
+    
+    
+    /**
+     * @param model A ISO27KModel or BSIModel
+     */
+    private void doModelReload(Object model) {
         try {
             Display.getDefault().syncExec(new Runnable() {
                 @Override
@@ -249,7 +275,7 @@ public class TreeUpdateListener implements IISO27KModelListener {
 
             getElementManager().clearCache();
 
-            updater.setInput(newModel);
+            updater.setInput(model);
             updater.refresh();
 
             // Expand elements in background
@@ -260,6 +286,8 @@ public class TreeUpdateListener implements IISO27KModelListener {
             LOG.error("Error while updating treeview", e);
         }
     }
+    
+    
 
     /**
      * @return the elementManager

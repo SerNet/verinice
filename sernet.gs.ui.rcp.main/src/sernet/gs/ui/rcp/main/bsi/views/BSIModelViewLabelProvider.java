@@ -39,26 +39,15 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 
     private static final Logger LOG = Logger.getLogger(BSIModelViewLabelProvider.class);
     
-    public BSIModelViewLabelProvider(TreeViewerCache cache) {
+    public BSIModelViewLabelProvider() {
         super();
-        this.cache = cache;
     }
 
-    private TreeViewerCache cache;
 
     @Override
     public Image getImage(Object obj) {
-        // Logger.getLogger(this.getClass()).debug("getImage " + obj);
 
         Object cachedObject = null;
-        if(obj instanceof CnATreeElement) {
-            cachedObject = cache.getCachedObject((CnATreeElement) obj);
-            if (cachedObject == null) {
-                cache.addObject(obj);
-            } else {
-                obj = cachedObject;
-            }
-        }
 
         if (obj instanceof BausteinUmsetzung) {         
             return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
@@ -79,21 +68,12 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 
     @Override
     public String getText(Object obj) {
-        // Logger.getLogger(this.getClass()).debug("getLabel "+obj);
         try {
             if (obj == null) {
                 return "<null>";
             }
     
-            Object cachedObject = null;
-            if(obj instanceof CnATreeElement) {
-                cachedObject = cache.getCachedObject((CnATreeElement) obj);
-                if (cachedObject == null) {
-                    cache.addObject(obj);
-                } else {
-                    obj = cachedObject;
-                }
-            }
+            Object cachedObject = null;          
     
             if (obj instanceof IBSIStrukturElement) {
                 IBSIStrukturElement el = (IBSIStrukturElement) obj;

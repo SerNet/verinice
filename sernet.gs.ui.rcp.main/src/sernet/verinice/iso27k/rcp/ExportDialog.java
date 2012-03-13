@@ -65,6 +65,7 @@ import sernet.verinice.service.sync.VeriniceArchive;
 /**
  * @author Daniel Murygin <dm@sernet.de>
  */
+@SuppressWarnings("restriction")
 public class ExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 

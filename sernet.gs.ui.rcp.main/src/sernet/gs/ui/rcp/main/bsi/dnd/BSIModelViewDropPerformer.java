@@ -142,7 +142,7 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 					false /* do not notify single elements*/);
 		}
 		// notifying for the last element is sufficient to update all views:
-		CnAElementFactory.getLoadedModel().databaseChildAdded(saveNew);
+		CnAElementFactory.getLoadedModel().childAdded(target,saveNew);
 	}
 
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {

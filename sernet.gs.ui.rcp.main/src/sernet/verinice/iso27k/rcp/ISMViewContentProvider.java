@@ -46,10 +46,12 @@ import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ElementFilter;
+import sernet.verinice.rcp.tree.TreeContentProvider;
 
 /**
  * Content provider for BSI model elements.
  * 
+ * @deprecated Use {@link TreeContentProvider}
  * @author koderman[at]sernet[dot]de
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

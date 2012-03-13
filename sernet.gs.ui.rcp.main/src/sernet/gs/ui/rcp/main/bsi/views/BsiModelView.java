@@ -19,15 +19,14 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -98,14 +97,14 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.rcp.tree.ElementManager;
+import sernet.verinice.rcp.tree.TreeContentProvider;
+import sernet.verinice.rcp.tree.TreeUpdateListener;
 
 /**
  * View for model of own "ITVerbund" with associated controls, risk analysis
@@ -116,6 +115,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+@SuppressWarnings("restriction")
 public class BsiModelView extends ViewPart implements IAttachedToPerspective, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(BsiModelView.class);
@@ -132,7 +132,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private BSIModelViewFilterAction filterAction;
 
-	private BSIModelViewContentProvider contentProvider;
+	TreeContentProvider contentProvider;
+    ElementManager elementManager;
 
 	private Action expandAllAction;
 
@@ -150,16 +151,14 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private ShowKonsolidatorAction konsolidatorAction;
 
-	private TreeViewerCache cache;
-
 	private BausteinZuordnungAction bausteinZuordnungAction;
 
 	private MetaDropAdapter dropAdapter;
 	
 	private IModelLoadListener modelLoadListener;
 
-	private BSIModelViewUpdater bsiModelListener;
-    
+	private TreeUpdateListener bsiModelListener;
+	
     private boolean linkingActive = false;
     
     private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
@@ -198,7 +197,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	 * The constructor.
 	 */
 	public BsiModelView() {
-		this.cache = new TreeViewerCache();
+	    elementManager = new ElementManager();
 	}
 	
 	public String getRightID(){
@@ -237,8 +236,12 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
         
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));		
-		viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(cache), workbench.getDecoratorManager()));
+		
+		//viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));    
+        contentProvider = new TreeContentProvider(elementManager);	
+        viewer.setContentProvider(contentProvider);
+                
+		viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(), workbench.getDecoratorManager()));
 		viewer.setSorter(new CnAElementByTitelSorter());
 
 		getSite().setSelectionProvider(viewer);
@@ -429,10 +432,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		};
 
 		BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
-		// The model filter is normally used for the view. By giving the filter
-		// also to the content provider this can be used to minimize database
-		// access.
-		contentProvider.setModelElementFilter(modelElementFilter);
+		
 		filterAction = new BSIModelViewFilterAction(viewer, Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer), new LebenszyklusPropertyFilter(viewer), new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter, new TagFilter(viewer));
 
 		expandAllAction = new Action() {
@@ -491,7 +491,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 		// create listener only once:
 		if (bsiModelListener == null) {
-			bsiModelListener = new BSIModelViewUpdater(viewer, cache);
+			bsiModelListener = new TreeUpdateListener(viewer,elementManager);
 			Display.getDefault().asyncExec(new Runnable() {
 	            public void run() {
 	                try {

@@ -54,6 +54,8 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.tree.ElementManager;
+import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
@@ -175,7 +177,7 @@ public class DSModelView extends ViewPart {
 
 	private BSIModel model;
 
-	private TreeViewerCache cache;
+	private ElementManager elementManager;
 
 	class NameSorter extends ViewerSorter {
 		@Override
@@ -196,7 +198,7 @@ public class DSModelView extends ViewPart {
 	 * The constructor.
 	 */
 	public DSModelView() {
-		this.cache = new TreeViewerCache();
+	    elementManager = new ElementManager();
 	}
 	
 	public String getRightID(){
@@ -207,8 +209,9 @@ public class DSModelView extends ViewPart {
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		viewUpdater = new DSModelViewUpdater();
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new BSIModelViewContentProvider(cache));
-		viewer.setLabelProvider(new DSViewLabelProvider(cache));
+		
+		viewer.setContentProvider(new TreeContentProvider(elementManager));
+		viewer.setLabelProvider(new DSViewLabelProvider());
 		viewer.setSorter(new NameSorter());
 
 		getSite().setSelectionProvider(viewer);

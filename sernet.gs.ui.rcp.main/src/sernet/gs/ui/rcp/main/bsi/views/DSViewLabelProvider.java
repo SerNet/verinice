@@ -25,8 +25,8 @@ import sernet.verinice.model.bsi.ITVerbund;
 public class DSViewLabelProvider extends BSIModelViewLabelProvider implements
 		IBaseLabelProvider {
 
-	public DSViewLabelProvider(TreeViewerCache cache) {
-		super(cache);
+	public DSViewLabelProvider() {
+		super();
 	}
 	
 	@Override

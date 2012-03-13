@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -76,6 +77,9 @@ public class ElementManager {
      */
     public CnATreeElement[] getChildren(CnATreeElement parentElement) {
         try {
+            if(parentElement instanceof NullModel) {
+                return new CnATreeElement[0];
+            }       
             CacheObject cachedElement = cache.getCachedObject(parentElement);
             CnATreeElement elementWithChildren = null;
             if(cachedElement!=null && cachedElement.isChildrenPropertiesLoaded()) {

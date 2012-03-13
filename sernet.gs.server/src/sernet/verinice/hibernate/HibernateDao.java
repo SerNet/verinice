@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.proxy.HibernateProxy;
@@ -75,6 +76,7 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
      */
     @Override
     public List<T> findByCriteria(DetachedCriteria criteria) {
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return getHibernateTemplate().findByCriteria(criteria);
     }
 

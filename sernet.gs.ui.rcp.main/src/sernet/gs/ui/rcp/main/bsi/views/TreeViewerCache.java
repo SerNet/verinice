@@ -30,6 +30,7 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.tree.ElementCache;
 
 
 /**
@@ -38,6 +39,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * Used to allow lazy loading of tree elements, resolving already displayed
  * items when a new instance for an already displayed object is returned from the database.
  * 
+ * 
+ * @deprecated Use {@link ElementCache}
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$

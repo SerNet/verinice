@@ -25,7 +25,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class LoadCnAElementByType<T extends CnATreeElement> extends GenericCommand {
 
 	private List<T> elements;

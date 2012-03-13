@@ -36,10 +36,11 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.tree.TreeUpdateListener;
 
 /**
+ * @deprecated {@link TreeUpdateListener}
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
  */
 @SuppressWarnings("restriction")
 public class ISO27KModelViewUpdate implements IISO27KModelListener {
