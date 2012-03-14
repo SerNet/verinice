@@ -60,7 +60,7 @@ public class ElementEntityDao extends TreeElementDao<Entity, Integer> implements
         entity = super.merge(entity);
         element.setEntity(entity);
 
-        if(!getHibernateTemplate().contains(entity)) {  
+        if(!getHibernateTemplate().contains(element)) {  
             getHibernateTemplate().load(element, element.getDbId());
         }
         

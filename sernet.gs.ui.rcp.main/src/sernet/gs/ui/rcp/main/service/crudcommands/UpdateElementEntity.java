@@ -25,12 +25,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.SecurityException;
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IElementEntityDao;
-import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -44,6 +42,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @param <T>
  */
+@SuppressWarnings("restriction")
 public class UpdateElementEntity<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand {
 
     private transient Logger log = Logger.getLogger(UpdateElementEntity.class);
