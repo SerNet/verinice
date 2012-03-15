@@ -192,7 +192,16 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private ICommandService commandService;
 	
-	private boolean checkRights(){
+	
+	/**
+     * 
+     */
+    public ISMView() {
+        super();
+        elementManager = new ElementManager();
+    }
+
+    private boolean checkRights(){
 	    return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
 	}
 	
@@ -222,8 +231,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
 	        CnAElementFactory.getInstance().reloadModelFromDatabase();
 	    }
-		//contentProvider = new ISMViewContentProvider(cache);
-	    elementManager = new ElementManager();
+	    
+	    
 	    contentProvider = new TreeContentProvider(elementManager);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);

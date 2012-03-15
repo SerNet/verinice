@@ -27,20 +27,27 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IParameter;
+import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.service.commands.LoadTreeItem;
 
 /**
- * ElementManager loads domain objects ({@link CnATreeElement}) for {@link TreeContentProvider}
- * from the verinice backend.
+ * ElementManager manages domain objects ({@link CnATreeElement}) for trees in views.
  * 
- * ElementManager caches objects to ensure that they are loaded only once.
+ * One instance of this class created for every view opened at runtime 
+ * which is used by {@link TreeContentProvider} and {@link TreeUpdateListener}.
+ * It's used by {@link ISMView} and {@link BsiModelView}.
+ * 
+ * ElementManager caches objects to ensure that they are loaded only once. 
+ * If an element is not cached already it's loaded from the backend by
+ * command {@link LoadTreeItem}
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -147,7 +154,9 @@ public class ElementManager {
     }
     
     /**
-     * @param child
+     * Method is called when an element was added.
+     * 
+     * @param Added element
      */
     public void elementAdded(CnATreeElement element) {
         try {       
@@ -161,6 +170,32 @@ public class ElementManager {
             throw new RuntimeException(e);
         }
         
+    }
+    
+    /**
+     * Method is called when an element was removed.
+     * 
+     * Element is removed also from chidren set of it's parent.
+     * 
+     * @param element REmoved element
+     */
+    public void elementRemoved(CnATreeElement element) {
+        CacheObject cachObjectParent = cache.getCachedObject(element.getParent());
+        if(cachObjectParent!=null) {
+            CnATreeElement parentFromCache = cachObjectParent.getElement();
+            boolean exists = parentFromCache.getChildren().remove(element);
+            if(exists) {
+                CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());           
+                cache.addObject(newCacheObjectParent);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Element removed from parent child set in cache...");
+                }           
+            }
+        }
+        cache.remove(element);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Element removed from cache");
+        }
     }
     
     /**
@@ -215,7 +250,7 @@ public class ElementManager {
         if(cachObjectParent!=null) {
             CnATreeElement parentFromCache = cachObjectParent.getElement();
             boolean exists = parentFromCache.getChildren().remove(element);
-            if(exists) {
+            if(exists && LOG.isDebugEnabled()) {
                 LOG.debug("Old element removed from parent child set in cache...");
             }
             boolean added = parentFromCache.getChildren().add(element);
@@ -260,8 +295,8 @@ public class ElementManager {
         LoadTreeItem command = new LoadTreeItem(element.getUuid(),ri,ElementFilter.getConvertToMap(getParameterList()));
         command = getCommandService().executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();
-        addToCache(elementWithChildren,command.getHasChildrenMap());
-        return elementWithChildren;
+        CacheObject cacheObject = addToCache(elementWithChildren,command.getHasChildrenMap());
+        return cacheObject.getElement();
 
     }
     

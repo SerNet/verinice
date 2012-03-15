@@ -37,8 +37,10 @@ import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 /**
+ * TreeUpdateListener updates a {@link TreeViewer} when a {@link CnATreeElement} was added, changed or removed.
+ * It handles changes of ISO 27000 and BSI elements.
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- * 
  */
 @SuppressWarnings("restriction")
 public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener {
@@ -70,7 +72,8 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
     @Override
     public void databaseChildRemoved(CnATreeElement child) {
         try {
-            updater.refresh();
+            getElementManager().elementRemoved(child);
+            updater.remove(child);
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);
         }

@@ -142,15 +142,13 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                                                   
                                 CnATreeElement el = (CnATreeElement) sel;                            
                                 monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
-                                el.getParent().removeChild(el);
+                                
                                 CnAElementHome.getInstance().remove(el);
+                                // notify all listeners:
+                                CnAElementFactory.getModel(el).databaseChildRemoved(el);
                                 monitor.worked(1);                           
                             }
-                        }
-    
-                        // notify all listeners:
-                        CnATreeElement child = (CnATreeElement) deleteList.iterator().next();
-                        CnAElementFactory.getModel(child).databaseChildRemoved(child);
+                        }               
                     } catch (Exception e) {
                         LOG.error("Error while deleting element.", e);
                         ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
