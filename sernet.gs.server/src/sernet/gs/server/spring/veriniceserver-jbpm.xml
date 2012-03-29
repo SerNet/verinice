@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
+        <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
+    </bean>
+
+    <bean id="processEngine" factory-bean="springHelper"
+        factory-method="createProcessEngine" />
+
+    <!-- Process definitions listet in processDefinitions are loaded and intialized on startup. -->
+    <bean id="processService" class="sernet.verinice.bpm.ProcessService" init-method="init">
+        <property name="processEngine" ref="processEngine" />
+        <property name="processDefinitions">
+            <set>
+                <!--<value>sernet/verinice/bpm/control-execution.jpdl.xml</value>-->
+                <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
+            </set>
+        </property>
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="changeLogEntryDao" ref="changeLogEntryDAO" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="controlGroupDao" ref="controlGroupDAO" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
+        <property name="processDao" ref="processDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <bean id="taskService" class="sernet.verinice.bpm.TaskService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="authService" ref="authService" />
+        <property name="elementDao" ref="cnaTreeElementDao" /> 
+        <property name="jbpmTaskDao" ref="jbpmTaskDao" />
+        <property name="jbpmVariableDao" ref="jbpmVariableDao" />
+        <property name="auditDao" ref="auditDAO" />
+    </bean>
+    
+    <!-- Sends a notification to users with assigned tasks. -->
+	<bean name="taskNotificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	    <property name="jobClass" value="sernet.verinice.bpm.NotificationJob" />
+	    <property name="jobDataAsMap">
+	        <map>             
+	            <entry key="workObjects" value-ref="workObjects" />
+	            <entry key="jbpmTaskDao" value-ref="jbpmTaskDao" />
+	            <entry key="taskService" value-ref="taskService" />
+	            <entry key="configurationDao" value-ref="configurationDao" />
+	            <entry key="mailSender" value-ref="mailSender" />
+	            <entry key="velocityEngine" value-ref="velocityEngine"/>     
+	            <entry key="taskListPath" value="todo/task.jsf"/>
+	            <entry key="enabled" value="${veriniceserver.notification.enabled}" />
+	            <entry key="emailFrom" value="${veriniceserver.notification.email.from}"/>
+	            <entry key="replyTo" value="${veriniceserver.notification.email.from}"/> 
+	            <entry key="url" value="${veriniceserver.notification.email.linkto}"/>
+	        </map>
+	    </property>
+	</bean>
+    
+    <!-- Creates jBPM processes by IProcessCreater implementations. -->
+    <!-- Add a new IProcessCreater to processCreaterSet to create more processes. -->
+    <bean name="processJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="processCreaterSet">
+                    <set>
+                        <!--<ref bean="controlProcessCreater" />-->
+                        <!--<ref bean="isaProcessCreater" />-->
+                        <ref bean="processValidator" />
+                    </set>
+                </entry>
+                <entry key="workObjects" value-ref="workObjects" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- Checks if element with UUID of process exists, deletes process if not -->
+    <bean name="processValidator" class="sernet.verinice.bpm.ProcessValidator">
+        <property name="processService" ref="processService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    
+    <!-- Creates one control-execution processes for every control. -->
+    <!--
+    <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
+        <property name="processService" ref="processService" />
+        <property name="controlDao" ref="controlDAO" />
+    </bean>
+    -->
+    <!-- Creates one isa-execution processes for every isa/samt topic. -->
+    <!--
+    <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
+        <property name="processService" ref="processService" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
+    </bean>
+    -->
+
+    <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.model.ExecutionImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="jbpmVariableDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.type.Variable</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="jbpmTaskDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.task.TaskImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="processDao" class="sernet.verinice.bpm.ProcessDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+</beans>

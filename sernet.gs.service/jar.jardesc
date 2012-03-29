@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="/work/home/aprack/java/workspace/sernet.gs.ui.rcp.main/lib/sernet.gs.service.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/sernet.gs.service/jar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" project1="sernet.gs.service" structuralOnly="false"/>
+    <selectedProjects>
+        <project name="sernet.gs.service"/>
+    </selectedProjects>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=sernet.gs.service/src"/>
+        <file path="/sernet.gs.service/GSService.xsd"/>
+    </selectedElements>
+    <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
+</jardesc>

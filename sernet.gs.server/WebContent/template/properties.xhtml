@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:rich="http://richfaces.org/rich"
+	  xmlns:a4j="http://richfaces.org/a4j">
+	<ui:composition>
+		<table>	
+			<a4j:repeat value="#{listNoLabel}" var="p">
+				<tr>
+					<td>				
+						<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}"/>
+						<h:outputText value="#{p.value}" rendered="#{p.isLine and (not p.isEditable)}" styleClass="roText"/>
+						<h:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" style="height:50px;"/>
+						<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
+						<rich:calendar value="#{p.date}" datePattern="#{p.datePattern}" rendered="#{p.isDate}"/>
+						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isSingleSelect}" style="margin-bottom:5px"/>							
+						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isNumericSelect and not empty p.optionList}" style="margin-bottom:5px"/>
+						<rich:inputNumberSpinner value="#{p.value}" minValue="#{p.min}" maxValue="#{p.max}" rendered="#{p.isNumericSelect and empty p.optionList}"/>
+					</td>
+				</tr>	
+			</a4j:repeat>
+		</table>
+		<table>	
+			<a4j:repeat value="#{list}" var="p">
+				<tr>
+					<td style="width: 200px;">
+						<h:outputText value="#{p.name}"/>
+					</td>
+					<td>
+						<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}"/>
+						<h:outputText value="#{p.value}" rendered="#{p.isLine and (not p.isEditable)}" styleClass="roText"/>
+						<h:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" style="height:50px;"/>
+						<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
+						<rich:calendar value="#{p.date}" datePattern="#{p.datePattern}" rendered="#{p.isDate}"/>
+						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isSingleSelect}" style="margin-bottom:5px"/>							
+						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isNumericSelect and not empty p.optionList}" style="margin-bottom:5px"/>
+						<rich:inputNumberSpinner value="#{p.value}" minValue="#{p.min}" maxValue="#{p.max}" rendered="#{p.isNumericSelect and empty p.optionList}"/>
+					</td>
+				</tr>	
+			</a4j:repeat>
+		</table>	     			
+	</ui:composition>
+</html>

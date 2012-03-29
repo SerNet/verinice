@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: inetlib
+Bundle-SymbolicName: inetlib
+Bundle-Version: 1.1.1
+Bundle-ClassPath: inetlib-1.1.1.jar
+Export-Package: gnu.inet.comsat,gnu.inet.finger,gnu.inet.ftp,gnu.inet.
+ gopher,gnu.inet.http,gnu.inet.http.event,gnu.inet.https,gnu.inet.imap
+ ,gnu.inet.ldap,gnu.inet.nntp,gnu.inet.pop3,gnu.inet.smtp,gnu.inet.uti
+ l
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-RegisterBuddy: sernet.verinice.encryption,com.springsource.jav
+ ax.activation
+

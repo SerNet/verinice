@@ -1,0 +1,40 @@
+#col1 { 
+	float: left; 
+	width: 205px;  
+	margin:0;
+	background-image: url("../image/navi-bg.jpg");
+	background-repeat: no-repeat;
+	height: 550px;
+	position: relative;
+}
+#col2 { 
+	float: right; 
+	width: 195px;  
+	margin:0
+}
+#col3 { 
+	width: auto; 
+	margin: 0 210px 0 215px; 
+	*margin-right:0; 
+	*width:551px;
+}
+
+h1 {  
+	margin: 10px 0 25px 
+}
+
+#header #topnav {
+	width: 115px;
+	right:0;
+	font-size: 85%;
+}
+
+.teaserHeader {
+	background-color:#C32D2B;
+    color:#FFFFFF;
+    font-weight:bold;
+    font-size: 100%;
+    margin-top:0;
+    padding:3px 10px;
+    border-bottom: 1px solid #fff;
+}

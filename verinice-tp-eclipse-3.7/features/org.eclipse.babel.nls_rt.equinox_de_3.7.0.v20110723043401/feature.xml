@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feature
+	id="org.eclipse.babel.nls_rt.equinox_de"
+	label="Babel Language Pack for rt.equinox in German (98.54%)"
+	image="eclipse_update_120.jpg"
+	provider-name="%providerName"
+	version="3.7.0.v20110723043401">
+	<copyright>
+		%copyright
+	</copyright>
+	<license url="%licenseURL">
+		%license
+	</license>
+	<description>Babel Language Pack for rt.equinox in German</description>
+	<plugin fragment="true" id="org.eclipse.core.resources.jmx.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2225" install-size="2225" />
+	<plugin fragment="true" id="org.eclipse.equinox.initializer.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2483" install-size="2483" />
+	<plugin fragment="true" id="org.eclipse.equinox.jmx.client.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="4639" install-size="4639" />
+	<plugin fragment="true" id="org.eclipse.equinox.jmx.common.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2286" install-size="2286" />
+	<plugin fragment="true" id="org.eclipse.equinox.jmx.server.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2943" install-size="2943" />
+	<plugin fragment="true" id="org.eclipse.equinox.jmx.vm.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2593" install-size="2593" />
+	<plugin fragment="true" id="org.eclipse.equinox.preferences.jmx.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2433" install-size="2433" />
+	<plugin fragment="true" id="org.eclipse.equinox.region.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="1595" install-size="1595" />
+	<plugin fragment="true" id="org.eclipse.osgi.jmx.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2891" install-size="2891" />
+	<plugin fragment="true" id="org.eclipse.swt.jmx.nl_de" unpack="false" version="3.7.0.v20110723043401" download-size="2110" install-size="2110" />
+</feature>
