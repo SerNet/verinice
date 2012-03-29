@@ -369,6 +369,38 @@ public class TaskService implements ITaskService{
         varMap.put(ITaskService.VAR_READ_STATUS, ITaskService.VAR_READ);
         getTaskService().setVariables(taskId, varMap);     
     }
+    
+    /**
+     * True: This is a real implementation.
+     * 
+     * @see sernet.verinice.interfaces.bpm.ITaskService#isActive()
+     */
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    /**
+     * This implementation cancel and deletes a task by deleting
+     * the owning process of the task.
+     * 
+     * @param taskId The database id of an task
+     * @see sernet.verinice.interfaces.bpm.ITaskService#cancelTask(java.lang.String)
+     */
+    @Override
+    public void cancelTask(String taskId) {
+        // Every task belongs to a subprocess of the main process
+        // HQL query to find the main process
+        String hql = "select execution.parent from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?";
+        final List<Execution> executionList = getJbpmTaskDao().findByQuery(hql,new Long[]{Long.valueOf(taskId)});         
+        if(!executionList.isEmpty()) {
+            for (Execution process : executionList) {
+                if(process!=null && process.getId()!=null) {
+                    getExecutionService().deleteProcessInstance(process.getId());
+                }
+            }
+        }     
+    }
 
     public org.jbpm.api.TaskService getTaskService() {
         return getProcessEngine().getTaskService();
@@ -428,39 +460,6 @@ public class TaskService implements ITaskService{
 
     public void setAuditDao(IBaseDao<Audit, Integer> auditDao) {
         this.auditDao = auditDao;
-    }
-
-    /**
-     * True: This is a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.ITaskService#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return true;
-    }
-
-    @Override
-    public void cancelTask(String taskId) {
-            List<Object> paramList = new LinkedList<Object>();
-            StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task ");
-            sb.append(" where ");
-            sb.append(" task.id=?" );
-            paramList.add(Long.valueOf(taskId));
-            final String hql = sb.toString();
-            String hql2 = "select execution from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?";
-            final List<Execution> executionList = getJbpmTaskDao().findByQuery(hql2,paramList.toArray());
-            final List<TaskImpl> jbpmTaskList = getJbpmTaskDao().findByQuery(hql,paramList.toArray());
-            getProcessEngine().execute(new Command<Object>() {
-                @Override
-                public Object execute(Environment arg0) throws Exception {
-                    for(TaskImpl t : jbpmTaskList){
-                        t.setExecution(executionList.get(0));
-                        t.cancelExecution(TaskImpl.STATE_SUSPENDED);
-                    }
-                    return null;
-                }
-            });
     }
 
 }

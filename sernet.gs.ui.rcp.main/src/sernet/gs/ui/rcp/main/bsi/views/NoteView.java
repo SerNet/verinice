@@ -46,12 +46,14 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadNotes;
@@ -106,6 +108,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 	
 		this.parent = parent;
 		parent.setLayout(new FillLayout());
+        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         
 		try {
 			expandBar = new ExpandBar(parent,SWT.V_SCROLL);

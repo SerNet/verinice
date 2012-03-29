@@ -43,20 +43,37 @@ import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.CnATypeMapper;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.Personengruppen;
+import sernet.verinice.model.ds.StellungnahmeDSB;
+import sernet.verinice.model.ds.VerantwortlicheStelle;
+import sernet.verinice.model.ds.Verarbeitungsangaben;
 
 /**
  * Utility class to convert result sets (from gstool databases) to verinice-objects.
@@ -73,11 +90,14 @@ public class TransferData {
 	private boolean importRollen;
 	private List<MbDringlichkeitTxt> dringlichkeiten;
 	private HashMap<String, String> drgMap;
-
-	public TransferData(GSVampire vampire, boolean importRollen) {
-		this.vampire = vampire;
-		this.importRollen = importRollen ; 
-	}
+	
+	  public TransferData(GSVampire vampire, boolean importRollen) {
+	        this.vampire = vampire;
+	        this.importRollen = importRollen ; 
+	        
+	      
+	        
+	    }
 
 	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws Exception {
 		NZielobjekt source = result.zielobjekt;
@@ -125,6 +145,8 @@ public class TransferData {
 			}
 			
 	}
+	
+	
 
 	private void typedTransfer(Anwendung element, ZielobjektTypeResult result) {
 		element.setTitel(result.zielobjekt.getName());

@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -149,6 +150,7 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new RelationViewLabelProvider(this));
 		viewer.setSorter(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
+        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
 		// try to add listeners once on startup, and register for model changes:
 		addBSIModelListeners();
@@ -391,7 +393,7 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
             public void run() {
                 toggleLinking(isChecked());
             }
-        };
+        };       
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         linkWithEditorAction.setChecked(isLinkingActive());
 	}

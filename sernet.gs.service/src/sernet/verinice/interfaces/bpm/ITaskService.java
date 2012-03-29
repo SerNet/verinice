@@ -94,6 +94,11 @@ public interface ITaskService {
      */
     boolean isActive();
     
+    /**
+     * Cancel and deleted a task
+     * 
+     * @param taskId The database id of an task
+     */
     void cancelTask(String taskId);
     
 }

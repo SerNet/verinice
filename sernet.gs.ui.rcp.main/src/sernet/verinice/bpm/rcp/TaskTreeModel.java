@@ -34,6 +34,7 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class TaskTreeModel {
 
     List<ITask> taskList;
@@ -74,14 +75,29 @@ public class TaskTreeModel {
     }
     
     public Object[] getChildrenArray(KeyValue parent) {
-        List<ITask> children = nodeMap.get(parent);
-        Collections.sort(children);
+        List<ITask> children = nodeMap.get(parent);       
         Object[] taskArray = null;
         if(children==null) {
             taskArray = new ITask[0];
         } else {
+            Collections.sort(children);
             taskArray = children.toArray();
         }
         return taskArray;
+    }
+
+    /**
+     * @param task
+     */
+    public void remove(ITask task) {
+        taskList.remove(task);   
+        KeyValue keyValue = new KeyValue(task.getUuidAudit(), task.getAuditTitle());
+        List<ITask> nodeChildren = nodeMap.get(keyValue);
+        if(nodeChildren!=null) {
+            nodeChildren.remove(task);
+            if(nodeChildren.isEmpty()) {
+                nodeMap.remove(keyValue);
+            }
+        }
     }
 }

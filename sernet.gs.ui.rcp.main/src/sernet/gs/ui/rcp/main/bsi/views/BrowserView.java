@@ -43,6 +43,7 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -51,6 +52,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -84,6 +86,7 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
 	public void createPartControl(Composite parent) {
 		GridLayout gl = new GridLayout(1, false);
 		parent.setLayout(gl);
+        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 		try {
 			browser = new Browser(parent, SWT.NONE);
 			browser.setLayoutData(new GridData(GridData.FILL_BOTH

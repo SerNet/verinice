@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -49,29 +48,29 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.iso27k.rcp.action.Messages;
-import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.DeriveStatusCommand;
-import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
- *
+ * This {@link ActionDelegate} determines all generic and specific measures (controls) that are
+ * linked to an isa question (samttopic) and transfers the maturity of the question
+ * to the measures, if maturity not unset or NA.
+ * Execution is is done by remote call on the server in {@link DeriveStatusCommand}.
+ * 
+ * @see DeriveStatusCommand
  */
+@SuppressWarnings("restriction")
 public class DeriveStatusAction extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
     
-    public static final String ID = "sernet.verinice.iso27k.rcp.action.DeriveStatusAction"; //$NON-NLS-1$
     private static final Logger LOG = Logger.getLogger(DeriveStatusAction.class);
+    
+    public static final String ID = "sernet.verinice.iso27k.rcp.action.DeriveStatusAction"; //$NON-NLS-1$
     
     private boolean serverIsRunning = true;
     
-    private IViewPart view;
-    
     private ControlGroup selectedControlgroup;
-    
-    private static ISchedulingRule iSchedulingRule = new Mutex();
     
     private int samtCount = 0;
     
@@ -126,7 +125,6 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
      */
     @Override
     public void init(IViewPart arg0) {
-        this.view = arg0;
     }
 
     @Override
@@ -152,21 +150,22 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     public void run(IAction action) {
         if (selectedControlgroup != null) {
             String title = selectedControlgroup.getTitle();
-            boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.2"), title));
+            boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.2"), title)); //$NON-NLS-1$ //$NON-NLS-2$
             if (!confirm)
                 return;
             try {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(Messages.getString("DeriveStatus.3"), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(Messages.getString("DeriveStatus.3"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         derivateStatus();
                         monitor.done();
                     }
                 });
-                InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}), Messages.getString("DeriveStatus.6"), PreferenceConstants.INFO_STATUS_DERIVED);
-//                MessageDialog.openInformation(Display.getDefault().getActiveShell(),  NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}));
+                InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}), Messages.getString("DeriveStatus.6"), PreferenceConstants.INFO_STATUS_DERIVED); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             } catch (Throwable e) {
-                LOG.error("Error while derivating status.", e); //$NON-NLS-1$
+                final String message = Messages.getString("DeriveStatusAction.6"); //$NON-NLS-1$
+                LOG.error(message, e); //$NON-NLS-1$
+                MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatusAction.7"), message); //$NON-NLS-1$
             }
         }
     }
@@ -181,17 +180,7 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
             measureCount = command.getMeasureCount();
         } catch (CommandException e) {
             LOG.error("Error while derivating status.", e); //$NON-NLS-1$
-        }
-    }
-
-    private CnATreeElement loadChildren(CnATreeElement element, RetrieveInfo info) {
-        try {
-            LoadElementByUuid command = new LoadElementByUuid(element.getUuid(), info);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            return command.getElement();
-        } catch (CommandException e) {
-            LOG.error("Error while retrieving children", e);
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -216,14 +205,8 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
         }
     }
 
-    @SuppressWarnings("restriction")
     private void updateModel(List<CnATreeElement> changedElementList) {
         if (changedElementList != null && !changedElementList.isEmpty()) {
-            for (CnATreeElement cnATreeElement : changedElementList) {
-//                avoid lazy exceptions here and use childChanged/databaseChildChanged again
-//                CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
-//                CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
-            }
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
     }

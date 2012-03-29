@@ -22,18 +22,32 @@ package sernet.verinice.bpm.rcp;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
+import sernet.verinice.model.bpm.TaskInformation;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
+ * 
  */
+@SuppressWarnings("restriction")
 public class TaskContentProvider implements ITreeContentProvider {
 
+    private TreeViewer viewer;
+
     private TaskTreeModel model;
+
+    /**
+     * @param treeViewer
+     */
+    public TaskContentProvider(TreeViewer treeViewer) {
+        this.viewer = treeViewer;
+    }
 
     @Override
     public void dispose() {
@@ -41,12 +55,12 @@ public class TaskContentProvider implements ITreeContentProvider {
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        if(newInput instanceof List/*<ITask>*/) {
+        if (newInput instanceof List/* <ITask> */) {
             this.model = new TaskTreeModel((List<ITask>) newInput);
         }
-        if(newInput instanceof TaskTreeModel) {
+        if (newInput instanceof TaskTreeModel) {
             this.model = (TaskTreeModel) newInput;
-        }      
+        }
     }
 
     @Override
@@ -66,16 +80,25 @@ public class TaskContentProvider implements ITreeContentProvider {
     @Override
     public Object getParent(Object element) {
         Object parent = null;
-        if(element instanceof ITask) {
-            parent = new KeyValue(((ITask)element).getUuidAudit(),((ITask)element).getAuditTitle());
+        if (element instanceof ITask) {
+            parent = new KeyValue(((ITask) element).getUuidAudit(), ((ITask) element).getAuditTitle());
         }
         return parent;
     }
 
     @Override
     public boolean hasChildren(Object element) {
-        return getChildren(element).length>0;
+        return getChildren(element).length > 0;
     }
 
+    public void removeTask(final TaskInformation task) {
+        Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+                model.remove(task);
+                viewer.remove(task);
+                viewer.refresh();
+            }
+        });
+    }
 
 }

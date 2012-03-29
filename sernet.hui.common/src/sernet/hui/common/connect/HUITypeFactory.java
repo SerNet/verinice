@@ -684,7 +684,7 @@ public class HUITypeFactory {
                     }
                     message = "";
                 } else {
-                    log.error("SNCA message not found, key is: " + key);
+                    log.warn("SNCA message not found, key is: " + key);
                     message = key + " (!)";
                 }
             }

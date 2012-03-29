@@ -243,6 +243,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
                 
 		viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(), workbench.getDecoratorManager()));
 		viewer.setSorter(new CnAElementByTitelSorter());
+        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
 		getSite().setSelectionProvider(viewer);
 		makeActions();
@@ -462,6 +463,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
                 toggleLinking(isChecked());
             }
         };
+        linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
 	}
 

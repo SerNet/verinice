@@ -40,6 +40,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 
 	private BooleanFieldEditor errorPopups;
 	private BooleanFieldEditor derbyWarning;
+    private BooleanFieldEditor linkToEditor;
 	private BooleanFieldEditor inputHelperHints;
 	private BooleanFieldEditor infoDialogTransformCatalogItems;
 	private BooleanFieldEditor infoDialogCopy;
@@ -75,6 +76,10 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(derbyWarning);
+		
+		linkToEditor = new BooleanFieldEditor(PreferenceConstants.LINK_TO_EDITOR, Messages.getString("GeneralSettingsPage.4"),  //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(linkToEditor);
 
 		errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
@@ -103,7 +108,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				getFieldEditorParent());
 		addField(infoDialogLdapImport);
 
-		infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent());
+		infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(infoDialogStatusDerivation);
 
 		switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$

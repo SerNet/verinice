@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -50,6 +51,11 @@ import sernet.snutils.DBException;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.interfaces.IAuthService;
 
+/**
+ * Dialog for user accounts which is opened by {@link ConfigurationAction}.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 public class AccountDialog extends TitleAreaDialog {
     
     private static final Logger LOG = Logger.getLogger(AccountDialog.class);

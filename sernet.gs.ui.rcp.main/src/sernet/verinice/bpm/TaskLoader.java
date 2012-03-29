@@ -43,6 +43,7 @@ import sernet.verinice.model.bpm.TaskParameter;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class TaskLoader {
 
     private static final Logger LOG = Logger.getLogger(TaskLoader.class);

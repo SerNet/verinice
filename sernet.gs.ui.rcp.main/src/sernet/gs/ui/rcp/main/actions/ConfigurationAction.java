@@ -35,14 +35,12 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.PasswordException;
@@ -53,14 +51,23 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.SaveConfiguration;
-import sernet.verinice.interfaces.ActionRightIDs;
 
+/**
+ * ConfigurationAction creates and changes user account. Data of an account is
+ * set to entity {@link sernet.verinice.model.common.configuration.Configuration}.
+ * 
+ * Account is edited by {@link AccountDialog}. 
+ * Account configuration is saved by command {@link SaveConfiguration}.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 public class ConfigurationAction implements IObjectActionDelegate,  RightEnabledUserInteraction{
 
 	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
