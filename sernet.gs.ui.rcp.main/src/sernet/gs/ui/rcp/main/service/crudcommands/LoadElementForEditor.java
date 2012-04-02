@@ -41,15 +41,15 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 	}
 	
 	private T element;
-	private boolean includeCollections;
+	private boolean retrieveChildren;
 	private Integer dbId;
     private String typeId;
 
-	public LoadElementForEditor(T element, boolean includeCollections) {
+	public LoadElementForEditor(T element, boolean retrieveChildren) {
 		// slim down for transfer:
 		dbId = element.getDbId();
 		typeId = element.getTypeId();
-		this.includeCollections = includeCollections;
+		this.retrieveChildren = retrieveChildren;
 	}
 	
 	public LoadElementForEditor(T element) {
@@ -64,7 +64,7 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setLinksDown(true).setLinksUp(true);
 		element = (T) dao.retrieve(dbId, ri);
-		HydratorUtil.hydrateElement(dao, element, includeCollections);
+		HydratorUtil.hydrateElement(dao, element, retrieveChildren);
 		Set<CnALink> linksDown = element.getLinksDown();
 		for (CnALink cnALink : linksDown) {
 			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);

@@ -59,6 +59,7 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
@@ -216,9 +217,11 @@ public class BSIElementEditor extends EditorPart {
             cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
             editorBehaviorList.clear();
 
-            LoadElementForEditor command = new LoadElementForEditor(cnAElement);
+            CnATreeElement elementWithChildren = Retriever.checkRetrieveChildren(cnAElement);          
+            LoadElementForEditor command = new LoadElementForEditor(cnAElement,false);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             cnAElement = command.getElement();
+            cnAElement.setChildren(elementWithChildren.getChildren());
 
             Entity entity = cnAElement.getEntity();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());

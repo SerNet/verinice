@@ -115,16 +115,8 @@ public class EditorFactory {
 
 			public void openEditorFor(Object o) throws Exception {
 				IEditorPart editor;
-
-				// replace element with new instance from DB:
-				CnATreeElement cnaElement = (CnATreeElement) o;
-				CnATreeElement newElement = CnAElementHome.getInstance().loadById(cnaElement.getTypeId(), cnaElement.getDbId());
-				
-				// may be null, i.e. if we don't have permission to open the object:
-				if (newElement == null)
-					throw new Exception(Messages.EditorFactory_0);
-				
-				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
+		
+				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
 
 				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
 					// open new editor:
