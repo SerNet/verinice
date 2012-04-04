@@ -85,7 +85,7 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 	    // reload because a title may have changed
 	    view.reloadAll();
 	}

@@ -149,7 +149,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
      * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
     @Override
-    public void childChanged(CnATreeElement parent, CnATreeElement child) {
+    public void childChanged(CnATreeElement child) {
         try {
             getElementManager().elementChanged(child);
             updater.refresh(child);

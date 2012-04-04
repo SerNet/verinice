@@ -34,7 +34,7 @@ public class NullListener implements IBSIModelListener {
 		// do nothing
 	}
 
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 		// do nothing
 
 	}

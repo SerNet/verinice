@@ -54,7 +54,7 @@ public class LinkRemover implements IBSIModelListener, IISO27KModelListener {
      * @see sernet.verinice.model.bsi.IBSIModelListener#childChanged(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void childChanged(CnATreeElement category, CnATreeElement child) {
+    public void childChanged(CnATreeElement child) {
         
     }
 

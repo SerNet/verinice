@@ -32,7 +32,7 @@ public interface IBSIModelListener {
 
 	void childRemoved(CnATreeElement category, CnATreeElement child);
 
-	void childChanged(CnATreeElement category, CnATreeElement child);
+	void childChanged(CnATreeElement child);
 	
 	/**
 	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden

@@ -60,10 +60,9 @@ public interface IISO27KModelListener {
 	void childRemoved(CnATreeElement category, CnATreeElement child);
 
 	/**
-	 * @param category
 	 * @param child
 	 */
-	void childChanged(CnATreeElement category, CnATreeElement child);
+	void childChanged(CnATreeElement child);
 
 	/**
 	 * @param child

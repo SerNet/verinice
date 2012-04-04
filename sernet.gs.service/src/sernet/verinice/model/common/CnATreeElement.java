@@ -223,9 +223,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			getModelChangeListener().childRemoved(category, child);
 	}
 
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 			// child changed:
-			getModelChangeListener().childChanged(category, child);
+			getModelChangeListener().childChanged(child);
 	}
 	
 	public boolean canContain(Object obj) { // NOPMD by dm on 07.02.12 12:39

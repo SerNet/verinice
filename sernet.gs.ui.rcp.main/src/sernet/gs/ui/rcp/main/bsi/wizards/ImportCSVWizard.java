@@ -90,7 +90,7 @@ public class ImportCSVWizard extends Wizard {
             }    
             if (changedElement != null) {
                 for (CnATreeElement cnATreeElement : changedElement) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
             }

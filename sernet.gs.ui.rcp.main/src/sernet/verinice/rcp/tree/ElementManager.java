@@ -39,15 +39,16 @@ import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.service.commands.LoadTreeItem;
 
 /**
- * ElementManager manages domain objects ({@link CnATreeElement}) for trees in views.
+ * ElementManager manages domain objects ({@link CnATreeElement}) for trees in
+ * views.
  * 
- * One instance of this class created for every view opened at runtime 
- * which is used by {@link TreeContentProvider} and {@link TreeUpdateListener}.
- * It's used by {@link ISMView} and {@link BsiModelView}.
+ * One instance of this class created for every view opened at runtime which is
+ * used by {@link TreeContentProvider} and {@link TreeUpdateListener}. It's used
+ * by {@link ISMView} and {@link BsiModelView}.
  * 
- * ElementManager caches objects to ensure that they are loaded only once. 
- * If an element is not cached already it's loaded from the backend by
- * command {@link LoadTreeItem}
+ * ElementManager caches objects to ensure that they are loaded only once. If an
+ * element is not cached already it's loaded from the backend by command
+ * {@link LoadTreeItem}
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -57,139 +58,144 @@ public class ElementManager {
     private static final Logger LOG = Logger.getLogger(ElementManager.class);
 
     private ElementCache cache;
-    
-    private List<IParameter> paramerterList; 
-    
+
+    private List<IParameter> paramerterList;
+
     private ICommandService commandService;
-    
+
     /**
      * Creates a new ElementManager with a new ElementCache
-     */ 
+     */
     public ElementManager() {
         super();
         cache = new ElementCache();
     }
-    
+
     /**
      * Returns the children of a {@link CnATreeElement}.
      * 
-     * All children of the parent element and properties of these children 
-     * are loaded and initialized (and not lazy).
+     * All children of the parent element and properties of these children are
+     * loaded and initialized (and not lazy).
      * 
-     * Calling this method might change parameter parentElement.
-     * Children set in parentElement is replaced by return value.
+     * Calling this method might change parameter parentElement. Children set in
+     * parentElement is replaced by return value.
      * 
-     * @param parentElement The parent of the children
+     * @param parentElement
+     *            The parent of the children
      * @return An array with the children of the parentElement
      */
     public CnATreeElement[] getChildren(CnATreeElement parentElement) {
         try {
-            if(parentElement instanceof NullModel) {
+            if (parentElement instanceof NullModel) {
                 return new CnATreeElement[0];
-            }       
+            }
             CacheObject cachedElement = cache.getCachedObject(parentElement);
             CnATreeElement elementWithChildren = null;
-            if(cachedElement!=null && cachedElement.isChildrenPropertiesLoaded()) {
+            if (cachedElement != null && cachedElement.isChildrenPropertiesLoaded()) {
                 elementWithChildren = cachedElement.getElement();
             } else {
                 elementWithChildren = loadElementWithChildren(parentElement);
                 parentElement.setChildren(elementWithChildren.getChildren());
             }
             return extractChildren(elementWithChildren);
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             LOG.error("RuntimeException while getting children", re);
             throw re;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Exception while getting children", e);
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Returns true if element has children false if not.
      * 
-     * This method never does remote calls. If return value is not found in cache 
-     * it logs a warning and returns <code>true</code>.
+     * This method never does remote calls. If return value is not found in
+     * cache it logs a warning and returns <code>true</code>.
      * 
-     * @param parentElement A CnATreeElement
+     * @param parentElement
+     *            A CnATreeElement
      * @return True if element has children, false if not
      */
     public boolean hasChildren(CnATreeElement parentElement) {
         try {
             boolean hasChildren = true;
             CacheObject cachedElement = cache.getCachedObject(parentElement);
-            if(cachedElement!=null) {
-                hasChildren = (cachedElement.getHasChildren()==ChildrenExist.YES);
+            if (cachedElement != null) {
+                hasChildren = (cachedElement.getHasChildren() == ChildrenExist.YES);
             } else {
-                String uuid = (parentElement!=null) ? parentElement.getUuid() : "unknown";
+                String uuid = (parentElement != null) ? parentElement.getUuid() : "unknown";
                 LOG.warn("Can't determine if element has children (returning true). Element not found in cache, uuid: " + uuid);
             }
             return hasChildren;
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             LOG.error("RuntimeException while getting children", re);
             throw re;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Exception while getting children", e);
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Method is called when an element has changed.
      * 
-     * @param element Changed element
+     * @param element
+     *            Changed element
      */
     public void elementChanged(CnATreeElement element) {
-        try {         
-            replaceOrAddInCache(element,false,checkChildren(element));
-            updateParentInCache(element);  
-        } catch(RuntimeException re) {
+        try {
+            element = replaceEntityInCache(element);
+            updateParentInCache(element);
+        } catch (RuntimeException re) {
             LOG.error("RuntimeException in elementChanged", re);
             throw re;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Exception in elementChanged", e);
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     /**
      * Method is called when an element was added.
      * 
-     * @param Added element
+     * @param Added
+     *            element
      */
     public void elementAdded(CnATreeElement element) {
-        try {       
-            replaceOrAddInCache(element,false,checkChildren(element));
-            updateParentInCache(element);  
-        } catch(RuntimeException re) {
+        try {
+            addToCache(element, checkChildren(element));
+            updateParentInCache(element);
+        } catch (RuntimeException re) {
             LOG.error("RuntimeException in elementAdded", re);
             throw re;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Exception in elementAdded", e);
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     /**
      * Method is called when an element was removed.
      * 
      * Element is removed also from chidren set of it's parent.
      * 
-     * @param element REmoved element
+     * @param element
+     *            REmoved element
      */
     public void elementRemoved(CnATreeElement element) {
         CacheObject cachObjectParent = cache.getCachedObject(element.getParent());
-        if(cachObjectParent!=null) {
+        if (cachObjectParent != null) {
             CnATreeElement parentFromCache = cachObjectParent.getElement();
             boolean exists = parentFromCache.getChildren().remove(element);
-            if(exists) {
-                CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());           
+            if (exists) {
+                CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());
                 cache.addObject(newCacheObjectParent);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Element removed from parent child set in cache...");
-                }           
+                }
             }
         }
         cache.remove(element);
@@ -197,23 +203,23 @@ public class ElementManager {
             LOG.debug("Element removed from cache");
         }
     }
-    
+
     /**
      * Clears the cache. Removes all cached elements.
      */
     public void clearCache() {
-        cache.clear();       
+        cache.clear();
     }
-    
+
     /**
      * @param tagFilter
      */
     public void addParameter(IParameter parameter) {
         getParameterList().add(parameter);
     }
-    
+
     public List<IParameter> getParameterList() {
-        if(paramerterList==null) {
+        if (paramerterList == null) {
             paramerterList = new ArrayList<IParameter>();
         }
         return paramerterList;
@@ -224,47 +230,69 @@ public class ElementManager {
      * 
      * Children loaded cache proeperty is set to false.
      * 
-     * Take care that children set of the element is initialized
-     * ans not a Hibernate proxy, otherwise a lazy-exception ist thrown.
+     * Take care that children set of the element is initialized ans not a
+     * Hibernate proxy, otherwise a lazy-exception ist thrown.
+     * 
+     * @param element
+     *            A CnATreeElement
+     */
+    private void addToCache(CnATreeElement element, ChildrenExist hasChildren) {
+        cache.addObject(new CacheObject(element, false, hasChildren));
+    }
+
+    /**
+     * Replaces the entity of an element in cache.
+     * If element is not found in cache element is not added to cache.
      * 
      * @param element A CnATreeElement
+     * @return The element from cache with replaced entity or 
+     *         unchanged element if element was not found in cache.
      */
-    private void replaceOrAddInCache(CnATreeElement element, boolean childrenPropertiesLoaded, ChildrenExist hasChildren) {
-        cache.addObject(new CacheObject(element, childrenPropertiesLoaded, hasChildren));
+    private CnATreeElement replaceEntityInCache(CnATreeElement element) {
+        CacheObject cachedObject = cache.getCachedObject(element);
+        if (cachedObject != null) {
+            CnATreeElement cachedElement = cachedObject.getElement();
+            cachedElement.setEntity(element.getEntity());
+            cache.addObject(new CacheObject(cachedElement, cachedObject.isChildrenPropertiesLoaded(), cachedObject.getHasChildren()));
+            return cachedElement;
+        } else {
+            return element;
+        }
+        
     }
-  
-    
+
     /**
      * Updates the parent of an element in cache.
      * 
-     * If parent of the element exists in cache the element is 
-     * replaced in children set of parent.
+     * If parent of the element exists in cache the element is replaced in
+     * children set of parent.
      * 
-     * Take care that parent set of the element is initialized
-     * and not a Hibernate proxy, otherwise a lazy-exception ist thrown.
+     * Take care that parent set of the element is initialized and not a
+     * Hibernate proxy, otherwise a lazy-exception ist thrown.
      * 
-     * @param element A CnATreeElement
+     * @param element
+     *            A CnATreeElement
      */
     private void updateParentInCache(CnATreeElement element) {
         CacheObject cachObjectParent = cache.getCachedObject(element.getParent());
-        if(cachObjectParent!=null) {
+        if (cachObjectParent != null) {
             CnATreeElement parentFromCache = cachObjectParent.getElement();
             boolean exists = parentFromCache.getChildren().remove(element);
-            if(exists && LOG.isDebugEnabled()) {
+            if (exists && LOG.isDebugEnabled()) {
                 LOG.debug("Old element removed from parent child set in cache...");
             }
             boolean added = parentFromCache.getChildren().add(element);
-            if(added) {
+            if (added) {
                 LOG.debug("Element added to parent child set in cache.");
             } else {
                 LOG.warn("Can not add element to parent's child set in cache.");
             }
-            CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());           
+            CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());
             cache.addObject(newCacheObjectParent);
-        } 
-        
+        }
+
     }
-    
+
     /**
      * Loads an element with children with one remote call.
      * 
@@ -276,14 +304,16 @@ public class ElementManager {
      * <li>Grandchildren (children of the children)</li>
      * </ul>
      * 
-     * @param element A CnATreeElement
+     * @param element
+     *            A CnATreeElement
      * @return Element with initialized children and children properties
-     * @throws CommandException If executing of command fails
+     * @throws CommandException
+     *             If executing of command fails
      */
     private CnATreeElement loadElementWithChildren(CnATreeElement element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setChildren(true).setChildrenProperties(true);
-        if(cache.getCachedObject(element)==null) {
+        if (cache.getCachedObject(element) == null) {
             // no element found in cache, load properties AND children
             ri.setProperties(true);
             if (LOG.isDebugEnabled()) {
@@ -292,17 +322,17 @@ public class ElementManager {
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Loading children from database, parent uuid: " + element.getUuid());
         }
-        LoadTreeItem command = new LoadTreeItem(element.getUuid(),ri,ElementFilter.getConvertToMap(getParameterList()));
+        LoadTreeItem command = new LoadTreeItem(element.getUuid(), ri, ElementFilter.getConvertToMap(getParameterList()));
         command = getCommandService().executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();
-        CacheObject cacheObject = addToCache(elementWithChildren,command.getHasChildrenMap());
+        CacheObject cacheObject = addChildrenToCache(elementWithChildren, command.getHasChildrenMap());
         return cacheObject.getElement();
 
     }
-    
-    private CacheObject addToCache(CnATreeElement element, Map<String, Boolean> hasChildrenMap) {
+
+    private CacheObject addChildrenToCache(CnATreeElement element, Map<String, Boolean> hasChildrenMap) {
         CacheObject cachedElement = cache.getCachedObject(element);
-        if(cachedElement==null) {
+        if (cachedElement == null) {
             // add retrived element to cache
             cachedElement = new CacheObject(element, true);
             cache.addObject(cachedElement);
@@ -315,31 +345,31 @@ public class ElementManager {
         }
         // add children to cache
         for (CnATreeElement child : element.getChildren()) {
-            ChildrenExist hasChildren = ChildrenExist.convert(hasChildrenMap.get(child.getUuid()));        
+            ChildrenExist hasChildren = ChildrenExist.convert(hasChildrenMap.get(child.getUuid()));
             cache.addObject(new CacheObject(child, false, hasChildren));
         }
         return cachedElement;
     }
-    
+
     private static ChildrenExist checkChildren(CnATreeElement element) {
-        ChildrenExist hasChildren = ChildrenExist.UNKNOWN;     
-        if(element.getChildren().size()>0) {
-            hasChildren = ChildrenExist.YES; 
+        ChildrenExist hasChildren = ChildrenExist.UNKNOWN;
+        if (element.getChildren().size() > 0) {
+            hasChildren = ChildrenExist.YES;
         } else {
-            hasChildren = ChildrenExist.NO; 
+            hasChildren = ChildrenExist.NO;
         }
         return hasChildren;
     }
-    
-    private static CnATreeElement[] extractChildren(CnATreeElement cachedElement) {     
+
+    private static CnATreeElement[] extractChildren(CnATreeElement cachedElement) {
         Set<CnATreeElement> childrenSet = cachedElement.getChildren();
         CnATreeElement[] children = new CnATreeElement[childrenSet.size()];
         int n = 0;
         for (CnATreeElement child : childrenSet) {
             children[n] = child;
             n++;
-        }        
-        return children;    
+        }
+        return children;
     }
 
     private ICommandService getCommandService() {

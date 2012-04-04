@@ -105,9 +105,9 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
 	}
 
 	@Override
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 		for (IBSIModelListener listener : getListeners()) {
-			listener.childChanged(category, child);
+			listener.childChanged(child);
 		}
 	}
 

@@ -146,7 +146,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
      * .gs.ui.rcp.main.common.model.CnATreeElement,
      * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
-    public void childChanged(CnATreeElement category, CnATreeElement child) {
+    public void childChanged(CnATreeElement child) {
         try {
             CnATreeElement cachedObject = cache.getCachedObject(child);
             if (cachedObject == null) {
@@ -159,8 +159,8 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
                 child = cachedObject; 
             }
             updater.refresh(child);
-            if(category.getParent()!=null) {
-                childChanged(category.getParent(), category);
+            if(child.getParent()!=null && child.getParent().getParent()!=null) {
+                childChanged(child.getParent());
             }
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);

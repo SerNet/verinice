@@ -111,9 +111,9 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 
 	
 	@Override
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 		for (IISO27KModelListener listener : getListeners()) {
-			listener.childChanged(category, child);
+			listener.childChanged(child);
 		}
 	}
 	

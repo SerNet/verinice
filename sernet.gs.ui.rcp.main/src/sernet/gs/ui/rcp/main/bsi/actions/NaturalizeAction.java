@@ -120,7 +120,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                                         CnATreeElement element = uuidElementMap.get(elementFromServer.getUuid());
                                         element.setSourceId(elementFromServer.getSourceId());
                                         element.setExtId(elementFromServer.getExtId());
-                                        CnAElementFactory.getModel(element).childChanged(element.getParent(), element);
+                                        CnAElementFactory.getModel(element).childChanged(element);
                                     }
                                 } else {
                                     CnAElementFactory.getInstance().reloadModelFromDatabase();

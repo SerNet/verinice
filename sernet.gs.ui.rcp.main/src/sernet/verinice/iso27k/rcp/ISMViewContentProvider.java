@@ -46,6 +46,7 @@ import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ElementFilter;
+import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 
 /**
@@ -60,7 +61,12 @@ public class ISMViewContentProvider implements ITreeContentProvider {
 
     private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
 
-    private final ElementComparator comparator = new ElementComparator();
+    private final ElementComparator<CnATreeElement> comparator = new ElementComparator<CnATreeElement>(new ITitleAdaptor<CnATreeElement>() {
+        @Override
+        public String getTitle(CnATreeElement element) {
+            return element.getTitle();
+        }
+    });
 
     private BSIModelElementFilter modelFilter;
 

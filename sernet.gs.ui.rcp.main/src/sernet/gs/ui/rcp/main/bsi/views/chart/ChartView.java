@@ -434,8 +434,7 @@ public class ChartView extends ViewPart {
             // do nothing
         }
 
-        public void childChanged(CnATreeElement category,
-                CnATreeElement child) {
+        public void childChanged(CnATreeElement child) {
             // do nothing
         }
 

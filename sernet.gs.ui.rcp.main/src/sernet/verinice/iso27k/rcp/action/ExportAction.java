@@ -259,7 +259,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	            CnAElementFactory.getInstance().reloadModelFromDatabase();
         	} else {
                 for (CnATreeElement cnATreeElement : changedElementList) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement.getParent(), cnATreeElement);
+                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
             }

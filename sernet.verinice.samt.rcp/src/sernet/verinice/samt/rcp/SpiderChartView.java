@@ -255,7 +255,7 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
          * @see sernet.verinice.model.iso27k.IISO27KModelListener#childChanged(sernet.verinice.model.common.CnATreeElement, sernet.verinice.model.common.CnATreeElement)
          */
         @Override
-        public void childChanged(CnATreeElement category, CnATreeElement child) {
+        public void childChanged(CnATreeElement child) {
             drawChart();     
         }
     

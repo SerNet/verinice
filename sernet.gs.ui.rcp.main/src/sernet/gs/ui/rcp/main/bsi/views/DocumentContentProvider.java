@@ -104,7 +104,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 		modelRefresh(null);
 	}
 
-	public void childChanged(CnATreeElement category, CnATreeElement child) {
+	public void childChanged(CnATreeElement child) {
 		modelRefresh(null);
 	}
 	

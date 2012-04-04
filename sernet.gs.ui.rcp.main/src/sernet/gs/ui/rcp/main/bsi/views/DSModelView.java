@@ -112,7 +112,7 @@ public class DSModelView extends ViewPart {
 			updater.add(category, child);
 		}
 
-		public void childChanged(CnATreeElement category, CnATreeElement child) {
+		public void childChanged(CnATreeElement child) {
 			updater.refresh(child);
 		}
 

@@ -183,7 +183,7 @@ public class BSIElementEditor extends EditorPart {
 
     private void refresh() {
         // notify all views of change:
-        CnAElementFactory.getModel(cnAElement).childChanged(cnAElement.getParent(), cnAElement);
+        CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
 
         // removed CnAElementFactory.getModel(cnAElement).refreshAllListeners here
         // before release 1.4.2

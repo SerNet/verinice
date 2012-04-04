@@ -100,7 +100,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 			}
 		}
 
-		public void childChanged(CnATreeElement category, CnATreeElement child) {
+		public void childChanged(CnATreeElement child) {
 			if (child instanceof MassnahmenUmsetzung) {
 				try {
 					if (!isOfInterest(child))
@@ -161,7 +161,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		}
 
 		public void databaseChildChanged(CnATreeElement child) {
-			childChanged(child.getParent(), child);
+			childChanged(child);
 		}
 
 		public void databaseChildRemoved(CnATreeElement child) {
