@@ -45,7 +45,6 @@ import sernet.verinice.model.iso27k.AuditGroup;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-@SuppressWarnings("restriction")
 public class AddISAToOrganisation extends Action implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(AddISAToOrganisation.class);

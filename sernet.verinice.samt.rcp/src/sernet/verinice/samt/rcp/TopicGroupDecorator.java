@@ -44,6 +44,9 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 			        TotalSecurityFigureCommand command = new TotalSecurityFigureCommand(audit.getDbId());
 			        command = getCommandService().executeCommand(command);
 			        securityFigure = command.getResult();
+			        if (LOG.isDebugEnabled()) {
+                        LOG.debug("Security figure: " + securityFigure + ", audit uuid: " + audit.getUuid());
+                    }
 			    }
 			    if(element instanceof ControlGroup) {	
     				group = (ControlGroup) Retriever.checkRetrieveChildren((CnATreeElement) element);	

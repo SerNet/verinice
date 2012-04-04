@@ -19,25 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.samt.service;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthAwareCommand;
-import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * Returns the achieved maturity levels compared to the maximum maturity level. Both values are weighted.
@@ -150,12 +139,5 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
         }
         return value;
     }
-
-    
-   
-    
-
-  
-
 
 }
