@@ -34,6 +34,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
+import sernet.verinice.model.common.ITitleAdaptor;
 
 /**
  * TreeContentProvider provides the TreeViewer in {@link ISMView} with information on 
@@ -49,7 +50,12 @@ public class TreeContentProvider implements ITreeContentProvider {
     
     private static final Logger LOG = Logger.getLogger(TreeContentProvider.class);
     
-    private static final Comparator<CnATreeElement> COMPARATOR = new ElementComparator();
+    private static final ElementComparator<CnATreeElement> COMPARATOR = new ElementComparator<CnATreeElement>(new ITitleAdaptor<CnATreeElement>() {
+        @Override
+        public String getTitle(CnATreeElement element) {
+            return element.getTitle();
+        }
+    });
     
     private ElementManager elementManager;
     

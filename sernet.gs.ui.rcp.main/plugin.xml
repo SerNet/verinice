@@ -210,6 +210,12 @@
 					id="org.eclipse.ui.commands.radioState">
 				</state>
 	   </command>
+	   <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.5"
+            id="sernet.verinice.rcp.unify"
+            name="%command.name.8">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -704,6 +710,14 @@
                icon="icons/paste.png"
                label="%command.label.1"/>
       </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
+         <command
+               commandId="sernet.verinice.rcp.unify"
+               disabledIcon="icons/konsolidator.png"
+               icon="icons/konsolidator.png"
+               label="%command.label.8"
+               tooltip="%command.tooltip.2"/>
+      </menuContribution>
    	  <menuContribution locationURI="popup:sernet.gs.ui.rcp.main.views.bsimodelview?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
@@ -1155,6 +1169,20 @@
      			<equals value="sernet.verinice.iso27k.rcp.CatalogView" />
     		</with>
          </activeWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.rcp.unify.UnifyHandler"
+            commandId="sernet.verinice.rcp.unify">
+         <activeWhen>
+    		 <iterate operator="or">
+                <instanceof value="sernet.verinice.model.iso27k.ControlGroup" />
+            </iterate>
+         </activeWhen> 
+         <enabledWhen>
+            <with variable="selection">
+            	 <count value="2"/>
+            </with>
+		 </enabledWhen>
       </handler>
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">

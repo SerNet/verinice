@@ -19,6 +19,7 @@ package sernet.hui.common.connect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -362,33 +363,44 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		return amount;
 	}
 	
-	/**
-	 * Copy all property values from given entity to this one.
-	 * @param source
-	 */
-	public void copyEntity(Entity source) {
-		Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
-		for (String propType : sourceProperties.keySet()) {
-			PropertyList sourceList = sourceProperties.get(propType);
-			
-			PropertyList newPropList = new PropertyList(sourceList.getProperties().size());
-			for (Property sourceProp : sourceList.getProperties()) {
-				// do not copy empty values:
-				if (sourceProp.getPropertyValue() != null
-						&& !sourceProp.getPropertyValue().equals("")) {
-					Property property = new Property(this);
-					property.setPropertyType(propType);
-					property.setPropertyValue(
-							sourceProp.getPropertyValue(),
-							false /*no property change fired*/,
-							source);
-					newPropList.add(property);
-				}
-			}
-			if (newPropList.getProperties().size() > 0)
-				typedPropertyLists.put(propType, newPropList);
-		}
-	}
+	 /**
+     * Copy all property values from given entity to this one
+     * 
+     * @param source An Entity
+     */
+    public void copyEntity(Entity source) {
+        List<String> emptyList = Collections.emptyList();
+        copyEntity(source, emptyList);
+    }
+	
+    /**
+     * Copy all property values from given entity to this one. 
+     * Properties with type from propertyTypeBlacklist will be ignored.
+     * 
+     * @param source An Entity
+     */
+    public void copyEntity(Entity source, List<String> propertyTypeBlacklist) {
+        Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
+        for(String propType : sourceProperties.keySet()) {
+            PropertyList sourceList = sourceProperties.get(propType);
+            PropertyList newPropList = new PropertyList(sourceList.getProperties().size());
+            for(Property sourceProp : sourceList.getProperties()) {
+                if(checkProperty(sourceProp, propertyTypeBlacklist)) {
+                    newPropList.add(sourceProp.copy(this));
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("Prop " + propType + " set to value: " + sourceProp.getPropertyValue());
+                    }
+                }
+            }
+            if(!newPropList.getProperties().isEmpty()) {
+                typedPropertyLists.put(propType, newPropList);
+            }
+        }
+    }
+    
+    private boolean checkProperty(Property property, List<String> propertyTypeBlacklist) {
+        return !property.isEmpty() && !propertyTypeBlacklist.contains(property.getPropertyType());
+    }
 	
 	public boolean isSelected(String propertyType, String optionId) {
 	    boolean result = false;

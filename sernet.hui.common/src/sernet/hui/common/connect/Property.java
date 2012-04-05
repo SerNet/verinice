@@ -50,6 +50,10 @@ public class Property implements Serializable, ITypedElement {
 		return propertyValue;
 	}
 	
+	public boolean isEmpty() {
+	    return getPropertyValue()==null || getPropertyValue().isEmpty();
+	}
+	
 	/**
 	 * Returns the value as an integer.
 	 * @return
@@ -112,6 +116,13 @@ public class Property implements Serializable, ITypedElement {
 
 	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
+	}
+	
+	public Property copy(Entity parent) {
+	    Property property = new Property(parent);
+        property.setPropertyType(getPropertyType());
+        property.setPropertyValue(getPropertyValue(), false);
+        return property;
 	}
 
     /* (non-Javadoc)

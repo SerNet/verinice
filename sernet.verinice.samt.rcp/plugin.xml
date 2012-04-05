@@ -95,6 +95,13 @@
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
                label="%command.label.1"/>
+      </menuContribution>  
+      <menuContribution locationURI="popup:sernet.verinice.samt.rcp.views.SamtView?after=special">
+         <command
+               commandId="sernet.verinice.rcp.unify"
+               disabledIcon="icons/konsolidator.png"
+               icon="icons/konsolidator.png"
+               label="%command.label.2"/>
       </menuContribution>
    </extension>
    <extension

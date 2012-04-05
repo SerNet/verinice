@@ -29,9 +29,19 @@ import sernet.gs.service.NumericStringComparator;
  * @see NumericStringComparator
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ElementComparator implements Comparator<CnATreeElement> {
+public class ElementComparator<T> implements Comparator<T> {
     
     NumericStringComparator numericStringComparator = new NumericStringComparator();
+
+    ITitleAdaptor<T> titleAdaptor;
+ 
+    /**
+     * @param titleAdaptor
+     */
+    public ElementComparator(ITitleAdaptor<T> titleAdaptor) {
+        super();
+        this.titleAdaptor = titleAdaptor;
+    }
 
     /**
      * Compares its two arguments for order.  Returns a negative integer,
@@ -44,14 +54,14 @@ public class ElementComparator implements Comparator<CnATreeElement> {
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(CnATreeElement o1, CnATreeElement o2) {
+    public int compare(T o1, T o2) {
         int FIRST_IS_LESS = -1;
         int EQUAL = 0;
         int FIRST_IS_GREATER = 1;
         int result = FIRST_IS_LESS;
-        if (o1 != null && o1.getTitle() != null) {
-            if (o2 != null && o2.getTitle() != null) {
-                result = numericStringComparator.compare(o1.getTitle().toLowerCase(), o2.getTitle().toLowerCase());
+        if (o1 != null && titleAdaptor.getTitle(o1) != null) {
+            if (o2 != null && titleAdaptor.getTitle(o2) != null) {
+                result = numericStringComparator.compare(titleAdaptor.getTitle(o1).toLowerCase(), titleAdaptor.getTitle(o2).toLowerCase());
             } else {
                 result = FIRST_IS_GREATER;
             }
