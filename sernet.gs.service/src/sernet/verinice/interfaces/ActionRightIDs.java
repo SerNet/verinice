@@ -81,6 +81,7 @@ public class ActionRightIDs {
     public static final String TASKVIEW = "taskview";
     public static final String TASKDELETE = "taskdelete";
     public static final String TASKSHOWALL = "taskshowall";
+    public static final String UNIFY = "unify";
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
     
