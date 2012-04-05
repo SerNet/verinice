@@ -39,9 +39,12 @@ import org.quartz.StatefulJob;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
 
 import sernet.gs.server.commands.NotificationInfo;
 import sernet.gs.server.commands.PrepareNotificationInfo;
+import sernet.gs.server.security.DummyAuthentication;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -83,6 +86,11 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
 	private String notificationEmailLinkTo;
 	
+	// NotificationJob can not do a real login
+    // authentication is a fake instance to run secured commands and dao actions
+    // without a login
+    private DummyAuthentication authentication = new DummyAuthentication();
+	
 	/**
      * @param notificationEmailLinkTo the notificationEmailLinkTo to set
      */
@@ -92,12 +100,16 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
     private DateFormat notificationEmailDateFormat;
 
-	protected void executeInternal(JobExecutionContext ctx)
-			throws JobExecutionException {
+	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		
 		// Do nothing if the notification feature is deactivated in the configuration.
 		if (!notificationEnabled)
 			return;
+		
+		// NotificationJob can not do a real login
+        // authentication is a fake instance to run secured commands and dao actions
+        // without a login
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		// Retrieves the notification information.
 		try {

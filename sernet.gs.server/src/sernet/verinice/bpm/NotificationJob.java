@@ -38,15 +38,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
-import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.security.InternalAuthenticationProvider;
+import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.hibernate.HibernateDao;
@@ -69,6 +65,7 @@ import sernet.verinice.model.iso27k.PersonIso;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private static final String DEFAULT_ADDRESS = Messages.getString("NotificationJob.0"); //$NON-NLS-1$
@@ -114,14 +111,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     // NotificationJob can not do a real login
     // authentication is a fake instance to run secured commands and dao actions
     // without a login
-    private InternalAuthentication authentication = new InternalAuthentication(
-            "$internaluser$", //$NON-NLS-1$ 
-            "$notused$", //$NON-NLS-1$
-            new GrantedAuthority[] { 
-                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
-                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
-                    new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN) 
-            }); 
+    private DummyAuthentication authentication = new DummyAuthentication(); 
     
     /*
      * Send notification if task notification is enabled.
@@ -390,22 +380,5 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     public String getUrl() {
         return url;
-    }
-
-    private final class InternalAuthentication extends UsernamePasswordAuthenticationToken {
-        private InternalAuthentication(Object principal, Object credentials, GrantedAuthority[] authorities) {
-            super(principal, credentials, authorities);
-        }
-
-        public void setAuthenticated(boolean b) {
-            // Allow being authenticated only when the caller is an
-            // InternalAuthenticationProvider instance.
-            StackTraceElement[] t = Thread.currentThread().getStackTrace();
-            if (b && t.length >= 1) {
-                if (InternalAuthenticationProvider.class.getName().equals(t[1].getClassName()) && "authenticate".equals(t[1].getMethodName())) { //$NON-NLS-1$
-                    super.setAuthenticated(true);
-                }
-            }
-        }
     }
 }

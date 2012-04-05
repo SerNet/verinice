@@ -29,7 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
 
+import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
@@ -76,7 +79,7 @@ public class PrepareNotificationInfo extends GenericCommand {
         }
         return log;
     }
-	
+
 	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
 	private Map<CnATreeElement, Configuration> personCache = new HashMap<CnATreeElement, Configuration>(); 
@@ -90,7 +93,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		return resultMap.values();
 	}
 	
-	public void execute() {
+	public void execute() {	    
 		LoadGenericElementByType<Configuration> lc = new LoadGenericElementByType<Configuration>(Configuration.class);
 		try {
 			lc = (LoadGenericElementByType<Configuration>) getCommandService().executeCommand(lc);
