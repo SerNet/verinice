@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,18 +32,24 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.IllegalSelectionException;
+import sernet.verinice.rcp.RightsEnabledHandler;
 
 /**
  * 
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class UnifyHandler extends AbstractHandler {
+public class UnifyHandler extends RightsEnabledHandler  {
 
     private static final Logger LOG = Logger.getLogger(UnifyHandler.class);
+
+    public UnifyHandler() {
+        super();
+    }
 
     /*
      * (non-Javadoc)
@@ -139,6 +144,14 @@ public class UnifyHandler extends AbstractHandler {
             }
         }
         return elements;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.UNIFY;
     }
 
 }

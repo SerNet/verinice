@@ -40,32 +40,20 @@ import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightsEnabledHandler;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CopyHandler extends AbstractHandler implements RightEnabledUserInteraction{
+public class CopyHandler extends RightsEnabledHandler {
 
 	private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
 	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
     public CopyHandler(){
-	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setBaseEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setBaseEnabled(checkRights());
-        }
+	    super();
 	}
 	
 	/* (non-Javadoc)
@@ -97,15 +85,6 @@ public class CopyHandler extends AbstractHandler implements RightEnabledUserInte
 	}
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -113,12 +92,5 @@ public class CopyHandler extends AbstractHandler implements RightEnabledUserInte
         return ActionRightIDs.ISMCOPY;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 
 }
