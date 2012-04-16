@@ -301,7 +301,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 	protected void elementSelected(Object element) {
 	    try {
             if(element instanceof CnATreeElement) {
-                addFileAction.setEnabled(true);     
+                addFileAction.setEnabled(addFileAction.checkRights());     
                 setCurrentCnaElement((CnATreeElement) element);
                 loadFiles();
                 

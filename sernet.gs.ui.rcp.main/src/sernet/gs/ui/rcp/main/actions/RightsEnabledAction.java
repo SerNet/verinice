@@ -22,6 +22,8 @@ import org.eclipse.jface.action.Action;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 public class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
@@ -33,6 +35,20 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
     
     public RightsEnabledAction(String rightID){
         this.setRightID(rightID);
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setEnabled(checkRights());
+        }
     }
     
     public RightsEnabledAction(){
@@ -71,7 +87,7 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
      */
     public void setRightID(String rightID) {
         this.rightID = rightID;
-        if(rightID.contains("notes")){
+        if(rightID!=null && rightID.contains("notes")){
             rightID.hashCode();
         }
     }
