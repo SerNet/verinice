@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -356,31 +357,15 @@ public class BSIElementEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
-        FormLayout formLayout = new FormLayout();
-        parent.setLayout(formLayout);
-
-        huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, 1);
-        formData.left = new FormAttachment(0, 1);
-        formData.right = new FormAttachment(100, -1);
-        if (isSamtPerspective()) {
-            formData.bottom = new FormAttachment(100, -1);
-        } else {
-            formData.bottom = new FormAttachment(66, -1);
-        }
-        huiComposite.setLayoutData(formData);
-
-        if (!isSamtPerspective()) {
-            linkMaker = new LinkMaker(parent);
-            FormData formData2 = new FormData();
-            formData2.top = new FormAttachment(66, 1);
-            formData2.left = new FormAttachment(0, 1);
-            formData2.right = new FormAttachment(100, -1);
-            formData2.bottom = new FormAttachment(100, -1);
-            linkMaker.setLayoutData(formData2);
-        }
-
+        SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+        huiComposite = new HitroUIComposite(sashForm, SWT.NULL, false);
+        if (showLinkMaker()) {
+            linkMaker = new LinkMaker(sashForm);
+            sashForm.setWeights(new int[] { 66, 33});
+            sashForm.setSashWidth(4);
+            sashForm.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+        }   
+        
         initContent();
         setIcon();
 
@@ -392,6 +377,11 @@ public class BSIElementEditor extends EditorPart {
         // if opened the first time, save initialized entity:
         if (isDirty())
             save(false);
+    }
+    
+    private boolean showLinkMaker() {
+        boolean showLinkMaker = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR);
+        return showLinkMaker && !isSamtPerspective();
     }
 
     /**

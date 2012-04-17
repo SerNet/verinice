@@ -79,6 +79,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.HUI_TAGS_STRICT, false);
 		
 		store.setDefault(PreferenceConstants.LINK_TO_EDITOR, true);
+		
+		store.setDefault(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR, true);
 	}
 
 }

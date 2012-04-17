@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
@@ -24,7 +24,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.HitroUtil;
 
-public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage  {
+public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+    private Group tagGroup;
 
     private CheckboxTableViewer viewer;
 
@@ -34,28 +36,32 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         setDescription(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors
+     * ()
      */
     @Override
     protected void createFieldEditors() {
         BooleanFieldEditor booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.HUI_TAGS_STRICT, sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
         addField(booleanFieldEditor);
-        
         createTagList();
-        
+        booleanFieldEditor = new BooleanFieldEditor(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR, Messages.getString("EditorPreferencePage.3"), getFieldEditorParent()); //$NON-NLS-1$
+        addField(booleanFieldEditor);
     }
 
     /**
      * 
      */
     private void createTagList() {
-        viewer = CheckboxTableViewer.newCheckList((Composite)getControl(), SWT.BORDER|SWT.V_SCROLL);
+        viewer = CheckboxTableViewer.newCheckList(getFieldEditorParent(), SWT.BORDER | SWT.V_SCROLL);
         Table table = viewer.getTable();
         table.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
         table.setHeaderVisible(false);
         table.setLinesVisible(false);
-        
+
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
         checkboxColumn.setText(""); //$NON-NLS-1$
         checkboxColumn.setWidth(35);
@@ -63,7 +69,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         TableColumn tagColumn = new TableColumn(table, SWT.LEFT);
         tagColumn.setText(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
         tagColumn.setWidth(100);
-        
+
         viewer.setContentProvider(new ArrayContentProvider());
 
         viewer.setLabelProvider(new ITableLabelProvider() {
@@ -74,29 +80,34 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
             @Override
             public String getColumnText(Object element, int columnIndex) {
-                if (columnIndex ==1) {
+                if (columnIndex == 1) {
                     return (String) element;
                 }
                 return null;
             }
 
+            @Override
             public void addListener(ILabelProviderListener listener) {
             }
 
+            @Override
             public void dispose() {
             }
 
+            @Override
             public boolean isLabelProperty(Object element, String property) {
                 return false;
             }
 
+            @Override
             public void removeListener(ILabelProviderListener listener) {
             }
         });
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
      */
     @Override
@@ -111,8 +122,9 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
     private String join(List tags) {
         Iterator iter;
-        if (tags == null || (!(iter = tags.iterator()).hasNext()))
+        if (tags == null || (!(iter = tags.iterator()).hasNext())) {
             return ""; //$NON-NLS-1$
+        }
 
         StringBuilder oBuilder = new StringBuilder(String.valueOf(iter.next()));
         while (iter.hasNext()) {
@@ -121,14 +133,19 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         return oBuilder.toString();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     @Override
     public void init(IWorkbench workbench) {
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.preference.FieldEditorPreferencePage#initialize()
      */
     @Override
@@ -136,20 +153,20 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         super.initialize();
         Activator.inheritVeriniceContextState();
         Set<String> allTags = HitroUtil.getInstance().getTypeFactory().getAllTags();
-        Object[] allTagsArray =null;
-        if(allTags!=null) {
+        Object[] allTagsArray = null;
+        if (allTags != null) {
             allTagsArray = allTags.toArray();
             viewer.setInput(allTagsArray);
         }
-        
+
         Object[] prefTagsArr = allTagsArray;
         String prefTags = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
-        
-        if(!PreferenceConstants.HUI_TAGS_ALL.equals(prefTags)) {
+
+        if (!PreferenceConstants.HUI_TAGS_ALL.equals(prefTags)) {
             prefTagsArr = split(prefTags);
         }
-        
-        if(prefTagsArr!=null) {
+
+        if (prefTagsArr != null) {
             viewer.setCheckedElements(prefTagsArr);
         }
     }
@@ -159,15 +176,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
      * @return
      */
     private String[] split(String tags) {
-        if (tags == null)
+        if (tags == null) {
             return new String[] {};
-        
+        }
+
         tags = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
         return tags.split(","); //$NON-NLS-1$
     }
 
-  
-
 }
-
-
