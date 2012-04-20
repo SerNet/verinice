@@ -26,8 +26,41 @@
 		      		<rich:simpleTogglePanel  switchType="client" label="#{group.name}" opened="#{edit.groupOpen}">
 		     			<vn:properties list="#{group.labelPropertyList}" listNoLabel="#{group.noLabelPropertyList}" />     			
 		      		</rich:simpleTogglePanel>
-		     	</a4j:repeat>
-		     	<rich:simpleTogglePanel switchType="client" label="#{msgEdit['links']}" opened="#{edit.linkOpen}">	     		
+		     	</a4j:repeat>	     		     	
+		     	<rich:simpleTogglePanel switchType="client" label="#{msgEdit['attachments']}" opened="#{edit.attachmentOpen}" rendered="#{edit.attachmentEnabled}">
+		     		<a4j:outputPanel id="attachmentPanel">
+			     		<rich:extendedDataTable id="attachmentTable"
+		     				value="#{attachment.attachments}" 
+			                var="item"
+			                selectionMode="single"
+			                height="150px"
+			                width="400px">
+			                <rich:column
+		     					sortable="true" 
+		     					sortBy="#{item.titel}"
+			                    label="#{msgEdit['linkType']}"
+			                    width="400px">
+			                    <f:facet name="header">
+			                        <h:outputText value="#{msgEdit['file']}" />
+			                    </f:facet>
+			                    <h:commandLink value="#{item.titel}" action="#{attachment.download}">
+			                    	<f:param name="id" value="#{item.dbId}" />
+			                    	<f:param name="name" value="#{item.titel}" />	                    	                    	
+			                    </h:commandLink>
+			                </rich:column>
+				        </rich:extendedDataTable>
+			        </a4j:outputPanel>
+		     		<rich:fileUpload fileUploadListener="#{attachment.listener}"
+		                maxFilesQuantity="5"
+		                id="upload"
+		                immediateUpload="#{attachment.autoUpload}"	            
+		                allowFlash="#{attachment.useFlash}"
+		                listHeight="55"
+		                rendered="#{edit.newAttachmentEnabled}">
+		            	<a4j:support event="onuploadcomplete" reRender="attachmentPanel" />
+		            </rich:fileUpload>
+		     	</rich:simpleTogglePanel>		     	
+		     	<rich:simpleTogglePanel switchType="client" label="#{msgEdit['links']}" opened="#{edit.linkOpen}" >	     		
 	      			<table>
 	      				<tr>
 	      					<td>
@@ -91,7 +124,8 @@
 		      				</tr>
 		      			</table>
 		      		 </a4j:outputPanel>
-		     	</rich:simpleTogglePanel> 							    		
+		     	</rich:simpleTogglePanel>
+		     								    		
 		   	</a4j:form>
 	   	</a4j:outputPanel>
 	</ui:composition>

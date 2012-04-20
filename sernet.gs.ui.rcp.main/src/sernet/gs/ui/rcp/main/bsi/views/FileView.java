@@ -715,7 +715,11 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 					rc = a1.getFileName().compareTo(a2.getFileName());
 					break;
 				case 2:
-					rc = a1.getMimeType().compareTo(a2.getMimeType());
+				    mimeType1 = a1.getMimeType();
+                    mimeType2 = a2.getMimeType();
+                    if (mimeType1 == null || mimeType2 == null)
+                        return 0;
+					rc = mimeType1.compareTo(mimeType2);
 					break;
 				case 3:
 					rc = a1.getText().compareTo(a2.getText());

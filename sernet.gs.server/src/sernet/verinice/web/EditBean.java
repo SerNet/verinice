@@ -43,6 +43,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -63,6 +64,8 @@ public class EditBean {
     private static final CharSequence TAG_WEB = "Web";
     
     private LinkBean linkBean;
+    
+    private AttachmentBean attachmentBean;
     
     private CnATreeElement element;
     
@@ -88,7 +91,9 @@ public class EditBean {
     
     private boolean groupOpen = false;
     
-    private boolean linkOpen = true;
+    private boolean linkOpen = false;
+    
+    private boolean attachmentOpen = true;
        
     public void init() {
         try {
@@ -108,6 +113,9 @@ public class EditBean {
                 getLinkBean().setEntityType(getEntityType());
                 getLinkBean().setTypeId(getTypeId());
                 getLinkBean().init();
+                
+                getAttachmentBean().setElement(getElement());
+                getAttachmentBean().init();
                 
                 groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
                 List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
@@ -201,26 +209,7 @@ public class EditBean {
         LOG.debug("save called...");
         try {
             if(getElement()!=null) {
-                if (!writeEnabled())
-                {
-                    throw new SecurityException("write is not allowed" );
-                }
-                Entity entity = getElement().getEntity();    
-                for (HuiProperty<String, String> property : getPropertyList()) {
-                    entity.setSimpleValue(property.getType(), property.getValue());
-                }
-                for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
-                    for (HuiProperty<String, String> property : group.getPropertyList()) {
-                        entity.setSimpleValue(property.getType(), property.getValue());
-                    }
-                }
-                SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(getElement());                           
-                command = getCommandService().executeCommand(command);
-                setElement(command.getElement());
-                if(LOG.isDebugEnabled()) {
-                    LOG.debug("Element saved, uuid: " + getUuid());
-                }   
-                Util.addInfo("submit", Util.getMessage(EditBean.BOUNDLE_NAME, "saved"));                  
+                doSave();                  
             }
             else {
                 LOG.warn("Control is null. Can not save.");
@@ -235,6 +224,28 @@ public class EditBean {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
             Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.failed"));
         }
+    }
+
+    private void doSave() throws CommandException {
+        if (!writeEnabled()) {
+            throw new SecurityException("write is not allowed" );
+        }
+        Entity entity = getElement().getEntity();    
+        for (HuiProperty<String, String> property : getPropertyList()) {
+            entity.setSimpleValue(property.getType(), property.getValue());
+        }
+        for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
+            for (HuiProperty<String, String> property : group.getPropertyList()) {
+                entity.setSimpleValue(property.getType(), property.getValue());
+            }
+        }
+        SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(getElement());                           
+        command = getCommandService().executeCommand(command);
+        setElement(command.getElement());
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Element saved, uuid: " + getUuid());
+        }   
+        Util.addInfo("submit", Util.getMessage(EditBean.BOUNDLE_NAME, "saved"));
     }
     
     public void clear() {
@@ -284,20 +295,10 @@ public class EditBean {
             // well.
             if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
-            }   
-            if (roles == null) {
-                LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();       
-                lcuc = getCommandService().executeCommand(lcuc);            
-                Configuration c = lcuc.getConfiguration();
-                // No configuration for the current user (anymore?). Then nothing is
-                // writable.
-                if (c == null) {
-                    return false;
-                }
-                roles = c.getRoles();
-            }    
+            }
+            Set<String> userRoles = getRoles();
             for (Permission p : cte.getPermissions()) {
-                if (p!=null && p.isWriteAllowed() && roles.contains(p.getRole())) {
+                if (p!=null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
                     return true;
                 }
             }
@@ -321,6 +322,25 @@ public class EditBean {
         return false;
     }
     
+    public Set<String> getRoles() throws CommandException {
+        if (roles == null) {        
+            roles = loadRoles();
+        } 
+        return roles;
+    }
+    
+    public Set<String> loadRoles() throws CommandException {
+        LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();       
+        lcuc = getCommandService().executeCommand(lcuc);            
+        Configuration c = lcuc.getConfiguration();
+        // No configuration for the current user (anymore?). Then nothing is
+        // writable.
+        if (c == null) {
+            return Collections.emptySet();
+        }
+        return c.getRoles();
+    }
+    
     public void addNoLabelType(String id) {
         noLabelTypeList.add(id);
     }
@@ -331,6 +351,20 @@ public class EditBean {
 
     public void setLinkBean(LinkBean linkBean) {
         this.linkBean = linkBean;
+    }
+
+    /**
+     * @return the attachmentBean
+     */
+    public AttachmentBean getAttachmentBean() {
+        return attachmentBean;
+    }
+
+    /**
+     * @param attachmentBean the attachmentBean to set
+     */
+    public void setAttachmentBean(AttachmentBean attachmentBean) {
+        this.attachmentBean = attachmentBean;
     }
 
     public String getTypeId() {
@@ -399,6 +433,17 @@ public class EditBean {
         }
         return noLabelList;
     }
+    
+    public boolean isAttachmentEnabled() {
+        // TODO dm implement rights management in web frontend
+        return true;
+    }
+    
+    public boolean isNewAttachmentEnabled() {
+        // TODO dm implement rights management in web frontend
+        return true;
+    }
+    
     public List<HuiProperty<String, String>> getPropertyList() {
         if(propertyList==null) {
             propertyList = Collections.emptyList();
@@ -466,6 +511,14 @@ public class EditBean {
     public void setLinkOpen(boolean linkOpen) {
         this.linkOpen = linkOpen;
     }
+    
+    public boolean isAttachmentOpen() {
+        return attachmentOpen;
+    }
+
+    public void setAttachmentOpen(boolean open) {
+        this.attachmentOpen = open;
+    }
 
     public TimeZone getTimeZone() {
         return TimeZone.getDefault();
@@ -478,4 +531,5 @@ public class EditBean {
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
+    
 }

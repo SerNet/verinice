@@ -100,6 +100,15 @@
 		<display-name>Ajax4jsf Filter</display-name>
 		<filter-name>ajax4jsf</filter-name>
 		<filter-class>org.ajax4jsf.Filter</filter-class>
+        <init-param>
+            <param-name>createTempFiles</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <!-- 104857600 b = 100 mb -->
+            <param-name>maxRequestSize</param-name>
+            <param-value>104857600</param-value>
+        </init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>ajax4jsf</filter-name>

@@ -78,6 +78,7 @@
         		<exclude name="**/TaskBean*.class"/>
         		<exclude name="**/EditBean*.class"/>
         		<exclude name="**/LinkBean*.class"/>
+        		<exclude name="**/AttachmentBean*.class"/>
         		<exclude name="**/TaskService.class"/>
         		<exclude name="**/TaskService$*.class"/>
         		<exclude name="**/ProcessService.class"/>

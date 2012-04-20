@@ -30,7 +30,7 @@ import sernet.hui.common.connect.EntityType;
  * @author Daniel <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class Attachment extends Addition implements Serializable{
+public class Attachment extends Addition implements Serializable, Comparable<Attachment> {
 
 	public static final String PROP_NAME = "attachment_name"; //$NON-NLS-1$
 	
@@ -64,7 +64,7 @@ public class Attachment extends Addition implements Serializable{
 	
 	public static String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj","bz2","bz"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
 	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
@@ -215,6 +215,22 @@ public class Attachment extends Addition implements Serializable{
 			return false;
 		return true;
 	}
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Attachment o) {
+        int result = 1; // this is greater
+        if(o!=null && o.getTitel()!=null) {
+            if(this.getTitel()!=null) {
+                result = this.getTitel().compareTo(o.getTitel());
+            } else {
+                result = 0;
+            }
+        }
+        return result;
+    }
 
 	
 

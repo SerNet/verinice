@@ -40,10 +40,20 @@
    <property-class>sernet.verinice.web.LinkBean</property-class>
    <value>#{link}</value>
   </managed-property>
+  <managed-property>
+   <property-name>attachmentBean</property-name>
+   <property-class>sernet.verinice.web.AttachmentBean</property-class>
+   <value>#{attachment}</value>
+  </managed-property>
  </managed-bean>
  <managed-bean>
   <managed-bean-name>link</managed-bean-name>
   <managed-bean-class>sernet.verinice.web.LinkBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>attachment</managed-bean-name>
+  <managed-bean-class>sernet.verinice.web.AttachmentBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
  <managed-bean>
