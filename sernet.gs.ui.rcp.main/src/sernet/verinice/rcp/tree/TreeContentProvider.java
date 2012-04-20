@@ -19,19 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.hibernate.mapping.Set;
 
-import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
@@ -149,9 +144,15 @@ public class TreeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
     @Override
-    public Object getParent(Object element) {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getParent(Object element) {      
+        if(element instanceof CnATreeElement) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getParent called for uuid: " + ((CnATreeElement) element).getUuid());
+            }
+            return ((CnATreeElement) element).getParent();
+        } else {
+            return null;
+        }
     }
 
     /**
