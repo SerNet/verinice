@@ -51,6 +51,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor switchPerspectiveCatalogView;
 	private BooleanFieldEditor showAlienDecorator;
 	private BooleanFieldEditor infoDialogStatusDerivation;
+	private BooleanFieldEditor showDBIDDecorator;
 	
 	private ComboFieldEditor encodingFieldEditor;
 	private static final String[][] encodingComboValues = new String[][]{
@@ -121,6 +122,9 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 
 		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showAlienDecorator);
+		
+		showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
+		addField(showDBIDDecorator);
 
 		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
