@@ -9,7 +9,7 @@
 <name>verinice Report Designer Product</name>
 
 <parent>
-	<artifactId>report.designer.tycho.parent</artifactId>
+	<artifactId>tycho.parent</artifactId>
 	<groupId>sernet.verinice</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<relativePath>../sernet.verinice.tycho.parent/pom.xml</relativePath>
