@@ -16,6 +16,11 @@
       <!-- reference BIRT TP here, locate it on local tomcat -->
       <url>http://localhost:8080/repos/verinicerepo/</url>
     </repository>
+    <repository>
+       <id>indigo-p2</id>
+       <layout>p2</layout>
+       <url>http://download.eclipse.org/releases/indigo/</url>
+    </repository>
   </repositories>
 
   <properties>
@@ -36,21 +41,6 @@
         <version>${tycho.version}</version>
         <configuration>
           <resolver>p2</resolver>
-           <target>
-            <artifact>
-              <groupId>sernet.verinice</groupId>
-              <artifactId>report.designer.target</artifactId>
-              <version>1.0.0-SNAPSHOT</version>
-              <classifier>veriniceReportDesigner</classifier>
-           </artifact>
-           <!-- without this, the linux/32/64 and macos build will fail -->
-		   <artifact>
-				<groupId>sernet.verinice</groupId>
-				<artifactId>report.designer.target</artifactId>
-				<version>3.7.0-SNAPSHOT</version>
-				<classifier>indigo</classifier>
-		   </artifact>
-          </target>
           <ignoreTychoRepositories>true</ignoreTychoRepositories>
 
 	  <environments>
