@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -34,7 +36,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class ConfigurationService implements IConfigurationService {
     
-    private HashMap<String, Object[]> roleMap = new HashMap<String, Object[]>();
+    private HashMap<String, String[]> roleMap = new HashMap<String, String[]>();
     
     private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
     
@@ -45,7 +47,7 @@ public class ConfigurationService implements IConfigurationService {
     private void loadUserData() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
         for (Configuration c : configurations) {
-            Object[] roleArray = c.getRoles().toArray();
+            String[] roleArray = getRoles(c);
             String user = c.getUser();
             // Put result into map and save asking the DB next time.
             roleMap.put(user, roleArray);           
@@ -53,6 +55,26 @@ public class ConfigurationService implements IConfigurationService {
             scopeIdMap.put(user, c.getPerson().getScopeId());  
         }
         getConfigurationDao().clear();
+    }
+
+    /**
+     * @param c
+     * @return
+     */
+    private String[] getRoles(Configuration c) {
+        Set<String> roleSet = c.getRoles();
+        if(c.isAdminUser()) {
+            roleSet.add(ApplicationRoles.ROLE_ADMIN);
+        }
+        if(c.isWebUser()) {
+            roleSet.add(ApplicationRoles.ROLE_WEB);
+        }
+        if(c.isRcpUser()) {
+            roleSet.add(ApplicationRoles.ROLE_USER);
+        }
+        String[] roleArray = new String[roleSet.size()];
+        roleArray = roleSet.toArray(roleArray);
+        return roleArray;
     }
     
     public void discardUserData() {
@@ -97,8 +119,8 @@ public class ConfigurationService implements IConfigurationService {
      * @see sernet.verinice.service.IConfigurationService#getRoles(java.lang.String)
      */
     @Override
-    public Object[] getRoles(String user) {
-        Object[] result = roleMap.get(user);
+    public String[] getRoles(String user) {
+        String[] result = roleMap.get(user);
         if (result == null) {
             loadUserData();
             result = roleMap.get(user);

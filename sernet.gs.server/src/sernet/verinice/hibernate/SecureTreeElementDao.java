@@ -32,6 +32,8 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.ConfigurationService;
+import sernet.verinice.service.IConfigurationService;
 
 /**
  * Extends {@link TreeElementDao} to check write and delete authorization for {@link CnATreeElement}s.
@@ -48,11 +50,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	private IBaseDao<Configuration, Integer> configurationDao;
 
 	private IBaseDao<Permission, Integer> permissionDao;
-
 	
-	private static Map<String, String[]> roleMap = new HashMap<String, String[]>();
-	private static Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
-	private static Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
+	private IConfigurationService configurationService;
 
 	/**
 	 * @param type
@@ -138,8 +137,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
                     throw new SecurityException(message);
                 }
 	        }
-	        if(isScopeOnly(username)
-	           && !entity.getScopeId().equals(scopeIdMap.get(username))) {
+	        if(isScopeOnly(username)  
+	           && !entity.getScopeId().equals(getConfigurationService().getScopeId(username))) {
 	                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
                     log.warn(message);
                     throw new SecurityException(message);
@@ -152,15 +151,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
      * @return
      */
     private boolean isScopeOnly(String username) {
-        Boolean result = scopeMap.get(username);
-        if(result==null) {
-            initUserData();
-            result = scopeMap.get(username);
-        }
-        if(result==null) {
-            result = false;
-        }
-        return result;
+        return getConfigurationService().isScopeOnly(username);
     }
 
     /**
@@ -180,48 +171,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	}
 
 	private String[] getDynamicRoles(String user) {
-		String[] result = roleMap.get(user);
-		if (result == null) {
-		    if(user.equals(getAuthService().getAdminUsername())) {
-		        result = new String[]{user,ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
-		        roleMap.put(user, result);
-		    }
-		    initUserData();
-		    result = roleMap.get(user);
-			if(result==null) {
-    			// This should not happen because the login was done using an
-    			// existing username
-    			// and if that does not exist any more something must have gone
-    			// wrong.
-    			throw new IllegalStateException();
-			}
-		}
-		// FIXME: Whenever an admin modifies the roles the roleMap
-        // must be cleared.
-        // We could introduce a special command just for this.
-		return result;
-	}
-	
-	private void initUserData() {
-        List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
-        String[] current = null;
-        for (Configuration c : configurations) {
-            // Put result into map and save asking the DB next time.
-            Set<String> roleSet = c.getRoles();
-            if(c.isAdminUser()) {
-                roleSet.add(ApplicationRoles.ROLE_ADMIN);
-            }
-            if(c.isWebUser()) {
-                roleSet.add(ApplicationRoles.ROLE_WEB);
-            }
-            if(c.isRcpUser()) {
-                roleSet.add(ApplicationRoles.ROLE_USER);
-            }
-            current = roleSet.toArray(new String[roleSet.size()]);
-            roleMap.put(c.getUser(), current); 
-            scopeMap.put(c.getUser(), c.isScopeOnly());
-            scopeIdMap.put(c.getUser(), c.getPerson().getScopeId());
-        }
+		return getConfigurationService().getRoles(user);
 	}
 
 	public void setAuthService(IAuthService authService) {
@@ -247,5 +197,19 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	public IBaseDao<Permission, Integer> getPermissionDao() {
 		return permissionDao;
 	}
+
+    /**
+     * @return the configurationService
+     */
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+    /**
+     * @param configurationService the configurationService to set
+     */
+    public void setConfigurationService(IConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
 
 }

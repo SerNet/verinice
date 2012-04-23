@@ -73,6 +73,7 @@ public class CutCommand extends GenericCommand {
     private static List<String> getPersonContainingTypeIDs(){
         ArrayList<String> list = new ArrayList<String>();
         list.add(sernet.verinice.model.bsi.Person.TYPE_ID);
+        list.add(sernet.verinice.model.bsi.PersonenKategorie.TYPE_ID);
         list.add(sernet.verinice.model.iso27k.Audit.TYPE_ID);
         list.add(sernet.verinice.model.iso27k.PersonGroup.TYPE_ID);
         list.add(sernet.verinice.model.iso27k.PersonIso.TYPE_ID);

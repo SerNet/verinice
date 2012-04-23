@@ -29,7 +29,7 @@ public interface IConfigurationService {
 
     Integer getScopeId(String user);
 
-    Object[] getRoles(String user);
+    String[] getRoles(String user);
     
     void discardUserData();
 

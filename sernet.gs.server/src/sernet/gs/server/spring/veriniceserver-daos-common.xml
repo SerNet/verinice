@@ -9,6 +9,7 @@
 		<property name="authService" ref="authService" />
 		<property name="configurationDao" ref="configurationDao" />
 		<property name="permissionDao" ref="permissionDAO" />
+        <property name="configurationService" ref="configurationService" />
     </bean>
 
 	<!-- Instance of generic hibernate DAO for class Property -->
