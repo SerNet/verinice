@@ -380,6 +380,7 @@ public class GSVampire {
 	
 	public Set<NZielobjekt> findBefragteMitarbeiterForBaustein(
 			ModZobjBstId id) {
+	    // fixme debug this, missing persons for verantwrotlich (mnums) and baustein (befragter)
 		Set<NZielobjekt> result = new HashSet<NZielobjekt>();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
