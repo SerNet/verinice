@@ -3077,13 +3077,13 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="org_name" 
             focus="true"
-            tags="Risk,VDA-ISA" />
+            tags="Basic,VDA-ISA" />
                     
         <huiproperty
             name="Description"
             id="org_description"
            	inputtype="text"
-            tags="Risk,VDA-ISA" />
+            tags="Basic,VDA-ISA" />
         
         <huiproperty
 	       name="Company Group" id="org_isa_compgroup" 
@@ -4023,11 +4023,11 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="control_name" 
             inputtype="text"
-            tags="Web"/>
+            tags="Web,Basic"/>
         <huiproperty
             name="Abbreviation"
             id="control_abbr"
-            tags="Web" />
+            tags="Web,Basic" />
         <huiproperty
             id="control_tag"
             name="Tags"
@@ -4037,7 +4037,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Description"
             id="control_desc"
             visible="false"
-            tags="Web"/>
+            tags="Web,Basic"/>
 		<huiproperty
             name="Document"
             id="control_document"
@@ -4571,14 +4571,14 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="incident_scenario_name"
-            tags="Risk" />
+            tags="Risk,Basic" />
         <huiproperty
             name="Abbreviation"
             id="incident_scenario_abbr"
-            tags="Risk" />
+            tags="Risk,Basic" />
         <huiproperty
             id="incident_scenario_tag"
-            name="Tags"
+            name="Tags,Basic"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
         	name="Explanation" id="incscen_explanation" inputtype="text" tags="Risk"/>
@@ -4688,7 +4688,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="incident_scenario_group_name" 
-            tags="Risk"/>
+            tags="Basic"/>
     </huientity>
     
     <huientity
@@ -4726,17 +4726,17 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="threat_name"
-            tags="Risk" />
+            tags="Risk,Basic" />
         <huiproperty
             name="Abbreviation"
             id="threat_abbr"
-            tags="Risk" />
+            tags="Risk,Basic" />
         <huiproperty
             id="threat_tag"
-            name="Tags"
+            name="Tags,Basic"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-        	name="Description" id="threat_description" visible="false" tags="Risk"/>
+        	name="Description" id="threat_description" visible="false" tags="Risk,Basic"/>
 		<huiproperty
             name="Document"
             id="threat_document"
@@ -4770,7 +4770,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="threat_group" >
         <huiproperty
             name="Title"
-            id="threat_group_name" tags="Risk" />
+            id="threat_group_name" tags="Basic" />
     </huientity>
     
     <huientity
@@ -4778,16 +4778,16 @@ the value between <param></param> will be used directly if no string is found fo
         id="vulnerability" >
         <huiproperty
             name="Title"
-            id="vulnerability_name" tags="Risk"/>
+            id="vulnerability_name" tags="Risk,Basic"/>
         <huiproperty
             name="Abbreviation"
-            id="vulnerability_abbr" tags="Risk"/>
+            id="vulnerability_abbr" tags="Risk,Basic"/>
         <huiproperty
             id="vulnerability_tag"
-            name="Tags"
+            name="Tags,Basic"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-				name="Description" id="vulnerability_desc"  visible="false" tags="Risk"/>
+				name="Description" id="vulnerability_desc"  visible="false" tags="Risk,Basic"/>
 		<huiproperty
             name="Document"
             id="vulnerability_document"
@@ -4807,7 +4807,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="vulnerability_group" >
         <huiproperty
             name="Title"
-            id="vulnerability_group_name" tags="Risk" />
+            id="vulnerability_group_name" tags="Basic" />
     </huientity>
     
     <huientity
@@ -4866,6 +4866,8 @@ the value between <param></param> will be used directly if no string is found fo
         	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
         <huirelation to="anwendung" id="rel_anwendung"
         	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
+            
+        <huirelation to="samt_topic" id="rel_document_samt_topic_ev" />
 		        
         <huiproperty
             name="Title"
@@ -4941,7 +4943,9 @@ the value between <param></param> will be used directly if no string is found fo
         id="evidence" >
 
 		<huirelation to="finding" id="rel_evidence_finding"
-        	name="proves" reversename="proved by" tooltip="" />        
+        	name="proves" reversename="proved by" tooltip="" />     
+            
+        <huirelation to="samt_topic" id="rel_evidence_samt_topic" />   
         
         <huiproperty
             name="Title"
@@ -5374,7 +5378,7 @@ the value between <param></param> will be used directly if no string is found fo
           <huirelation to="person-iso" id="rel_samttopic_person-iso_resp"
             	reversename="responsible" name="responsible for"  />
 
-            <huirelation to="person-iso" id="rel_person_samttopic_imp"
+        <huirelation to="person-iso" id="rel_person_samttopic_imp"
         	name="implements" reversename="implemented by" tooltip="" />
         <huirelation to="person-iso" id="rel_person_samttopic_maint"
         	name="maintains" reversename="maintained by" tooltip="" />
@@ -5384,6 +5388,11 @@ the value between <param></param> will be used directly if no string is found fo
         	name="audits" reversename="audited by" tooltip="" />
         <huirelation to="person-iso" id="rel_person_samttopic_interviewed"
         	name="interviewed" reversename="interviewed about" tooltip="" />
+            
+        <huirelation to="interview" id="rel_samt_topic_interview" />
+        <huirelation to="process" id="rel_samt_topic_process" />
+        <huirelation to="record" id="rel_samt_topic_record" />
+        <huirelation to="response" id="rel_samt_topic_response" />
         
           <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
           <huiproperty 
