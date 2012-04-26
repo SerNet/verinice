@@ -8,8 +8,8 @@
 
    <launcherArgs>
       <vmArgs>-Xms64m
--Xmx512m
--XX:MaxPermSize=128m</vmArgs>
+-Xmx2048m
+-XX:MaxPermSize=512m</vmArgs>
    </launcherArgs>
 
    <windowImages/>
