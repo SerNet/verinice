@@ -652,18 +652,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="jsf-api"
-         download-size="0"
-         install-size="0"
-         version="1.2.12"/>
-
-   <plugin
-         id="richfaces"
-         download-size="0"
-         install-size="0"
-         version="3.3.2.SR1"/>
-
-   <plugin
          id="gnumail"
          download-size="0"
          install-size="0"
@@ -704,5 +692,11 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="jsf-api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

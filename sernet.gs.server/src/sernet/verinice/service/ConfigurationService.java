@@ -27,6 +27,7 @@ import java.util.Set;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -42,7 +43,9 @@ public class ConfigurationService implements IConfigurationService {
     
     private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
     
-    IBaseDao<Configuration, Serializable> configurationDao;
+    private IBaseDao<Configuration, Serializable> configurationDao;
+    
+    private IAuthService authService;
  
     private void loadUserData() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
@@ -54,6 +57,9 @@ public class ConfigurationService implements IConfigurationService {
             scopeMap.put(user, c.isScopeOnly());     
             scopeIdMap.put(user, c.getPerson().getScopeId());  
         }
+        String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
+        roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
+        scopeMap.put(getAuthService().getAdminUsername(), false);       
         getConfigurationDao().clear();
     }
 
@@ -140,5 +146,19 @@ public class ConfigurationService implements IConfigurationService {
      */
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
+    }
+
+    /**
+     * @return the authService
+     */
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    /**
+     * @param authService the authService to set
+     */
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
     }
 }

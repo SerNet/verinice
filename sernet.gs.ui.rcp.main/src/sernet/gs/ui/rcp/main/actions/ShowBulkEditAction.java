@@ -148,7 +148,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             // prepare list according to selected lightweight todo items:
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 TodoViewItem item = (TodoViewItem) iter.next();
-                dbIDs.add(item.getdbId());
+                dbIDs.add(item.getDbId());
             }
             entType = HUITypeFactory.getInstance().getEntityType(MassnahmenUmsetzung.TYPE_ID);
             clazz = MassnahmenUmsetzung.class;

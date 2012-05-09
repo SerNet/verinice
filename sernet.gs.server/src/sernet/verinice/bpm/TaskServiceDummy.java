@@ -27,7 +27,7 @@ public class TaskServiceDummy implements ITaskService {
     }
 
     @Override
-    public List<CnATreeElement> getElementList() {
+    public List<String> getElementList() {
         return Collections.emptyList();
     }
 

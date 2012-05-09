@@ -34,8 +34,6 @@ import org.jbpm.api.Execution;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ManagementService;
 import org.jbpm.api.ProcessEngine;
-import org.jbpm.api.cmd.Command;
-import org.jbpm.api.cmd.Environment;
 import org.jbpm.api.task.Task;
 import org.jbpm.pvm.internal.task.TaskImpl;
 import org.jbpm.pvm.internal.type.Variable;
@@ -56,6 +54,8 @@ import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.IConfigurationService;
 
 /**
  * JBoss jBPM implementation of {@link ITaskService}.
@@ -84,6 +84,8 @@ public class TaskService implements ITaskService{
     private ProcessEngine processEngine;
     
     private IAuthService authService;
+    
+    private IConfigurationService configurationService;
     
     private IBaseDao<CnATreeElement,Integer> elementDao;
 
@@ -229,19 +231,12 @@ public class TaskService implements ITaskService{
      * @see sernet.verinice.interfaces.bpm.ITaskService#getAuditList()
      */
     @Override
-    public List<CnATreeElement> getElementList() {
+    public List<String> getElementList() {
         ServerInitializer.inheritVeriniceContextState();
         String hql = "select distinct var.string from Variable var where var.key = ?";
         String[] param = new String[]{IIsaExecutionProcess.VAR_AUDIT_UUID};
         List<String> uuidAuditList = getJbpmVariableDao().findByQuery(hql, param);
-        List<CnATreeElement> auditList = new ArrayList<CnATreeElement>();
-        for (String uuid : uuidAuditList) {
-            CnATreeElement audit = getElementDao().findByUuid(uuid, RetrieveInfo.getPropertyInstance());
-            if(audit!=null) {
-                auditList.add(audit);
-            }
-        }
-        return auditList;
+        return uuidAuditList;
     }
 
     private boolean doSearch(ITaskParameter parameter) {
@@ -264,40 +259,11 @@ public class TaskService implements ITaskService{
         }
         String readStatus = (String) getTaskService().getVariable(task.getId(), ITaskService.VAR_READ_STATUS);
         taskInformation.setIsRead(ITaskService.VAR_READ.equals(readStatus));
-        taskInformation.setStyle((taskInformation.getIsRead()) ? ITask.STYLE_READ : ITask.STYLE_UNREAD);
-              
-        String executionId = task.getExecutionId();   
+  
         
-        if (log.isDebugEnabled()) {
-            log.debug("map, loading element...");
-        }
-        Set<String> varNameSet = new HashSet<String>();
-        varNameSet.add(IExecutionProcess.VAR_UUID);
-        varNameSet.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
-        varNameSet.add(IExecutionProcess.VAR_TYPE_ID);
-        Map<String, Object> varMap = getExecutionService().getVariables(executionId,varNameSet);
-        
-        String uuidControl = (String) varMap.get(IExecutionProcess.VAR_UUID);            
-        taskInformation.setUuid(uuidControl);  
-        RetrieveInfo ri = new RetrieveInfo();
-        ri.setProperties(true);
-        CnATreeElement element = getElementDao().findByUuid(uuidControl, ri);
-        if(element!=null) {
-            taskInformation.setControlTitle(element.getTitle());
-            taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
-        }
-        
-        if (log.isDebugEnabled()) {
-            log.debug("map, loading audit...");
-        }
-        String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID);     
-        if(uuidAudit!=null) {
-            taskInformation.setUuidAudit(uuidAudit);       
-            CnATreeElement audit = getElementDao().findByUuid(uuidAudit, ri);
-            if(audit!=null) {
-                taskInformation.setAuditTitle(audit.getTitle());
-            }
-        }
+        Map<String, Object> varMap = loadVariables(task);      
+        mapControl(taskInformation, varMap);       
+        mapAudit(taskInformation, varMap);
         
         if (log.isDebugEnabled()) {
             log.debug("map, loading type...");
@@ -310,6 +276,63 @@ public class TaskService implements ITaskService{
             log.debug("map finished");
         }
         return taskInformation;
+    }
+
+    /**
+     * @param task
+     * @return
+     */
+    private Map<String, Object> loadVariables(Task task) {
+        if (log.isDebugEnabled()) {
+            log.debug("map, loading element...");
+        }
+        String executionId = task.getExecutionId();
+        Set<String> varNameSet = new HashSet<String>();
+        varNameSet.add(IExecutionProcess.VAR_UUID);
+        varNameSet.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
+        varNameSet.add(IExecutionProcess.VAR_TYPE_ID);
+        Map<String, Object> varMap = getExecutionService().getVariables(executionId,varNameSet);
+        return varMap;
+    }
+
+    /**
+     * @param taskInformation
+     * @param varMap
+     */
+    private void mapAudit(TaskInformation taskInformation, Map<String, Object> varMap) {
+        if (log.isDebugEnabled()) {
+            log.debug("map, loading audit...");
+        }
+        String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID);     
+        if(uuidAudit!=null) {
+            taskInformation.setUuidAudit(uuidAudit);
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setProperties(true);
+            CnATreeElement audit = getElementDao().findByUuid(uuidAudit, ri);
+            if(audit!=null) {
+                taskInformation.setAuditTitle(audit.getTitle());
+            }
+        }
+    }
+
+    /**
+     * @param taskInformation
+     * @param varMap
+     * @return
+     */
+    private void mapControl(TaskInformation taskInformation, Map<String, Object> varMap) {
+        String uuidControl = (String) varMap.get(IExecutionProcess.VAR_UUID);            
+        taskInformation.setUuid(uuidControl);  
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setProperties(true);
+        CnATreeElement element = getElementDao().findByUuid(uuidControl, ri);
+        if(element!=null) {
+            taskInformation.setControlTitle(element.getTitle());
+            taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
+            if(element instanceof SamtTopic) {
+                taskInformation.setIsProcessed(((SamtTopic)element).getMaturity()!=SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC);
+            }          
+        }
     }
     
     private String createSortableString(String text) {

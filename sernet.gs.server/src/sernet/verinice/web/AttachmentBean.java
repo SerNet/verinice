@@ -29,8 +29,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.richfaces.event.UploadEvent;
-import org.richfaces.model.UploadItem;
+
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
 import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
@@ -64,8 +65,8 @@ public class AttachmentBean {
         attachments = loadAttachments();  
     }
 
-    public void listener(UploadEvent event) throws Exception {
-        UploadItem item = event.getUploadItem();
+    public void handleFileUpload(FileUploadEvent event) throws Exception {
+        UploadedFile item = event.getFile();
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getElement().getDbId());
         attachment.setCnAElementTitel(getElement().getTitle());
@@ -79,7 +80,7 @@ public class AttachmentBean {
         attachment = (Attachment) command.getAddition();
         
         AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.readFileData(item.getFile().getPath());
+        attachmentFile.setFileData(item.getContents());
         SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
         attachmentFile.setDbId(attachment.getDbId());
         saveFileCommand = getCommandService().executeCommand(saveFileCommand);

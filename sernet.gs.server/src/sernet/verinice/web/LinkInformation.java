@@ -35,6 +35,17 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
     private Integer dependencyId;
     private String typeId;
     
+    private String id;
+    
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTargetName() {
         return targetName;
     }

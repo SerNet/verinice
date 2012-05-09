@@ -32,44 +32,31 @@ public interface ITask extends Comparable<ITask> {
     
     public static final String STYLE_UNREAD = "unread"; 
     
-    /**
-     * @return
-     */
+    public static final String STYLE_PROCESSED = "processed"; 
+    
+    public static final String STYLE_UNPROCESSED = "unprocessed"; 
+    
     String getId();
     
-    /**
-     * @return
-     */
+    void setId(String id);
+    
     String getName();
     
-    /**
-     * @return
-     */
     String getControlTitle();
 
-    /**
-     * @return
-     */
     Date getCreateDate();
-    
-    /**
-     * @return
-     */
+
     Date getDueDate();
-    
-    /**
-     * @return
-     */
+
     String getUuid();
 
-    /**
-     * @return
-     */
     String getType();
     
     String getSortValue();
     
     String getAssignee();
+    
+    boolean getIsProcessed();
     
     /**
      * Returns a map with outcomes of this task.
@@ -94,6 +81,8 @@ public interface ITask extends Comparable<ITask> {
     String getStyle();
     
     void setStyle(String style);
+    
+    void addStyle(String style);
     
     String getUuidAudit();
     

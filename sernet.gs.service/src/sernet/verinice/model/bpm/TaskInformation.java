@@ -30,7 +30,7 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class TaskInformation implements ITask,Serializable {
+public class TaskInformation implements ITask, Serializable {
 
     String id;
     
@@ -59,6 +59,8 @@ public class TaskInformation implements ITask,Serializable {
     private String auditTitle;
     
     private String assignee;
+    
+    private boolean processed = false;
     
     /**
      * 
@@ -177,7 +179,8 @@ public class TaskInformation implements ITask,Serializable {
      */
     @Override
     public void setIsRead(boolean isRead) {
-        this.isRead = isRead;     
+        this.isRead = isRead;
+        addStyle((isRead) ? ITask.STYLE_READ : ITask.STYLE_UNREAD);
     }
 
     public String getStyle() {
@@ -186,6 +189,14 @@ public class TaskInformation implements ITask,Serializable {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+    
+    public void addStyle(String style) {
+        if(this.style==null) {
+            setStyle(style);
+        } else {
+            this.style = this.style + "_" + style;
+        }
     }
     
     /**
@@ -218,6 +229,20 @@ public class TaskInformation implements ITask,Serializable {
 
     public void setAssignee(String assignee) {
         this.assignee = assignee;
+    }
+    
+    
+    /**
+     * @param processed the processed to set
+     */
+    public void setIsProcessed(boolean processed) {
+        this.processed = processed;
+        addStyle((processed) ? ITask.STYLE_PROCESSED : ITask.STYLE_UNPROCESSED);
+    }
+
+    @Override
+    public boolean getIsProcessed() {
+        return processed;
     }
 
     @Override

@@ -74,11 +74,11 @@ public interface ITaskService {
     List<ITask> getTaskList(ITaskParameter parameter);
     
     /**
-     * Returns all elements which are related to a task.
+     * Returns uuids of all elements which are related to a task.
      * 
-     * @return a list with audits
+     * @return a list with uuids
      */
-    List<CnATreeElement> getElementList();
+    List<String> getElementList();
     
     void completeTask(String taskId);
     

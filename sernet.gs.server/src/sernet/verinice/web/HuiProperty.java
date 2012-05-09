@@ -99,14 +99,14 @@ public class HuiProperty<K,V> implements Serializable{
     
     public Date getDate() {
         if(!getIsDate()) {
-            throw new RuntimeException("Not a date property, can not return a date.");
+            return null;
         }
         return (value!=null) ? new Date(Long.valueOf((String)value)) : null;
     }
     
     public void setDate(Date date) {
         if(!getIsDate()) {
-            throw new RuntimeException("Not a date property, can not set date.");
+            return;
         }
         if(date!=null) {
             value = (V) Long.valueOf(date.getTime()).toString();
@@ -117,7 +117,7 @@ public class HuiProperty<K,V> implements Serializable{
     
     public List<String> getOptionList() {
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            throw new RuntimeException("Not a single select property, can not return option list.");
+            return null;
         }
         List<String> itemList = Collections.emptyList();
         if(type.getOptions()!=null) {
@@ -132,7 +132,7 @@ public class HuiProperty<K,V> implements Serializable{
     public String getSelectedOption() {    
         IMLPropertyOption option = null;
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            throw new RuntimeException("Not a single select property, can not return selected option.");
+            return null;
         }
         String item = null;
         if(getIsSingleSelect()) {
@@ -149,7 +149,7 @@ public class HuiProperty<K,V> implements Serializable{
   
     public void setSelectedOption(String item) {
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            throw new RuntimeException("Not a single select property, can not set option.");
+            return;
         }
         if(item!=null) {
             for (IMLPropertyOption option : type.getOptions()) {
@@ -178,14 +178,14 @@ public class HuiProperty<K,V> implements Serializable{
     
     public int getMax() {
         if(!type.isNumericSelect()) {
-            throw new RuntimeException("Not a numeric select property, can not return max value.");
+            return 0;
         }
         return type.getMaxValue();
     }
     
     public int getMin() {
         if(!type.isNumericSelect()) {
-            throw new RuntimeException("Not a numeric select property, can not return min value.");
+            return 0;
         }
         return type.getMinValue();
     }

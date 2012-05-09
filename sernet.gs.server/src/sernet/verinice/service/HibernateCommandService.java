@@ -262,12 +262,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
                 }
             });        
         } else {
-            getBsiModelDao().executeCallback(new HibernateCallback() {
-                public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                    session.disableFilter("scopeFilter");
-                    return null;
-                }
-            });
+            disableScopeFilter();
         }
     }
 	

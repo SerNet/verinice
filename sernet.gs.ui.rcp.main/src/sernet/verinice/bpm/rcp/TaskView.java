@@ -78,7 +78,7 @@ import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadAncestors;
 
 /**
  * RCP view to display task loaded by instances of {@link ITaskService}.
@@ -289,7 +289,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
                     try {
                         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-                        LoadElementByUuid<Control> loadControl = new LoadElementByUuid<Control>(task.getType(), task.getUuid(), RetrieveInfo.getPropertyInstance());
+                        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                        LoadAncestors loadControl = new LoadAncestors(task.getType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
                         EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
                     } catch (Throwable t) {

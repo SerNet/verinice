@@ -256,6 +256,7 @@ This variant:
     
     <bean id="configurationServiceImpl" class="sernet.verinice.service.ConfigurationService">
         <property name="configurationDao" ref="configurationDao" />
+		<property name="authService" ref="authService" />
     </bean>
     
     

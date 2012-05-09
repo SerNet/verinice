@@ -128,7 +128,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 		return stand;
 	}
 
-	public int getdbId() {
+	public int getDbId() {
 		return dbId;
 	}
 

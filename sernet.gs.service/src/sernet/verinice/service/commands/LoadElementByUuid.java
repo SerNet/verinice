@@ -27,7 +27,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand {
 
 	private String uuid;
-	private T element;
+	protected T element;
     private String typeId;
     private RetrieveInfo ri;
 

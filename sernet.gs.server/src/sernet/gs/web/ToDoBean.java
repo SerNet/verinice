@@ -31,9 +31,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
-import org.richfaces.component.html.HtmlExtendedDataTable;
-import org.richfaces.model.selection.Selection;
-import org.richfaces.model.selection.SimpleSelection;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
@@ -46,6 +43,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -66,10 +64,6 @@ public class ToDoBean {
 	
 	AssetNavigationBean assetNavigation;
 	
-	private Selection selection = new SimpleSelection(); 
-	
-	private HtmlExtendedDataTable table;
-	
 	List<TodoViewItem> todoList = new ArrayList<TodoViewItem>();
 	
 	TodoViewItem selectedItem;
@@ -78,7 +72,7 @@ public class ToDoBean {
 	
 	Converter umsetzungConverter = new UmsetzungConverter();
 	
-	List<String> executionList;
+	List<KeyValue> executionList;
 	
 	boolean showDescription = false;
 	
@@ -108,9 +102,12 @@ public class ToDoBean {
 	public ToDoBean() {
 		super();
 		// Grundschutz
-		executionList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH,MassnahmenUmsetzung.P_UMSETZUNG_JA,MassnahmenUmsetzung.P_UMSETZUNG_NEIN,MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE,MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET);
-		// ISO 27001
-		//executionList = Arrays.asList(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED,MassnahmenUmsetzung.P_UMSETZUNG_MANAGED,MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING,MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED,MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE);
+		executionList = new ArrayList<KeyValue>(5);
+		executionList.add(new KeyValue(UmsetzungConverter.ENTBERHRLICH, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH));
+		executionList.add(new KeyValue(UmsetzungConverter.JA, MassnahmenUmsetzung.P_UMSETZUNG_JA));
+		executionList.add(new KeyValue(UmsetzungConverter.NEIN, MassnahmenUmsetzung.P_UMSETZUNG_NEIN));
+		executionList.add(new KeyValue(UmsetzungConverter.TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE));
+		executionList.add(new KeyValue(UmsetzungConverter.UNBEARBEITET, MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET));
 	}
 	
 	public void loadToDoList() {
@@ -122,10 +119,18 @@ public class ToDoBean {
 	}
 	
 	public void loadToDoListForVerbund() {
+	    String title = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itVerbundTitle");
+	    if(title!=null) {
+	        getAssetNavigation().setSelectedItVerbundTitel(title);
+	    }
 		loadToDoList(AssetNavigationBean.SOURCE_VERBUND);
 	}
 	
 	public void loadToDoListForElement() {
+	    String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+	    if(id!=null) {
+	        getAssetNavigation().setSelectedElementId(Integer.valueOf(id));
+	    }
 		loadToDoList(AssetNavigationBean.SOURCE_ELEMENT);
 	}
 	
@@ -148,7 +153,7 @@ public class ToDoBean {
 		boolean massnahmeInList = false;
 		if(selectedMassnahme!=null) {
 			for (TodoViewItem item : massnahmenList) {
-				if(selectedMassnahme.getDbId()==item.getdbId()) {
+				if(selectedMassnahme.getDbId()==item.getDbId()) {
 					massnahmeInList = true;
 					break;
 				}
@@ -223,17 +228,10 @@ public class ToDoBean {
 		LOG.debug("loadToDo");
 		int massnahmeId = -1;
 		try {
-			Iterator<Object> iterator = getSelection().getKeys();
-	        while (iterator.hasNext()) {
-	            Object key = iterator.next();
-	            table.setRowKey(key);
-	            if (table.isRowAvailable()) {
-	                setSelectedItem( (TodoViewItem) table.getRowData());
-	            }
-	        }
+			
 	
 			if(getSelectedItem()!=null) {
-				massnahmeId = getSelectedItem().getdbId();
+				massnahmeId = getSelectedItem().getDbId();
 				LoadCnAElementById command = new LoadCnAElementById(MassnahmenUmsetzung.TYPE_ID, massnahmeId);
 				
 					getCommandService().executeCommand(command);
@@ -384,26 +382,6 @@ public class ToDoBean {
 	public TimeZone getTimeZone() {
 		return TimeZone.getDefault();
 	}
-	
-
-
-	public Selection getSelection()
-    {
-        return selection;
-    }
-
-    public void setSelection(Selection selection)
-    {
-        this.selection = selection;
-    } 
-    
-    public void setTable(HtmlExtendedDataTable table) {
-        this.table = table;
-    }
-
-    public HtmlExtendedDataTable getTable() {
-        return table;
-    }
 
 	public String getUmsetzung() {
 		String umsetzung = null;
@@ -455,11 +433,11 @@ public class ToDoBean {
 		this.umsetzungConverter = umsetzungConverter;
 	}
 
-	public List<String> getExecutionList() {
+	public List<KeyValue> getExecutionList() {
 		return executionList;
 	}
 
-	public void setExecutionList(List<String> umsetzungList) {
+	public void setExecutionList(List<KeyValue> umsetzungList) {
 		this.executionList = umsetzungList;
 	}
 

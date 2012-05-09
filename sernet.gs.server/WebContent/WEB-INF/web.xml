@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app id="veriniceserver_ID" version="2.4"
-	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+  version="2.5">
 
 	<!--
 		This file configures the plain veriniceserver. It is not used for the
@@ -60,14 +61,10 @@
         <param-name>facelets.LIBRARIES</param-name>
         <param-value>/WEB-INF/verinice-taglib.xml</param-value>
     </context-param>
-    <context-param>
-        <param-name>org.richfaces.SKIN</param-name>
-        <param-value>ruby</param-value>
+    <context-param>  
+        <param-name>primefaces.THEME</param-name>  
+        <param-value>blitzer</param-value>  
     </context-param>
-	<context-param>
-		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
-		<param-value>enable</param-value>
-	</context-param>
 	<!-- Webclient conf end -->
 
 	<filter>
@@ -94,54 +91,17 @@
 		<filter-name>contextInitializer</filter-name>
 		<url-pattern>/todo/*</url-pattern>
 	</filter-mapping>
-
-	<!-- Webclient conf -->
-	<filter>
-		<display-name>Ajax4jsf Filter</display-name>
-		<filter-name>ajax4jsf</filter-name>
-		<filter-class>org.ajax4jsf.Filter</filter-class>
-        <init-param>
-            <param-name>createTempFiles</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <!-- 104857600 b = 100 mb -->
-            <param-name>maxRequestSize</param-name>
-            <param-value>104857600</param-value>
-        </init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>ajax4jsf</filter-name>
-		<servlet-name>Faces Servlet</servlet-name>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>INCLUDE</dispatcher>
-		<dispatcher>ERROR</dispatcher>
-	</filter-mapping>
-	<!-- OPENFACES RESOURCE FILTER -->
-	<filter>
-		<filter-name>ResourceFilter</filter-name>
-		<filter-class>org.openfaces.util.ResourceFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>ResourceFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>ResourceFilter</filter-name>
-		<servlet-name>Faces Servlet</servlet-name>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>ResourceFilter</filter-name>
-		<url-pattern>/openFacesResources/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	<!-- Webclient conf end -->
-	
-	
+    
+    <!-- Primefaces fileupload -->
+    <filter> 
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>   
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>     
+    </filter>   
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>  
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    
 	<!-- Spring context loader -->
 	<servlet>
 		<servlet-name>context</servlet-name>

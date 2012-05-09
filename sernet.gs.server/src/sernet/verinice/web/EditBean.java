@@ -133,6 +133,9 @@ public class EditBean {
                                     prop.setShowLabel(false);
                                 }
                                 listOfGroup.add(prop);
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
+                                }
                             }
                         }
                         group.setPropertyList(listOfGroup);
@@ -233,10 +236,16 @@ public class EditBean {
         Entity entity = getElement().getEntity();    
         for (HuiProperty<String, String> property : getPropertyList()) {
             entity.setSimpleValue(property.getType(), property.getValue());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
+            }
         }
         for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
             for (HuiProperty<String, String> property : group.getPropertyList()) {
                 entity.setSimpleValue(property.getType(), property.getValue());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
+                }
             }
         }
         SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(getElement());                           

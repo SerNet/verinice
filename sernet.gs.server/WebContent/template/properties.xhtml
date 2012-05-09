@@ -4,43 +4,82 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-	  xmlns:rich="http://richfaces.org/rich"
-	  xmlns:a4j="http://richfaces.org/a4j">
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:composition>
-		<table>	
-			<a4j:repeat value="#{listNoLabel}" var="p">
-				<tr>
-					<td>				
-						<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}"/>
-						<h:outputText value="#{p.value}" rendered="#{p.isLine and (not p.isEditable)}" styleClass="roText"/>
-						<h:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" style="height:50px;"/>
-						<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
-						<rich:calendar value="#{p.date}" datePattern="#{p.datePattern}" rendered="#{p.isDate}"/>
-						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isSingleSelect}" style="margin-bottom:5px"/>							
-						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isNumericSelect and not empty p.optionList}" style="margin-bottom:5px"/>
-						<rich:inputNumberSpinner value="#{p.value}" minValue="#{p.min}" maxValue="#{p.max}" rendered="#{p.isNumericSelect and empty p.optionList}"/>
-					</td>
-				</tr>	
-			</a4j:repeat>
-		</table>
-		<table>	
-			<a4j:repeat value="#{list}" var="p">
-				<tr>
-					<td style="width: 200px;">
-						<h:outputText value="#{p.name}"/>
-					</td>
-					<td>
-						<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}"/>
-						<h:outputText value="#{p.value}" rendered="#{p.isLine and (not p.isEditable)}" styleClass="roText"/>
-						<h:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" style="height:50px;"/>
-						<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
-						<rich:calendar value="#{p.date}" datePattern="#{p.datePattern}" rendered="#{p.isDate}"/>
-						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isSingleSelect}" style="margin-bottom:5px"/>							
-						<rich:comboBox value="#{p.selectedOption}" suggestionValues="#{p.optionList}" enableManualInput="false" rendered="#{p.isNumericSelect and not empty p.optionList}" style="margin-bottom:5px"/>
-						<rich:inputNumberSpinner value="#{p.value}" minValue="#{p.min}" maxValue="#{p.max}" rendered="#{p.isNumericSelect and empty p.optionList}"/>
-					</td>
-				</tr>	
-			</a4j:repeat>
-		</table>	     			
+		<p:outputPanel rendered="#{not empty listNoLabel}">
+			<table>
+				<ui:repeat var="i" value="#{listNoLabel}">
+					<tr>
+						<td>
+							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}"/>
+							<h:outputText value="#{i.value}" rendered="#{i.isLine and (not p.isEditable)}" styleClass="roText"/>
+							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" />
+							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable)}" styleClass="roText"/>
+							<p:outputPanel rendered="#{i.isDate}">
+								<p:calendar value="#{i.date}" 
+									showButtonPanel="true" 
+									showWeek="true"
+									mode="popup" 
+									showOn="button"
+									navigator="true"/>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isSingleSelect}">
+								<p:selectOneMenu value="#{i.selectedOption}">	
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option.name}" itemValue="#{option.value}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList}">
+								<p:selectOneMenu value="#{i.selectedOption}" >	
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList}">
+								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}"/>
+							</p:outputPanel>
+						</td>
+					</tr>	
+				</ui:repeat>
+			</table>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{not empty list}">
+			<table>	
+				<c:forEach var="p" items="#{list}" > 
+					<tr>
+						<td style="width: 140px;">
+							<h:outputText value="#{p.name}"/>
+						</td>
+						<td style="width: 300px;">				
+							<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}" styleClass="hui"/>
+							<h:outputText value="#{p.value}" rendered="#{p.isLine and (not p.isEditable)}" styleClass="roText" />
+							<p:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}"  styleClass="hui"/>
+							<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
+							<p:outputPanel rendered="#{p.isDate}">
+								<p:calendar value="#{p.date}" 
+									showButtonPanel="true" 
+									showWeek="true"
+									mode="popup" 
+									showOn="button"
+									navigator="true"
+									styleClass="hui"/>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isSingleSelect}">
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui">	
+									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option.name}" itemValue="#{option.value}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isNumericSelect and not empty p.optionList}">
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui">	
+									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList}">
+								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" styleClass="hui"/>
+							</p:outputPanel> 
+						</td>
+					</tr>	
+				</c:forEach>
+			</table>
+		</p:outputPanel>	     			
 	</ui:composition>
 </html>

@@ -100,7 +100,7 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	    if (log.isDebugEnabled()) {
             log.debug("Checking rights for entity: " + entity + " and username: " + username);
         } 
-	    if (getAuthService().isPermissionHandlingNeeded()) {
+	    if (isPermissionHandlingNeeded(username)) {
 	        String[] roleArray = getDynamicRoles(username);
 	        if(!hasAdminRole(roleArray)) {	    
                 StringBuilder sb = new StringBuilder();
@@ -145,6 +145,15 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	        }
 	    }
     }
+
+    /**
+     * @param username 
+     * @return
+     */
+    private boolean isPermissionHandlingNeeded(String username) {
+        return getAuthService().isPermissionHandlingNeeded() 
+                && !(getAuthService().getAdminUsername().equals(username)) ;
+    }
 	
 	/**
      * @param username
@@ -170,8 +179,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		return false;
 	}
 
-	private String[] getDynamicRoles(String user) {
-		return getConfigurationService().getRoles(user);
+	private String[] getDynamicRoles(String username) {
+		return getConfigurationService().getRoles(username);
 	}
 
 	public void setAuthService(IAuthService authService) {

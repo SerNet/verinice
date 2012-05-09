@@ -197,7 +197,7 @@ public class EditorFactory {
 
 				// replace element with new instance from DB:
 				TodoViewItem selection = (TodoViewItem) o;
-				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getdbId());
+				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
 				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
 
 				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {

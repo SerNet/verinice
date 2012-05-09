@@ -31,10 +31,8 @@ import java.util.TimeZone;
 import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
-import org.richfaces.component.html.HtmlExtendedDataTable;
-import org.richfaces.model.selection.Selection;
-import org.richfaces.model.selection.SimpleSelection;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
@@ -45,11 +43,14 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.LoadElementByUuid;
 /**
  * JSF managed bean for view and edit Tasks, template: todo/task.xhtml
  * 
@@ -81,10 +82,6 @@ public class TaskBean {
     
     private boolean showUnread = true;
     
-    private HtmlExtendedDataTable table;
-    
-    private Selection selection = new SimpleSelection();
-    
     /**
      * @return
      */
@@ -110,26 +107,14 @@ public class TaskBean {
     	if (LOG.isDebugEnabled()) {
             LOG.debug("openTask() called ..."); //$NON-NLS-1$
         }
-    	readSelectionFromTable();
     	doOpenTask();
-    }
-    
-    private void readSelectionFromTable() {
-    	Iterator<Object> iterator = getSelection().getKeys();
-        while (iterator.hasNext()) {
-            Object key = iterator.next();
-            table.setRowKey(key);
-            if (table.isRowAvailable()) {
-                setSelectedTask( (ITask) table.getRowData());
-            }
-        }
     }
     
     private void doOpenTask() {  
         try {         
             getTaskService().markAsRead(getSelectedTask().getId());
             getSelectedTask().setIsRead(true);
-            getSelectedTask().setStyle(ITask.STYLE_READ);
+            getSelectedTask().addStyle(ITask.STYLE_READ);
             
             getEditBean().setUuid(getSelectedTask().getUuid());
             getEditBean().setTitle(getSelectedTask().getControlTitle());
@@ -161,11 +146,9 @@ public class TaskBean {
     		ITask task = iterator.next();
     		if(task!=null && getSelectedTask()!=null && task.equals(getSelectedTask())) {
     		    if(iterator.hasNext()) {
+    		        setSelectedTask(iterator.next());
     		        isNext = true;
-        			setSelectedTask(iterator.next());
-        			SimpleSelection selection = new SimpleSelection();
-        			selection.addKey(Integer.valueOf(i+1));
-        			getTable().setSelection(selection);
+    		        break;
     		    }
     		}
     		i++;
@@ -183,7 +166,6 @@ public class TaskBean {
             getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
             getTaskList().remove(getSelectedTask());
             setSelectedTask(null);
-            setSelection(null);
             getEditBean().clear();
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -201,7 +183,6 @@ public class TaskBean {
         getTaskList().clear();
         this.taskList = loadTasks();
         setSelectedTask(null);
-        setSelection(null);
         getEditBean().clear();
         Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "allTaskCompleted", new Object[]{Integer.valueOf(n)}));   //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -253,60 +234,28 @@ public class TaskBean {
     }
 
     public List<CnATreeElement> getAuditList() {
-        if(auditList==null) {
-            auditList = getTaskService().getElementList();
+        if(auditList==null) {        
+            try {
+                loadAuditList();
+            } catch (CommandException e) {
+                LOG.error("Error while loading audit list.", e);
+            }
         }
-        auditList = filterAuditListByUser(auditList);
         return auditList;
     }
 
-    public List<CnATreeElement> filterAuditListByUser(List<CnATreeElement> auditList){
-        ArrayList<CnATreeElement> filteredList = new ArrayList<CnATreeElement>(0);
-        ITaskService iService =  getTaskService();
-        TaskService service = null;
-        if(iService instanceof TaskService){
-            service = (TaskService)iService;
-        }
-        if(service != null){
-            String user = service.getAuthService().getUsername();
-            String admin = service.getAuthService().getAdminUsername();
-            if(!user.equals(admin)){ //admin is allowed to see unfiltered list
-                for(CnATreeElement audit : auditList){
-                    try{
-                        for(Permission p : loadPermission(audit)){
-                            if(user.equals(p.getRole())){
-                                filteredList.add(audit);
-                                break;
-                            }
-                        }
-                    }
-                    catch (RuntimeException re){
-                        LOG.warn("Error getting permissions for audit\nUser don't have the permission to acces this audit", re);
-                    }
-                }
-            } else {
-                for(CnATreeElement a : auditList){
-                    filteredList.add(a);
-                }
-            }
-        }
-        return filteredList;
-    }
-    
-    private Set<Permission> loadPermission(CnATreeElement firstElement) {
-        LoadPermissions lp = new LoadPermissions(firstElement);
-        try {
-            lp = ServiceFactory.lookupCommandService().executeCommand(lp);
-        } catch (CommandException e) {
-            throw new RuntimeException(e);
-        }
-        // clone the permissions because of hashcode trouble in set with instances created by hibernate
-        return Permission.clonePermissionSet(firstElement, lp.getPermissions());
-    }
-    
-    
     public void setAuditList(List<CnATreeElement> auditList) {
         this.auditList = auditList;
+    }
+    
+    private void loadAuditList() throws CommandException {
+        List<String> uuidAuditList = getTaskService().getElementList();
+        auditList = new ArrayList<CnATreeElement>(uuidAuditList.size());
+        for (String uuid : uuidAuditList) {
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, RetrieveInfo.getPropertyInstance());
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            auditList.add(command.getElement());              
+        }
     }
 
     public List<ITask> getTaskList() {
@@ -366,22 +315,6 @@ public class TaskBean {
 
     public void setShowUnread(boolean showUnread) {
         this.showUnread = showUnread;
-    }
-
-    public HtmlExtendedDataTable getTable() {
-        return table;
-    }
-
-    public void setTable(HtmlExtendedDataTable table) {
-        this.table = table;
-    }
-
-    public Selection getSelection() {
-        return selection;
-    }
-
-    public void setSelection(Selection selection) {
-        this.selection = selection;
     }
 
     public TimeZone getTimeZone() {

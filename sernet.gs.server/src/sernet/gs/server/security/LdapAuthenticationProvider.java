@@ -19,7 +19,6 @@ package sernet.gs.server.security;
 
 import javax.naming.ldap.InitialLdapContext;
 
-import org.richfaces.iterator.ForEachIterator;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;

@@ -41,12 +41,6 @@ h1 {
 	position: relative;
 }
 
-#header #topnav {
-	width: 255px;
-	right:0;
-	font-size: 85%;
-}
-
 #fontresize {
 	float: right;
 	padding-top:2px;
@@ -57,27 +51,6 @@ span.resizeIcon{
 	padding: 0 5px;
 }
 
-#service {
-	
-}
-
-#supernavigationFirst,
-#supernavigationSecond {
-}
-
-#supernavigationFirst div,
-#supernavigationSecond div{
-	float: left
-}
-
-#supernavigationFirst span,
-#supernavigationSecond span {
-	float: left;
-	margin: 0 5px;
-}
-
-#languageSelect {
-}
 
 #quicksearch {
 	float:right;
@@ -130,16 +103,6 @@ li.liNavi{
 	font-weight: bold;
 	margin-left: 5px;
 	padding-left: 5px;
-}
-
-#listLeftNavi li:hover{
-	background-image:url("../image/10-prozent-grau.png");
-	background-repeat:repeat-x;
-}
-
-#listLeftNavi li.active{
-	background-image:url("../image/10-prozent-grau.png");
-	background-repeat:repeat-x;
 }
 
 li.liNavi:first-child{
@@ -339,18 +302,6 @@ ul#listLeftNavi{
 
 #col3 p.bodytext{
 	padding-bottom: 8px;
-}
-
-#col3 a,
-#col3 a:link,
-#col3 a:hover,
-#col3 a:active,
-#col3 a:visited {
-	color:#c32d2b;
-}
-
-#col3 a:hover{
-	text-decoration: underline;
 }
 
 #col3_info1 {
@@ -592,17 +543,6 @@ input.dl_submit {
 .dl_link_description{
 	margin-left: 17px;
 	padding-top:5px;
-}
-
-.ui-icon{
-	background-image:url(../image/expand.gif);
-	
-	background-repeat:no-repeat;
-	display:block;
-	float:left;
-	height:10px;
-	margin:0.2308em 0.3808em 0 0.2308em;
-	width:10px;
 }
 
 h1.ui-state-active .ui-icon{

@@ -25,6 +25,8 @@ package sernet.verinice.interfaces.iso27k;
  */
 public interface ILink {
     
+    String getId();
+    
     String getTargetUuid();
     
     String getType();
