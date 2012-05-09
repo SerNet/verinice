@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: jsf-api
-Bundle-SymbolicName: jsf-api
-Bundle-Version: 1.2.12
-Bundle-ClassPath: jsf-api-1.2_12.jar
+Bundle-Name: jsf-api_2
+Bundle-SymbolicName: jsf-api_2
+Bundle-Version: 2.1.7
+Bundle-ClassPath: javax.faces-2.1.7.jar
 Export-Package: javax.faces,
  javax.faces.application,
  javax.faces.component,

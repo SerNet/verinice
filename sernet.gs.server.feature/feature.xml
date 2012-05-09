@@ -694,7 +694,7 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="jsf-api"
+         id="jsf-api_2"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
