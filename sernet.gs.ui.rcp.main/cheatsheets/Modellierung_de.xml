@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Modellierung">
+
+	<intro 
+		>
+		<description>
+		Jetzt wird es langsam interessant: Modellierung nach BSI Grundschutz.
+		</description>
+	</intro>
+
+	<item title="Vorbereitung">
+		<description>
+		Lesen Sie die Modellierungshinweise in Kapitel 2.1 und 2.2 der Grundschutzkataloge.
+		</description>
+		<onCompletion>
+		Wahrscheinlich haben Sie jetzt einfach weitergeklickt.  Ich hoffe, Sie wissen was Sie tun. :-)
+		</onCompletion>
+	</item>
+	
+	<item title="Zuordnen eines Bausteins">
+		<description>
+		Suchen Sie in der Ansicht "IT-Grundschutz" den Baustein 3.101 "Allgemeiner Server".
+		<br/><br/>
+		Klicken und ziehen Sie den Baustein mit der linken Maustaste rüber ins Fenster 
+		"GS-Modell" und lassen Sie ihn auf dem "Buchhaltungssystem" fallen.
+		</description>
+	</item>
+	
+	<item title="Bausteinumsetzung">
+		<description>
+		Klappen Sie den Buchhaltungsserver auf. B 3.101 wurde auf den Server angewandt.
+		<br/><br/>
+		Öffnen Sie den Baustein durch Doppelklick. Geben Sie eine Erläuterung für die Zuweisung
+		ein. Später erfassen Sie hier ihre Interviewpartner zur Feststellung des
+		Umsetzungsstatus.
+		<br/><br/>
+		Schließen Sie den Baustein (Strg-W).
+		</description>
+	</item>
+	
+	<item title="Maßnahmen">
+		<description>
+		Klappen Sie den Baustein auf. Es werden die umzusetzenden Maßnahmen angezeigt.
+		Sie können diese Ansicht filtern, indem Sie im Fenstermenü den Button "Filtern"
+		auswählen. So können Sie sich z.B. nur die Maßnahmen der Stufe A 
+		oder nur die Maßnahmen für die Notfallvorsorge anzeigen lassen.
+		<br/><br/>
+		Klappen Sie den Baustein wieder zu.
+		</description>
+	</item>
+	
+	<item title="Zuordnen mehrerer Bausteine 1">
+		<description>
+		Um schneller voran zu kommen, können Sie mehrere Bausteine auf einmal
+		auf ein oder mehrere Zielobjekte anwenden. 
+		<br/><br/>
+		Selektieren Sie im Fenster "IT-Grundschutz" den Baustein B 1.0. Halten Sie dann die Shift-Taste 
+		gedrückt und selektieren Sie den Baustein B 1.13. Es werden alle Bausteine dazwischen 
+		selektiert.
+		<br/><br/>
+		Jedoch möchten Sie den Baustein B 1.11 "Outsourcing" NICHT anwenden: halten Sie die 
+		Strg-Taste gedrückt und klicken Sie auf den Baustein B 1.11. Er wird abgewählt.		
+		</description>
+	</item>
+	
+	<item title="Zuordnen mehrere Bausteine 2">
+		<description>
+		Kopieren Sie die gewählten Bausteine in die Zwischenablage: Rechtsklick -> "Kopieren".
+		<br/><br/>
+		Wählen Sie dann im Fenster "GS-Modell" den übergeordneten IT-Verbund aus. Fügen Sie 
+		die Bausteine ein: Rechtsklick -> "Einfügen".
+		</description>
+
+	</item>
+	
+	<item title="Bausteine Suchen">
+	<description>
+	Sie suchen Bausteine, die sich mit dem Thema "Drucker" befassen. Klicken Sie im Fenster 
+	"IT-Grundschutz" auf den Button "Filtern". Geben Sie als Suchbegriff "Drucker" ein.
+	<br/><br/>
+	Als Ergebnis sehen Sie die Bausteine B 1.9 "Hard- und Software Management" und B 5.1 "Peer 
+	to Peer Dienste", die eine Maßnahme, bzw. eine Gefährdung zum Thema Drucker enthalten.
+	</description>
+		<onCompletion>
+		Sehr gut. Sie wissen nun, wie Sie ihren IT-Verbund modellieren können. Wenn Sie möchten, fahren sie mit dem Spickzettel "Basis-Sicherheitscheck" fort.
+		</onCompletion>
+	</item>
+	
+
+</cheatsheet>

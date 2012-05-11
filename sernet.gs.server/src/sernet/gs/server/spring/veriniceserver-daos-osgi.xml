@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!-- DAO definitions which are different in the OSGi server. -->
+        
+<!-- BEGIN dao definitions ========================================================================= -->
+
+	<bean id="configurationDao" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.common.configuration.Configuration</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory"/>
+		
+	</bean>
+	
+<!-- END dao definitions ============================================================================ -->
+
+</beans>

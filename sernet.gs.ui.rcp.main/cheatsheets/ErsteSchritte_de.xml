@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Erste Schritte">
+
+	<intro 
+		>
+		<description>
+			<b>Willkommen bei verinice.</b>
+			<br/>
+			<br/>
+			Dieser Spickzettel erleichtert es Ihnen, 
+			das Tool einzurichten und sich gleich darin zurecht zu finden.
+		</description>
+	</intro>
+
+	<item
+		title="Grundschutz Kataloge downloaden">
+
+	<action 
+			pluginId="sernet.gs.ui.rcp.main"
+			class="sernet.gs.ui.rcp.main.bsi.actions.DownloadBsiCataloguesAction"
+			confirm="true"/>
+		<description>
+			Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
+			downloaden.
+			<br/>
+			<br/>
+			Gehen Sie auf die Webseite des BSI in den Bereich "IT-Grundschutz-Kataloge - Download".
+			<br/>
+			Adresse: <b>https://www.bsi.bund.de/cln_174/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html</b>
+			<br/>
+			<br/>
+			Laden Sie folgende Datei herunter:
+			<br/>
+			<b>2009, 11. EL: HTML-Seiten IT-Grundschutz-Kataloge (ZIP ca. 11 MB)</b>
+			<br/>
+			<br/>
+			Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
+		</description>
+	</item>
+	
+	<item title="Einstellungen öffnen">
+	<!-- 
+	<action 
+			pluginId="sernet.gs.ui.rcp.main"
+			class="sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction"/>
+			 -->
+	<description>
+		Nun müssen Sie einstellen, wo sich der gespeicherte Download der
+		Grundschutz Kataloge befindet.
+		<br/>
+		<br/>
+		Öffnen Sie die Einstellungen über das Menü "Bearbeiten" -> "Einstellungen".
+		<br/>
+		<br/>
+		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie dort die Datenquelle auf "ZIP-Datei" und setzen Sie den korrekten Pfad zur heruntergeladenen Datei.
+		<br/>
+		<br/>
+		Schließen Sie dann die Einstellungen mit "Okay".
+	</description>
+	</item>
+
+	<item title="Kataloge werden geladen">
+	<description>
+	Die Grundschutz Kataloge wurden nun aus der ZIP-Datei geladen. Sobald der
+	Parser mit seiner Arbeit fertig ist, erscheinen alle Bausteine im Fenster
+	"IT-Grundschutz".
+	<br/><br/>
+	 Wenn Sie nun einen Baustein oder eine Maßnahme anklicken, können Sie den Inhalt im Browserfenster nachlesen.
+	</description>
+	<onCompletion>
+	Sehr gut! Wenn Sie weitermachen möchten, finden Sie weitere Spickzettel im Hilfemenü.
+	</onCompletion>
+	
+	</item>
+		
+	
+</cheatsheet>

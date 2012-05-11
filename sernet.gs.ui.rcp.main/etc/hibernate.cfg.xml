@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+
+<!-- 
+
+###########################################################################
+    	DO NOT EDIT. ANY CHANGES YOU MAKE WILL BE OVERWRITTEN
+    	
+    	Please configure your database in the preferences dialog of
+    	the application.
+    	
+    	Or edit skel_hibernate.cfg.xml in the application .jar file, 
+    	but: if you break it, you fix it.
+###########################################################################
+
+
+ -->
+
+
+    <session-factory>
+        <property name="connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
+        <property name="dialect">org.hibernate.dialect.DerbyDialect</property>
+        <property name="connection.url">jdbc:derby:/work/home/akoderman/java/runtime-oc.product/verinicedb;create=true</property>
+        <property name="connection.username"></property>
+        <property name="connection.password"></property>
+ 
+ 		<!-- Improve performance for collection inserts -->
+		<property name="hibernate.jdbc.batch_size">100</property>
+  
+
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">10</property>
+
+
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.use_sql_comments">false</property>
+
+        <!-- Drop and re-create the database schema on startup only for development, oviously:
+         <property name="hbm2ddl.auto">create-drop</property>
+        <property name="hbm2ddl.auto">validate</property>
+		-->
+         <property name="hbm2ddl.auto">update</property>
+        
+
+        <mapping resource="Entity.hbm.xml"/>
+        <mapping resource="CnALink.hbm.xml"/>
+        <mapping resource="PropertyList.hbm.xml"/>
+        <mapping resource="CnATreeElement.hbm.xml"/> 
+        <mapping resource="ChangeLogEntry.hbm.xml"/>
+        <mapping resource="Gefaehrdung.hbm.xml"/>
+        <mapping resource="Risikomassnahme.hbm.xml"/>
+        <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>
+
+    </session-factory>
+
+</hibernate-configuration>
+
