@@ -126,7 +126,6 @@ public class BIRTReportService {
 		    config.setLogFile(logFile);
 		    config.setLogMaxBackupIndex(10);
 		    config.setLogRollingSize(3000000); // equals 3MB
-		    
 		}
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
@@ -254,6 +253,11 @@ public class BIRTReportService {
 		} catch (EngineException e) {
 		    log.error("Could not render design: ", e);
 			throw new IllegalStateException(e);
+		} finally{
+		    // ensure .log file is released again (.lck file will be removed)
+		    if(engine != null){
+		        engine.destroy();
+		    }
 		}
 	}
 
