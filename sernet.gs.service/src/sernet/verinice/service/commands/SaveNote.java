@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
@@ -34,7 +34,7 @@ public class SaveNote extends GenericCommand {
 	
 	public Logger getLog() {
 		if(log==null) {
-			log = Logger.getLogger(LoadNotes.class);
+			log = Logger.getLogger(SaveNote.class);
 		}
 		return log;
 	}

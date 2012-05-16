@@ -17,13 +17,11 @@
  *     Andreas Becker <andreas.r.becker[at]rub[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster[a]tarent[dot]de> - removal of JDom API use
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.sync.commands;
+package sernet.verinice.service.commands;
 
 import java.util.HashSet;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsBySourceID;
-import sernet.gs.ui.rcp.main.service.crudcommands.RemoveElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;

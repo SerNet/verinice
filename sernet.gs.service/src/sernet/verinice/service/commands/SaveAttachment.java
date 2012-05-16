@@ -15,11 +15,9 @@
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.verinice.model.bsi.AttachmentFile;
-import sernet.verinice.service.commands.SaveElement;
 
 /**
  * Saves AttachmentFiles in database.

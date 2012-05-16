@@ -103,6 +103,7 @@ import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
@@ -544,7 +545,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element==null) {
+        if(element==null || !(element instanceof IISO27kElement)) {
             return;
         }
         

@@ -33,8 +33,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -43,6 +41,8 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
+import sernet.verinice.service.commands.SaveAttachment;
+import sernet.verinice.service.commands.SaveNote;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

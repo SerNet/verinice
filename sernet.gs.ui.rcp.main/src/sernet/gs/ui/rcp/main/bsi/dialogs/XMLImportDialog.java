@@ -41,7 +41,6 @@ import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -49,6 +48,8 @@ import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
@@ -64,6 +65,7 @@ public class XMLImportDialog extends Dialog {
     private boolean insert;
     private boolean update;
     private boolean delete;
+    private boolean integrate;
 
     private Text dataPathText;
     private boolean dataPathFlag;
@@ -219,6 +221,22 @@ public class XMLImportDialog extends Dialog {
         deleteText.setText(Messages.XMLImportDialog_10);
         deleteText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 		*/
+        
+        final Button integrateButton = new Button(operationGroup, SWT.CHECK);
+        integrateButton.setText(Messages.XMLImportDialog_31);
+        integrateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        integrateButton.setSelection(false);
+        integrate = false;
+        integrateButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                integrate = integrateButton.getSelection();
+            }
+        });
+
+        Label integrateText = new Label(operationGroup, SWT.LEFT);
+        integrateText.setText(Messages.XMLImportDialog_37);
+        integrateText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
         // decryption
         
@@ -507,7 +525,10 @@ public class XMLImportDialog extends Dialog {
                 // data is encrypted, guess format
                 format = guessFormat(fileData);
             }         
-            command = new SyncCommand(format, insert, update, delete, fileData);    
+            
+            command = new SyncCommand(
+                    new SyncParameter(insert, update, delete, integrate, format), 
+                    fileData);    
             command = ServiceFactory.lookupCommandService().executeCommand(command);
 
         } catch (PasswordException  e) {

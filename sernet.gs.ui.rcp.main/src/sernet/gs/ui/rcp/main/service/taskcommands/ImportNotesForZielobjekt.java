@@ -32,8 +32,6 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
-import sernet.gs.ui.rcp.main.service.CnATypeMapper;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
@@ -44,7 +42,9 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.commands.SaveNote;
 
 /**
  * @author koderman@sernet.de

@@ -15,11 +15,10 @@
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service;
+package sernet.verinice.service.commands;
 
 import java.util.HashMap;
 
-import sernet.gs.reveng.importData.GSVampire;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;

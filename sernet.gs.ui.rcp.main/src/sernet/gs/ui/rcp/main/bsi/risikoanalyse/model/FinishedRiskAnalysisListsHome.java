@@ -19,9 +19,9 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
 import sernet.verinice.service.commands.SaveElement;
 
 public class FinishedRiskAnalysisListsHome {

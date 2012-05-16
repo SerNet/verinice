@@ -17,7 +17,7 @@
  *     Andreas Becker <andreas.r.becker[at]rub[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster[a]tarent[dot]de> - removal of JDom API use
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.sync.commands;
+package sernet.verinice.service.commands;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -32,12 +32,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.CnATypeMapper;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByExternalID;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveAttachment;
-import sernet.gs.ui.rcp.main.service.crudcommands.SaveNote;
-import sernet.gs.ui.rcp.main.sync.InvalidRequestException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -57,10 +51,6 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.CheckSourceId;
-import sernet.verinice.service.commands.ExportCommand;
-import sernet.verinice.service.commands.LoadAttachmentByExternalId;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
 import sernet.verinice.service.sync.VeriniceArchive;
@@ -110,7 +100,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private transient SyncData syncData;
     private String userName;
 
-	private boolean insert, update;
+    private SyncParameter parameter;
+    
     private List<String> errorList;
 
     private int inserted = 0, updated = 0, merged = 0;
@@ -125,8 +116,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<String, Attachment> attachmentMap;
     
-    private Integer format;
-    
     private transient IAuthService authService;
     
     private transient Map<Class,IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
@@ -136,18 +125,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     		SyncData syncData, 
     		SyncMapping syncMapping,
     		String userName,
-    		boolean insert, 
-    		boolean update, 
-    		Integer format,
+    		SyncParameter parameter,
     		List<String> errorList) {
         super();
         this.sourceId = sourceId;
         this.syncData = syncData;
         this.syncMapping = syncMapping;
         this.userName = userName;
-        this.insert = insert;
-        this.update = update;
-        this.format = format;
+        this.parameter = parameter;
         this.errorList = errorList;
         attachmentMap = new HashMap<String, Attachment>();
     }
@@ -237,7 +222,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         
         if (elementInDB != null) {
-            if (update) {
+            if (parameter.isUpdate()) {
                 /*** UPDATE: ***/
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
@@ -245,6 +230,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 if(parent==null) {
                     // Org. or IT-Verbund was found
                     parent = elementInDB.getParent();
+                }
+                if(parameter.isIntegrate()) {
+                    elementInDB.setSourceId(null);
+                    elementInDB.setExtId(null);
                 }
                 setAttributes = true;
                 updated++;
@@ -264,14 +253,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         
         // If no previous object was found in the database and the 'insert'
         // flag is given, create a new object.
-        if (elementInDB == null && insert) {                          
+        if (elementInDB == null && parameter.isInsert()) {                          
             try {
                 // create new object in db...
                 elementInDB =createElement(dao, parent, clazz);
                  
                 // ...and set its sourceId and extId:
-                elementInDB.setSourceId(sourceId);
-                elementInDB.setExtId(extId);
+                if(!parameter.isIntegrate()) {
+                    elementInDB.setSourceId(sourceId);
+                    elementInDB.setExtId(extId);
+                }
                 
                 if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
                     addElement(elementInDB);
@@ -653,7 +644,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (container==null) {
             LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
-                cmdLoadContainer = ServiceFactory.lookupCommandService().executeCommand(cmdLoadContainer);
+                cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
                 throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
@@ -680,7 +671,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private CnATreeElement createBsiContainer() {
         LoadBSIModel cmdLoadModel = new LoadBSIModel();
         try {
-            cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
+            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
             String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
             getLog().error(message,e);
@@ -705,7 +696,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private CnATreeElement createIsoContainer() {
         LoadModel cmdLoadModel = new LoadModel();
         try {
-            cmdLoadModel = ServiceFactory.lookupCommandService().executeCommand(cmdLoadModel);
+            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
             String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
             getLog().error(message,e);
@@ -765,7 +756,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 	}
 	
 	private boolean isVeriniceArchive() {
-        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(format);
+        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
     }
 	
 	/**

@@ -126,6 +126,7 @@ public class BIRTReportService {
 		    config.setLogFile(logFile);
 		    config.setLogMaxBackupIndex(10);
 		    config.setLogRollingSize(3000000); // equals 3MB
+		    
 		}
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform

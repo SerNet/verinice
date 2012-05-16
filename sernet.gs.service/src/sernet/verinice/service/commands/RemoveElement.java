@@ -17,7 +17,7 @@
  *     Henning Heinold <h.heinold@tarent.de> - cascade when deleting CnATreeElement with
  *     FinishedRiskAnalysis
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,7 +27,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.FindRiskAnalysisListsByParentID;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -43,7 +42,6 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Removes tree-elements.

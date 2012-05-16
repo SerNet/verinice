@@ -11,7 +11,6 @@ import org.hibernate.dialect.function.CastFunction;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
-import sernet.gs.ui.rcp.main.service.CnATypeMapper;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -32,6 +31,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * Loads an element with all links from / to it.

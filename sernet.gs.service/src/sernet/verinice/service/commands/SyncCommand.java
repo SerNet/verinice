@@ -19,7 +19,7 @@
  *     Robert Schuster <r.schuster[a]tarent[dot]de> - conversion to verinice command  
  *     Daniel Murygin <dm[a]sernet[dot]de> - Bugfixing
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.sync.commands;
+package sernet.verinice.service.commands;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
+import sernet.verinice.service.commands.SyncDeleteCommand;
+import sernet.verinice.service.commands.SyncInsertUpdateCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -42,7 +44,6 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.sync.VeriniceArchive;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
@@ -65,7 +66,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
 
     private String stationId;
 
-    private boolean insert, update, delete;
+    private SyncParameter parameter;
 
     private byte[] syncRequestSerialized;
 
@@ -82,8 +83,6 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     private Set<CnATreeElement> elementSet = null;
     
     private transient VeriniceArchive veriniceArchive;
-    
-    private Integer format = ExportCommand.EXPORT_FORMAT_DEFAULT;
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -101,19 +100,10 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
      * @param delete
      * @param syncRequestSerialized
      */
-    public SyncCommand(Integer format, boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
-        if(format!=null) {
-            this.format = format;
-        }
-        this.insert = insert;
-        this.update = update;
-        this.delete = delete;     
+    public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {     
+        this.parameter = parameter;    
         this.syncRequestSerialized = syncRequestSerialized;
         this.stationId = ChangeLogEntry.STATION_ID;
-    }
-    
-    public SyncCommand(boolean insert, boolean update, boolean delete, byte[] syncRequestSerialized) {
-        this(ExportCommand.EXPORT_FORMAT_DEFAULT, insert, update, delete, syncRequestSerialized);
     }
 
     /**
@@ -128,32 +118,26 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
      * @param delete
      * @param sr
      */
-    public SyncCommand(boolean insert, boolean update, boolean delete, SyncRequest sr) {
-        this.insert = insert;
-        this.update = update;
-        this.delete = delete;
-
+    public SyncCommand(SyncParameter parameter, SyncRequest sr) {
+        this.parameter = parameter; 
+        
         // TODO: dm, SyncRequest marshal is called in contructor and unmarshal is called in execute...
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         JAXB.marshal(sr, bos);
 
         this.syncRequestSerialized = bos.toByteArray();
-        this.format = ExportCommand.EXPORT_FORMAT_XML_PURE;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
     public SyncCommand(SyncRequest sr) {
         this.sourceId = sr.getSourceId();
 
-        this.insert = sr.isInsert();
-        this.update = sr.isUpdate();
-        this.delete = sr.isDelete();
+        parameter = new SyncParameter(sr.isInsert(), sr.isUpdate(), sr.isDelete(), true,  ExportCommand.EXPORT_FORMAT_XML_PURE);
 
         this.syncData = sr.getSyncData();
         this.syncMapping = sr.getSyncMapping();
 
         this.syncRequestSerialized = null;
-        this.format = ExportCommand.EXPORT_FORMAT_XML_PURE;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -174,7 +158,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
             veriniceArchive = new VeriniceArchive(syncRequestSerialized);
             xmlData = veriniceArchive.getVeriniceXml();
         }
-        if(ExportCommand.EXPORT_FORMAT_XML_PURE.equals(format)) {
+        if(ExportCommand.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
             xmlData = syncRequestSerialized;
         }
         
@@ -197,9 +181,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         		syncData, 
         		syncMapping,
         		getAuthService().getUsername(),
-        		insert, 
-        		update,
-        		format,
+        		parameter,
         		errors);
 
         try {
@@ -225,7 +207,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
         inserted += cmdInsertUpdate.getInserted();
         updated += cmdInsertUpdate.getUpdated();
 
-        if (delete) {
+        if (parameter.isDelete()) {
             SyncDeleteCommand cmdDelete = new SyncDeleteCommand(sourceId, syncData, errors);
 
             try {
@@ -335,7 +317,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     }
     
     private boolean isVeriniceArchive() {
-        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(format);
+        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
     }
 
 }

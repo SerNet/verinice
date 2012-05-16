@@ -17,8 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 
 /**
@@ -37,18 +42,22 @@ public class Konsolidator {
 	 * 
 	 * @param source
 	 * @param target
+	 * @return 
 	 */
-	public static void konsolidiereMassnahmen(BausteinUmsetzung source,
+	public static List<CnATreeElement> konsolidiereMassnahmen(BausteinUmsetzung source,
 			BausteinUmsetzung target) {
 		if (!source.getKapitel().equals(target.getKapitel()))
-			return;
+			return Collections.emptyList();
+		List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
 		
 		for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {
 			MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
 			if (sourceMn != null) {
 				mn.getEntity().copyEntity(sourceMn.getEntity());
+				changedElements.add(mn);
 			}
 		}
+		return changedElements;
 	}
 
 	/**

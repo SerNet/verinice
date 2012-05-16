@@ -15,9 +15,10 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameter;
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
@@ -54,11 +55,10 @@ public class ImportCSVWizard extends Wizard {
             ExceptionUtil.log(e, Messages.ImportCSVWizard_1);
         }
 
+		
 		SyncCommand command = new SyncCommand(
-		        entityPage.getInsertState(),
-		        entityPage.getUpdateState(), 
-		        entityPage.getDeleteState(), 
-		        sr);
+                new SyncParameter(entityPage.getInsertState(), entityPage.getUpdateState(), entityPage.getDeleteState()), 
+                sr);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		} catch (CommandException e) {

@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -45,7 +47,9 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 
 public class ShowKonsolidatorAction extends RightsEnabledAction implements ISelectionListener {
 
@@ -94,7 +98,9 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
             if (o instanceof BausteinUmsetzung) {
-                selectedElements.add((BausteinUmsetzung) o);
+                BausteinUmsetzung baustein = (BausteinUmsetzung) o;
+                initParent(baustein);
+                selectedElements.add(baustein);
             }
         }
 
@@ -125,8 +131,8 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
                         // reload state from server:
-                        for (BausteinUmsetzung bausteinUmsetzung : selectedElements) {
-                            CnAElementFactory.getLoadedModel().databaseChildChanged(bausteinUmsetzung);
+                        for (CnATreeElement element : command.getChangedElements()) {
+                            CnAElementFactory.getLoadedModel().databaseChildChanged(element);                        
                         }
 
                     } catch (CommandException e) {
@@ -141,6 +147,14 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.ShowKonsolidatorAction_6);
         } 
+    }
+
+    /**
+     * @param baustein
+     */
+    private void initParent(/* not final */BausteinUmsetzung baustein) {
+       CnATreeElement parent =  Retriever.checkRetrieveElement(baustein.getParent());
+       baustein.setParent(parent);
     }
 
     /**

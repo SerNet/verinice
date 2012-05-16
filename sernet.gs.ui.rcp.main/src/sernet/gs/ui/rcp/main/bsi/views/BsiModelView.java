@@ -97,6 +97,7 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
@@ -538,7 +539,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element==null) {
+        if(element==null || !(element instanceof IBSIStrukturElement)) {
             return;
         }
         

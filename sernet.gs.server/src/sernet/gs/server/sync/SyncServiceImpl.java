@@ -24,9 +24,9 @@ import javax.jws.soap.SOAPBinding;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.sync.commands.SyncCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.service.commands.SyncCommand;
 import de.sernet.sync.sync.SyncResponse;
 import de.sernet.sync.sync_service.SyncService;
  
