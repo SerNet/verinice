@@ -66,6 +66,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -173,6 +174,7 @@ public class BSIElementEditor extends EditorPart {
             CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
             this.setPartName(cnAElement.getTitle());
+            this.setTitleToolTip(cnAElement.getTitle());
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
@@ -274,11 +276,16 @@ public class BSIElementEditor extends EditorPart {
      */
     private void addBehavior() {
         if (cnAElement.getSchutzbedarfProvider() != null) {
-            IEditorBehavior behavior = new InheritanceBehavior(huiComposite);
-            editorBehaviorList.add(behavior);
-            behavior.addBehavior();
-            behavior.init();
+            initBehaviour(new InheritanceBehavior(huiComposite));
+        } else if(cnAElement instanceof IncidentScenario){
+            initBehaviour(new LikelihoodBehaviour(huiComposite));
         }
+    }
+    
+    private void initBehaviour(IEditorBehavior behaviour){
+        editorBehaviorList.add(behaviour);
+        behaviour.addBehavior();
+        behaviour.init();
     }
 
     /**
