@@ -11,6 +11,11 @@
   <name>editor</name>
   <tag-class/>
   <body-content>empty</body-content>
+  <attribute>
+   <description>boolean</description>
+   <name>showButton</name>
+   <rtexprvalue>false</rtexprvalue>
+  </attribute>
  </tag>
  <tag>
   <description>Property list for element editor</description>

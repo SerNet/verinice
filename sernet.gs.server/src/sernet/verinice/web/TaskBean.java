@@ -20,6 +20,7 @@
 package sernet.verinice.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -89,6 +90,8 @@ public class TaskBean {
         if (LOG.isDebugEnabled()) {
             LOG.debug("loadTasks called..."); //$NON-NLS-1$
         }
+        getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
+        
         ITaskParameter parameter = new TaskParameter();
         parameter.setRead(getShowRead());
         parameter.setUnread(getShowUnread());  
@@ -116,6 +119,7 @@ public class TaskBean {
             getSelectedTask().setIsRead(true);
             getSelectedTask().addStyle(ITask.STYLE_READ);
             
+            getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
             getEditBean().setTitle(getSelectedTask().getControlTitle());
             getEditBean().setTypeId(getSelectedTask().getType());

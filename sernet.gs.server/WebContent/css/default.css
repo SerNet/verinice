@@ -63,6 +63,24 @@
 input.submit {
 	margin-top:1em;
 }
+
+.breadcrumb {	
+	width: 865px;
+	height: 22px;
+	display: inline-block; 
+	vertical-align: middle;
+}
+
+.saveButton {
+	height:73px;
+	margin-bottom: 3px;
+}
+
+.saveButtonHidden {
+	display: none;
+	visibility: hidden;
+}
+
 .formElement {
 	width: 150px;
 	margin-left:1em;
@@ -200,4 +218,16 @@ h1+a:visited {
 .ui-datepicker-trigger {
 	width: 33px;
 	margin-left: 2px;
+}
+
+.ui-widget .up-button {
+	background-image: url("../image/up.gif");
+}
+
+.ui-widget .home-button {
+	background-image: url("../image/home.gif");
+}
+
+.ui-widget .save-button {
+	background-image: url("../image/save.gif");
 }

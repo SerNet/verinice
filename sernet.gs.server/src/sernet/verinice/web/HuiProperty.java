@@ -97,11 +97,21 @@ public class HuiProperty<K,V> implements Serializable{
         return type.isDate();
     }
     
+    public boolean getIsBooleanSelect() {
+        return type.isBooleanSelect();
+    }
+    
     public Date getDate() {
         if(!getIsDate()) {
             return null;
         }
-        return (value!=null) ? new Date(Long.valueOf((String)value)) : null;
+        Date date = null;
+        if(value!=null && value instanceof String ) {
+            if(!((String)value).isEmpty()) {
+                date = new Date(Long.valueOf((String)value));
+            }
+        }
+        return date;
     }
     
     public void setDate(Date date) {
@@ -113,6 +123,14 @@ public class HuiProperty<K,V> implements Serializable{
         } else {
             value = null;
         }
+    }
+    
+    public boolean getBoolean() {
+        return Integer.valueOf((String) getValue())==1;
+    }
+    
+    public void setBoolean(boolean b) {
+        setValue((b) ? (V)"1" : (V)"0");
     }
     
     public List<String> getOptionList() {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+    xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition template="/layout.xhtml">
+<ui:define name="content">
+	<div id="path" style="width: 100%; margin-bottom: 4px;">
+		<h:form id="navForm">
+			<p:commandButton action="#{tree.init}" update=":tableForm,:navForm" icon="home-button" title="Wurzel" style="height: 36px;vertical-align: middle;"/>	
+			<p:commandButton action="#{tree.showParent}" update=":tableForm,:navForm" icon="up-button" title="Nach oben" style="height: 36px;vertical-align: middle;"/>	
+			<p:commandButton onclick="submitEditForm();" disabled="#{edit.element==null}"  icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
+			<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb"/>
+		</h:form>
+	</div>
+	<div id="col3" style="width: auto; margin: 0 200px 0 0; *margin-right:0;">
+		<div id="col3_content">
+			
+			<h:form id="tableForm">
+				<p:dataTable id="elementTable"
+	                var="item"
+	                value="#{tree.children}"
+	                rowKey="#{item.element.dbId}"
+					selection="#{tree.elementInformation}" 
+	                selectionMode="single"
+	                scrollable="true"
+					scrollHeight="450" 
+					resizableColumns="true"
+					style="width: 450px"
+	                rendered="#{!empty tree.children}">
+	                <p:ajax event="rowSelect" 
+						listener="#{tree.openElement}"   
+                    	update=":tableForm,:navForm,:editForm" />                 
+			        <p:column style="width:20px">
+						<h:graphicImage value="#{item.icon}" />	
+			        </p:column>
+			        <p:column headerText="Titel" sortBy="#{item.title}" style="width:430px">
+						<h:outputText value="#{item.title}"/>	
+			        </p:column>
+	            </p:dataTable>
+			</h:form>
+		</div>
+	</div>
+	<div id="col2">
+		<div id="col2_content">									    				
+	    	<vn:editor/>    		 				    			    							
+		</div>
+	</div>
+</ui:define>
+</ui:composition>
+</html>

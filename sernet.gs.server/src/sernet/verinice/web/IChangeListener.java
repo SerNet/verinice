@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -19,37 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import javax.faces.context.FacesContext;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class NavigationBean {
-    
-    public static final String VIEW_ID_TASK = "/todo/task.xhtml";
-    
-    public static final String VIEW_ID_TODO = "/todo/todo.xhtml";
-    
-    public static final String VIEW_ID_EDIT = "/edit/index.xhtml";
-    
-    public static final String CLASS_ACTIVE = "active";
-    
-    public static final String CLASS_INACTIVE = "inactive";
-    
-    public String getTaskStyle() {
-        return VIEW_ID_TASK.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
-    }
-    
-    public String getBsiTodoStyle() {
-        return VIEW_ID_TODO.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
-    }
-    
-    public String getEditStyle() {
-        return VIEW_ID_EDIT.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
-    }
-    
-    private String getViewId() {
-        return FacesContext.getCurrentInstance().getViewRoot().getViewId();
-    }
+public interface IChangeListener {
+
+    void elementChanged(CnATreeElement element);
 }

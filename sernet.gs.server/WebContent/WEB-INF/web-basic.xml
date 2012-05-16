@@ -85,6 +85,10 @@
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/todo/*</url-pattern>
+    </filter-mapping> 
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/edit/*</url-pattern>
     </filter-mapping>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -94,6 +98,10 @@
 		<filter-name>contextInitializer</filter-name>
 		<url-pattern>/todo/*</url-pattern>
 	</filter-mapping>
+    <filter-mapping>
+        <filter-name>contextInitializer</filter-name>
+        <url-pattern>/edit/*</url-pattern>
+    </filter-mapping>
 
 	<!-- Webclient conf -->
 	<filter>

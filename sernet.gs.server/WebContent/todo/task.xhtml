@@ -82,11 +82,13 @@
 			        </p:column> 
 				</p:dataTable>  
 			</h:form>
+			<!-- Dont't remove navForm. It's referenced by editor.xhtml -->
+			<h:form id="navForm"/>			
 		</div>
 	</div>
 	<div id="col2">
 		<div id="col2_content">									    				
-	    	<vn:editor />    		 				    			    							
+	    	<vn:editor showButton="true"/>    		 				    			    							
 		</div>
 	</div>
 </ui:define>

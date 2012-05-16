@@ -14,8 +14,9 @@
     <!-- The filter chain that all HTTP requests go through: -->
 	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
+			<security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
 			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
-			 <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" /> 
+            <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" /> 
 			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
 		</security:filter-chain-map>
 	</bean>
@@ -78,8 +79,9 @@
 		<property name="accessDecisionManager" ref="accessDecisionManager" />
 		<property name="objectDefinitionSource">
 			<security:filter-invocation-definition-source>
+				<security:intercept-url pattern="/edit/**" access="ROLE_WEB" />
 				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
-				<security:intercept-url pattern="/service/**" access="ROLE_USER" />
+                <security:intercept-url pattern="/service/**" access="ROLE_USER" />
 				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
 			</security:filter-invocation-definition-source>
 		</property>
