@@ -756,7 +756,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 	}
 	
 	private boolean isVeriniceArchive() {
-        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
+        return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
     }
 	
 	/**

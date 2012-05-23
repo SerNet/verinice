@@ -18,6 +18,7 @@
 package sernet.verinice.interfaces;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * Interface for data access commands that can be executed by a local or remote CommandService. 
@@ -70,5 +71,12 @@ public interface ICommand extends Serializable
 	 * the command object is returned with the result to the client.
 	 */
 	public void clear();
+	
+	/**
+	 * Returns properties for this command instance.
+	 * 
+	 * @return Properties
+	 */
+	public Properties getProperties();
 	
 }

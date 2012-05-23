@@ -26,7 +26,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.ServerInitializer;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.model.common.configuration.Configuration;

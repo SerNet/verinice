@@ -93,7 +93,7 @@ public class ElementCache {
                     }
                     if (LOG.isDebugEnabled()) {
                         Statistics s = getCache().getStatistics();
-                        LOG.info("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
+                        LOG.debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
                     }
                 }
             } else {

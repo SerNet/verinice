@@ -15,16 +15,12 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.server;
+package sernet.gs.service;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.service.IHibernateCommandService;
-
+import sernet.verinice.interfaces.IHibernateCommandService;
 /**
  * Initialize environemnt on Verinice server on startup.
  * 
@@ -42,23 +38,7 @@ public class ServerInitializer {
 	
 	private IHibernateCommandService hibernateCommandService;
 	
-	private IProgress nullMonitor = new IProgress() {
-		public void beginTask(String name, int totalWork) {
-		}
-
-		public void done() {
-		}
-
-		public void setTaskName(String string) {
-		}
-
-		public void subTask(String string) {
-		}
-
-		public void worked(int work) {
-		}
-		
-	};
+	
 	
 	/**
 	 * Initializes the current thread with the VeriniceContext.State
@@ -82,18 +62,7 @@ public class ServerInitializer {
 		// at this point because otherwise we would have a circular dependency
 		// in the Spring configuration (= commandService needs workObjects
 		// and vice versa)
-		hibernateCommandService.setWorkObjects(state);
-		
-		GSScraperUtil gsScraperUtil = GSScraperUtil.getInstance();
-		// initialize grundschutz scraper:
-		try {
-			gsScraperUtil.getModel().loadBausteine(nullMonitor);
-		} catch (Exception e) {
-			log.error("Fehler beim Laden der Grundschutzkataloge: " + e.getMessage());
-			if (log.isDebugEnabled()) {
-				log.debug("stacktrace: " + e);
-			}
-		}
+		hibernateCommandService.setWorkObjects(state);	
 		
 	}
 

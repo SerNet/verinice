@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Properties;
+
 /**
  * Base class of all command.
  * 
@@ -43,7 +45,7 @@ public abstract class GenericCommand implements ICommand {
 	
 	private transient IDAOFactory daoFactory;
 	private transient ICommandService commandService;
-	
+	private Properties properties;
 
 	public void setCommandService(ICommandService service) {
 		this.commandService = service;
@@ -65,5 +67,27 @@ public abstract class GenericCommand implements ICommand {
 		// default implementation does nothing
 	}
 
-
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.ICommand#getProperties()
+	 */
+	@Override
+	public Properties getProperties() {
+	    if(properties==null) {
+	        properties = readProperties();
+	    }
+	    return properties;
+	}
+	
+	private Properties readProperties() {
+    	Properties properties = new Properties();  
+        String className = this.getClass().getName();
+        Properties allProperties = getCommandService().getProperties(); 
+        for (Object keyObject : allProperties.keySet()) {
+            String key = (String) keyObject;
+            if(key.startsWith(className)) {
+                properties.put(key.substring(key.indexOf(className)+className.length()+1), allProperties.getProperty(key));
+            }
+        }
+        return properties;
+	}
 }

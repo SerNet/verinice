@@ -24,7 +24,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
-import sernet.gs.server.ServerInitializer;
+import sernet.gs.service.ServerInitializer;
 import sernet.verinice.model.bsi.ITVerbund;
 
 public class ItVerbundConverter implements Converter {

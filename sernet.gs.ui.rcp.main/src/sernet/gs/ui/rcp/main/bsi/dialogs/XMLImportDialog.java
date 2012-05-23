@@ -47,7 +47,6 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
@@ -86,7 +85,7 @@ public class XMLImportDialog extends Dialog {
     
     private Text certificatePathField;
     
-    private Integer format = ExportCommand.EXPORT_FORMAT_DEFAULT;
+    private Integer format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
     public XMLImportDialog(Shell shell) {
         super(shell);
@@ -556,12 +555,12 @@ public class XMLImportDialog extends Dialog {
      * @return ExportCommand.EXPORT_FORMAT_XML_PURE or ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV 
      */
     private Integer guessFormat(byte[] fileData) {
-        Integer result = ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV;
+        Integer result = SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV;
         if(fileData!=null) {
             String content = new String(fileData);
             content = content.trim();
             if(content.endsWith(SYNC_REQUEST)) {
-                result = ExportCommand.EXPORT_FORMAT_XML_PURE;
+                result = SyncParameter.EXPORT_FORMAT_XML_PURE;
             }
         }
         return result;

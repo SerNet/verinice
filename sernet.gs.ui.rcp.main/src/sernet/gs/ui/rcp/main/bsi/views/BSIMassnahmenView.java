@@ -61,9 +61,15 @@ import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.iso27k.ISO27KModel;
 
 /**
  * View for parsed BSI IT-Grundschutz catalogues.
@@ -91,6 +97,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	private Action expandAllAction;
 
 	private Action collapseAction;
+    
+    private IModelLoadListener modelLoadListener;
 	
 	public String getRightID(){
 	    return ActionRightIDs.BSIMASSNAHMEN;
@@ -102,8 +110,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new KapitelSorter());
 
-		WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
-		JobScheduler.scheduleInitJob(job);
+		startInitDataJob();
 
 		viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
 		BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
@@ -123,6 +130,33 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 		refresh();
 	}
+	
+	protected void startInitDataJob() {
+	    if(CnAElementFactory.getLoadedModel()!=null) {
+	        WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
+	        JobScheduler.scheduleInitJob(job);
+        } else if(modelLoadListener==null) {
+            // model is not loaded yet: add a listener to load data when it's laoded
+            modelLoadListener = new IModelLoadListener() {
+                public void closed(BSIModel model) {
+                    // nothing to do
+                }
+                public void loaded(BSIModel model) {
+                    // work is done in loaded(ISO27KModel model)
+                }
+
+                @Override
+                public void loaded(ISO27KModel model) {
+                    startInitDataJob();
+                }
+                
+            };
+            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+        }
+	    
+	}
+	
+	
 
 	private void refresh() {
 		Display.getDefault().asyncExec(new Runnable() {

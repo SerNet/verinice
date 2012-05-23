@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.server.ServerInitializer;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 
 public class ContextInitializer implements Filter {

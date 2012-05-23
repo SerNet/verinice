@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.Permission;

@@ -18,16 +18,41 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
+import javax.naming.InitialContext;
+
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
+
+import sernet.gs.service.ServerInitializer;
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 
 public class GSScraperUtil {
 	
 	private static final Logger log = Logger.getLogger(GSScraperUtil.class);
 	
 	private BSIMassnahmenModel model;
+	
+	private static boolean isInitialized = false;
 
+	private static IProgress nullMonitor = new IProgress() {
+        public void beginTask(String name, int totalWork) {
+        }
+
+        public void done() {
+        }
+
+        public void setTaskName(String string) {
+        }
+
+        public void subTask(String string) {
+        }
+
+        public void worked(int work) {
+        }
+        
+    };
+	
 	private GSScraperUtil() {
 		log.debug(
 		"Initializing GS catalogues service ...");
@@ -38,9 +63,25 @@ public class GSScraperUtil {
 	}
 	
 	public static GSScraperUtil getInstanceWeb() {
+	    if(!isInitialized) {
+            init();
+        }
 		GSScraperUtil instance = (GSScraperUtil) VeriniceContext.get(VeriniceContext.GS_SCRAPER_UTIL);
 		instance.getModel().setLayoutConfig(new WebLayoutConfig());
 		return instance;
+	}
+	
+	private static void init() {
+	    GSScraperUtil gsScraperUtil = GSScraperUtil.getInstance();
+        // initialize grundschutz scraper:
+        try {
+            gsScraperUtil.getModel().loadBausteine(nullMonitor);
+        } catch (Exception e) {
+            log.error("Fehler beim Laden der Grundschutzkataloge: " + e.getMessage());
+            if (log.isDebugEnabled()) {
+                log.debug("stacktrace: " + e);
+            }
+        }
 	}
 	
 	public BSIMassnahmenModel getModel()

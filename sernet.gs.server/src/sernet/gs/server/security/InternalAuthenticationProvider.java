@@ -31,7 +31,6 @@ import org.springframework.security.providers.AuthenticationProvider;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.ServerInitializer;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.service.HibernateCommandService;
 
@@ -69,6 +68,7 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 	
 	public InternalAuthenticationProvider()
 	{
+	    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		synchronized (lock)
 		{
 			if (instance != null)

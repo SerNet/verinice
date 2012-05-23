@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Properties;
+
 /**
  * Service to execute commands. 
  * 
@@ -37,7 +39,10 @@ package sernet.verinice.interfaces;
  *
  */
 public interface ICommandService {
+    
 	public  <T extends ICommand> T executeCommand(T command) throws CommandException;
 
 	public void discardUserData();
+	
+	public Properties getProperties();
 }

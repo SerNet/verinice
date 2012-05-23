@@ -32,7 +32,7 @@ import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.server.ServerInitializer;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.configuration.Configuration;
 

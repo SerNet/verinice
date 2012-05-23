@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Andreas Becker <andreas[at]becker[dot]name> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - Export to verinice archive, concurrency
  ******************************************************************************/
 
 package sernet.verinice.service.commands;
@@ -22,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,19 +30,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.IThreadCompleteListener;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -51,7 +55,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -60,8 +63,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.sync.StreamFactory;
 import sernet.verinice.service.sync.VeriniceArchive;
 import de.sernet.sync.data.SyncData;
-import de.sernet.sync.data.SyncFile;
-import de.sernet.sync.data.SyncObject;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
@@ -71,7 +72,21 @@ import de.sernet.sync.sync.SyncRequest;
  * Creates an XML representation of the given list of
  * CnATreeElements.
  * 
+ * ExportCommand uses multiple threads to load data. Default number of threads is 3.
+ * You can configure maximum number of threads in veriniceserver-common.xml:
+ * 
+ * <bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService">
+ *  <!-- Set properties for command instances here -->
+ *  <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME> -->
+ *  <property name="properties">
+ *      <props>
+ *          <prop key="sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
+ *      </props>
+ *  </property>
+ * </bean>
+ * 
  * @author <andreas[at]becker[dot]name>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class ExportCommand extends GenericCommand implements IChangeLoggingCommand
@@ -84,76 +99,66 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         }
         return log;
     }
-
-    public static final Integer EXPORT_FORMAT_VERINICE_ARCHIV = 0; 
-    public static final Integer EXPORT_FORMAT_XML_PURE = 1;  
-    public static final Integer EXPORT_FORMAT_DEFAULT = EXPORT_FORMAT_VERINICE_ARCHIV;
     
+    private static final Integer lock = new Integer(0);
+   
+    public static final String PROP_MAX_NUMBER_OF_THREADS = "maxNumberOfThreads";
+    public static final int DEFAULT_NUMBER_OF_THREADS = 3;
     
-    private transient CacheManager manager = null;
-    private String cacheId = null;
-    private transient Cache cache = null;
-    
-    transient private IBaseDao<CnATreeElement, Serializable> dao;
-    
-	/*+++
-	 * List of already-exported objects' IDs, to
-	 * prevent multiple inclusion of a single object
-	 * in <syncData>, e.g. due to explicitly selecting
-	 * a father element and one of its successors:
-	 *++++++++++++++++++++++++++++++++++++++++++++++++*/
-	private HashMap<String, String> exportedObjectIDs = new HashMap<String, String>();
-	
-	private transient List<SyncObject> orphaneList;
-
+    // Configuration fields set by client
+    private List<CnATreeElement> elements;
 	private String sourceId;
-	private List<CnATreeElement> elements;
-	private Set<CnALink> linkSet;
-	private boolean reImport = false;
+    private boolean reImport = false;
+    private Integer exportFormat;
+    private Map<String,String> entityTypesBlackList;   
+    private Map<Class,Class> entityClassBlackList;
 	
-	private HashMap<String,String> entityTypesToBeExported;
-	
-	private Map<String,String> entityTypesBlackList;
-	
-	private Map<Class,Class> entityClassBlackList;
-	
-	private byte[] result;
-	
+    // Result fields
+	private byte[] result;	
     private List<CnATreeElement> changedElements;
     private String stationId;
     
-    private Integer exportFormat;
+    // Fields used on server only
     private transient byte[] xmlData;
+    private transient Set<CnALink> linkSet;
     private transient Set<Attachment> attachmentSet;
-    
-    public ExportCommand( 
-            List<CnATreeElement> elements, 
-            String sourceId, 
-            boolean reImport) {
-        new ExportCommand(elements, sourceId, reImport, EXPORT_FORMAT_DEFAULT);
+    private transient Set<EntityType> exportedEntityTypes;
+    private transient Set<String> exportedTypes;    
+    private transient CacheManager manager = null;
+    private transient String cacheId = null;
+    private transient Cache cache = null;   
+    private transient IBaseDao<CnATreeElement, Serializable> dao;
+    private transient ExecutorService taskExecutor;
+ 
+    public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport) {
+        new ExportCommand(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
     
-	public ExportCommand( 
-	        List<CnATreeElement> elements, 
-	        String sourceId, 
-	        boolean reImport,
-	        Integer exportFormat) {
+	public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport, Integer exportFormat) {
 		this.elements = elements;
 		this.sourceId = sourceId;
 		this.reImport = reImport;
 		if(exportFormat!=null) {
 		    this.exportFormat = exportFormat;
 		} else {
-		    this.exportFormat = EXPORT_FORMAT_DEFAULT;
+		    this.exportFormat = SyncParameter.EXPORT_FORMAT_DEFAULT;
 		}
-		this.linkSet = new HashSet<CnALink>();
 		this.attachmentSet = new HashSet<Attachment>();    
         this.stationId = ChangeLogEntry.STATION_ID;
 	}
 	
+	private void createFields() {
+        this.changedElements = new LinkedList<CnATreeElement>();
+        this.linkSet = new HashSet<CnALink>();
+        this.attachmentSet = new HashSet<Attachment>();
+        this.exportedTypes = new HashSet<String>();
+        this.exportedEntityTypes = new HashSet<EntityType>();
+	}
+	
 	public void execute() {
 	    try {
-    	    xmlData = createXmlData();
+	        createFields();
+    	    xmlData = export();
     		
     		if(isVeriniceArchive()) {
     		    result = createVeriniceArchive();
@@ -161,116 +166,136 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
     		    result = xmlData;
     		}
 	    } catch (RuntimeException re) {
-            log.error("Runtime exception while exporting", re);
+            getLog().error("Runtime exception while exporting", re);
             throw re;
         } catch (Exception e) {
-            log.error("Exception while exporting", e);
+            getLog().error("Exception while exporting", e);
             throw new RuntimeCommandException("Exception while exporting", e);
         }
+	    finally {
+	        getCache().removeAll();
+	    }
 		
 	}
 
-    private byte[] createXmlData() throws CommandException {
-        changedElements = new LinkedList<CnATreeElement>();
-	    getCache().removeAll();
-		String timestamp = Long.toString(Calendar.getInstance().getTimeInMillis());
-		exportedObjectIDs = new HashMap<String, String>();
-		
-		SyncData sd = new SyncData();
-		
-		SyncMapping sm = new SyncMapping();
-		List<MapObjectType> mapObjectTypeList = sm.getMapObjectType();
-		
-		SyncRequest sr = new SyncRequest();
-		sr.setSourceId(sourceId);
-		sr.setSyncData(sd);
-		sr.setSyncMapping(sm);
-		
-		/** 
-		 * A list for objects whose parent object is not in the exported set.
-		 * 
-		 * The orphanes are added last as top-level elements to the SyncData
-		 * object.
-		 */
-		orphaneList = new ArrayList<SyncObject>();
-
-		/*+++++
-		 * Add one <syncObject> element for each
-		 * given CnATreeElement to <syncData>: 
-		 *+++++++++++++++++++++++++++++++++++++++*/
-		Set<EntityType> exportedEntityTypes = new HashSet<EntityType>();
-		Set<String> exportedTypes = new HashSet<String>();
-		for( CnATreeElement element : elements ) {	    
-			export(sd.getSyncObject(), element, timestamp, exportedEntityTypes, exportedTypes);	
+	/**
+     * Export (i.e. "create XML representation of" the given cnATreeElement
+     * and its successors. For this, child elements are exported recursively.
+     * All elements that have been processed are returned as a list of
+     * {@code syncObject}s with their respective attributes, represented
+     * as {@code syncAttribute}s.
+     * 
+     * @return XML representation of elements
+     * @throws CommandException
+     */
+    private byte[] export() throws CommandException {	
+        if (getLog().isInfoEnabled()) {
+            getLog().info("Max number of threads is: " + getMaxNumberOfThreads());
+        }
+        
+        getCache().removeAll();
+        
+		SyncData syncData = new SyncData();
+		ExportTransaction exportTransaction = new ExportTransaction();
+	
+		for( CnATreeElement element : elements ) {	
+		    exportTransaction.setElement(element);
+		    
+		    ExportThread thread = new ExportThread(exportTransaction);
+            configureThread(thread);
+	        thread.export();
+	        getValuesFromThread(thread);
+		    
+			exportChildren(exportTransaction);
+			syncData.getSyncObject().add(exportTransaction.getTarget());
 		}
-		sd.getSyncObject().addAll(orphaneList);
 		
 		for(CnALink link : linkSet) {
-		    ExportFactory.transform(link, sd.getSyncLink());
+		    CnATreeElement dependant  = link.getDependant();
+		    dependant = getFromCache(dependant);
+		    link.setDependant(dependant);
+		    CnATreeElement dependency  = link.getDependency();
+		    dependency = getFromCache(dependency);
+		    link.setDependency(dependency);
+		    ExportFactory.transform(link, syncData.getSyncLink());
 		}
 		
-		/* Adds SyncMapping for all EntityTypes that have been exported. This
-		 * is going to be an identity mapping.
-		 */
-		for (EntityType entityType : exportedEntityTypes)
-		{
-			if(entityType!=null) {
-    			// Add <mapObjectType> element for this entity type to <syncMapping>:
-    			MapObjectType mapObjectType = new MapObjectType();
-    			
-    			mapObjectType.setIntId(entityType.getId());
-    			mapObjectType.setExtId(entityType.getId());
-    			
-    			List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
-    			for (PropertyType propertyType : entityType.getAllPropertyTypes())
-    			{
-    				// Add <mapAttributeType> for this property type to current <mapObjectType>:
-    				MapAttributeType mapAttributeType = new MapAttributeType();
-    				
-    				mapAttributeType.setExtId(propertyType.getId());
-    				mapAttributeType.setIntId(propertyType.getId());
-    				
-    				mapAttributeTypes.add(mapAttributeType);
-    			}
-    			
-    			mapObjectTypeList.add(mapObjectType);
-			}
-		}
+		if (getLog().isDebugEnabled()) {
+            Statistics s = getCache().getStatistics();
+            getLog().debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
+        }
 		
-		// For all exported objects that had no entity type (e.g. category objects)
-		// we create a simple 1-to-1 mapping using their type id.
-		for (String typeId : exportedTypes)
-		{
-			MapObjectType mapObjectType = new MapObjectType();
-			mapObjectType.setIntId(typeId);
-			mapObjectType.setExtId(typeId);
-			
-			mapObjectTypeList.add(mapObjectType);
-		}
+		SyncMapping syncMapping = new SyncMapping();
+		createMapping(syncMapping.getMapObjectType());
+		
+		SyncRequest syncRequest = new SyncRequest();
+        syncRequest.setSourceId(sourceId);
+        syncRequest.setSyncData(syncData);
+        syncRequest.setSyncMapping(syncMapping);
 		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ExportFactory.marshal(sr, bos);
+		ExportFactory.marshal(syncRequest, bos);
 		return bos.toByteArray();
     }
-	
-	/**
-	 * Creates the verinice archive after createXmlData() was called.
-	 * 
-	 * @return the verinice archive as byte[]
-	 * @throws CommandException
-	 */
-	private byte[] createVeriniceArchive() throws CommandException {
-	    try {        
-	        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();        
-	        ZipOutputStream zipOut = new ZipOutputStream(byteOut);     
-	        
+    
+    private void exportChildren(final ExportTransaction transaction) throws CommandException {      
+        CnATreeElement element = transaction.getElement();
+        Set<CnATreeElement> children = element.getChildren();
+        
+        List<ExportTransaction> transactionList = new ArrayList<ExportTransaction>();
+        
+        taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
+        
+        for( CnATreeElement child : children ) {
+            ExportTransaction childTransaction = new ExportTransaction(child);
+            transactionList.add(childTransaction);
+            ExportThread thread = new ExportThread(childTransaction);
+            configureThread(thread);
+            thread.addListener(new IThreadCompleteListener() {            
+                @Override
+                public void notifyOfThreadComplete(Thread thread) {
+                    ExportThread exportThread = (ExportThread) thread;
+                    synchronized(lock) {
+                        transaction.getTarget().getChildren().add(exportThread.getSyncObject());
+                        getValuesFromThread(exportThread);
+                    }                 
+                }
+            });
+            taskExecutor.execute(thread);
+        }
+        
+        if (getLog().isDebugEnabled() && transactionList.size()>0) {
+            getLog().debug("Export threads: " + transactionList.size() + ", concurrent: " + getMaxNumberOfThreads() + ", waiting for termination...");
+        }
+        
+        awaitTermination(transactionList.size() * 10);
+        
+        if (getLog().isDebugEnabled() && transactionList.size()>0) {
+            getLog().debug(transactionList.size() + " export threads finished.");
+        }
+        
+        for( ExportTransaction childTransaction : transactionList ) {           
+            exportChildren(childTransaction);
+        }
+    }
+
+    /**
+     * Creates the verinice archive after createXmlData() was called.
+     * 
+     * @return the verinice archive as byte[]
+     * @throws CommandException
+     */
+    private byte[] createVeriniceArchive() throws CommandException {
+        try {        
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();        
+            ZipOutputStream zipOut = new ZipOutputStream(byteOut);     
+            
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, xmlData);
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD, StreamFactory.getDataXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD, StreamFactory.getMappingXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD, StreamFactory.getSyncXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, StreamFactory.getReadmeAsStream());
-            
-            
+                     
             for (Attachment attachment : getAttachmentSet()) {
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());      
                 command = getCommandService().executeCommand(command);
@@ -284,167 +309,123 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             byteOut.close();
             return byteOut.toByteArray();
         } catch (IOException e) {
-            log.error("Error while creating zip output stream", e);
+            getLog().error("Error while creating zip output stream", e);
             throw new RuntimeCommandException(e);
         }
-	}
-
-    
-   
-	
-	private boolean isVeriniceArchive() {
-	    return EXPORT_FORMAT_VERINICE_ARCHIV.equals(exportFormat);
-	}
-	
-	/**
-     * @param element
-	 * @param syncObject 
-	 * @throws CommandException 
-     */
-    private void exportAttachments(CnATreeElement element, SyncObject syncObject) throws CommandException {
-        if(element!=null) {
-            LoadAttachments command = new LoadAttachments(element.getDbId());
-            command = getCommandService().executeCommand(command);
-            List<Attachment> fileList = command.getAttachmentList();
-            List<SyncFile> fileListXml = syncObject.getFile();
-            for (Attachment attachment : fileList) {
-                SyncFile syncFile = new SyncFile();
-                Entity entity = attachment.getEntity();
-                String extId = ExportFactory.createExtId(attachment);
-                syncFile.setExtId(extId);
-                syncFile.setFile(ExportFactory.createZipFileName(attachment));
-                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID, getHuiTypeFactory());
-                fileListXml.add(syncFile);
-                if(isReImport()) {
-                    attachment.setExtId(extId);
-                    attachment.setSourceId(sourceId);
-                    saveElement(attachment);
-                }
-            }
-            // Add all files to attachment set, to export file data later
-            getAttachmentSet().addAll(fileList);
-        }     
     }
+    
 
     /**
-	 * Export (i.e. "create XML representation of" the given cnATreeElement
-	 * and its successors. For this, child elements are exported recursively.
-	 * All elements that have been processed are returned as a list of
-	 * {@code syncObject}s with their respective attributes, represented
-	 * as {@code syncAttribute}s.
-	 * 
-	 * @param element
-	 * @return List<Element>
-     * @throws CommandException 
-	 */
-	private void export(List<SyncObject> list, CnATreeElement element, String timestamp, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes) throws CommandException {	
-		List<SyncObject> childList = null;	
-		
-		/**
-		 * Export the given CnATreeElement, if it is NOT blacklisted (i.e. an IT network
-		 * or category element) AND, if we should restrict the exported objects to certain
-		 * entity types, this element's entity type IS allowed:
-		 **/
-		
-		String typeId = element.getTypeId();
-		if(checkElement(element)) {
-			element = hydrate( element );
-			
-			String extId = ExportFactory.createExtId(element);
-			SyncObject syncObject = new SyncObject();
-			syncObject.setExtId(extId);
-			syncObject.setExtObjectType(typeId);
-
-			List<de.sernet.sync.data.SyncAttribute> attributes = syncObject.getSyncAttribute();
-			
-			/**
-			 * Retrieve all properties from the entity:
-			 */		
-			Entity entity = element.getEntity();
-			// Category instance may have no Entity attached to it
-			// For those we do not store any property values.
-			if (entity != null) {
-			    ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory());
-				
-				// Add the elements EntityType to the set of exported EntityTypes in order to
-				// use it for the mapping generation later on.
-				exportedEntityTypes.add(element.getEntityType());
-			}
-			else {
-				// Instance has no EntityType. This is fine but still some mapping
-				// information is needed. We save the typeId for later then.
-				exportedTypes.add(typeId);
-			}
-			// add links to linkSet
-			addLinks(element);
-            		
-			if(isVeriniceArchive()) {
-                // export attachments of the element
-                exportAttachments(element, syncObject);
-                exportedEntityTypes.add(getHuiTypeFactory().getEntityType(Attachment.TYPE_ID));
+     * @param timeout
+     */
+    private void awaitTermination(int timeout) {
+        taskExecutor.shutdown();
+        try {
+            // Wait a while for existing tasks to terminate
+            if (!taskExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                taskExecutor.shutdownNow(); // Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!taskExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
+                    getLog().error("Export executer did not terminate.");
+                }
             }
-			
-			list.add(syncObject);
-			childList = syncObject.getChildren();
-			exportedObjectIDs.put( element.getUuid(), new String() );
-			
-			/**
-			 * Save source and external id to re-import element later
-			 */
-			if(isReImport()) {
-				// TODO: what happens if external and source id already set?
-				element.setextId(extId);
-				element.setSourceId(sourceId);
-				saveElement(element);
-				changedElements.add(element);
-			}
-			
-			/**
-			 * Handle children recursively:
-			 */
-			Set<CnATreeElement> children = element.getChildren();		
-			List<SyncObject> targetList = (childList == null ? orphaneList : childList);	
-			for( CnATreeElement child : children ) {
-				export(targetList, child, timestamp, exportedEntityTypes, exportedTypes);
-			}
-		} else if(getLog().isDebugEnabled()) { // else if(checkElement(element))
-			getLog().debug("Element is not exported: Type " + typeId + ", uuid: " + element.getUuid());
-		}		
+        } catch (InterruptedException ie) {
+            // (Re-)Cancel if current thread also interrupted
+            taskExecutor.shutdownNow();
+            // Preserve interrupt status
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    /**
+     * Adds SyncMapping for all EntityTypes that have been exported. This
+     * is going to be an identity mapping.
+     * 
+     * @param mapObjectTypeList
+     */
+    private void createMapping(List<MapObjectType> mapObjectTypeList) {
+        for (EntityType entityType : exportedEntityTypes)
+        {
+            if(entityType!=null) {
+                // Add <mapObjectType> element for this entity type to <syncMapping>:
+                MapObjectType mapObjectType = new MapObjectType();
+                
+                mapObjectType.setIntId(entityType.getId());
+                mapObjectType.setExtId(entityType.getId());
+                
+                List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
+                for (PropertyType propertyType : entityType.getAllPropertyTypes())
+                {
+                    // Add <mapAttributeType> for this property type to current <mapObjectType>:
+                    MapAttributeType mapAttributeType = new MapAttributeType();
+                    
+                    mapAttributeType.setExtId(propertyType.getId());
+                    mapAttributeType.setIntId(propertyType.getId());
+                    
+                    mapAttributeTypes.add(mapAttributeType);
+                }
+                
+                mapObjectTypeList.add(mapObjectType);
+            }
+        }
+        // For all exported objects that had no entity type (e.g. category objects)
+        // we create a simple 1-to-1 mapping using their type id.
+        for (String typeId : exportedTypes)
+        {
+            MapObjectType mapObjectType = new MapObjectType();
+            mapObjectType.setIntId(typeId);
+            mapObjectType.setExtId(typeId);
+            
+            mapObjectTypeList.add(mapObjectType);
+        }
+    }
+    
+    private CnATreeElement getFromCache(CnATreeElement element) {
+        Element cachedElement = getCache().get(element.getUuid());
+        if(cachedElement!=null) {
+            element = (CnATreeElement) cachedElement.getValue();
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Element from cache: " + element.getTitle() + ", UUID: " + element.getUuid());
+            }
+        } else {
+            element = getDao().retrieve(element.getDbId(), RetrieveInfo.getPropertyInstance());
+            getCache().put(new Element(element.getUuid(), element));
+        }
+        return element;
+    }
+      
+    private void configureThread(ExportThread thread) {
+        thread.setCommandService(getCommandService());
+        thread.setCache(getCache());
+        thread.setDao(getDao());
+        thread.setAttachmentDao(getDaoFactory().getDAO(Attachment.class));
+        thread.setHuiTypeFactory(getHuiTypeFactory());
+        thread.setSourceId(sourceId);
+        thread.setVeriniceArchive(isVeriniceArchive());
+        thread.setReImport(isReImport());
+        thread.setEntityTypesBlackList(getEntityTypesBlackList());
+        thread.setEntityClassBlackList(getEntityClassBlackList());
+    }
+    
+    /**
+     * @param exportThread
+     */
+    private void getValuesFromThread(ExportThread exportThread) {
+        linkSet.addAll(exportThread.getLinkSet());
+        attachmentSet.addAll(exportThread.getAttachmentSet());
+        exportedEntityTypes.addAll(exportThread.getExportedEntityTypes());
+        exportedTypes.addAll(exportThread.getExportedTypes());
+        changedElements.addAll(exportThread.getChangedElementList());
+    }
+
+	private boolean isVeriniceArchive() {
+	    return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(exportFormat);
 	}
 	
 	private boolean isReImport() {
 		return reImport;
 	}
-	
-	private void saveElement(CnATreeElement element) {
-		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
-		dao.saveOrUpdate(element);	
-	}
-	
-	/**
-     * @param attachment
-     */
-    private void saveElement(Attachment attachment) {
-        IBaseDao<Attachment, Serializable> dao = getDaoFactory().getDAO(Attachment.class);
-        dao.saveOrUpdate(attachment); 
-    }
-
-	private boolean checkElement(CnATreeElement element) {
-		return exportedObjectIDs.get(element.getUuid()) == null
-		 && (entityTypesToBeExported == null || entityTypesToBeExported.get(element.getTypeId()) != null)
-		 && (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
-		 && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
-	}
-
-    private void addLinks(CnATreeElement element) {
-        try {
-            linkSet.addAll(element.getLinksDown());
-            linkSet.addAll(element.getLinksUp());
-        } catch (Exception e) {
-            getLog().error("error while getting links of element: " + element.getTitle() + "(" + element.getTypeId() + "), UUID: " + element.getUuid(), e);
-        }
-    }
-    
+  
     private Map<String,String> getEntityTypesBlackList() {
         if(entityTypesBlackList==null) {
             entityTypesBlackList = createDefaultEntityTypesBlackList();
@@ -486,50 +467,6 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    /*************************************************
-	 * Hydrate {@code element}, including all of its
-	 * successor elements and properties.
-	 * 
-	 * @param element
-	 *************************************************/
-	private CnATreeElement hydrate(CnATreeElement element)
-	{ 
-		if (element == null)
-			return element;
-		
-		Element cachedElement = getCache().get(element.getUuid());
-		if(cachedElement!=null) {
-		    element = (CnATreeElement) cachedElement.getValue();
-		    if (getLog().isDebugEnabled()) {
-		        getLog().debug("Element from cache: " + element.getTitle());
-            }
-		    return element;
-		}
-		
-		RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
-		ri.setLinksDown(true);
-		ri.setLinksUp(true);
-		element = getDao().retrieve(element.getDbId(), ri);
-		
-		getCache().put(new Element(element.getUuid(), element));
-		
-		if (getLog().isDebugEnabled()) {
-		    getLog().debug("Hydrating element: " + element.getTitle() + ", UUID: " + element.getUuid());
-        }
-		
-		Set<CnATreeElement> children = element.getChildren();
-		for (CnATreeElement child : children) {
-			if (child instanceof BausteinUmsetzung){
-				// next element:
-				continue;
-			}
-			if(checkElement(child)) {
-				hydrate(child);
-			}
-		}		
-		return element;
-	}
-
 	public byte[] getResult() {
 		return result; 
 	}
@@ -551,7 +488,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 	private Cache createCache() {
 	    cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        cache = new Cache(cacheId, 20000, false, false, 1800, 1800);
         manager.addCache(cache);
         return cache;
 	}
@@ -586,7 +523,7 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 
     public Integer getExportFormat() {
         if(exportFormat==null) {
-            exportFormat = EXPORT_FORMAT_DEFAULT;
+            exportFormat = SyncParameter.EXPORT_FORMAT_DEFAULT;
         }
         return exportFormat;
     }
@@ -600,6 +537,35 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
             attachmentSet = new HashSet<Attachment>();
         }
         return attachmentSet;
+    }
+    
+    /**
+     * You can configure maximum number of threads in veriniceserver-common.xml:
+     * 
+     * <bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService">
+     *  <!-- Set properties for command instances here -->
+     *  <!-- Key is <COMMAND_CLASS_NAME>.<PROPERTY_NAME> -->
+     *  <property name="properties">
+     *      <props>
+     *          <prop key="sernet.verinice.service.commands.ExportCommand.maxNumberOfThreads">5</prop>
+     *      </props>
+     *  </property>
+     * </bean>
+     * 
+     * @return
+     */
+    private int getMaxNumberOfThreads() {
+        int number = DEFAULT_NUMBER_OF_THREADS;
+        Object prop = getProperties().get(PROP_MAX_NUMBER_OF_THREADS);
+        if(prop!=null) {
+            try {
+                number = Integer.valueOf((String) prop);
+            } catch( Exception e) {
+                getLog().error("Error while readind max number of thread from property: " + PROP_MAX_NUMBER_OF_THREADS + ", value is: " + prop, e);
+                number = DEFAULT_NUMBER_OF_THREADS;
+            }
+        }
+        return number;
     }
     
 }

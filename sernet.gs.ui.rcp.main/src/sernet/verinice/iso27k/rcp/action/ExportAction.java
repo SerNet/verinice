@@ -19,7 +19,6 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.io.File;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +31,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,7 +41,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -67,19 +64,18 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.encryption.EncryptionException;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
-import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.Mutex;
-import sernet.verinice.iso27k.rcp.ExportDialog;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.ExportCommand;
-import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.iso27k.rcp.ExportDialog;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.ExportCommand;
 
 /**
  * {@link Action} that exports assessment objects from the

@@ -31,8 +31,12 @@ public class SyncParameter implements Serializable {
     private boolean update;
     private boolean delete;
     private boolean integrate; 
+   
+    public static final Integer EXPORT_FORMAT_VERINICE_ARCHIV = 0; 
+    public static final Integer EXPORT_FORMAT_XML_PURE = 1;  
+    public static final Integer EXPORT_FORMAT_DEFAULT = EXPORT_FORMAT_VERINICE_ARCHIV;
     
-    private Integer format = ExportCommand.EXPORT_FORMAT_DEFAULT;
+    private Integer format = EXPORT_FORMAT_DEFAULT;
 
     public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) {
         super();
@@ -51,7 +55,7 @@ public class SyncParameter implements Serializable {
      * @param deleteState
      */
     public SyncParameter(boolean insertState, boolean updateState, boolean deleteState) {
-        this(insertState, updateState, deleteState, true, ExportCommand.EXPORT_FORMAT_DEFAULT);
+        this(insertState, updateState, deleteState, true, SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
     public boolean isInsert() {

@@ -39,8 +39,8 @@ import org.jbpm.pvm.internal.task.TaskImpl;
 import org.jbpm.pvm.internal.type.Variable;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
-import sernet.gs.server.ServerInitializer;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;

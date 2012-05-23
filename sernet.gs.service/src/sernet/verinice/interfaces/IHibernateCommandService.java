@@ -15,10 +15,9 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service;
+package sernet.verinice.interfaces;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
 
 /**
  * This interfaces makes the {@link #setWorkObjects(sernet.hui.common.VeriniceContext.State)}

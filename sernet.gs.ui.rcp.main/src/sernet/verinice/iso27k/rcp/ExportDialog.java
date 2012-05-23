@@ -59,7 +59,7 @@ import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.ExportCommand;
+import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
@@ -85,7 +85,7 @@ public class ExportDialog extends TitleAreaDialog {
     private Text txtLocation;
     
     // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
-    private int format = ExportCommand.EXPORT_FORMAT_DEFAULT;
+    private int format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
     
     public ExportDialog(Shell activeShell) {

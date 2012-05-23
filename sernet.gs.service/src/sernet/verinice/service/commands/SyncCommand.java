@@ -132,7 +132,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     public SyncCommand(SyncRequest sr) {
         this.sourceId = sr.getSourceId();
 
-        parameter = new SyncParameter(sr.isInsert(), sr.isUpdate(), sr.isDelete(), true,  ExportCommand.EXPORT_FORMAT_XML_PURE);
+        parameter = new SyncParameter(sr.isInsert(), sr.isUpdate(), sr.isDelete(), true,  SyncParameter.EXPORT_FORMAT_XML_PURE);
 
         this.syncData = sr.getSyncData();
         this.syncMapping = sr.getSyncMapping();
@@ -158,7 +158,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
             veriniceArchive = new VeriniceArchive(syncRequestSerialized);
             xmlData = veriniceArchive.getVeriniceXml();
         }
-        if(ExportCommand.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
+        if(SyncParameter.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
             xmlData = syncRequestSerialized;
         }
         
@@ -317,7 +317,7 @@ public class SyncCommand extends GenericCommand implements IChangeLoggingCommand
     }
     
     private boolean isVeriniceArchive() {
-        return ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
+        return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
     }
 
 }
