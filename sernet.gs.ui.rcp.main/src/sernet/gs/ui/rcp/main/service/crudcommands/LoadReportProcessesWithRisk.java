@@ -147,7 +147,7 @@ public class LoadReportProcessesWithRisk extends GenericCommand {
     private void calculateRisk() throws CommandException {
         for (CnATreeElement cnATreeElement : elements) {
             if (cnATreeElement.getTypeId().equals(Process.TYPE_ID)) {
-                LoadReportLinkedElements loadAssets = new LoadReportLinkedElements(Asset.TYPE_ID, cnATreeElement.getDbId(), true);
+                LoadReportLinkedElements loadAssets = new LoadReportLinkedElements(Asset.TYPE_ID, cnATreeElement.getDbId(), true, false);
                 loadAssets = getCommandService().executeCommand(loadAssets);
                 List<CnATreeElement> assets = loadAssets.getElements();
                 

@@ -46,9 +46,9 @@ public class LoadConfigurationByUser extends GenericCommand {
     
     private Configuration configuration;
     
-    private PersonIso pIso;
+    private CnATreeElement pIso;
 
-    public LoadConfigurationByUser(PersonIso pIso){
+    public LoadConfigurationByUser(CnATreeElement pIso){
         this.pIso = pIso;
     }
     
@@ -72,24 +72,6 @@ public class LoadConfigurationByUser extends GenericCommand {
                     configuration = c;
                     break;
                 }
-//                PersonIso pIso = null;
-//                Hibernate.initialize(elmt);
-//                String uuid = elmt.getUuid();
-//                DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class);
-//                criteria.add(Restrictions.eq("uuid", uuid));
-//                criteria.setFetchMode("children", FetchMode.JOIN);
-//                List<CnATreeElement> elements =  cnaDao.findByCriteria(criteria);
-//                if(elements.size() == 1){
-//                    for(CnATreeElement e : elements){
-//                        pIso = PersonIso.class.cast(((HibernateProxy)e).getHibernateLazyInitializer().getImplementation());
-//                    }
-//                    for(Method m : PersonIso.class.getMethods()){
-//                        if(m.getReturnType().equals(String.class) && m.getName().startsWith("get")){
-//                            System.out.println("Methode:\t" + m.getName());
-//                            System.out.println("Rückgabe:\t" + m.invoke(pIso, null));
-//                        }
-//                    }
-//                }
             } catch (Exception e){
                 LOG.error("Error", e);
             }

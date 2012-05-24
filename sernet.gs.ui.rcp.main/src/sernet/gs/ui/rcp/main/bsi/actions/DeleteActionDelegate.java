@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,22 +31,35 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -53,6 +67,8 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  * Delete items on user request.
@@ -118,13 +134,13 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Object sel = null;
                     try {
                         Activator.inheritVeriniceContextState();
                         monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
-    
                         for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
-                            Object sel = iter.next();
-    
+                            sel = iter.next();
+                           
                             if (sel instanceof IBSIStrukturElement 
                                     || sel instanceof BausteinUmsetzung 
                                     || sel instanceof FinishedRiskAnalysis 
@@ -148,8 +164,39 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                                 CnAElementFactory.getModel(el).databaseChildRemoved(el);
                                 monitor.worked(1);                           
                             }
-                        }               
-                    } catch (Exception e) {
+                        } 
+                    } catch (DataIntegrityViolationException dive){
+                        // try solving exception by deleting configuration / riskanalysis first
+                            final CnATreeElement el = (CnATreeElement) sel;
+                            Display.getDefault().asyncExec(new Runnable() {
+                                
+                                @Override
+                                public void run() {
+                                    try {
+                                            GenericCommand command = null;
+                                            if(el.getClass().getPackage().getName().contains("model.bsi")){
+                                                iterateThroughGroup(el);
+                                            }
+                                            if(determineConfiguration(el)){
+                                                if(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.DeleteActionDelegate_0, Messages.DeleteActionDelegate_18)){
+                                                    command = new PrepareObjectWithAccountDataForDeletion(el);
+                                                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                                            } 
+                                            removeElement(el);
+                                        }
+                                    } catch (CommandException e) {
+                                        LOG.error("Error while deleting element.", e);
+                                        ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                                    } catch (DataIntegrityViolationException de){
+                                        LOG.error("Error while deleting element.", de);
+                                    } catch (Exception e){
+                                        LOG.error("Error while deleting element.", e);
+                                        ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);                            
+                                    }
+                                }
+                            });
+                    }
+                    catch (Exception e) {
                         LOG.error("Error while deleting element.", e);
                         ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                     }
@@ -223,6 +270,103 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         }
     }
 
-
-
+    private void removeElement(CnATreeElement elementToRemove){
+        try {
+            if(!elementToRemove.isChildrenLoaded()){
+                elementToRemove = loadChildren(elementToRemove);
+            }
+            if(elementToRemove instanceof FinishedRiskAnalysis){
+                RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true);
+                LoadElementByUuid<FinishedRiskAnalysis> command = new LoadElementByUuid<FinishedRiskAnalysis>(elementToRemove.getUuid(), info);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                elementToRemove = command.getElement();
+            }
+            CnAElementHome.getInstance().remove(elementToRemove);
+            CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
+        } catch (Exception e) {
+            LOG.error("Error while deleting risk analysis", e);
+        }
+    }
+    
+    private void iterateThroughGroup(CnATreeElement element) throws CommandException{
+        if(!element.isChildrenLoaded()){
+            element = loadChildren(element);
+        }
+        if(canContainRiskAnalysis(element)){
+            freeBSIElement(element);
+        } 
+        for(CnATreeElement child : element.getChildren()){
+            if(canContainRiskAnalysis(child)){
+                freeBSIElement(child);
+            } else {
+                iterateThroughGroup(child);
+            }
+        }
+    }
+    
+    private CnATreeElement loadChildren(CnATreeElement element) throws CommandException{
+        LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        element = ((LoadChildrenForExpansion)command).getElementWithChildren();
+        element.setChildrenLoaded(true);
+        return element;
+    }
+    
+    private boolean canContainRiskAnalysis(CnATreeElement element){
+        return (element instanceof IBSIStrukturElement);
+    }
+    
+    private void freeBSIElement(CnATreeElement element) throws CommandException{
+        if(element instanceof FinishedRiskAnalysis){
+            removeGefaehrdungen((FinishedRiskAnalysis)element);
+            removeElement(element);
+        } else {
+            if(!element.isChildrenLoaded()){
+                element = loadChildren(element);
+            }
+            for(CnATreeElement child : element.getChildren()){
+                if(child instanceof FinishedRiskAnalysis){
+                    removeGefaehrdungen((FinishedRiskAnalysis)child);
+                    removeElement(child);
+                } 
+            }
+        }
+    }
+    
+    private void removeGefaehrdungen(FinishedRiskAnalysis analysis) throws CommandException {
+        RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true).setProperties(true);
+        LoadElementByUuid<FinishedRiskAnalysis> command = new LoadElementByUuid<FinishedRiskAnalysis>(analysis.getUuid(), info);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        analysis = command.getElement();
+        Set<CnATreeElement> children = analysis.getChildren();
+        for (CnATreeElement child : children) {
+            if (child instanceof GefaehrdungsUmsetzung) {
+                GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
+                removeElement(gef);
+            }
+        }
+    }
+    
+    private boolean determineConfiguration(CnATreeElement elmt){
+        boolean foundConfiguration = false;
+        String[] types = new String[]{Person.TYPE_ID, PersonIso.TYPE_ID};
+        ICommandService service = ServiceFactory.lookupCommandService();
+        for(String type : types){
+            try{
+            LoadReportElementWithChildren command = new LoadReportElementWithChildren(type, elmt.getDbId());
+            command = service.executeCommand(command);
+            for(CnATreeElement person : command.getResult()){
+                LoadConfiguration command2 = new LoadConfiguration(person);
+                command2 = service.executeCommand(command2);
+                if(command2.getConfiguration() != null){
+                    return true;
+                }
+            }
+            } catch (CommandException e){
+                LOG.error("Error determing existence of configuration objects", e);
+            }
+        }
+    
+        return false;
+    }
 }
