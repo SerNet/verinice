@@ -88,8 +88,9 @@ public class Util {
 	     if(component==null) {
 	         component = findComponent(context.getViewRoot(), DEFAULT_COMPONENT_ID);
 	     }
-	     context.addMessage(component.getClientId(context), message);
-	
+	     if(component!=null) {
+	         context.addMessage(component.getClientId(context), message);
+         }
 	}
 
 	private static UIComponent findComponent(UIComponent parent, String id) {

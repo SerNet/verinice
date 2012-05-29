@@ -17,6 +17,20 @@
 			<p:commandButton action="#{tree.init}" update=":tableForm,:navForm" icon="home-button" title="Wurzel" style="height: 36px;vertical-align: middle;"/>	
 			<p:commandButton action="#{tree.showParent}" update=":tableForm,:navForm" icon="up-button" title="Nach oben" style="height: 36px;vertical-align: middle;"/>	
 			<p:commandButton onclick="submitEditForm();" disabled="#{edit.element==null}"  icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
+			<p:commandButton id="newButton" disabled="#{edit.element==null}"  icon="new-button" title="New" style="height: 36px;vertical-align: middle;"/>			
+			<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="false" >
+				<p:dataTable id="newElementTable"
+	                var="h"
+	                value="#{tree.handlers}"
+	                styleClass="noheader">
+	                <p:column style="width:20px">
+						<h:graphicImage value="#{h.icon}" />	
+			        </p:column>
+                	<p:column>
+                		<p:commandLink value="#{msgTree[h.label]}" actionListener="#{h.execute}" styleClass="#{h.icon}" update=":tableForm,:navForm" />			
+                	</p:column>
+				</p:dataTable> 
+    		</p:overlayPanel>
 			<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb"/>
 		</h:form>
 	</div>
@@ -37,7 +51,7 @@
 	                rendered="#{!empty tree.children}">
 	                <p:ajax event="rowSelect" 
 						listener="#{tree.openElement}"   
-                    	update=":tableForm,:navForm,:editForm" />                 
+                    	update=":tableForm,:navForm,:editForm,:navForm:newPanel" />                 
 			        <p:column style="width:20px">
 						<h:graphicImage value="#{item.icon}" />	
 			        </p:column>

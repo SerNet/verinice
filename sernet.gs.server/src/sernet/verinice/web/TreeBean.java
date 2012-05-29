@@ -45,26 +45,11 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Document;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Incident;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.model.iso27k.Record;
-import sernet.verinice.model.iso27k.Requirement;
-import sernet.verinice.model.iso27k.Response;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.service.iso27k.LoadModel;
@@ -74,9 +59,11 @@ import sernet.verinice.service.iso27k.LoadModel;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class TreeBean {
+public class TreeBean implements IElementListener {
 
     private static final Logger LOG = Logger.getLogger(TreeBean.class);
+    
+    public static final String BOUNDLE_NAME = "sernet.verinice.web.TreeMessages"; //$NON-NLS-1$
     
     private static final ElementComparator<CnATreeElement> COMPARATOR = new ElementComparator<CnATreeElement>(new ITitleAdaptor<CnATreeElement>() {
         @Override
@@ -84,6 +71,8 @@ public class TreeBean {
             return element.getTitle();
         }
     });
+    
+    private static final int maxBreadcrumbSize = 4;
     
     private EditBean editBean;
     
@@ -100,6 +89,10 @@ public class TreeBean {
     private String pathId;
     
     List<CnATreeElement> path = new LinkedList<CnATreeElement>();
+    
+    private List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+    
+    private boolean newVisible = false;
     
     public TreeBean() {
         super();
@@ -121,9 +114,9 @@ public class TreeBean {
             children = new ArrayList<ElementInformation>(elementArray.length);
             for (CnATreeElement e : elementArray) {
                 children.add(new ElementInformation(e));
-            }        
-        }
-        createMenuModel();
+            }
+            createMenuModel();
+        }    
     }
 
     private boolean isGroup() {
@@ -155,10 +148,7 @@ public class TreeBean {
         });
         createMenuModel();
     }
-    
-    /**
-     * @param element2
-     */
+
     protected void updatePath(CnATreeElement element) {
         if(path!=null && path.contains(element)) {
             path.set(path.indexOf(element), element);
@@ -175,9 +165,6 @@ public class TreeBean {
         }
     }
     
-    /**
-     * 
-     */
     private void createMenuModel() {
         menuModel = new DefaultMenuModel();
         FacesContext facesCtx = FacesContext.getCurrentInstance();
@@ -194,10 +181,14 @@ public class TreeBean {
         menuModel.addMenuItem(item);
         
         path.clear();
-        addPath(this.getElement());
+        createPath(this.getElement());
         Collections.reverse(path);
         Integer n = 0;
-        for (CnATreeElement element : path) {
+        if(path.size()>maxBreadcrumbSize) {
+            n = path.size() - maxBreadcrumbSize;
+        }
+        for (int i = n; i < path.size(); i++) {
+            CnATreeElement element = path.get(i);
             item = new MenuItem();
             item.setValue(element.getTitle());
             item.setStyle("padding: 0;");
@@ -224,6 +215,15 @@ public class TreeBean {
     
     public void openElement() {
         try {
+            if(getElement() instanceof IISO27kGroup) {
+                List<IActionHandler> handlerList = HandlerFactory.getHandlerForElement((IISO27kGroup) getElement());
+                for (IActionHandler handler : handlerList) {
+                    handler.addElementListeners(this);
+                }
+                setHandlers(handlerList);
+            }
+            
+            getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_ALL));
             getEditBean().setSaveButtonHidden(true);
             getEditBean().setUuid(getElement().getUuid());
             getEditBean().setTitle(getElement().getTitle());
@@ -236,21 +236,28 @@ public class TreeBean {
             getLinkBean().setSelectedLinkTargetName(null);
             getLinkBean().setSelectedLinkType(null);
         } catch (Throwable t) {
-            LOG.error("Error while opening task", t); //$NON-NLS-1$
+            LOG.error("Error while opening element", t); //$NON-NLS-1$
         } 
     }
+    
+    @Override
+    public void elementAdded(CnATreeElement element) {
+        manager.elementAdded(element);
+        getChildren().add(new ElementInformation(element));
+        setNewVisible(false);
+    }
 
-    /**
-     * @param element2
-     * @param parents
-     */
-    private void addPath(CnATreeElement element) {
+    private void createPath(CnATreeElement element) {
         if(!isRoot(element)) {
             path.add(element);
             if(!isTopLevel(element)) {           
-                addPath(element.getParent());
+                createPath(element.getParent());
             }
         }
+    }
+    
+    public void add() {
+        
     }
     
     private boolean isRoot(CnATreeElement element) {
@@ -270,9 +277,6 @@ public class TreeBean {
                || typeId.equals(ImportIsoGroup.TYPE_ID));
     }
 
-    /**
-     * @return the menuModel
-     */
     public MenuModel getMenuModel() {
         if(menuModel==null) {
             createMenuModel();
@@ -280,30 +284,42 @@ public class TreeBean {
         return menuModel;
     }
 
-    /**
-     * @return the pathId
-     */
     public String getPathId() {
         return pathId;
     }
 
-    /**
-     * @param pathId the pathId to set
-     */
     public void setPathId(String pathId) {
         this.pathId = pathId;
     }
 
-    /**
-     * @return the editBean
-     */
+    public List<IActionHandler> getHandlers() {
+        return handlers;
+    }
+
+    public void setHandlers(List<IActionHandler> handlers) {
+        this.handlers = handlers;
+    }
+
+    public boolean getNewVisible() {
+        return newVisible;
+    }
+    
+    public void toggleNew() {
+        this.newVisible = !this.newVisible;
+    }
+    
+    public void showNew() {
+        this.newVisible = true;
+    }
+
+    public void setNewVisible(boolean newVisible) {
+        this.newVisible = newVisible;
+    }
+
     public EditBean getEditBean() {
         return editBean;
     }
 
-    /**
-     * @param editBean the editBean to set
-     */
     public void setEditBean(EditBean editBean) {
         this.editBean = editBean;
     }

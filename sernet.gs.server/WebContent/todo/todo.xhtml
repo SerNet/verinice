@@ -23,7 +23,7 @@
 					  			actionListener="#{toDo.loadToDoListForVerbund}"
 					  			update=":verbundForm,:elementsForm,:tablePanel,:editPanel"
 					  			styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
-					            <f:param name="itVerbundTitle" value="#{itVerbund.title}"/>
+					            <f:param name="itVerbundTitle" value="#{itVerbund.titleEscaped}" />
 					        </p:commandLink>
 					    </li>
 					</ui:repeat>
@@ -100,7 +100,7 @@
      			</div>
      			<h:form id="elementsForm">
      				<p:accordionPanel id="elementPanel" height="500" style="background-color: #ffffff;">
-	      				<p:tab title="#{msg['todo.buildings']}" rendered="#{not empty assetNavigation.gebaeudeList}">
+	      				<p:tab title="#{msg['todo.buildings']}"  rendered="#{not empty assetNavigation.gebaeudeList}" style="height: 250px">
 				        	<ul>
 						 		<ui:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
 						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">

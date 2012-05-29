@@ -65,7 +65,7 @@ input.submit {
 }
 
 .breadcrumb {	
-	width: 865px;
+	width: 832px;
 	height: 22px;
 	display: inline-block; 
 	vertical-align: middle;
@@ -103,6 +103,8 @@ input.submit {
     padding: 0;
     position: relative;
     top: 1px;
+    height: 257px;
+    width: 173px;
 }
 
 .floatbox ul {
@@ -230,4 +232,62 @@ h1+a:visited {
 
 .ui-widget .save-button {
 	background-image: url("../image/save.gif");
+}
+
+.ui-widget .new-button {
+	background-image: url("../image/new.gif");
+}
+
+.ui-widget .new-asset-icon {
+	background-image: url("../image/icon/elements/16-asset-grey.png");
+}
+
+
+.ui-widget .new-threat-icon {
+	background-image: url("../image/icon/elements/16-lightening.png");
+}
+.ui-widget .new-vulnerability-icon {
+	background-image: url("../image/icon/elements/16-shield-blue-broken.png");
+}
+.ui-widget .new-incident_scenario-icon {
+	background-image: url("../image/icon/elements/dialog-warning.png");
+}
+.ui-widget .new-incident-icon {
+	background-image: url("../image/icon/elements/16-arrow-incident-red.png");
+}
+.ui-widget .new-requirement-icon {
+	background-image: url("../image/icon/elements/16-paper-gavel-alt.png");
+}
+.ui-widget .new-exception-icon {
+	background-image: url("../image/icon/elements/16-paper-excerpt-yellow.png");
+}
+.ui-widget .new-audit-icon {
+	background-image: url("../image/icon/elements/16-clipboard-audit.png");
+}
+.ui-widget .new-interview-icon {
+	background-image: url("../image/icon/elements/16-clipboard-comment.png");
+}
+.ui-widget .new-evidence-icon {
+	background-image: url("../image/icon/elements/16-clipboard-eye.png");
+}
+.ui-widget .new-response-icon {
+	background-image: url("../image/icon/elements/16-paper-arrow-green.png");
+}
+.ui-widget .new-document-icon {
+	background-image: url("../image/icon/elements/mime-document.png");
+}
+.ui-widget .new-record-icon {
+	background-image: url("../image/icon/elements/mime-text.png");
+}
+.ui-widget .new-scope-icon {
+	background-image: url("../image/icon/elements/tree_explorer.gif");
+}
+.ui-widget .new-person-iso-icon {
+	background-image: url("../image/icon/elements/user_suit.png");
+}
+.ui-widget .new-process-icon {
+	background-image: url("../image/icon/elements/16-paper-workplan.png");
+}
+.ui-widget .new-control-icon {
+	background-image: url("../image/icon/elements/stufe_none.png");
 }

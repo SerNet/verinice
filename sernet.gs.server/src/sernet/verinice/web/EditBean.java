@@ -511,6 +511,9 @@ public class EditBean {
     }
     
     public List<IChangeListener> getChangeListener() {
+        if(this.changeListener==null) {
+            this.changeListener = new LinkedList<IChangeListener>();
+        }
         return changeListener;
     }
 
@@ -519,16 +522,11 @@ public class EditBean {
     }
     
     public void addChangeListener(IChangeListener changeListener) {
-        if(this.changeListener==null) {
-            this.changeListener = new LinkedList<IChangeListener>();
-        }
-        this.changeListener.add(changeListener);
+        getChangeListener().add(changeListener);
     }
     
     public void clearChangeListener() {
-        if(getChangeListener()!=null) {
-            getChangeListener().clear();
-        }
+        getChangeListener().clear();
     }
 
     public List<String> getVisibleTags() {

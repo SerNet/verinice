@@ -49,7 +49,7 @@ public class AssetNavigationBean {
 	
 	final static int SOURCE_ELEMENT = 2;
 	
-	List<ITVerbund> itVerbundList;
+	List<ItVerbundWrapper> itVerbundList;
 	
 	ITVerbund selectedItVerbund;
 	
@@ -78,14 +78,26 @@ public class AssetNavigationBean {
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		try {
 			service.executeCommand(command);
-			setItVerbundList(command.getElements());
+			setItVerbundList(getWrapperList(command.getElements()));
 		} catch (Exception e) {
 			LOG.error("Error while loading IT-Verbuende", e);
 			Util.addError("verbundForm", Util.getMessage("error"));
 		}	
 	}
 	
-	public void loadChildren(ILoadChildren command, int source) {
+	/**
+     * @param elements
+     * @return
+     */
+    private List<ItVerbundWrapper> getWrapperList(List<ITVerbund> elements) {
+        List<ItVerbundWrapper> wrapperList = new ArrayList<ItVerbundWrapper>();
+        for (ITVerbund verbund : elements) {
+            wrapperList.add(new ItVerbundWrapper(verbund));
+        }
+        return wrapperList;
+    }
+
+    public void loadChildren(ILoadChildren command, int source) {
 		Integer itVerbundId = null;
 		try {
 			setSelectedItVerbund((ITVerbund) getItVerbundConverter().getAsObject(null, null, getSelectedItVerbundTitel()));
@@ -115,11 +127,11 @@ public class AssetNavigationBean {
 		
 	}
 	
-	public void setItVerbundList(List<ITVerbund> itVerbundList) {
+	public void setItVerbundList(List<ItVerbundWrapper> itVerbundList) {
 		this.itVerbundList = itVerbundList;
 	}
 
-	public List<ITVerbund> getItVerbundList() {
+	public List<ItVerbundWrapper> getItVerbundList() {
 		return itVerbundList;
 	}
 	

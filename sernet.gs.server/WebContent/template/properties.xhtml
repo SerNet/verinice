@@ -7,42 +7,6 @@
 	  xmlns:p="http://primefaces.org/ui"
 	  xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:composition>
-		<p:outputPanel rendered="#{not empty listNoLabel}">
-			<table>
-				<c:forEach var="i" items="#{listNoLabel}">
-					<tr>
-						<td>
-							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}"/>
-							<h:outputText value="#{i.value}" rendered="#{not p.isEditable}" styleClass="roText"/>
-							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" />
-							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable)}" styleClass="roText"/>
-							<p:outputPanel rendered="#{i.isDate}">
-								<p:calendar value="#{i.date}" 
-									showButtonPanel="true" 
-									showWeek="true"
-									mode="popup" 
-									showOn="button"
-									navigator="true"/>
-							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isSingleSelect}">
-								<p:selectOneMenu value="#{i.selectedOption}">
-									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
-								</p:selectOneMenu>
-							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList}">
-								<p:selectOneMenu value="#{i.selectedOption}">
-									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
-								</p:selectOneMenu>
-							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList}">
-								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}"/>
-							</p:outputPanel>
-							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
-						</td>
-					</tr>	
-				</c:forEach>
-			</table>
-		</p:outputPanel>
 		<p:outputPanel rendered="#{not empty list}">
 			<table>	
 				<c:forEach var="p" items="#{list}" > 
@@ -52,7 +16,7 @@
 						</td>
 						<td style="width: 300px;">				
 							<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}" styleClass="hui"/>
-							<h:outputText value="#{p.value}" rendered="#{not p.isEditable}" styleClass="roText" />
+							<h:outputText value="#{p.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText" />
 							<p:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}"  styleClass="hui"/>
 							<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
 							<p:outputPanel rendered="#{p.isDate}">
@@ -76,6 +40,42 @@
 							</p:outputPanel>
 							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList}">
 								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" styleClass="hui"/>
+							</p:outputPanel>
+							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
+						</td>
+					</tr>	
+				</c:forEach>
+			</table>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{not empty listNoLabel}">
+			<table>
+				<c:forEach var="i" items="#{listNoLabel}">
+					<tr>
+						<td>
+							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}"/>
+							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText"/>
+							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" />
+							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable)}" styleClass="roText"/>
+							<p:outputPanel rendered="#{i.isDate}">
+								<p:calendar value="#{i.date}" 
+									showButtonPanel="true" 
+									showWeek="true"
+									mode="popup" 
+									showOn="button"
+									navigator="true"/>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isSingleSelect}">
+								<p:selectOneMenu value="#{i.selectedOption}">
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList}">
+								<p:selectOneMenu value="#{i.selectedOption}">
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList}">
+								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}"/>
 							</p:outputPanel>
 							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
 						</td>

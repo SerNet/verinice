@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Daniel Murygin <dm[at]sernet[dot]de>.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,8 +10,8 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
@@ -19,25 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import java.io.Serializable;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Interface to implement actions executed in web interface.
- * You can set a label ans an icon to describe the interface.
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
  */
-public interface IActionHandler extends Serializable{
- 
-    void execute();
-    
-    String getLabel();
-    
-    void setLabel(String label);
-    
-    String getIcon();
-    
-    void setIcon(String path);
-    
-    void addElementListeners(IElementListener elementListener);
+public interface IElementListener {
+
+    void elementAdded(CnATreeElement element);
 }

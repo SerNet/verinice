@@ -65,14 +65,14 @@
 	      			<table>
 	      				<tr>
 	      					<td>
-	      						<p:selectOneMenu id="linkType" value="#{link.selectedLinkType}" style="width:173px">
+	      						<p:selectOneMenu id="linkType" value="#{link.selectedLinkType}" style="width:155px">
 	      							<f:selectItem itemLabel="#{msgEdit['selectType']}" itemValue="" />  
 									<f:selectItems value="#{link.linkTypeList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 									<p:ajax update="linkTarget" event="change" listener="#{link.loadLinkTargets}" process="linkType"/>
 								</p:selectOneMenu>
 	      					</td>
 	      					<td>
-	      						<p:selectOneMenu id="linkTarget" value="#{link.selectedLinkTargetName}">
+	      						<p:selectOneMenu id="linkTarget" value="#{link.selectedLinkTargetName}" style="width:155px">
 	      							<f:selectItem itemLabel="#{msgEdit['selectTarget']}" itemValue="" />  
 									<f:selectItems value="#{link.linkTargetNameList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>

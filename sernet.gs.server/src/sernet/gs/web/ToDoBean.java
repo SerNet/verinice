@@ -143,7 +143,7 @@ public class ToDoBean {
 		// execute command in AssetNavigationBean
 		// to load children together with measures
 		getAssetNavigation().loadChildren(command,source);
-		
+	
 		// extract measures from command
 		Set<TodoViewItem> massnahmenList = command.getMassnahmen();
 		getTodoList().clear();	

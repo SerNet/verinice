@@ -27,10 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.model.SelectItem;
-
 import org.apache.log4j.Logger;
-import org.hibernate.hql.ast.tree.IsNullLogicOperatorNode;
 
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
@@ -126,7 +123,11 @@ public class HuiProperty<K,V> implements Serializable{
     }
     
     public boolean getBoolean() {
-        return Integer.valueOf((String) getValue())==1;
+        boolean result = false;
+        if(getValue()!=null) {
+            result = Integer.valueOf((String) getValue())==1;
+        }
+        return result;
     }
     
     public void setBoolean(boolean b) {
@@ -153,10 +154,10 @@ public class HuiProperty<K,V> implements Serializable{
             return null;
         }
         String item = null;
-        if(getIsSingleSelect()) {
+        if(getIsSingleSelect() && getValue()!=null) {
             option = type.getOption((String)getValue());
         }
-        if(getIsNumericSelect()) {
+        if(getIsNumericSelect() && getValue()!=null) {
             option = type.getOption(Integer.valueOf((String)getValue()));           
         }
         if(option!=null) {

@@ -22,13 +22,9 @@ package sernet.verinice.web;
 import java.util.Hashtable;
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.Exception;

@@ -40,12 +40,12 @@ public class ItVerbundConverter implements Converter {
 		Object value = null;
 		if(toDoBean!=null && text!=null) {
 			ServerInitializer.inheritVeriniceContextState();
-			List<ITVerbund> itVerbundList = toDoBean.getItVerbundList();
+			List<ItVerbundWrapper> itVerbundList = toDoBean.getItVerbundList();
 			if(itVerbundList!=null) {
-				for (Iterator<ITVerbund> iterator = itVerbundList.iterator(); iterator.hasNext();) {
-					ITVerbund itVerbund = iterator.next();
-					if(text.equals(itVerbund.getTitle())) {
-						value = itVerbund;
+				for (Iterator<ItVerbundWrapper> iterator = itVerbundList.iterator(); iterator.hasNext();) {
+				    ItVerbundWrapper itVerbundWrapper = iterator.next();
+					if(text.equals(itVerbundWrapper.getItVerbund().getTitle())) {
+						value = itVerbundWrapper.getItVerbund();
 						break;
 					}
 				}
@@ -56,8 +56,8 @@ public class ItVerbundConverter implements Converter {
 
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object value) {
 		ServerInitializer.inheritVeriniceContextState();
-		ITVerbund itVerbund = (ITVerbund) value;
-		return (itVerbund==null) ? null : itVerbund.getTitle();
+		ItVerbundWrapper itVerbundWrapper = (ItVerbundWrapper) value;
+		return (itVerbundWrapper==null) ? null : itVerbundWrapper.getItVerbund().getTitle();
 	}
 
 }

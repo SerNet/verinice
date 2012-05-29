@@ -245,8 +245,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 setAttributes = false;
             }
         }
-        CnATypeMapper typeMapper = new CnATypeMapper();
-        Class clazz = typeMapper.getClassFromTypeId(veriniceObjectType);
+       
+        Class clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
         IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);      
         
         parent = (parent == null) ? accessContainer(clazz) : parent;

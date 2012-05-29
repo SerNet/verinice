@@ -255,8 +255,8 @@ public class CnATypeMapper {
      * @return the corresponding Class
      ************************************************************/
     @SuppressWarnings("unchecked")
-    public Class<CnATreeElement> getClassFromTypeId(String typeId) {
-        Class<CnATreeElement> klass = (Class<CnATreeElement>) typeIdClass.get(typeId);
+    public static <T> Class<T> getClassFromTypeId(String typeId) {
+        Class<T> klass = (Class<T>) typeIdClass.get(typeId);
         if (klass == null) {
             throw new IllegalStateException(String.format("Type ID '%s' was not available in type map.", typeId));
         }

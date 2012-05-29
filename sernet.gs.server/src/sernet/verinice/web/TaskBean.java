@@ -26,29 +26,20 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
-
-import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.bpm.TaskService;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -90,7 +81,6 @@ public class TaskBean {
         if (LOG.isDebugEnabled()) {
             LOG.debug("loadTasks called..."); //$NON-NLS-1$
         }
-        getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
         
         ITaskParameter parameter = new TaskParameter();
         parameter.setRead(getShowRead());
@@ -119,6 +109,7 @@ public class TaskBean {
             getSelectedTask().setIsRead(true);
             getSelectedTask().addStyle(ITask.STYLE_READ);
             
+            getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
             getEditBean().setTitle(getSelectedTask().getControlTitle());
@@ -352,7 +343,13 @@ public class TaskBean {
         }
     
         @Override
-        public void setLabel(String label) {}      
+        public void setLabel(String label) {}
+        @Override
+        public String getIcon() { return null; }
+        @Override
+        public void setIcon(String path) {}
+        @Override
+        public void addElementListeners(IElementListener elementListener) {}     
     }
     
     public class OpenNextHandler implements IActionHandler {
@@ -368,7 +365,13 @@ public class TaskBean {
         }
     
         @Override
-        public void setLabel(String label) {}      
+        public void setLabel(String label) {}
+        @Override
+        public String getIcon() { return null; }
+        @Override
+        public void setIcon(String path) {}
+        @Override
+        public void addElementListeners(IElementListener elementListener) {}
     }
 
 }
