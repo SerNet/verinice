@@ -45,10 +45,10 @@
 		                width="400px"
 		                styleClass="noheader">
 		                <p:column headerText="#{msgEdit['file']}" style="width:400px">
-		                	<h:commandLink value="#{item.titel}" action="#{attachment.download}">
+		                	<p:commandLink value="#{item.titel}" action="#{attachment.download}" ajax="false" immediate="true">
 		                    	<f:param name="id" value="#{item.dbId}" />
 		                    	<f:param name="name" value="#{item.titel}" />	                    	                    	
-		                    </h:commandLink>
+		                    </p:commandLink>
 				        </p:column>
 		            </p:dataTable> 
 					<!-- 104857600 b = 100 mb -->

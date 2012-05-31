@@ -48,7 +48,7 @@ public class CreateElementHandler implements IActionHandler {
      * @param parent
      * @param newElementType
      */
-    public CreateElementHandler(CnATreeElement parent, String newElementType, String id) {
+    public CreateElementHandler(CnATreeElement parent, String newElementType) {
         super();
         this.parent = parent;
         this.newElementType = newElementType;

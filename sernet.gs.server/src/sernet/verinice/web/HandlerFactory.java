@@ -19,11 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Creates web {@link IActionHandler}s for an {@link IISO27kGroup}.
@@ -34,15 +39,36 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 public class HandlerFactory {
     
+    /**
+     * @param element
+     * @return
+     */
+    public static List<IActionHandler> getHandlerForElement(CnATreeElement element) {
+        if(element instanceof IISO27kGroup) {
+            return getHandlerForElement((IISO27kGroup)element);
+        }
+        if(element instanceof ISO27KModel) {
+            return getHandlerForElement((ISO27KModel)element);
+        }
+        return Collections.emptyList();
+    }
+    
     public static List<IActionHandler> getHandlerForElement(IISO27kGroup group) {       
         List<IActionHandler> handlers = new LinkedList<IActionHandler>();
-        int n = 0;
-        for (String childType : group.getChildTypes()) {
-            handlers.add(new CreateElementHandler((CnATreeElement) group, childType, "h" + n));
-            n++;
-            handlers.add(new CreateElementHandler((CnATreeElement) group, group.getTypeId(), "h" + n));
-            n++;
+        if(!(group instanceof ImportIsoGroup)) {
+            if(!(group instanceof IISO27Scope)) {
+                handlers.add(new CreateElementHandler((CnATreeElement) group, group.getTypeId()));
+            }       
+            for (String childType : group.getChildTypes()) {
+                handlers.add(new CreateElementHandler((CnATreeElement) group, childType));          
+            }
         }
+        return handlers;
+    }
+    
+    public static List<IActionHandler> getHandlerForElement(ISO27KModel model) {       
+        List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+        handlers.add(new CreateElementHandler((CnATreeElement) model, Organization.TYPE_ID));
         return handlers;
     }
 }

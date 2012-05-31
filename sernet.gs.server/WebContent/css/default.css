@@ -65,7 +65,7 @@ input.submit {
 }
 
 .breadcrumb {	
-	width: 832px;
+	width: 800px;
 	height: 22px;
 	display: inline-block; 
 	vertical-align: middle;
@@ -236,6 +236,10 @@ h1+a:visited {
 
 .ui-widget .new-button {
 	background-image: url("../image/new.gif");
+}
+
+.ui-widget .delete-button {
+	background-image: url("../image/delete-16.png");
 }
 
 .ui-widget .new-asset-icon {

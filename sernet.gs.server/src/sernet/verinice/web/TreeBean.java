@@ -38,6 +38,7 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
@@ -52,6 +53,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.tree.ElementManager;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
@@ -90,7 +92,7 @@ public class TreeBean implements IElementListener {
     
     List<CnATreeElement> path = new LinkedList<CnATreeElement>();
     
-    private List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+    private List<IActionHandler> handlers;
     
     private boolean newVisible = false;
     
@@ -109,14 +111,29 @@ public class TreeBean implements IElementListener {
     public void setElement(CnATreeElement element) {     
         this.element = element;
         if(isGroup()) {
-            CnATreeElement[] elementArray = manager.getChildren(this.element);
-            Arrays.sort(elementArray, COMPARATOR);
-            children = new ArrayList<ElementInformation>(elementArray.length);
-            for (CnATreeElement e : elementArray) {
-                children.add(new ElementInformation(e));
-            }
-            createMenuModel();
-        }    
+            loadChildren();
+            createMenuModel();          
+        } else {
+            setHandlers(new ArrayList<IActionHandler>());
+        }
+        createHandlers();
+    }
+
+    private void loadChildren() {
+        CnATreeElement[] elementArray = manager.getChildren(this.element);
+        Arrays.sort(elementArray, COMPARATOR);
+        children = new ArrayList<ElementInformation>(elementArray.length);
+        for (CnATreeElement e : elementArray) {
+            children.add(new ElementInformation(e));
+        }
+    }
+
+    private void createHandlers() {
+        List<IActionHandler> handlerList = HandlerFactory.getHandlerForElement(getElement());
+        for (IActionHandler handler : handlerList) {
+            handler.addElementListeners(this);
+        }
+        setHandlers(handlerList);
     }
 
     private boolean isGroup() {
@@ -147,6 +164,7 @@ public class TreeBean implements IElementListener {
             }
         });
         createMenuModel();
+        createHandlers();
     }
 
     protected void updatePath(CnATreeElement element) {
@@ -160,6 +178,7 @@ public class TreeBean implements IElementListener {
     public void showParent() {
         if(this.element!=null) {
             setElement(this.element.getParent());
+            openElement();
         } else {
             init();
         }
@@ -214,32 +233,53 @@ public class TreeBean implements IElementListener {
     }
     
     public void openElement() {
-        try {
-            if(getElement() instanceof IISO27kGroup) {
-                List<IActionHandler> handlerList = HandlerFactory.getHandlerForElement((IISO27kGroup) getElement());
-                for (IActionHandler handler : handlerList) {
-                    handler.addElementListeners(this);
-                }
-                setHandlers(handlerList);
+        try { 
+            if(isEditable()) {
+                getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_ALL));
+                getEditBean().setSaveButtonHidden(true);
+                getEditBean().setUuid(getElement().getUuid());
+                getEditBean().setTitle(getElement().getTitle());
+                getEditBean().setTypeId(getElement().getTypeId());
+                getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
+                getEditBean().init();
+                getEditBean().clearActionHandler();
+                
+                getLinkBean().setSelectedLink(null);
+                getLinkBean().setSelectedLinkTargetName(null);
+                getLinkBean().setSelectedLinkType(null);
+            } else {
+                getEditBean().clear();
+                getLinkBean().clear();
             }
-            
-            getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_ALL));
-            getEditBean().setSaveButtonHidden(true);
-            getEditBean().setUuid(getElement().getUuid());
-            getEditBean().setTitle(getElement().getTitle());
-            getEditBean().setTypeId(getElement().getTypeId());
-            getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
-            getEditBean().init();
-            getEditBean().clearActionHandler();
-            
-            getLinkBean().setSelectedLink(null);
-            getLinkBean().setSelectedLinkTargetName(null);
-            getLinkBean().setSelectedLinkType(null);
         } catch (Throwable t) {
             LOG.error("Error while opening element", t); //$NON-NLS-1$
+            Util.addError("elementTable", Util.getMessage("tree.open.failed")); //$NON-NLS-1$
         } 
     }
     
+    public void delete() {
+        try {
+            RemoveElement<CnATreeElement> command = new RemoveElement(getElement());
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            manager.elementRemoved(getElement());
+            getChildren().remove(getElementInformation());
+            getEditBean().clear();
+            getLinkBean().clear();
+            if(isGroup()) {
+                showParent();
+            }
+        } catch( Exception e) {
+            LOG.error("Error while deleting element.");
+            Util.addError("elementTable", Util.getMessage("tree.delete.failed"));
+        }
+    }
+
+    private boolean isEditable() {
+        return getElement()!=null 
+               && !(getElement() instanceof ISO27KModel)
+               && !(getElement() instanceof ImportIsoGroup);
+    }
+
     @Override
     public void elementAdded(CnATreeElement element) {
         manager.elementAdded(element);
@@ -293,6 +333,9 @@ public class TreeBean implements IElementListener {
     }
 
     public List<IActionHandler> getHandlers() {
+        if(handlers==null) {
+            init();
+        }
         return handlers;
     }
 
