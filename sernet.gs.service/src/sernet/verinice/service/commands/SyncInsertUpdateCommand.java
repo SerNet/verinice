@@ -332,7 +332,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         
         if(elementInDB!=null) {
-            idElementMap.put(elementInDB.getExtId(), elementInDB);
+            idElementMap.put(extId, elementInDB);
         }
         
         if (getLogrt().isDebugEnabled()) {
