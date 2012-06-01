@@ -16,8 +16,9 @@
 		<h:form id="navForm">
 			<p:commandButton action="#{tree.init}" update=":tableForm,:navForm" icon="home-button" title="Wurzel" style="height: 36px;vertical-align: middle;"/>	
 			<p:commandButton action="#{tree.showParent}" update=":tableForm,:navForm,:editForm,:navForm:newPanel" icon="up-button" title="Nach oben" style="height: 36px;vertical-align: middle;"/>	
-			<p:commandButton onclick="submitEditForm();" disabled="#{edit.element==null}"  icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
-			<p:commandButton onclick="confirmation.show()" disabled="#{edit.element==null}"  icon="delete-button" title="Delete" style="height: 36px;vertical-align: middle;"/>
+			<p:commandButton onclick="submitEditForm();" oncomplete="repeatMessage();" disabled="#{edit.element==null}" icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
+			<p:remoteCommand name="repeatMessage" process="@form" action="#{message.repeat}"/>
+		    <p:commandButton onclick="confirmation.show()" disabled="#{edit.element==null}"  icon="delete-button" title="Delete" style="height: 36px;vertical-align: middle;"/>
 			<p:commandButton id="newButton" disabled="#{empty tree.handlers}"  icon="new-button" title="New" style="height: 36px;vertical-align: middle;"/>			
 			<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="false" >
 				<p:dataTable id="newElementTable"

@@ -268,9 +268,10 @@ public class TreeBean implements IElementListener {
             if(isGroup()) {
                 showParent();
             }
+            Util.addInfo("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
         } catch( Exception e) {
             LOG.error("Error while deleting element.");
-            Util.addError("elementTable", Util.getMessage("tree.delete.failed"));
+            Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
         }
     }
 

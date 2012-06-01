@@ -78,6 +78,7 @@ public class CreateElementHandler implements IActionHandler {
                 for (IElementListener listener : getElementListeners()) {
                     listener.elementAdded(newElement);
                 }
+                Util.addInfo("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "element-created", new Object[]{title} ));
             }
             
         } catch (Exception e) {

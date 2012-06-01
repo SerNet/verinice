@@ -39,6 +39,10 @@ public class MessageBean {
         this.error = error;
     }
     
+    public void repeat() {
+        Util.repeatMessage();
+    }
+    
     public void english() {
         Util.english();
     }

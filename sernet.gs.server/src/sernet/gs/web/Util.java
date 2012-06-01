@@ -32,6 +32,10 @@ public class Util {
 
 	private static final String DEFAULT_COMPONENT_ID = "massagePanel";
 
+	private static String lastComponentId;
+	
+	private static FacesMessage lastMessage;
+	
     public static String getMessage(String key) {
 		return getMessage(ToDoBean.BOUNDLE_NAME, key, null);
 	}
@@ -90,7 +94,16 @@ public class Util {
 	     }
 	     if(component!=null) {
 	         context.addMessage(component.getClientId(context), message);
+	         lastComponentId = component.getClientId(context);
+	         lastMessage = message;
          }
+	}
+	
+	public static void repeatMessage() {
+	    if(lastComponentId!=null && lastMessage!=null) {
+    	    FacesContext context = FacesContext.getCurrentInstance();
+    	    context.addMessage(lastComponentId, lastMessage);
+	    }
 	}
 
 	private static UIComponent findComponent(UIComponent parent, String id) {
