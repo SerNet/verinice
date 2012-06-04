@@ -190,10 +190,10 @@ public class ISMViewFilterDialog extends Dialog {
         table.setHeaderVisible(false);
         table.setLinesVisible(false);    
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setWidth(100);
+        checkboxColumn.setWidth(430);
         
         comp.setContent(viewerType.getControl());
-        viewerType.getTable().setSize(150, 135);
+        viewerType.getTable().setSize(470, 135);
  
         viewerType.setContentProvider(new ArrayContentProvider());
 
@@ -244,10 +244,10 @@ public class ISMViewFilterDialog extends Dialog {
         table.setHeaderVisible(false);
         table.setLinesVisible(false);
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setWidth(100);
+        checkboxColumn.setWidth(430);
         
         comp.setContent(viewer.getControl());
-        viewer.getTable().setSize(150, 135);
+        viewer.getTable().setSize(470, 135);
 
         viewer.setContentProvider(new ArrayContentProvider());
 
@@ -362,7 +362,7 @@ public class ISMViewFilterDialog extends Dialog {
         newShell.setText(Messages.ISMViewFilterDialog_5);
 
         // workaround to prevent tableviewer size from exceeding shell size:
-        newShell.setSize(400, 540);
+        newShell.setSize(500, 570);
     }
     
     protected HUITypeFactory getTypeFactory() {
