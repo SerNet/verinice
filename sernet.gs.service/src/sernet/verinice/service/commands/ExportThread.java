@@ -28,6 +28,7 @@ import java.util.Set;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 
@@ -53,6 +54,8 @@ import de.sernet.sync.data.SyncObject;
 public class ExportThread extends NotifyingThread {
 
     private static final Logger LOG = Logger.getLogger(ExportThread.class);
+    
+    private static final Object lock = new Object();
     
     private Cache cache = null;
     
@@ -210,13 +213,23 @@ public class ExportThread extends NotifyingThread {
         ri.setLinksUp(true);
         element = getDao().retrieve(element.getDbId(), ri);
         
-        getCache().put(new Element(element.getUuid(), element));
+        cacheElement(element);       
         
         if (LOG.isDebugEnabled()) {
             LOG.debug("Hydrating element: " + element.getTitle() + ", UUID: " + element.getUuid());
         }
              
         return element;
+    }
+
+    private void cacheElement(CnATreeElement element) {
+        synchronized (lock) {
+            if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
+                getCache().put(new Element(element.getUuid(), element));
+            } else {
+                LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
+            }
+        }
     }
     
     private void exportAttachments(CnATreeElement element, SyncObject syncObject) throws CommandException {

@@ -480,20 +480,28 @@ public class ExportCommand extends GenericCommand implements IChangeLoggingComma
 	    if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
 	        cache = createCache();
 	    } else {
-	        cache = manager.getCache(cacheId);
+	        cache = getManager().getCache(cacheId);
 	    }
 	    return cache;
  	}
 	
 	private Cache createCache() {
 	    cacheId = UUID.randomUUID().toString();
-        manager = CacheManager.create();
         cache = new Cache(cacheId, 20000, false, false, 1800, 1800);
-        manager.addCache(cache);
+        getManager().addCache(cache);
         return cache;
 	}
 	
-	protected HUITypeFactory getHuiTypeFactory() {
+	
+	
+	public CacheManager getManager() {
+	    if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
+	        manager = CacheManager.create();
+	    }
+        return manager;
+    }
+
+    protected HUITypeFactory getHuiTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
