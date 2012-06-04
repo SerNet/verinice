@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.aspectj.weaver.bcel.AtAjAttributes;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -153,6 +154,8 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 	protected TableColumn dateColumn;
 	protected TableColumn versionColumn;
 	TableSorter tableSorter = new TableSorter();
+	
+	private List<Attachment> attachmentList;
 	
 	private AttachmentContentProvider contentProvider = new AttachmentContentProvider(this);
 	
@@ -346,7 +349,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 			}
 			LoadAttachments command = new LoadAttachments(id);		
 			command = getCommandService().executeCommand(command);		
-			final List<Attachment> attachmentList = command.getAttachmentList();
+			attachmentList = command.getAttachmentList();
 			if(attachmentList!=null) {
 				Display.getDefault().syncExec(new Runnable(){
 					public void run() {
@@ -603,6 +606,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 		super.dispose();
 		getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
+        for (Attachment attachment : attachmentList) {
+            attachment.removeAllListener();
+        }
 	}
 	
 	
@@ -637,7 +643,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 				Attachment attachment = (Attachment) element;
 				switch(columnIndex) {
 				case 1: 
-					return attachment.getFileName(); //$NON-NLS-1$
+					return attachment.getTitel(); //$NON-NLS-1$
 				case 2: 
 					return attachment.getMimeType(); //$NON-NLS-1$
 				case 3: 

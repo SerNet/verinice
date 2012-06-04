@@ -167,6 +167,10 @@ public class Addition implements Serializable, ITypedElement {
 	public void removeListener(INoteChangedListener listener) {
 		getListener().remove(listener);
 	}
+	
+	public void removeAllListener() {
+        getListener().clear();
+    }
 
 
 }
