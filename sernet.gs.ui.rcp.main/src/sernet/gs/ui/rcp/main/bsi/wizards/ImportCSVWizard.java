@@ -57,7 +57,12 @@ public class ImportCSVWizard extends Wizard {
 
 		
 		SyncCommand command = new SyncCommand(
-                new SyncParameter(entityPage.getInsertState(), entityPage.getUpdateState(), entityPage.getDeleteState()), 
+                new SyncParameter(
+                        entityPage.getInsertState(), 
+                        entityPage.getUpdateState(), 
+                        entityPage.getDeleteState(),
+                        false,
+                        SyncParameter.EXPORT_FORMAT_XML_PURE), 
                 sr);
 		try {
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
