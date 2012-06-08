@@ -103,6 +103,8 @@ public class EditBean {
     private boolean saveButtonHidden = false;
     
     private List<String> visibleTags = Arrays.asList(TAG_ALL);
+    
+    private String saveMessage = null;
        
     public void init() {
         try {
@@ -267,7 +269,19 @@ public class EditBean {
         if(LOG.isDebugEnabled()) {
             LOG.debug("Element saved, uuid: " + getUuid());
         }   
-        Util.addInfo("submit", Util.getMessage(EditBean.BOUNDLE_NAME, "saved"));
+        Util.addInfo("submit", getSaveMessage());
+    }
+
+    private String getSaveMessage() {
+        if(saveMessage==null) {
+            return Util.getMessage(EditBean.BOUNDLE_NAME, "saved");
+        } else {
+            return saveMessage;
+        }
+    }
+    
+    public void setSaveMessage( String message ) {
+        this.saveMessage = message;
     }
     
     public void clear() {

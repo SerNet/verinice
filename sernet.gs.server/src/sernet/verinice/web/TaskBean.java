@@ -109,6 +109,7 @@ public class TaskBean {
             getSelectedTask().setIsRead(true);
             getSelectedTask().addStyle(ITask.STYLE_READ);
             
+            getEditBean().setSaveMessage(Util.getMessage(TaskBean.BOUNDLE_NAME, "elementSaved"));
             getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
