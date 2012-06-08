@@ -105,10 +105,12 @@ public class PreferenceConstants {
 	public static final String CRYPTO_VERINICE_SSL_SECURITY_ENABLED = "gs_cna_verinice_ssl_security_enabled";
 	public static final String CRYPTO_PKCS11_LIBRARY_PATH = "gs_cna_pkcs11_library_path";
 	public static final String CRYPTO_TRUSTSTORE_FILE = "gs_cna_truststore_file";
-	public static final String CRYPTO_KEYSTORE_FILE = "gs_cna_keystore_file";
+	public static final String CRYPTO_TRUSTSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";	
 	public static final String CRYPTO_TRUSTSTORE_SOURCE = "gs_cna_truststore_source";
 	public static final String CRYPTO_TRUSTSTORE_SOURCE_FROM_FILE = "file";
 	public static final String CRYPTO_TRUSTSTORE_SOURCE_FROM_PKCS11_LIBRARY = "pkcs11";
+	public static final String CRYPTO_KEYSTORE_FILE = "gs_cna_keystore_file";
+	public static final String CRYPTO_KEYSTORE_PASSWORD = "javax.net.ssl.keyStorePassword";
 	public static final String CRYPTO_KEYSTORE_SOURCE = "gs_cna_keystore_source";
 	public static final String CRYPTO_KEYSTORE_SOURCE_NONE = "none";
 	public static final String CRYPTO_KEYSTORE_SOURCE_FROM_FILE = "file";
