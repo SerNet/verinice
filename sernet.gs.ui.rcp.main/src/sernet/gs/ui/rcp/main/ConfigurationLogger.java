@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProduct;
@@ -71,6 +72,9 @@ public final class ConfigurationLogger {
     //org.eclipse.core.internal.net.ProxyType.PREF_PROXY_DATA_NODE = "proxyData" is not public
     public static final String PREF_PROXY_DATA_NODE = "proxyData";
     
+    public static final String ECLIPSE_VMARGS = "eclipse.vmargs";
+    public static final String SUN_JAVA_COMMAND = "sun.java.command";
+    
     /**
      * Properties with a key from this list will not be logged by methods from this class
      * to prevend the logging of passwords or other sensibel data.
@@ -84,7 +88,10 @@ public final class ConfigurationLogger {
         PreferenceConstants.VNSERVER_PASS,
         PreferenceConstants.VNSERVER_USER,
         PreferenceConstants.CRYPTO_TRUSTSTORE_FILE,
-        PreferenceConstants.CRYPTO_KEYSTORE_FILE};
+        PreferenceConstants.CRYPTO_KEYSTORE_FILE,
+        PreferenceConstants.CRYPTO_TRUSTSTORE_PASSWORD,
+        PreferenceConstants.CRYPTO_KEYSTORE_PASSWORD,
+        ConfigurationLogger.SUN_JAVA_COMMAND};
     
     public static List<String> preferenceBlacklist = Arrays.asList(PREFERENCE_BLACKLIST);
     
@@ -127,17 +134,35 @@ public final class ConfigurationLogger {
         List<String> keyList = new ArrayList<String>();
         while(keys.hasMoreElements()) {
             Object key = keys.nextElement();
-            if(key instanceof String) {
+            if(key instanceof String && !preferenceBlacklist.contains(key)) {
                 keyList.add((String) key);
             }
         }
         Collections.sort(keyList);
-        for (String key : keyList) {
-            LOG.info(key + ": " + properties.get(key));
+        for (String key : keyList) { 
+            if(ConfigurationLogger.ECLIPSE_VMARGS.equals(key)) {
+                logVmArgsExceptD((String) properties.get(key));
+            } else {
+                LOG.info(key + ": " + properties.get(key));
+            }
         }
         
     }
     
+    private static void logVmArgsExceptD(String vmArgs) {
+       StringTokenizer st = new StringTokenizer(vmArgs,"-");
+       while(st.hasMoreTokens()) {
+           String prop = st.nextToken();
+           if(prop!=null) {
+               prop = prop.trim();
+               if(!prop.toLowerCase().startsWith("d")) {
+                   LOG.info("-" + prop);
+               }
+           }
+       }
+        
+    }
+
     /**
      * Logs verinice preferences the user set in the verinice preference dialog.
      */
