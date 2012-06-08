@@ -25,12 +25,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.MethodExpression;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.MethodExpressionActionListener;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -185,38 +180,33 @@ public class TreeBean implements IElementListener {
     }
     
     private void createMenuModel() {
-        menuModel = new DefaultMenuModel();
-        FacesContext facesCtx = FacesContext.getCurrentInstance();
-        ELContext elementCtx = facesCtx.getELContext();
-        ExpressionFactory factory = facesCtx.getApplication().getExpressionFactory();
-        MethodExpression methodExpression = factory.createMethodExpression(elementCtx, "#{tree.selectPath}", Void.class,new Class[]{ActionEvent.class});
-        MethodExpressionActionListener actionListener = new MethodExpressionActionListener(methodExpression);
-        
-        // home item
-        MenuItem item = new MenuItem();
-        item.setStyle("padding: 0;");
-        item.setUpdate(":tableForm,:navForm");
-        item.addActionListener(actionListener);      
-        menuModel.addMenuItem(item);
+        menuModel = new DefaultMenuModel();     
+        // Add home item     
+        menuModel.addMenuItem(MenuItemFactory.createNavigationMenuItem());
         
         path.clear();
         createPath(this.getElement());
         Collections.reverse(path);
+        
+        Integer breadcrumbSize = calculateBreadcrumbSize();
+        for (int i = breadcrumbSize; i < path.size(); i++) {
+            CnATreeElement element = path.get(i);
+            MenuItem item = MenuItemFactory.createNavigationMenuItem();
+            item.setValue(element.getTitle());
+            item.getAttributes().put("pathId", i );
+            menuModel.addMenuItem(item);
+        }
+    }
+
+    /**
+     * @return
+     */
+    private Integer calculateBreadcrumbSize() {
         Integer n = 0;
         if(path.size()>maxBreadcrumbSize) {
             n = path.size() - maxBreadcrumbSize;
         }
-        for (int i = n; i < path.size(); i++) {
-            CnATreeElement element = path.get(i);
-            item = new MenuItem();
-            item.setValue(element.getTitle());
-            item.setStyle("padding: 0;");
-            item.setUpdate(":tableForm,:navForm");
-            item.addActionListener(actionListener);
-            item.getAttributes().put("pathId", n );
-            menuModel.addMenuItem(item);
-            n++;
-        }
+        return n;
     }
     
     public void selectPath(ActionEvent event) {
