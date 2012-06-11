@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.bsi.dnd.DNDHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AddMassnahmeToGefaherdung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -75,9 +75,13 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
         
         /* get the target object */
         Object receiver = getCurrentTarget();
+        
+        if(data == null){
+            data = getSelectedObject();
+        }
 
         /* get dropped elements */
-        for (Object toDrop : DNDItems.getItems()) {
+        for (Object toDrop : DNDHelper.arrayToList(data)) {
             try {
                 // class has already been validated at this point:
                 parent = (GefaehrdungsUmsetzung) receiver;

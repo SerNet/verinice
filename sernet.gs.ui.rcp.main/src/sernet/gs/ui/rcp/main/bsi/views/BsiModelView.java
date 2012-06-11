@@ -46,8 +46,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -72,7 +70,12 @@ import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
@@ -358,9 +361,14 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	}
 
 	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance() };
+		Transfer[] types = new Transfer[] { IBSIStrukturElementTransfer.getInstance(), 
+		                                    BausteinElementTransfer.getInstance(),
+		                                    BausteinUmsetzungTransfer.getInstance(), 
+		                                    ISO27kElementTransfer.getInstance(), 
+		                                    ISO27kGroupTransfer.getInstance()};
+
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, types, dropAdapter);
+		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
 		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
 	}
 
@@ -455,9 +463,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		collapseAction.setText(Messages.BsiModelView_17);
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
-		dropAdapter = new MetaDropAdapter(viewer);
-		dropAdapter.addAdapter(new BSIModelViewDropPerformer());
-		
 		linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {

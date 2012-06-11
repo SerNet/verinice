@@ -22,13 +22,16 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.mapping.Array;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.common.model.BuildInput;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
@@ -36,8 +39,11 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
 
 public class GS2BSITransformService {
@@ -62,11 +68,21 @@ public class GS2BSITransformService {
 	
 	private boolean isScenario = false;
 	
+	private Object data;
+	
 	public GS2BSITransformService(IProgressObserver progressObserver,
-			IModelUpdater modelUpdater, Group selectedGroup, List items) {
+			IModelUpdater modelUpdater, Group selectedGroup, Object data) {
 		this.progressObserver = progressObserver;
 		LOG = Logger.getLogger(GS2BSITransformService.class);
-		itemList = items;
+		itemList = new ArrayList<Object>(0);
+		if(data instanceof Object[]){
+		    Object[] o = (Object[]) data;
+		    for(Object object : o){
+		        itemList.add(object);
+		    }
+		} else if (data instanceof Object){
+		    itemList.add(data);
+		}
 		this.modelUpdater = modelUpdater;
 		this.selectedGroup = selectedGroup;
 	}
@@ -98,69 +114,110 @@ public class GS2BSITransformService {
 			LOG.warn("Transforming canceled. " + numberProcessed + " of " + numberOfControls + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
-		SaveElement command = null;
-		boolean errorOccured = false;
 		List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
 		if(item !=null) {
             
 			if(item instanceof Massnahme){
 				Massnahme m = (Massnahme)item;
-				elements.add((CnATreeElement)generateControl(m));
+				elements.add((CnATreeElement)generateControl(m, group));
 			}
 			if (item instanceof Gefaehrdung){
 				Gefaehrdung g = (Gefaehrdung)item;
 				elements.add(generateScenario(g, group));
 			}
 			if(item instanceof Baustein){
-			    Baustein b = (Baustein)item;
-			    if(group.canContain(new IncidentScenario())){
-			        for(Gefaehrdung g : b.getGefaehrdungen()){
-			            elements.add(generateScenario(g, group));
-			        }
-			    } else if(group.canContain(new Control())){
-			        for(Massnahme m : b.getMassnahmen()){
-			            elements.add(generateControl(m));
-			        }
-	            }
-			}
-			if(elements.size() > 0) {
-			    for(CnATreeElement e : elements){
-			        monitor.setTaskName(getText(numberOfControls,numberProcessed,e.getTitle()));
-			        if (group.canContain(e)) {
-					    group.addChild(e);
-					    e.setParentAndScope(group);
-					    if (LOG.isDebugEnabled()) {
-					        LOG.debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
-					    }
-			        } else {
-//					     throw new ItemTransformException("Error while transforming massnahme into control"); //$NON-NLS-1$
-			            LOG.warn("trying to drop an item into a group that is unable to accept this type of items");
-			            errorOccured = true;
-			        }	
-			        if(!errorOccured){
-			            try {
-			                HashSet<Permission> newperms = new HashSet<Permission>();
-			                newperms.add(Permission.createPermission(e, getAuthService().getUsername(), true, true));
-			                e.setPermissions(newperms);
-			                command = new SaveElement(e);
-			                if(e instanceof IncidentScenario){
-			                    isScenario = true;
-			                }
-			                command = getCommandService().executeCommand(command);
-			                numberOfControls++;
-			            } catch (CommandException ce) {
-			                LOG.error("Error while inserting control", ce); //$NON-NLS-1$
-			                throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
+			    try {
+			        Baustein b = (Baustein)item;
+			        if(group.canContain(new IncidentScenario())){
+			            IncidentScenarioGroup newGroup = new IncidentScenarioGroup(group);
+			            newGroup.setTitel(b.getId() + " " + b.getTitel());
+			            CnATreeElement saveNew = null;
+			            saveNew = CnAElementFactory.getInstance().saveNew(group,
+			                    IncidentScenarioGroup.TYPE_ID,
+			                    new BuildInput<IncidentScenarioGroup>(newGroup),
+			                    false /* do not notify single elements*/);
+			            saveNew.setTitel(b.getId() + " " + b.getTitel());
+			            CnAElementHome.getInstance().updateEntity(saveNew);
+			            CnAElementFactory.getLoadedModel().childAdded(group,saveNew);
+			            for(Gefaehrdung g : b.getGefaehrdungen()){
+			                IncidentScenario scen = generateScenario(g, (IncidentScenarioGroup)saveNew); 
+			                elements.add(scen);
 			            }
-			            e = (CnATreeElement) command.getElement();
-			            e.setParentAndScope(group);
-			            modelUpdater.childAdded(group, e);
-			            monitor.processed(1);
-			            numberProcessed++;
+			        } else if(group.canContain(new Control())){
+			            ControlGroup newGroup = new ControlGroup(group);
+			            newGroup.setTitel(b.getTitel());
+                        CnATreeElement saveNew = null;
+                        saveNew = CnAElementFactory.getInstance().saveNew(group,
+                                ControlGroup.TYPE_ID,
+                                new BuildInput<ControlGroup>(newGroup),
+                                false /* do not notify single elements*/);
+                        saveNew.setTitel(b.getId() + " " + b.getTitel());
+                        CnAElementHome.getInstance().updateEntity(saveNew);
+                        CnAElementFactory.getLoadedModel().childAdded(group,saveNew);
+			            for(Massnahme m : b.getMassnahmen()){
+			                elements.add(generateControl(m, (ControlGroup)saveNew));
+			            }
 			        }
-				}				
+			    } catch (Exception e) {
+			        LOG.error("Error while transforming baustein", e);
+			    }
 			}
+
 		}
+		saveItems(elements, monitor);
+	}
+	
+	private void saveItems(List<CnATreeElement> elements, IProgressObserver monitor){
+	    SaveElement command = null;
+	    boolean errorOccured = false;
+        if(elements.size() > 0) {
+            for(CnATreeElement e : elements){
+                monitor.setTaskName(getText(numberOfControls,numberProcessed,e.getTitle()));
+                if(e.getParent().canContain(e)){
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                } else {
+//                   throw new ItemTransformException("Error while transforming massnahme into control"); //$NON-NLS-1$
+                    LOG.warn("trying to drop an item into a group that is unable to accept this type of items");
+                    errorOccured = true;
+                }   
+                if(!errorOccured){
+                    try {
+                        HashSet<Permission> newperms = new HashSet<Permission>();
+                        newperms.add(Permission.createPermission(e, getAuthService().getUsername(), true, true));
+                        e.setPermissions(newperms);
+                        command = new SaveElement(e);
+                        if(e instanceof IncidentScenario){
+                            isScenario = true;
+                        }
+                        command = getCommandService().executeCommand(command);
+                        numberOfControls++;
+                    } catch (CommandException ce) {
+                        LOG.error("Error while inserting control", ce); //$NON-NLS-1$
+                        throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
+                    }
+                    e = (CnATreeElement) command.getElement();
+                    RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true).setProperties(true);
+                    LoadElementByUuid<CnATreeElement> c2 = new LoadElementByUuid<CnATreeElement>(e.getUuid(), info);
+                    try {
+                        c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
+                        e = c2.getElement();
+                        c2 = new LoadElementByUuid<CnATreeElement>(e.getParent().getUuid(), info);
+                        c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
+                        e.setParent(c2.getElement());
+                    } catch (CommandException e1) {
+                        LOG.error("Error while loading element", e1);
+                    }
+                    CnATreeElement parent =  e.getParent();
+                    parent.addChild(e);
+                    e.setParentAndScope(parent);
+                    modelUpdater.childAdded((Group)parent, e);
+                    monitor.processed(1);
+                    numberProcessed++;
+                }
+            }               
+        }
 	}
 	
 	/**
@@ -172,8 +229,8 @@ public class GS2BSITransformService {
 		return Messages.getString("ControlTransformService.2", i, n, title); //$NON-NLS-1$
 	}
 	
-	private Control generateControl(Massnahme m){
-		Control c = new Control();
+	private Control generateControl(Massnahme m, CnATreeElement parent){
+		Control c = new Control(parent);
 		c.setTitel(m.getId() + " " + m.getTitel());
 		try {
 			String description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(), m.getStand());

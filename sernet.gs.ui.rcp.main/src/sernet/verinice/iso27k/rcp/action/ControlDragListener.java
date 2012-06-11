@@ -28,10 +28,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.verinice.interfaces.iso27k.IItem;
+import sernet.verinice.service.iso27k.Item;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -56,6 +57,7 @@ public class ControlDragListener implements DragSourceListener {
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 		dragedItemList.clear();
@@ -80,16 +82,29 @@ public class ControlDragListener implements DragSourceListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
+	@Override
 	public void dragSetData(DragSourceEvent event) {
-		event.data = DNDItems.CNAITEM;
-		DNDItems.setItems(dragedItemList);
+	    try{
+	        IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
+	        if(ItemTransfer.getInstance().isSupportedType(event.dataType)){
+	            if(selection.getFirstElement() instanceof Item){
+	                event.data = ((Item)selection.getFirstElement());
+	            } else {
+	                event.data = DNDItems.CNAITEM;
+	                LOG.error("Something went wrong here");
+	            }
+	        }
+	    }catch (Throwable t){
+	        LOG.error("error", t);
+	    }
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
+	@Override
 	public void dragFinished(DragSourceEvent event) {
-		dragedItemList.clear();
+	    dragedItemList.clear();
 	}
 
 }

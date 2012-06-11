@@ -39,8 +39,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -64,6 +62,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -89,7 +88,6 @@ import sernet.verinice.service.commands.SaveNote;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -390,7 +388,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	}
 	
 	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+	    Transfer[] types = new Transfer[] { ItemTransfer.getInstance()};
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(operations, types, dragListener);
 	}

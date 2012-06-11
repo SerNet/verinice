@@ -41,8 +41,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -63,7 +61,15 @@ import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropPerformer;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.GefaehrdungTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.MassnahmeTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -83,12 +89,10 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
-import sernet.verinice.iso27k.rcp.action.TagFilter;
-import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.common.TagParameter;
+import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
@@ -142,7 +146,13 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
 	
-	private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+	private static Transfer[] types = new Transfer[] { IBSIStrukturElementTransfer.getInstance(), 
+	                                                   ISO27kElementTransfer.getInstance(),
+	                                                   ISO27kGroupTransfer.getInstance(),
+	                                                   MassnahmeTransfer.getInstance(),
+	                                                   GefaehrdungTransfer.getInstance(),
+	                                                   BausteinElementTransfer.getInstance(),
+	                                                   ItemTransfer.getInstance()};
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
 	protected TreeViewer viewer;
@@ -179,7 +189,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 
 	private ControlDropPerformer controlDropAdapter;
 
-	private BSIModelViewDropPerformer bsiDropAdapter;
+	private BSIModelViewDropListener bsiDropAdapter;
 	
 	private ShowAccessControlEditAction accessControlEditAction;
 
@@ -402,11 +412,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
         }	
         
 		metaDropAdapter = new MetaDropAdapter(viewer);
-		controlDropAdapter = new ControlDropPerformer(this);
-		bsiDropAdapter = new BSIModelViewDropPerformer();
-		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(this);
+		controlDropAdapter = new ControlDropPerformer(viewer);
+		bsiDropAdapter = new BSIModelViewDropListener(viewer);
+		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
 		metaDropAdapter.addAdapter(controlDropAdapter);
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
+		
 		metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
 		
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
@@ -470,8 +481,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	}
 	
 	private void hookDNDListeners() {
-		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
-		viewer.addDropSupport(operations, types, metaDropAdapter);
+	    Transfer[] types2 = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
+	                                         BausteinElementTransfer.getInstance(),
+	                                         BausteinUmsetzungTransfer.getInstance(),
+	                                         ISO27kElementTransfer.getInstance(),
+	                                         ItemTransfer.getInstance()};
+
+		viewer.addDragSupport(operations, types2, new BSIModelViewDragListener(viewer));
+		viewer.addDropSupport(operations, types2, metaDropAdapter);
 		
 	}
 	

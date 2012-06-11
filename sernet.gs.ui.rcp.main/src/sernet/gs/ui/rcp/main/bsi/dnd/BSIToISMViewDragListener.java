@@ -59,7 +59,6 @@ public class BSIToISMViewDragListener implements DragSourceListener {
 			}
 		}
 		event.doit = true;
-		DNDItems.setItems(selectionList);
 	}
 
 	@Override

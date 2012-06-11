@@ -123,7 +123,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
                 }
             }
             event.doit = true;
-            DNDItems.setItems(risikoMassnahmenUmsetzungen);
+            event.data = risikoMassnahmenUmsetzungen.toArray(new RisikoMassnahmenUmsetzung[risikoMassnahmenUmsetzungen.size()]);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("dragStart finished");
             }
@@ -137,8 +137,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
      * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
      */
     public void dragSetData(DragSourceEvent event) {
-        event.data = DNDItems.RISIKOMASSNAHMENUMSETZUNG;
-        DNDItems.setItems(risikoMassnahmenUmsetzungen);
+        event.data = risikoMassnahmenUmsetzungen.toArray(new RisikoMassnahmenUmsetzung[risikoMassnahmenUmsetzungen.size()]);;
     }
 
     /**

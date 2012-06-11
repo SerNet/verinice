@@ -1,6 +1,7 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -9,11 +10,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.model.Baustein;
@@ -21,63 +24,69 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.GS2BSITransformOperation;
 import sernet.verinice.iso27k.service.ItemTransformException;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
-public class BSIModelDropPerformer implements DropPerformer {
+public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerformer {
 	
 	private boolean isActive = false;
 	
+	private TreeViewer viewer = null;
+	
 	private static final Logger LOG = Logger.getLogger(BSIModelDropPerformer.class);
 	
-	public BSIModelDropPerformer(ViewPart view){
-		
+	private Object target = null;
+	
+	public BSIModelDropPerformer(TreeViewer viewer){
+		super(viewer);
+		this.viewer = viewer;
 	}
 
-	@Override
-	public boolean performDrop(Object data, Object target, Viewer viewer) {
-		if(!(validateDropObjects(target))){
-			return false;
-		}
-		
-		boolean success = isActive();
-		if (isActive()) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("performDrop..."); //$NON-NLS-1$
-			}
-			try {
-				// because of validateDrop only Groups can be a target
-				Group group = (Group) target;
-				if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
-					GS2BSITransformOperation operation = new GS2BSITransformOperation(group);
-					IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-					progressService.run(true, true, operation);
-					IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-					boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
-					String objectType = "";
-					if(operation.isScenario()){
-						objectType = Messages.getString("GS2BSITransformer.1");
-					} else {
-						objectType = Messages.getString("ControlDropPerformer.2");
-					}
-					if (!dontShow) {
-						MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
-								NLS.bind(objectType, operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
-								Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
-								dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
-						preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
-					}
-				} else if (LOG.isDebugEnabled()) {
-					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
-				}
-			 } catch (ItemTransformException e) {
+    @Override
+    public boolean performDrop(Object data) {
+        if(!(validateDropObjects(target, data))){
+            return false;
+        }
+        
+        boolean success = isActive();
+        if (isActive()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("performDrop..."); //$NON-NLS-1$
+            }
+            try {
+                // because of validateDrop only Groups can be a target
+                Group group = (Group) target;
+                if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
+                    GS2BSITransformOperation operation = new GS2BSITransformOperation(group, data);
+                    IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+                    progressService.run(true, true, operation);
+                    IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+                    boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
+                    String objectType = "";
+                    if(operation.isScenario()){
+                        objectType = Messages.getString("GS2BSITransformer.1");
+                    } else {
+                        objectType = Messages.getString("ControlDropPerformer.2");
+                    }
+                    if (!dontShow) {
+                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
+                                NLS.bind(objectType, operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
+                                Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
+                                dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
+                        preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
+                    }
+                } else if (LOG.isDebugEnabled()) {
+                    LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
+                }
+             } catch (ItemTransformException e) {
                 LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
                 showException(e);
              } catch (InvocationTargetException e) {             
@@ -89,19 +98,29 @@ public class BSIModelDropPerformer implements DropPerformer {
                     ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
                 }
              } catch (Exception e) {             
-				LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
-				ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
-			 }
-		}
-		return success;
-		
-	}
-
+                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+                ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
+             }
+        }
+        return success;
+    }
+	
+    @Override
+    public void drop(DropTargetEvent event){
+        if(target != null){
+            target = (CnATreeElement) determineTarget(event);
+        }
+        super.drop(event);
+    }
+    
 	@Override
 	public boolean validateDrop(Object target, int operation,
 			TransferData transferType) {
 		boolean valid = false;
-		if (target instanceof Group) {
+		if(target != null){
+		    this.target = target;
+		}
+		if (target instanceof Group && isSupportedData(transferType)) {
 			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
 			valid = childTypeList.contains(Control.TYPE_ID) 
 			|| childTypeList.contains(IncidentScenario.TYPE_ID); 
@@ -116,14 +135,23 @@ public class BSIModelDropPerformer implements DropPerformer {
 	 * @param target
 	 * @return
 	 */
-	public boolean validateDropObjects(Object target) {
+	public boolean validateDropObjects(Object target, Object data) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target); //$NON-NLS-1$
 		}
 		boolean valid = false;
 
-		List items = DNDItems.getItems();
-
+		List items = new ArrayList<Object>(0);
+		
+		if(data instanceof Object[]){
+		    Object[] o = (Object[])data;
+		    for(Object object : o){
+		        items.add(object);
+		    }
+		} else if (data instanceof Object){
+		    items.add(data);
+		}
+		
 		if (items == null || items.isEmpty()) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("No items in drag list"); //$NON-NLS-1$
@@ -171,7 +199,6 @@ public class BSIModelDropPerformer implements DropPerformer {
 		return valid;
 	}
 
-	@Override
 	public boolean isActive() {
 		return isActive;
 	}
@@ -180,5 +207,18 @@ public class BSIModelDropPerformer implements DropPerformer {
         final String message = Messages.getString("ControlDropPerformer.0") + e.getMessage(); //$NON-NLS-1$
         MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.4"), message); //$NON-NLS-1$
     }
+    
+    private boolean isSupportedData(TransferData transferType){
+        return ISO27kElementTransfer.getInstance().isSupportedType(transferType);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
+     */
+    @Override
+    public boolean performDrop(Object data, Object target, Viewer viewer) {
+        return performDrop(data);
+    }
+ 
 
 }

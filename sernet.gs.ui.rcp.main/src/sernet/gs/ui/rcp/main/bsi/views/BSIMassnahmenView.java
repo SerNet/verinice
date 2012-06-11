@@ -38,8 +38,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -58,18 +56,17 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIMassnahmenViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.IAttachedToPerspective;
 
 /**
  * View for parsed BSI IT-Grundschutz catalogues.
@@ -225,7 +222,7 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	}
 
 	private void hookDNDListener() {
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance(), FileTransfer.getInstance() };
+		Transfer[] types = new Transfer[] { BausteinElementTransfer.getInstance() };
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(operations, types, new BSIMassnahmenViewDragListener(viewer));
 	}

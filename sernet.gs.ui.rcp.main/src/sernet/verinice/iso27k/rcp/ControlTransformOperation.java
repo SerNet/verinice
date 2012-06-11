@@ -53,11 +53,13 @@ public class ControlTransformOperation implements IRunnableWithProgress {
 	@SuppressWarnings("unchecked")
 	private Group selectedGroup;
 	
+	private Object data;
 
 	@SuppressWarnings("unchecked")
-	public ControlTransformOperation(Group selectedGroup) {
+	public ControlTransformOperation(Group selectedGroup, Object data) {
 		this.selectedGroup = selectedGroup;	
 		modelUpdater = new RcpModelUpdater();
+		this.data = data;
 	}
 	
 	
@@ -66,7 +68,7 @@ public class ControlTransformOperation implements IRunnableWithProgress {
 	 */
 	public void run(IProgressMonitor monitor)  {	
 		progressObserver = new RcpProgressObserver(monitor);
-		service = new ControlTransformService(progressObserver,modelUpdater,this.selectedGroup,DNDItems.getItems());
+		service = new ControlTransformService(progressObserver,modelUpdater,this.selectedGroup, data);
 		Activator.inheritVeriniceContextState();
 		service.run();
 	}

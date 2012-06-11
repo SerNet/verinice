@@ -62,6 +62,8 @@ public class ControlTransformService {
 	
 	private boolean doFullRefresh = false;
 	
+	private Object data;
+	
 	public int getNumberOfControls() {
 		return numberOfControls;
 	}
@@ -85,9 +87,17 @@ public class ControlTransformService {
     		IProgressObserver progressObserver, 
     		IModelUpdater modelUpdater, 
     		Group selectedGroup, 
-    		List items) {
+    		Object data) {
         this(progressObserver, modelUpdater, selectedGroup);
-        this.itemList = items;
+        this.itemList = new ArrayList<Object>();
+        if(data instanceof Object[]){
+            Object[] o = (Object[])data;
+            for(Object object : o){
+                itemList.add(object);
+            }
+        } else if (data instanceof Object){
+            itemList.add(data);
+        }
     }
 
     public void run()  {

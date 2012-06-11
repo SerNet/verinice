@@ -20,9 +20,15 @@
  * 
  */
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
@@ -41,6 +47,8 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
     private static final int TYPE_ID = registerType(TYPE_NAME);
 
     private static RisikoMassnahmenUmsetzungTransfer INSTANCE = new RisikoMassnahmenUmsetzungTransfer();
+    
+    private static Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungTransfer.class);
 
     public static RisikoMassnahmenUmsetzungTransfer getInstance() {
       return INSTANCE;
@@ -72,30 +80,66 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
 	 * converts a Java representation of data into a
 	 * platform-specific one.
 	 */
-	public void javaToNative(Object data, TransferData transferData) {
-		if (!(data instanceof RisikoMassnahmenUmsetzung[]))
-			return;
-		RisikoMassnahmenUmsetzung[] items = (RisikoMassnahmenUmsetzung[]) data;
-
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			DataOutputStream dataOut = new DataOutputStream(out);
-			dataOut.writeInt(items.length);
-			for (int i = 0; i < items.length; i++) {
-				dataOut.writeUTF(items[i].getText());
-				//dataOut.writeUTF(items[i].getDecscription());
-			}
-			dataOut.close();
-			out.close();
-			super.javaToNative(out.toByteArray(), transferData);
-		} catch (IOException e) {
-			Logger.getLogger(this.getClass()).debug(e.toString());
-		}
-	}
-	
-	
-	public Object nativeToJava(TransferData transferData) {
-		// no native transfer provided
-		return null;
-	}
+	   public void javaToNative (Object data, TransferData transferData){
+	        if (data == null || !(validateData(data))) return;
+	        if (isSupportedType(transferData)) {
+	            ArrayList<RisikoMassnahmenUmsetzung> rMassnahmen = new ArrayList<RisikoMassnahmenUmsetzung>(0);
+	            if(data instanceof RisikoMassnahmenUmsetzung[]){
+	                RisikoMassnahmenUmsetzung[] rMassnahmenElements = (RisikoMassnahmenUmsetzung[]) data;
+	                for(RisikoMassnahmenUmsetzung b : rMassnahmenElements){
+	                    rMassnahmen.add(b);
+	                }
+	            } else if (data instanceof RisikoMassnahmenUmsetzung){
+	                rMassnahmen.add((RisikoMassnahmenUmsetzung)data);
+	            }
+	            ByteArrayOutputStream out = null;
+	            ObjectOutputStream objectOut = null;
+	            try{
+	                out = new ByteArrayOutputStream();
+	                objectOut = new ObjectOutputStream(out);
+	                
+	                objectOut.writeObject(rMassnahmen.toArray(new Object[rMassnahmen.size()]));
+	                
+	                super.javaToNative(out.toByteArray(), transferData);
+	            } catch (IOException e){
+	                LOG.error("Error while serializing object for dnd", e);
+	            } finally {
+	                if(out != null && objectOut != null){
+	                    try {
+	                        out.close();
+	                        objectOut.close();
+	                    } catch (IOException e) {
+	                        LOG.error("Error while closing stream", e);
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    
+	    public Object nativeToJava(TransferData transferData){
+	        Object o = null;
+	        if(isSupportedType(transferData)){
+	            byte[] bs = (byte[]) super.nativeToJava(transferData);
+	            ByteArrayInputStream bis = new ByteArrayInputStream(bs);
+	            ObjectInput in;
+	            try {
+	                in = new ObjectInputStream(bis);
+	                o = in.readObject();
+	                bis.close();
+	                in.close();
+	            } catch (OptionalDataException e){
+	                LOG.error("Wrong data", e);
+	            } catch (IOException e) {
+	                LOG.error("Error while transfering dnd object back to java", e);
+	            } catch (ClassNotFoundException e) {
+	                LOG.error("Error while transfering dnd object back to java", e);
+	            }
+	        }
+	        return o;
+	    }
+	    
+	    private boolean validateData(Object data){
+	        return (data instanceof RisikoMassnahmenUmsetzung[]||
+	                data instanceof RisikoMassnahmenUmsetzung);
+	    }
 }

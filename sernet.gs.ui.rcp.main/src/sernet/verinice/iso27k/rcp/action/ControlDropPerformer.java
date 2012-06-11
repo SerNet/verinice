@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -30,16 +31,16 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
@@ -54,19 +55,85 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ControlDropPerformer implements DropPerformer {
+public class ControlDropPerformer extends ViewerDropAdapter implements DropPerformer {
 
 	private boolean isActive;
+	
+	private TreeViewer viewer;
+	
+	private Object target = null;
 
 	/**
 	 * @param view
 	 * @param viewer
 	 */
-	public ControlDropPerformer(ViewPart view) {
+	public ControlDropPerformer(TreeViewer viewer) {
+	    super(viewer);
+	    this.viewer = viewer;
 	}
 
 	private static final Logger LOG = Logger.getLogger(ControlDropPerformer.class);
 
+	@Override
+	public boolean performDrop(Object data){
+	       if (!validateDropObjects(target, data)) {
+	            return false;
+	        }
+	        TreeSelection oldSelection = (TreeSelection)viewer.getSelection();
+	        boolean success = isActive();
+	        if (isActive()) {
+	            if (LOG.isDebugEnabled()) {
+	                LOG.debug("performDrop..."); //$NON-NLS-1$
+	            }
+	            try {
+	                // because of validateDrop only Groups can be a target
+	                Group group = (Group) target;
+	                if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
+	                    ControlTransformOperation operation = new ControlTransformOperation(group, data);
+	                    // set target to current treeselection if it isnt already selected
+	                    if(viewer.getSelection() != target || viewer.getSelection() == null){
+	                        if(viewer.getSelection() instanceof TreeSelection){
+	                            viewer.setSelection(new StructuredSelection(target));
+	                        }
+	                    }
+	                    IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+	                    progressService.run(true, true, operation);
+	                    IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+	                    boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
+	                    if (!dontShow) {
+	                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
+	                                NLS.bind(Messages.getString("ControlDropPerformer.2"), operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
+	                                Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
+	                                dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
+	                        preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
+	                    }
+	                } else if (LOG.isDebugEnabled()) {
+	                    LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
+	                }
+	                // Restore old selection in tree
+	              if(!oldSelection.isEmpty()){
+	                    viewer.setSelection(oldSelection);
+	              }
+	             } catch (ItemTransformException e) {
+	                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+	                showException(e);
+	             } catch (InvocationTargetException e) {             
+	                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+	                Throwable t = e.getTargetException();
+	                if(t instanceof ItemTransformException) {
+	                    showException((ItemTransformException) t);
+	                } else {
+	                    ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
+	                }
+	             } catch (Exception e) {             
+	                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
+	                ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
+	             }
+	        }
+	        return success;
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -75,61 +142,7 @@ public class ControlDropPerformer implements DropPerformer {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean performDrop(Object data, Object target, Viewer viewer) {
-		if (!validateDropObjects(target)) {
-			return false;
-		}
-		TreeSelection oldSelection = (TreeSelection)viewer.getSelection();
-		boolean success = isActive();
-		if (isActive()) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("performDrop..."); //$NON-NLS-1$
-			}
-			try {
-				// because of validateDrop only Groups can be a target
-				Group group = (Group) target;
-				if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
-					ControlTransformOperation operation = new ControlTransformOperation(group);
-	                // set target to current treeselection if it isnt already selected
-					if(viewer.getSelection() != target || viewer.getSelection() == null){
-	                    if(viewer.getSelection() instanceof TreeSelection){
-	                        viewer.setSelection(new StructuredSelection(target));
-	                    }
-	                }
-					IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-					progressService.run(true, true, operation);
-					IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-					boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.INFO_CONTROLS_ADDED);
-					if (!dontShow) {
-						MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
-								NLS.bind(Messages.getString("ControlDropPerformer.2"), operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
-								Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
-								dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
-						preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());
-					}
-				} else if (LOG.isDebugEnabled()) {
-					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
-				}
-				// Restore old selection in tree
-//				if(!oldSelection.isEmpty()){
-				    viewer.setSelection(oldSelection);
-//				}
-			 } catch (ItemTransformException e) {
-                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
-                showException(e);
-             } catch (InvocationTargetException e) {             
-                LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
-                Throwable t = e.getTargetException();
-                if(t instanceof ItemTransformException) {
-                    showException((ItemTransformException) t);
-                } else {
-                    ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
-                }
-             } catch (Exception e) {             
-				LOG.error("Error while transforming items to controls", e); //$NON-NLS-1$
-				ExceptionUtil.log(e, sernet.verinice.iso27k.rcp.action.Messages.getString("ControlDropPerformer.5")); //$NON-NLS-1$
-			 }
-		}
-		return success;
+	    return performDrop(data);
 	}
 
     private void showException(ItemTransformException e) {
@@ -146,6 +159,7 @@ public class ControlDropPerformer implements DropPerformer {
 	 */
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {		
 		boolean valid = false;
+		this.target = target;
 		if (target instanceof Group) {
 			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
 			valid = childTypeList.contains(Control.TYPE_ID) 
@@ -163,14 +177,23 @@ public class ControlDropPerformer implements DropPerformer {
 	 * @param target
 	 * @return
 	 */
-	public boolean validateDropObjects(Object target) {
+	public boolean validateDropObjects(Object target, Object data) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target); //$NON-NLS-1$
 		}
 		boolean valid = false;
 
-		List items = DNDItems.getItems();
+		List items = new ArrayList<Object>(0);
 
+		if(data instanceof Object[]){
+		    Object[] o = (Object[]) data;
+		    for(Object object : o){
+		        items.add(object);
+		    }
+		} else if(data instanceof Object){
+		    items.add(data);
+		}
+		
 		if (items == null || items.isEmpty()) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("No items in drag list"); //$NON-NLS-1$

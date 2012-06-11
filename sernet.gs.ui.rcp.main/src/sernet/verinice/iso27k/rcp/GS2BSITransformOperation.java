@@ -40,11 +40,13 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
 	
 	private boolean isScenario = false;
 	
+	private Object data;
 
 	@SuppressWarnings("rawtypes")
-	public GS2BSITransformOperation(Group selectedGroup) {
+	public GS2BSITransformOperation(Group selectedGroup, Object data) {
 		this.selectedGroup = selectedGroup;	
 		modelUpdater = new RcpModelUpdater();
+		this.data = data;
 	}
 	
 	
@@ -53,7 +55,7 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
 	 */
 	public void run(IProgressMonitor monitor)  {	
 		progressObserver = new RcpProgressObserver(monitor);
-		service = new GS2BSITransformService(progressObserver,modelUpdater,this.selectedGroup,DNDItems.getItems());
+		service = new GS2BSITransformService(progressObserver,modelUpdater,this.selectedGroup, data);
 		Activator.inheritVeriniceContextState();
 		service.run();
 		isScenario = service.isScenario();
