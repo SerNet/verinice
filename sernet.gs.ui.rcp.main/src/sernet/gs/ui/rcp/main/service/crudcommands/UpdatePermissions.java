@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -41,7 +42,7 @@ import sernet.verinice.model.common.Permission;
  *
  */
 @SuppressWarnings({ "serial", "restriction" })
-public class UpdatePermissions extends GenericCommand implements IChangeLoggingCommand {
+public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLoggingCommand {
 	
 	private String cteTypeId;
 

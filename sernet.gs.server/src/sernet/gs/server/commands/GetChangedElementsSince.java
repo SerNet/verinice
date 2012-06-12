@@ -42,107 +42,88 @@ import sernet.verinice.model.common.CnATreeElement;
  * Retrieves all {@link CnATreeElement} instances which have been changed since
  * the given key date.
  * 
- * <p>Each instance appears only once in the result even if multiple changes
- * happened.</p>
+ * Each instance appears only once in the result even if multiple changes
+ * happened.
  * 
  * @author Robert Schuster <r.schuster@tarent.de>
- *
  */
 @SuppressWarnings("serial")
 class GetChangedElementsSince extends GenericCommand {
 
-	private List<CnATreeElement> changedElements;
-	
-	private String[] classNames;
-	private Date keydate;
-	private int type;
+    private List<CnATreeElement> changedElements;
 
-	public GetChangedElementsSince(Calendar keydate, int type, Class<?> klass) {
-		this(keydate, type, new String[] { klass.getName() });
-	}
-	
-	public GetChangedElementsSince(Calendar keydate, int type, String[] classNames) {
-		this.keydate = keydate.getTime();
-		this.classNames = classNames;
-		this.type = type;
-	}
-	
-	public List<CnATreeElement> getChangedElements()
-	{
-		return changedElements;
-	}
+    private String[] classNames;
+    private Date keydate;
+    private int type;
 
-	@SuppressWarnings("unchecked")
-	public void execute() {
-		
-		IBaseDao<ChangeLogEntry, Serializable> dao = getDaoFactory().getDAO(
-				ChangeLogEntry.class);
-		
-		List<ChangeLogEntry> entries = (List<ChangeLogEntry>) 
-			dao.findByCallback(new Callback(keydate, type, classNames));
-		
-		try
-		{
-			hydrateChangedItems(entries);
-		}
-		catch (CommandException e)
-		{
-			throw new RuntimeException("Error retrieving changed elements.", e);
-		}
-	}
+    public GetChangedElementsSince(Calendar keydate, int type, Class<?> klass) {
+        this(keydate, type, new String[] { klass.getName() });
+    }
 
-	private void hydrateChangedItems(List<ChangeLogEntry> entries)
-			throws CommandException {
+    public GetChangedElementsSince(Calendar keydate, int type, String[] classNames) {
+        this.keydate = keydate.getTime();
+        this.classNames = classNames;
+        this.type = type;
+    }
 
-		Set<Integer> ids = new HashSet<Integer>(entries.size());
+    public List<CnATreeElement> getChangedElements() {
+        return changedElements;
+    }
 
-		for (ChangeLogEntry logEntry : entries) {
-			if (logEntry.getElementId() != null)
-				ids.add(logEntry.getElementId());
-		}
+    @SuppressWarnings("unchecked")
+    public void execute() {
+        IBaseDao<ChangeLogEntry, Serializable> dao = getDaoFactory().getDAO(ChangeLogEntry.class);
 
-		if (ids.isEmpty())
-			changedElements = Collections.emptyList();
-		else
-		{
-			Integer[] idArray = (Integer[]) ids.toArray(new Integer[ids.size()]);
-			LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(idArray);
-			command = getCommandService().executeCommand(command);
-	
-			changedElements = command.getElements();
-		}
-	}
+        List<ChangeLogEntry> entries = (List<ChangeLogEntry>) dao.findByCallback(new Callback(keydate, type, classNames));
 
-	private static class Callback implements HibernateCallback, Serializable {
-		
-		Date keydate;
-		
-		String[] classNames;
-		
-		int type;
-		
-		Callback(Date keydate, int type, String[] classNames)
-		{
-			this.keydate = keydate;
-			this.type = type;
-			this.classNames = classNames;
-		}
+        try {
+            hydrateChangedItems(entries);
+        } catch (CommandException e) {
+            throw new RuntimeException("Error retrieving changed elements.", e);
+        }
+    }
 
-		public Object doInHibernate(Session session) throws HibernateException,
-				SQLException {
-			
-			Query query = session.createQuery(
-					"from ChangeLogEntry entry "
-					+ "where entry.changetime > :keydate "
-					+ "and entry.elementId is not null "
-					+ "and entry.change= :type "
-					+ "and entry.elementClass in (:classNames)")
-					.setDate("keydate", keydate)
-					.setInteger("type", type)
-					.setParameterList("classNames", classNames);
-			
-			return query.list();
-		}
+    private void hydrateChangedItems(List<ChangeLogEntry> entries) throws CommandException {
+        Set<Integer> ids = new HashSet<Integer>(entries.size());
+        for (ChangeLogEntry logEntry : entries) {
+            if (logEntry.getElementId() != null)
+                ids.add(logEntry.getElementId());
+        }
 
-	}
+        if (ids.isEmpty()) {
+            changedElements = Collections.emptyList();
+        } else {        
+            Integer[] idArray = (Integer[]) ids.toArray(new Integer[ids.size()]);
+            LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(idArray);
+            command = getCommandService().executeCommand(command);
+            changedElements = command.getElements();
+        }
+    }
+
+    private static class Callback implements HibernateCallback, Serializable {
+
+        Date keydate;
+
+        String[] classNames;
+
+        int type;
+
+        Callback(Date keydate, int type, String[] classNames) {
+            this.keydate = keydate;
+            this.type = type;
+            this.classNames = classNames;
+        }
+
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+
+            Query query = session.createQuery("from ChangeLogEntry entry " +
+                    "where entry.changetime > :keydate " +
+                    "and entry.elementId is not null " +
+                    "and entry.change= :type " +
+                    "and entry.elementClass in (:classNames)").setDate("keydate", keydate).setInteger("type", type).setParameterList("classNames", classNames);
+
+            return query.list();
+        }
+
+    }
 }

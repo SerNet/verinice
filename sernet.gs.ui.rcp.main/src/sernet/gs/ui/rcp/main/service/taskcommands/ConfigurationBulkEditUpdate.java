@@ -28,6 +28,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -45,7 +46,7 @@ import sernet.verinice.model.iso27k.PersonIso;
  *  used for bulkediting of account data
  */
 @SuppressWarnings({"serial", "restriction"})
-public class ConfigurationBulkEditUpdate extends GenericCommand  implements IChangeLoggingCommand, IAuthAwareCommand {
+public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implements IChangeLoggingCommand, IAuthAwareCommand {
     
     private transient Logger LOG;
     private List<Integer> dbIDs;

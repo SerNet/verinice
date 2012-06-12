@@ -50,6 +50,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -89,7 +90,7 @@ import de.sernet.sync.sync.SyncRequest;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class ExportCommand extends GenericCommand implements IChangeLoggingCommand
+public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggingCommand
 {
     private transient Logger log = Logger.getLogger(ExportCommand.class);
     

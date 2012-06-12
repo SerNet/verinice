@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -48,7 +49,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class CreateElement<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class CreateElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
     transient private Logger log = Logger.getLogger(CreateElement.class);
 

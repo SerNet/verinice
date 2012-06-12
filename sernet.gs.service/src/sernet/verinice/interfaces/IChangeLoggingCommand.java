@@ -38,9 +38,13 @@ public interface IChangeLoggingCommand {
 	public String getStationId();
 	
 	/**
-	 * @return the modifiec element
+	 * Returns the elements this command changed.
+	 * 
+	 * @return Changed elements
 	 */
 	public List<CnATreeElement> getChangedElements();
+	
+	public List<ElementChange> getChanges();
 	
 	/**
 	 * @return

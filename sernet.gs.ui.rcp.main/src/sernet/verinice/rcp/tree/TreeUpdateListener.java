@@ -42,7 +42,6 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener {
 
     private static final Logger LOG = Logger.getLogger(TreeUpdateListener.class);
@@ -74,6 +73,25 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
         try {
             getElementManager().elementRemoved(child);
             updater.remove(child);
+        } catch (Exception e) {
+            LOG.error("Error while updating treeview", e);
+        }
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildRemoved
+     * (sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
+     */
+    @Override
+    public void databaseChildRemoved(ChangeLogEntry entry) {
+        try {
+            if(entry!=null && entry.getUuid()!=null) {
+                getElementManager().elementRemoved(entry.getUuid());
+                updater.refresh();
+            }
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);
         }
@@ -182,22 +200,6 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
         try {
             getElementManager().elementChanged(child);
             updater.refresh(child);
-        } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildRemoved
-     * (sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
-     */
-    @Override
-    public void databaseChildRemoved(ChangeLogEntry entry) {
-        try {
-            updater.refresh();
         } catch (Exception e) {
             LOG.error("Error while updating treeview", e);
         }

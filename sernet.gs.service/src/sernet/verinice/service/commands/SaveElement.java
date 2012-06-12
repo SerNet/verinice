@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -38,11 +39,11 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @param <T>
  */
-public class SaveElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
+public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
 	protected T element;
 	protected String stationId;
-
+	private boolean logChanges = true;
 	protected SaveElement() {
 	 
 	}
@@ -61,6 +62,10 @@ public class SaveElement<T extends ITypedElement> extends GenericCommand impleme
 	public T getElement() {
 		return element;
 	}
+	
+	public void setLogChanges(boolean logChanges) {
+        this.logChanges = logChanges;
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
@@ -74,7 +79,7 @@ public class SaveElement<T extends ITypedElement> extends GenericCommand impleme
 	 */
 	public List<CnATreeElement> getChangedElements() {
 		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
-		if (element instanceof CnATreeElement) {
+		if (element instanceof CnATreeElement && logChanges) {
 			list.add((CnATreeElement) element);
 		}
 		return list;

@@ -37,6 +37,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.service.commands.SyncDeleteCommand;
 import sernet.verinice.service.commands.SyncInsertUpdateCommand;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -50,7 +51,7 @@ import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
-public class SyncCommand extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
     private transient Logger log = Logger.getLogger(SyncCommand.class);
 
     public Logger getLog() {

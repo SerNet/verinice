@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -29,7 +30,7 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class UpdateMultipleElements<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
+public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
 	private List<T> elements;
 	private String stationId;

@@ -18,20 +18,22 @@
 package sernet.verinice.service.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class UpdateElement<T extends ITypedElement> extends GenericCommand implements IChangeLoggingCommand {
+public class UpdateElement<T extends ITypedElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
 	private T element;
 	private boolean fireupdates;
-	
+	private boolean logChanges = true;
 	private String stationId;
 
 	public UpdateElement(T element, boolean fireUpdates, String stationId) {
@@ -49,7 +51,11 @@ public class UpdateElement<T extends ITypedElement> extends GenericCommand imple
 		return element;
 	}
 
-	public String getStationId() {
+	public void setLogChanges(boolean logChanges) {
+        this.logChanges = logChanges;
+    }
+
+    public String getStationId() {
 		return stationId;
 	}
 
@@ -69,12 +75,12 @@ public class UpdateElement<T extends ITypedElement> extends GenericCommand imple
 	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
 	 */
 	public List<CnATreeElement> getChangedElements() {
-		if (element instanceof CnATreeElement) {
+		if (element instanceof CnATreeElement && logChanges) {
 			ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>(1);
 			list.add((CnATreeElement) element);
 			return list;
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 }

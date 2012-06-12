@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
+import java.util.List;
 import java.util.UUID;
 
 import net.sf.ehcache.Cache;
@@ -140,22 +141,67 @@ public class ElementCache {
 	
 	public void remove(CnATreeElement element) {
         try {
-            remove(element.getUuid());
+            removeFromParentChilds(element);
+            getCache().remove(element.getUuid());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Element removed, uuid: " + element.getUuid());
+            }
         } catch(Exception t) {
             LOG.error("Error while removing object",t);
         }   
     }
-
+	
 	public void remove(String uuid) {
-	    try {
-	        getCache().remove(uuid);
-	        if (LOG.isInfoEnabled()) {
-                LOG.info("Element removed, uuid: " + uuid);
+        try {
+            CnATreeElement element = getElement(uuid);
+            if(element!=null) {
+               remove(element);                 
             }
         } catch(Exception t) {
             LOG.error("Error while removing object",t);
-        }	
-	}
+        }   
+    }
+	
+	public CnATreeElement getElement(String uuid) {
+	    CnATreeElement element = null;
+	    try { 	    
+            CacheObject cacheObject = null;
+            Element cachedElement = getCache().get(uuid);
+            if(cachedElement!=null) {
+                cacheObject = ((CacheObject) cachedElement.getObjectValue());
+                if(cacheObject!=null) {
+                    element = cacheObject.getElement();                              
+                }
+            }          
+	    } catch(Exception t) {
+            LOG.error("Error while getting object, uuid: " + uuid, t);
+        } 
+	    return element;
+    }
+
+    private void removeFromParentChilds(CnATreeElement element) {
+        CacheObject cacheObject = getCachedObject(element);
+        if(cacheObject!=null) {
+            CnATreeElement oldElement = cacheObject.getElement();
+            CnATreeElement oldParent = oldElement.getParent();
+            CacheObject cacheObjectParent = getCachedObject(oldParent);
+            if(cacheObjectParent!=null) {
+                oldParent = cacheObjectParent.getElement();
+                boolean exists = oldParent.getChildren().remove(element);
+                if (exists && LOG.isDebugEnabled()) {
+                    LOG.debug("Element removed from parent child set in cache...");
+                }              
+            }
+        } else {            
+            List<String> keys = getCache().getKeys();
+            for (String key : keys) {
+                cacheObject = (CacheObject) getCache().get(key).getObjectValue();
+                cacheObject.getElement().getChildren().remove(element);
+            }
+        }
+    }
+
+	
 	
 	private Cache getCache() {     
         if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {

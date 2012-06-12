@@ -71,9 +71,7 @@ public class LoadPolymorphicCnAElementById extends GenericCommand {
 
         @Override
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
-
-            Query query = session.createQuery("from CnATreeElement cte " + "where cte.dbId in (:ids)").setParameterList("ids", ids);
-
+            Query query = session.createQuery("from CnATreeElement cte where cte.dbId in (:ids)").setParameterList("ids", ids);
             return query.list();
         }
 

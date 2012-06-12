@@ -33,7 +33,7 @@ import sernet.hui.common.connect.ITypedElement;
  * 
  */
 @SuppressWarnings("serial")
-public class ChangeLogEntry implements Serializable, ITypedElement {
+public class ChangeLogEntry implements Serializable, Comparable<ChangeLogEntry>,  ITypedElement {
 
     /**
      * Changes to cnatree elements:
@@ -62,6 +62,7 @@ public class ChangeLogEntry implements Serializable, ITypedElement {
 	private int change;
 	private String stationId;
 	private String username;
+	private String uuid;
 
 	/**
 	 * Session ID to identify changes made by a particular client during its
@@ -108,6 +109,7 @@ public class ChangeLogEntry implements Serializable, ITypedElement {
 		}
 
 		this.elementId = element.getDbId();
+		this.uuid = element.getUuid();
 		this.elementClass = element.getClass().getName();
 		this.change = change;
 		this.username = username;
@@ -189,6 +191,27 @@ public class ChangeLogEntry implements Serializable, ITypedElement {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
+	} 
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ChangeLogEntry o) {
+        int result = 0;
+        if(this.getChangetime()!=null && o.getChangetime()!=null) {
+            result = this.getChangetime().compareTo(o.getChangetime());
+        }
+        return result;
+    }
 
 }

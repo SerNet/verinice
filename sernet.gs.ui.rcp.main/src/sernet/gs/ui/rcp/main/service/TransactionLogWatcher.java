@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -72,12 +73,13 @@ public class TransactionLogWatcher {
 			command = commandService.executeCommand(command);
 
 			lastChecked = command.getLastChecked();
-			List<ChangeLogEntry> entries = command.getEntries();
+			List<ChangeLogEntry> entries = command.getEntries();				
 			if(entries==null || entries.isEmpty() ) {
     			if(log.isDebugEnabled()) {
     				log.debug("No changes");
     			}
 			} else {
+			    Collections.sort(entries);
     			for (ChangeLogEntry changeLogEntry : entries) {
     				Integer elementId = changeLogEntry.getElementId();
     				CnATreeElement changedElement = command.getChangedElements().get(elementId);
@@ -99,6 +101,7 @@ public class TransactionLogWatcher {
 		if (log.isInfoEnabled()) {
 			log.info("Processing change event type " + changeLogEntry.getChangeDescription() + " from user " + changeLogEntry.getUsername() + " for element " + changeLogEntry.getElementClass() + " / " + changeLogEntry.getElementId());
 		}
+		
 	
 		switch (changetype) {
 			case ChangeLogEntry.TYPE_UPDATE:
@@ -106,9 +109,11 @@ public class TransactionLogWatcher {
 				break;
 	
 			case ChangeLogEntry.TYPE_INSERT:
-				CnAElementFactory.getModel(changedElement).databaseChildAdded(changedElement);
-	
-				break;
+			    if(changedElement!=null) {
+			        CnAElementFactory.getModel(changedElement).databaseChildAdded(changedElement);
+			        CnAElementFactory.getModel(changedElement).childAdded(changedElement.getParent(), changedElement);
+			    }
+			    break;
 			case ChangeLogEntry.TYPE_DELETE:
 				if (changedElement == null) {
 					// element no longer retrievable, notify by ID:

@@ -35,7 +35,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -58,7 +58,7 @@ import sernet.verinice.model.samt.SamtTopic;
  *  to a specific measure, which will be marked implemented_na.
  */
 @SuppressWarnings("serial")
-public class DeriveStatusCommand extends GenericCommand implements IChangeLoggingCommand {
+public class DeriveStatusCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
     
     // 0,4,5 only here for future use
     private static String TAG_MATURITY_LVL_0 = "ISA_MATLVL_0";

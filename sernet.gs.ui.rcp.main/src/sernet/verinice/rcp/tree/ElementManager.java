@@ -179,27 +179,28 @@ public class ElementManager {
     /**
      * Method is called when an element was removed.
      * 
-     * Element is removed also from chidren set of it's parent.
+     * Element is removed also from children set of it's parent.
      * 
-     * @param element
-     *            REmoved element
+     * @param element Removed element
      */
     public void elementRemoved(CnATreeElement element) {
-        CacheObject cachObjectParent = cache.getCachedObject(element.getParent());
-        if (cachObjectParent != null) {
-            CnATreeElement parentFromCache = cachObjectParent.getElement();
-            boolean exists = parentFromCache.getChildren().remove(element);
-            if (exists) {
-                CacheObject newCacheObjectParent = new CacheObject(parentFromCache, cachObjectParent.isChildrenPropertiesLoaded());
-                cache.addObject(newCacheObjectParent);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Element removed from parent child set in cache...");
-                }
-            }
-        }
         cache.remove(element);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Element removed from cache");
+            LOG.debug("Element removed from cache, uuid: " + element.getUuid());
+        }
+    }
+    
+    /**
+     * Method is called when an element was removed.
+     * 
+     * Element is removed also from children set of it's parent.
+     * 
+     * @param element Uuid of removed element
+     */
+    public void elementRemoved(String uuid) {
+        cache.remove(uuid);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Element removed from cache, uuid: " + uuid);
         }
     }
 
@@ -382,5 +383,7 @@ public class ElementManager {
     private ICommandService createCommandService() {
         return ServiceFactory.lookupCommandService();
     }
+
+   
 
 }

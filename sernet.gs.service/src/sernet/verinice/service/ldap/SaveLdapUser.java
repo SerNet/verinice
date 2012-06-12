@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -36,7 +37,7 @@ import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
 
-public class SaveLdapUser extends GenericCommand implements IChangeLoggingCommand,IAuthAwareCommand {
+public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLoggingCommand,IAuthAwareCommand {
 
 	 private transient Logger log = Logger.getLogger(SaveLdapUser.class);
 

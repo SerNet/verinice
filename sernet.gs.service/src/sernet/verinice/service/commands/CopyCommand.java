@@ -36,16 +36,21 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 /**
  * Copies a list of elements with all children to a group.
  * Element types in BLACKLIST are ignored.
  * 
+ * CopyCommand uses command SaveElement to save element copies.
+ * SaveElement is a IChangeLoggingCommand and logs all changes from
+ * CopyCommand
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("serial")
 public class CopyCommand extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(CopyCommand.class);
@@ -212,9 +217,9 @@ public class CopyCommand extends GenericCommand {
             if(depth==0) {
                 insertList.add(element);
             }
-            if((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung) && element.getChildren()!=null) {
+            if((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung) 
+               && element.getChildren()!=null) {
 
-//            if(element instanceof IISO27kGroup && element.getChildren()!=null) {
                 depth++;
                 for (CnATreeElement child : element.getChildren()) {
                     createInsertList(child,tempList,insertList,depth,removed);
@@ -248,37 +253,22 @@ public class CopyCommand extends GenericCommand {
         return Messages.getString("CopyCommand.0", title, n); //$NON-NLS-1$
     }
 
-    /**
-     * @return the uuidGroup
-     */
     public String getUuidGroup() {
         return uuidGroup;
     }
 
-    /**
-     * @param uuidGroup the uuidGroup to set
-     */
     public void setUuidGroup(String uuidGroup) {
         this.uuidGroup = uuidGroup;
     }
 
-    /**
-     * @return the uuidList
-     */
     public List<String> getUuidList() {
         return uuidList;
     }
 
-    /**
-     * @param uuidList the uuidList to set
-     */
     public void setUuidList(List<String> uuidList) {
         this.uuidList = uuidList;
     }
 
-    /**
-     * @return the postProcessorList
-     */
     public List<IPostProcessor> getPostProcessorList() {
         return postProcessorList;
     }
@@ -290,16 +280,10 @@ public class CopyCommand extends GenericCommand {
         postProcessorList.add(task);
     }
 
-    /**
-     * @return the number
-     */
     public int getNumber() {
         return number;
     }
 
-    /**
-     * @param number the number to set
-     */
     public void setNumber(int number) {
         this.number = number;
     }

@@ -21,17 +21,23 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -43,7 +49,7 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CutCommand extends GenericCommand {
+public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
  
     private transient Logger log = Logger.getLogger(CutCommand.class);
     
@@ -65,6 +71,11 @@ public class CutCommand extends GenericCommand {
     private List<IPostProcessor> postProcessorList;
     
     private transient IBaseDao<CnATreeElement, Serializable> dao;
+    
+    // used on server side only !
+    private transient Set<ElementChange> elementChanges;
+    
+    private String stationId;
     
     /**
      * returns a list of classes that can contain persons or personIsos as children
@@ -98,6 +109,7 @@ public class CutCommand extends GenericCommand {
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
+        this.stationId = ChangeLogEntry.STATION_ID;
     }
 
     /* (non-Javadoc)
@@ -107,6 +119,7 @@ public class CutCommand extends GenericCommand {
     public void execute() {
         try {   
             this.number = 0;
+            elementChanges = new HashSet<ElementChange>();
             List<CnATreeElement> elementList = createInsertList(uuidList); 
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
             Map<String, String> sourceDestMap = new Hashtable<String, String>();
@@ -121,10 +134,10 @@ public class CutCommand extends GenericCommand {
                         break;
                     }
                 }
-            }
+            }       
             if(isPersonMoved){
                 getCommandService().discardUserData();
-            }
+            }         
             
             // set scope id of all elements and it's subtrees
             for (CnATreeElement element : elementList) {
@@ -170,18 +183,29 @@ public class CutCommand extends GenericCommand {
         
         // save old parent
         UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
+        command.setLogChanges(false);
         command = getCommandService().executeCommand(command);
         parentOld = (CnATreeElement) command.getElement();
-          
+        ElementChange delete = new ElementChange(element, ChangeLogEntry.TYPE_DELETE);
+        elementChanges.add(delete);
+        
         element.setParentAndScope(group);
         
         group.addChild(element);
         
         // save element
         SaveElement saveElementCommand = new SaveElement(element);
+        saveElementCommand.setLogChanges(false);
         saveElementCommand = getCommandService().executeCommand(saveElementCommand);
         CnATreeElement savedElement = (CnATreeElement) saveElementCommand.getElement();
-
+        ElementChange insert = new ElementChange(savedElement, ChangeLogEntry.TYPE_INSERT);
+        if(insert.getTime().equals(delete.getTime())) {
+            Calendar plus1Second = Calendar.getInstance();
+            plus1Second.add(Calendar.SECOND, 1);       
+            insert.setTime(plus1Second.getTime());
+        }
+        elementChanges.add(insert);
+        
         number++;
         return savedElement;
     }
@@ -286,6 +310,37 @@ public class CutCommand extends GenericCommand {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;
+    }
+    
+    public void clear() {
+        // changedElements are used on server side only !
+        if(elementChanges!=null) {
+            elementChanges.clear();
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
+     */
+    @Override
+    public String getStationId() {
+        return this.stationId;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangedElements()
+     */
+    @Override
+    public List<ElementChange> getChanges() {
+        return new ArrayList<ElementChange>(elementChanges);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
+     */
+    @Override
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_UPDATE;
     }
 
 }

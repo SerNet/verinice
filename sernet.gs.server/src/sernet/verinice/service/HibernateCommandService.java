@@ -32,6 +32,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -168,19 +169,20 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 
 
     private void log(IChangeLoggingCommand notifyCommand) {
-		List<CnATreeElement> changedElements = notifyCommand.getChangedElements();
-		for (CnATreeElement changedElement : changedElements) {
+		List<ElementChange> elementChanges = notifyCommand.getChanges();
+		for (ElementChange changedElement : elementChanges) {
 			
 			// save reference to element, if it has not been deleted:
 			CnATreeElement referencedElement = null;
-			if (notifyCommand.getChangeType() != ChangeLogEntry.TYPE_DELETE)
-				referencedElement = changedElement;
+			if (changedElement.getChangeType() != ChangeLogEntry.TYPE_DELETE) {
+				referencedElement = changedElement.getElement();
+			}
 				
-			ChangeLogEntry logEntry = new ChangeLogEntry(changedElement,
-					notifyCommand.getChangeType(),
+			ChangeLogEntry logEntry = new ChangeLogEntry(changedElement.getElement(),
+			        changedElement.getChangeType(),
 					getAuthService().getUsername(),
 					notifyCommand.getStationId(),
-					GregorianCalendar.getInstance().getTime());
+					changedElement.getTime());
 			log(logEntry, referencedElement);
 		}
 	}

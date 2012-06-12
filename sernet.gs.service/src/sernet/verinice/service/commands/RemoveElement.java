@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -55,7 +56,7 @@ import sernet.verinice.model.iso27k.PersonIso;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class RemoveElement<T extends CnATreeElement> extends GenericCommand implements IChangeLoggingCommand, INoAccessControl {
+public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, INoAccessControl {
 
     private transient Logger log = Logger.getLogger(RemoveElement.class);
 

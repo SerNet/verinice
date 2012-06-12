@@ -145,7 +145,9 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 		List<CnATreeElement> elements = loadElementsWithDao(dbIdList);
 		
 		for (CnATreeElement elmt : elements) {
-			changedElements.put(elmt.getDbId(), elmt);
+		    if(elmt!=null) {
+		        changedElements.put(elmt.getDbId(), elmt);
+		    }
 		}
 	}
 	

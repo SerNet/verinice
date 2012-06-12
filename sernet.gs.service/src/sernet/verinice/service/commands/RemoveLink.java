@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -31,7 +32,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class RemoveLink<T extends CnALink> extends GenericCommand implements IChangeLoggingCommand {
+public class RemoveLink<T extends CnALink> extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
 private transient Logger log = Logger.getLogger(RemoveLink.class);
     

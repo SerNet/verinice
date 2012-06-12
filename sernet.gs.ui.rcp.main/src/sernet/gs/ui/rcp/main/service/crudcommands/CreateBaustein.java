@@ -28,6 +28,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -50,7 +51,7 @@ import sernet.verinice.model.common.Permission;
  * @param <T>
  */
 @SuppressWarnings("serial")
-public class CreateBaustein extends GenericCommand implements IChangeLoggingCommand, 
+public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggingCommand, 
 	IAuthAwareCommand {
 
 	private transient Logger log = Logger.getLogger(CreateBaustein.class);

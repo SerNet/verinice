@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -39,7 +40,7 @@ import sernet.verinice.service.commands.SaveElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class NaturalizeCommand extends GenericCommand implements IChangeLoggingCommand {
+public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
     private transient Logger log = Logger.getLogger(NaturalizeCommand.class);
 
