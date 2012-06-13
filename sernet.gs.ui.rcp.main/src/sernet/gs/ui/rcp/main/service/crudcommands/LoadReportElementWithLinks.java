@@ -3,6 +3,9 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -89,7 +92,8 @@ public class LoadReportElementWithLinks extends GenericCommand {
      */
     private void loadLinks(CnATreeElement root) {
         result = new ArrayList<List<String>>();
-        for (CnALink link : root.getLinksDown()) {
+
+        for (CnALink link : getSortedLinkList(root, false, true)) {
             if (typeId == null )
                 result.add(makeRow(root, link));
             else {
@@ -97,7 +101,7 @@ public class LoadReportElementWithLinks extends GenericCommand {
                     result.add(makeRow(root, link));
             }
         }
-        for (CnALink link : root.getLinksUp()) {
+        for (CnALink link : getSortedLinkList(root, true, false)) {
             if (typeId == null )
                 result.add(makeRow(root, link));
             else {
@@ -105,6 +109,28 @@ public class LoadReportElementWithLinks extends GenericCommand {
                     result.add(makeRow(root, link));
             }
         }
+    }
+    
+    private List<CnALink> getSortedLinkList(final CnATreeElement root, boolean upLinks, boolean downLinks){
+        Set<CnALink> list = new HashSet<CnALink>();
+        if(upLinks){
+            list.addAll(root.getLinksUp());
+        } 
+        if(downLinks){
+            list.addAll(root.getLinksDown());
+        }
+        ArrayList<CnALink> sortedList = new ArrayList<CnALink>(0);
+        for(CnALink link : list){
+            sortedList.add(link);
+        }
+        Collections.sort(sortedList, new Comparator<CnALink>() {
+            //sorts list on the basis of the title of the linked element
+            @Override
+            public int compare(CnALink o1, CnALink o2) {
+                return CnALink.getRelationObjectTitle(root, o1).compareTo(CnALink.getRelationObjectTitle(root, o2));
+            }
+        });
+        return sortedList;
     }
     
 
