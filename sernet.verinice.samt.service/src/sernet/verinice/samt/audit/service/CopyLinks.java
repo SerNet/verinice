@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -47,7 +48,7 @@ import sernet.verinice.service.commands.CreateLink;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CopyLinks extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class CopyLinks extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private transient Logger log = Logger.getLogger(CopyLinks.class);
     public Logger getLog() {

@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -47,7 +48,7 @@ import sernet.verinice.service.commands.CreateLink;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class MoveLinks extends GenericCommand implements IChangeLoggingCommand, IAuthAwareCommand {
+public class MoveLinks extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
     private transient Logger log = Logger.getLogger(MoveLinks.class);
     public Logger getLog() {
