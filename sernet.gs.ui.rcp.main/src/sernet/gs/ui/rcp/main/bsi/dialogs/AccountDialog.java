@@ -18,13 +18,15 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
+import org.aspectj.bridge.Message;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,7 +34,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -42,14 +47,16 @@ import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.hui.swt.widgets.SingleSelectionControl;
 import sernet.snutils.DBException;
-import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.CheckUserName;
 
 /**
  * Dialog for user accounts which is opened by {@link ConfigurationAction}.
@@ -58,7 +65,7 @@ import sernet.verinice.interfaces.IAuthService;
  */
 public class AccountDialog extends TitleAreaDialog {
     
-    private static final Logger LOG = Logger.getLogger(AccountDialog.class);
+    private static transient Logger LOG = Logger.getLogger(AccountDialog.class);
     
     private EntityType entType;
     private Entity entity = null;
@@ -71,6 +78,10 @@ public class AccountDialog extends TitleAreaDialog {
 	private Text textName;
 	private String name;
 	private boolean isScopeOnly;
+	
+	private FocusListener nameValidator;
+	private FocusListener pwValidator;
+	
 
     private AccountDialog(Shell parent, EntityType entType) {
         super(parent);
@@ -189,6 +200,40 @@ public class AccountDialog extends TitleAreaDialog {
 		gdText.horizontalAlignment = GridData.FILL;
 		textName.setLayoutData(gdText);
 		
+		nameValidator = new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                CheckUserName command = new CheckUserName(textName.getText());
+                try {
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    if(command.getResult()){
+                        Display.getDefault().asyncExec(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                textName.setToolTipText(Messages.AccountDialog_7);
+                                textName.selectAll();
+                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_7);
+                                textName.setFocus();
+                                textName.forceFocus();
+                            }
+                        });
+                    } else {
+                        textName.setToolTipText("");
+                    }
+                } catch (CommandException e1) {
+                    LOG.error("Error while checking username", e1);
+                }
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+        };
+		
+        textName.addFocusListener(nameValidator);
+		
 		Label labelPassword = new Label(compositePassword, SWT.NONE);
 		labelPassword.setText(Messages.AccountDialog_2);
 		
@@ -209,15 +254,45 @@ public class AccountDialog extends TitleAreaDialog {
             
             @Override
             public void focusGained(FocusEvent e) {
-                // nothing to do
+ 
             }
         });
+		
+		
 		
 		Label labelPassword2 = new Label(compositePassword, SWT.NONE);
 		labelPassword2.setText(Messages.AccountDialog_3);
 		
 		textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
 		textPassword2.setLayoutData(gdText);
+		
+		pwValidator = new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(!textPassword.getText().equals(textPassword2.getText())){
+                Display.getDefault().asyncExec(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        textPassword2.setToolTipText(Messages.AccountDialog_8);
+                        textPassword.selectAll();
+                        MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_8);
+                        textPassword.setFocus();
+                        textPassword.forceFocus();
+                    }
+                });
+            } else {
+                textPassword2.setToolTipText("");
+            }
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+        };
+        
+        textPassword2.addFocusListener(pwValidator);
 		
 		if(getEntity()!=null 
 			&& getEntity().getProperties(Configuration.PROP_USERNAME)!=null
@@ -235,6 +310,13 @@ public class AccountDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 	
+	@Override
+	protected void cancelPressed(){
+	    textName.removeFocusListener(nameValidator);
+	    textPassword2.removeFocusListener(pwValidator);
+	    super.cancelPressed();
+	}
+	
 	public String getPassword() {
 		return password;
 	}
@@ -250,5 +332,12 @@ public class AccountDialog extends TitleAreaDialog {
 	public Entity getEntity() {
         return entity;
     }
-
+	
+	public Logger getLog(){
+	    if(LOG == null){
+	        LOG = Logger.getLogger(AccountDialog.class);
+	    }
+	    return LOG;
+	}
+	
 }
