@@ -48,7 +48,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     
     IAuthService authService;
     IRightsService rightsServiceExecuter;
-    List<Userprofile> userprofile;
+    List<Userprofile> userprofileList;
     Map<String, Action> actionMap;
     Profiles profiles;
     Map<String, Profile> profileMap;
@@ -66,8 +66,8 @@ public class RightsServiceClient implements IRightsServiceClient{
             returnValue = isBlacklist();
         
             if(getUserprofile()!=null) {
-                returnValue = actionMap.get(actionId)!=null && isWhitelist() || 
-                              actionMap.get(actionId)==null && isBlacklist();
+                returnValue = getActionMap().get(actionId)!=null && isWhitelist() || 
+                              getActionMap().get(actionId)==null && isBlacklist();
             }
             return returnValue;
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     public void updateConfiguration(Auth auth) {
         getRightsServiceExecuter().updateConfiguration(auth);
         this.auth = auth;
-        this.userprofile = null;
+        this.userprofileList = null;
         this.profiles = null;
     }
     
@@ -103,7 +103,7 @@ public class RightsServiceClient implements IRightsServiceClient{
      */
     public void reload() {
         this.auth = null;
-        this.userprofile = null;
+        this.userprofileList = null;
         this.profiles = null;
         this.userNameList = null;
         this.groupNameList = null;
@@ -122,10 +122,10 @@ public class RightsServiceClient implements IRightsServiceClient{
      */
     @Override
     public List<Userprofile> getUserprofile() {
-        if(userprofile==null) {
-            userprofile = loadUserprofile();
+        if(userprofileList==null) {
+            userprofileList = loadUserprofile();
         }
-        return userprofile;
+        return userprofileList;
     }
     
     /* (non-Javadoc)
@@ -134,7 +134,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     @Override
     public Profiles getProfiles() {
         if(profiles==null) {
-            profiles = loadProfiles();
+            profiles = loadProfileMap();
         }
         return profiles;
     }
@@ -209,26 +209,28 @@ public class RightsServiceClient implements IRightsServiceClient{
         return messages;
     }
     
-    private Profiles loadProfiles() {
-        Profiles profiles = getRightsServiceExecuter().getProfiles();   
-        profileMap = new HashMap<String, Profile>();
-        for (Profile profile : profiles.getProfile()) {
-            profileMap.put(profile.getName(), profile);
-        }
-        return profiles;
-    }
-    
     private  List<Userprofile> loadUserprofile() {
-        List<Userprofile> userprofileList = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());        
+        userprofileList = getRightsServiceExecuter().getUserprofile(getAuthService().getUsername());        
         if(userprofileList==null || userprofileList.isEmpty() ) {
             // no userprofile found, create an empty dummy userprofile
-            Userprofile userprofile = new Userprofile();
-            userprofile.setLogin(getAuthService().getUsername());
+            Userprofile dummyprofile = new Userprofile();
+            dummyprofile.setLogin(getAuthService().getUsername());
             userprofileList = new ArrayList<Userprofile>(1);
-            userprofileList.add(userprofile);
+            userprofileList.add(dummyprofile);
         }
+        return userprofileList;
+    }
+    
+    public Map<String, Action> getActionMap() {
+        if(actionMap==null) {
+            actionMap=loadActionMap();
+        }
+        return actionMap;
+    }
+    
+    private Map<String, Action> loadActionMap() {
         actionMap = new HashMap<String, Action>();
-        for (Userprofile userprofile : userprofileList) {  
+        for (Userprofile userprofile : getUserprofile()) {  
             List<ProfileRef> profileList = userprofile.getProfileRef();
             if(profileList!=null) {
                 for (ProfileRef profileRef : profileList) {
@@ -244,17 +246,23 @@ public class RightsServiceClient implements IRightsServiceClient{
                 }
             }
         }
-        return userprofileList;
+        return actionMap;
     }
-
-    /**
-     * @return the profileMap
-     */
+    
     public Map<String, Profile> getProfileMap() {
         if(profileMap==null) {
-            loadProfiles();
+            loadProfileMap();
         }
         return profileMap;
+    }
+    
+    private Profiles loadProfileMap() {
+        Profiles profiles = getRightsServiceExecuter().getProfiles();   
+        profileMap = new HashMap<String, Profile>();
+        for (Profile profile : profiles.getProfile()) {
+            profileMap.put(profile.getName(), profile);
+        }
+        return profiles;
     }
 
     public boolean isBlacklist() {

@@ -60,6 +60,8 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
@@ -67,6 +69,8 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -75,8 +79,10 @@ import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
+import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.service.commands.LoadAncestors;
 
@@ -120,6 +126,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private Composite parent = null;
     
     private RightsServiceClient rightsService;
+    
+    private IModelLoadListener modelLoadListener;
 
     /*
      * (non-Javadoc)
@@ -133,7 +141,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         this.parent = parent;
         Composite container = createContainer(parent);
         createTreeViewer(container);
-        loadTasks();
+        initData();
         makeActions();
         addActions();
         addListener();
@@ -152,25 +160,59 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public void setFocus() {
         // empty
     }
+    
+    private void initData() {
+        if(CnAElementFactory.isModelLoaded()) {
+            loadTasks();
+        } else if(modelLoadListener==null) {
+            // model is not loaded yet: add a listener to load data when it's laoded
+            modelLoadListener = new IModelLoadListener() {
+                @Override
+                public void closed(BSIModel model) {
+                    // nothing to do
+                }
+                public void loaded(BSIModel model) {
+                    initData();
+                }
+                @Override
+                public void loaded(ISO27KModel model) {
+                    // work is done in loaded(BSIModel model)                        
+                }               
+            };
+            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+        }
+    }
 
     private void loadTasks() {
         TaskParameter param = new TaskParameter();
         param.setAllUser(!onlyMyTasks);
         List<ITask> taskList = Collections.emptyList();
-        LoadTaskJob job = new LoadTaskJob(param);
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        try {
-            progressService.run(true, true, job);
-            taskList = job.getTaskList();
-        } catch (Throwable t) {
-            showError("Error", "Error while loading task.");
-            LOG.error("Error while loading tasks.", t);
-        }
-
+        final LoadTaskJob job = new LoadTaskJob(param);
+        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+        Display.getDefault().syncExec(new Runnable(){
+            public void run() {
+                try {
+                    progressService.run(true, true, job);
+                } catch (Throwable t) {
+                    LOG.error("Error while loading tasks.", t);
+                    showError("Error", "Error while loading task.");
+                }
+            }
+        });
+        
+        taskList = job.getTaskList();
+        
+        final List<ITask> finalTaskList = taskList;
+        
         // Get the content for the viewer, setInput will call getElements in the
         // contentProvider
         try {
-            getViewer().setInput(taskList);
+            Display.getDefault().syncExec(new Runnable(){
+                public void run() {
+                    getViewer().setInput(finalTaskList);
+                }
+            });
+            
         } catch (Throwable t) {
             LOG.error("Error while setting table data", t); //$NON-NLS-1$
         }
@@ -308,7 +350,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         };
         myTasksAction.setChecked(onlyMyTasks);
-        myTasksAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL));
         myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));
 
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
@@ -322,8 +363,28 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         };
-        cancelTaskAction.setEnabled(false);
+        cancelTaskAction.setEnabled(false);      
         cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
+        
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        configureActions();
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            configureActions();
+        }
+    }
+    
+    private void configureActions() {
+        cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
+        myTasksAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL));
     }
 
     @Deprecated
@@ -364,11 +425,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(this.refreshAction);
-        boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
-        if (hasRole) {
-            manager.add(myTasksAction);
-            manager.add(cancelTaskAction);
-        }
+        manager.add(myTasksAction);
+        manager.add(cancelTaskAction);
     }
 
     private void addListener() {
@@ -463,12 +521,21 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         return Iso27kPerspective.ID;
     }
 
-    protected void showError(String title, String message) {
-        MessageDialog.openError(this.getSite().getShell(), title, message);
+    protected void showError(final String title, final String message) {
+        Display.getDefault().syncExec(new Runnable(){
+            public void run() {
+                MessageDialog.openError(TaskView.this.getSite().getShell(), title, message);
+            }
+        });     
     }
 
-    protected void showInformation(String title, String message) {
-        MessageDialog.openInformation(this.getSite().getShell(), title, message);
+    protected void showInformation(final String title, final String message) {
+        Display.getDefault().syncExec(new Runnable(){
+            public void run() {
+                MessageDialog.openInformation(TaskView.this.getSite().getShell(), title, message);
+            }
+        }); 
+        
     }
 
     private void cancelTask() throws InvocationTargetException, InterruptedException {

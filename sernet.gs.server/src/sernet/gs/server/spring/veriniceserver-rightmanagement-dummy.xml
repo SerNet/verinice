@@ -13,5 +13,7 @@
 	<property name="propertyDao" ref="propertyDao" />
 	<property name="messages" ref="rightsServiceMessages" /> 
 </bean>
+
+<bean id="rightsServerHandler" class="sernet.verinice.service.DummyRightsServerHandler" />
 	
 </beans>

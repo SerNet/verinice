@@ -16,5 +16,9 @@
         <property name="configurationService" ref="configurationService" />  
         <property name="authService" ref="authService" />
 	</bean>
+    
+    <bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler">
+        <property name="rightsService" ref="rightsService" />
+    </bean>
 	
 </beans>

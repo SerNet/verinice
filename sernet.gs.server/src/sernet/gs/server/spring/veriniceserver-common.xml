@@ -70,6 +70,7 @@ This variant:
 				<entry key="commandService" value-ref="commandService" />
 				<entry key="authService" value-ref="authService" />
                 <entry key="taskService" value-ref="taskService" />
+                <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
 			</map>
 		</property>
 	</bean>

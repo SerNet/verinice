@@ -50,6 +50,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.core.io.Resource;
 
+import sernet.gs.service.SecurityException;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
@@ -113,6 +114,8 @@ public class XmlRightsService implements IRightsService {
      */
     private volatile Map<String,List<String>> groupnameMap = new Hashtable<String, List<String>>();
     
+    private RightsServerHandler rightsServerHandler;
+    
     private Resource authConfigurationDefault;
     
     private Resource authConfiguration;
@@ -132,8 +135,6 @@ public class XmlRightsService implements IRightsService {
     private IRemoteMessageSource messages;
     
     private IAuthService authService;
-    
-    private IRightsServiceClient rightServiceClient;
     
     private HashMap<String, Profile> profileMap;
 
@@ -283,8 +284,7 @@ public class XmlRightsService implements IRightsService {
             }                             
 
         } catch (sernet.gs.service.SecurityException e) {
-            String message = "User " + getAuthService().getUsername() + " has no permission to write authorization configuration.";
-            log.error(message, e);
+            log.error(e.getMessage(), e);
             throw e;
         } catch (Exception e) {
             String message = "Error while updating authorization configuration.";
@@ -310,7 +310,10 @@ public class XmlRightsService implements IRightsService {
      * authorization configuration.
      */
     private void checkWritePermission() throws sernet.gs.service.SecurityException {
-        // TODO: implement checkWritePermission     
+        boolean isWritePermission = getRightsServerHandler().isEnabled(getAuthService().getUsername(), ActionRightIDs.EDITPROFILE); 
+        if(!isWritePermission) {
+            throw new SecurityException("User " + getAuthService().getUsername() + " has no permission to write authorization configuration.");
+        }       
     }
     
     /**
@@ -399,6 +402,7 @@ public class XmlRightsService implements IRightsService {
                 "where props.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME};  
         List<String> usernameList = getPropertyDao().findByQuery(HQL,params);
+        usernameList.add(getAuthService().getAdminUsername());
         return usernameList;
     }
 
@@ -483,6 +487,13 @@ public class XmlRightsService implements IRightsService {
         return getConfiguration().getProfiles();
     }
     
+    public RightsServerHandler getRightsServerHandler() {
+        if(rightsServerHandler==null) {
+            rightsServerHandler = new RightsServerHandler(this);
+        }
+        return rightsServerHandler;
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
      */
@@ -639,14 +650,6 @@ public class XmlRightsService implements IRightsService {
 
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
-    }
-
-    public IRightsServiceClient getRightServiceClient() {
-        return rightServiceClient;
-    }
-
-    public void setRightServiceClient(IRightsServiceClient rightServiceClient) {
-        this.rightServiceClient = rightServiceClient;
     }
     
     private HashMap<String, Profile> getProfileMap() {
