@@ -10,7 +10,7 @@
     xmlns:vn="http://www.verinice.org/taglib">
 
 	<ui:composition>
-		<h:form id="editForm">
+		<h:form id="editForm" rendered="#{rendered}">
 			<p:outputPanel id="editPanel" rendered="#{edit.element!=null}">
 				<div class="csc-header csc-header-n1" style="height:40px;">
 		    		<h1><h:outputText value="#{edit.title}"/></h1>
@@ -37,10 +37,11 @@
 		      		</p:panel>
 		     	</c:forEach>
 		     	<!-- Attachments -->
-		     	<p:panel id="attachmentPanel" header="#{msgEdit['attachments']}" collapsed="#{not edit.attachmentOpen}" rendered="#{edit.attachmentEnabled}" toggleable="true" toggleSpeed="500">				      							      					  					  			
+		     	<p:panel id="attachmentPanel" header="#{msgEdit['attachments']}" collapsed="#{not edit.attachmentOpen}" rendered="#{edit.attachmentEnabled and (auth.attachments or auth.addAttachments)}" toggleable="true" toggleSpeed="500">				      							      					  					  			
 		     		<p:dataTable id="attachmentTable"
 	     				value="#{attachment.attachments}" 
 		                var="item"
+		                rendered="#{auth.attachments}"
 		                height="150px"
 		                width="400px"
 		                styleClass="noheader">
@@ -52,7 +53,8 @@
 				        </p:column>
 		            </p:dataTable> 
 					<!-- 104857600 b = 100 mb -->
-					<p:fileUpload fileUploadListener="#{attachment.handleFileUpload}"  
+					<p:fileUpload fileUploadListener="#{attachment.handleFileUpload}"
+						rendered="#{auth.addAttachments}"  
 			        	mode="advanced"  
 			            multiple="true"  
             			auto="true"      
@@ -61,7 +63,7 @@
 			            allowTypes="/(\.|\/).*$/"/>
 				</p:panel>
 				<!-- Links -->
-				<p:panel id="linkPanel" header="#{msgEdit['links']}" collapsed="#{not edit.linkOpen}" toggleable="true" toggleSpeed="100">	     		
+				<p:panel id="linkPanel" header="#{msgEdit['links']}" rendered="#{auth.relations}" collapsed="#{not edit.linkOpen}" toggleable="true" toggleSpeed="100">	     		
 	      			<table>
 	      				<tr>
 	      					<td>
@@ -82,7 +84,7 @@
 	      			</table>		      						      			
 	      			<p:dataTable
 	     				value="#{link.linkList}" 
-		                var="item"
+		                var="item"		                
 		                selectionMode="single"
 	             		selection="#{link.selectedLink}"
 	             		rowKey="#{item.id}"

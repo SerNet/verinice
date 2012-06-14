@@ -19,30 +19,29 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Action;
+import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.ConfigurationType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
-import sernet.verinice.model.auth.Userprofiles;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServerHandler implements IRightsServerHandler {
+public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener {
 
     private static final Logger LOG = Logger.getLogger(RightsServerHandler.class);
     
@@ -56,10 +55,11 @@ public class RightsServerHandler implements IRightsServerHandler {
     
     public RightsServerHandler() {
         super();
+        XmlRightsService.addChangeListener(this);
     }
 
     public RightsServerHandler(IRightsService rightsService) {
-        super();
+        this();
         this.rightsService = rightsService;
     }
 
@@ -165,6 +165,30 @@ public class RightsServerHandler implements IRightsServerHandler {
 
     public void setRightsService(IRightsService rightsService) {
         this.rightsService = rightsService;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsChangeListener#configurationChanged(sernet.verinice.model.auth.Auth)
+     */
+    @Override
+    public void configurationChanged(Auth auth) {
+        discardData();       
+    }
+
+   
+    private void discardData() {
+        profileMap=null;
+        userActionMap=null;
+        userprofileMap=null;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        XmlRightsService.removeChangeListener(this);
+        super.finalize();
     }
 
 }

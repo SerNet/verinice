@@ -68,6 +68,7 @@ public class ActionRightIDs {
     public static final String ISMCUT = "ismcut";
     public static final String ISMCOPY = "ismcopy";
     public static final String ISMVIEW = "ismview";
+    public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";

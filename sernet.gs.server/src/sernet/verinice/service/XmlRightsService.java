@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,6 +56,7 @@ import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;
@@ -137,6 +139,8 @@ public class XmlRightsService implements IRightsService {
     private IAuthService authService;
     
     private HashMap<String, Profile> profileMap;
+    
+    private static List<IRightsChangeListener> changeListener;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -281,7 +285,9 @@ public class XmlRightsService implements IRightsService {
                 this.auth = null;
             } finally {
                 writeLock.unlock();
-            }                             
+            }
+            
+            fireChangeEvent();
 
         } catch (sernet.gs.service.SecurityException e) {
             log.error(e.getMessage(), e);
@@ -301,6 +307,12 @@ public class XmlRightsService implements IRightsService {
                 writeLock.unlock();
             }
             throw new RuntimeException(message);
+        }
+    }
+
+    private void fireChangeEvent() {       
+        for (IRightsChangeListener listener : getChangeListener()) {
+            listener.configurationChanged(getConfiguration());
         }
     }
 
@@ -717,6 +729,21 @@ public class XmlRightsService implements IRightsService {
             }
         }
         return actionMap;
+    }
+    
+    private static List<IRightsChangeListener> getChangeListener() {
+        if(XmlRightsService.changeListener==null) {
+            XmlRightsService.changeListener = new LinkedList<IRightsChangeListener>();
+        }
+        return XmlRightsService.changeListener;
+    }
+    
+    public static void addChangeListener(IRightsChangeListener listener) {
+        getChangeListener().add(listener);
+    }
+    
+    public static void removeChangeListener(IRightsChangeListener listener) {
+        getChangeListener().remove(listener);
     }
     
     public boolean isWhitelist() {

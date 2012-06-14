@@ -13,7 +13,7 @@
 <ui:define name="content">
 	<div id="col1">
 		<div id="col1_content">	
-			<h:form id="verbundForm">
+			<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
 				<h1><h:outputText value="#{msg['todo.groups']}" /></h1>
 				<ul id="listLeftNavi">
 					<ui:repeat id="itVerbundList" value="#{assetNavigation.itVerbundList}" var="itVerbund">
@@ -96,9 +96,9 @@
 		<div id="col3_content">	
 			<div id="col3_innen" class="floatbox">
      			<div class="csc-header csc-header-n1">
-     				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" /></h1>
+     				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}"/></h1>
      			</div>
-     			<h:form id="elementsForm">
+     			<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
      				<p:accordionPanel id="elementPanel" height="500" style="background-color: #ffffff;">
 	      				<p:tab title="#{msg['todo.buildings']}"  rendered="#{not empty assetNavigation.gebaeudeList}" style="height: 250px">
 				        	<ul>
@@ -215,10 +215,10 @@
 			<div id="col3_innen" class="floatbox">
 			    <div class="csc-textpic-text">
 			    	<p:outputPanel id="editPanel">
-	      				<p:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null}">
+	      				<p:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
 		      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"/></h1>
 		      			</p:outputPanel>
-	      				<h:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null}">
+	      				<h:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
 	      					<table id="editTable">
 								<tr>
 									<td>
@@ -269,8 +269,8 @@
 	      				</h:form>
 	      			</p:outputPanel>
 	      			<p:outputPanel id="tablePanel">
-						<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}"/></h1>
-		      			<h:form id="tableForm">
+						<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}" rendered="#{auth.bsiTasks}"/></h1>
+		      			<h:form id="tableForm" rendered="#{auth.bsiTasks}">
 		      				<p:dataTable id="toDoTable"
 				                var="item"
 				                value="#{toDo.todoList}"

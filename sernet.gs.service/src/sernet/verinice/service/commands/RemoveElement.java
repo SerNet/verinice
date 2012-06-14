@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -141,6 +142,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
             element.remove();
             dao.delete(element);
+        } catch (SecurityException e) {
+            getLog().error("SecurityException while deleting element: " + element, e);
+            throw e;
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while deleting element: " + element, e);
             throw e;

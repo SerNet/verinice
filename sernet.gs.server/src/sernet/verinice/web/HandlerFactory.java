@@ -39,36 +39,34 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class HandlerFactory {
     
-    /**
-     * @param element
-     * @return
-     */
-    public static List<IActionHandler> getHandlerForElement(CnATreeElement element) {
-        if(element instanceof IISO27kGroup) {
-            return getHandlerForElement((IISO27kGroup)element);
-        }
-        if(element instanceof ISO27KModel) {
-            return getHandlerForElement((ISO27KModel)element);
-        }
-        return Collections.emptyList();
+    public static List<IActionHandler> getHandlerForGroup(CnATreeElement group) {       
+        List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+        handlers.add(getGroupHandler(group));
+        handlers.addAll(getElementHandler(group));
+        return handlers;
     }
     
-    public static List<IActionHandler> getHandlerForElement(IISO27kGroup group) {       
+    public static List<IActionHandler> getElementHandler(CnATreeElement group) {       
         List<IActionHandler> handlers = new LinkedList<IActionHandler>();
-        if(!(group instanceof ImportIsoGroup)) {
-            if(!(group instanceof IISO27Scope)) {
-                handlers.add(new CreateElementHandler((CnATreeElement) group, group.getTypeId()));
-            }       
-            for (String childType : group.getChildTypes()) {
+        if(group instanceof IISO27kGroup && !(group instanceof ImportIsoGroup)) {           
+            for (String childType : (((IISO27kGroup)group).getChildTypes())) {
                 handlers.add(new CreateElementHandler((CnATreeElement) group, childType));          
             }
         }
         return handlers;
     }
     
-    public static List<IActionHandler> getHandlerForElement(ISO27KModel model) {       
-        List<IActionHandler> handlers = new LinkedList<IActionHandler>();
-        handlers.add(new CreateElementHandler((CnATreeElement) model, Organization.TYPE_ID));
-        return handlers;
+    public static IActionHandler getGroupHandler(CnATreeElement group) {       
+        IActionHandler handler = null;
+        if(group instanceof IISO27kGroup && !(group instanceof ImportIsoGroup)) {
+            if(!(group instanceof IISO27Scope)) {
+                handler = new CreateElementHandler((CnATreeElement) group, group.getTypeId());
+            }               
+        }
+        return handler;
+    }
+     
+    public static IActionHandler getOrgHandler(CnATreeElement model) {
+        return new CreateElementHandler(model, Organization.TYPE_ID);
     }
 }

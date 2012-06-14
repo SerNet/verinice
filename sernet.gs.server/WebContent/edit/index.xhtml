@@ -13,13 +13,13 @@
 <ui:composition template="/layout.xhtml">
 <ui:define name="content">
 	<div id="path" style="width: 100%; margin-bottom: 4px;">
-		<h:form id="navForm">
+		<h:form id="navForm"  rendered="#{auth.isoElements}">
 			<p:commandButton action="#{tree.init}" update=":tableForm,:navForm" icon="home-button" title="Wurzel" style="height: 36px;vertical-align: middle;"/>	
 			<p:commandButton action="#{tree.showParent}" update=":tableForm,:navForm,:editForm,:navForm:newPanel" icon="up-button" title="Nach oben" style="height: 36px;vertical-align: middle;"/>	
 			<p:commandButton onclick="submitEditForm();" oncomplete="repeatMessage();" disabled="#{edit.element==null}" icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
 			<p:remoteCommand name="repeatMessage" process="@form" action="#{message.repeat}"/>
 		    <p:commandButton onclick="confirmation.show()" disabled="#{edit.element==null}"  icon="delete-button" title="Delete" style="height: 36px;vertical-align: middle;"/>
-			<p:commandButton id="newButton" disabled="#{empty tree.handlers}"  icon="new-button" title="New" style="height: 36px;vertical-align: middle;"/>			
+			<p:commandButton id="newButton" disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"  icon="new-button" title="New" style="height: 36px;vertical-align: middle;"/>			
 			<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="false" >
 				<p:dataTable id="newElementTable"
 	                var="h"
@@ -43,7 +43,7 @@
 	</div>
 	<div id="col3" style="width: auto; margin: 0 200px 0 0; *margin-right:0;">
 		<div id="col3_content">	
-			<h:form id="tableForm">
+			<h:form id="tableForm" rendered="#{auth.isoElements}">
 				<p:dataTable id="elementTable"
 	                var="item"
 	                value="#{tree.children}"
@@ -70,7 +70,7 @@
 	</div>
 	<div id="col2">
 		<div id="col2_content">									    				
-	    	<vn:editor/>    		 				    			    							
+	    	<vn:editor rendered="#{auth.isoElements}"/>    		 				    			    							
 		</div>
 	</div>
 </ui:define>

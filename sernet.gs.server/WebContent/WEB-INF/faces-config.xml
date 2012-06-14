@@ -75,6 +75,11 @@
    <property-class>sernet.verinice.web.EditBean</property-class>
    <value>#{edit}</value>
   </managed-property>
+  <managed-property>
+   <property-name>authBean</property-name>
+   <property-class>sernet.verinice.web.AuthBean</property-class>
+   <value>#{auth}</value>
+  </managed-property>
  </managed-bean>
  <managed-bean>
   <managed-bean-name>message</managed-bean-name>

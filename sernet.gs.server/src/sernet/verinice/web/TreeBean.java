@@ -32,6 +32,7 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
+import sernet.gs.service.SecurityException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.BSIModel;
@@ -72,6 +73,8 @@ public class TreeBean implements IElementListener {
     private static final int maxBreadcrumbSize = 4;
     
     private EditBean editBean;
+    
+    private AuthBean authBean;
     
     private CnATreeElement element;
 
@@ -124,11 +127,26 @@ public class TreeBean implements IElementListener {
     }
 
     private void createHandlers() {
-        List<IActionHandler> handlerList = HandlerFactory.getHandlerForElement(getElement());
-        for (IActionHandler handler : handlerList) {
+        List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+        if(getAuthBean().getAddGroup()) {
+            IActionHandler handler = HandlerFactory.getGroupHandler(getElement());
+            if(handler!=null) {
+                handlers.add(handler);
+            }
+        }
+        if(getAuthBean().getAddElement() && !(getElement() instanceof Organization)) {
+            handlers.addAll(HandlerFactory.getElementHandler(getElement()));
+        }
+        if(getAuthBean().getAddGroup() && getElement() instanceof Organization) {
+            handlers.addAll(HandlerFactory.getElementHandler(getElement()));
+        }
+        if(getAuthBean().getAddOrg() && getElement() instanceof ISO27KModel) {
+            handlers.add(HandlerFactory.getOrgHandler(getElement()));
+        }
+        for (IActionHandler handler : handlers) {
             handler.addElementListeners(this);
         }
-        setHandlers(handlerList);
+        setHandlers(handlers);
     }
 
     private boolean isGroup() {
@@ -225,6 +243,7 @@ public class TreeBean implements IElementListener {
     public void openElement() {
         try { 
             if(isEditable()) {
+                getEditBean().setSaveMessage(Util.getMessage(TreeBean.BOUNDLE_NAME, "elementSaved"));
                 getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_ALL));
                 getEditBean().setSaveButtonHidden(true);
                 getEditBean().setUuid(getElement().getUuid());
@@ -259,9 +278,17 @@ public class TreeBean implements IElementListener {
                 showParent();
             }
             Util.addInfo("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
+        } catch( SecurityException e) {
+            LOG.error("SecurityException while deleting element.");
+            Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
         } catch( Exception e) {
             LOG.error("Error while deleting element.");
-            Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+            Throwable t = e.getCause();
+            if(t!=null && t instanceof SecurityException) {
+                Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+            } else {
+                Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+            }
         }
     }
 
@@ -358,6 +385,14 @@ public class TreeBean implements IElementListener {
         this.editBean = editBean;
     }
     
+    public AuthBean getAuthBean() {
+        return authBean;
+    }
+
+    public void setAuthBean(AuthBean authBean) {
+        this.authBean = authBean;
+    }
+
     public LinkBean getLinkBean() {
         return getEditBean().getLinkBean();
     }

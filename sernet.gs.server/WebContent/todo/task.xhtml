@@ -14,7 +14,7 @@
 <ui:define name="content">
 	<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
 		<div id="col3_content">
-			<h:form id="tableForm">
+			<h:form id="tableForm" rendered="#{auth.isoTasks}">
 				<div class="csc-header csc-header-n1" style="height:40px;">
 					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
 				</div>
@@ -88,7 +88,7 @@
 	</div>
 	<div id="col2">
 		<div id="col2_content">									    				
-	    	<vn:editor showButton="true"/>    		 				    			    							
+	    	<vn:editor rendered="#{auth.isoTasks}"/>    		 				    			    							
 		</div>
 	</div>
 </ui:define>

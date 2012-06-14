@@ -59,6 +59,7 @@
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />
+            <action id="ismviewweb" /> 
 	        <action id="konsolidator" />
 	        <action id="naturalize" />
 	        <action id="notes" />

@@ -13,7 +13,7 @@
   <body-content>empty</body-content>
   <attribute>
    <description>boolean</description>
-   <name>showButton</name>
+   <name>rendered</name>
    <rtexprvalue>false</rtexprvalue>
   </attribute>
  </tag>

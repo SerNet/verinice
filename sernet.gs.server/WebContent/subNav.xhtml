@@ -4,13 +4,13 @@
       xmlns:h="http://java.sun.com/jsf/html" >
 	<ul id="topNavi" class="listNavi">
 		<li class="liNavi #{nav.bsiTodoStyle}" id="liNavi_02">
-			<h:outputLink value="#{request.contextPath}/todo/todo.jsf"><span>#{msg['nav.bsi-controls']}</span></h:outputLink>
+			<h:outputLink value="#{request.contextPath}/todo/todo.jsf" rendered="#{auth.bsiTasks}"><span>#{msg['nav.bsi-controls']}</span></h:outputLink>
 		</li>
 		<li class="liNavi #{nav.taskStyle}" id="liNavi_02">
-			<h:outputLink value="#{request.contextPath}/todo/task.jsf"><span>#{msg['nav.iso-tasks']}</span></h:outputLink>
+			<h:outputLink value="#{request.contextPath}/todo/task.jsf" rendered="#{auth.isoTasks}"><span>#{msg['nav.iso-tasks']}</span></h:outputLink>
 		</li>
 		<li class="liNavi #{nav.editStyle}" id="liNavi_02">
-			<h:outputLink value="#{request.contextPath}/edit/index.jsf"><span>#{msg['nav.iso-objects']}</span></h:outputLink>
+			<h:outputLink value="#{request.contextPath}/edit/index.jsf" rendered="#{auth.isoElements}"><span>#{msg['nav.iso-objects']}</span></h:outputLink>
 		</li>
 	</ul>	
 </ui:composition>

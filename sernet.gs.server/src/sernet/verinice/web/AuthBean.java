@@ -20,7 +20,9 @@
 package sernet.verinice.web;
 
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IRightsServerHandler;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -33,7 +35,55 @@ public class AuthBean {
         return getAuthService().getUsername();
     }
     
+    public boolean getBsiTasks() {
+        return isEnabled(ActionRightIDs.BSIMASSNAHMEN);
+    }
+    
+    public boolean getIsoTasks() {
+        return isEnabled(ActionRightIDs.TASKVIEW);
+    }
+    
+    public boolean getIsoElements() {
+        return isEnabled(ActionRightIDs.ISMVIEWWEB);
+    }
+    
+    public boolean getRelations() {
+        return isEnabled(ActionRightIDs.RELATIONS);
+    }
+    
+    public boolean getAttachments() {
+        return isEnabled(ActionRightIDs.FILES);
+    }
+    
+    public boolean getAddAttachments() {
+        return isEnabled(ActionRightIDs.ADDFILE);
+    }
+    
+    public boolean getDeleteAttachments() {
+        return isEnabled(ActionRightIDs.DELETEFILE);
+    }
+    
+    public boolean getAddElement() {
+        return isEnabled(ActionRightIDs.ADDISMELEMENT);
+    }
+    
+    public boolean getAddGroup() {
+        return isEnabled(ActionRightIDs.ADDISMGROUP);
+    }
+    
+    public boolean getAddOrg() {
+        return isEnabled(ActionRightIDs.ADDISMORG);
+    }
+    
+    public boolean isEnabled( String rightId) {
+        return getRightsService().isEnabled(getAuthService().getUsername(), rightId);
+    }
+    
     private IAuthService getAuthService() {
         return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+    }
+    
+    private IRightsServerHandler getRightsService() {
+        return (IRightsServerHandler) VeriniceContext.get(VeriniceContext.RIGHTS_SERVER_HANDLER);
     }
 }
