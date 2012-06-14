@@ -45,9 +45,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -353,9 +352,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         ICommandService service = ServiceFactory.lookupCommandService();
         for(String type : types){
             try{
-            LoadReportElementWithChildren command = new LoadReportElementWithChildren(type, elmt.getDbId());
+            LoadReportElements command = new LoadReportElements(type, elmt.getDbId());
             command = service.executeCommand(command);
-            for(CnATreeElement person : command.getResult()){
+            for(CnATreeElement person : command.getElements()){
                 LoadConfiguration command2 = new LoadConfiguration(person);
                 command2 = service.executeCommand(command2);
                 if(command2.getConfiguration() != null){
