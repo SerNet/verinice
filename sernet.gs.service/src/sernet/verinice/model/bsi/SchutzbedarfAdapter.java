@@ -40,6 +40,16 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
 
+    
+    private transient Logger log = Logger.getLogger(SchutzbedarfAdapter.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(SchutzbedarfAdapter.class);
+        }
+        return log;
+    }
+    
     private CnATreeElement cnaTreeElement;
 
     public SchutzbedarfAdapter(CnATreeElement parent) {
@@ -140,9 +150,14 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             }
 
         } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
+            throw new RuntimeException(tae);
+        } catch (RuntimeException e) {
+            ta.abort();
+            throw e;
         } catch (Exception e) {
             ta.abort();
+            throw new RuntimeException(e);
         }
     }
 
@@ -164,9 +179,14 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             }
 
         } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
+            throw new RuntimeException(tae);
+        } catch (RuntimeException e) {
+            ta.abort();
+            throw e;
         } catch (Exception e) {
             ta.abort();
+            throw new RuntimeException(e);
         }
     }
 
@@ -188,9 +208,14 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             }
 
         } catch (TransactionAbortedException tae) {
-            Logger.getLogger(this.getClass()).debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
+            throw new RuntimeException(tae);
+        } catch (RuntimeException e) {
+            ta.abort();
+            throw e;
         } catch (Exception e) {
             ta.abort();
+            throw new RuntimeException(e);
         }
     }
 

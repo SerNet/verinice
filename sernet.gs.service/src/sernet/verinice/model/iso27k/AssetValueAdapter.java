@@ -103,7 +103,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("set confd. for " + cnaTreeElement); //$NON-NLS-1$
         }
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY), Integer.toString(i));
+        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY), Integer.toString(i));  
     }
 
     /**
@@ -169,6 +169,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_11, e);
             ta.abort();
+            throw e;
+        } catch (java.lang.Exception e) {
+            LOG.error(Messages.AssetValueAdapter_11, e);
+            ta.abort();
+            throw new RuntimeException(e);
         }
     }
 
@@ -195,6 +200,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_7, e);
             ta.abort();
+            throw e;
+        } catch (java.lang.Exception e) {
+            LOG.error(Messages.AssetValueAdapter_11, e);
+            ta.abort();
+            throw new RuntimeException(e);
         }
     }
 
@@ -220,6 +230,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_9, e);
             ta.abort();
+            throw e;
+        } catch (java.lang.Exception e) {
+            LOG.error(Messages.AssetValueAdapter_11, e);
+            ta.abort();
+            throw new RuntimeException(e);
         }
     }
 
