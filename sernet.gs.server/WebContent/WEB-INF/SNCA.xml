@@ -11,7 +11,15 @@
 	
     Authors:  akoderman,
     		  rschuster,
-    		  dmurygin 
+    		  dmurygin,
+    		  shagedorn 
+-->
+
+<!--
+	ATTENTION:
+	changing the id of a property could lead to unexpected behavior or, in the worst case, errors
+	change this file only if you know exactly what you are doing and are aware of
+	all the consequences
 -->
 
 <!--
