@@ -24,9 +24,17 @@
 		address="/sync" />
 		
 	<!-- Makes the SyncService WebService available as a Spring bean. -->
-	<bean id="syncService" class="sernet.gs.server.sync.SyncServiceImpl" >
+	<bean id="syncServiceImpl" class="sernet.gs.server.sync.SyncServiceImpl" >
 		<property name="commandService" ref="hibernateCommandService" />
 	</bean>
     
+    <bean id="syncService" parent="baseTxProxy">
+        <property name="target" ref="syncServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="executeCommand">PROPAGATION_REQUIRED,-sernet.verinice.interfaces.CommandException</prop>
+            </props>
+        </property>
+    </bean>
 
 </beans>
