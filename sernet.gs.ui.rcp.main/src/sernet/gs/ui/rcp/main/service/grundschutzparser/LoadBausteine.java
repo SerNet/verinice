@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.service.grundschutzparser;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.model.Baustein;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
@@ -29,6 +31,15 @@ import sernet.verinice.interfaces.INoAccessControl;
 @SuppressWarnings("serial")
 public class LoadBausteine extends GenericCommand implements INoAccessControl {
 
+    private transient Logger log = Logger.getLogger(LoadBausteine.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadBausteine.class);
+        }
+        return log;
+    }
+    
 	private List<Baustein> bausteine;
 
 	public void execute() {
@@ -65,6 +76,7 @@ public class LoadBausteine extends GenericCommand implements INoAccessControl {
 				
 			});
 		} catch (Exception e) {
+		    getLog().error("Error while loading bausteine: ", e);
 			throw new RuntimeCommandException(e);
 		}
 	}

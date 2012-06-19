@@ -165,6 +165,7 @@ public class ImportCreateBausteine extends GenericCommand {
             }
 
         } catch (Exception e) {
+            getLog().error("Error while import: ", e);
             throw new RuntimeCommandException(e);
         }
 
