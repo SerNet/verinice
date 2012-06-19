@@ -361,15 +361,18 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	}
 
 	private void hookDNDListeners() {
-		Transfer[] types = new Transfer[] { IBSIStrukturElementTransfer.getInstance(), 
-		                                    BausteinElementTransfer.getInstance(),
-		                                    BausteinUmsetzungTransfer.getInstance(), 
-		                                    ISO27kElementTransfer.getInstance(), 
-		                                    ISO27kGroupTransfer.getInstance()};
+		Transfer[] dropTypes = new Transfer[] { BausteinElementTransfer.getInstance(),
+		                                        BausteinUmsetzungTransfer.getInstance(), 
+		                                        IBSIStrukturElementTransfer.getInstance() 
+		                                      };
+		Transfer[] dragTypes = new Transfer[]{  IBSIStrukturElementTransfer.getInstance(),
+		                                        BausteinUmsetzungTransfer.getInstance()
+		                                      };
+		        
 
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, types, new BSIModelViewDropListener(viewer));
-		viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
+		viewer.addDropSupport(operations, dropTypes, new BSIModelViewDropListener(viewer));
+		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
 	}
 
 	private void hookDoubleClickAction() {

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -37,6 +38,8 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -50,6 +53,7 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  *
@@ -74,29 +78,27 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
      */
     @Override
     public boolean performDrop(Object data) {
-        LOG.debug("performDrop entered");
         Object toDrop = data;
         if(data == null){
             if(LOG.isDebugEnabled()){
                 LOG.debug("data is null - setting to selected Object");
             }
-            data = getSelectedObject();
+            
+            data = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
         }
         List items = DNDHelper.arrayToList(data);
         Object firstOne = items.get(0);
         if (toDrop != null && (toDrop instanceof Object[])) {
             Object[] o = (Object[])toDrop;
             if(o.length > 0){
-                LOG.debug("p1.1");
                 firstOne = o[0];
             }
         } else if(toDrop != null && (toDrop instanceof Object)){
             firstOne = toDrop;
         }
 
-        LOG.debug("aktiv: \t " + String.valueOf(isActive()));
         if(isActive()) {
-            if(firstOne instanceof Baustein){
+            if(firstOne instanceof Baustein && target.getClass().getPackage().getName().contains("model.bsi")){
                 ArrayList<Baustein> list = new ArrayList<Baustein>(0);
                 for(Object object : items){
                     if(object instanceof Baustein){
@@ -154,7 +156,9 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         else if(target instanceof IBSIStrukturElement && isSupportedData(transferType)){
             return isActive = true;
         }
-        
+        if(target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)){
+            return isActive = false;
+        }
         return isActive=true;
     }
 
@@ -269,7 +273,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     }
 
     private boolean dropBaustein(final CnATreeElement target, Viewer viewer,final Baustein[] bausteine) {
-        LOG.debug("entered dropBaustein(...)");
         if (!CnAElementHome.getInstance().isNewChildAllowed(target))
             return false;
 
@@ -333,7 +336,9 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     private boolean isSupportedData(TransferData transferType){
         return (BausteinElementTransfer.getInstance().isSupportedType(transferType)
                 || IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType)
-                || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType));
+                || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType)
+                || ISO27kElementTransfer.getInstance().isSupportedType(transferType)
+                || ISO27kGroupTransfer.getInstance().isSupportedType(transferType));
     }
 
     /* (non-Javadoc)

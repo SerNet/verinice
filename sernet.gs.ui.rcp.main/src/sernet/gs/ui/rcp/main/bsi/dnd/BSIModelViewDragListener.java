@@ -55,17 +55,7 @@ public class BSIModelViewDragListener implements DragSourceListener {
 	public void dragSetData(DragSourceEvent event) {
 	    IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 	    if(validateDrag(event)){
-	        if(selection.getFirstElement() instanceof Baustein){
-	            event.data = (Baustein)selection.getFirstElement();
-	        } else if(selection.getFirstElement() instanceof IBSIStrukturElement){
-	            event.data = (IBSIStrukturElement)selection.getFirstElement();
-	        } else if(selection.getFirstElement() instanceof IISO27kElement){
-	            event.data = IISO27kElement.class.getCanonicalName();
-	        } else {
-	            event.data = selection.getFirstElement();
-	        }
-	    } else {
-            event.data = DNDItems.CNAITEM;
+	        event.data = DNDHelper.castDataArray(selection.toArray());
 	    }
 	}
 
@@ -89,14 +79,14 @@ public class BSIModelViewDragListener implements DragSourceListener {
 			}
 		}
 		event.doit = true;
+		LOG.debug("EVENT.DOIT:\t" + String.valueOf(event.doit));
 	}
 	
 	private boolean validateDrag(DragSourceEvent event){
 	    return (BausteinElementTransfer.getInstance().isSupportedType(event.dataType)
 	            || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
 	            || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
-	            || ISO27kElementTransfer.getInstance().isSupportedType(event.dataType)
-	            || ISO27kGroupTransfer.getInstance().isSupportedType(event.dataType));
+	            );
 	}
 
 }

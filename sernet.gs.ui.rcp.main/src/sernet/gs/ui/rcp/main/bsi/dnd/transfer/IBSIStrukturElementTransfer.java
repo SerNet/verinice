@@ -37,7 +37,7 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
  */
 public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
     
-    private static final String TYPENAME_IBSIELEMENT = IBSIStrukturElement.class.getCanonicalName();
+    private static final String TYPENAME_IBSIELEMENT = "bsiElement";
     private static final int TYPEID_ISBSIELEMENT = registerType(TYPENAME_IBSIELEMENT);
     
     private static Logger LOG = Logger.getLogger(IBSIStrukturElementTransfer.class);

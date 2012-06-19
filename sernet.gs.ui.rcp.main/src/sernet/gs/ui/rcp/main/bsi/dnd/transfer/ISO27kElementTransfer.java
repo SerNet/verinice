@@ -37,7 +37,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  */
 public class ISO27kElementTransfer extends ByteArrayTransfer {
     
-    private static final String TYPENAME_ISOELEMENT = IISO27kElement.class.getCanonicalName();
+    private static final String TYPENAME_ISOELEMENT = "isoElement";
     private static final int TYPEID_ISOELEMENT = registerType(TYPENAME_ISOELEMENT);
     
     private static Logger LOG = Logger.getLogger(ISO27kElementTransfer.class);

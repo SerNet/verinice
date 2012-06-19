@@ -24,7 +24,7 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.iso27k.IItem;
@@ -209,7 +209,7 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
     }
     
     private boolean isSupportedData(TransferData transferType){
-        return ISO27kElementTransfer.getInstance().isSupportedType(transferType);
+        return BausteinElementTransfer.getInstance().isSupportedType(transferType);
     }
 
     /* (non-Javadoc)

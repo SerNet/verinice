@@ -135,8 +135,10 @@ public class ItemTransfer extends ByteArrayTransfer {
     }
     
     private boolean validateData(Object data){
-        return (data instanceof Item ||
-                data instanceof Item[]);
+        boolean one = data instanceof Item;
+        boolean two = data instanceof Item[];
+        boolean three = one || two;
+        return three;
     }
 
 }

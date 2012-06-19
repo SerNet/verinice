@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -52,7 +53,7 @@ public class BSIMassnahmenViewDragListener implements DragSourceListener {
 	    try{
 	        selection = (IStructuredSelection)viewer.getSelection();
 	        if(selection.getFirstElement() instanceof Baustein){
-	            event.data = (Baustein)selection.getFirstElement();
+	            event.data = transferToBausteinArray(selection.toArray());
 	        }
 	    } catch (Throwable t){
 	        LOG.error("error: ", t);
@@ -69,11 +70,21 @@ public class BSIMassnahmenViewDragListener implements DragSourceListener {
 				event.doit = false;
 				return;	
 			} else {
-			    event.data = o;
+			    event.data = transferToBausteinArray(selection.toArray());
 			}
 		}
 		event.doit = true;
 		dragSetData(event);
+	}
+	
+	private Object[] transferToBausteinArray(Object[] source){
+	    ArrayList<Baustein> dest = new ArrayList<Baustein>(0);
+	    for(Object o : source){
+	        if(o instanceof Baustein){
+	            dest.add((Baustein)o);
+	        }
+	    }
+	    return dest.toArray(new Baustein[dest.size()]);
 	}
 
 }

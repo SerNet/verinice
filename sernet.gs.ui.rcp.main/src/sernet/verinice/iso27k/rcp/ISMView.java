@@ -481,14 +481,19 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	}
 	
 	private void hookDNDListeners() {
-	    Transfer[] types2 = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
-	                                         BausteinElementTransfer.getInstance(),
-	                                         BausteinUmsetzungTransfer.getInstance(),
-	                                         ISO27kElementTransfer.getInstance(),
-	                                         ItemTransfer.getInstance()};
+	    Transfer[] dragTypes = new Transfer[] { ISO27kElementTransfer.getInstance(),
+	                                            ISO27kGroupTransfer.getInstance()
+	                                          };
+	    Transfer[] dropTypes = new Transfer[] { BausteinElementTransfer.getInstance(),
+	                                            BausteinUmsetzungTransfer.getInstance(),
+	                                            ItemTransfer.getInstance(),
+	                                            ISO27kElementTransfer.getInstance(),
+	                                            ISO27kGroupTransfer.getInstance(),
+	                                            IBSIStrukturElementTransfer.getInstance()
+	                                          };
 
-		viewer.addDragSupport(operations, types2, new BSIModelViewDragListener(viewer));
-		viewer.addDropSupport(operations, types2, metaDropAdapter);
+		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
+		viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
 		
 	}
 	

@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
+import sernet.gs.ui.rcp.main.bsi.dnd.DNDHelper;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.verinice.interfaces.iso27k.IItem;
@@ -88,7 +89,7 @@ public class ControlDragListener implements DragSourceListener {
 	        IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 	        if(ItemTransfer.getInstance().isSupportedType(event.dataType)){
 	            if(selection.getFirstElement() instanceof Item){
-	                event.data = ((Item)selection.getFirstElement());
+	                event.data = DNDHelper.castDataArray(selection.toArray());
 	            } else {
 	                event.data = DNDItems.CNAITEM;
 	                LOG.error("Something went wrong here");

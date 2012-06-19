@@ -17,11 +17,30 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.dnd.TransferData;
+
+import sernet.gs.model.Baustein;
+import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.GefaehrdungTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.MassnahmeTransfer;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.service.iso27k.Item;
 
 /**
  *
@@ -29,6 +48,23 @@ import org.apache.log4j.Logger;
 public class DNDHelper {
     
     private static final Logger LOG = Logger.getLogger(DNDHelper.class);
+    
+    private static Class<?> classes[] = new Class[]{Baustein.class,
+                                             Massnahme.class,
+                                             Gefaehrdung.class,
+                                             IBSIStrukturElement.class,
+                                             IISO27kElement.class,
+                                             Item.class};
+    
+    private static Class<?> transferClasses[] = new Class[]{ BausteinElementTransfer.class,
+                                                             BausteinUmsetzungTransfer.class,
+                                                             GefaehrdungTransfer.class,
+                                                             IBSIStrukturElementTransfer.class,
+                                                             ISO27kElementTransfer.class,
+                                                             ISO27kGroupTransfer.class,
+                                                             ItemTransfer.class,
+                                                             MassnahmeTransfer.class
+                                                };
     
     public static List arrayToList(Object data){
         ArrayList<Object> list = new ArrayList<Object>();
@@ -46,6 +82,82 @@ public class DNDHelper {
             list.add(data);
         }
         return list;
+    }
+    
+    /**
+     * creates an array of one of the types contained in classes,
+     * so transferclasses can check for correct type of dnd'ed array
+     * @param source
+     * @return
+     */
+    public static Object[] castDataArray(Object[] source){
+        List<?> dest = null;
+        Class<?> type = Object.class;
+        for(Class<?> c : classes){
+            if(source.length > 0){
+                if(c.isInstance(source[0])){
+                    type = c;
+                    break;
+                }
+            }
+        }
+        dest = createListOfType(type);
+        for(Object o : source){
+            if(type.isInstance(o)){
+                Method m;
+                try {
+                    m = dest.getClass().getDeclaredMethod("add", new Class[]{Object.class});
+                    m.invoke(dest, type.cast(o));
+                } catch (SecurityException e) {
+                    LOG.error("Error while casting dnd list", e);
+                } catch (NoSuchMethodException e) {
+                    LOG.error("Error while casting dnd list", e);
+                } catch (IllegalArgumentException e) {
+                    LOG.error("Error while casting dnd list", e);
+                } catch (IllegalAccessException e) {
+                    LOG.error("Error while casting dnd list", e);
+                } catch (InvocationTargetException e) {
+                    LOG.error("Error while casting dnd list", e);
+                }
+            } else {
+                return new Object[0];
+            }
+        }
+        
+        return dest.toArray((Object[])Array.newInstance(type, dest.size()));
+    }
+    
+    private static <T> List<T> createListOfType(Class<T> type){
+        return new ArrayList<T>();
+    }
+    
+    public static String getTransferType(TransferData transferData){
+        for(Class<?> clazz : transferClasses){
+            try {
+                Method getTypeIDs = clazz.getMethod("getTypeIds", null);
+                if(!getTypeIDs.isAccessible()){
+                    getTypeIDs.setAccessible(true);
+                }
+                int[] typeIDs = (int[]) getTypeIDs.invoke(transferData, null);
+                for(int typeID : typeIDs){
+                    if(Integer.parseInt(String.valueOf(transferData.type)) == typeID){
+                        return clazz.getCanonicalName();
+                    }
+                }
+            } catch (SecurityException e) {
+                LOG.error("Error:", e);
+            } catch (NoSuchMethodException e) {
+                LOG.error("Error:", e);
+            } catch (IllegalArgumentException e) {
+                LOG.error("Error:", e);
+            } catch (IllegalAccessException e) {
+                LOG.error("Error:", e);
+            } catch (InvocationTargetException e) {
+                LOG.error("Error:", e);
+            }
+            
+        }
+        return "";
     }
 
 }
