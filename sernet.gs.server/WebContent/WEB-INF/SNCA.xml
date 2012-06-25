@@ -3649,7 +3649,20 @@ the value between <param></param> will be used directly if no string is found fo
        
         <huirelation to="incident" id="rel_person_incident_rep"
         	name="reported" reversename="reported by" tooltip="" />
-        
+        	
+        <huirelation to="samt_topic" id="rel_person_samt_topic_interviewed"
+        	name="interviewed about"	reversename="interviewed" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samt_topic_monitors"
+        	name="monitors"	reversename="monitored by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samt_topic_audits"
+        	name="audits"	reversename="audited by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samt_topic_assignee"
+        	name="assignee"	reversename="is responsible for" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samt_topic_implements"
+        	name="implements"	reversename="implemented by" tooltip="" />
+        <huirelation to="samt_topic" id="rel_person_samt_topic_maintains"
+        	name="maintains"	reversename="maintained by" tooltip="" />
+            	
         <!-- roles, int. auditor etc. -->
         <huiproperty
             name="Abbreviation"
@@ -4438,6 +4451,9 @@ the value between <param></param> will be used directly if no string is found fo
         	name="requested by" reversename="requested exception" tooltip=""/>
         <huirelation to="person-iso" id="rel_exception_person_approved" 
         	name="approved by" reversename="approved exception" tooltip=""/>
+ 	
+ 		  <huirelation to="samt_topic" id="rel_exception_samt_topic_exception_of"
+ 		  	name="exception from" reversename="approved exception" tooltip="" />      	
        	
         <huiproperty
             name="Title"
@@ -4493,6 +4509,9 @@ the value between <param></param> will be used directly if no string is found fo
         	name="fullfilled by" reversename="fullfils" tooltip=""/>
        	<huirelation to="asset" id="rel_requirement_asset" 
         	name="applies to" reversename="requires" tooltip=""/>
+
+			<huirelation to="samt_topic" id="rel_requirement_samt_topic_fullfilled"
+			name="fullfilled by" reversename="fullfills" tooltip="" /> 	
         	
         <huiproperty
             name="Title"
@@ -4532,6 +4551,9 @@ the value between <param></param> will be used directly if no string is found fo
         	name="was responded by" reversename="response to" tooltip="" />
         <huirelation to="control" id="rel_incident_control"
         	name="in future prevented by" reversename="reaction to" tooltip="" />
+      
+		  <huirelation to="samt_topic" id="rel_incident_samt_topic_prevented"
+		  	name="in future prevented by"	reversename="reaction to" tooltip="" /> 	
         
         <huiproperty
             name="Title"
@@ -4575,6 +4597,9 @@ the value between <param></param> will be used directly if no string is found fo
         	name="relevant vulnerability" reversename="applies to" tooltip=""/>
         <huirelation to="asset" id="rel_incscen_asset" 
         	name="affects" reversename="affected by" tooltip=""/>
+
+		<huirelation to="samt_topic" id="rel_incscen_samt_topic_reduce"
+		  	name="probability reduced by" reversename="reduces probability of" tooltip="" />
         
         <huiproperty
             name="Title"
@@ -4851,6 +4876,11 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="finding" id="rel_document_finding" 
         	name="documents" reversename="related document" tooltip=""/>
 
+		<huirelation to="samt_topic" id="rel_document_samt_topic_documented"
+ 		  	name="documents" reversename="related document" tooltip="" />		
+		<huirelation to="process" id="rel_document_process_documented" 
+		  	name="documents" reversename="related document" tooltip="" /> 
+		  				
         <huirelation to="person-iso" id="rel_document_person_owner" 
         	name="owner" reversename="is owner of" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_author" 
@@ -4874,9 +4904,7 @@ the value between <param></param> will be used directly if no string is found fo
         	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
         <huirelation to="anwendung" id="rel_anwendung"
         	name="dokumentiert" reversename="relevantes Dokument" tooltip="" />
-            
-        <huirelation to="samt_topic" id="rel_document_samt_topic_ev" />
-		        
+            		        
         <huiproperty
             name="Title"
             id="document_name" />
@@ -4936,6 +4964,13 @@ the value between <param></param> will be used directly if no string is found fo
             name="Document"
             id="interview_document"
             isURL="true" />
+	
+    	<huirelation to="finding" id="rel_interview_finding_notice"
+    		name="revealed" reversename="noticed in" tooltip="" />
+    	<huirelation to="evidence" id="rel_interview_evidence_relevant"
+    		name="documented" reversename="relevant for" tooltip="" />
+		<huirelation to="samt_topic"  id="rel_interview_samt_topic_included"  
+			name="included" reversename="processed in" tooltip="" /> 
     </huientity>
     
     <huientity
