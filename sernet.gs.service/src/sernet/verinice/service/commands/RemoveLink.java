@@ -102,7 +102,7 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
      * ()
      */
     public int getChangeType() {
-        return ChangeLogEntry.TYPE_DELETE;
+        return ChangeLogEntry.TYPE_UPDATE;
     }
 
     /*
@@ -116,6 +116,7 @@ private transient Logger log = Logger.getLogger(RemoveLink.class);
         List<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
         if (element != null) {
             result.add(element.getDependant());
+            result.add(element.getDependency());
         }
         return result;
     }
