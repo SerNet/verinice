@@ -21,24 +21,23 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Create and save new element of type type to the database using its class to lookup
- * the DAO from the factory.
+ * Create and save new element of type type to the database using its class to
+ * lookup the DAO from the factory.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  * @param <T>
  */
-public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> 
-extends GenericCommand {
-    
+public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
+
     private transient Logger log = Logger.getLogger(CreateLink.class);
 
     public Logger getLog() {
@@ -49,61 +48,57 @@ extends GenericCommand {
     }
 
     private U dependant;
-	private V dependency;
-	private CnALink link;
-	private String relationId;
-	private String comment;
+    private V dependency;
+    private CnALink link;
+    private String relationId;
+    private String comment;
 
-	public CreateLink(U dependant, V dependency) {
-		this(dependant, dependency, "", "");
-	}
-	
-	public CreateLink(U dependant, V dependency, String relationId) {
-		this(dependant, dependency, relationId, "");
-	}
-	
-	public CreateLink(U dependant, V dependancy, String relationId, String comment) {
-		this.dependant = dependant;
-		this.dependency = dependancy;
-		this.relationId = relationId;
-		this.comment = comment;
-	}
-	
-	public void execute() {
-	    if (getLog().isDebugEnabled()) {
+    public CreateLink(U dependant, V dependency) {
+        this(dependant, dependency, "", "");
+    }
+
+    public CreateLink(U dependant, V dependency, String relationId) {
+        this(dependant, dependency, relationId, "");
+    }
+
+    public CreateLink(U dependant, V dependancy, String relationId, String comment) {
+        this.dependant = dependant;
+        this.dependency = dependancy;
+        this.relationId = relationId;
+        this.comment = comment;
+    }
+
+    public void execute() {
+        if (getLog().isDebugEnabled()) {
             getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
         }
-	    
-		IBaseDao<CnALink, Serializable> linkDao 
-			= (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
-		
-		IBaseDao<U, Serializable> targetDao 
-		= (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dependant.getTypeId());
+        try {
+            IBaseDao<CnALink, Serializable> linkDao = (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
+            IBaseDao<U, Serializable> dependantDao = (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dependant.getTypeId());
+            IBaseDao<V, Serializable> dependencyDao = (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependency.getTypeId());
 
-		IBaseDao<V, Serializable> draggedDao 
-		= (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependency.getTypeId());
+            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            ri.setLinksUp(true);
+            dependency = dependencyDao.findByUuid(dependency.getUuid(), ri);
+            ri = RetrieveInfo.getPropertyInstance();
+            ri.setLinksDown(true);
+            dependant = dependantDao.findByUuid(dependant.getUuid(), ri);
 
-//		// if dependancy or dependant are cglib enhanced, we won't get a DAO, but in this case we don't need to reload
-//		// because we're already inside the session:
-//		if (draggedDao != null && targetDao != null) {
-//			draggedDao.reload(dependancy, dependancy.getDbId());
-//			targetDao.reload(dependant, dependant.getDbId());
-//		}
-		dependency = draggedDao.findById(dependency.getDbId());
-		dependant = targetDao.findById(dependant.getDbId());
-		
-		link = new CnALink(dependant, dependency, relationId, comment);
-		try {
-		    linkDao.merge(link, true);
-        } catch (Exception e) {
-            getLog().error("Could not create link from " + dependency.getTypeId() + " to " + dependant.getTypeId() );
+            link = new CnALink(dependant, dependency, relationId, comment);
+
+            linkDao.merge(link, true);
+        } catch (RuntimeException e) {
+            getLog().error("RuntimeException while creating link.", e);
+            throw e;
+        } catch (Throwable e) {
+            getLog().error("Error while creating link", e);
+            throw new RuntimeException("Error while creating link", e);
         }
-		
-	}
 
-	public CnALink getLink() {
-		return link;
-	}
+    }
 
+    public CnALink getLink() {
+        return link;
+    }
 
 }
