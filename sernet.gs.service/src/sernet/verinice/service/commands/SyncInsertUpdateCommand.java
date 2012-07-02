@@ -293,15 +293,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
                 MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
+                String attrIntId = null;
                 if (mat == null) {
-                    final String message = "Could not find mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + extObjectType;
-                    getLog().error(message);
-                    this.errorList.add(message);
+                    final String message = "Could not find mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + extObjectType + ". Using extern-id.";
+                    getLog().warn(message);
+                    attrIntId = attrExtId;
                 } else {
-                    String attrIntId = mat.getIntId();
-                    elementInDB.getEntity().importProperties(huiTypeFactory,attrIntId, attrValues);
-                    addElement(elementInDB);
-                }           
+                    attrIntId = mat.getIntId();                  
+                }
+                elementInDB.getEntity().importProperties(huiTypeFactory,attrIntId, attrValues);
+                addElement(elementInDB);
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
             parent.addChild(elementInDB);

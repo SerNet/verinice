@@ -103,7 +103,10 @@ public class ExportFactory {
         Map<String, PropertyList> properties = entity.getTypedPropertyLists();
         for (String propertyTypeId : properties.keySet()) {             
             PropertyType propertyType = huiTypeFactory.getPropertyType(typeId, propertyTypeId);
-            if(propertyType!=null && propertyType.isReportable()) {
+            if(propertyType==null) {
+                LOG.warn("Property type not found in SNCA.xml: " + propertyTypeId + ", typeId: " + typeId);
+            }
+            if( propertyType==null || (propertyType!=null && propertyType.isReportable())) {
                 SyncAttribute syncAttribute = new SyncAttribute();
                 // Add <syncAttribute> to this <syncObject>:
                 syncAttribute.setName(propertyTypeId);
@@ -115,9 +118,6 @@ public class ExportFactory {
                 if (noOfValues > 0) {
                     syncAttributeList.add(syncAttribute);
                 }
-            }
-            if(propertyType==null) {
-                LOG.warn("Property type is null, propertyTypeId: " + propertyTypeId + ", typeId: " + typeId);
             }
         }
     }
