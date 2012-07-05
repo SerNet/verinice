@@ -295,3 +295,10 @@ h1+a:visited {
 .ui-widget .new-control-icon {
 	background-image: url("../image/icon/elements/stufe_none.png");
 }
+
+.task-description {
+	border: 1px solid #EEEEEE;
+	border-radius: 6px 6px 6px 6px;
+	margin-top: 5px;
+	padding: 3px;
+}

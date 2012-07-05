@@ -71,6 +71,7 @@ This variant:
 				<entry key="authService" value-ref="authService" />
                 <entry key="taskService" value-ref="taskService" />
                 <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
+                <entry key="remindService" value-ref="remindService" />
 			</map>
 		</property>
 	</bean>
@@ -82,7 +83,7 @@ This variant:
 		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
 		<property name="minPoolSize" value="10" />
-		<property name="initialPoolSize" value="5" />
+		<property name="initialPoolSize" value="10" />
 		<property name="maxPoolSize" value="60" />
 		<property name="acquireIncrement" value="5" />
 		<property name="maxStatements" value="100" />

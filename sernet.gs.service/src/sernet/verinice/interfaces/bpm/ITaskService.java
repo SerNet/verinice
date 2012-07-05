@@ -40,6 +40,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface ITaskService {
 
+    String DESCRIPTION_SUFFIX = ".description";
     
     String VAR_READ_STATUS = "TASK_READ_STATUS";
     

@@ -51,6 +51,9 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	public static final String PROP_THRESHOLD1 = "control_min1"; //$NON-NLS-1$
 	public static final String PROP_THRESHOLD2 = "control_min2"; //$NON-NLS-1$
 	public static final String PROP_MATURITY_DUEDATE = "control_maturity_duedate"; //$NON-NLS-1$
+	public static final String PROP_MATURITY_COMMENT = "control_maturity_comment"; //$NON-NLS-1$
+	public static final String PROP_CONTROL_IMPL_DATE = "control_implby"; //$NON-NLS-1$
+	public static final String PROP_IMPL_EXPLANATION = "control_implemented_explanation"; //$NON-NLS-1$
 
 	// ISR properties:
 	public static final String PROP_ISR_MATURITY = "control_isr_maturity"; //$NON-NLS-1$
@@ -134,7 +137,15 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	}
 	
 	public Date getDueDate() {
-        return getEntity().getDate(PROP_MATURITY_DUEDATE);
+        return getEntity().getDate(PROP_CONTROL_IMPL_DATE);
+    }
+	
+	public String getMaturityComment() {
+        return getEntity().getSimpleValue(PROP_MATURITY_COMMENT);
+    }
+	
+	public String getImplementationExplanation() {
+        return getEntity().getSimpleValue(PROP_IMPL_EXPLANATION);
     }
 	
 	public static String getImplementation(Entity entity) {

@@ -22,6 +22,7 @@ package sernet.verinice.model.iso27k;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
@@ -42,7 +43,10 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	public static final String PROP_CREAT = "audit_isa_creat";
 	public static final String PROP_CREATPHONE = "audit_isa_creatphone";
-	public static final String PROP_CREATMAIL = "audit_isa_creatmail";
+    public static final String PROP_CREATMAIL = "audit_isa_creatmail";
+    public static final String PROP_STARTDATE = "audit_startdate";
+    public static final String PROP_ENDDATE = "audit_enddate";
+	
 	
 	public static final String[] CHILD_TYPES = new String[] {
         AssetGroup.TYPE_ID,
@@ -144,6 +148,14 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	public String getCreatorEmail(){
 		return getEntity().getSimpleValue(PROP_CREATMAIL);
 	}
+	
+	public Date getStartDate(){
+        return getEntity().getDate(PROP_STARTDATE);
+    }
+    
+    public Date getEndDate(){
+        return getEntity().getDate(PROP_ENDDATE);
+    }
 	
 	public ArrayList<CnATreeElement> toList(){
 		ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();

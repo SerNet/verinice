@@ -31,9 +31,16 @@
 					    <p:commandButton id="completeAll" action="#{task.completeAllTask}" value="#{msgTask['completeAll']}" update=":tableForm:taskTable,:editForm" styleClass="button">
 					    	<f:setPropertyActionListener  target="#{message.info}" value="Completing all tasks. Please wait..." />				    		
 					    </p:commandButton>
-					</p:outputPanel>			 	 
-					 <table style="margin-top: 8px">
-					 	<tr>
+					</p:outputPanel>
+					<p:outputPanel id="descriptionPanel">
+						<p:outputPanel rendered="#{task.selectedTask!=null}">
+							<div class="task-description">
+								<h:outputText value="#{task.selectedTask.description}" escape="false"/>
+							</div>				
+						</p:outputPanel>						
+					</p:outputPanel>		 	 
+					<table style="margin-top: 8px">
+						<tr>
 					 		<td>
 					 			<p:selectOneMenu id="audit" value="#{task.selectedAuditName}" style="margin-right: 10px">	
 									 <f:selectItem itemLabel="#{msgTask['selectIsa']}" itemValue="" /> 

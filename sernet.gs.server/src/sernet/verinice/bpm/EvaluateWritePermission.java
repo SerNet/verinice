@@ -3,7 +3,7 @@ package sernet.verinice.bpm;
 import org.jbpm.api.jpdl.DecisionHandler;
 import org.jbpm.api.model.OpenExecution;
 
-import sernet.verinice.interfaces.bpm.IExecutionProcess;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 
 @SuppressWarnings("serial")
@@ -18,7 +18,7 @@ public class EvaluateWritePermission implements DecisionHandler {
             transition = IIsaExecutionProcess.TRANSITION_IS_WRITE_PERMISSION;
         } else {
             transition = IIsaExecutionProcess.TRANSITION_NO_WRITE_PERMISSION;
-            execution.setVariable(IExecutionProcess.VAR_TASK_READ_STATUS, IExecutionProcess.TASK_UNREAD);
+            execution.setVariable(IGenericProcess.VAR_TASK_READ_STATUS, IGenericProcess.TASK_UNREAD);
         }
         return transition;
     }

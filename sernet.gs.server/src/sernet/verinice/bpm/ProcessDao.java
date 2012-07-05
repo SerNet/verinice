@@ -52,7 +52,7 @@ public class ProcessDao extends HibernateDaoSupport {
                 uuidAssignee = link.getDependency().getUuid();            
                 break;
             }
-        }
+        } 
         return loadUsername(uuidAssignee);
     }
     

@@ -42,6 +42,8 @@ public interface ITask extends Comparable<ITask> {
     
     String getName();
     
+    String getDescription();
+    
     String getControlTitle();
 
     Date getCreateDate();

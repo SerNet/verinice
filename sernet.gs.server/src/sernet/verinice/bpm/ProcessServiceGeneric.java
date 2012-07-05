@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ProcessDefinition;
 import org.jbpm.api.ProcessDefinitionQuery;
@@ -38,6 +40,9 @@ import org.jbpm.pvm.internal.stream.ResourceStreamInput;
 import org.jbpm.pvm.internal.xml.Parse;
 
 import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
+import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 
 /**
@@ -54,7 +59,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     
     private ProcessEngine processEngine;
     private Set<String> processDefinitions;
-    private boolean wasInitCalled = false;
+    protected boolean wasInitCalled = false;
 
     private IDao<ExecutionImpl, Long> jbpmExecutionDao;
 
@@ -175,6 +180,19 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
             id = processDefinitionList.get(0).getId();
         }
         return id;
+    }
+    
+    public List<ExecutionImpl> findExecutionForElement(String key, String uuid) {    
+        String processDefinitionId = findProcessDefinitionId(key);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Latest processDefinitionId: " + processDefinitionId);
+        }
+        DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
+        executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
+        DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
+        variableCrit.add(Restrictions.eq("key", IGenericProcess.VAR_UUID));
+        variableCrit.add(Restrictions.eq("string", uuid));
+        return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
 
     /* (non-Javadoc)

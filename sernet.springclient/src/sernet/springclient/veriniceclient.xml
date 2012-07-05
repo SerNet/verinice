@@ -73,6 +73,17 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
+    <bean id="isaControlFlowService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/controlFlowHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IIsaControlFlowService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+    </bean>
+    
     <bean id="rightsServiceExecuter"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
@@ -205,6 +216,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 			<!--<entry key="syncService" value-ref="syncService" />-->
 			<entry key="webServiceClient" value-ref="webServiceClient" />
             <entry key="taskService" value-ref="taskService" />
+            <entry key="isaControlFlowService" value-ref="isaControlFlowService" />
             <entry key="processServiceIsa" value-ref="processServiceIsa" />
             <entry key="rightsService" value-ref="rightsServiceClient" />
 		</map>

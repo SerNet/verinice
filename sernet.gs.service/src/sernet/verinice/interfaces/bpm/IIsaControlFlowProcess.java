@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -20,24 +20,28 @@
 package sernet.verinice.interfaces.bpm;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
+ *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IIsaExecutionProcess extends IGenericProcess {
-    
-    String KEY = "isa-execution";
-    
-    String VAR_WRITE_PERMISSION = "ISA_WRITE_PERMISSION";
-    
-    String TRANSITION_IS_WRITE_PERMISSION = "is write permission";
-    String TRANSITION_NO_WRITE_PERMISSION = "no write permission";
-    
-    String DEFAULT_OWNER_NAME = "admin";
-    
-    // see https://docs.jboss.org/jbpm/v4/devguide/html_single/#timer 
-    String DEFAULT_DUEDATE = "10 business days";
+public interface IIsaControlFlowProcess extends IGenericProcess {
 
-   
-
+    String KEY = "isa-control-flow";
+    
+    String VAR_ASSIGNEE_NAME = "ICF_ASSIGNEE_NAME";
+    
+    String TASK_ASSIGN = "TASK_ASSIGN";
+    
+    String TASK_EXECUTE = "TASK_EXECUTE";
+    
+    String TASK_AUDIT = "TASK_AUDIT";
+    
+    String DEADLINE_PASSED = "DEADLINE_PASSED";
+    
+    String NOT_RESPONSIBLE = "NOT_RESPONSIBLE";
+    
+    String VAR_DEADLINE_COMMENT = "ISA_DEADLINE_COMMENT";
+    
+    String VAR_ASSIGN_DUEDATE = "ISA_ASSIGN_DUEDATE";
     
 }

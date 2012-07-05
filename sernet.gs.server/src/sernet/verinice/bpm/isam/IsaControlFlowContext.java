@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,43 +17,36 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.bpm.isam;
 
+import sernet.verinice.bpm.ProcessContext;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
+ *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaProcessContext extends ProcessContext {
+public class IsaControlFlowContext extends ProcessContext {
+    
+    private Control control;
+    
+    private ControlGroup controlGroup;
+    
+    private String uuidAudit;
+    
 
-    String uuidAudit;
-    
-    String uuidOrganization;
-    
-    ControlGroup controlGroup;
-    
-    SamtTopic samtTopic;
-
-    public IsaProcessContext() {
+    public IsaControlFlowContext() {
         super();
     }
 
-    public String getUuidAudit() {
-        return uuidAudit;
+    public Control getControl() {
+        return control;
     }
 
-    public void setUuidAudit(String uuidAudit) {
-        this.uuidAudit = uuidAudit;
-    }
-
-    public String getUuidOrganization() {
-        return uuidOrganization;
-    }
-
-    public void setUuidOrganization(String uuidOrganization) {
-        this.uuidOrganization = uuidOrganization;
+    public void setControl(Control control) {
+        this.control = control;
     }
 
     public ControlGroup getControlGroup() {
@@ -64,11 +57,12 @@ public class IsaProcessContext extends ProcessContext {
         this.controlGroup = controlGroup;
     }
 
-    public SamtTopic getSamtTopic() {
-        return samtTopic;
+    public String getUuidAudit() {
+        return uuidAudit;
     }
 
-    public void setSamtTopic(SamtTopic samtTopic) {
-        this.samtTopic = samtTopic;
+    public void setUuidAudit(String uuidAudit) {
+        this.uuidAudit = uuidAudit;
     }
+    
 }

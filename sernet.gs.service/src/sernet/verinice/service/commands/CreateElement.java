@@ -37,6 +37,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -132,6 +133,8 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
             // get constructor with parent-parameter and create new object:
             if(isOrganization()) {
                 child = (T) Organization.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
+            } else if(isAudit()) {
+                child = (T) Audit.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
             } else {
                 child = (T) clazz.getConstructor(CnATreeElement.class).newInstance(container);
             
@@ -161,11 +164,12 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    /**
-     * @return
-     */
     private boolean isOrganization() {
         return Organization.class.equals(clazz) || Organization.TYPE_ID.equals(typeId);
+    }
+    
+    private boolean isAudit() {
+        return Audit.class.equals(clazz) || Audit.TYPE_ID.equals(typeId);
     }
 
     /**
@@ -185,7 +189,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         // and has no permissions. Therefore we use the name of the currently
         // logged in user as a role which has read and write permissions for
         // the new ITVerbund.
-        if (child instanceof ITVerbund || child instanceof Organization) {
+        if (child instanceof ITVerbund || child instanceof Organization || child instanceof Audit) {
             addPermissions(child);           
         } else {
             RetrieveInfo ri = new RetrieveInfo();

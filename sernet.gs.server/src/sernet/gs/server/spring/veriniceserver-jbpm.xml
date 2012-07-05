@@ -24,6 +24,7 @@
             <set>
                 <!--<value>sernet/verinice/bpm/control-execution.jpdl.xml</value>-->
                 <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
+                <value>sernet/verinice/bpm/isam/isa-control-flow.jpdl.xml</value>
             </set>
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -33,6 +34,17 @@
         <property name="samtTopicDao" ref="samtTopicDAO" />
         <property name="processDao" ref="processDao" />
         <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="controlDao" ref="controlDAO" />
+        <property name="controlGroupDao" ref="controlGroupDAO" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="authService" ref="authService" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->
@@ -46,6 +58,32 @@
         <property name="jbpmTaskDao" ref="jbpmTaskDao" />
         <property name="jbpmVariableDao" ref="jbpmVariableDao" />
         <property name="auditDao" ref="auditDAO" />
+        <property name="taskOutcomeBlacklist">
+            <set>
+                <value>icf.trans.reminderDeadline</value>
+            </set>
+        </property>
+    </bean>
+    
+    <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
+        <property name="mailSender" ref="mailSender" />
+        <property name="velocityEngine" ref="velocityEngine"/>
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="configurationDao" ref="configurationDao" />
+        <property name="enabled" value="${veriniceserver.notification.enabled}" />
+        <property name="emailFrom" value="${veriniceserver.notification.email.from}"/>
+        <property name="replyTo" value="${veriniceserver.notification.email.from}"/> 
+        <property name="url" value="${veriniceserver.notification.email.linkto}"/>    
+    </bean>
+    
+    <bean id="remindService" parent="baseTxProxy">
+        <property name="target" ref="remindServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="loadUserData">PROPAGATION_SUPPORTS,readOnly</prop>
+                <prop key="retrieve*">PROPAGATION_SUPPORTS,readOnly</prop>
+            </props>
+        </property>
     </bean>
     
     <!-- Cron job which sends a notification to users with assigned tasks.                      -->

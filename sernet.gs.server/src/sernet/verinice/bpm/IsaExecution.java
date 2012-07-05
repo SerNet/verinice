@@ -19,15 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
@@ -41,11 +38,9 @@ import sernet.verinice.service.commands.LoadUsername;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaExecution {
+public class IsaExecution extends ProzessExecution {
 
     private final Logger log = Logger.getLogger(IsaExecution.class);
-    
-    ICommandService commandService;
     
     /**
      * Loads an assignee for a {@link SamtTopic} (ISA topic).
@@ -59,19 +54,7 @@ public class IsaExecution {
      * @return username of the assignee
      */
     public String loadAssignee(String uuid) {
-        ServerInitializer.inheritVeriniceContextState();
-        String username = null;
-        try {
-            LoadUsername command = new LoadUsername(uuid,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
-            command = getCommandService().executeCommand(command);
-            username = command.getUsername();         
-        } catch(Throwable t) {
-            log.error("Error while loading assignee.", t); //$NON-NLS-1$
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("uuid SamtTopic: " + uuid + ", username: " + username); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return username;
+        return loadAssignee(uuid, SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
     }
     
     public String loadWritePermission(String uuid, String username) {
@@ -115,12 +98,5 @@ public class IsaExecution {
             log.debug("uuid SamtTopic: " + uuid + ", implementation: " + implementation); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return implementation;
-    }
-    
-    private ICommandService getCommandService() {
-        if(commandService==null) {
-            commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-        }
-        return commandService;
     }
 }

@@ -25,6 +25,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
@@ -105,6 +106,10 @@ public abstract class ServiceFactory {
      */
     public static IProcessServiceIsa lookupProcessServiceIsa() {
         return (IProcessServiceIsa) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE_ISA);
+    }
+    
+    public static IIsaControlFlowService lookupIsaControlFlowService() {
+        return (IIsaControlFlowService) VeriniceContext.get(VeriniceContext.ISA_CONTROL_FLOW_SERVICE);
     }
 	
 	public static boolean isPermissionHandlingNeeded() {

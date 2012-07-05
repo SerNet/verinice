@@ -678,6 +678,51 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control"
+            objectClass="sernet.verinice.model.iso27k.Control">
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control.action"
+               label="Start control flow..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit"
+            objectClass="sernet.verinice.model.iso27k.Audit">
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit.action"
+               label="Start control flow..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group"
+            objectClass="sernet.verinice.model.iso27k.ControlGroup">
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group.action"
+               label="Start control flow..."
+               menubarPath="additions"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
             id="sernet.gs.ui.rcp.main.auditreport"
             objectClass="sernet.verinice.model.iso27k.Audit">
          <action

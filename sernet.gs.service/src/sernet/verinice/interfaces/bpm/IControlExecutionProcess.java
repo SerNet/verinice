@@ -23,7 +23,7 @@ package sernet.verinice.interfaces.bpm;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IControlExecutionProcess extends IExecutionProcess {
+public interface IControlExecutionProcess extends IGenericProcess {
     String KEY = "control-execution";
     
     String VAR_OWNER_NAME = "OWNER_NAME";

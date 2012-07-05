@@ -17,12 +17,8 @@
  ******************************************************************************/
 package sernet.hui.common;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
 
 import org.apache.log4j.Logger;
 
@@ -95,10 +91,14 @@ public class VeriniceContext {
 	public static String TASK_SERVICE = "taskService";
 
     public static String PROCESS_SERVICE_ISA = "processServiceIsa";
+
+    public static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
     
     public static String RIGHTS_SERVICE = "rightsService";
     
     public static String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
+    
+    public static String REMIND_SERVICE = "remindService";
     
     private static String SERVER_URL = null;
 

@@ -28,5 +28,9 @@
             </map>
         </property>
     </bean>
+    
+    <bean id="remindService" class="sernet.verinice.bpm.RemindServiceDummy" />
+    
+    <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowServiceDummy" />
   
 </beans>

@@ -33,7 +33,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
-import sernet.verinice.interfaces.bpm.IExecutionProcess;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
@@ -134,7 +134,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         }
         executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
         DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
-        variableCrit.add(Restrictions.eq("key", IExecutionProcess.VAR_UUID));
+        variableCrit.add(Restrictions.eq("key", IGenericProcess.VAR_UUID));
         variableCrit.add(Restrictions.eq("string", uuidControl));
         return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
@@ -143,18 +143,8 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
      * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
      */
     public List<ExecutionImpl> findIsaExecution(final String uuid) {
-        DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
-        String processDefinitionId = findProcessDefinitionId(IIsaExecutionProcess.KEY);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Latest processDefinitionId: " + processDefinitionId);
-        }
-        executionCrit.add(Restrictions.eq("processDefinitionId", processDefinitionId));
-        DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
-        variableCrit.add(Restrictions.eq("key", IExecutionProcess.VAR_UUID));
-        variableCrit.add(Restrictions.eq("string", uuid));
-        return getJbpmExecutionDao().findByCriteria(executionCrit);
+        return findExecutionForElement(IIsaExecutionProcess.KEY,uuid);       
     }
-    
 
     /**
      * True: This is a real implementation.
@@ -250,8 +240,8 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         String username = getProcessDao().getAssignee(control);
         
         props.put(IControlExecutionProcess.VAR_ASSIGNEE_NAME, username);
-        props.put(IExecutionProcess.VAR_UUID, control.getUuid());
-        props.put(IExecutionProcess.VAR_TYPE_ID, control.getTypeId());    
+        props.put(IGenericProcess.VAR_UUID, control.getUuid());
+        props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());    
         props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
         props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
         Date duedate = control.getDueDate();
@@ -275,8 +265,8 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         Map<String, Object> props = new HashMap<String, Object>();      
         String username = getProcessDao().getAssignee(topic);  
         props.put(IIsaExecutionProcess.VAR_ASSIGNEE_NAME, username);
-        props.put(IExecutionProcess.VAR_UUID, topic.getUuid());
-        props.put(IExecutionProcess.VAR_TYPE_ID, topic.getTypeId());
+        props.put(IGenericProcess.VAR_UUID, topic.getUuid());
+        props.put(IGenericProcess.VAR_TYPE_ID, topic.getTypeId());
         props.put(IIsaExecutionProcess.VAR_OWNER_NAME, getOwnerName(topic));
         props.put(IIsaExecutionProcess.VAR_IMPLEMENTATION, topic.getMaturity());
         if(context.getUuidAudit()!=null) {
@@ -285,9 +275,9 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         Date duedate = topic.getCompleteUntil();
         Date now = new Date(System.currentTimeMillis());
         if(duedate!=null && now.before(duedate)) {
-            props.put(IIsaExecutionProcess.VAR_DUEDATE, duedate);
+            props.put(IGenericProcess.VAR_DUEDATE, duedate);
         } else {
-            props.put(IIsaExecutionProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
+            props.put(IGenericProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
         }
              
         startProcess(IIsaExecutionProcess.KEY, props);     
