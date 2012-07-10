@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -60,6 +61,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
@@ -106,6 +108,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
 
     private TreeViewer treeViewer;
+    
+    private Browser textPanel;
 
     private TaskLabelProvider labelProvider;
 
@@ -140,6 +144,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public void createPartControl(Composite parent) {
         this.parent = parent;
         Composite container = createContainer(parent);
+        createInfoPanel(container);
         createTreeViewer(container);
         initData();
         makeActions();
@@ -216,6 +221,29 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         } catch (Throwable t) {
             LOG.error("Error while setting table data", t); //$NON-NLS-1$
         }
+    }
+    
+    private Composite createContainer(Composite parent) {
+        final Composite composite = new Composite(parent, SWT.NONE);
+        GridLayout layoutRoot = new GridLayout(1, false);
+        layoutRoot.marginWidth = 2;
+        layoutRoot.marginHeight = 2;
+        composite.setLayout(layoutRoot);
+        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+        gd.grabExcessVerticalSpace = true;
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.FILL;
+        composite.setLayoutData(gd);
+        return composite;
+    }
+    
+    private void createInfoPanel(Composite container) {
+        textPanel = new Browser(container, SWT.NONE);
+        textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ));
+        final GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
+        gridData.heightHint = 80;
+        textPanel.setLayoutData(gridData);
     }
 
     private void createTreeViewer(Composite parent) {
@@ -415,6 +443,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     try {
                         cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
                         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        getInfoPanel().setText( HtmlWriter.getPage(task.getDescription()));
                         List<KeyValue> outcomeList = task.getOutcomes();
                         for (KeyValue keyValue : outcomeList) {
                             CompleteTaskAction completeAction = new CompleteTaskAction(keyValue.getKey());
@@ -453,21 +482,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         });
     }
 
-    private Composite createContainer(Composite parent) {
-        final Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layoutRoot = new GridLayout(1, false);
-        layoutRoot.marginWidth = 2;
-        layoutRoot.marginHeight = 2;
-        composite.setLayout(layoutRoot);
-        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
-        gd.grabExcessVerticalSpace = true;
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.FILL;
-        composite.setLayoutData(gd);
-        return composite;
-    }
-
     public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = ServiceFactory.lookupCommandService();
@@ -477,6 +491,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     protected TreeViewer getViewer() {
         return treeViewer;
+    }
+    
+    protected Browser getInfoPanel() {
+        return textPanel;
     }
 
     /*

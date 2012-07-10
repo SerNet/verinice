@@ -671,7 +671,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaProcess.action"
                label="%action.label.26"
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="%action.tooltip.25">
          </action>
@@ -686,7 +686,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control.action"
                label="Start control flow..."
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -701,7 +701,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit.action"
                label="Start control flow..."
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -716,7 +716,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group.action"
                label="Start control flow..."
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -731,7 +731,7 @@
                icon="icons/report.png"
                id="sernet.gs.ui.rcp.main.actions.AuditReportAction.action"
                label="%action.label.27"
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="%action.tooltip.26">
          </action>

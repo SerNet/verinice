@@ -46,7 +46,11 @@ public class Reminder implements EventListener  {
     public void sendEmail(String taskType, String assignee, String uuid) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("sendEmail called...");           
-        }  
+        }
+        
+        if(!validate(taskType,assignee,uuid)) {
+            return;
+        }
         
         ServerInitializer.inheritVeriniceContextState();      
         
@@ -60,6 +64,26 @@ public class Reminder implements EventListener  {
         handler.send(assignee, uuid);
     }
     
+    private boolean validate(String taskType, String assignee, String uuid) {
+        if(taskType==null) {
+            LOG.error("Task type is null. Can not send email.");
+            return false;
+        }
+        if(assignee==null) {
+            LOG.error("Assignee type is null. Can not send email.");
+            return false;
+        }
+        if(uuid==null) {
+            LOG.error("Uuid type is null. Can not send email.");
+            return false;
+        }
+        if(EmailHandlerFactory.getHandler(taskType)==null) {
+            LOG.error("No email handler is registered for task type: " + taskType +". Can not send email.");
+            return false;
+        }
+        return true;
+    }
+
     /* (non-Javadoc)
      * @see org.jbpm.api.listener.EventListener#notify(org.jbpm.api.listener.EventListenerExecution)
      */

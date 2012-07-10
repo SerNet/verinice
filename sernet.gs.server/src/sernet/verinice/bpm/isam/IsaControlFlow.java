@@ -43,7 +43,7 @@ import sernet.verinice.service.commands.CreateElement;
 public class IsaControlFlow extends ProzessExecution {
 
     private static final Logger LOG = Logger.getLogger(IsaControlFlow.class);
-    private static final String VERIFICATION_SUFFIX = " Follow Up";
+    private static final String VERIFICATION_SUFFIX = " Follow Up"; //$NON-NLS-1$
     
     public Date loadExecuteDuedate(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
@@ -54,11 +54,11 @@ public class IsaControlFlow extends ProzessExecution {
                 duedate = ((Control) element).getDueDate();
                 Date now = Calendar.getInstance().getTime();
                 if(duedate.before(now)) {
-                    LOG.warn("Duedate is in the past, uuid of control: " + element.getUuid());
+                    LOG.warn("Duedate is in the past, uuid of control: " + element.getUuid()); //$NON-NLS-1$
                     duedate = null;
                 }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Duedete of control: " + element.getUuid() + " set to " + duedate);
+                    LOG.debug("Duedete of control: " + element.getUuid() + " set to " + duedate); //$NON-NLS-1$
                 }
             }
         } catch(Throwable t) {
@@ -75,7 +75,7 @@ public class IsaControlFlow extends ProzessExecution {
             if(element!=null && element instanceof Control) {
                 implementation = ((Control) element).getImplementation();
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Implementation of control: " + element.getUuid() + " set to " + implementation);
+                    LOG.debug("Implementation of control: " + element.getUuid() + " set to " + implementation); //$NON-NLS-1$
                 }
             }
         } catch(Throwable t) {
@@ -95,13 +95,42 @@ public class IsaControlFlow extends ProzessExecution {
                     comment = null;
                 }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Comment of control: " + element.getUuid() + ": " + comment);
+                    LOG.debug("Comment of control: " + element.getUuid() + ": " + comment); //$NON-NLS-1$
                 }
             }
         } catch(Throwable t) {
             LOG.error("Error while loading comment.", t); //$NON-NLS-1$
         }
         return comment;
+    }
+    
+    public Date loadAuditDate(String uuid) {
+        ServerInitializer.inheritVeriniceContextState();
+        Date date = null;
+        try {
+            CnATreeElement element = loadElementByUuid(uuid);  
+            if(element!=null && element instanceof Audit) {
+                Calendar nowPlus2Min = Calendar.getInstance();
+                nowPlus2Min.add(Calendar.MINUTE, 2);
+                date = nowPlus2Min.getTime();
+                
+                
+                /*
+                date = ((Audit) element).getStartDate();
+                Date now = Calendar.getInstance().getTime();
+                if(date.before(now)) {
+                    LOG.warn("Audit date is in the past, uuid of audit: " + element.getUuid()); //$NON-NLS-1$
+                    date = null;
+                }
+                */
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Audit date of audit: " + element.getUuid() + " set to " + date); //$NON-NLS-1$
+                }
+            }
+        } catch(Throwable t) {
+            LOG.error("Error while loading duedate.", t); //$NON-NLS-1$
+        }
+        return date;
     }
 
     public void startQsWorkflow() {

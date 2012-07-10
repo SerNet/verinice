@@ -409,7 +409,7 @@
                icon="icons/user.png"
                id="sernet.verinice.samt.rcp.AssignAllIsaTopics"
                label="%action.label.15"
-               menubarPath="additions"
+               menubarPath="special"
                style="push"
                tooltip="%action.tooltip.3">
          </action>

@@ -28,8 +28,6 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
 
     String KEY = "isa-control-flow";
     
-    String VAR_ASSIGNEE_NAME = "ICF_ASSIGNEE_NAME";
-    
     String TASK_ASSIGN = "TASK_ASSIGN";
     
     String TASK_EXECUTE = "TASK_EXECUTE";
@@ -43,5 +41,7 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
     String VAR_DEADLINE_COMMENT = "ISA_DEADLINE_COMMENT";
     
     String VAR_ASSIGN_DUEDATE = "ISA_ASSIGN_DUEDATE";
+    
+    String VAR_AUDITOR_NAME = "ICF_AUDITOR_NAME";
     
 }

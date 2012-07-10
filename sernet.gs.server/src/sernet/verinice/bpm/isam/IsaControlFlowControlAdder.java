@@ -45,7 +45,7 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
     private static final Logger LOG = Logger.getLogger(IsaControlFlowControlAdder.class);
     private static final String VERIFICATION_SUFFIX = " Follow Up";
     
-    public void addControlToAudit(String uuid, String uuidAudit) {
+    public String addControlToAudit(String uuid, String uuidAudit) {
         try {
             ServerInitializer.inheritVeriniceContextState();
             CnATreeElement control = loadElementByUuid(uuid);       
@@ -54,8 +54,10 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
             String title = audit.getTitle() + VERIFICATION_SUFFIX;
             Audit verificationAudit = findOrCreateAudit(auditGroup, title);
             copyElementToAudit(control,verificationAudit);
+            return verificationAudit.getUuid();
         } catch(Throwable t) {
             LOG.error("Error while addind control to audit.", t); //$NON-NLS-1$
+            return null;
         }
     }
 
@@ -97,8 +99,22 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
          for (CnATreeElement dir : dirList) {
              parent = findOrAddDirectories(parent,dir);
          }
-         CopyCommand copyCommand = new CopyCommand(parent.getUuid(), Arrays.asList(new String[]{control.getUuid()}));
-         copyCommand = getCommandService().executeCommand(copyCommand);
+         boolean exitst = false;
+         for (CnATreeElement child : parent.getChildren()) {
+             if(child.getTitle().equals(control.getTitle())) {
+                 exitst = true;
+                 break;
+             }
+         }
+         if(!exitst) {
+             CopyCommand copyCommand = new CopyCommand(parent.getUuid(), Arrays.asList(new String[]{control.getUuid()}));
+             copyCommand = getCommandService().executeCommand(copyCommand);
+             if (LOG.isDebugEnabled()) {
+                 LOG.debug("A copy of the control created in audit, orginal control uuid: " + control.getUuid());
+             }
+         } else if (LOG.isDebugEnabled()) {
+            LOG.debug("A copy of the control already exists in audit, orginal control uuid: " + control.getUuid());
+        }
     }     
 
     private List<CnATreeElement> getDirListInAudit(CnATreeElement element, List<CnATreeElement> dirList) throws CommandException {

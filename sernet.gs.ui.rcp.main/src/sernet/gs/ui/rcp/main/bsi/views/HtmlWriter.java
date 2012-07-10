@@ -151,15 +151,24 @@ public abstract class HtmlWriter {
         return buf.toString();
     }
     
+    public static String getPage(String text) {
+        StringBuilder sb = new StringBuilder();
+        writeHtml(sb, null, text, VeriniceCharset.CHARSET_UTF_8.name());
+        return sb.toString();
+    }
+    
     private static void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
         String cssDir = CnAWorkspace.getInstance().getWorkdir()+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
         buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").append(encoding).append("\"/>\n"); //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("<link REL=\"stylesheet\" media=\"screen\" HREF=\"").append(cssDir).append("\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
-        buf.append("</head><body><div id=\"content\"><h1>"); //$NON-NLS-1$
-        buf.append(headline);
-        buf.append("</h1><p>"); //$NON-NLS-1$
-        buf.append(""); //$NON-NLS-1$
+        buf.append("</head><body><div id=\"content\">"); //$NON-NLS-1$
+        if(headline!=null) {
+            buf.append("<h1>"); //$NON-NLS-1$
+            buf.append(headline);
+            buf.append("</h1>"); //$NON-NLS-1$
+        }
+        buf.append("<p>"); //$NON-NLS-1$
         buf.append(bodytext.replaceAll("\\n", "<br/>")); //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("</p></div></body></html>"); //$NON-NLS-1$
     }

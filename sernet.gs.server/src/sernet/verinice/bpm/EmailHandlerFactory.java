@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import sernet.verinice.bpm.isam.AssignEmailHandler;
+import sernet.verinice.bpm.isam.AuditEmailHandler;
 import sernet.verinice.bpm.isam.DeadlineEmailHandler;
 import sernet.verinice.bpm.isam.ExecuteEmailHandler;
 import sernet.verinice.bpm.isam.NotResponsibleEmailHandler;
@@ -43,6 +44,7 @@ public class EmailHandlerFactory {
         handlerMap.put(IIsaControlFlowProcess.TASK_EXECUTE, new ExecuteEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
+        handlerMap.put(IIsaControlFlowProcess.TASK_AUDIT, new AuditEmailHandler());
     }
     
     /**

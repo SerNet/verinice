@@ -86,4 +86,8 @@ public class ProzessExecution {
         return commandService;
     }
     
+    protected String setValue(String value) {
+        return value;
+    }
+    
 }

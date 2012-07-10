@@ -17,7 +17,7 @@
       <transition g="47,-26" name="not assigned" to="icf.task.assign">
         <condition expr="#{ISA_ASSIGNEE_NAME==null or ISA_DUEDATE==null}"/>
       </transition>
-      <transition name="assigned" to="isImplementation" g="12,-72">
+      <transition g="12,-72" name="assigned" to="isImplementation">
         <condition expr="#{ISA_ASSIGNEE_NAME!=null and ISA_DUEDATE!=null}"/>
       </transition>
    </decision>
@@ -58,10 +58,10 @@
           <field name="uuid"><object expr="#{UUID}"/></field>
         </event-listener>
       </on> 
-      <transition g="756,602:-202,-5" name="icf.trans.reminderDeadline" to="java.deadlineExecute">
+      <transition g="756,602:-118,17" name="icf.trans.reminderDeadline" to="java.deadlineExecute">
         <timer duedate="#{ISA_DUEDATE}"/>
       </transition>
-      <transition g="-80,-21" name="icf.trans.notResposible" to="java.loadComment"/>
+      <transition g="-1,4" name="icf.trans.notResposible" to="java.loadComment"/>
       <transition g="-111,-12" name="icf.trans.error" to="java.startQsWorkflow"/>
       <transition g="16,-8" name="icf.trans.check" to="java.loadImplementation"/>
    </task>
@@ -73,7 +73,7 @@
       <transition to="icf.task.assign.deadline"/>
    </java> 
    
-   <task g="541,416,188,56" assignee="#{ISA_OWNER_NAME}" duedate="21 days" name="icf.task.assign.deadline">
+   <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="541,416,188,56" name="icf.task.assign.deadline">
       <transition g="6,-3" name="icf.trans.assigned" to="java.loadAssignee"/>
    </task> 
    
@@ -90,7 +90,7 @@
       <transition g="-125,-92" name="not implemented" to="icf.task.execute">
         <condition expr="#{ISA_IMPLEMENTATION=='control_implemented_notedited'}"/>
       </transition>
-      <transition g="1222,446;1227,865:-201,-242" name="implemented" to="icf.task.check">
+      <transition g="1224,444;1227,865:-201,-242" name="implemented" to="icf.task.check">
         <condition expr="#{ISA_IMPLEMENTATION!='control_implemented_notedited'}"/>
       </transition>
    </decision> 
@@ -98,7 +98,7 @@
    
    <!-- not responsible -->
   
-   <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="534,643,202,37" method="loadComment" name="java.loadComment" var="ISA_DEADLINE_COMMENT">
+   <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="532,744,202,37" method="loadComment" name="java.loadComment" var="ISA_DEADLINE_COMMENT">
       <arg><object expr="#{UUID}"/></arg>
       <transition to="isComment"/>
    </java>
@@ -107,66 +107,116 @@
       <transition g="-105,25" name="with comment" to="java.notResponsible">
         <condition expr="#{ISA_DEADLINE_COMMENT!=null}"/>
       </transition>
-      <transition g="-69,13" name="no comment" to="icf.task.comment">
+      <transition g="-71,-24" name="no comment" to="icf.task.comment">
         <condition expr="#{ISA_DEADLINE_COMMENT==null}"/>
       </transition>
    </decision>
    
-   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="561,733,147,52" name="icf.task.comment">
-      <transition g="8,-6" name="icf.trans.complete" to="java.loadComment"/>
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="559,635,147,52" name="icf.task.comment">
+      <transition g="7,-25" name="icf.trans.complete" to="java.loadComment"/>
+      <transition name="icf.trans.reminderDeadline" to="java.deadlineExecute" g="-185,-22">
+        <timer duedate="#{ISA_DUEDATE}"/>
+      </transition>
    </task>
    
-   <java class="sernet.verinice.bpm.Reminder" g="329,643,182,37" method="sendEmail" name="java.notResponsible">
+   <java class="sernet.verinice.bpm.Reminder" g="329,642,182,37" method="sendEmail" name="java.notResponsible">
       <arg><object expr="NOT_RESPONSIBLE"/></arg>
       <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
       <transition to="icf.task.assign.nr"/>
    </java>
    
-   <task g="342,418,147,52" assignee="#{ISA_OWNER_NAME}" duedate="21 days" name="icf.task.assign.nr">
+   <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="342,418,147,52" name="icf.task.assign.nr">
       <transition g="-124,-19" name="icf.trans.assigned" to="java.loadAssignee"/>
    </task>
    
      
-   <task assignee="#{ISA_OWNER_NAME}" g="550,837,169,52" name="icf.task.obtainAdvise">
-      <transition g="313,865;310,259:34,278" name="icf.trans.reassign" to="icf.task.assign"/>
-      <transition g="639,1274:-110,-358" name="icf.trans.finish" to="end"/>
+   <task assignee="#{ISA_OWNER_NAME}" g="434,838,169,52" name="icf.task.obtainAdvise">
+      <transition g="313,865;310,259:9,280" name="icf.trans.reassign" to="icf.task.assign"/>
+      <transition g="528,1503:-112,-605" name="icf.trans.finish" to="end"/>
    </task>
    
    
    
    <!-- Audit -->
    
-   <task assignee="#{ISA_OWNER_NAME}" g="914,837,186,52" name="icf.task.check">
+   <task assignee="#{ISA_OWNER_NAME}" g="915,837,186,52" name="icf.task.check">
       <transition g="3,-11" name="icf.trans.audit" to="java.addToAudit"/>
-      <transition g="830,878;834,1259:-80,11" name="icf.trans.ok" to="end"/>
-      <transition g="-112,-5" name="icf.trans.decline" to="icf.task.execute"/>
-      <transition g="-95,-27" name="icf.trans.escalate" to="icf.task.obtainAdvise"/>
+      <transition g="1228,874;1226,1500:-86,-283" name="icf.trans.ok" to="end"/>
+      <transition g="7,50" name="icf.trans.decline" to="icf.task.execute"/>
+      <transition g="-21,-27" name="icf.trans.escalate" to="icf.task.obtainAdvise"/>
    </task>
    
-   <java class="sernet.verinice.bpm.isam.IsaControlFlowControlAdder" g="925,936,163,37" method="addControlToAudit" name="java.addToAudit">
+   <java class="sernet.verinice.bpm.isam.IsaControlFlowControlAdder" g="926,936,163,37" method="addControlToAudit" name="java.addToAudit" var="UUID">
       <arg><object expr="#{UUID}"/></arg>
       <arg><object expr="#{UUID_AUDIT}"/></arg>
-      <transition to="icf.task.assignAuditor"/>
-   </java> 
+      <transition to="java.loadType"/>
+   </java>
    
-   <task assignee="#{ISA_OWNER_NAME}" g="914,1003,186,52" name="icf.task.assignAuditor">
-      <transition g="8,-11" name="icf.trans.wait" to="wait"/>
+   <java class="sernet.verinice.bpm.ProzessExecution" g="945,991,126,34" method="setValue" name="java.loadType" var="TYPE">
+      <arg><object expr="audit"/></arg>
+      <transition to="java.loadAuditor"/>
+   </java>
+   
+   <java class="sernet.verinice.bpm.ProzessExecution" g="927,1044,161,37" method="loadAssignee" name="java.loadAuditor" var="ICF_AUDITOR_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="rel_audit_person_auditor"/></arg>
+      <transition to="java.loadAuditDate"/>
+   </java>
+   
+   <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="930,1107,156,38" method="loadAuditDate" name="java.loadAuditDate" var="AUDIT_DATE">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="isAuditor"/>
+   </java>
+   
+   <decision g="984,1167,80,40" name="isAuditor">
+      <transition g="-34,-26" name="not assigned" to="icf.task.assignAuditor">
+        <condition expr="#{ICF_AUDITOR_NAME==null or AUDIT_DATE==null}"/>
+      </transition>
+      <transition g="13,-78" name="assigned" to="join1">
+        <condition expr="#{ICF_AUDITOR_NAME!=null and AUDIT_DATE!=null}"/>
+      </transition>
+   </decision>
+   
+   
+   <task assignee="#{ISA_OWNER_NAME}" g="730,1165,170,52" name="icf.task.assignAuditor">
+      <transition g="-23,-43" name="icf.trans.wait" to="fork1"/>
    </task>
    
-   <state g="961,1105,92,35" name="wait">
-      <transition to="java.reminderAudit">
-      <timer duedate="#{auditDate} - 6 weeks"/>
+   <fork g="664,1167,48,48" name="fork1">
+      <transition to="java.loadAuditor.remind"/>
+      <transition g="685,1062:" to="java.loadAuditor"/>
+   </fork>
+   
+   <java class="sernet.verinice.bpm.ProzessExecution" g="592,1237,191,36" method="loadAssignee" name="java.loadAuditor.remind" var="ICF_AUDITOR_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="rel_audit_person_auditor"/></arg>
+      <transition to="java.loadAuditDate.remind"/>
+   </java>
+   
+   <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="578,1294,220,35" method="loadAuditDate" name="java.loadAuditDate.remind" var="AUDIT_DATE">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="wait"/>
+   </java>
+   
+   <state g="642,1357,92,35" name="wait">
+      <transition g="-77,23" name="6 weeks before audit" to="java.reminderAudit">
+        <!--<timer duedate="#{AUDIT_DATE} - 6 weeks"/>-->
+        <timer duedate="#{AUDIT_DATE} - 1 minute"/>
       </transition>
    </state>
 
-   <java class="sernet.verinice.bpm.Reminder" g="929,1176,156,38" method="sendEmail" name="java.reminderAudit">
+   <java class="sernet.verinice.bpm.Reminder" g="803,1356,156,38" method="sendEmail" name="java.reminderAudit">
       <arg><object expr="TASK_AUDIT"/></arg>
-      <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
+      <arg><object expr="#{ICF_AUDITOR_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
-      <transition to="end"/>
+      <transition to="join1"/>
    </java>
    
-   <end g="983,1252,48,48" name="end"/>
+   <join g="983,1352,48,48" name="join1">
+      <transition to="end"/>
+   </join>
    
+   <end g="983,1484,48,48" name="end"/>
+
 </process>
