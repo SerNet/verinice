@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="ISO 27001 mit verinice.">
+	<intro>
+		<description>
+			<b>Willkommen beim neuen Teil von verinice. - der ISO 27000-Perspektive </b>
+			<br/>
+			<br/>
+			Dieser Spickzettel zeigt Ihnen, wie Sie den nativen ISO27001-Standard 
+			in verinice verwenden können. Hierzu ist eine völlig neue Perspektive 
+			geschaffen worden. Sie können die neuen Ansichten jedoch auch in Kombination mit der Grundschutz-Perspektive sinnvoll nutzen. Dieser Spickzettel zeigt Ihnen wie! 
+		</description>
+	</intro>
+	<item title="In die neue Perspektive wechseln">
+		<description>
+		Gehen Sie in der Menüleiste auf &quot;Ansicht &gt; öffne Perspektive ... &gt; ISO 27000&quot;. 
+		Dadurch werden nun andere Fensterinhalte angezeigt. 
+		<br/> 
+		<br/>
+		Sie sehen links das 
+		Katalogfenster, in dem Sie eigene Kataloge aus einer mit Excel oder OOCalc erstellten CSV-Datei importieren können. 
+		<br/><br/>
+		Rechts daneben finden Sie den ISM View. Ihre eigenen Kataloge können Sie als &quot;Controls&quot; hier per DragnDrop hinzufügen. Ausserdem können Sie Assets und andere Objekte anlegen, z.B. Anforderungen, Sicherheitsvorfälle oder auch Dokumente mit Autor, Version und Stand.
+		<br/><br/>
+		 Unterhalb des ISM-Views finden Sie die Relationen-Ansicht. Hier sehen Sie die Verknüpfungen ihrer Objekte untereinander. Diese werden neuerdings auch im Editor jeweils mit angezeigt und erlauben das einfache navigieren zwischen Abhängigkeiten.
+		 <br/><br/>
+		 Der Attachment-View erlaubt das anhängen von Dateien. Die Dateien werden in der verinice-Datenbank selbst abgelegt. Eine Datei kann (mit dem selben Namen) in mehreren Versionen abgelegt und mit entsprechenden Metadaten versehen werden, z.B. Version, Stand, Autor und Freigabestatus. 
+		</description>
+	</item>
+	<item title="Kataloge einfügen">
+		<description>
+		Importieren Sie einen Katalog, indem Sie im Katalogfenster den Button 
+		&quot;Katalog importieren...&quot; drücken. Wählen Sie in gewohnter Art die CSV-Datei, 
+		die den gewünschten Katalog enthält. Bestätigen Sie mit &quot;OK&quot;.
+		<br/><br/>
+		Einige Beispiel-Kataloge für den Import finden Sie unter http://v.de unter &quot;Downloads&quot;.
+		<br/><br/>
+		Nun wird der Katalog im Katalogfenster angezeigt. Sie können die Inhalte der Controls 
+		(analog zu den Massnahmen im IT-Grundschutz)
+		im Browserfenster sehen, das Sie durch den Button &quot;GS Browser&quot; aktivieren können. Wenn
+		Sie nun ein Control anklicken, wird dessen 
+		Inhalt in Browserfenster angezeigt. 
+		<br/><br/>
+		Sie können  jeden in der Vergangeheit geladenen Katolog auswählen, wenn Sie im Fenster 
+		&quot;Kataloge&quot; das Drop-Down-Menü &quot;Katalog&quot; anklicken. Sollten Sie in vorherigen 
+		Sitzungen bereits einen Katalog importiert haben, so erscheint dieser hier in der 
+		angezeigten Liste. 
+		<br/><br/>
+		Wie Sie nun unter der ISO 27000-Ansicht arbeiten können, erfahren Sie im nachfolgenden 
+		Tutorial.
+		</description>
+	</item>
+</cheatsheet>

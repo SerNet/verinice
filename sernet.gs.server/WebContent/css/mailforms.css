@@ -1,0 +1,402 @@
+html {
+	/* fix for safari on iPhone/iPad */
+	/* it will not automatically adjust the fonts of the page when it rotates */
+	-webkit-text-size-adjust: none;
+}
+
+/* Powermail */
+	/* Form */
+span.powermail_mandatory {
+	/* Color of mandatory error message */
+	color: #c32d2b;
+}
+input.validation-failed,
+textarea.validation-failed {
+	/* Background color if validation failed 
+	background-color: red;
+	background-image: url(/typo3conf/ext/powermail/img/icon_exclamation.gif);
+	background-repeat: no-repeat;
+	background-position: 98% 0;
+	*/
+}
+div.powermail_mandatory_js {
+	/* DIV container of errormessage */
+	color: #c32d2b;
+	margin: 3px 0 15px 200px;
+	font-size: 90%;
+}
+fieldset.tx-powermail-pi1_fieldset {
+	/* Fieldset */
+	padding: 0;
+	*margin-bottom:10px;
+}
+fieldset.tx-powermail-pi1_fieldset legend {
+	/* legend of Fieldset */
+	background-color:#C32D2B;
+	color:#FFFFFF;
+	font-weight:bold;
+	padding:2px 5px;
+	width:100%;
+}
+fieldset.tx-powermail-pi1_fieldset label {
+	/* label */
+	display: block;
+	width: 200px;
+	float: left;
+	clear: both;
+	font-weight: bold;
+}
+fieldset.tx-powermail-pi1_fieldset input.powermail_text,
+fieldset.tx-powermail-pi1_fieldset textarea.powermail_textarea,
+fieldset.tx-powermail-pi1_fieldset select.powermail_select,
+fieldset.tx-powermail-pi1_fieldset select.powermail_countryselect,
+fieldset.tx-powermail-pi1_fieldset input.powermail_captcha {
+	/* Input and textarea */
+	width: 260px;
+	border: 1px solid #c5c5c5;
+	height: 18px;
+}
+fieldset.tx-powermail-pi1_fieldset input.powermail_captcha{
+	margin-left:200px;
+}
+fieldset.tx-powermail-pi1_fieldset textarea.powermail_textarea{
+	height: 100px;
+}
+fieldset.tx-powermail-pi1_fieldset select.powermail_select,
+fieldset.tx-powermail-pi1_fieldset select.powermail_countryselect{
+	height: 19px;
+}
+fieldset.tx-powermail-pi1_fieldset div.tx_powermail_pi1_fieldwrap_html_radio input.powermail_radio {
+	/* Radiobuttons */
+	margin: 5px 0;
+}
+div.tx_powermail_pi1_fieldwrap_html {
+	/* DIV container arround every field */
+	margin: 10px 0;
+}
+
+div.tx_powermail_pi1_fieldwrap_html_reset,
+div.tx_powermail_pi1_fieldwrap_html_submit {
+	display:inline;
+}
+
+.tx_powermail_pi1_formconfirmation_back,
+.tx_powermail_pi1_formconfirmation_submit {
+	display: inline;
+}
+
+fieldset.tx-powermail-pi1_fieldset input.powermail_submit,
+fieldset.tx-powermail-pi1_fieldset input.powermail_reset,
+input.tx-powermail-pi1_confirmation_submit,
+input.tx-powermail-pi1_confirmation_back,
+input.tx-powermail-pi1_mandatory_submit {
+	/* submit button */
+	border:1px solid #C5C5C5;
+	color:#C32D2B;
+	font-weight:bold;
+	height:22px;
+	margin:10px 0 10px 50px;
+	width:140px;
+	background-color: #EDEDED;
+}
+p.tx_powermail_pi1_fieldwrap_html_checkbox_title,
+p.tx_powermail_pi1_fieldwrap_html_radio_title {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+}
+div.countryzone {
+	margin: 10px 0 0 200px;
+}
+div.tx_powermail_pi1_fieldwrap_html label a,
+div.tx_powermail_pi1_fieldwrap_html p a {
+	/* Description */
+	cursor: help;
+	text-decoration: none;
+}
+div.tx_powermail_pi1_fieldwrap_html label a dfn,
+div.tx_powermail_pi1_fieldwrap_html p a dfn {
+	/* Description */
+	display: none;
+	text-decoration: none;
+}
+div.tx_powermail_pi1_fieldwrap_html label a:hover dfn,
+div.tx_powermail_pi1_fieldwrap_html p a:hover dfn {
+	/* Description on mouseover */
+	display: block;
+	position: absolute;
+	width: 250px;
+	padding: 5px;
+	border: 1px solid red;
+	color: black;
+	text-decoration: none;
+	font-size: 0.8em;
+	text-decoration: none;
+}
+div.tx_powermail_pi1_fieldwrap_html img.icon_info {
+	/* Description icon */
+	padding: 2px 2px 0 2px;
+}
+fieldset.tx-powermail-pi1_fieldset div.even {
+}
+
+/* Captcha */
+#recaptcha_widget_div {
+	clear: both;
+}
+
+#powermail-captcha_reload {
+	cursor: pointer;
+	padding: 5px 20px 0 0;
+	margin-left: 200px;
+	font-size:90%;
+	text-align:center;
+}
+
+img.powermail_captcha_captcha {
+}
+
+
+	/* Confirmation */
+td.powermail_all_td {
+	padding: 3px 10px 3px 0;
+}
+
+	/* THX */
+td.powermail_all p.bodytext {
+	margin: 0;
+}
+
+
+/* verinice.PRO Formular */
+fieldset.verinice_form select.powermail_select {
+	width: 455px;
+}
+
+#powermaildiv_uid127 {
+	width:511px;
+}
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_select label {
+	display: none !important;
+}
+
+fieldset.verinice_form div{
+	float: left;
+}
+
+fieldset.verinice_form div.tx_powermail_pi1_fieldwrap_html_label{
+	margin-bottom:0;
+}
+
+fieldset.fachlicherkontakt div.tx_powermail_pi1_fieldwrap_html_label{
+	width: 380px;
+}
+
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html{
+	float: left;
+	margin-right: 15px;
+}
+
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html input{
+	width: 244px;
+	padding:0 2px;
+}
+
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html select{
+	width: 250px;
+}
+
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html select.powermail_uid63,
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html select.powermail_uid79,
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html select.powermail_uid101{
+	width: 424px;
+}
+
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html textarea{
+	width: 511px;
+	height:50px;
+}
+
+fieldset.verinice_form .tx_powermail_pi1_fieldwrap_html_radio .tx_powermail_pi1_fieldwrap_html_radio_title {
+	display: none;
+}
+
+fieldset.verinice_form div.tx_powermail_pi1_fieldwrap_html_radio input.powermail_radio {
+	float: left;
+	margin: 0 5px 0 0;
+}
+
+fieldset.verinice_form div.tx_powermail_pi1_fieldwrap_html_radio .powermail_radio_inner {
+	margin-bottom: 5px;
+}
+
+/* Rechnungsanschrift */
+
+fieldset.rechnungskontakt div.tx_powermail_pi1_fieldwrap_html_label{
+	width: 380px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html{
+	float: left;
+	margin-right: 15px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html input{
+	width: 244px;
+	padding:0 2px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html input.powermail_uid160 {
+	width:511px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html select{
+	width: 250px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html select.powermail_uid66{
+	width: 204px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html textarea{
+	width: 511px;
+	height:50px;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html_check{
+	float: none;
+}
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html_check input{
+	width: auto;
+}
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html_check label{
+	text-indent: 0;
+	color: #000;
+	position: relative;
+	display: inline;
+}
+
+fieldset.rechnungskontakt .tx_powermail_pi1_fieldwrap_html_select label,
+fieldset.fachlicherkontakt .tx_powermail_pi1_fieldwrap_html_select label {
+	display: none;
+}
+
+#auftragveriniceprosubskript #powermaildiv_uid81 input,
+#auftragveriniceprosubskript #powermaildiv_uid81 label,
+#auftragveriniceprosubskript #powermaildiv_uid119 input,
+#auftragveriniceprosubskript #powermaildiv_uid119 label{
+	width: 424px;
+}
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_captcha {
+	width: 511px;
+	text-align: center;
+}
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_captcha label{
+	top: 45px !important;
+	*top: 50px !important;
+	width:auto !important;
+}
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_captcha input {
+	width: auto;
+}
+
+#auftragveriniceprosubskript .powermail_submit {
+	margin-right: 11px;
+}
+
+
+fieldset.rechnungskontakt p,
+fieldset.rechnungskontakt .powermail_check_inner {
+	display: inline;
+}
+
+
+#auftragveriniceprosubskript fieldset.rechnungskontakt p {
+	margin-right: 90px;
+}
+
+#auftragveriniceprosubskript fieldset.rechnungskontakt .powermail_check_inner label{
+	top: 0;
+	color: #000000 !important;
+	float:none;
+}
+
+#auftragveriniceprosubskript fieldset.verinice_form label {
+	display: inline !important;
+}
+
+#auftragveriniceprosubskript fieldset.verinice_form select {
+	margin-top: 5px;
+}
+
+#auftragveriniceprosubskript fieldset.verinice_form .powermail_check_inner label {
+	margin-right: 75px;
+	float: none;
+}
+
+#auftragveriniceprosubskript div.powermail_mandatory_js {
+	position:absolute;
+	margin:0;
+	width:300px;
+	*top:22px;
+	*left:0;
+}
+
+#auftragveriniceprosubskript .verinice_form .powermail_mandatory_js {
+	*top:0;
+} 
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_radio div.powermail_mandatory_js {
+	position:relative;
+}
+
+#auftragveriniceprosubskript fieldset.tx-powermail-pi1_fieldset label {
+	font-weight:normal;
+	width:424px;
+	clear:none;
+} 
+
+#auftragveriniceprosubskript .overlabel-wrapper .overlabel-apply {
+	left:8px;
+}
+
+#auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_captcha.overlabel-wrapper .overlabel-apply {
+	left:189px;
+}
+
+#auftragveriniceprosubskript input.powermail_captcha {
+	margin:0;
+}
+
+#auftragveriniceprosubskript #powermail-captcha_reload {
+	margin:0;
+	padding:2px;
+}
+
+#auftragveriniceprosubskript div.tx_powermail_pi1_fieldwrap_html_reset, 
+#auftragveriniceprosubskript div.tx_powermail_pi1_fieldwrap_html_submit {
+	margin:0;
+}
+
+#auftragveriniceprosubskript .powermail_submit {
+	margin:10px 0 0 0;
+}
+
+#auftragveriniceprosubskript .powermail_reset {
+	margin:10px 0 0 25px;
+} 
+
+#auftragveriniceprosubskript legend {
+	width: 503px;
+	*margin-left:-8px;
+}
+
+#auftragveriniceprosubskript #advice-required-uid161 {
+	position:relative;
+	width:auto;
+	top:2px;
+}

@@ -1,0 +1,25 @@
+#Fri Jul 01 09:08:34 CEST 2011
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/provider=
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/uri=file\:/java/verinice-tp-eclipse-3.7/configuration/org.eclipse.osgi/bundles/79/data/listener_1925729951/
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/enabled=true
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/type=org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/provider=
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/nickname=The Eclipse Project Updates
+repositories/http\:__download.eclipse.org_releases_indigo/uri=http\://download.eclipse.org/releases/indigo
+repositories/http\:__download.eclipse.org_releases_indigo/nickname=Indigo
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/uri=http\://download.eclipse.org/eclipse/updates/3.7
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/uri=file\:/java/verinice-tp-eclipse-3.7/.eclipseextension
+eclipse.preferences.version=1
+repositories/http\:__download.eclipse.org_releases_indigo/enabled=true
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/enabled=true
+repositories/http\:__download.eclipse.org_eclipse_updates_3.7/count=1
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/version=1
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/name=/java/verinice-tp-eclipse-3.7/.eclipseextension
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/isSystem=true
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/type=org.eclipse.equinox.p2.extensionlocation.metadataRepository
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/isSystem=true
+repositories/http\:__download.eclipse.org_releases_indigo/count=1
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/version=1
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/name=dropins
+repositories/file\:_java_verinice-tp-eclipse-3.7_configuration_org.eclipse.osgi_bundles_79_data_listener_1925729951/description=
+repositories/file\:_java_verinice-tp-eclipse-3.7_.eclipseextension/description=
