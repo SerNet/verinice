@@ -26,8 +26,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.ProzessExecution;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
@@ -43,7 +46,8 @@ import sernet.verinice.service.commands.CreateElement;
 public class IsaControlFlow extends ProzessExecution {
 
     private static final Logger LOG = Logger.getLogger(IsaControlFlow.class);
-    private static final String VERIFICATION_SUFFIX = " Follow Up"; //$NON-NLS-1$
+    
+    private IIsaQmService qmService;
     
     public Date loadExecuteDuedate(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
@@ -110,19 +114,18 @@ public class IsaControlFlow extends ProzessExecution {
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
             if(element!=null && element instanceof Audit) {
+                /* For debug only:
                 Calendar nowPlus2Min = Calendar.getInstance();
                 nowPlus2Min.add(Calendar.MINUTE, 2);
                 date = nowPlus2Min.getTime();
-                
-                
-                /*
+                */
+
                 date = ((Audit) element).getStartDate();
                 Date now = Calendar.getInstance().getTime();
                 if(date.before(now)) {
                     LOG.warn("Audit date is in the past, uuid of audit: " + element.getUuid()); //$NON-NLS-1$
                     date = null;
                 }
-                */
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Audit date of audit: " + element.getUuid() + " set to " + date); //$NON-NLS-1$
                 }
@@ -133,8 +136,8 @@ public class IsaControlFlow extends ProzessExecution {
         return date;
     }
 
-    public void startQsWorkflow() {
-        
+    public void startQsWorkflow(String uuid, String uuidAudit) {
+        getQmService().startProcessesForControl(uuid, uuidAudit);
     }
     
     public void remind() {
@@ -149,5 +152,10 @@ public class IsaControlFlow extends ProzessExecution {
         
     }
     
-    
+    protected IIsaQmService getQmService() {
+        if(qmService==null) {
+            qmService = (IIsaQmService) VeriniceContext.get(VeriniceContext.ISA_QM_SERVICE);
+        }
+        return qmService;
+    }
 }

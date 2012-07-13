@@ -32,5 +32,7 @@
     <bean id="remindService" class="sernet.verinice.bpm.RemindServiceDummy" />
     
     <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowServiceDummy" />
+    
+    <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmServiceDummy" />
   
 </beans>

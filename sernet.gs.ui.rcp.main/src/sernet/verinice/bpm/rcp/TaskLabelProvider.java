@@ -91,6 +91,9 @@ public class TaskLabelProvider implements ITableLabelProvider {
                 break;
             }
         }
+        if(text!=null && text.length()>100) {
+            text = text.substring(0, 99) + "...";
+        }
         return text;
     }
 

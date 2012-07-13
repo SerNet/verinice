@@ -105,8 +105,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView";
 
-    private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
-
     private TreeViewer treeViewer;
     
     private Browser textPanel;
@@ -272,7 +270,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         treeColumn.setText(Messages.TaskViewColumn_3);
 
         // set initial column widths
-        layout.addColumnData(new ColumnWeightData(40, true));
+        layout.addColumnData(new ColumnWeightData(40, false));
         layout.addColumnData(new ColumnWeightData(30, false));
         layout.addColumnData(new ColumnWeightData(15, false));
         layout.addColumnData(new ColumnWeightData(15, false));
@@ -420,6 +418,13 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private void addToolBarActions() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
+        // Dummy action to force displaying the toolbar in a new line
+        Action dummyAction = new Action() {};
+        dummyAction.setText(" ");
+        dummyAction.setEnabled(false);
+        ActionContributionItem item = new ActionContributionItem(dummyAction);
+        item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
+        manager.add(item);
         manager.add(this.refreshAction);
         manager.add(myTasksAction);
         manager.add(cancelTaskAction);

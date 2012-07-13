@@ -78,6 +78,8 @@
    </task> 
    
    <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="727,512,178,36" method="startQsWorkflow" name="java.startQsWorkflow">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="#{UUID_AUDIT}"/></arg>
       <transition g="943,583:" to="icf.task.execute"/>
    </java>
    

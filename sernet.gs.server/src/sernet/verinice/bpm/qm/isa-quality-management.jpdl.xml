@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="isa-quality-management" name="verinice ISA quality management process" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>ISA quality management process in verinice</description>
+
+   <start g="331,25,80,40" name="start">
+      <transition to="check comment"/>
+   </start>
+   
+   <decision g="331,134,48,48" name="check comment">
+      <transition g="-28,-72" name="no comment" to="iqm.task.addComment"/>
+      <transition g="-118,-25" name="with comment" to="iqm.task.setAssignee"/>
+   </decision>
+   
+   <java class="sernet.verinice.bpm.qm.IsaQm" g="27,81,158,38" method="loadComment" name="java.loadComment">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="check comment"/>
+   </java>
+     
+   <task assignee="#{ISA_ASSIGNEE_NAME}" g="15,197,183,52" name="iqm.task.addComment">
+      <transition g="5,-9" name="iqm.trans.complete" to="java.loadComment"/>
+   </task>
+
+   
+   <task g="270,255,171,52" name="iqm.task.setAssignee">
+      <transition g="8,-12" name="iqm.trans.complete" to="iqm.task.check"/>
+   </task>
+   
+   <task g="292,330,127,52" name="iqm.task.check">
+      <transition g="-92,-20" name="iqm.trans.fix" to="iqm.task.resultFixed"/>
+      <transition g="-7,-23" name="iqm.trans.noFix" to="iqm.task.resultNotChanged"/>
+   </task>
+   
+   <task g="154,414,167,52" name="iqm.task.resultFixed">
+      <transition g="-117,-18" name="iqm.trans.ok" to="end"/>
+   </task>
+   
+   <task g="393,411,211,52" name="iqm.task.resultNotChanged">
+      <transition g="59,-19" name="iqm.trans.ok" to="end"/>
+   </task>
+   
+   <end g="332,507,80,40" name="end"/>
+   
+</process>

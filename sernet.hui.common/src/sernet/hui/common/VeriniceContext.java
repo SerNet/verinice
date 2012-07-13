@@ -93,6 +93,8 @@ public class VeriniceContext {
     public static String PROCESS_SERVICE_ISA = "processServiceIsa";
 
     public static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
+
+    public static String ISA_QM_SERVICE = "isaQmService";
     
     public static String RIGHTS_SERVICE = "rightsService";
     

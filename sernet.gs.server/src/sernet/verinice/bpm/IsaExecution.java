@@ -23,14 +23,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CheckWritingPermission;
 import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.LoadUsername;
 
 /**
  * Execution class for a jBPM Java task of process isa-execution

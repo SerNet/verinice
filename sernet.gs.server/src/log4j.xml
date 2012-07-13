@@ -22,23 +22,27 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
-
-    <!-- Add settings for packages here  -->
-    <!-- 
-    <logger name="sernet.verinice.web">
-        <level value="DEBUG" />
-    </logger>
-     -->
+    
     <!--
     <logger name="org.hibernate.SQL">
         <level value="DEBUG" />
     </logger>
     -->
     
+    <logger name="sernet.verinice.bpm">
+        <level value="DEBUG" />
+    </logger>
+    
+    <logger name="sernet.verinice.bpm.isam">
+        <level value="DEBUG" />
+    </logger>
+    
+    
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
-		<appender-ref ref="FILE" />
+        <appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

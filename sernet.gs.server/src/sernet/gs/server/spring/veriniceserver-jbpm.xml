@@ -25,6 +25,7 @@
                 <!--<value>sernet/verinice/bpm/control-execution.jpdl.xml</value>-->
                 <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
                 <value>sernet/verinice/bpm/isam/isa-control-flow.jpdl.xml</value>
+                <value>sernet/verinice/bpm/qm/isa-quality-management.jpdl.xml</value>
             </set>
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -44,6 +45,14 @@
         <property name="controlGroupDao" ref="controlGroupDAO" />
         <property name="auditDao" ref="auditDAO" />
         <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="authService" ref="authService" />
+    </bean>
+    
+    <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="controlDao" ref="controlDAO" />
         <property name="authService" ref="authService" />
     </bean>
     

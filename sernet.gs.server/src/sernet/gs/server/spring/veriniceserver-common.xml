@@ -72,6 +72,7 @@ This variant:
                 <entry key="taskService" value-ref="taskService" />
                 <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
                 <entry key="remindService" value-ref="remindService" />
+                <entry key="isaQmService" value-ref="isaQmService" />
 			</map>
 		</property>
 	</bean>
