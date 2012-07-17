@@ -61,6 +61,8 @@ public class ZIPGSSource implements IGSSource {
 	private static final String BAUSTEIN_PATH_DATENSCHUTZ = "B1.5-Datenschutz/www.bsi.de/gshb/baustein-datenschutz/html/";
 	private static final String PREFIX_2009 = "it-grundschutz_el11_html/";
 	private static final String BAUSTEIN_PATH_2009 = PREFIX_2009 + "baust/";
+	private static final String PREFIX_2012 = "it-grundschutz_el12_html/";
+    private static final String BAUSTEIN_PATH_2012 = PREFIX_2012 + "baust/";
 	
 	private static final String MASSNAHME_PATH_2005 = "gshb/deutsch/m/";
 	private static final String MASSNAHME_PATH_2006 = "m/";
@@ -116,7 +118,12 @@ public class ZIPGSSource implements IGSSource {
 						ZipEntry entry = getBausteinPath2009(zf, baustein); 
 						return zf.getInputStream(entry);
 					} catch (Exception e3) {
-						throw new GSServiceException(e3);
+	                    try {
+	                        ZipEntry entry = getBausteinPath2012(zf, baustein); 
+	                        return zf.getInputStream(entry);
+	                    } catch (Exception e4) {
+	                        throw new GSServiceException(e4);
+	                    }
 					}
 				}
 			}
@@ -161,7 +168,8 @@ public class ZIPGSSource implements IGSSource {
 				entry = zf.getEntry(BAUSTEIN_PATH_DATENSCHUTZ + bausteinFileName + SUFFIX);
 			if (entry == null)
 				entry = getBausteinPath2009(zf, bausteinFileName);
-				
+			if (entry == null)
+                entry = getBausteinPath2012(zf, bausteinFileName);	
 				
 			if (entry == null)
 				throw new GSServiceException("Feler beim Laden des Bausteins: " + bausteinFileName);
@@ -176,24 +184,27 @@ public class ZIPGSSource implements IGSSource {
 	
 	}
 
-	/**
-	 * @param zf2
-	 * @param bausteinFileName
-	 * @param suffix2
-	 * @return
-	 */
+	
 	private ZipEntry getBausteinPath2009(ZipFile zf, String bausteinFileName) {
-		ZipEntry entry = null;
-		Pattern pat = Pattern.compile("(b\\d\\d).*");
-		Matcher matcher = pat.matcher(bausteinFileName);
-		if (matcher.find()) {
-			String chapter = matcher.group(1);
-			String path = BAUSTEIN_PATH_2009 + chapter + "/" + bausteinFileName + SUFFIX_2009;
-			entry = zf.getEntry(path);
-			
-		}
-		return entry;
+		return getBaustein(zf, BAUSTEIN_PATH_2009, bausteinFileName);
 	}
+	
+	private ZipEntry getBausteinPath2012(ZipFile zf, String bausteinFileName) {
+        return getBaustein(zf, BAUSTEIN_PATH_2012, bausteinFileName);
+    }
+	
+	private ZipEntry getBaustein(ZipFile zf, String pathFragment, String bausteinFileName) {
+        ZipEntry entry = null;
+        Pattern pat = Pattern.compile("(b\\d\\d).*");
+        Matcher matcher = pat.matcher(bausteinFileName);
+        if (matcher.find()) {
+            String chapter = matcher.group(1);
+            String path = pathFragment + chapter + "/" + bausteinFileName + SUFFIX_2009;
+            entry = zf.getEntry(path);
+            
+        }
+        return entry;
+    }
 
 	public InputStream getMassnahmeAsStream(String massnahme) throws GSServiceException {
 		try {
@@ -216,7 +227,12 @@ public class ZIPGSSource implements IGSSource {
 							ZipEntry entry = zf.getEntry(getPath2009("m", massnahme)); 
 							return zf.getInputStream(entry);
 						} catch (Exception e5) {
-							throw new GSServiceException("Massnahme nicht gefunden: " + massnahme, e4);
+	                        try {
+	                            ZipEntry entry = zf.getEntry(getPath2012("m", massnahme)); 
+	                            return zf.getInputStream(entry);
+	                        } catch (Exception e6) {
+	                            throw new GSServiceException("Massnahme nicht gefunden: " + massnahme, e6);
+	                        }
 						}
 					}
 				}
@@ -224,17 +240,21 @@ public class ZIPGSSource implements IGSSource {
 		}
 	}
 	
-	/**
-	 * @param massnahme
-	 * @return
-	 */
 	private String getPath2009(String dir, String fileName) {
+	   return getPath(PREFIX_2009, dir, fileName); 
+	}
+	
+	private String getPath2012(String dir, String fileName) {
+	   return getPath(PREFIX_2012, dir, fileName); 
+	}
+	
+	private String getPath(String prefix, String dir, String fileName) {
 		String path= "";
 		Pattern pattern = Pattern.compile("(" + dir + "\\d\\d).*");
 		Matcher matcher = pattern.matcher(fileName);
 		if (matcher.find()) {
 			String chapter = matcher.group(1);
-			path = PREFIX_2009 + dir + "/" + chapter + "/" + fileName + SUFFIX_2009;
+			path = prefix + dir + "/" + chapter + "/" + fileName + SUFFIX_2009;
 		}
 		return path;
 		
@@ -258,7 +278,12 @@ public class ZIPGSSource implements IGSSource {
 						ZipEntry entry = zf.getEntry(getPath2009("g", gefaehrdung)); 
 						return zf.getInputStream(entry);
 					} catch (Exception e4) {
-						throw new GSServiceException("Massnahme nicht gefunden: " + gefaehrdung, e4);
+	                    try {
+	                        ZipEntry entry = zf.getEntry(getPath2012("g", gefaehrdung)); 
+	                        return zf.getInputStream(entry);
+	                    } catch (Exception e5) {
+	                        throw new GSServiceException("Massnahme nicht gefunden: " + gefaehrdung, e5);
+	                    }
 					}
 				}
 			}
@@ -291,7 +316,7 @@ public class ZIPGSSource implements IGSSource {
 	 * @see sernet.gs.scraper.IGSSource#getVintage()
 	 */
 	public String getVintage() {
-		if (getBausteinPath2009(zf, "b01001") != null)
+		if (getBausteinPath2009(zf, "b01001") != null || getBausteinPath2012(zf, "b01001") != null)
 			return IGSSource.VINTAGE_2009;
 		else
 			return IGSSource.VINTAGE_2006;
