@@ -46,7 +46,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	@Deprecated
 	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch"; //$NON-NLS-1$
 	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link"; //$NON-NLS-1$
-
+	public static final String P_Baustein_Beschreibung="eigene_bstumsetzung_beschreibung";
 
 	private final static Pattern kapitelPattern 
 		= Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
@@ -212,6 +212,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public void setEncoding(String enc) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(P_ENCODING), enc);
 	}
+	
 
 	public MassnahmenUmsetzung getMassnahmenUmsetzung(String url) {
 		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
@@ -234,6 +235,10 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public void addBefragungDurch(Person person) {
 		PropertyType propertyType = getEntityType().getPropertyType(P_ERFASSTDURCH_LINK);
 		getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
+	}
+
+	public String getDescription() {
+		return getEntity().getSimpleValue(P_Baustein_Beschreibung);
 	}
 
 }

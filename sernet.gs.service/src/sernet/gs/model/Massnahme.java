@@ -183,6 +183,4 @@ public class Massnahme implements IGSModel {
 		this.verantwortlichUmsetzung.add(role);
 	}
 
-	
-
-}
+	}

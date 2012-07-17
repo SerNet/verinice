@@ -522,9 +522,51 @@
                    label="%action.label.11"
                    menubarPath="content"
                    style="push"
-                   tooltip="%action.tooltip.11">
-             </action>
-      </objectContribution>
+                   tooltip="%action.tooltip.11"/>
+       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.BausteinContrib"
+            objectClass="sernet.verinice.model.bsi.IBSIStrukturElement">
+         	<action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddBausteinActionDelegate"
+               enablesFor="1"
+               icon="icons/16-cube-blue.png"
+               id="sernet.gs.ui.rcp.main.addBaustein"
+               label="%action.label.29"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.29">
+               <enablement>
+               <and>
+                  <objectClass
+                        name="sernet.verinice.model.bsi.IBSIStrukturElement">
+                  </objectClass>
+                  <not>
+                     <or>
+                        <objectClass
+                              name="sernet.verinice.model.common.CnATreeElement">
+                        </objectClass>
+                    </or>
+                  </not>
+               </and>
+            </enablement>
+         </action>
+            </objectContribution>   
+            <objectContribution
+                adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.BausteinMassnahmeContrib"
+            objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
+         <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddMassnahmeActionDelegate"
+               enablesFor="+"
+               icon="icons/exclamation.png"
+               id="sernet.gs.ui.rcp.main.addnewMassnahme"
+               label="%action.label.30"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.30"/>
+           </objectContribution>   
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.personContribution1"
@@ -582,7 +624,7 @@
                label="%action.label.17"
                menubarPath="special"
                tooltip="%action.tooltip.17">
-            <enablement>
+	        <enablement>
                <and>
                   <objectClass
                         name="sernet.verinice.model.bsi.IBSIStrukturElement">

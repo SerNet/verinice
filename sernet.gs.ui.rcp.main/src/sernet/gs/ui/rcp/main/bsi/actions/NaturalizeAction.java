@@ -62,6 +62,9 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     private static final Logger LOG = Logger.getLogger(NaturalizeAction.class);
     
     public static final String ID = "sernet.gs.ui.rcp.main.actions.NaturalizeAction"; //$NON-NLS-1$
+    
+    public static final String TYPE_ID = "naturalizeAction";
+    
 
     List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
 

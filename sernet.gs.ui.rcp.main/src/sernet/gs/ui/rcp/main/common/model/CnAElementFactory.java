@@ -49,6 +49,8 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmeKategorie;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
@@ -317,6 +319,15 @@ public class CnAElementFactory {
             }
         });
         
+        
+        elementbuilders.put(MassnahmeKategorie.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+                MassnahmeKategorie child = dbHome.save(container, MassnahmeKategorie.class, MassnahmeKategorie.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
 		elementbuilders.put(Gebaeude.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
 				Gebaeude child = dbHome.save(container, Gebaeude.class, Gebaeude.TYPE_ID);
@@ -395,7 +406,32 @@ public class CnAElementFactory {
 			}
 		});
 
+		
 		elementbuilders.put(BausteinUmsetzung.TYPE_ID, new IElementBuilder<BausteinUmsetzung, Baustein>() {
+			public BausteinUmsetzung build(CnATreeElement container, BuildInput<Baustein> input) throws Exception {
+				
+				BausteinUmsetzung child = dbHome.save(container, BausteinUmsetzung.class, BausteinUmsetzung.TYPE_ID);
+				if (input == null){
+				init(container,child);
+				return child;
+			}
+				else {
+					BausteinUmsetzung bu = dbHome.save(container, input.getInput());
+					container.addChild(bu);
+					bu.setParentAndScope(container);
+					return bu;
+				}
+			
+				}
+			protected void init( CnATreeElement container,CnATreeElement child ) {
+		        container.addChild(child);
+	            child.setParentAndScope(container);
+		    }
+				
+			
+		});
+
+	/*	elementbuilders.put(BausteinUmsetzung.TYPE_ID, new IElementBuilder<BausteinUmsetzung, Baustein>() {
 			public BausteinUmsetzung build(CnATreeElement container, BuildInput<Baustein> input) throws Exception {
 
 				BausteinUmsetzung bu = dbHome.save(container, input.getInput());
@@ -406,8 +442,17 @@ public class CnAElementFactory {
 				bu.setParentAndScope(container);
 				return bu;
 			}
-		});
+		});*/
+		
 
+		elementbuilders.put(MassnahmenUmsetzung.TYPE_ID, new ElementBuilder() {
+			public CnATreeElement build(CnATreeElement container, BuildInput input) throws Exception {
+				MassnahmenUmsetzung child = dbHome.save(container, MassnahmenUmsetzung.class, MassnahmenUmsetzung.TYPE_ID);
+				init(container, child);
+				return child;
+			}
+		});
+		
 		elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input) throws Exception {
 

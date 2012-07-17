@@ -36,10 +36,14 @@ public class Baustein implements IGSModel{
 	public static final int SCHICHT_3_IT_SYSTEME = 3;
 	public static final int SCHICHT_4_NETZ = 4;
 	public static final int SCHICHT_5_ANWENDUNGEN = 5;
+
+
+	public static final String TYPE_ID="baumstein_gs_model";
 	
 	private String id;
 	private String titel;
 	private String url;
+	private String url_eigene;
 	private List<Massnahme> massnahmen;
 	private List<Gefaehrdung> gefaehrdungen;
 	private String encoding;
@@ -115,6 +119,12 @@ public class Baustein implements IGSModel{
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	public String getUrl_eigene() {
+		return url_eigene;
+	}
+	public void setUrl_eigene(String url_eigene) {
+		this.url = url_eigene;
+	}
 	
 	public void add(Massnahme m) {
 		massnahmen.add(m);
@@ -143,5 +153,5 @@ public class Baustein implements IGSModel{
 	public void setGefaehrdungen(List<Gefaehrdung> gefaehrdungen) {
 		this.gefaehrdungen = gefaehrdungen;
 	}
-	
+
 }

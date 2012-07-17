@@ -80,14 +80,19 @@ public abstract class HtmlWriter {
 
         if (element instanceof BausteinUmsetzung) {
             BausteinUmsetzung bst = (BausteinUmsetzung) element;
+            if (bst.getUrl() == null || bst.getUrl().isEmpty() || bst.getUrl().equals("null")){
+            	html=toHtml(bst);
+            }else {
+            
             html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
+        }
         }
         
         if (element instanceof Massnahme) {
             Massnahme mn = (Massnahme) element;
             html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand());
         }
-
+ 
         if (element instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) element;
             RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
@@ -98,7 +103,11 @@ public abstract class HtmlWriter {
             }
         } else if (element instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
+            if (mnu.getUrl() == null || mnu.getUrl().isEmpty() || mnu.getUrl().equals("null")){
+            	html=toHtml(mnu);
+            }else {
             html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
+        }
         }
  
         if (element instanceof TodoViewItem) {
@@ -136,6 +145,18 @@ public abstract class HtmlWriter {
         
         return html;
   
+    }
+    
+    private static String toHtml(BausteinUmsetzung bstums){
+    	StringBuilder buf =  new StringBuilder();
+    	writeHtml(buf, bstums.getTitle(), bstums.getDescription(), "iso-8859-1");
+    	return buf.toString();
+    }
+    
+    private static String toHtml(MassnahmenUmsetzung mnums){
+    	StringBuilder buf =  new StringBuilder();
+    	writeHtml(buf, mnums.getTitle(), mnums.getDescription(), "iso-8859-1");
+    	return buf.toString();
     }
     
     private static String toHtml(GefaehrdungsUmsetzung ums) {

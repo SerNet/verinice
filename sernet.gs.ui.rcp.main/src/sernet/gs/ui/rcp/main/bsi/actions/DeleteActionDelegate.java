@@ -58,6 +58,7 @@ import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -142,6 +143,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                            
                             if (sel instanceof IBSIStrukturElement 
                                     || sel instanceof BausteinUmsetzung 
+                                    || sel instanceof MassnahmenUmsetzung
                                     || sel instanceof FinishedRiskAnalysis 
                                     || sel instanceof GefaehrdungsUmsetzung 
                                     || sel instanceof ITVerbund 
@@ -221,6 +223,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         for (Object sel : elementList) {
             if (sel instanceof IBSIStrukturElement 
                     || sel instanceof BausteinUmsetzung 
+                    || sel instanceof MassnahmenUmsetzung
                     || sel instanceof FinishedRiskAnalysis 
                     || sel instanceof GefaehrdungsUmsetzung 
                     || sel instanceof ITVerbund 

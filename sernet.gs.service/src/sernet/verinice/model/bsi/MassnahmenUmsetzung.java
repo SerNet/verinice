@@ -42,6 +42,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public static final String P_UMSETZUNGBIS = "mnums_umsetzungbis"; //$NON-NLS-1$
 	public static final String P_UMSETZUNGDURCH_LINK = "mnums_umsetzungdurch_link"; //$NON-NLS-1$
 	public static final String P_INITIIERUNGDURCH_LINK = "mnums_initdurch_link"; //$NON-NLS-1$
+	
 
 	public static final String P_NAECHSTEREVISIONAM = "mnums_naechsterevisionam"; //$NON-NLS-1$
 	public static final String P_NAECHSTEREVISIONDURCH_LINK = "mnums_naechsterevisiondurch_link"; //$NON-NLS-1$
@@ -64,6 +65,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public static final String P_URL = "mnums_url"; //$NON-NLS-1$
 	public static final String P_STAND = "mnums_stand"; //$NON-NLS-1$
 	public static final String P_ERLAEUTERUNG = "mnums_erlaeuterung"; //$NON-NLS-1$
+	public static final String P_BESCHREIBUNG = "mnums_beschreibung"; //$NON-NLS-1$
 
 	public static final String P_KOSTEN_PTFIX = "mnums_kosten_ptfix"; //$NON-NLS-1$
 	public static final String P_KOSTEN_PTVAR = "mnums_kosten_ptvar"; //$NON-NLS-1$
@@ -96,6 +98,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public static final String P_NAECHSTEREVISIONDURCH_OLD = "mnums_naechsterevisiondurch"; //$NON-NLS-1$
 	@Deprecated
 	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch"; //$NON-NLS-1$
+
+	private static final String P_ENCODING = "mnums_encoding";
 
 
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
@@ -332,6 +336,10 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		getEntity().setSimpleValue(getEntityType().getPropertyType(P_STAND), stand);
 	}
 
+	public void setEncoding(String enc) {
+		getEntity().setSimpleValue(getEntityType().getPropertyType(P_ENCODING), enc);
+	}
+	
 	/**
 	 * Returns the name of the MassnahnenUmsetzung.
 	 * 
@@ -370,6 +378,14 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public String getParentTitle() {
 		return getParent().getParent().getTitle();
 	}
+	public String getDescription() {
+		return getEntity().getSimpleValue(P_BESCHREIBUNG);
+	}
 
-
+	public String getEncoding() {
+		return getEntity().getSimpleValue(P_ENCODING);
+	}
 }
+	
+
+	
