@@ -54,9 +54,7 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 
 	public KatalogePreferencePage() {
 		super(GRID);
-
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription(Messages.getString("KatalogePreferencePage.0")); //$NON-NLS-1$
 	}
 	
 	/*
@@ -66,10 +64,17 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		final Link link = new Link(parent, SWT.NONE);
-		link.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
+	    final Link link = new Link(parent, SWT.NONE);
+        link.setText(Messages.getString("KatalogePreferencePage.0")); //$NON-NLS-1$
+        link.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+                Program.launch(event.text);
+            }
+        });
+	    final Link link2 = new Link(parent, SWT.NONE);
+	    link2.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
 				Messages.getString("KatalogePreferencePage.14")); //$NON-NLS-1$
-		link.addListener(SWT.Selection, new Listener() {
+	    link2.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				Program.launch(event.text);
 			}
