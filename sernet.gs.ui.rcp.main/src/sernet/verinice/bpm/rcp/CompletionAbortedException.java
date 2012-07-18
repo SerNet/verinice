@@ -17,62 +17,42 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm.qm;
-
-import sernet.verinice.bpm.ProcessContext;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
+package sernet.verinice.bpm.rcp;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaQmContext extends ProcessContext {
-    
-    private Control control;
-    
-    private String ownerName;
-    
-    private String uuidAudit;
-    
-    private String comment;
-    
+public class CompletionAbortedException extends RuntimeException {
 
-    public IsaQmContext() {
+    /**
+     * 
+     */
+    public CompletionAbortedException() {
         super();
     }
 
-    public Control getControl() {
-        return control;
+    /**
+     * @param message
+     * @param cause
+     */
+    public CompletionAbortedException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    /**
+     * @param message
+     */
+    public CompletionAbortedException(String message) {
+        super(message);
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    /**
+     * @param cause
+     */
+    public CompletionAbortedException(Throwable cause) {
+        super(cause);
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public String getUuidAudit() {
-        return uuidAudit;
-    }
-
-    public void setUuidAudit(String uuidAudit) {
-        this.uuidAudit = uuidAudit;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-    
 }

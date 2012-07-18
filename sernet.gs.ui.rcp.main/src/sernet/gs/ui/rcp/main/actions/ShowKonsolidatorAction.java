@@ -153,7 +153,8 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
      * @param baustein
      */
     private void initParent(/* not final */BausteinUmsetzung baustein) {
-       CnATreeElement parent =  Retriever.checkRetrieveElement(baustein.getParent());
+       CnATreeElement withParent = Retriever.checkRetrieveParent(baustein);
+       CnATreeElement parent =  Retriever.checkRetrieveElement(withParent.getParent());
        baustein.setParent(parent);
     }
 

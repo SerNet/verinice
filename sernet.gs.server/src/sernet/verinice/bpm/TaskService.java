@@ -44,6 +44,7 @@ import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -96,6 +97,8 @@ public class TaskService implements ITaskService {
     private IBaseDao<Audit, Integer> auditDao;
     
     private Set<String> taskOutcomeBlacklist;
+    
+    private Map<String, ICompleteServerHandler> completeHandler;
     
     
     /* (non-Javadoc)
@@ -255,6 +258,7 @@ public class TaskService implements ITaskService {
     private TaskInformation map(Task task) {
         TaskInformation taskInformation = new TaskInformation();
         taskInformation.setId(task.getId());
+        taskInformation.setType(task.getName());
         taskInformation.setName(Messages.getString(task.getName()));
         taskInformation.setDescription(Messages.getString(task.getName() + ITaskService.DESCRIPTION_SUFFIX));
         taskInformation.setCreateDate(task.getCreateTime()); 
@@ -274,7 +278,7 @@ public class TaskService implements ITaskService {
             log.debug("map, loading type..."); //$NON-NLS-1$
         }
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
-        taskInformation.setType(typeId);
+        taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
         
         if (log.isDebugEnabled()) {
@@ -373,11 +377,15 @@ public class TaskService implements ITaskService {
      */
     @Override
     public void completeTask(String taskId) {
+        completeTask(taskId,(Map<String, Object>)null);
+    }
+    
+    public void completeTask(String taskId, Map<String, Object> parameter) {
         Task task = getTaskService().getTask(taskId);
         if(task!=null) {
             String name = task.getName();
             if(DEFAULT_OUTCOMES.get(name)!=null) {
-                completeTask(taskId,DEFAULT_OUTCOMES.get(name));
+                completeTask(task,DEFAULT_OUTCOMES.get(name),parameter);
             } else {
                 log.warn("No default outcome set for task: " + name); //$NON-NLS-1$
                 getTaskService().completeTask(taskId);
@@ -385,12 +393,37 @@ public class TaskService implements ITaskService {
         }
     }
     
-
     @Override
     public void completeTask(String taskId, String outcomeId) {
-        getTaskService().completeTask(taskId,outcomeId);
+        completeTask(taskId,outcomeId,null);
     }
     
+
+    @Override
+    public void completeTask(String taskId, String outcomeId, Map<String, Object> parameter) {
+        Task task = getTaskService().getTask(taskId);
+        if(task!=null) {
+            completeTask(task,outcomeId,parameter);
+        }
+    }
+    
+    private void completeTask(Task task, String outcomeId, Map<String, Object> parameter) {     
+        ICompleteServerHandler handler = getHandler(task.getName(),outcomeId);
+        if(handler!=null) {
+            handler.execute(task.getId(),parameter);
+        }
+        getTaskService().completeTask(task.getId(),outcomeId);
+    }
+    
+    /**
+     * @param name
+     * @param outcomeId
+     * @return
+     */
+    private ICompleteServerHandler getHandler(String name, String outcomeId) {
+        return getCompleteHandler().get(new StringBuilder(name).append(".").append(outcomeId).toString());
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#markAsRead(java.lang.String)
      */
@@ -420,17 +453,61 @@ public class TaskService implements ITaskService {
      */
     @Override
     public void cancelTask(String taskId) {
-        // Every task belongs to a subprocess of the main process
+        // Some task belongs to a subprocess of the main process
         // HQL query to find the main process
         String hql = "select execution.parent from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?"; //$NON-NLS-1$
-        final List<Execution> executionList = getJbpmTaskDao().findByQuery(hql,new Long[]{Long.valueOf(taskId)});         
+        List<Execution> executionList = getJbpmTaskDao().findByQuery(hql,new Long[]{Long.valueOf(taskId)});         
         if(!executionList.isEmpty()) {
             for (Execution process : executionList) {
                 if(process!=null && process.getId()!=null) {
                     getExecutionService().deleteProcessInstance(process.getId());
                 }
             }
-        }     
+        }
+        // HQL query to find the  process
+        hql = "select execution from org.jbpm.pvm.internal.task.TaskImpl t where t.id = ?";
+        executionList = getJbpmTaskDao().findByQuery(hql,new Long[]{Long.valueOf(taskId)});         
+        if(!executionList.isEmpty()) {
+            for (Execution process : executionList) {
+                if(process!=null && process.getId()!=null) {
+                    getExecutionService().deleteProcessInstance(process.getId());
+                }
+            }
+        }    
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setAssignee(Set<String> taskIdset, String username) {
+        if(taskIdset!=null && !taskIdset.isEmpty() && username!=null) {
+            for (String taskId : taskIdset) {
+                getTaskService().assignTask(taskId, username);            
+            }
+            
+        }
+    }
+    
+    @Override
+    public void setAssigneeVar(Set<String> taskIdset, String username) {
+        if(taskIdset!=null && !taskIdset.isEmpty() && username!=null) {
+            for (String taskId : taskIdset) {
+                Map<String, String> param = new HashMap<String, String>();
+                param.put(IGenericProcess.VAR_ASSIGNEE_NAME, username);
+                getTaskService().setVariables(taskId, param);
+            }
+            
+        }
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.String, java.util.Map)
+     */
+    @Override
+    public void setVariables(String taskId, Map<String, String> param) {
+        getTaskService().setVariables(taskId, param);
     }
 
     public org.jbpm.api.TaskService getTaskService() {
@@ -502,6 +579,14 @@ public class TaskService implements ITaskService {
 
     public void setTaskOutcomeBlacklist(Set<String> processDefinitions) {
         this.taskOutcomeBlacklist = processDefinitions;
+    }
+
+    public Map<String, ICompleteServerHandler> getCompleteHandler() {
+        return completeHandler;
+    }
+
+    public void setCompleteHandler(Map<String, ICompleteServerHandler> completeHandler) {
+        this.completeHandler = completeHandler;
     }
 
 }

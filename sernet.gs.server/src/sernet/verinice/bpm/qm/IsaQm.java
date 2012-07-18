@@ -35,18 +35,18 @@ public class IsaQm extends ProzessExecution {
 
     private static final Logger LOG = Logger.getLogger(IsaQm.class);
     
-    public String loadComment(String uuid) {
+    public String loadFeedback(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         String comment = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
             if(element!=null && element instanceof Control) {
-                comment = ((Control)element).getImplementationExplanation();
+                comment = ((Control)element).getFeedbackNote();
                 if(comment!=null && comment.trim().isEmpty()) {
                     comment = null;
                 }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Comment of control: " + element.getUuid() + ": " + comment); //$NON-NLS-1$
+                    LOG.debug("Feedback note of control: " + element.getUuid() + ": " + comment); //$NON-NLS-1$
                 }
             }
         } catch(Throwable t) {
@@ -54,7 +54,5 @@ public class IsaQm extends ProzessExecution {
         }
         return comment;
     }
-    
-   
-    
+      
 }

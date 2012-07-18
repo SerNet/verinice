@@ -40,6 +40,8 @@ public interface ITask extends Comparable<ITask> {
     
     void setId(String id);
     
+    String getType();
+    
     String getName();
     
     String getDescription();
@@ -52,7 +54,7 @@ public interface ITask extends Comparable<ITask> {
 
     String getUuid();
 
-    String getType();
+    String getElementType();
     
     String getSortValue();
     

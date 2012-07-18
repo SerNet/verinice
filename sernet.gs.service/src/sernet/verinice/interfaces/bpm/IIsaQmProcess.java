@@ -28,4 +28,12 @@ public interface IIsaQmProcess extends IGenericProcess {
 
     String KEY = "isa-quality-management";
     
+    String TASK_IQM_SET_ASSIGNEE = "iqm.task.setAssignee";
+    
+    String TRANS_IQM_SET_ASSIGNEE = "iqm.trans.setAssignee";
+    
+    String VAR_FEEDBACK = "IQM_FEEDBACK";
+    
+    String VAR_IQM_ASSIGNEE = "IQM_ASSIGNEE";
+    
 }

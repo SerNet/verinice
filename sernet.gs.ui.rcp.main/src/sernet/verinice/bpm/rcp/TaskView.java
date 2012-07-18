@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -101,7 +103,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  */
 public class TaskView extends ViewPart implements IAttachedToPerspective {
 
-    private static final Logger LOG = Logger.getLogger(TaskView.class);
+    static final Logger LOG = Logger.getLogger(TaskView.class);
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView";
 
@@ -186,7 +188,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         }
     }
 
-    private void loadTasks() {
+    void loadTasks() {
         TaskParameter param = new TaskParameter();
         param.setAllUser(!onlyMyTasks);
         List<ITask> taskList = Collections.emptyList();
@@ -326,7 +328,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     try {
                         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
                         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                        LoadAncestors loadControl = new LoadAncestors(task.getType(), task.getUuid(), ri);
+                        LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
                         EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
                     } catch (Throwable t) {
@@ -394,18 +396,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         return false;
     }
 
-    /**
-     * @param next
-     */
-    protected void completeTask(TaskInformation task, String outcomeId) {
-        if (outcomeId == null) {
-            ServiceFactory.lookupTaskService().completeTask(task.getId());
-        } else {
-            ServiceFactory.lookupTaskService().completeTask(task.getId(), outcomeId);
-        }
-        this.contentProvider.removeTask(task);
-    }
-
     private void addActions() {
         addToolBarActions();
         getViewer().addDoubleClickListener(new IDoubleClickListener() {
@@ -439,33 +429,50 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         });
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-                manager.removeAll();
-                addToolBarActions();
-                cancelTaskAction.setEnabled(false);
+            public void selectionChanged(SelectionChangedEvent event) {         
                 if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
                     try {
-                        cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
-                        TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-                        getInfoPanel().setText( HtmlWriter.getPage(task.getDescription()));
-                        List<KeyValue> outcomeList = task.getOutcomes();
-                        for (KeyValue keyValue : outcomeList) {
-                            CompleteTaskAction completeAction = new CompleteTaskAction(keyValue.getKey());
-                            completeAction.setText(keyValue.getValue());
-                            completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
-                            ActionContributionItem item = new ActionContributionItem(completeAction);
-                            item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
-                            manager.add(item);
-                        }
-
+                        taskSelected();
                     } catch (Throwable t) {
-                        LOG.error("Error while opening control.", t);
+                        LOG.error("Error while configuring task actions.", t);
                     }
                 }
                 getViewSite().getActionBars().updateActionBars();
             }
         });
+        // First we create a menu Manager
+        MenuManager menuManager = new MenuManager();
+        Menu menu = menuManager.createContextMenu(treeViewer.getTree());
+        // Set the MenuManager
+        treeViewer.getTree().setMenu(menu);
+        getSite().registerContextMenu(menuManager, treeViewer);
+        // Make the selection available
+        getSite().setSelectionProvider(treeViewer);
+    }
+    
+    /**
+     * @param manager
+     */
+    private void taskSelected() { 
+        IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
+        manager.removeAll();
+         
+        addToolBarActions();
+        
+        cancelTaskAction.setEnabled(false);
+        cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
+        TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+        getInfoPanel().setText( HtmlWriter.getPage(task.getDescription()));   
+        
+        List<KeyValue> outcomeList = task.getOutcomes();
+        for (KeyValue keyValue : outcomeList) {
+            CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());
+            completeAction.setText(keyValue.getValue());
+            completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
+            ActionContributionItem item = new ActionContributionItem(completeAction);
+            item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
+            manager.add(item);
+        }
     }
 
     /**
@@ -554,6 +561,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
         }
     }
+    
+    public void removeTask(ITask task) {
+        contentProvider.removeTask(task);
+    }
 
     /**
      * @return the rightsService
@@ -565,48 +576,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         return rightsService;
     }
 
-    /**
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     * 
-     */
-    private final class CompleteTaskAction extends Action {
-
-        final String id = TaskView.class.getName() + ".complete";
-        String outcomeId;
-
-        public CompleteTaskAction(String outcomeId) {
-            super();
-            this.outcomeId = outcomeId;
-            setId(id + "." + outcomeId);
-        }
-
-        @Override
-        public void run() {
-            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            try {
-                final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
-                final int number = selection.size();
-                progressService.run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        Activator.inheritVeriniceContextState();
-                        for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-                            Object sel = iterator.next();
-                            if (sel instanceof TaskInformation) {
-                                completeTask((TaskInformation) sel, outcomeId);
-                            }
-                        }
-                        loadTasks();
-                    }
-                });
-                showInformation("Information", number + " task(s) completed.");
-            } catch (Throwable t) {
-                showError("Error", "Error while completing task.");
-                LOG.error("Error while completing tasks.", t);
-            }
-        }
-    }
-    
     private final class LoadTaskJob implements IRunnableWithProgress {      
         private ITaskParameter param;       
         private List<ITask> taskList;

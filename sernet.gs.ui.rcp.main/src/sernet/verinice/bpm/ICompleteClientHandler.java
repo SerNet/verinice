@@ -17,62 +17,38 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm.qm;
+package sernet.verinice.bpm;
 
-import sernet.verinice.bpm.ProcessContext;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
+import java.util.Map;
+
+import org.eclipse.swt.widgets.Shell;
+
+import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
+ * ICompleteClientHandler are executed on client site before a task is completed.
+ * Returned {@link Map} is passed to {@link ITaskService} completeTask methods.
+ * 
+ * To use a handler you have to register it with a task and outcome name
+ * in {@link CompleteHandlerRegistry}. 
  *
- *
+ * @see CompleteHandlerRegistry
+ * @see {@link CompleteTaskAction}
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaQmContext extends ProcessContext {
-    
-    private Control control;
-    
-    private String ownerName;
-    
-    private String uuidAudit;
-    
-    private String comment;
-    
+public interface ICompleteClientHandler {
 
-    public IsaQmContext() {
-        super();
-    }
+    /**
+     * Executed on client site before a task is completed.
+     * Returned {@link Map} is passed to {@link ITaskService} completeTask methods.
+     * 
+     * @return Parameter which are passed to task service.
+     */
+    Map<String, Object> execute();
 
-    public Control getControl() {
-        return control;
-    }
+    /**
+     * @param shell The current Shell
+     */
+    void setShell(Shell shell);
 
-    public void setControl(Control control) {
-        this.control = control;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public String getUuidAudit() {
-        return uuidAudit;
-    }
-
-    public void setUuidAudit(String uuidAudit) {
-        this.uuidAudit = uuidAudit;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-    
 }

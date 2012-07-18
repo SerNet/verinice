@@ -91,7 +91,7 @@ public class TaskContentProvider implements ITreeContentProvider {
         return getChildren(element).length > 0;
     }
 
-    public void removeTask(final TaskInformation task) {
+    public void removeTask(final ITask task) {
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
                 model.remove(task);

@@ -2,6 +2,8 @@ package sernet.verinice.bpm;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -19,12 +21,19 @@ import sernet.verinice.model.common.CnATreeElement;
 public class TaskServiceDummy implements ITaskService {
 
     @Override
-    public void completeTask(String taskId) {
-    }
+    public void completeTask(String taskId) {}
 
     @Override
-    public void completeTask(String taskId, String outcomeId) {
-    }
+    public void completeTask(String taskId, String outcomeId) {}
+    
+    @Override
+    public void completeTask(String taskId, Map<String, Object> parameter) {}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#completeTask(java.lang.String, java.lang.String, java.util.Map)
+     */
+    @Override
+    public void completeTask(String taskId, String outcomeId, Map<String, Object> parameter) {}
 
     @Override
     public List<String> getElementList() {
@@ -57,5 +66,23 @@ public class TaskServiceDummy implements ITaskService {
 
     @Override
     public void cancelTask(String taskId) {}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setAssignee(Set<String> taskIdset, String username) {}
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setAssigneeVar(Set<String> taskIdset, String username) {}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.String, java.util.Map)
+     */
+    @Override
+    public void setVariables(String taskId, Map<String, String> param) {}
 
 }

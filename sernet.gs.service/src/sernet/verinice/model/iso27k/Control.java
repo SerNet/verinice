@@ -54,6 +54,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	public static final String PROP_MATURITY_COMMENT = "control_maturity_comment"; //$NON-NLS-1$
 	public static final String PROP_CONTROL_IMPL_DATE = "control_implby"; //$NON-NLS-1$
 	public static final String PROP_IMPL_EXPLANATION = "control_implemented_explanation"; //$NON-NLS-1$
+    public static final String PROP_FEEDBACK_NOTE = "control_feedback_note"; //$NON-NLS-1$
 
 	// ISR properties:
 	public static final String PROP_ISR_MATURITY = "control_isr_maturity"; //$NON-NLS-1$
@@ -225,6 +226,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD2), value);
 		
 	}
+	
+	public String getFeedbackNote() {
+	    return getEntity().getSimpleValue(PROP_FEEDBACK_NOTE);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.model.IControl#getMaturityPropertyId()

@@ -34,6 +34,8 @@ public class TaskInformation implements ITask, Serializable {
 
     String id;
     
+    String type;
+    
     Date createDate;
     
     Date dueDate;
@@ -46,7 +48,7 @@ public class TaskInformation implements ITask, Serializable {
     
     String uuid;
     
-    String type;
+    String elementType;
     
     String sortValue;
     
@@ -83,6 +85,14 @@ public class TaskInformation implements ITask, Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     /* (non-Javadoc)
@@ -145,12 +155,12 @@ public class TaskInformation implements ITask, Serializable {
         this.uuid = uuid;
     }
 
-    public String getType() {
-        return type;
+    public String getElementType() {
+        return elementType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setElementType(String type) {
+        this.elementType = type;
     }
 
     public String getSortValue() {

@@ -58,15 +58,15 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 
     public int getIntegritaet() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (hasValue(properties))
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
         else
             return Schutzbedarf.UNDEF;
     }
-
+    
     public int getVerfuegbarkeit() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (hasValue(properties))
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
         else
             return Schutzbedarf.UNDEF;
@@ -74,10 +74,16 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 
     public int getVertraulichkeit() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
-        if (properties != null && properties.getProperties().size() > 0)
+        if (hasValue(properties))
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
         else
             return Schutzbedarf.UNDEF;
+    }
+    
+    public boolean hasValue(PropertyList properties) {      
+        return properties != null && 
+               !properties.getProperties().isEmpty() &&
+               properties.getProperty(0).getPropertyValue() !=null;
     }
 
     public void setIntegritaet(int i) {

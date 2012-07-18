@@ -40,15 +40,12 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,20 +57,10 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementsForScope;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.swt.widgets.Colors;
-import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.snutils.DBException;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
@@ -99,6 +86,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
     private Button checkbox;
     private CnATreeElement inputElmt;
     protected boolean scopeOnly;
+    protected boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
     
@@ -111,6 +99,8 @@ public class CnATreeElementSelectionDialog extends Dialog {
         setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.entityType = selectedType;
         this.inputElmt = inputElmt;
+        scopeOnly = true;
+        showScopeCheckbox = true;
     }
     
     
@@ -158,29 +148,33 @@ public class CnATreeElementSelectionDialog extends Dialog {
             }
         });
         
-        checkbox = new Button(container, SWT.CHECK);
-        checkbox.setText(Messages.CnATreeElementSelectionDialog_4);
-        checkbox.setSelection(true);
-        scopeOnly = true;
-        FormData checkboxFD = new FormData();
-        checkboxFD.top = new FormAttachment(text, 5);
-        checkboxFD.left = new FormAttachment(0, 5);
-        checkbox.setLayoutData(checkboxFD);
-        checkbox.pack();
-        checkbox.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
-                scopeOnly = checkbox.getSelection();
-                loadElements();
-            }
-            
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
-        
+        if(isShowScopeCheckbox()) {
+            checkbox = new Button(container, SWT.CHECK);
+            checkbox.setText(Messages.CnATreeElementSelectionDialog_4);
+            checkbox.setSelection(true);
+            FormData checkboxFD = new FormData();
+            checkboxFD.top = new FormAttachment(text, 5);
+            checkboxFD.left = new FormAttachment(0, 5);
+            checkbox.setLayoutData(checkboxFD);
+            checkbox.pack();
+            checkbox.addSelectionListener(new SelectionListener() {
+                public void widgetSelected(SelectionEvent e) {
+                    scopeOnly = checkbox.getSelection();
+                    loadElements();
+                }
+                
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
+            });
+        }
         
         viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
         FormData formData3 = new FormData();
-        formData3.top = new FormAttachment(checkbox, 5);
+        if(isShowScopeCheckbox()) {
+            formData3.top = new FormAttachment(checkbox, 5);
+        } else {
+            formData3.top = new FormAttachment(text, 5);
+        }
         formData3.left = new FormAttachment(0, 5);
         formData3.right = new FormAttachment(100, -5);
         formData3.bottom = new FormAttachment(100, -5);
@@ -328,6 +322,29 @@ public class CnATreeElementSelectionDialog extends Dialog {
         job.setUser(false);
         job.schedule();
         
+    }
+
+    public boolean isScopeOnly() {
+        return scopeOnly;
+    }
+
+    public void setScopeOnly(boolean scopeOnly) {
+        this.scopeOnly = scopeOnly;
+        if(this.checkbox!=null) {
+            this.checkbox.setSelection(scopeOnly);
+        }
+    }
+
+
+
+    public boolean isShowScopeCheckbox() {
+        return showScopeCheckbox;
+    }
+
+
+
+    public void setShowScopeCheckbox(boolean showScopeCheckbox) {
+        this.showScopeCheckbox = showScopeCheckbox;
     }
 
 }

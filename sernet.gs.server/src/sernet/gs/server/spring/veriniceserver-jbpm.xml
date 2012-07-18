@@ -72,6 +72,15 @@
                 <value>icf.trans.reminderDeadline</value>
             </set>
         </property>
+        <property name="completeHandler">
+            <map>
+                <entry key="iqm.task.setAssignee.iqm.trans.setAssignee" value-ref="isaQmSetAssigneeHandler"/>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
+        <property name="taskService" ref="taskService" />
     </bean>
     
     <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   

@@ -114,7 +114,7 @@ public class TaskBean {
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
             getEditBean().setTitle(getSelectedTask().getControlTitle());
-            getEditBean().setTypeId(getSelectedTask().getType());
+            getEditBean().setTypeId(getSelectedTask().getElementType());
             getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
             setOutcomeId(null);
             getEditBean().init();

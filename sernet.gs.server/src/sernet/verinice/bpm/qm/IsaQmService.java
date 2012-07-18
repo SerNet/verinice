@@ -68,6 +68,7 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         context.setControl(control);
         context.setOwnerName(getAuthService().getUsername());
         context.setUuidAudit(auditUuid);
+        context.setComment(control.getFeedbackNote());
         context = startProcessIfMissing(context);  
         return new ProcessInformation(context.getNumberOfProcesses());
     }
@@ -94,6 +95,14 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());            
         props.put(IGenericProcess.VAR_OWNER_NAME, context.getOwnerName());
         props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
+        String comment = context.getComment();
+        if(comment!=null) {
+            comment = comment.trim();
+            if(comment.isEmpty()) {
+                comment = null;
+            }
+        }
+        props.put(IIsaQmProcess.VAR_FEEDBACK, comment);
         startProcess(IIsaQmProcess.KEY, props);
         context.increaseProcessNumber(); 
     }
