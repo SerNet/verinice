@@ -21,16 +21,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
-import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.MassnahmeKategorie;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class  AddMassnahmeActionDelegate extends AbstractAddCnATreeElementActionDelegate {
+public class  AddMassnahmeActionDelegate extends AddModulandMethodActionDelegate {
 
     private IWorkbenchPart targetPart;
 
@@ -42,16 +39,7 @@ public class  AddMassnahmeActionDelegate extends AbstractAddCnATreeElementAction
         try {
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
 
-          /*  CnATreeElement newElement = null;
-            if (sel instanceof BausteinUmsetzung) {
-            MassnahmeKategorie kat = (MassnahmeKategorie) sel;
-            newElement = CnAElementFactory.getInstance().saveNew(kat, MassnahmenUmsetzung.TYPE_ID, null);
-        }
-
-        if (newElement != null) {
-            EditorFactory.getInstance().openEditor(newElement);
-        }*/
-            if (sel instanceof CnATreeElement) {
+                if (sel instanceof CnATreeElement) {
                 CnATreeElement parent = (CnATreeElement) sel;
                 CnATreeElement  newMassnahme = CnAElementFactory.getInstance().saveNew(parent, MassnahmenUmsetzung.TYPE_ID, null);
                 

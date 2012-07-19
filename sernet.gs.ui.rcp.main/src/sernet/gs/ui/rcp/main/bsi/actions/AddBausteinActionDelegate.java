@@ -27,7 +27,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class AddBausteinActionDelegate extends AbstractAddCnATreeElementActionDelegate {
+public class AddBausteinActionDelegate extends AddModulandMethodActionDelegate {
     private IWorkbenchPart targetPart;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {

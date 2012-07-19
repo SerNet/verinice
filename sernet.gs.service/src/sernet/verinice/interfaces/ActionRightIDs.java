@@ -41,6 +41,7 @@ public class ActionRightIDs {
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
     public static final String ADDSECURITYASSESSMENTWC = "addsecurityassessmentwc";
+    public static final String ADDOWNMODUL = "addownmodul";
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
