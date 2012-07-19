@@ -830,14 +830,6 @@ public class CnAElementFactory {
 			CnAElementFactory.getModel(child).childAdded(container, child);
 			CnAElementFactory.getModel(child).databaseChildAdded(child);
 		}
-		if(buildableTypeId.equals(Audit.TYPE_ID)) {
-    		CnAElementFactory.getInstance().saveNew(child, AssetGroup.TYPE_ID, null);
-            CnAElementFactory.getInstance().saveNew(child, ControlGroup.TYPE_ID, null);
-            CnAElementFactory.getInstance().saveNew(child, PersonGroup.TYPE_ID, null);
-            CnAElementFactory.getInstance().saveNew(child, FindingGroup.TYPE_ID, null);
-            CnAElementFactory.getInstance().saveNew(child, EvidenceGroup.TYPE_ID, null);
-            CnAElementFactory.getInstance().saveNew(child, InterviewGroup.TYPE_ID, null);
-		}
         return child;
 	}
 
