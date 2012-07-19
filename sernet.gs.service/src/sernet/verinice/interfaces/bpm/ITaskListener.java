@@ -36,5 +36,10 @@ public interface ITaskListener {
      * @param taskList information about new tasks 
      */
     void newTasks(List<ITask> taskList);
+    
+    /**
+     * Is called after new tasks are created but not loaded.  
+     */
+    void newTasks();
 
 }

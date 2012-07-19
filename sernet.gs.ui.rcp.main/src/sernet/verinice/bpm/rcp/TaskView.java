@@ -133,6 +133,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private IModelLoadListener modelLoadListener;
 
+    private ITaskListener taskListener;
+
     /*
      * (non-Javadoc)
      * 
@@ -215,6 +217,9 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             Display.getDefault().syncExec(new Runnable(){
                 public void run() {
                     getViewer().setInput(finalTaskList);
+                    if(contentProvider.getNumberOfGroups()==1) {
+                        getViewer().expandToLevel(2);
+                    }
                 }
             });
             
@@ -421,12 +426,18 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     }
 
     private void addListener() {
-        TaskLoader.addTaskListener(new ITaskListener() {
+        taskListener = new ITaskListener() {
             @Override
             public void newTasks(List<ITask> taskList) {
                 addTasks(taskList);
             }
-        });
+
+            @Override
+            public void newTasks() {
+                loadTasks();
+            }
+        };
+        TaskChangeRegistry.addTaskChangeListener(taskListener);
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {         
@@ -448,6 +459,15 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         getSite().registerContextMenu(menuManager, treeViewer);
         // Make the selection available
         getSite().setSelectionProvider(treeViewer);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        TaskChangeRegistry.removeTaskChangeListener(taskListener);
+        super.dispose();
     }
     
     /**
@@ -596,4 +616,5 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             return taskList;
         }
     }
+
 }

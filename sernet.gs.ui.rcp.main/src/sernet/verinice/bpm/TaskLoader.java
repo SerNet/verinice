@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.bpm.rcp.TaskChangeRegistry;
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -52,8 +53,6 @@ public class TaskLoader {
     
     private Date lastChecked = null;
     
-    private static Set<ITaskListener> taskListenerSet;
-    
     /**
      * Is called periodically by Spring/Quartz cron job 
      * and loads newly created tasks after last call.
@@ -65,32 +64,11 @@ public class TaskLoader {
             ITaskParameter parameter = new TaskParameter();
             parameter.setSince(lastChecked);
             taskList = getTaskService().getTaskList(parameter);
-            if(taskList!=null && !taskList.isEmpty()) {
-                for (ITaskListener listener : getTaskListenerSet()) {
-                    listener.newTasks(taskList);
-                }
-            }
+            TaskChangeRegistry.tasksAdded(taskList);       
         }
         lastChecked = now;
     }
     
-    /**
-     * Adds a {@link ITaskListener} to notify
-     * when tasks related events occur.
-     * 
-     * @param taskListener
-     */
-    public static void addTaskListener(ITaskListener taskListener) {
-        getTaskListenerSet().add(taskListener);
-    }
-    
-    private static Set<ITaskListener> getTaskListenerSet() {
-        if(taskListenerSet==null) {
-            taskListenerSet = new HashSet<ITaskListener>();
-        }
-        return taskListenerSet;
-    }
-
     public ITaskService getTaskService() {
         return taskService;
     }

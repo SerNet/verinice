@@ -114,6 +114,9 @@ public class StartIsaControlFlowProcess implements IObjectActionDelegate, RightE
                         }
                     }
                 });
+                if(numberOfProcess > 0) {
+                    TaskChangeRegistry.tasksAdded();
+                }
                 InfoDialogWithShowToggle.openInformation(
                         Messages.StartIsaProcess_0,  
                         Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),// "Succesfully created " + numberOfProcess + " tasks.",; 

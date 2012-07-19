@@ -100,5 +100,9 @@ public class TaskContentProvider implements ITreeContentProvider {
             }
         });
     }
+    
+    public int getNumberOfGroups() {
+        return model.getRootElementSet().size();
+    }
 
 }

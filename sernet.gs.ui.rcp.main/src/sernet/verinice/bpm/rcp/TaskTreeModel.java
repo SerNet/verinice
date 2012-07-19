@@ -34,7 +34,6 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class TaskTreeModel {
 
     List<ITask> taskList;
