@@ -73,6 +73,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -103,6 +104,7 @@ import sernet.verinice.service.commands.LoadAttachments;
 public class FileView extends ViewPart implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(FileView.class);
+	private CnATreeElement inputElmt;
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
 	
@@ -299,6 +301,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 			return;
 		}
 		elementSelected(element);
+		if (element instanceof CnATreeElement) {
+			setNewInput((CnATreeElement)element);
+		}
 	}
 	
 	protected void elementSelected(Object element) {
@@ -431,6 +436,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 					attachment.addListener(new Attachment.INoteChangedListener() {
 						public void noteChanged() {
 							loadFiles();
+							
 						}
 					});
 					EditorFactory.getInstance().openEditor(attachment);	
@@ -804,6 +810,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
             LOG.debug("Loading attached files of element now..."); //$NON-NLS-1$
         }
         elementSelected(element);
+        
     }
 
     /**
@@ -812,4 +819,20 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
     private boolean isLinkingActive() {
         return isLinkingActive;
     }
+    private void setNewInput(CnATreeElement elmt) {
+		this.inputElmt = elmt;
+		loadLinks(elmt);
+		setViewTitle(Messages.FileView_7 +" " + elmt.getTitle());
+	}
+
+	private void setViewTitle(String title) {
+		this.setContentDescription(title);
+	}
+	public void loadLinks(final CnATreeElement elmt) {
+		if (!CnAElementHome.getInstance().isOpen()
+		        || inputElmt == null) {
+			return;
+		}
+	}
+		
 }

@@ -109,6 +109,8 @@ public final class Messages extends NLS {
 	public static String DocumentView_4;
 
 	public static String DocumentView_6;
+	
+	public static String DocumentView_7;
 
 	public static String DSModelView_0;
 
@@ -167,7 +169,9 @@ public final class Messages extends NLS {
 	public static String FileView_5;
 
 	public static String FileView_6;
-
+	
+	public static String FileView_7;
+	
 	public static String GenericMassnahmenView_1;
 
 	public static String GenericMassnahmenView_10;

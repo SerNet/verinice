@@ -332,7 +332,7 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	private void setNewInput(CnATreeElement elmt) {
 		this.inputElmt = elmt;
 		loadLinks(elmt);
-		setViewTitle(Messages.RelationView_9 + elmt.getTitle());
+		setViewTitle(Messages.RelationView_9 + " " + elmt.getTitle());
 	}
 
 	private void setViewTitle(String title) {

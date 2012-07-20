@@ -53,6 +53,7 @@ import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
@@ -71,6 +72,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(NoteView.class);
+	
+	private CnATreeElement inputElmt;
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.NoteView"; //$NON-NLS-1$
 	
@@ -150,9 +153,15 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
 		if (!(selection instanceof IStructuredSelection))
 			return;
+		
+		if (((IStructuredSelection) selection).size() != 1)
+			return;
 		try {
 			Object element = ((IStructuredSelection) selection).getFirstElement();
 			elementSelected(element);
+			if (element instanceof CnATreeElement) {
+				setNewInput((CnATreeElement)element);
+			}
 		} catch (Exception e) {
 			LOG.error("Error while loading notes", e); //$NON-NLS-1$
 		}
@@ -368,5 +377,20 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
         }
         elementSelected(element);       
     }
+    private void setNewInput(CnATreeElement elmt) {
+		this.inputElmt = elmt;
+		loadLinks(elmt);
+		setViewTitle(Messages.NoteView_8 +" " + elmt.getTitle());
+	}
+
+	private void setViewTitle(String title) {
+		this.setContentDescription(title);
+	}
+	public void loadLinks(final CnATreeElement elmt) {
+		if (!CnAElementHome.getInstance().isOpen()
+		        || inputElmt == null) {
+			return;
+		}
+	}
 
 }
