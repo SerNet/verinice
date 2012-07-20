@@ -24,7 +24,7 @@
     <!-- The filter chain that all HTTP requests go through: -->
 	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
-			<security:filter-chain pattern="/tedit/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+			<security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
             <security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
 			<security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" /> 
 			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
