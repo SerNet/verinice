@@ -543,21 +543,7 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.29">
-               <enablement>
-               <and>
-                  <objectClass
-                        name="sernet.verinice.model.bsi.IBSIStrukturElement">
-                  </objectClass>
-                  <not>
-                     <or>
-                        <objectClass
-                              name="sernet.verinice.model.common.CnATreeElement">
-                        </objectClass>
-                    </or>
-                  </not>
-               </and>
-            </enablement>
-         </action>
+              </action>
             </objectContribution>   
             <objectContribution
                 adaptable="false"
@@ -1369,6 +1355,18 @@
 	            label="importDecorator"
 	            lightweight="true"
 	            location="BOTTOM_RIGHT"
+	            state="true">
+	          <enablement>
+	          	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+	         </enablement>
+	      </decorator>
+	      <decorator
+	            adaptable="true"
+	            class="sernet.verinice.rcp.OwnModulDecorator"
+	            id="sernet.verinice.rcp.OMDecorator"
+	            label="ownModulDecorator"
+	            lightweight="true"
+	            location="TOP_RIGHT"
 	            state="true">
 	          <enablement>
 	          	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>

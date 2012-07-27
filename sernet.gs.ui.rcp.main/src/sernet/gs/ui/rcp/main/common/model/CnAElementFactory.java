@@ -466,29 +466,20 @@ public class CnAElementFactory {
 					public BausteinUmsetzung build(CnATreeElement container,
 							BuildInput<Baustein> input) throws Exception {
 
-						BausteinUmsetzung child = dbHome.save(container,
-								BausteinUmsetzung.class,
-								BausteinUmsetzung.TYPE_ID);
 						if (input == null) {
-							init(container, child);
+							BausteinUmsetzung child = dbHome.save(container,
+									BausteinUmsetzung.class,
+									BausteinUmsetzung.TYPE_ID);
 							return child;
 						} else {
-							BausteinUmsetzung bu = dbHome.save(container,
-									input.getInput());
+							BausteinUmsetzung bu = dbHome.save(container, input.getInput());
 							container.addChild(bu);
 							bu.setParentAndScope(container);
 							return bu;
-						}
-
+							}
 					}
 
-					protected void init(CnATreeElement container,
-							CnATreeElement child) {
-						container.addChild(child);
-						child.setParentAndScope(container);
-					}
-
-				});
+		});
 
 		elementbuilders.put(MassnahmenUmsetzung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
