@@ -54,6 +54,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
@@ -502,7 +503,7 @@ public class CnAElementHome {
                         } // end for ISO 27k elements
                         
                         // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-                        if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement) {
+                        if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dragged instanceof BausteinUmsetzung || dragged instanceof MassnahmenUmsetzung) {
                             CnATreeElement from = dropTarget;
                             CnATreeElement to = dragged;
                             String linkIdParam = linkId;

@@ -1915,6 +1915,9 @@ the value between <param></param> will be used directly if no string is found fo
 		 	name="verknüpft mit" reversename="modelliert mit" />
 		 <huirelation  to="gebaeude" id="rel_bstumsetzung_gebaeude"
 		 	name="verknüpft mit" reversename="modelliert mit" />
+		 <huirelation to="document" id="rel_bstumsetzung_document"
+		 	name="verknüpft mit" reversename="modelliert mit"/>
+		 	 
 			
 		<huiproperty
 			id="bstumsetzung_nr"
@@ -2065,6 +2068,10 @@ the value between <param></param> will be used directly if no string is found fo
 	<huientity
 		id="mnums"
 		name="Maßnahmenumsetzung">
+		
+		<huirelation to="document" id="rel_mnums_document"
+		 	name="verknüpft mit" reversename="modelliert mit"/>
+		 	
 		<huiproperty
 				id="mnums_id"
                 editable="true"
@@ -2112,7 +2119,6 @@ the value between <param></param> will be used directly if no string is found fo
                editable="true"
                visible="true"
                inputtype="text"
-               textrows="10"
                name="Beschreibung"/>
                
         <huipropertygroup id="mnums_gsaudit" name="GS Audit" tags="GS-Audit" >
@@ -4906,6 +4912,10 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="evidence" id="rel_document_evidence" 
         	name="documents" reversename="related document" tooltip=""/>
         <huirelation to="finding" id="rel_document_finding" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bstumsetzung" id="rel_document_bstumsetzung" 
+        	name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="mnums" id="rel_document_mnums" 
         	name="documents" reversename="related document" tooltip=""/>
 
 		<huirelation to="samt_topic" id="rel_document_samt_topic_documented"

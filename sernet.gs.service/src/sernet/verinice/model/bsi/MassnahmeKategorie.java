@@ -32,7 +32,7 @@ public class MassnahmeKategorie extends CnATreeElement implements IBSIStrukturKa
 	}
 	@Override
 	public String getTitle() {
-		return Messages.MassnahmeKategorie_0;
+		return Messages.MassnahmenUmsetzung_1;
 	}
 	
 	
