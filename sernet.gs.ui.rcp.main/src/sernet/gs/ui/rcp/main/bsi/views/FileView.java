@@ -629,9 +629,17 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 				return null;
 			}
 			Attachment attachment = (Attachment) element;
+			int rc;
+			String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : "";
+			String imageType = mimeImageMap.get(mimeType);
+			for(String key : mimeImageMap.keySet())
 			if(columnIndex==0) {
-				String mimeType = (attachment.getMimeType()!=null) ? attachment.getMimeType().toLowerCase() : "";			 //$NON-NLS-1$
-				return ImageCache.getInstance().getImageDescriptor(mimeImageMap.get(mimeType)).createImage();
+				
+				if(imageType!=null && key!=null) {
+					rc = imageType.compareTo(key);
+					return ImageCache.getInstance().getImageDescriptor(mimeImageMap.get(mimeType)).createImage();
+					}	
+						return ImageCache.getInstance().getImage(ImageCache.UNKNOWN_FILE_TYPE);
 			}
 			return null;
 		}
