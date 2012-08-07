@@ -13,6 +13,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -91,6 +92,12 @@ public class EncryptionDialog extends TitleAreaDialog {
 
 	private Combo pkcs11KeyEncryptionCombo;
 	
+	private Text passwordField;
+	private	Text passwordField2;
+	 
+	private String password;
+	
+	
 	/**
 	 * Creates a new EncryptionDialog.
 	 * 
@@ -125,14 +132,24 @@ public class EncryptionDialog extends TitleAreaDialog {
 			}
 		});
 		
-		final Text passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
+		passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
 		GridData data = new GridData();
 		data.widthHint = 280;
 		passwordField.setLayoutData(data);
-		
-		// FIXME: span two cols instead of using an invisible label here 
 		new Label(encryptionChoicePanel, SWT.NONE);
 		
+		Label labelpassword2 = new Label(encryptionChoicePanel, SWT.NONE);
+        labelpassword2.setText(Messages.EncryptionDialog_6);
+       
+          
+
+		passwordField2 = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
+		GridData data2 = new GridData();
+		data2.widthHint = 280;
+		passwordField2.setLayoutData(data2);
+		// 	FIXME: span two cols instead of using an invisible label here 
+		new Label(encryptionChoicePanel, SWT.NONE);
+
 		// ==== Certificate Based Encryption controls
 		final Button certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
 		certificateEncryptionRadio.setText(Messages.EncryptionDialog_4);
@@ -284,5 +301,14 @@ public class EncryptionDialog extends TitleAreaDialog {
 	public String getSelectedKeyAlias() {
 		return selectedKeyAlias;
 	}
+	protected void okPressed() {
+        if (passwordField.getText().equals(passwordField2.getText())) {
+            password = passwordField.getText();
+            super.okPressed();
+        } 
+        else {
+            MessageDialog.openWarning(this.getShell(), Messages.PasswordDialog_3, Messages.PasswordDialog_4);
+        }
+    }
 	
 }

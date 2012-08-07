@@ -117,6 +117,7 @@ public class Messages extends NLS {
     public static String EncryptionDialog_3;
     public static String EncryptionDialog_4;
     public static String EncryptionDialog_5;
+    public static String EncryptionDialog_6;
     public static String ExportDialog_0;
 	public static String ExportDialog_1;
 	public static String ExportDialog_2;

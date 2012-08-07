@@ -71,63 +71,63 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("restriction")
 public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
-	private static final Logger LOG = Logger.getLogger(NoteView.class);
-	
-	private CnATreeElement inputElmt;
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.NoteView"; //$NON-NLS-1$
-	
-	Composite parent;
-	
-	ExpandBar expandBar;
-	
-	private ISelectionListener selectionListener;
+    private static final Logger LOG = Logger.getLogger(NoteView.class);
 
-	private ICommandService	commandService;
-	
-	private CnATreeElement currentCnaElement;
-	
-	private RightsEnabledAction addNoteAction;
+    private CnATreeElement inputElmt;
 
-	private IBSIModelListener modelListener;
-	
-	List<Note> noteList;
-	
-	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
-    
+    public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.NoteView"; //$NON-NLS-1$
+
+    Composite parent;
+
+    ExpandBar expandBar;
+
+    private ISelectionListener selectionListener;
+
+    private ICommandService commandService;
+
+    private CnATreeElement currentCnaElement;
+
+    private RightsEnabledAction addNoteAction;
+
+    private IBSIModelListener modelListener;
+
+    List<Note> noteList;
+
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
+
     private Action linkWithEditorAction;
 
     private boolean linkingActive = true;
 
-	public NoteView() {
-	}
-	
-	public String getRightID(){
-	    return ActionRightIDs.NOTES;
-	}
-	
-	@Override
-	public void createPartControl(Composite parent) {
-	
-		this.parent = parent;
-		parent.setLayout(new FillLayout());
+    public NoteView() {
+    }
+
+    public String getRightID() {
+        return ActionRightIDs.NOTES;
+    }
+
+    @Override
+    public void createPartControl(Composite parent) {
+
+        this.parent = parent;
+        parent.setLayout(new FillLayout());
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-        
-		try {
-			expandBar = new ExpandBar(parent,SWT.V_SCROLL);
-		    expandBar.setSpacing(4);
-			hookPageSelection();
-		} catch (Exception e) {
-			ExceptionUtil.log(e, Messages.BrowserView_3);
-			LOG.error("Error while creating control", e); //$NON-NLS-1$
-		}
-		
-		makeActions();
-		fillLocalToolBar();
 
-	}
+        try {
+            expandBar = new ExpandBar(parent, SWT.V_SCROLL);
+            expandBar.setSpacing(4);
+            hookPageSelection();
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.BrowserView_3);
+            LOG.error("Error while creating control", e); //$NON-NLS-1$
+        }
 
-	/**
+        makeActions();
+        fillLocalToolBar();
+
+    }
+
+    /**
      * Passing the focus request to the viewer's control.
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
@@ -136,82 +136,82 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     public void setFocus() {
         expandBar.setFocus();
     }
-	
-	private void hookPageSelection() {
-		selectionListener = new ISelectionListener() {
-			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-				pageSelectionChanged(part, selection);
-			}
-		};
-		getSite().getPage().addPostSelectionListener(selectionListener);
-		getSite().getPage().addPartListener(linkWithEditorPartListener);
-	}
 
-	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-		if (part == this)
-			return;
+    private void hookPageSelection() {
+        selectionListener = new ISelectionListener() {
+            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+                pageSelectionChanged(part, selection);
+            }
+        };
+        getSite().getPage().addPostSelectionListener(selectionListener);
+        getSite().getPage().addPartListener(linkWithEditorPartListener);
+    }
 
-		if (!(selection instanceof IStructuredSelection))
-			return;
-		
-		if (((IStructuredSelection) selection).size() != 1)
-			return;
-		try {
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			elementSelected(element);
-			if (element instanceof CnATreeElement) {
-				setNewInput((CnATreeElement)element);
-			}
-		} catch (Exception e) {
-			LOG.error("Error while loading notes", e); //$NON-NLS-1$
-		}
-	}
+    protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+        if (part == this)
+            return;
+
+        if (!(selection instanceof IStructuredSelection))
+            return;
+
+        if (((IStructuredSelection) selection).size() != 1)
+            return;
+        try {
+            Object element = ((IStructuredSelection) selection).getFirstElement();
+            elementSelected(element);
+            if (element instanceof CnATreeElement) {
+                setNewInput((CnATreeElement) element);
+            }
+        } catch (Exception e) {
+            LOG.error("Error while loading notes", e); //$NON-NLS-1$
+        }
+    }
 
     /**
      * @param element
      */
     private void elementSelected(Object element) {
-        if(element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
-        	if(addNoteAction.checkRights()){
-        	    addNoteAction.setEnabled(true);
-        	}
-        	setCurrentCnaElement((CnATreeElement) element);
-        	clear();
-        	loadNotes();
+        if (element instanceof CnATreeElement && !element.equals(getCurrentCnaElement())) {
+            if (addNoteAction.checkRights()) {
+                addNoteAction.setEnabled(true);
+            }
+            setCurrentCnaElement((CnATreeElement) element);
+            clear();
+            loadNotes();
         } else {
-        	addNoteAction.setEnabled(false);
+            addNoteAction.setEnabled(false);
         }
     }
-	
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.addNoteAction);
-		manager.add(this.linkWithEditorAction);
-	}
-	
-	private void makeActions() {
 
-		addNoteAction = new RightsEnabledAction(ActionRightIDs.ADDNOTE) {
-			public void run() {
-				Note note = new Note();
-				note.setCnATreeElementId(getCurrentCnaElement().getDbId());
-				note.setCnAElementTitel(getCurrentCnaElement().getTitle());
-				note.setTitel(Messages.NoteView_2);
-				note.addListener(new Note.INoteChangedListener() {
-					public void noteChanged() {
-						clear();
-						loadNotes();
-					}
-				});
-				EditorFactory.getInstance().openEditor(note);			
-			}
-		};
-		addNoteAction.setText(Messages.NoteView_3);
-		addNoteAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-		addNoteAction.setEnabled(false);
-		
-		linkWithEditorAction = new Action(Messages.NoteView_0, IAction.AS_CHECK_BOX) {
+    private void fillLocalToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.addNoteAction);
+        manager.add(this.linkWithEditorAction);
+    }
+
+    private void makeActions() {
+
+        addNoteAction = new RightsEnabledAction(ActionRightIDs.ADDNOTE) {
+            public void run() {
+                Note note = new Note();
+                note.setCnATreeElementId(getCurrentCnaElement().getDbId());
+                note.setCnAElementTitel(getCurrentCnaElement().getTitle());
+                note.setTitel(Messages.NoteView_2);
+                note.addListener(new Note.INoteChangedListener() {
+                    public void noteChanged() {
+                        clear();
+                        loadNotes();
+                    }
+                });
+                EditorFactory.getInstance().openEditor(note);
+            }
+        };
+        addNoteAction.setText(Messages.NoteView_3);
+        addNoteAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        addNoteAction.setEnabled(false);
+
+        linkWithEditorAction = new Action(Messages.NoteView_0, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
                 toggleLinking(isChecked());
@@ -219,152 +219,155 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
         };
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         linkWithEditorAction.setChecked(isLinkingActive());
-	}
+    }
 
-	public void loadNotes() {
-		try {
-			LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());		
-			command = getCommandService().executeCommand(command);		
-			noteList = command.getNoteList();
-			if(noteList!=null && noteList.size()>0) {		
-				for (final Note note : noteList) {
-					note.addListener(new Note.INoteChangedListener() {
-						public void noteChanged() {
-							clear();
-							loadNotes();
-						}
-					});
-				
-					// set transient cna-element-titel
-					note.setCnAElementTitel(getCurrentCnaElement().getTitle());
-					Composite composite = new Composite(expandBar, SWT.NONE);
-				    GridLayout layout = new GridLayout(2, false);
-				    layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 4;
-				    layout.verticalSpacing = 10;
-				    composite.setLayout(layout);
-				    
-				    GridData gdText = new GridData();
-					gdText.grabExcessHorizontalSpace = true;
-					gdText.grabExcessVerticalSpace = false;
-					gdText.horizontalAlignment = GridData.FILL;
-					gdText.verticalAlignment = GridData.CENTER;
-					gdText.heightHint=100;
-					gdText.verticalSpan=2;
-				    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-				    text.setLayoutData(gdText);
-				    if(note.getText()!=null) {
-				    	text.setText(note.getText());
-				    }
-					
-					Button editButton = new Button(composite,SWT.NONE);
-					editButton.setImage(ImageCache.getInstance().getImage(ImageCache.EDIT));
-					editButton.setToolTipText(Messages.NoteView_4);
-					editButton.addSelectionListener(new SelectionListener(){
-						public void widgetDefaultSelected(SelectionEvent e) {				
-						}
-						public void widgetSelected(SelectionEvent e) {
-							editNote(note);
-						}		    	
-				    });
-					
-					Button deleteButton = new Button(composite,SWT.NONE);
-				    deleteButton.setImage(ImageCache.getInstance().getImage(ImageCache.DELETE));
-				    deleteButton.setToolTipText(Messages.NoteView_5);
-				    deleteButton.addSelectionListener(new SelectionListener(){
-						public void widgetDefaultSelected(SelectionEvent e) {				
-						}
-						public void widgetSelected(SelectionEvent e) {
-							boolean b = MessageDialog.openQuestion(
-									NoteView.this.getSite().getShell(), 
-									Messages.NoteView_6,
-									NLS.bind(Messages.NoteView_7, note.getTitel()));
-							if(b) {
-								deleteNote(note);
-							}
-						}		    	
-				    });
-					
-				    ExpandItem item0 = new ExpandItem(expandBar, SWT.NONE, 0);
-				    if(note.getTitel()!=null) {
-				    	item0.setText(note.getTitel());
-				    }
-				    item0.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-				    item0.setControl(composite);
-				    item0.setExpanded(true);
-				} // end for
-			}
-		} catch(Exception e) {
-			LOG.error("Error while loading notes", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, "Error while loading notes"); //$NON-NLS-1$
-		}
-	}
-	
-	protected void editNote(Note note) {
-		EditorFactory.getInstance().openEditor(note);
-	}
-	
-	protected void deleteNote(Note note) {
-		DeleteNote command = new DeleteNote(note);		
-		try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			LOG.error("Error while saving note", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.NoteView_12);
-		}
-		clear();
-		loadNotes();
-	}
+    public void loadNotes() {
+        try {
+            LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());
+            command = getCommandService().executeCommand(command);
+            noteList = command.getNoteList();
+            if (noteList != null && noteList.size() > 0) {
+                for (final Note note : noteList) {
+                    note.addListener(new Note.INoteChangedListener() {
+                        public void noteChanged() {
+                            clear();
+                            loadNotes();
+                        }
+                    });
 
-	public void clear() {
-		for (Control ctl : expandBar.getChildren()) {
-			ctl.dispose();
-	    }
-		for (ExpandItem item : expandBar.getItems()) {
-			item.dispose();
-	    }
-	}
-	
-	public ICommandService getCommandService() {
-		if(commandService==null) {
-			commandService = createCommandServive();
-		}
-		return commandService;
-	}
+                    // set transient cna-element-titel
+                    note.setCnAElementTitel(getCurrentCnaElement().getTitle());
+                    Composite composite = new Composite(expandBar, SWT.NONE);
+                    GridLayout layout = new GridLayout(2, false);
+                    layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 4;
+                    layout.verticalSpacing = 10;
+                    composite.setLayout(layout);
 
-	private ICommandService createCommandServive() {
-		return ServiceFactory.lookupCommandService();
-	}
+                    GridData gdText = new GridData();
+                    gdText.grabExcessHorizontalSpace = true;
+                    gdText.grabExcessVerticalSpace = false;
+                    gdText.horizontalAlignment = GridData.FILL;
+                    gdText.verticalAlignment = GridData.CENTER;
+                    gdText.heightHint = 100;
+                    gdText.verticalSpan = 2;
+                    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+                    text.setLayoutData(gdText);
+                    if (note.getText() != null) {
+                        text.setText(note.getText());
+                    }
 
-	public CnATreeElement getCurrentCnaElement() {
-		return currentCnaElement;
-	}
+                    Button editButton = new Button(composite, SWT.NONE);
+                    editButton.setImage(ImageCache.getInstance().getImage(ImageCache.EDIT));
+                    editButton.setToolTipText(Messages.NoteView_4);
+                    editButton.addSelectionListener(new SelectionListener() {
+                        public void widgetDefaultSelected(SelectionEvent e) {
+                        }
 
-	public void setCurrentCnaElement(CnATreeElement currentCnaElement) {
-		this.currentCnaElement = currentCnaElement;
-	}
-	
-	@Override
-	public void dispose() {
-		getSite().getPage().removePostSelectionListener(selectionListener);
-		BSIModel model = CnAElementFactory.getLoadedModel();
-		model.removeBSIModelListener(modelListener);
+                        public void widgetSelected(SelectionEvent e) {
+                            editNote(note);
+                        }
+                    });
+
+                    Button deleteButton = new Button(composite, SWT.NONE);
+                    deleteButton.setImage(ImageCache.getInstance().getImage(ImageCache.DELETE));
+                    deleteButton.setToolTipText(Messages.NoteView_5);
+                    deleteButton.addSelectionListener(new SelectionListener() {
+                        public void widgetDefaultSelected(SelectionEvent e) {
+                        }
+
+                        public void widgetSelected(SelectionEvent e) {
+                            boolean b = MessageDialog.openQuestion(NoteView.this.getSite().getShell(), Messages.NoteView_6, NLS.bind(Messages.NoteView_7, note.getTitel()));
+                            if (b) {
+                                deleteNote(note);
+                            }
+                        }
+                    });
+
+                    ExpandItem item0 = new ExpandItem(expandBar, SWT.NONE, 0);
+                    if (note.getTitel() != null) {
+                        item0.setText(note.getTitel());
+                    }
+                    item0.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+                    item0.setControl(composite);
+                    item0.setExpanded(true);
+                } // end for
+            }
+        } catch (Exception e) {
+            LOG.error("Error while loading notes", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, "Error while loading notes"); //$NON-NLS-1$
+        }
+    }
+
+    protected void editNote(Note note) {
+        EditorFactory.getInstance().openEditor(note);
+    }
+
+    protected void deleteNote(Note note) {
+        DeleteNote command = new DeleteNote(note);
+        try {
+            command = getCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            LOG.error("Error while saving note", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.NoteView_12);
+        }
+        clear();
+        loadNotes();
+    }
+
+    public void clear() {
+        for (Control ctl : expandBar.getChildren()) {
+            ctl.dispose();
+        }
+        for (ExpandItem item : expandBar.getItems()) {
+            item.dispose();
+        }
+    }
+
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
+
+    public CnATreeElement getCurrentCnaElement() {
+        return currentCnaElement;
+    }
+
+    public void setCurrentCnaElement(CnATreeElement currentCnaElement) {
+        this.currentCnaElement = currentCnaElement;
+    }
+
+    @Override
+    public void dispose() {
+        getSite().getPage().removePostSelectionListener(selectionListener);
+        BSIModel model = CnAElementFactory.getLoadedModel();
+        model.removeBSIModelListener(modelListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
-		super.dispose();
-	}
-	
-	protected void toggleLinking(boolean checked) {
+        super.dispose();
+    }
+
+    protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
             editorActivated(getSite().getPage().getActiveEditor());
         }
     }
-    
+
     protected boolean isLinkingActive() {
         return linkingActive;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
@@ -372,25 +375,18 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
-        if(element==null) {
+        if (element == null) {
             return;
         }
-        elementSelected(element);       
+        elementSelected(element);
     }
+
     private void setNewInput(CnATreeElement elmt) {
-		this.inputElmt = elmt;
-		loadLinks(elmt);
-		setViewTitle(Messages.NoteView_8 +" " + elmt.getTitle());
-	}
+        this.inputElmt = elmt;
+        setViewTitle(Messages.NoteView_8 + " " + elmt.getTitle());
+    }
 
-	private void setViewTitle(String title) {
-		this.setContentDescription(title);
-	}
-	public void loadLinks(final CnATreeElement elmt) {
-		if (!CnAElementHome.getInstance().isOpen()
-		        || inputElmt == null) {
-			return;
-		}
-	}
-
+    private void setViewTitle(String title) {
+        this.setContentDescription(title);
+    }
 }

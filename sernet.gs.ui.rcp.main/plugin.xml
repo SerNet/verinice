@@ -727,6 +727,21 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
+            id="sernet.verinice.bpm.rcp.CreateIsaControl.controlgroup"
+            objectClass="sernet.verinice.model.iso27k.ControlGroup">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.AddIsaControl"
+               enablesFor="+"
+               icon="icons/isa-topic.png"
+               id="sernet.verinice.iso27k.rcp.action.AddIsaControl"
+               label="%action.label.31"
+               menubarPath="content"
+               style="push"
+               tooltip="Create a new ISA control...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
             id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit"
             objectClass="sernet.verinice.model.iso27k.Audit">
          <action

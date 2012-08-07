@@ -253,6 +253,7 @@ public class ImageCache {
 	public static final String ISO27K_CONTROLGROUP      = "controlgroup.png";
     public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
 	public static final String ISO27K_CONTROL_YES		= "16-em-check.png";
+	public static final String ISO27K_SAMTTOPIC          = "isa-topic.png";
 	
 	public static final String ISA_TOPIC		        = "isa-topic.png";
 	
@@ -309,7 +310,7 @@ public class ImageCache {
         ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
 		ISO27K_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
 		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
-		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_SAMTTOPIC);
 		ISO27K_ICON_MAP.put(ImportIsoGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();

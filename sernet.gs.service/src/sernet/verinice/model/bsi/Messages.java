@@ -27,7 +27,6 @@ import org.eclipse.osgi.util.NLS;
  */
 public final class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.model.bsi.messages"; //$NON-NLS-1$
-	public static String MassnahmeKategorie_0;
 	public static String AnwendungenKategorie_0;
     public static String BausteinUmsetzung_0;
     public static String BausteinUmsetzung_1;
