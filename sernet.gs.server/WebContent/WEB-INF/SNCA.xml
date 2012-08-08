@@ -4913,10 +4913,7 @@ the value between <param></param> will be used directly if no string is found fo
         	name="documents" reversename="related document" tooltip=""/>
         <huirelation to="finding" id="rel_document_finding" 
         	name="documents" reversename="related document" tooltip=""/>
-        <huirelation to="bstumsetzung" id="rel_document_bstumsetzung" 
-        	name="documents" reversename="related document" tooltip=""/>
-        <huirelation to="mnums" id="rel_document_mnums" 
-        	name="documents" reversename="related document" tooltip=""/>
+        
 
 		<huirelation to="samt_topic" id="rel_document_samt_topic_documented"
  		  	name="documents" reversename="related document" tooltip="" />		

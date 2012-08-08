@@ -68,7 +68,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
         TableColumn tagColumn = new TableColumn(table, SWT.LEFT);
         tagColumn.setText(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
-        tagColumn.setWidth(100);
+        tagColumn.setWidth(200);
 
         viewer.setContentProvider(new ArrayContentProvider());
 
@@ -156,6 +156,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
         Object[] allTagsArray = null;
         if (allTags != null) {
             allTagsArray = allTags.toArray();
+            Arrays.sort(allTagsArray);
             viewer.setInput(allTagsArray);
         }
 

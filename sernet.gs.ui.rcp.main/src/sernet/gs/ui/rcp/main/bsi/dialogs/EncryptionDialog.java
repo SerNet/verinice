@@ -46,269 +46,284 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
  * 
  * @author Sebastian Engel <sengel@tarent.de>
  * 
- *
+ * 
  */
 public class EncryptionDialog extends TitleAreaDialog {
-	
-	/**
-	 * Possible methods for encryption.
-	 *  
-	 * @author Sebastian Engel <s.engel@tarent.de>
-	 *
-	 */
-	public enum EncryptionMethod {
-		PASSWORD,
-		X509_CERTIFICATE,
-		PKCS11_KEY,
-	}
-	
-	/**
-	 * The default title of this dialog.
-	 */
-	private static final String DEFAULT_DIALOG_TITLE = Messages.EncryptionDialog_0;
-	
-	/**
-	 * The default message displayed in the head of this dialog.
-	 */
-	private static final String DEFAULT_DIALOG_MESSAGE = 
-		Messages.EncryptionDialog_1;
-	
-	/**
-	 * Indicates which encryption method is used.
-	 */
-	private EncryptionMethod selectedEncryptionMethod = EncryptionMethod.PASSWORD;
-	
-	/**
-	 * The password entered by the user
-	 */
-	private char[] enteredPassword = "".toCharArray(); //$NON-NLS-1$
-	
-	/**
-	 * The X.509 public certificate file selected by the user
-	 */
-	private File selectedX509CertificateFile;
-	
-	private String selectedKeyAlias;
 
-	private Combo pkcs11KeyEncryptionCombo;
-	
-	private Text passwordField;
-	private	Text passwordField2;
-	 
-	private String password;
-	
-	
-	/**
-	 * Creates a new EncryptionDialog.
-	 * 
-	 * @param parentShell the parent shell
-	 */
-	public EncryptionDialog(Shell parentShell) {
-		super(parentShell);
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle(DEFAULT_DIALOG_TITLE);
-		setMessage(DEFAULT_DIALOG_MESSAGE);
+    /**
+     * Possible methods for encryption.
+     * 
+     * @author Sebastian Engel <s.engel@tarent.de>
+     * 
+     */
+    public enum EncryptionMethod {
+        PASSWORD, X509_CERTIFICATE, PKCS11_KEY,
+    }
 
-		Composite composite = (Composite) super.createDialogArea(parent);
-		GridLayout compositeLayout = (GridLayout) composite.getLayout();
-		compositeLayout.marginWidth = 10;
-		compositeLayout.marginHeight = 10;
+    /**
+     * The default title of this dialog.
+     */
+    private static final String DEFAULT_DIALOG_TITLE = Messages.EncryptionDialog_0;
 
-		// ===== Password Based Encryption controls =====
-		Composite encryptionChoicePanel = new Composite(composite, SWT.NONE);
-		GridLayout pbeLayout = new GridLayout(3, false);
-		encryptionChoicePanel.setLayout(pbeLayout);
+    /**
+     * The default message displayed in the head of this dialog.
+     */
+    private static final String DEFAULT_DIALOG_MESSAGE = Messages.EncryptionDialog_1;
 
-		final Button passwordEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
-		passwordEncryptionRadio.setSelection(true);
-		passwordEncryptionRadio.setText(Messages.EncryptionDialog_3);
-		passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectedEncryptionMethod = EncryptionMethod.PASSWORD;
-			}
-		});
-		
-		passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
-		GridData data = new GridData();
-		data.widthHint = 280;
-		passwordField.setLayoutData(data);
-		new Label(encryptionChoicePanel, SWT.NONE);
-		
-		Label labelpassword2 = new Label(encryptionChoicePanel, SWT.NONE);
+    /**
+     * Indicates which encryption method is used.
+     */
+    private EncryptionMethod selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+
+    /**
+     * The password entered by the user
+     */
+    private char[] enteredPassword = "".toCharArray(); //$NON-NLS-1$
+
+    /**
+     * The X.509 public certificate file selected by the user
+     */
+    private File selectedX509CertificateFile;
+
+    private String selectedKeyAlias;
+
+    private Combo pkcs11KeyEncryptionCombo;
+
+    private Text passwordField;
+    private Text passwordField2;
+
+    private Text certificatePathField;
+    private Button browseX509CertificateButton;
+    private Button certificateEncryptionRadio;
+
+    /**
+     * Creates a new EncryptionDialog.
+     * 
+     * @param parentShell
+     *            the parent shell
+     */
+    public EncryptionDialog(Shell parentShell) {
+        super(parentShell);
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle(DEFAULT_DIALOG_TITLE);
+        setMessage(DEFAULT_DIALOG_MESSAGE);
+
+        Composite composite = (Composite) super.createDialogArea(parent);
+        GridLayout compositeLayout = (GridLayout) composite.getLayout();
+        compositeLayout.marginWidth = 10;
+        compositeLayout.marginHeight = 10;
+
+        // ===== Password Based Encryption controls =====
+        Composite encryptionChoicePanel = new Composite(composite, SWT.NONE);
+        GridLayout pbeLayout = new GridLayout(3, false);
+        encryptionChoicePanel.setLayout(pbeLayout);
+
+        final Button passwordEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
+        passwordEncryptionRadio.setSelection(true);
+        passwordEncryptionRadio.setText(Messages.EncryptionDialog_3);
+        passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                passwordField.setEnabled(true);
+                passwordField2.setEnabled(true);
+                certificatePathField.setEnabled(false);
+                browseX509CertificateButton.setEnabled(false);
+                selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+                
+            }
+        });
+
+        passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
+        GridData data = new GridData();
+        data.widthHint = 280;
+        passwordField.setLayoutData(data);
+        new Label(encryptionChoicePanel, SWT.NONE);
+
+        Label labelpassword2 = new Label(encryptionChoicePanel, SWT.NONE);
         labelpassword2.setText(Messages.EncryptionDialog_6);
-       
-          
 
-		passwordField2 = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
-		GridData data2 = new GridData();
-		data2.widthHint = 280;
-		passwordField2.setLayoutData(data2);
-		// 	FIXME: span two cols instead of using an invisible label here 
-		new Label(encryptionChoicePanel, SWT.NONE);
+        passwordField2 = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
+        GridData data2 = new GridData();
+        data2.widthHint = 280;
+        passwordField2.setLayoutData(data2);
+        // FIXME: span two cols instead of using an invisible label here
+        new Label(encryptionChoicePanel, SWT.NONE);
 
-		// ==== Certificate Based Encryption controls
-		final Button certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
-		certificateEncryptionRadio.setText(Messages.EncryptionDialog_4);
-		certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-			}
-		});
-		
-		final Text certificatePathField = new Text(encryptionChoicePanel, SWT.SINGLE | SWT.BORDER);
-		data = new GridData();
-		data.widthHint = 280;
-		certificatePathField.setLayoutData(data);
-		certificatePathField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				passwordEncryptionRadio.setSelection(false);
-				certificateEncryptionRadio.setSelection(true);
-				selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-			}
-		});
-		
-		Button browseX509CertificateButton = new Button(encryptionChoicePanel, SWT.NONE);
-		browseX509CertificateButton.setText(Messages.EncryptionDialog_5);
-		browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
-				dialog.setFilterExtensions(new String[]{ "*.pem",}); //$NON-NLS-1$
-				String certificatePath = dialog.open();
-				if(certificatePath != null) {
-					selectedX509CertificateFile = new File(certificatePath);
-					certificatePathField.setText(certificatePath);
-				} else {
-					certificatePathField.setText(""); //$NON-NLS-1$
-				}
-				
-				passwordEncryptionRadio.setSelection(false);
-				certificateEncryptionRadio.setSelection(true);
-				selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-			}
-		});
-		
-		passwordField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				passwordEncryptionRadio.setSelection(true);
-				certificateEncryptionRadio.setSelection(false);
-				selectedEncryptionMethod = EncryptionMethod.PASSWORD;
-			}
-		});
-		passwordField.addModifyListener(new ModifyListener() {         
+        // ==== Certificate Based Encryption controls
+        certificateEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
+        certificateEncryptionRadio.setText(Messages.EncryptionDialog_4);
+        certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                passwordField.setEnabled(false);
+                passwordField.setText("");
+                passwordField2.setEnabled(false);
+                passwordField2.setText("");
+                certificatePathField.setEnabled(true);
+                browseX509CertificateButton.setEnabled(true);
+            }
+        });
+
+        certificatePathField = new Text(encryptionChoicePanel, SWT.SINGLE | SWT.BORDER);
+        data = new GridData();
+        data.widthHint = 280;
+        certificatePathField.setLayoutData(data);
+        certificatePathField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                passwordEncryptionRadio.setSelection(false);
+                certificateEncryptionRadio.setSelection(true);
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+            }
+        });
+
+        browseX509CertificateButton = new Button(encryptionChoicePanel, SWT.NONE);
+        browseX509CertificateButton.setText(Messages.EncryptionDialog_5);
+        browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+                dialog.setFilterExtensions(new String[] { "*.pem", }); //$NON-NLS-1$
+                String certificatePath = dialog.open();
+                if (certificatePath != null) {
+                    selectedX509CertificateFile = new File(certificatePath);
+                    certificatePathField.setText(certificatePath);
+                } else {
+                    certificatePathField.setText(""); //$NON-NLS-1$
+                }
+
+                passwordEncryptionRadio.setSelection(false);
+                certificateEncryptionRadio.setSelection(true);
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+            }
+        });
+
+        passwordField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                passwordEncryptionRadio.setSelection(true);
+                certificateEncryptionRadio.setSelection(false);
+                selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+            }
+        });
+        passwordField.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                if(passwordField.getText()!=null) {
-                    enteredPassword=passwordField.getText().toCharArray(); 
+                if (passwordField.getText() != null) {
+                    enteredPassword = passwordField.getText().toCharArray();
                 } else {
-                    enteredPassword="".toCharArray(); //$NON-NLS-1$
+                    enteredPassword = "".toCharArray(); //$NON-NLS-1$
                 }
             }
         });
 
-		// ==== Certificate Based Encryption controls
-		final Button pkcs11KeyEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
-		pkcs11KeyEncryptionRadio.setText("Verschlüsselung mit Schlüssel aus PKCS#11-Bibliothek");
-		pkcs11KeyEncryptionRadio.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectedEncryptionMethod = EncryptionMethod.PKCS11_KEY;
-				updateCombo();
-			}
-		});
-		pkcs11KeyEncryptionCombo = new Combo(encryptionChoicePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData();
-		data.widthHint = 280;
-		pkcs11KeyEncryptionCombo.setLayoutData(data);
-		pkcs11KeyEncryptionCombo.setEnabled(false);
-		pkcs11KeyEncryptionCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectedKeyAlias = pkcs11KeyEncryptionCombo.getText();
-			}
-		});		
-		
-		encryptionChoicePanel.pack();
-		composite.pack();
-		return composite;
-	}
-	
-	private void updateCombo() {
-		WorkspaceJob job = new WorkspaceJob("verfügbare Schlüssel einlesen") {
-			@Override
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				IStatus status = Status.OK_STATUS;
-				
-				try {
-					KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
-					ks.load(null, null);
-					Enumeration<String> en = ks.aliases();
-					final List<String> l = new ArrayList<String>();
-					while (en.hasMoreElements()) {
-						l.add(en.nextElement());
-	 				}
-				
-					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
-							pkcs11KeyEncryptionCombo.removeAll();
-							for (String s : l) {
-								pkcs11KeyEncryptionCombo.add(s);	
-							}
-							pkcs11KeyEncryptionCombo.setEnabled(true);
-						}
-					});
-				} catch (GeneralSecurityException gse) {
-					status = Status.CANCEL_STATUS;
-				} catch (IOException ioe) {
-					status = Status.CANCEL_STATUS;
-				}
-				
-				return status;
-			}
-		};
-		JobScheduler.scheduleJob(job, null);
-	}
+        // ==== Certificate Based Encryption controls
+        final Button pkcs11KeyEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
+        pkcs11KeyEncryptionRadio.setText("Verschlüsselung mit Schlüssel aus PKCS#11-Bibliothek");
+        pkcs11KeyEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectedEncryptionMethod = EncryptionMethod.PKCS11_KEY;
+                passwordField.setEnabled(false);
+                passwordField.setText("");
+                passwordField2.setEnabled(false);
+                passwordField2.setText("");
+                certificatePathField.setEnabled(false);
+                browseX509CertificateButton.setEnabled(false);
+                updateCombo();
+            }
+        });
+        pkcs11KeyEncryptionCombo = new Combo(encryptionChoicePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
+        data = new GridData();
+        data.widthHint = 280;
+        pkcs11KeyEncryptionCombo.setLayoutData(data);
+        pkcs11KeyEncryptionCombo.setEnabled(false);
+        pkcs11KeyEncryptionCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectedKeyAlias = pkcs11KeyEncryptionCombo.getText();
+            }
+        });
 
-	/**
-	 * @return the selected encryption method
-	 */
-	public EncryptionMethod getSelectedEncryptionMethod() {
-		return selectedEncryptionMethod;
-	}
-	
-	/**
-	 * @return the password to use for encryption entered by the user
-	 */
-	public char[] getEnteredPassword() {
-		return enteredPassword;
-	}
-	
-	/**
-	 * @return the X.509 certificate file to use for encryption selected by the user
-	 */
-	public File getSelectedX509CertificateFile() {
-		return selectedX509CertificateFile;
-	}
-	
-	public String getSelectedKeyAlias() {
-		return selectedKeyAlias;
-	}
-	protected void okPressed() {
+        encryptionChoicePanel.pack();
+        composite.pack();
+        return composite;
+    }
+
+    private void updateCombo() {
+        WorkspaceJob job = new WorkspaceJob("verfügbare Schlüssel einlesen") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+
+                try {
+                    KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+                    ks.load(null, null);
+                    Enumeration<String> en = ks.aliases();
+                    final List<String> l = new ArrayList<String>();
+                    while (en.hasMoreElements()) {
+                        l.add(en.nextElement());
+                    }
+
+                    Display.getDefault().asyncExec(new Runnable() {
+                        public void run() {
+                            pkcs11KeyEncryptionCombo.removeAll();
+                            for (String s : l) {
+                                pkcs11KeyEncryptionCombo.add(s);
+                            }
+                            pkcs11KeyEncryptionCombo.setEnabled(true);
+                        }
+                    });
+                } catch (GeneralSecurityException gse) {
+                    status = Status.CANCEL_STATUS;
+                } catch (IOException ioe) {
+                    status = Status.CANCEL_STATUS;
+                }
+
+                return status;
+            }
+        };
+        JobScheduler.scheduleJob(job, null);
+    }
+
+    /**
+     * @return the selected encryption method
+     */
+    public EncryptionMethod getSelectedEncryptionMethod() {
+        return selectedEncryptionMethod;
+    }
+
+    /**
+     * @return the password to use for encryption entered by the user
+     */
+    public char[] getEnteredPassword() {
+        return enteredPassword;
+    }
+
+    /**
+     * @return the X.509 certificate file to use for encryption selected by the
+     *         user
+     */
+    public File getSelectedX509CertificateFile() {
+        return selectedX509CertificateFile;
+    }
+
+    public String getSelectedKeyAlias() {
+        return selectedKeyAlias;
+    }
+
+    protected void okPressed() {
         if (passwordField.getText().equals(passwordField2.getText())) {
-            password = passwordField.getText();
+            passwordField.getText();
             super.okPressed();
-        } 
-        else {
-            MessageDialog.openWarning(this.getShell(), Messages.PasswordDialog_3, Messages.PasswordDialog_4);
+        } else {
+            MessageDialog.openWarning(this.getShell(), Messages.EncryptionDialog_7, Messages.EncryptionDialog_8);
         }
     }
-	
+
 }

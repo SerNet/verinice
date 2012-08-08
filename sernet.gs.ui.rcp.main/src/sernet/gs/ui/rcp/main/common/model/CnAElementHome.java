@@ -503,7 +503,7 @@ public class CnAElementHome {
                         } // end for ISO 27k elements
                         
                         // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-                        if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dragged instanceof BausteinUmsetzung || dragged instanceof MassnahmenUmsetzung) {
+                        if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung || dragged instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung || dragged instanceof MassnahmenUmsetzung) {
                             CnATreeElement from = dropTarget;
                             CnATreeElement to = dragged;
                             String linkIdParam = linkId;
