@@ -27,7 +27,7 @@
 		
 		<property name="linkType"/>
 
-		<property name="comment" />
+		<property name="comment" column='"comment"'/>
 
 		<property name="riskConfidentiality" />
 		<property name="riskIntegrity" />
