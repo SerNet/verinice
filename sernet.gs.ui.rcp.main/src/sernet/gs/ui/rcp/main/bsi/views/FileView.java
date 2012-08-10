@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.bcel.AtAjAttributes;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -44,7 +45,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -55,7 +58,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
@@ -65,6 +70,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -73,9 +79,9 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -102,11 +108,13 @@ import sernet.verinice.service.commands.LoadAttachments;
  */
 @SuppressWarnings("restriction")
 public class FileView extends ViewPart implements ILinkedWithEditorView {
-
-    private static final Logger LOG = Logger.getLogger(FileView.class);
+    
+    static final Logger LOG = Logger.getLogger(FileView.class);
     private CnATreeElement inputElmt;
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
+    
+    private static final int DEFAULT_THUMBNAIL_SIZE = 0;
 
     private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
     static {
@@ -150,6 +158,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 
     protected TableViewer viewer;
     protected TableColumn iconColumn;
+    protected TableViewerColumn imageColumn;
     protected TableColumn fileNameColumn;
     protected TableColumn mimeTypeColumn;
     protected TableColumn textColumn;
@@ -183,6 +192,8 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
+    private ImageCellProvider imageCellProvider = null;
+    
     public FileView() {
         super();
     }
@@ -227,15 +238,37 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AttachmentLabelProvider());
         Table table = viewer.getTable();
+        
+        table.addListener(SWT.MeasureItem, new Listener() {   
+            public void handleEvent(Event event) {
+               // height cannot be per row so simply set
+               event.height = getThumbnailSize() + 4;
+            }
+         });
+           
+        if(getThumbnailSize()>0) {
+            imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
+            imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
+            imageColumn.setLabelProvider(getImageCellProvider());
+        } else {
+            // dummy column
+            imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
+            imageColumn.getColumn().setWidth(0);
+            imageColumn.setLabelProvider(new CellLabelProvider() {               
+                @Override
+                public void update(ViewerCell arg0) {}
+            });
+        }
+        
         iconColumn = new TableColumn(table, SWT.LEFT);
         iconColumn.setWidth(26);
         iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, 0));
 
         fileNameColumn = new TableColumn(table, SWT.LEFT);
         fileNameColumn.setText(Messages.FileView_2);
-        fileNameColumn.setWidth(120);
+        fileNameColumn.setWidth(152);
         fileNameColumn.addSelectionListener(new SortSelectionAdapter(this, fileNameColumn, 1));
-
+        
         mimeTypeColumn = new TableColumn(table, SWT.LEFT);
         mimeTypeColumn.setText(Messages.FileView_3);
         mimeTypeColumn.setWidth(50);
@@ -243,7 +276,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
 
         textColumn = new TableColumn(table, SWT.LEFT);
         textColumn.setText(Messages.FileView_4);
-        textColumn.setWidth(350);
+        textColumn.setWidth(250);
         textColumn.addSelectionListener(new SortSelectionAdapter(this, textColumn, 3));
 
         dateColumn = new TableColumn(table, SWT.LEFT);
@@ -260,6 +293,28 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
 
+    }
+
+    /**
+     * @return
+     */
+    private CellLabelProvider getImageCellProvider() {
+        if(imageCellProvider==null) {
+            imageCellProvider = new ImageCellProvider(getThumbnailSize());
+        }
+        return imageCellProvider;
+    }
+
+    /**
+     * @return
+     */
+    private int getThumbnailSize() {
+        int size = DEFAULT_THUMBNAIL_SIZE;
+        String sizeString = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.THUMBNAIL_SIZE);
+        if(sizeString!=null && !sizeString.isEmpty()) {
+            size = Integer.parseInt(sizeString);
+        }    
+        return size;
     }
 
     private void hookActions() {
@@ -543,7 +598,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
                 AttachmentFile attachmentFile = command.getAttachmentFile();
                 String tempDir = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
                 if (attachmentFile != null && tempDir != null) {
-                    if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
+                   if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
                         tempDir = tempDir + File.separatorChar;
                     }
                     String path = tempDir + attachment.getFileName();
@@ -612,20 +667,31 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
         for (Attachment attachment : attachmentList) {
             attachment.removeAllListener();
         }
+        if(imageCellProvider!=null) {
+            imageCellProvider.shutdownCache();
+        }
     }
 
     public static String getImageForMimeType(String mimeType) {
         return mimeImageMap.get(mimeType);
     }
 
-    private static class AttachmentLabelProvider extends LabelProvider implements ITableLabelProvider {
-
+    public static Display getDisplay() {
+        Display display = Display.getCurrent();
+        //may be null if outside the UI thread
+        if (display == null)
+           display = Display.getDefault();
+        return display;       
+     }
+    
+    private static class AttachmentLabelProvider extends LabelProvider implements ITableLabelProvider {      
+        
         public Image getColumnImage(Object element, int columnIndex) {
             if (element instanceof PlaceHolder) {
                 return null;
             }
             Attachment attachment = (Attachment) element;
-            if (columnIndex == 0) {
+            if (columnIndex == 1) {
                 String mimeType = (attachment.getMimeType() != null) ? attachment.getMimeType().toLowerCase() : "";
                 String imageType = mimeImageMap.get(mimeType);
                 if (imageType != null) {
@@ -648,15 +714,15 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
                 DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
                 Attachment attachment = (Attachment) element;
                 switch (columnIndex) {
-                case 1:
-                    return attachment.getTitel(); //$NON-NLS-1$
                 case 2:
-                    return attachment.getMimeType(); //$NON-NLS-1$
+                    return attachment.getTitel(); //$NON-NLS-1$
                 case 3:
-                    return attachment.getText(); //$NON-NLS-1$
+                    return attachment.getMimeType(); //$NON-NLS-1$
                 case 4:
-                    return (attachment.getDate() != null) ? dateFormat.format(attachment.getDate()) : null; //$NON-NLS-1$
+                    return attachment.getText(); //$NON-NLS-1$
                 case 5:
+                    return (attachment.getDate() != null) ? dateFormat.format(attachment.getDate()) : null; //$NON-NLS-1$
+                case 6:
                     return attachment.getVersion(); //$NON-NLS-1$
                 default:
                     return null;
@@ -666,6 +732,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
                 throw new RuntimeException(e);
             }
         }
+ 
 
     }
 

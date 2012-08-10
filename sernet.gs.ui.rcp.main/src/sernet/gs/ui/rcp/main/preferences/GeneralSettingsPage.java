@@ -57,9 +57,18 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private static final String[][] encodingComboValues = new String[][]{
         new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
         new String[]{VeriniceCharset.CHARSET_ISO_8859_15.displayName(),VeriniceCharset.CHARSET_ISO_8859_15.name()},
-        new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}
-        
+        new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}       
 	};
+	
+	private ComboFieldEditor thumbnailSizeEditor;	
+    private static final String[][] thumbnailSizeValues = new String[][]{
+        new String[]{Messages.getString("GeneralSettingsPage.5"),"0"}, //$NON-NLS-1$ //$NON-NLS-2$
+        new String[]{Messages.getString("GeneralSettingsPage.8"),"20"}, //$NON-NLS-1$ //$NON-NLS-2$
+        new String[]{Messages.getString("GeneralSettingsPage.10"),"50"}, //$NON-NLS-1$ //$NON-NLS-2$
+        new String[]{Messages.getString("GeneralSettingsPage.12"),"80"}, //$NON-NLS-1$ //$NON-NLS-2$
+        new String[]{Messages.getString("GeneralSettingsPage.14"),"110"}, //$NON-NLS-1$ //$NON-NLS-2$
+        new String[]{Messages.getString("GeneralSettingsPage.16"),"150"} //$NON-NLS-1$ //$NON-NLS-2$
+    };
 
 	public GeneralSettingsPage() {
 		super(GRID);
@@ -131,6 +140,12 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 				encodingComboValues, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);
+        
+        thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
+                Messages.getString("GeneralSettingsPage.7"),  //$NON-NLS-1$
+                thumbnailSizeValues, 
+                getFieldEditorParent());
+        addField(thumbnailSizeEditor);
         
 	}
 
