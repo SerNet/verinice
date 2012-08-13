@@ -40,6 +40,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * File meta-data data will not be loaded by this command. 
  * Use command LoadAttachments to load file meta-data from database.
  * 
+ * For images you can set a scale-size. If set images are scaled before send to the
+ * client. Width or height is set to the scale-size by keeping the ratio.
+ * 
  * @see LoadAttachment
  * @see AttachmentFile
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -60,7 +63,8 @@ public class LoadAttachmentFile extends GenericCommand {
 	
 	private AttachmentFile attachmentFile;
 	
-	// for images only, null means no scaling
+	// For images only, null means no scaling
+	// Width or height is set to the scale-size by keeping the ratio.
 	private Integer scaleSize;
 
 	public LoadAttachmentFile(Integer dbId) {
@@ -89,6 +93,10 @@ public class LoadAttachmentFile extends GenericCommand {
 		
 	}
 
+    /**
+     * For images you can set a scale-size. If set images are scaled before send to the
+     * client. Width or height is set to the scale-size by keeping the ratio.
+     */
     private void scaleImage() {
         if(getAttachmentFile()==null || getAttachmentFile().getFileData()==null) {
             return;
@@ -121,11 +129,6 @@ public class LoadAttachmentFile extends GenericCommand {
         }
     }
 
-    /**
-     * @param thumbnailImage
-     * @return
-     * @throws IOException
-     */
     private byte[] getByteArray(BufferedImage thumbnailImage) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write( thumbnailImage, "png", baos );
@@ -135,10 +138,6 @@ public class LoadAttachmentFile extends GenericCommand {
         return thumbByteArray;
     }
 
-    /**
-     * @param image
-     * @param resizedImage
-     */
     private void drawThumbnail(BufferedImage image, BufferedImage resizedImage) {
         Graphics2D g = resizedImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
@@ -147,10 +146,6 @@ public class LoadAttachmentFile extends GenericCommand {
         g.dispose();
     }
 
-    /**
-     * @return
-     * @throws IOException
-     */
     private BufferedImage readImageFromByteArray() throws IOException {
         InputStream in = new ByteArrayInputStream(getAttachmentFile().getFileData());
         BufferedImage image = ImageIO.read(in);

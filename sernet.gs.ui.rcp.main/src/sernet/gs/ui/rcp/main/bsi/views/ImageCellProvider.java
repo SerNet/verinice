@@ -30,19 +30,12 @@ import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -51,7 +44,15 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 
-class ImageCellProvider extends OwnerDrawLabelProvider {
+/**
+ * If file attachment is an image ImageCellProvider loads an scaled instance 
+ * of this image an displays is in a table cell.
+ * 
+ * Once an image is loaded it is cached by EHCache.
+ *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
+public class ImageCellProvider extends OwnerDrawLabelProvider {
     
     private static final Logger LOG = Logger.getLogger(ImageCellProvider.class);
     
@@ -65,9 +66,6 @@ class ImageCellProvider extends OwnerDrawLabelProvider {
     private String cacheId = null;
     private Cache cache = null;
     
-    /**
-     * @param fileView
-     */
     ImageCellProvider(int thumbnailSize) {
         this.thumbSize = thumbnailSize;
     }
@@ -104,9 +102,6 @@ class ImageCellProvider extends OwnerDrawLabelProvider {
     @Override
     protected void measure(Event arg0, Object arg1) {}
     
-    /**
-     * @param attachment
-     */
     private Image getImage(Object element) {
         if(! (element instanceof Attachment)) {
             return null;
@@ -154,7 +149,9 @@ class ImageCellProvider extends OwnerDrawLabelProvider {
     }
     
     private Image createImage(byte[] fileData) {
-        //return new Image(FileView.getDisplay(),loader.load(new ByteArrayInputStream(fileData))[0]);
+        if(fileData==null) {
+            return null;
+        }
         try {
             return new Image(FileView.getDisplay(),new ByteArrayInputStream(fileData));
         } catch (Exception e) {
