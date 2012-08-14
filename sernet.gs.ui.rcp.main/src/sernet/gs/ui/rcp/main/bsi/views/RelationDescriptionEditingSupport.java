@@ -85,9 +85,8 @@ public class RelationDescriptionEditingSupport extends EditingSupport {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             newLink = command.getElement();
         } catch (Exception e) {
-            ExceptionUtil.log(e, "Fehler ...");
-            CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
-        }
+            ExceptionUtil.log(e, "Fehler beim Erstellen von Kommentaren.");
+        }CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
     }
 
 }
