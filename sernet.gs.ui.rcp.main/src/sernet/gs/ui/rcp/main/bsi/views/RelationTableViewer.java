@@ -20,8 +20,11 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -46,9 +49,12 @@ public class RelationTableViewer extends TableViewer {
 	private TableColumn col4;
 	private IRelationTable view;
 	private TableColumn col3;
-    private TableViewerColumn col5;
+    private TableViewerColumn  viewerCol5;
     private TableViewerColumn col6;
     private TableViewerColumn col7;
+    private TableViewerColumn col8;
+   
+   
     
 	/**
 	 * @param parent
@@ -98,22 +104,27 @@ public class RelationTableViewer extends TableViewer {
 		col4.setText(Messages.RelationTableViewer_6);
 		col4.setWidth(200);
 		
+		viewerCol5 = new TableViewerColumn(this, SWT.LEFT);
+        viewerCol5.getColumn().setText(Messages.RelationTableViewer_7);
+        viewerCol5.getColumn().setWidth(250);  
+        viewerCol5.setEditingSupport(new RelationDescriptionEditingSupport(view, this));
+         
 		// risk avalues if requested:
 		if (showRisk) {
-		    col5 = new TableViewerColumn(this, SWT.LEFT);
-		    col5.getColumn().setText("C"); //$NON-NLS-1$
-		    col5.getColumn().setWidth(25);
-//		    col5.setLabelProvider(new RiskLabelProver('C'));
-		    
 		    col6 = new TableViewerColumn(this, SWT.LEFT);
-		    col6.getColumn().setText("I"); //$NON-NLS-1$
+		    col6.getColumn().setText("C"); //$NON-NLS-1$
 		    col6.getColumn().setWidth(25);
-//		    col6.setLabelProvider(new RiskLabelProver('I'));
+//		    col6.setLabelProvider(new RiskLabelProver('C'));
 		    
 		    col7 = new TableViewerColumn(this, SWT.LEFT);
-		    col7.getColumn().setText("A"); //$NON-NLS-1$
+		    col7.getColumn().setText("I"); //$NON-NLS-1$
 		    col7.getColumn().setWidth(25);
-//		    col7.setLabelProvider(new RiskLabelProver('A'));
+//		    col7.setLabelProvider(new RiskLabelProver('I'));
+		    
+		    col8 = new TableViewerColumn(this, SWT.LEFT);
+		    col8.getColumn().setText("A"); //$NON-NLS-1$
+		    col8.getColumn().setWidth(25);
+//		    col8.setLabelProvider(new RiskLabelProver('A'));
 		}
 		
 		
@@ -122,6 +133,7 @@ public class RelationTableViewer extends TableViewer {
 				IRelationTable.COLUMN_TYPE, //$NON-NLS-1$
 				IRelationTable.COLUMN_TYPE_IMG, //$NON-NLS-1$
 				IRelationTable.COLUMN_TITLE, //$NON-NLS-1$
+				IRelationTable.COLUMN_COMMENT, //$NON-NLS-1$
 				IRelationTable.COLUMN_RISK_C, //$NON-NLS-1$
 				IRelationTable.COLUMN_RISK_I, //$NON-NLS-1$
 				IRelationTable.COLUMN_RISK_A //$NON-NLS-1$
@@ -130,6 +142,7 @@ public class RelationTableViewer extends TableViewer {
 		
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		
 
 	}
 }

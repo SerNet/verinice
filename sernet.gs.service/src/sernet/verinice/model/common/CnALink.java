@@ -273,7 +273,7 @@ public class CnALink implements Serializable, ITypedElement {
 		this.linkType = linkTypeFor(dependency);
 	}
 	
-	protected void setComment(String comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 

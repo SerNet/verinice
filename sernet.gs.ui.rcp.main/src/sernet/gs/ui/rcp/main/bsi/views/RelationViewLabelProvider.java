@@ -94,12 +94,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 		case 3:
 			return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
 		case 4:
-		    return getRisk(link, 'C');
+		     return link.getComment();
 		case 5:
-		    return getRisk(link, 'I');
-		case 6:
-		    return getRisk(link, 'A');
-			
+            return getRisk(link, 'C');
+        case 6:
+            return getRisk(link, 'I');
+        case 7:
+            return getRisk(link, 'A');
 		default:
 			return ""; //$NON-NLS-1$
 		}

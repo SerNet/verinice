@@ -239,6 +239,8 @@ public final class Messages extends NLS {
 	public static String RelationTableViewer_4;
 
 	public static String RelationTableViewer_6;
+	
+	public static String RelationTableViewer_7;
 
 	public static String RelationView_0;
 
