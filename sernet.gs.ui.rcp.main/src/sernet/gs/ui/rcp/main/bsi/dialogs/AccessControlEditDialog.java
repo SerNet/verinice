@@ -155,7 +155,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
 		showInformation();
 
-		buttonInherit = new Button(containerSettings, SWT.CHECK | SWT.BORDER);
+		buttonInherit = new Button(containerSettings, SWT.CHECK );
 		buttonInherit.setText(Messages.AccessControlEditDialog_11);
 		buttonInherit.setSelection(false);
 		gridData = new GridData();
@@ -175,13 +175,13 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		labelRole.setText(Messages.AccessControlEditDialog_12);
 		comboRole = new Combo(containerRoles, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboRole.setItems(getRoles());
-		buttonRead = new Button(containerRoles, SWT.CHECK | SWT.BORDER);
+		buttonRead = new Button(containerRoles, SWT.CHECK );
 		buttonRead.setText(Messages.AccessControlEditDialog_13);
 		buttonRead.setSelection(false);
-		buttonWrite = new Button(containerRoles, SWT.CHECK | SWT.BORDER);
+		buttonWrite = new Button(containerRoles, SWT.CHECK );
 		buttonWrite.setText(Messages.AccessControlEditDialog_14);
 		buttonWrite.setSelection(false);
-		Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
+		Button buttonAdd = new Button(containerRoles, SWT.PUSH );
 		buttonAdd.setText(Messages.AccessControlEditDialog_15);
 		gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
@@ -201,7 +201,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
 		createViewer(containerRoles);
 		
-		buttonRemove = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
+		buttonRemove = new Button(containerRoles, SWT.PUSH );
 		buttonRemove.setText(Messages.AccessControlEditDialog_16);
 		buttonRemove.addSelectionListener(new SelectionListener() {
 			@Override
