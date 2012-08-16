@@ -216,11 +216,17 @@
             id="sernet.verinice.rcp.unify"
             name="%command.name.8">
       </command>
-	   <command
+      <command
             categoryId="sernet.gs.ui.rcp.commands"
-            description="Assign a user to this task"
+            description="%command.description.group"
+            id="sernet.verinice.rcp.group"
+            name="%command.name.group">
+      </command>
+	  <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.assign"
             id="sernet.verinice.bpm.rcp.assign"
-            name="Assign user...">
+            name="%command.name.assign">
       </command>
    </extension>
    <extension
@@ -810,7 +816,39 @@
                disabledIcon="icons/konsolidator.png"
                icon="icons/konsolidator.png"
                label="%command.label.8"
-               tooltip="%command.tooltip.2"/>
+               tooltip="%command.tooltip.2">
+         	<visibleWhen>
+    			<iterate operator="or">
+             		<instanceof value="sernet.verinice.model.iso27k.ControlGroup" />
+             	</iterate>
+         	</visibleWhen>
+         </command>          
+      </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
+         <command
+               commandId="sernet.verinice.rcp.group"
+               disabledIcon="icons/konsolidator.png"
+               icon="icons/group_by_tag.gif"
+               label="%command.label.group"
+               tooltip="%command.tooltip.group">
+         	<visibleWhen>
+		   		<iterate operator="and" ifEmpty="false">
+	      			<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
+	               	</not>            
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+	               	</not>
+		   		</iterate>
+	        </visibleWhen>
+         </command>
       </menuContribution>
    	  <menuContribution locationURI="popup:sernet.gs.ui.rcp.main.views.bsimodelview?after=additions">
          <command
@@ -871,8 +909,8 @@
                commandId="sernet.verinice.bpm.rcp.assign"
                disabledIcon="icons/user_edit.png"
                icon="icons/user_edit.png"
-               label="Assign user..."
-               tooltip="Assign a user to a task"/>  
+               label="%command.label.assign"
+               tooltip="%Assign a person for this task"/>  
         </menuContribution>
    </extension>
    <extension
@@ -1278,12 +1316,38 @@
             commandId="sernet.verinice.rcp.unify">
          <activeWhen>
     		 <iterate operator="or">
-                <instanceof value="sernet.verinice.model.iso27k.ControlGroup" />
-            </iterate>
+             	<instanceof value="sernet.verinice.model.iso27k.ControlGroup" />
+             </iterate>
          </activeWhen> 
          <enabledWhen>
             <with variable="selection">
             	 <count value="2"/>
+            </with>
+		 </enabledWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.rcp.group.GroupByTagHandler"
+            commandId="sernet.verinice.rcp.group">
+         <activeWhen>
+    		 <iterate operator="and">
+                <instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+                <not>
+                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
+               	</not>            
+                <not>
+                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+               	</not>
+                <not>
+                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+               	</not>
+                <not>
+                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+               	</not>
+            </iterate>
+         </activeWhen> 
+         <enabledWhen>
+            <with variable="selection">
+            	 <count value="1"/>
             </with>
 		 </enabledWhen>
       </handler>

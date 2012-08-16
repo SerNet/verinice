@@ -29,8 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * Base class for change-logging-commands with two methods which converts.
  * one result list to another.
  * 
- * You only have to override one of the two methods
- * getChangedElements(), getChanges()
+ * You only have to override getChangedElements()
+ * getChanges() uses getChangedElements to get it's result
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
