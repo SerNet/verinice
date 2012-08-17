@@ -107,7 +107,6 @@
         		<exclude name="portal.verinice.private/*.html"/>
         		<exclude name="error/*.html"/>
         		<exclude name="WEB-INF/faces-config.xml"/>
-        		<exclude name="WEB-INF/faces-config-basic.xml"/>
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>

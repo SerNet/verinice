@@ -41,25 +41,12 @@ public class AuditEmailHandler extends GenericEmailHandler implements IEmailHand
     private static final String TEMPLATE = "AuditReminder";
     
     private static final String TEMPLATE_ELEMENT_TITLE = "elementTitle";
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#send(java.lang.String, java.lang.String)
-     */
-    @Override
-    public void send(String assignee, String uuid) {
-        try {
-            
-            Map<String , String> parameter = getRemindService().loadUserData(assignee);
-            parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
-            CnATreeElement element = getRemindService().retrieveElement(uuid, RetrieveInfo.getPropertyInstance());
-            String title = element.getTitle();
-            parameter.put(TEMPLATE_ELEMENT_TITLE, title);
-            parameter.put(IRemindService.TEMPLATE_SUBJECT, "Audit starts in 6 weeks: " + title);                    
-        
-            getRemindService().sendEmail(parameter);
-        } catch(Exception e) {
-            LOG.error("Error while sending email", e);
-        }
+  
+    public void addParameter(String uuidElement, Map<String, String> parameter) {
+        CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
+        String title = element.getTitle();
+        parameter.put(TEMPLATE_ELEMENT_TITLE, title);
+        parameter.put(IRemindService.TEMPLATE_SUBJECT, "Audit starts in 6 weeks: " + title);
     }
 
     /* (non-Javadoc)

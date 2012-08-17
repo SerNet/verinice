@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.isam;
 
-import java.util.Hashtable;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -44,23 +43,14 @@ public class AssignEmailHandler extends GenericEmailHandler implements IEmailHan
     private static final String TEMPLATE_ELEMENT_TITLE = "elementTitle";
     
     /* (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#send(java.lang.String, java.lang.String)
+     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
      */
     @Override
-    public void send(String assignee, String uuid) {
-        try {
-            
-            Map<String , String> parameter = getRemindService().loadUserData(assignee);
-            parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
-            CnATreeElement element = getRemindService().retrieveElement(uuid, RetrieveInfo.getPropertyInstance());
-            String title = element.getTitle();
-            parameter.put(TEMPLATE_ELEMENT_TITLE, title);
-            parameter.put(IRemindService.TEMPLATE_SUBJECT, "Set assignee for: " + title);                    
-        
-            getRemindService().sendEmail(parameter);
-        } catch(Exception e) {
-            LOG.error("Error while sending email", e);
-        }
+    public void addParameter(String uuidElement, Map<String, String> parameter) {
+        CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
+        String title = element.getTitle();
+        parameter.put(TEMPLATE_ELEMENT_TITLE, title);
+        parameter.put(IRemindService.TEMPLATE_SUBJECT, "Set assignee for: " + title); 
     }
 
     /* (non-Javadoc)
@@ -70,6 +60,5 @@ public class AssignEmailHandler extends GenericEmailHandler implements IEmailHan
     public String getTemplate() {
         return TEMPLATE;
     }
-
  
 }

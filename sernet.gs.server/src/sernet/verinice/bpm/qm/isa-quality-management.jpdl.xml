@@ -4,7 +4,7 @@
    <description>ISA quality management process in verinice</description>
 
    <start g="332,25,80,40" name="start">
-      <transition to="check feedback" g="-127,-22"/>
+      <transition to="check feedback"/>
    </start>
    
    <decision g="332,134,48,48" name="check feedback">
@@ -25,23 +25,30 @@
       <transition g="5,-9" name="iqm.trans.complete" to="java.loadFeedback"/>
    </task>
 
-   
    <task g="270,245,171,52" name="iqm.task.setAssignee">
       <transition g="8,-12" name="iqm.trans.setAssignee" to="iqm.task.check"/>
+      <transition name="iqm.trans.fix" to="java.reminderFixed" g="194,274:-151,5"/>
+      <transition name="iqm.trans.noFix" to="java.reminderNotChanged" g="524,271:4,2"/>
    </task>
    
    <task assignee="#{IQM_ASSIGNEE}" g="292,330,127,52" name="iqm.task.check">
-      <transition g="-92,-20" name="iqm.trans.fix" to="iqm.task.resultFixed"/>
-      <transition g="-7,-23" name="iqm.trans.noFix" to="iqm.task.resultNotChanged"/>
+      <transition g="-55,-35" name="iqm.trans.fix" to="java.reminderFixed"/>
+      <transition g="-23,-33" name="iqm.trans.noFix" to="java.reminderNotChanged"/>
    </task>
    
-   <task assignee="#{ISA_ASSIGNEE_NAME}" g="154,414,167,52" name="iqm.task.resultFixed">
-      <transition g="-117,-18" name="iqm.trans.ok" to="end"/>
-   </task>
+   <java class="sernet.verinice.bpm.Reminder" g="114,429,167,37" method="sendEmail" name="java.reminderFixed">
+      <arg><object expr="REMINDER_FIXED"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="end"/>
+   </java>
    
-   <task assignee="#{ISA_ASSIGNEE_NAME}" g="393,411,211,52" name="iqm.task.resultNotChanged">
-      <transition g="59,-19" name="iqm.trans.ok" to="end"/>
-   </task>
+   <java class="sernet.verinice.bpm.Reminder" g="417,425,211,37" method="sendEmail" name="java.reminderNotChanged">
+      <arg><object expr="REMINDER_NOT_CHANGED"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="end"/>
+   </java>
    
    <end g="332,507,80,40" name="end"/>
    

@@ -27,6 +27,8 @@ import sernet.verinice.bpm.isam.AuditEmailHandler;
 import sernet.verinice.bpm.isam.DeadlineEmailHandler;
 import sernet.verinice.bpm.isam.ExecuteEmailHandler;
 import sernet.verinice.bpm.isam.NotResponsibleEmailHandler;
+import sernet.verinice.bpm.qm.IssueFixedEmailHandler;
+import sernet.verinice.bpm.qm.IssueNotFixedEmailHandler;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 
 /**
@@ -45,6 +47,10 @@ public class EmailHandlerFactory {
         handlerMap.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.TASK_AUDIT, new AuditEmailHandler());
+
+        handlerMap.put(IIsaControlFlowProcess.REMINDER_FIXED, new IssueFixedEmailHandler());
+        handlerMap.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());
+        
     }
     
     /**

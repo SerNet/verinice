@@ -17,44 +17,36 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.bpm.qm;
 
 import java.util.Map;
 
+import sernet.verinice.bpm.GenericEmailHandler;
+import sernet.verinice.bpm.IEmailHandler;
+
 /**
- * Sends template based emails.
- * Templates uses a customizable parameter map.
- * 
- * Don't use this interface directly use {@link GenericEmailHandler}.
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IEmailHandler {
+public class IssueNotFixedEmailHandler extends GenericEmailHandler implements IEmailHandler {
 
-    /**
-     * Send an email to the assignee.
-     * 
-     * @param assignee A username
-     * @param uuid The UUID of an element
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
      */
-    void send(String assignee, String uuidElement);
-    
-    /**
-     * Use this method to add parameter used in the template for this handler.
-     * 
-     * @param uuidElement The UUID of an element
-     * @param parameter Parameter for the email template
+    @Override
+    public void addParameter(String uuidElement, Map<String, String> parameter) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.IEmailHandler#getTemplate()
      */
-    void addParameter(String uuidElement, Map<String, String> parameter);
-    
-    /**
-     * This method must return the name of the template file without path, locale and file extensions.
-     * 
-     * If template files are IssueReminder.vm and IssueReminder_de.vm
-     * this method must return "IssueReminder"
-     * 
-     * @return Name of the template file without path, locale and file extensions
-     */
-    String getTemplate();
+    @Override
+    public String getTemplate() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

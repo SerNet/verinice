@@ -20,6 +20,9 @@
 package sernet.verinice.bpm;
 
 import java.util.Locale;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
@@ -29,11 +32,18 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
- *
+ * Email handler for use in JBPM workflows.
+ * You have to override methods addParameter(), getTemplate()
+ * in your implementation.
+ * 
+ * Email handler is called by {@link Reminder} and is configured
+ * GenericEmailHandler sends email by a {@link IRemindService}.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class GenericEmailHandler implements IEmailHandler {
+    
+    private static final Logger LOG = Logger.getLogger(GenericEmailHandler.class);
     
     // template path without lang code "_en" and file extension ".vm"
     private static final String TEMPLATE_BASE_PATH = "sernet/verinice/bpm/"; //$NON-NLS-1$
@@ -42,6 +52,24 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     private IRemindService remindService;
     
     private ICommandService commandService;
+    
+    /**
+     * Loads user based data calls abstract method addParameter
+     * ans sends email by {@link IRemindService}.
+     * 
+     * @see sernet.verinice.bpm.IEmailHandler#send(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void send(String assignee, String uuid) {
+        try {            
+            Map<String , String> parameter = getRemindService().loadUserData(assignee);
+            parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
+            addParameter(uuid, parameter);                          
+            getRemindService().sendEmail(parameter);
+        } catch(Exception e) {
+            LOG.error("Error while sending email", e);
+        }
+    }
     
     /**
      * Returns the bundle/jar relative path to the velocity email template.

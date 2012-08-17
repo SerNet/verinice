@@ -72,6 +72,9 @@
                 <value>icf.trans.reminderDeadline</value>
             </set>
         </property>
+        <!-- Add task complete handler here -->
+        <!-- Key is <TASK_ID>.<TRANS_ID> from jbpm file -->
+        <!-- See ICompleteServerHandler for more documentation. -->
         <property name="completeHandler">
             <map>
                 <entry key="iqm.task.setAssignee.iqm.trans.setAssignee" value-ref="isaQmSetAssigneeHandler"/>
