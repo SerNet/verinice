@@ -3564,6 +3564,55 @@ the value between <param></param> will be used directly if no string is found fo
 					inputtype="text"
 					id="asset_value_comment" />
 		</huipropertygroup>
+<huipropertygroup name="Greenbone GSM" id="gsm_asset_group" tags="Greenbone_GSM" >
+        <!-- TODO translate this property -->
+        <huiproperty id="gsm_asset_tag" name="GSM Tag" />
+		
+        <!-- TODO translate this property -->
+        <huiproperty id="gsm_asset_description" name="GSM Desc." 
+            inputtype="line"
+        />
+        
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_hostname" name="Hostname" inputtype="line" tags="Greenbone_GSM" />
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_installed_apps" name="Installed Software" inputtype="text" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_traceroute" name="Traceroute" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_memory" name="Memory" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_cpuinfo" name="CPU" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_os" name="OS" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_os_cpe" name="CPE" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_open_ports" name="Open Ports" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_scan_started" name="Scan start" inputtype="line" tags="Greenbone_GSM" />
+ 
+
+        <!-- TODO translate this property -->
+<huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" />
+
+
+</huipropertygroup>
 		
 	
 		<huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
@@ -4750,6 +4799,20 @@ the value between <param></param> will be used directly if no string is found fo
             
 			        	
         </huipropertygroup>
+<huipropertygroup name="Greenbone GSM" id="gsm_incscen_group" tags="Greenbone_GSM" >
+   <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_scenario_description" name="GSM Desc." 
+            inputtype="text"
+        />
+    
+    
+   <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_scenario_cve" name="GSM CVE" />
+    
+    
+   <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_scenario_level" name="GSM Lvl." />
+</huipropertygroup>
         
     </huientity>
     
@@ -4871,6 +4934,19 @@ the value between <param></param> will be used directly if no string is found fo
             <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
             <option id="vulnerability_level_3" name="3: Probable" value="3"/>
 		</huiproperty>
+<huipropertygroup name="Greenbone GSM" id="gsm_vuln_group" tags="Greenbone_GSM" >
+  <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_vulnerability_description" name="GSM Desc." 
+            inputtype="text"
+        />
+    
+  <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_vulnerability_cve" name="GSM CVE" />
+    
+  <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_vulnerability_level" name="GSM Lvl." />
+</huipropertygroup>
+       
     </huientity>
     
     <huientity
@@ -5475,6 +5551,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="process" id="rel_samt_topic_process" />
         <huirelation to="record" id="rel_samt_topic_record" />
         <huirelation to="response" id="rel_samt_topic_response" />
+        <huirelation to="incident_scenario"
+        id="rel_samt_topic_incident_scenario" />
         
           <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
           <huiproperty 
@@ -5592,5 +5670,11 @@ the value between <param></param> will be used directly if no string is found fo
     			<option name="N.a." id="samt_topicimplemented_na"/>
     		</huiproperty>
   
+<huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
+        <!-- TODO translate this property -->
+        <huiproperty id="gsm_ism_control_description" name="" 
+            inputtype="text"
+        />
+</huipropertygroup>
       </huientity> 
 </huientities>
