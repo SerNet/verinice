@@ -4083,18 +4083,17 @@ the value between <param></param> will be used directly if no string is found fo
 		    name="Audit approved by" 
 		    id="audit_approved_by" 
             tags="VDA-ISA" />
-         <huiproperty 
-       		name="Type" id="audit_requirement_equivalence" inputtype="singleoption">
-			<option name="1st Option" id="audit_req_equivalence_1st" />       	
-			<option name="2nd Option" id="audit_req_equivalence_2nd" />       	
-			<option name="3rd Option" id="audit_req_equivalence_3rd" />       	
-		</huiproperty>
-         <huiproperty 
-       		name="Type" id="audit_need_for_action" inputtype="singleoption">
-			<option name="1st Option" id="audit_need_action_1st" />       	
-			<option name="2nd Option" id="audit_need_action_2nd" />       	
-			<option name="3rd Option" id="audit_need_action_3rd" />       	
-		</huiproperty>           	
+        <huiproperty
+        	name="Audit executing company"
+        	id="audit_executing_company"
+        	tags="VDA_ISA_Audit"
+        	inputtype="text"
+        	textrows="1"/>
+		<huiproperty
+			id="audit_excluded_topics" 
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="12"/>
     </huientity>
 
     <huientity
@@ -5143,7 +5142,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
         	name="showInReport"
         	id="interview_showInISAReport"
-			inputtype="booleanoption"  defaultValue="0" />
+			inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit"/>
 	
     	<huirelation to="finding" id="rel_interview_finding_notice"
     		name="revealed" reversename="noticed in" tooltip="" />
@@ -5248,7 +5247,15 @@ the value between <param></param> will be used directly if no string is found fo
 			inputtype="date">
             <defaultRule class="Today" />
         </huiproperty>
-        
+        <huiproperty 
+       		name="finding Type" id="finding_type2" inputtype="singleoption" tags="VDA_ISA_Audit">
+			<option name="technical Finding" id="finding_type2_technical" />       	
+			<option name="significant Detection" id="finding_type2_significant" /> 
+        </huiproperty>
+        <huiproperty
+        	name="showInReport"
+        	id="finding_showInISAReport"
+			inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit" />
     </huientity>
     
     <huientity
@@ -5618,14 +5625,14 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="response" id="rel_samt_topic_response" />
         <huirelation to="incident_scenario"
         id="rel_samt_topic_incident_scenario" />
-        
+                
           <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
           <huiproperty 
                 id="samt_topic_desc"
                 inputtype="text"
                 tags="Web"
-                editable="false"
-                visible="false"/>
+                editable="true"
+                visible="true"/>
           </huipropertygroup>
                
           <huiproperty 
@@ -5697,6 +5704,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="samt_topic_audit_ra_0"  value="0" />
                 <option id="samt_topic_audit_ra_1"  value="1" />
                 <option id="samt_topic_audit_ra_2"  value="2" />
+                <option id="samt_topic_audit_ra_3"  value="3" />
             </huiproperty>
 
             <!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
@@ -5735,11 +5743,17 @@ the value between <param></param> will be used directly if no string is found fo
     			<option name="N.a." id="samt_topicimplemented_na"/>
     		</huiproperty>
     		
-    		<huiproperty name="userClassification" id="samt_user_classification" inputtype="singleoption" tags="Risk">
+    		<huiproperty name="userClassification" id="samt_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit">
     			<option name="Good implementation" id="samt_classification_good" />
     			<option name="Insufficient implementation" id="samt_classification_insufficient" />
     			<option name="No classification" id="samt_classification_none" />
     		</huiproperty>
+            <huiproperty
+            	name="Samttopic UserClassification Comment" 
+	            id="samt_topic_classification_comment" 
+	            tags="VDA_ISA_Audit"
+	            inputtype="text"
+	            />    		
   
 <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
         <!-- TODO translate this property -->
