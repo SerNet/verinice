@@ -16,7 +16,7 @@ public class OwnModulDecorator extends LabelProvider implements ILightweightLabe
 
     private static final Logger LOG = Logger.getLogger(OwnModulDecorator.class);
 
-    public static final String IMAGE_PATH = "overlays/dirty_ov.gif";
+    public static final String IMAGE_PATH = "overlays/owned_ovr.gif";
 
     public void decorate(Object o, IDecoration decoration) {
         if (o instanceof BausteinUmsetzung) {

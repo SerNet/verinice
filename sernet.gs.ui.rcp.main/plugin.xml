@@ -543,7 +543,7 @@
          	<action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddBausteinActionDelegate"
                enablesFor="1"
-               icon="icons/16-cube-blue.png"
+               icon="icons/OMC.png"
                id="sernet.gs.ui.rcp.main.addBaustein"
                label="%action.label.29"
                menubarPath="special"
@@ -558,7 +558,7 @@
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddMassnahmeActionDelegate"
                enablesFor="+"
-               icon="icons/exclamation.png"
+               icon="icons/OCM.png"
                id="sernet.gs.ui.rcp.main.addnewMassnahme"
                label="%action.label.30"
                menubarPath="content"
@@ -1449,6 +1449,18 @@
 	            state="true">
 	          <enablement>
 	          	<objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+	         </enablement>
+	      </decorator>
+	      <decorator
+	            adaptable="true"
+	            class="sernet.verinice.rcp.OwnControlDecorator"
+	            id="sernet.verinice.rcp.OCDecorator"
+	            label="ownControlDecorator"
+	            lightweight="true"
+	            location="TOP_RIGHT"
+	            state="true">
+	          <enablement>
+	          	<objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 	         </enablement>
 	      </decorator>
 	      <decorator
