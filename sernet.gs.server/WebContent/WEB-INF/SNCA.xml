@@ -4072,6 +4072,29 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty 
         	id="audit_isa_creatmail" 
            	tags="VDA-ISA" />
+         <huiproperty 
+			name="Audit Release Date"
+			id="audit_release_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+		</huiproperty>
+		<huiproperty 
+		    name="Audit approved by" 
+		    id="audit_approved_by" 
+            tags="VDA-ISA" />
+         <huiproperty 
+       		name="Type" id="audit_requirement_equivalence" inputtype="singleoption">
+			<option name="1st Option" id="audit_req_equivalence_1st" />       	
+			<option name="2nd Option" id="audit_req_equivalence_2nd" />       	
+			<option name="3rd Option" id="audit_req_equivalence_3rd" />       	
+		</huiproperty>
+         <huiproperty 
+       		name="Type" id="audit_need_for_action" inputtype="singleoption">
+			<option name="1st Option" id="audit_need_action_1st" />       	
+			<option name="2nd Option" id="audit_need_action_2nd" />       	
+			<option name="3rd Option" id="audit_need_action_3rd" />       	
+		</huiproperty>           	
     </huientity>
 
     <huientity
@@ -4080,6 +4103,12 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="controlgroup_name" />
+            
+        <huirelation to="person-iso" id="controlgroup_room_inspector" 
+        	name="inspector" reversename="is inspector of" tooltip="Person is inspector of this room."/>
+
+        <huirelation to="person-iso" id="controlgroup_room_companion" 
+        	name="companion" reversename="is inspector of" tooltip="Person is companion of inspector of this room."/>            
     	
     	<!-- Flag to decide if a controlgroup is a group which contains only the controls of ISO 27001 annex A or not -->
         <huiproperty
@@ -4088,6 +4117,37 @@ the value between <param></param> will be used directly if no string is found fo
         	inputtype="booleanoption" defaultValue="0"
         	tags="VDA_ISA_Audit"
         	/>
+        <huipropertygroup id="controlgroup_isroom_group" name="IT-Room-Check" tags="VDA_ISA_Audit" >
+        	<huiproperty
+        		name="isRoom"
+        		id="controlgroup_is_room"
+        		inputtype="booleanoption" defaultValue="0"
+        		tags="VDA_ISA_Audit"
+        		/>
+        	<huiproperty
+        		name="dateofinspection"
+        		id="controlgroup_isroom_dateofinspection"
+        		inputtype="date"
+         		tags="VDA_ISA_Audit">
+				<defaultRule class="Today">
+                </defaultRule>
+        	</huiproperty>       		
+        	<huiproperty
+        		name="categorisation"
+          		id="controlgroup_isroom_categorisation"
+        		inputtype="singleoption"
+         		tags="VDA_ISA_Audit"
+        		>
+        		<option name="dataCentre" id="controlgroup_isroom_categorisation_datacentre" />
+        	</huiproperty>
+        	<huiproperty
+        		name="gotConcept"
+        		id="controlgroup_is_room_gotConcept"
+        		inputtype="booleanoption" defaultValue="0"
+        		tags="VDA_ISA_Audit"
+        		/>
+   		
+        </huipropertygroup>        	
     </huientity>
 
     <huientity
@@ -5079,6 +5139,11 @@ the value between <param></param> will be used directly if no string is found fo
             name="Document"
             id="interview_document"
             isURL="true" />
+            
+        <huiproperty
+        	name="showInReport"
+        	id="interview_showInISAReport"
+			inputtype="booleanoption"  defaultValue="0" />
 	
     	<huirelation to="finding" id="rel_interview_finding_notice"
     		name="revealed" reversename="noticed in" tooltip="" />
@@ -5668,6 +5733,12 @@ the value between <param></param> will be used directly if no string is found fo
     			<option name="No" id="samt_topicimplemented_no"/>
     			<option name="Partly" id="samt_topicimplemented_partly"/>
     			<option name="N.a." id="samt_topicimplemented_na"/>
+    		</huiproperty>
+    		
+    		<huiproperty name="userClassification" id="samt_user_classification" inputtype="singleoption" tags="Risk">
+    			<option name="Good implementation" id="samt_classification_good" />
+    			<option name="Insufficient implementation" id="samt_classification_insufficient" />
+    			<option name="No classification" id="samt_classification_none" />
     		</huiproperty>
   
 <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
