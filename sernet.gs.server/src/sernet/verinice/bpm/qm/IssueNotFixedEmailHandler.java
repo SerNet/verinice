@@ -21,8 +21,11 @@ package sernet.verinice.bpm.qm;
 
 import java.util.Map;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
+import sernet.verinice.bpm.IRemindService;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
@@ -31,13 +34,19 @@ import sernet.verinice.bpm.IEmailHandler;
  */
 public class IssueNotFixedEmailHandler extends GenericEmailHandler implements IEmailHandler {
 
+   private static final String TEMPLATE = "IssueNotFixed";
+    
+    private static final String TEMPLATE_ELEMENT_TITLE = "elementTitle";
+    
     /* (non-Javadoc)
      * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
      */
     @Override
     public void addParameter(String uuidElement, Map<String, String> parameter) {
-        // TODO Auto-generated method stub
-        
+        CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
+        String title = element.getTitle();
+        parameter.put(TEMPLATE_ELEMENT_TITLE, title);
+        parameter.put(IRemindService.TEMPLATE_SUBJECT, "Issue not fixed: " + title);
     }
 
     /* (non-Javadoc)
@@ -45,8 +54,7 @@ public class IssueNotFixedEmailHandler extends GenericEmailHandler implements IE
      */
     @Override
     public String getTemplate() {
-        // TODO Auto-generated method stub
-        return null;
+        return TEMPLATE;
     }
 
 }
