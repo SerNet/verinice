@@ -36,6 +36,12 @@ public interface ITask extends Comparable<ITask> {
     
     public static final String STYLE_UNPROCESSED = "unprocessed"; 
     
+    public static final String PRIO_LOW = "LOW";
+    
+    public static final String PRIO_NORMAL = "NORMAL";
+    
+    public static final String PRIO_HIGH = "HIGH";
+    
     String getId();
     
     void setId(String id);
@@ -91,5 +97,9 @@ public interface ITask extends Comparable<ITask> {
     String getUuidAudit();
     
     String getAuditTitle();
+    
+    String getPriority();
+
+    void setPriority(String priority);
 
 }

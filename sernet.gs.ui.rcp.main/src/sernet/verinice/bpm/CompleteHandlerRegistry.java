@@ -22,6 +22,7 @@ package sernet.verinice.bpm;
 import java.util.Hashtable;
 import java.util.Map;
 
+import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 
 /**
@@ -45,6 +46,7 @@ public abstract class CompleteHandlerRegistry {
     static {
         handler = new Hashtable<String, ICompleteClientHandler>();
         handler.put(IIsaQmProcess.TASK_IQM_SET_ASSIGNEE + "." + IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE, new SetAssigneeClientHandler());
+        handler.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, new NewQmIssueClientHandler());
     }
     
     /**

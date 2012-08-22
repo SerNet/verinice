@@ -136,8 +136,8 @@ public class IsaControlFlow extends ProzessExecution {
         return date;
     }
 
-    public void startQsWorkflow(String uuid, String uuidAudit) {
-        getQmService().startProcessesForControl(uuid, uuidAudit);
+    public void startQsWorkflow(String uuid, String uuidAudit, Object feedback, String priority) {
+        getQmService().startProcessesForControl(uuid, uuidAudit, feedback, priority);
     }
     
     public void remind() {

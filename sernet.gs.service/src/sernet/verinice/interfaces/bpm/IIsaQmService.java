@@ -28,5 +28,5 @@ package sernet.verinice.interfaces.bpm;
  */
 public interface IIsaQmService extends IProcessServiceGeneric {
 
-    IProcessStartInformation startProcessesForControl(String controlUuid, String auditUuid);
+    IProcessStartInformation startProcessesForControl(String controlUuid, String auditUuid, Object feedback, String priority);
 }

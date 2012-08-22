@@ -36,6 +36,7 @@ import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 
 /**
@@ -48,7 +49,7 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
     private static final Logger LOG = Logger.getLogger(IsaQmService.class);
     
     // Dao members (injected by Spring)
-    private IBaseDao<Control, Integer> controlDao;
+    private IBaseDao<CnATreeElement, Integer> elementDao;
     
     private IAuthService authService;
     
@@ -62,19 +63,22 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
      * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForControl(String controlUuid, String auditUuid) {
+    public IProcessStartInformation startProcessesForControl(String controlUuid, String auditUuid, Object feedback, String priority) {
         IsaQmContext context = new IsaQmContext();
-        Control control = loadControl(controlUuid);
-        context.setControl(control);
+        CnATreeElement element = loadControl(controlUuid);
+        context.setElement(element);
         context.setOwnerName(getAuthService().getUsername());
         context.setUuidAudit(auditUuid);
-        context.setComment(control.getFeedbackNote());
-        context = startProcessIfMissing(context);  
+        if(feedback!=null) {
+            context.setComment(feedback);
+        }
+        context.setPriority(priority);
+        context = startProcessIfMissing(context);         
         return new ProcessInformation(context.getNumberOfProcesses());
     }
 
     private IsaQmContext startProcessIfMissing(IsaQmContext context) {
-        Control control = context.getControl();
+        CnATreeElement control = context.getElement();
         String uuid = control.getUuid();
         List<ExecutionImpl> executionList = findExecutionForElement(IIsaQmProcess.KEY, uuid);
         if(executionList==null || executionList.isEmpty()) {
@@ -87,7 +91,7 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
     }
     
     private void startProcess(IsaQmContext context) {
-        Control control = context.getControl();
+        CnATreeElement control = context.getElement();
         Map<String, Object> props = new HashMap<String, Object>();      
         String username = getAuthService().getUsername(); 
         props.put(IGenericProcess.VAR_ASSIGNEE_NAME, username);
@@ -95,30 +99,32 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());            
         props.put(IGenericProcess.VAR_OWNER_NAME, context.getOwnerName());
         props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
-        String comment = context.getComment();
-        if(comment!=null) {
-            comment = comment.trim();
-            if(comment.isEmpty()) {
-                comment = null;
+        Object comment = context.getComment();
+        if(comment!=null && comment instanceof String) {
+            String text = (String) comment;
+            text = text.trim();
+            if(text.isEmpty()) {
+                text = null;
             }
+            comment = text;
         }
         props.put(IIsaQmProcess.VAR_FEEDBACK, comment);
+        props.put(IGenericProcess.VAR_PRIORITY, context.getPriority());
         startProcess(IIsaQmProcess.KEY, props);
         context.increaseProcessNumber(); 
     }
     
-    private Control loadControl(String uuid) {
+    private CnATreeElement loadControl(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-        Control control = getControlDao().findByUuid(uuid, ri);
-        return control;
+        return getElementDao().findByUuid(uuid, ri);
     }
 
-    public IBaseDao<Control, Integer> getControlDao() {
-        return controlDao;
+    public IBaseDao<CnATreeElement, Integer> getElementDao() {
+        return elementDao;
     }
-    public void setControlDao(IBaseDao<Control, Integer> controlDao) {
-        this.controlDao = controlDao;
+    public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
+        this.elementDao = elementDao;
     }
 
 

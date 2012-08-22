@@ -55,6 +55,10 @@ import org.jbpm.api.TaskService;
  */
 public interface ICompleteServerHandler {
  
+    public static final String TASK_TYPE_DEFAULT = "default";
+    
+    public static final String OUTCOME_ID_DEFAULT = "default_outcome";
+    
     /**
      * @return A jBPM task name
      */

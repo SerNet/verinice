@@ -30,7 +30,7 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
     
     String TASK_ASSIGN = "TASK_ASSIGN";
     
-    String TASK_EXECUTE = "TASK_EXECUTE";
+    String TASK_EXECUTE = "icf.task.execute";
     
     String TASK_AUDIT = "TASK_AUDIT";
     
@@ -47,5 +47,7 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
     String REMINDER_FIXED = "REMINDER_FIXED";
     
     String REMINDER_NOT_CHANGED = "REMINDER_NOT_CHANGED";
+    
+    String TRANS_ERROR = "icf.trans.error";
     
 }

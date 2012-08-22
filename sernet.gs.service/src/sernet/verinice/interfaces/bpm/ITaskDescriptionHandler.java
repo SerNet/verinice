@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin.
+ * Copyright (c) 2012 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,37 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.interfaces.bpm;
 
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.jbpm.api.task.Task;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * A ITaskDescriptionHandler loads a description of a jBPM task
  *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class Messages {
-    private static final String BUNDLE_NAME = "sernet.verinice.bpm.messages"; //$NON-NLS-1$
+public interface ITaskDescriptionHandler {
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    /**
+     * @param task a jBPM task
+     * @return The description of a task
+     */
+    String loadDescription(Task task);
 
-    private Messages() {
-    }
-
-    public static String getString(String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
-    
-    public static String getString(String key, Object... params  ) {
-        try {
-            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
 }

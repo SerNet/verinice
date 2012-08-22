@@ -17,55 +17,34 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm.qm;
+package sernet.verinice.bpm;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
-import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
- * This task complete server handler reads param
- * IIsaQmProcess.VAR_IQM_ASSIGNEE and adds it's
- * value as process/task var IIsaQmProcess.VAR_IQM_ASSIGNEE
- * to task with id taskId.
+ * Default ICompleteServerHandler which is active if parameter are set in
+ * ITaskService.completeTask but no ICompleteServerHandler is set
+ * for this task/outcome in veriniceserver-jbpm.xml.
  * 
- * Configured in veriniceserver-jbpm.xml as a property of Spring bean taskService.
- *
+ * DefaultCompleteServerHandler set all params passed from the client
+ * as jBPM process variables.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
+public class DefaultCompleteServerHandler implements ICompleteServerHandler {
 
     private ITaskService taskService;
     
-    /**
-     * Value of param  IIsaQmProcess.VAR_IQM_ASSIGNEE is added
-     * to task as var IIsaQmProcess.VAR_IQM_ASSIGNEE.
-     *  
-     * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#execute(java.util.Map)
-     */
-    @Override
-    public void execute(String taskId, Map<String, Object> parameter) {
-        if(parameter!=null) {
-            String assignee = (String) parameter.get(IIsaQmProcess.VAR_IQM_ASSIGNEE);
-            if(assignee!=null) {
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put(IIsaQmProcess.VAR_IQM_ASSIGNEE, assignee);
-                getTaskService().setVariables(taskId, param);
-            }
-        }
-        
-
-    }
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#getTaskType()
      */
     @Override
     public String getTaskType() {
-        return IIsaQmProcess.TASK_IQM_SET_ASSIGNEE;
+        return TASK_TYPE_DEFAULT;
     }
 
     /* (non-Javadoc)
@@ -73,9 +52,32 @@ public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
      */
     @Override
     public String getOutcomeId() {
-        return IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE;
+        return OUTCOME_ID_DEFAULT;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#execute(java.lang.String, java.util.Map)
+     */
+    @Override
+    public void execute(String taskId, Map<String, Object> parameter) {
+        if(parameter!=null) {        
+            Map<String, Object> taskParameter = getTaskService().getVariables(taskId);
+            for (String key : parameter.keySet()) {
+                Object value = parameter.get(key);
+                if(value instanceof String) {
+                    String s = (String) value;
+                    if(s!=null && s.length()>254) {
+                        taskParameter.put(key, s.toCharArray());
+                    } else {
+                        taskParameter.put(key, s);
+                    }
+                    
+                }
+            }
+            getTaskService().setVariables(taskId, taskParameter);
+        }
+    }
+    
     public ITaskService getTaskService() {
         return taskService;
     }

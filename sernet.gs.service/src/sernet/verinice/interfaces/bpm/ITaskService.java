@@ -124,9 +124,11 @@ public interface ITaskService {
      */
     void setAssigneeVar(Set<String> taskIdSet, String username);
 
+    Map<String, Object> getVariables(String taskId);
+    
     /**
      * @param taskId
      * @param param
      */
-    void setVariables(String taskId, Map<String, String> param);
+    void setVariables(String taskId, Map<String, Object> param);
 }

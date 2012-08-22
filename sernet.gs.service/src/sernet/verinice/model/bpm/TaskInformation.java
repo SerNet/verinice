@@ -66,6 +66,8 @@ public class TaskInformation implements ITask, Serializable {
     
     private boolean processed = false;
     
+    private String priority;
+    
     /**
      * 
      */
@@ -263,6 +265,14 @@ public class TaskInformation implements ITask, Serializable {
     @Override
     public boolean getIsProcessed() {
         return processed;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     @Override

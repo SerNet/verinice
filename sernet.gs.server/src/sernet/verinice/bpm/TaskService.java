@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +49,7 @@ import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyValue;
@@ -99,6 +101,12 @@ public class TaskService implements ITaskService {
     private Set<String> taskOutcomeBlacklist;
     
     private Map<String, ICompleteServerHandler> completeHandler;
+    
+    private ICompleteServerHandler defaultCompleteServerHandler;
+
+    private Map<String, ITaskDescriptionHandler> descriptionHandler;
+    
+    private ITaskDescriptionHandler defaultDescriptionHandler;
     
     
     /* (non-Javadoc)
@@ -260,17 +268,20 @@ public class TaskService implements ITaskService {
         taskInformation.setId(task.getId());
         taskInformation.setType(task.getName());
         taskInformation.setName(Messages.getString(task.getName()));
-        taskInformation.setDescription(Messages.getString(task.getName() + ITaskService.DESCRIPTION_SUFFIX));
+        taskInformation.setDescription(loadTaskDescription(task));
         taskInformation.setCreateDate(task.getCreateTime()); 
         taskInformation.setAssignee(task.getAssignee());
         if (log.isDebugEnabled()) {
             log.debug("map, setting read status..."); //$NON-NLS-1$
-        }
-        String readStatus = (String) getTaskService().getVariable(task.getId(), ITaskService.VAR_READ_STATUS);
-        taskInformation.setIsRead(ITaskService.VAR_READ.equals(readStatus));
-  
+        }          
         
-        Map<String, Object> varMap = loadVariables(task);      
+        Map<String, Object> varMap = loadVariables(task);  
+        taskInformation.setIsRead(ITaskService.VAR_READ.equals(varMap.get(ITaskService.VAR_READ_STATUS)));       
+        String priority =  (String) varMap.get(IGenericProcess.VAR_PRIORITY);
+        if(priority==null) {
+            priority = ITask.PRIO_NORMAL;
+        }
+        taskInformation.setPriority(priority);
         mapControl(taskInformation, varMap);       
         mapAudit(taskInformation, varMap);
         
@@ -291,6 +302,18 @@ public class TaskService implements ITaskService {
      * @param task
      * @return
      */
+    private String loadTaskDescription(Task task) {
+        ITaskDescriptionHandler handler = getDescriptionHandler().get(task.getName());
+        if(handler==null) {
+            handler = getDefaultDescriptionHandler();
+        }
+        return handler.loadDescription(task);
+    }
+
+    /**
+     * @param task
+     * @return
+     */
     private Map<String, Object> loadVariables(Task task) {
         if (log.isDebugEnabled()) {
             log.debug("map, loading element..."); //$NON-NLS-1$
@@ -300,6 +323,8 @@ public class TaskService implements ITaskService {
         varNameSet.add(IGenericProcess.VAR_UUID);
         varNameSet.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
         varNameSet.add(IGenericProcess.VAR_TYPE_ID);
+        varNameSet.add(ITaskService.VAR_READ_STATUS);
+        varNameSet.add(IGenericProcess.VAR_PRIORITY);
         Map<String, Object> varMap = getExecutionService().getVariables(executionId,varNameSet);
         return varMap;
     }
@@ -421,7 +446,11 @@ public class TaskService implements ITaskService {
      * @return
      */
     private ICompleteServerHandler getHandler(String name, String outcomeId) {
-        return getCompleteHandler().get(new StringBuilder(name).append(".").append(outcomeId).toString());
+        ICompleteServerHandler handler = getCompleteHandler().get(new StringBuilder(name).append(".").append(outcomeId).toString());
+        if(handler==null) {
+            handler = getDefaultCompleteServerHandler();
+        }
+        return handler;
     }
 
     /* (non-Javadoc)
@@ -506,8 +535,17 @@ public class TaskService implements ITaskService {
      * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.String, java.util.Map)
      */
     @Override
-    public void setVariables(String taskId, Map<String, String> param) {
+    public void setVariables(String taskId, Map<String, Object> param) {
         getTaskService().setVariables(taskId, param);
+    }
+    
+    public Map<String, Object> getVariables(String taskId) {
+        Map<String, Object> variables = new Hashtable<String, Object>();
+        Set<String> names = getTaskService().getVariableNames(taskId);
+        for (String name : names) {
+            variables.put(name, getTaskService().getVariable(taskId, name));
+        }
+        return variables;
     }
 
     public org.jbpm.api.TaskService getTaskService() {
@@ -587,6 +625,30 @@ public class TaskService implements ITaskService {
 
     public void setCompleteHandler(Map<String, ICompleteServerHandler> completeHandler) {
         this.completeHandler = completeHandler;
+    }
+
+    public ICompleteServerHandler getDefaultCompleteServerHandler() {
+        return defaultCompleteServerHandler;
+    }
+
+    public void setDefaultCompleteServerHandler(ICompleteServerHandler defaultCompleteServerHandler) {
+        this.defaultCompleteServerHandler = defaultCompleteServerHandler;
+    }
+
+    public Map<String, ITaskDescriptionHandler> getDescriptionHandler() {
+        return descriptionHandler;
+    }
+
+    public void setDescriptionHandler(Map<String, ITaskDescriptionHandler> descriptionHandler) {
+        this.descriptionHandler = descriptionHandler;
+    }
+
+    public ITaskDescriptionHandler getDefaultDescriptionHandler() {
+        return defaultDescriptionHandler;
+    }
+
+    public void setDefaultDescriptionHandler(ITaskDescriptionHandler defaultDescriptionHandler) {
+        this.defaultDescriptionHandler = defaultDescriptionHandler;
     }
 
 }

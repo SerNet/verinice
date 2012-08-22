@@ -85,8 +85,8 @@ final class CompleteTaskAction extends Action {
                     }
                 });          
         } catch (Throwable t) {
+            LOG.error("Error while completing tasks.", t);
             this.taskView.showError("Error", "Error while completing task.");
-            TaskView.LOG.error("Error while completing tasks.", t);
         }
     }
     

@@ -20,8 +20,7 @@
 package sernet.verinice.bpm.qm;
 
 import sernet.verinice.bpm.ProcessContext;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
@@ -30,25 +29,26 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class IsaQmContext extends ProcessContext {
     
-    private Control control;
+    private CnATreeElement element;
     
     private String ownerName;
     
     private String uuidAudit;
     
-    private String comment;
+    private Object comment;
     
+    private String priority;
 
     public IsaQmContext() {
         super();
     }
 
-    public Control getControl() {
-        return control;
+    public CnATreeElement getElement() {
+        return element;
     }
 
-    public void setControl(Control control) {
-        this.control = control;
+    public void setElement(CnATreeElement element) {
+        this.element = element;
     }
 
     public String getOwnerName() {
@@ -67,12 +67,20 @@ public class IsaQmContext extends ProcessContext {
         this.uuidAudit = uuidAudit;
     }
 
-    public String getComment() {
+    public Object getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    public void setComment(Object comment) {
         this.comment = comment;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
     
 }

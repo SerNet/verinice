@@ -53,7 +53,7 @@
       <on event="timeout">
       <timer duedate="#{ISA_DUEDATE} - 7 days"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
-          <field name="taskType"><string value="TASK_EXECUTE"/></field>
+          <field name="taskType"><string value="icf.task.execute"/></field>
           <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
           <field name="uuid"><object expr="#{UUID}"/></field>
         </event-listener>
@@ -73,13 +73,15 @@
       <transition to="icf.task.assign.deadline"/>
    </java> 
    
-   <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="541,416,188,56" name="icf.task.assign.deadline">
+   <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="541,416,188,56" name="icf.task.assign.deadline" >
       <transition g="6,-3" name="icf.trans.assigned" to="java.loadAssignee"/>
    </task> 
    
    <java class="sernet.verinice.bpm.isam.IsaControlFlow" g="727,512,178,36" method="startQsWorkflow" name="java.startQsWorkflow">
       <arg><object expr="#{UUID}"/></arg>
       <arg><object expr="#{UUID_AUDIT}"/></arg>
+      <arg><object expr="#{IQM_FEEDBACK}"/></arg>
+      <arg><object expr="#{IQM_PRIORITY}"/></arg>
       <transition g="943,583:" to="icf.task.execute"/>
    </java>
    

@@ -264,9 +264,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         tree.setLinesVisible(true);
 
         TableLayout layout = new TableLayout();
+        
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText(Messages.TaskViewColumn_0);
-
+        treeColumn.setText(Messages.TaskViewColumn_0);      
+        
         treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskViewColumn_1);
 

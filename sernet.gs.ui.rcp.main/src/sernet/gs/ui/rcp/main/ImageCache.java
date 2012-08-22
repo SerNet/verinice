@@ -223,6 +223,12 @@ public class ImageCache {
     public static final String LOAD_MORE = "load-more.gif";
     
     public static final String UNKNOWN_FILE_TYPE = "question.gif";
+    
+    public static final String PRIORITY_LOW = "priority-4.gif";
+    
+    public static final String PRIORITY_NORMAL = "priority-2.gif";
+    
+    public static final String PRIORITY_HIGH = "priority-1.gif";
 
 	/* ************************************************************************************************** */
 	// ISO 27000 icons - ISM Tree View:

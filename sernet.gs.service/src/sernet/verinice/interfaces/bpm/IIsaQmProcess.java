@@ -36,4 +36,6 @@ public interface IIsaQmProcess extends IGenericProcess {
     
     String VAR_IQM_ASSIGNEE = "IQM_ASSIGNEE";
     
+    String VAR_QM_PRIORITY = "IQM_PRIORITY";
+    
 }

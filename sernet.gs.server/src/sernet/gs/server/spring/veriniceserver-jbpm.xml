@@ -52,7 +52,7 @@
         <property name="processEngine" ref="processEngine" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="processDao" ref="processDao" />
-        <property name="controlDao" ref="controlDAO" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
         <property name="authService" ref="authService" />
     </bean>
     
@@ -80,11 +80,37 @@
                 <entry key="iqm.task.setAssignee.iqm.trans.setAssignee" value-ref="isaQmSetAssigneeHandler"/>
             </map>
         </property>
+        <property name="defaultCompleteServerHandler" ref="defaultCompleteServerHandler" />
+        <!-- Add task description handler here -->
+        <!-- Key is <TASK_ID> from jbpm file -->
+        <!-- See ITaskDescriptionHandler for more documentation. -->
+        <!-- If no handler is set for a task bean "defaultDescriptionHandler" is used  -->
+        <property name="descriptionHandler">
+            <map>
+                <entry key="iqm.task.setAssignee" value-ref="setAssigneeDescriptionHandler"/>
+                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>
+            </map>
+        </property>
+        <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
     </bean>
     
+    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>
+      
     <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
         <property name="taskService" ref="taskService" />
     </bean>
+    
+    <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
+      
+    <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>
+    
+    <bean id="checkFeedbackDescriptionHandler" class="sernet.verinice.bpm.qm.CheckFeedbackDescriptionHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>  
     
     <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
         <property name="mailSender" ref="mailSender" />

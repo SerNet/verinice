@@ -36,7 +36,7 @@ public class IsaQmServiceDummy implements IIsaQmService {
      * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForControl(String controlUuid, String uuidAudit) {
+    public IProcessStartInformation startProcessesForControl(String controlUuid, String uuidAudit, Object comment, String priority) {
         return new ProcessInformation(0);
     }
     

@@ -83,6 +83,14 @@ public class TaskServiceDummy implements ITaskService {
      * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.String, java.util.Map)
      */
     @Override
-    public void setVariables(String taskId, Map<String, String> param) {}
+    public void setVariables(String taskId, Map<String, Object> param) {}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getVariables(java.lang.String)
+     */
+    @Override
+    public Map<String, Object> getVariables(String taskId) {      
+        return Collections.emptyMap();
+    }
 
 }
