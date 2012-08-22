@@ -37,6 +37,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
@@ -164,12 +165,20 @@ public class CopyCommand extends GenericCommand {
         if(newElement.getEntity()!=null) {
             newElement.getEntity().copyEntity(copyElement.getEntity());
             if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
+               if (newElement instanceof GefaehrdungsUmsetzung){
+                    String title = newElement.getTitle();
+                    String CopyGefaehrdungtitle = ((GefaehrdungsUmsetzung)newElement).getText();
+                    Set<CnATreeElement> siblings = toGroup.getChildren();
+                    siblings.remove(newElement);
+                    newElement.setTitel(getUniqueTitle(title, CopyGefaehrdungtitle, siblings, 0));
+                }else {
                 String title = newElement.getTitle();
                 Set<CnATreeElement> siblings = toGroup.getChildren();
                 siblings.remove(newElement);
                 newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
             }
         }
+    }
         SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = (CnATreeElement) saveCommand.getElement();
