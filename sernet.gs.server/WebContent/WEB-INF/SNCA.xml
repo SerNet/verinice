@@ -4093,7 +4093,117 @@ the value between <param></param> will be used directly if no string is found fo
 			id="audit_excluded_topics" 
 			inputtype="text" 
             tags="VDA_ISA_Audit"
-            textrows="12"/>
+            textrows="4"/>
+        <huipropertygroup id="audit_document_data" name="Audit Document Data" tags="VDA_ISA_Audit">
+        <huiproperty
+        	id="audit_document_data_author_name"
+        	name="Audit author name"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Author Date"
+			id="audit_document_data_author_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty
+        	id="audit_document_data_first_quality_control_name"
+        	name="First Quality Control done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Date of First Quality Control"
+			id="audit_document_data_first_quality_control_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty
+        	id="audit_document_data_approval_name"
+        	name="Audit Document Data, Approval done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Approval done on"
+			id="audit_document_data_approval_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty
+        	id="audit_document_data_company_coordination_name"
+        	name="Audit Document Data, Coordination with Company done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Coordination with Componay done on"
+			id="audit_document_data_company_coordination_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+        </huiproperty>            
+        <huiproperty
+        	id="audit_document_data_adjustment_approval_name"
+        	name="Audit Document Data, Adjustment and Approval done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Adjustment and Approval done on"
+			id="audit_document_data_adjustment_approval_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+        </huiproperty>            
+         <huiproperty
+        	id="audit_document_data_second_quality_control_name"
+        	name="Audit Document Data, Second Quality Control done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Date of Second Quality Control"
+			id="audit_document_data_second_quality_control_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />
+         </huiproperty>
+         <huiproperty
+        	id="audit_document_data_final_approval_distribution_name"
+        	name="Audit Document Data, Final Approval and Distribution done by"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"/>
+         <huiproperty 
+			name="Audit Document Data, Date of Final Approval and Distribution"
+			id="audit_document_data_final_approval_distribution_date"
+			inputtype="date"
+			tags="VDA-ISA">
+            <defaultRule class="Today" />           
+        </huiproperty>            
+        </huipropertygroup>
+        <huipropertygroup id="audit_topics_group" name="Information Security Reporting" tags="VDA_ISA_Audit">
+		<huiproperty
+			id="audit_topics_good_results" 
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="4"/>
+		<huiproperty
+			id="audit_topics_bad_results" 
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="4"/>
+		</huipropertygroup>
+		<huiproperty
+			id="audit_target_audience" 
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="4"/>		
     </huientity>
 
     <huientity
@@ -5149,7 +5259,7 @@ the value between <param></param> will be used directly if no string is found fo
     	<huirelation to="evidence" id="rel_interview_evidence_relevant"
     		name="documented" reversename="relevant for" tooltip="" />
 		<huirelation to="samt_topic"  id="rel_interview_samt_topic_included"  
-			name="included" reversename="processed in" tooltip="" /> 
+			name="interviewed" reversename="interviewed about" tooltip="" /> 
     </huientity>
     
     <huientity
@@ -5697,7 +5807,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
                inputtype="numericoption" 
                min="-1" 
-               max="2" 
+               max="3" 
                defaultValue="-1">
                             
                 <option id="samt_topic_audit_ra_na"  value="-1" />
