@@ -64,6 +64,7 @@ import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -279,6 +280,8 @@ public class BSIElementEditor extends EditorPart {
             initBehaviour(new InheritanceBehavior(huiComposite));
         } else if(cnAElement instanceof IncidentScenario){
             initBehaviour(new LikelihoodBehaviour(huiComposite));
+        } else if(cnAElement instanceof ControlGroup){
+            initBehaviour(new ControlgroupRoomNetworkBehaviour(huiComposite));
         }
     }
     

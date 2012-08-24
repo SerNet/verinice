@@ -4090,6 +4090,11 @@ the value between <param></param> will be used directly if no string is found fo
         	inputtype="text"
         	textrows="1"/>
 		<huiproperty
+			id="audit_included_topics" 
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="4"/>        
+		<huiproperty
 			id="audit_excluded_topics" 
 			inputtype="text" 
             tags="VDA_ISA_Audit"
@@ -5216,7 +5221,7 @@ the value between <param></param> will be used directly if no string is found fo
 			<option name="Other" id="document_type_other" />       	
 		</huiproperty>
         <huiproperty 
-       		id="document_classfc" name="Classification" inputtype="singleoption">
+       		id="document_classfc" name="Classification" inputtype="singleoption" >
 	       <option name="Confidential" id="document_classfc_confidential"/>
 	       <option name="Internal Use" id="document_classfc_internal"/>
 	       <option name="Public" id="document_classfc_public"/>
@@ -5253,6 +5258,20 @@ the value between <param></param> will be used directly if no string is found fo
         	name="showInReport"
         	id="interview_showInISAReport"
 			inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit"/>
+
+        <huiproperty 
+       		id="interview_audit_action" name="Audit Action Type" inputtype="singleoption" tags="VDA_ISA_Audit">
+	       <option name="Interview" id="interview_audit_action_type_interview"/>
+	       <option name="Documentationcheck" id="interview_audit_action_type_documentation_check"/>
+	       <option name="Inspection" id="interview_audit_action_type_inspection"/>
+	       <option name="Document review" id="interview_audit_action_type_document_review"/>
+	       <option name="Third party document application" id="interview_audit_action_type_third_party_document_application"/>
+	       <option name="Observation of workflows and activities" id="interview_audit_action_type_activity_observation"/>
+        </huiproperty>
+        
+        <huiproperty
+	    	id="interview_audit_action_description" name="Audit Action Description" inputtype="text" tags="VDA_ISA_Audit"
+	 	   textrows="4"/>        			
 	
     	<huirelation to="finding" id="rel_interview_finding_notice"
     		name="revealed" reversename="noticed in" tooltip="" />

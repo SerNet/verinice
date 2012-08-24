@@ -59,7 +59,12 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
         };
         Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
-            action.setEnabled(checkRights());
+            try{
+                Activator.inheritVeriniceContextState();
+                action.setEnabled(checkRights());
+            } catch (NullPointerException npe){
+                action.setEnabled(false);
+            }
         }
 	}
 
@@ -88,8 +93,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
                     public void setRootElement(Integer rootElement) { rootElmt = rootElement; }
                     public Integer getRootElement() {return rootElmt; }
                     public Integer[] getRootElements(){return rootElmts;}
-                    public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;					}
-					
+                    public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
     			};
     			if(dialog.getRootElement() != null){
     				ro.setRootElement(dialog.getRootElement());

@@ -81,6 +81,7 @@ public class LoadChapterListCommand extends GenericCommand {
 
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
     public static final Integer PLACEHOLDER_CONTROLGROUP_ID = -7;
+    private static final int OVERVIEW_PROPERTY_TARGET = 0;
     
     public LoadChapterListCommand(Integer chapterId) {
         log = Logger.getLogger(LoadChapterListCommand.class);
@@ -218,7 +219,7 @@ public class LoadChapterListCommand extends GenericCommand {
                                 if (elmt instanceof ControlGroup) {
                                     ControlGroup g = (ControlGroup) elmt;
                                     String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
-                                    if (isOverviewElementString != null && isOverviewElementString.equals("1")) {
+                                    if (isOverviewElementString != null && isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
                                         values.add(createValueEntry(elmt));
                                     }
                                 }
@@ -242,7 +243,7 @@ public class LoadChapterListCommand extends GenericCommand {
                                 if (elmt instanceof ControlGroup) {
                                     ControlGroup g = (ControlGroup) elmt;
                                     String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
-                                    if (isOverviewElementString != null && !isOverviewElementString.equals("1")) {
+                                    if (isOverviewElementString != null && !isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
                                         values.add(createValueEntry(elmt));
                                     }
                                 }
@@ -261,7 +262,7 @@ public class LoadChapterListCommand extends GenericCommand {
                     int groupid = ((Integer) o[0]).intValue();
                     for(ControlGroup rootChild : loadAllControlgroupChildren(rootObject)){
                         if(rootChild.getDbId().intValue() == groupid){
-                            if(rootChild.getEntity().getValue(OVERVIEW_PROPERTY).equals("1")){
+                            if(rootChild.getEntity().getValue(OVERVIEW_PROPERTY).equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))){
                                 values.add(createValueEntry(rootChild));
                             }
                         }
@@ -286,7 +287,7 @@ public class LoadChapterListCommand extends GenericCommand {
                 ControlGroup placeHolderGroup = new ControlGroup();
                 if (ce instanceof ControlGroup) {
                     ControlGroup g = (ControlGroup) ce;
-                    if(g.getEntity().getValue(OVERVIEW_PROPERTY).equals("1")){
+                    if(g.getEntity().getValue(OVERVIEW_PROPERTY).equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))){
                         String placeHolderIdString = String.valueOf(PLACEHOLDER_CONTROLGROUP_ID) + String.valueOf(g.getDbId());
                         placeHolderGroup.setDbId(Integer.parseInt(placeHolderIdString));
                         if(!g.isChildrenLoaded()){

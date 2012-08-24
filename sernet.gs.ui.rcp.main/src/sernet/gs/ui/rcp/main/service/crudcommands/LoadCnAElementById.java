@@ -45,6 +45,10 @@ public class LoadCnAElementById extends GenericCommand {
 		}
 	}
 	
+	public LoadCnAElementById(String typeId, Integer id){
+	    this(typeId, id.intValue());
+	}
+	
 	public LoadCnAElementById(){
 		// default constructor for use with JavaScript within BIRT
 	}
