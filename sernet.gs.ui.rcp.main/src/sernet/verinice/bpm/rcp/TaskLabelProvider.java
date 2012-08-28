@@ -94,16 +94,19 @@ public class TaskLabelProvider implements ITableLabelProvider {
                 text = task.getControlTitle();
                 break;
             case 1:
-                text = task.getName();
+                text = task.getProcessName();
                 break;
             case 2:
+                text = task.getName();
+                break;
+            case 3:
                 IAuthService authService = ServiceFactory.lookupAuthService();
                 text = task.getAssignee();
                 if(text!=null && text.equals(authService.getUsername())) {
                     text = text + " (you)";
                 }                          
                 break;    
-            case 3:
+            case 4:
                 if(task.getDueDate()!=null) {
                     text = DateFormat.getDateInstance().format(task.getDueDate());
                 }

@@ -17,18 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.web;
 
-
+import sernet.verinice.interfaces.bpm.ITask;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IIsaQmService extends IProcessServiceGeneric {
+public interface ICompleteWebHandler {
 
-    IProcessStartInformation startProcessesForElement(String uuid, Object feedback, String priority);
-    
-    IProcessStartInformation startProcessesForElement(String uuid, String auditUuid, Object feedback, String priority);
+    /**
+     * @param selectedTask
+     * @param string 
+     */
+    void execute(ITask selectedTask, String outcomeId);
+
 }

@@ -42,6 +42,10 @@ public class TaskParameter implements ITaskParameter, Serializable {
     
     boolean allUser;
     
+    String processKey;
+    
+    String taskId;
+    
     public TaskParameter() {
         super();
     }
@@ -103,6 +107,22 @@ public class TaskParameter implements ITaskParameter, Serializable {
 
     public void setAllUser(boolean allUser) {
         this.allUser = allUser;
+    }
+
+    public String getProcessKey() {
+        return processKey;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setProcessKey(String processKey) {
+        this.processKey = processKey;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
 

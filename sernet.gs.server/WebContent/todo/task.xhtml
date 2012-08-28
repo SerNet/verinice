@@ -24,7 +24,7 @@
 					    	<p:commandButton id="complete" 
 					    		action="#{task.completeTask}" 
 					    		value="#{outcome.value}" 
-					    		update=":tableForm,:editForm" >
+					    		update=":tableForm,:editForm,:completeHandlerForm">
 					    		<f:setPropertyActionListener target="#{task.outcomeId}" value="#{outcome.key}" />					    		
 					    	</p:commandButton>						    
 					    </ui:repeat>
@@ -98,6 +98,10 @@
 	    	<vn:editor rendered="#{auth.isoTasks}"/>    		 				    			    							
 		</div>
 	</div>
+	<ui:insert name="extensions">
+		<ui:include src="/todo/extensions.xhtml"/>
+	</ui:insert>
+	<h:outputText value="" style="#{newQmBean.description}" />
 </ui:define>
 </ui:composition>
 </html>

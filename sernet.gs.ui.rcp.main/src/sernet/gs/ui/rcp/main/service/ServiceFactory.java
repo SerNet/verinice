@@ -26,6 +26,7 @@ import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
+import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
@@ -110,6 +111,10 @@ public abstract class ServiceFactory {
     
     public static IIsaControlFlowService lookupIsaControlFlowService() {
         return (IIsaControlFlowService) VeriniceContext.get(VeriniceContext.ISA_CONTROL_FLOW_SERVICE);
+    }
+    
+    public static IIsaQmService lookupQmService() {
+        return (IIsaQmService) VeriniceContext.get(VeriniceContext.ISA_QM_SERVICE);
     }
 	
 	public static boolean isPermissionHandlingNeeded() {

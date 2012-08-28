@@ -46,6 +46,10 @@ public class ComboModel<T> {
 		objectList.add(new ComboModelObject<T>(object, labelProvider.getLabel(object)));
 	}
 	
+	public void add(int position, T object) {
+        objectList.add(position, new ComboModelObject<T>(object, labelProvider.getLabel(object)));
+    }
+	
 	public void remove(int i) {
 		objectList.remove(i);
 	}

@@ -37,7 +37,6 @@ import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
 
 /**
  *
@@ -53,6 +52,8 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
     
     private IAuthService authService;
     
+    private String defaultAssignee;
+    
     public IsaQmService() {
         super();
         // this is not the main process service:
@@ -60,12 +61,19 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
     }
     
     /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(java.lang.String, java.lang.Object, java.lang.String)
+     */
+    public IProcessStartInformation startProcessesForElement(String uuid, Object feedback, String priority) {
+        return startProcessesForElement(uuid, null, feedback, priority);
+    }
+    
+    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForControl(String controlUuid, String auditUuid, Object feedback, String priority) {
+    public IProcessStartInformation startProcessesForElement(String uuid, String auditUuid, Object feedback, String priority) {
         IsaQmContext context = new IsaQmContext();
-        CnATreeElement element = loadControl(controlUuid);
+        CnATreeElement element = loadElement(uuid);
         context.setElement(element);
         context.setOwnerName(getAuthService().getUsername());
         context.setUuidAudit(auditUuid);
@@ -110,14 +118,23 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         }
         props.put(IIsaQmProcess.VAR_FEEDBACK, comment);
         props.put(IGenericProcess.VAR_PRIORITY, context.getPriority());
+        props.put(IIsaQmProcess.VAR_IQM_REVIEW, getDefaultAssignee());
         startProcess(IIsaQmProcess.KEY, props);
         context.increaseProcessNumber(); 
     }
     
-    private CnATreeElement loadControl(String uuid) {
+    private CnATreeElement loadElement(String uuid) {
         ServerInitializer.inheritVeriniceContextState();
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         return getElementDao().findByUuid(uuid, ri);
+    }
+
+    public String getDefaultAssignee() {
+        return defaultAssignee;
+    }
+
+    public void setDefaultAssignee(String defaultAssignee) {
+        this.defaultAssignee = defaultAssignee;
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

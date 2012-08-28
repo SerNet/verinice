@@ -53,6 +53,7 @@ import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyValue;
+import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -157,6 +158,18 @@ public class TaskService implements ITaskService {
                 sb.append("task.assignee=? "); //$NON-NLS-1$
                 paramList.add(parameter.getUsername());
             } 
+            
+            if(parameter.getProcessKey()!=null) {
+                where = concat(sb,where);
+                sb.append("task.executionId like ? "); //$NON-NLS-1$
+                paramList.add(parameter.getProcessKey() + "%"); //$NON-NLS-1$
+            }
+            
+            if(parameter.getTaskId()!=null) {
+                where = concat(sb,where);
+                sb.append("task.name=? "); //$NON-NLS-1$
+                paramList.add(parameter.getTaskId()); 
+            }
             
             if(parameter.getSince()!=null) {
                 where = concat(sb,where);
@@ -270,7 +283,7 @@ public class TaskService implements ITaskService {
         taskInformation.setName(Messages.getString(task.getName()));
         taskInformation.setDescription(loadTaskDescription(task));
         taskInformation.setCreateDate(task.getCreateTime()); 
-        taskInformation.setAssignee(task.getAssignee());
+        taskInformation.setAssignee(getConfigurationService().getName(task.getAssignee()));
         if (log.isDebugEnabled()) {
             log.debug("map, setting read status..."); //$NON-NLS-1$
         }          
@@ -291,11 +304,21 @@ public class TaskService implements ITaskService {
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
         taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
-        
+        taskInformation.setProcessName(getProcessName(task));
         if (log.isDebugEnabled()) {
             log.debug("map finished"); //$NON-NLS-1$
         }
         return taskInformation;
+    }
+
+    /**
+     * @param task
+     * @return
+     */
+    private String getProcessName(Task task) {
+        String executionId = task.getExecutionId();
+        String processKey = executionId.substring(0,executionId.indexOf('.'));        
+        return Messages.getString(processKey);
     }
 
     /**
@@ -540,9 +563,9 @@ public class TaskService implements ITaskService {
     }
     
     public Map<String, Object> getVariables(String taskId) {
-        Map<String, Object> variables = new Hashtable<String, Object>();
+        Map<String, Object> variables = new HashMap<String, Object>();
         Set<String> names = getTaskService().getVariableNames(taskId);
-        for (String name : names) {
+        for (String name : names) {          
             variables.put(name, getTaskService().getVariable(taskId, name));
         }
         return variables;
@@ -570,6 +593,14 @@ public class TaskService implements ITaskService {
 
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
+    }
+
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+    public void setConfigurationService(IConfigurationService configurationService) {
+        this.configurationService = configurationService;
     }
 
     public void setProcessEngine(ProcessEngine processEngine) {

@@ -93,6 +93,12 @@ public class TaskBean {
         if (LOG.isDebugEnabled()) {
             LOG.debug("loadTasks finished"); //$NON-NLS-1$
         }
+        for (ITask task : taskList) {
+            String controlTitle = task.getControlTitle();
+            if(controlTitle.length()>100) {
+                task.setControlTitle(controlTitle.substring(0, 99) + "...");
+            }
+        }
         return taskList;
     }
     
@@ -113,7 +119,11 @@ public class TaskBean {
             getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
-            getEditBean().setTitle(getSelectedTask().getControlTitle());
+            String title = getSelectedTask().getControlTitle();
+            if(title.length()>100) {
+                title = title.substring(0, 99) + "...";
+            }
+            getEditBean().setTitle(title);
             getEditBean().setTypeId(getSelectedTask().getElementType());
             getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
             setOutcomeId(null);
@@ -159,12 +169,17 @@ public class TaskBean {
             LOG.debug("completeTask() called ..."); //$NON-NLS-1$
         }
         if(getSelectedTask()!=null) {
-            getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
-            getTaskList().remove(getSelectedTask());
-            setSelectedTask(null);
-            getEditBean().clear();
-            Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
-        }
+            ICompleteWebHandler handler = CompleteWebHandlerRegistry.getHandler(getSelectedTask().getType() + "." + getOutcomeId());
+            if(handler!=null) {
+                handler.execute(getSelectedTask(), getOutcomeId());
+            } else {
+                getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
+                getTaskList().remove(getSelectedTask());
+                setSelectedTask(null);
+                getEditBean().clear();
+                Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
+            }
+         }
     }
     
     public void completeAllTask() { 

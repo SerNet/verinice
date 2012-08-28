@@ -295,8 +295,7 @@
                relative="org.eclipse.ui.views.TaskList"/>
       </perspectiveExtension>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
+   <extension point="org.eclipse.ui.popupMenus">
       <!-- ISO27000 actions -->
       <objectContribution
             adaptable="false"
@@ -789,6 +788,21 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.26">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartQmProcess"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+         <action
+               class="sernet.verinice.bpm.rcp.StartQmProcess"
+               enablesFor="1"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartQmProcess.action"
+               label="%action.label.32"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.32">
          </action>
       </objectContribution>
    </extension>

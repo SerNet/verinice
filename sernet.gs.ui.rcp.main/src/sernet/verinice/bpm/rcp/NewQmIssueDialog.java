@@ -19,10 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -30,18 +26,20 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.verinice.interfaces.bpm.ITask;
 
 /**
@@ -51,27 +49,62 @@ import sernet.verinice.interfaces.bpm.ITask;
  */
 public class NewQmIssueDialog extends TitleAreaDialog {
 
+    private static final String[] priorityArray = {ITask.PRIO_LOW,ITask.PRIO_NORMAL,ITask.PRIO_HIGH};
+    private static final String[] priorityLabelArray = {Messages.NewQmIssueDialog_0,Messages.NewQmIssueDialog_1,Messages.NewQmIssueDialog_2};
+    private static final int DEFAULT_PRIORITY_INDEX = 1;
+    
+    private int dialogWidth = 400;
+    
+    private String elementTitle;
+    
     private String description;
     
     private String priority;
-    
-    private static final String[] priorityArray = {ITask.PRIO_LOW,ITask.PRIO_NORMAL,ITask.PRIO_HIGH};
-    private static final String[] priorityLabelArray = {"low","normal","high"};
 
-    private static final int DEFAULT_PRIORITY_INDEX = 1;
-    
     /**
      * @param parentShell
      */
     public NewQmIssueDialog(Shell parentShell) {
         super(parentShell);
-        setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);    
     }
     
 
+    /**
+     * @param activeShell
+     * @param string
+     */
+    public NewQmIssueDialog(Shell activeShell, String title) {
+        this(activeShell);
+        if(title.length()>40) {
+            title = title.substring(0, 40) + "..."; //$NON-NLS-1$
+        }
+        this.elementTitle = title;
+    }
+
+
     private void addFormElements(Composite composite) {
+        if(elementTitle!=null) {
+            final Label objectLabel = new Label(composite, SWT.NONE);
+            objectLabel.setText(Messages.NewQmIssueDialog_4);
+            final Label object = new Label(composite, SWT.NONE);
+           
+            FontData[] fD = object.getFont().getFontData();
+            for (int i = 0; i < fD.length; i++) {
+                fD[i].setStyle(SWT.BOLD);
+            }
+            Font newFont = new Font(getShell().getDisplay(),fD);
+            object.setFont(newFont);
+            GC gc = new GC(object);
+            Point size = gc.textExtent(elementTitle);
+            if(size.x > dialogWidth - 30) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-30) + "..."; //$NON-NLS-1$
+            }
+            object.setText(elementTitle);
+        }
+        
         final Label descriptionLabel = new Label(composite, SWT.NONE);
-        descriptionLabel.setText("Description");
+        descriptionLabel.setText(Messages.NewQmIssueDialog_6);
         final Text textArea = new Text(composite, SWT.MULTI | SWT.LEAD | SWT.BORDER | SWT.WRAP);
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         gd.heightHint = 150;
@@ -89,7 +122,7 @@ public class NewQmIssueDialog extends TitleAreaDialog {
         });
         
         final Label priorityLabel = new Label(composite, SWT.NONE);
-        priorityLabel.setText("Priority");
+        priorityLabel.setText(Messages.NewQmIssueDialog_7);
         final Combo priorityCombo = new Combo(composite, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
         priorityCombo.setItems(priorityLabelArray);
         priorityCombo.select(DEFAULT_PRIORITY_INDEX);
@@ -101,13 +134,29 @@ public class NewQmIssueDialog extends TitleAreaDialog {
         });
     }
     
+    /**
+     * @param gc
+     * @param elementTitle2
+     * @return
+     */
+    private String trimTitleByWidthSize(GC gc, String elementTitle, int width) {
+        String newTitle = elementTitle.substring(0, elementTitle.length()-1);
+        Point size = gc.textExtent(newTitle + "..."); //$NON-NLS-1$
+        if(size.x>width) {
+            newTitle = trimTitleByWidthSize(gc, newTitle, width);
+        }
+        return newTitle;
+    }
+
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setSize(400, 500);
+        newShell.setSize(dialogWidth, 450);
+        newShell.setText(Messages.NewQmIssueDialog_9);
     }
     
     /* (non-Javadoc)
@@ -115,24 +164,17 @@ public class NewQmIssueDialog extends TitleAreaDialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        setTitle("New QM Issue");
-        setMessage("To start a new QM issue fill in the form an press OK.", IMessageProvider.INFORMATION);
+        setTitle(Messages.NewQmIssueDialog_10);
+        setMessage(Messages.NewQmIssueDialog_11);
         
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = 10;
-        layout.marginHeight = 10;
+        //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        composite.setLayoutData(gd);    
-        
-        final Group groupOrganization = new Group(composite, SWT.NONE);    
-        //groupOrganization.setText(Messages.GroupByTagDialog_2);
-        GridLayout groupOrganizationLayout = new GridLayout(1, true);
-        groupOrganization.setLayout(groupOrganizationLayout);
-        gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        groupOrganization.setLayoutData(gd);
+        composite.setLayoutData(gd);
 
-        ScrolledComposite scrolledComposite = new ScrolledComposite(groupOrganization, SWT.V_SCROLL);
+        ScrolledComposite scrolledComposite = new ScrolledComposite(composite, SWT.V_SCROLL);
         scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
         scrolledComposite.setExpandHorizontal(true);
         
@@ -144,13 +186,26 @@ public class NewQmIssueDialog extends TitleAreaDialog {
         addFormElements(innerComposite);
         
         scrolledComposite.setVisible(true);
-        Point size = innerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT); 
-        size.y += 2 * 2;
-        innerComposite.setSize(size);
-        groupOrganization.layout(); 
+        Point size = innerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);   
+        innerComposite.setSize(size); 
                   
+        // Build the separator line
+        Label separator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
+        separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
         composite.pack(); 
+        
+        setDialogLocation();
+        
         return composite;
+    }
+    
+    private void setDialogLocation() {
+        Rectangle monitorArea = getShell().getDisplay().getPrimaryMonitor().getBounds();
+        Rectangle shellArea = getShell().getBounds();
+        int x = monitorArea.x + (monitorArea.width - shellArea.width)/2;
+        int y = monitorArea.y + (monitorArea.height - shellArea.height)/2;
+        getShell().setLocation(x,y);
     }
 
 

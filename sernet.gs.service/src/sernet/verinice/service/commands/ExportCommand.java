@@ -390,7 +390,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             }
         } else {
             element = getDao().retrieve(element.getDbId(), RetrieveInfo.getPropertyInstance());
-            getCache().put(new Element(element.getUuid(), element));
+            if(element!=null) {
+                getCache().put(new Element(element.getUuid(), element));
+            }
         }
         return element;
     }

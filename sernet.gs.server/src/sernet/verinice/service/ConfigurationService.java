@@ -43,6 +43,8 @@ public class ConfigurationService implements IConfigurationService {
     
     private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
     
+    private Map<String, String> nameMap = new HashMap<String, String>();
+    
     private IBaseDao<Configuration, Serializable> configurationDao;
     
     private IAuthService authService;
@@ -56,6 +58,7 @@ public class ConfigurationService implements IConfigurationService {
             roleMap.put(user, roleArray);           
             scopeMap.put(user, c.isScopeOnly());     
             scopeIdMap.put(user, c.getPerson().getScopeId());  
+            nameMap.put(user, c.getPerson().getTitle());  
         }
         String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
         roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
@@ -87,6 +90,7 @@ public class ConfigurationService implements IConfigurationService {
         roleMap.clear();
         scopeMap.clear();
         scopeIdMap.clear();
+        nameMap.clear();
     }
     
     /* (non-Javadoc)
@@ -130,6 +134,20 @@ public class ConfigurationService implements IConfigurationService {
         if (result == null) {
             loadUserData();
             result = roleMap.get(user);
+        }
+        return result;
+    }
+    
+   
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.IConfigurationService#getName(java.lang.String)
+     */
+    @Override
+    public String getName(String user) {
+        String result = nameMap.get(user);
+        if (result == null) {
+            loadUserData();
+            result = nameMap.get(user);
         }
         return result;
     }

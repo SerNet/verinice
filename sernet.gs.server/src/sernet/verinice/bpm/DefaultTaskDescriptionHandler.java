@@ -23,6 +23,7 @@ import org.jbpm.api.task.Task;
 
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.Messages;
 
 /**
  * Default ITaskDescriptionHandler which reads description of task from

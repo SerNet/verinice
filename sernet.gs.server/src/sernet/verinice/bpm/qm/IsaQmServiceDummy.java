@@ -31,12 +31,20 @@ import sernet.verinice.model.bpm.ProcessInformation;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IsaQmServiceDummy implements IIsaQmService {
-
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(java.lang.String, java.lang.Object, java.lang.String)
+     */
+    @Override
+    public IProcessStartInformation startProcessesForElement(String uuid, Object feedback, String priority) {
+        return new ProcessInformation(0);
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForControl(String controlUuid, String uuidAudit, Object comment, String priority) {
+    public IProcessStartInformation startProcessesForElement(String controlUuid, String uuidAudit, Object comment, String priority) {
         return new ProcessInformation(0);
     }
     
@@ -68,8 +76,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     @Override
     public boolean isActive() {
         return false;
-    }
-
-    
+    } 
 
 }

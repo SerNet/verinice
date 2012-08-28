@@ -35,6 +35,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;

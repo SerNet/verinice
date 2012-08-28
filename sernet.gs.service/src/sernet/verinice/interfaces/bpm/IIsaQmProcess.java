@@ -38,4 +38,6 @@ public interface IIsaQmProcess extends IGenericProcess {
     
     String VAR_QM_PRIORITY = "IQM_PRIORITY";
     
+    String VAR_IQM_REVIEW = "IQM_REVIEW";
+    
 }

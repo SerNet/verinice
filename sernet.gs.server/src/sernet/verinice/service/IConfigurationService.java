@@ -30,6 +30,8 @@ public interface IConfigurationService {
     Integer getScopeId(String user);
 
     String[] getRoles(String user);
+
+    String getName(String user);
     
     void discardUserData();
 

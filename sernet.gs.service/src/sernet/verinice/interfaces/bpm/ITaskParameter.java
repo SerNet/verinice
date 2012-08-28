@@ -52,4 +52,12 @@ public interface ITaskParameter extends Serializable {
     
     void setAuditUuid(String uuid);
     
+    public String getProcessKey();
+
+    public String getTaskId();
+
+    public void setProcessKey(String processKey);
+
+    public void setTaskId(String taskId);
+    
 }

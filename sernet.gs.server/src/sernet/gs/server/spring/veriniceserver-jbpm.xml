@@ -54,6 +54,7 @@
         <property name="processDao" ref="processDao" />
         <property name="elementDao" ref="cnaTreeElementDao" />
         <property name="authService" ref="authService" />
+        <property name="defaultAssignee" value="qm-review" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->
@@ -67,6 +68,7 @@
         <property name="jbpmTaskDao" ref="jbpmTaskDao" />
         <property name="jbpmVariableDao" ref="jbpmVariableDao" />
         <property name="auditDao" ref="auditDAO" />
+        <property name="configurationService" ref="configurationService" />
         <property name="taskOutcomeBlacklist">
             <set>
                 <value>icf.trans.reminderDeadline</value>

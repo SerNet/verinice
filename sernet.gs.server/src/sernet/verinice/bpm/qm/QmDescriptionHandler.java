@@ -21,10 +21,10 @@ package sernet.verinice.bpm.qm;
 
 import org.jbpm.api.task.Task;
 
-import sernet.verinice.bpm.Messages;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.Messages;
 
 /**
  * Reads value of process/task variable with name

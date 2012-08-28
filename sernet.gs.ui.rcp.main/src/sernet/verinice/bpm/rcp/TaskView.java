@@ -20,8 +20,10 @@
 package sernet.verinice.bpm.rcp;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -41,6 +43,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
@@ -77,7 +80,6 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskListener;
-import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
@@ -105,7 +107,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     static final Logger LOG = Logger.getLogger(TaskView.class);
 
-    public static final String ID = "sernet.verinice.bpm.rcp.TaskView";
+    public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
 
     private TreeViewer treeViewer;
     
@@ -122,6 +124,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private Action myTasksAction;
 
     private Action cancelTaskAction;
+    
+    private TaskFilterAction taskFilterAction;
 
     private ICommandService commandService;
 
@@ -201,31 +205,16 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 try {
                     progressService.run(true, true, job);
                 } catch (Throwable t) {
-                    LOG.error("Error while loading tasks.", t);
-                    showError("Error", "Error while loading task.");
+                    LOG.error("Error while loading tasks.", t); //$NON-NLS-1$
+                    showError(Messages.TaskView_2, Messages.TaskView_3);
                 }
             }
         });
         
         taskList = job.getTaskList();
         
-        final List<ITask> finalTaskList = taskList;
-        
-        // Get the content for the viewer, setInput will call getElements in the
-        // contentProvider
-        try {
-            Display.getDefault().syncExec(new Runnable(){
-                public void run() {
-                    getViewer().setInput(finalTaskList);
-                    if(contentProvider.getNumberOfGroups()==1) {
-                        getViewer().expandToLevel(2);
-                    }
-                }
-            });
-            
-        } catch (Throwable t) {
-            LOG.error("Error while setting table data", t); //$NON-NLS-1$
-        }
+        RefreshTaskView refresh = new RefreshTaskView(taskList, getViewer());
+        refresh.refresh();
     }
     
     private Composite createContainer(Composite parent) {
@@ -263,10 +252,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         tree.setHeaderVisible(true);
         tree.setLinesVisible(true);
 
-        TableLayout layout = new TableLayout();
         
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskViewColumn_0);      
+        
+        treeColumn = new TreeColumn(tree, SWT.LEFT);
+        treeColumn.setText(Messages.TaskView_4);
         
         treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskViewColumn_1);
@@ -278,10 +269,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         treeColumn.setText(Messages.TaskViewColumn_3);
 
         // set initial column widths
-        layout.addColumnData(new ColumnWeightData(40, false));
-        layout.addColumnData(new ColumnWeightData(30, false));
-        layout.addColumnData(new ColumnWeightData(15, false));
-        layout.addColumnData(new ColumnWeightData(15, false));
+        TableLayout layout = new TableLayout();
+        layout.addColumnData(new ColumnWeightData(39, false));
+        layout.addColumnData(new ColumnWeightData(12, false));
+        layout.addColumnData(new ColumnWeightData(25, false));
+        layout.addColumnData(new ColumnWeightData(12, false));
+        layout.addColumnData(new ColumnWeightData(12, false));
 
         tree.setLayout(layout);
 
@@ -338,7 +331,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                         loadControl = getCommandService().executeCommand(loadControl);
                         EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
                     } catch (Throwable t) {
-                        LOG.error("Error while opening control.", t);
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
                     }
                 }
             }
@@ -354,14 +347,16 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         myTasksAction.setChecked(onlyMyTasks);
         myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));
 
+        taskFilterAction = new TaskFilterAction(getSite().getShell(), getViewer(), myTasksAction);
+        
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
             public void run() {
                 try {
                     cancelTask();
                     this.setChecked(false);
                 } catch (Throwable e) {
-                    showError("Error", "Error while canceling task.");
-                    LOG.error("Error while canceling task.", e);
+                    LOG.error("Error while canceling task.", e); //$NON-NLS-1$
+                    showError(Messages.TaskView_6, Messages.TaskView_7);
                 }
             }
         };
@@ -386,7 +381,9 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     
     private void configureActions() {
         cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
-        myTasksAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL));
+        boolean enabled = getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL);
+        myTasksAction.setEnabled(enabled);
+        taskFilterAction.setOnlyMyTaskEnabled(enabled);
     }
 
     @Deprecated
@@ -416,11 +413,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         IToolBarManager manager = bars.getToolBarManager();
         // Dummy action to force displaying the toolbar in a new line
         Action dummyAction = new Action() {};
-        dummyAction.setText(" ");
+        dummyAction.setText(" "); //$NON-NLS-1$
         dummyAction.setEnabled(false);
         ActionContributionItem item = new ActionContributionItem(dummyAction);
         item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         manager.add(item);
+        manager.add(taskFilterAction);
         manager.add(this.refreshAction);
         manager.add(myTasksAction);
         manager.add(cancelTaskAction);
@@ -446,7 +444,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     try {
                         taskSelected();
                     } catch (Throwable t) {
-                        LOG.error("Error while configuring task actions.", t);
+                        LOG.error("Error while configuring task actions.", t); //$NON-NLS-1$
                     }
                 }
                 getViewSite().getActionBars().updateActionBars();
@@ -499,18 +497,24 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     /**
      * @param taskList
      */
-    protected void addTasks(final List<ITask> taskList) {
+    protected void addTasks(List<ITask> taskList) {
+        final List<ITask> newList;
+        if(taskList==null || taskList.isEmpty()) {
+            newList = new LinkedList<ITask>();
+        } else {
+            newList = taskList;
+        }
         List<ITask> currentTaskList = (List<ITask>) getViewer().getInput();
         if (currentTaskList != null) {
             for (ITask task : currentTaskList) {
-                if (!taskList.contains(task)) {
-                    taskList.add(task);
+                if (!newList.contains(task)) {
+                    newList.add(task);
                 }
             }
         }
         Display.getDefault().syncExec(new Runnable() {
             public void run() {
-                getViewer().setInput(taskList);
+                getViewer().setInput(newList);
             }
         });
     }
@@ -577,7 +581,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                         }
                     }
                 });
-                showInformation("Information", number + " task(s) deleted.");
+                showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));
             }
 
         }
@@ -595,27 +599,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
-    }
-
-    private final class LoadTaskJob implements IRunnableWithProgress {      
-        private ITaskParameter param;       
-        private List<ITask> taskList;
-
-        public LoadTaskJob(ITaskParameter param) {
-            super();
-            this.param = param;
-        }
-
-        @Override
-        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-            Activator.inheritVeriniceContextState();
-            taskList = ServiceFactory.lookupTaskService().getTaskList(param);
-            Collections.sort(taskList);
-        }
-        
-        public List<ITask> getTaskList() {
-            return taskList;
-        }
     }
 
 }

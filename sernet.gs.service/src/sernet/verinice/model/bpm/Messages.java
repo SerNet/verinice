@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.model.bpm;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  *
  */
 public class Messages {
-    private static final String BUNDLE_NAME = "sernet.verinice.bpm.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.verinice.model.bpm.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

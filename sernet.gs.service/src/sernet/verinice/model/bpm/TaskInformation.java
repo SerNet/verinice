@@ -32,31 +32,33 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  */
 public class TaskInformation implements ITask, Serializable {
 
-    String id;
+    private String id;
     
-    String type;
+    private String type;
     
-    Date createDate;
+    private Date createDate;
     
-    Date dueDate;
+    private Date dueDate;
     
-    String name;
+    private String name;
     
-    String description;
+    private String processName;
     
-    String controlTitle;
+    private String description;
     
-    String uuid;
+    private String controlTitle;
     
-    String elementType;
+    private String uuid;
     
-    String sortValue;
+    private String elementType;
     
-    List<KeyValue> outcomeList;
+    private String sortValue;
+    
+    private List<KeyValue> outcomeList;
 
-    boolean isRead = false;
+    private boolean isRead = false;
     
-    String style;
+    private String style;
 
     private String uuidAudit;
 
@@ -125,6 +127,14 @@ public class TaskInformation implements ITask, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
     }
 
     public String getDescription() {
