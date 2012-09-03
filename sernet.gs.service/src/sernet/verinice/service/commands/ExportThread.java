@@ -186,7 +186,7 @@ public class ExportThread extends NotifyingThread {
                 // TODO: what happens if external and source id already set?
                 element.setextId(extId);
                 element.setSourceId(getSourceId());
-                getDao().saveOrUpdate(element);
+                getDao().merge(element);
                 getChangedElementList().add(element);
             }
         } else if(LOG.isDebugEnabled()) { // else if(checkElement(element))
@@ -199,14 +199,10 @@ public class ExportThread extends NotifyingThread {
         if (element == null)
             return element;
         
-        Element cachedElement = getCache().get(element.getUuid());
-        if(cachedElement!=null) {
-            element = (CnATreeElement) cachedElement.getValue();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Element from cache: " + element.getTitle() + ", UUID: " + element.getUuid());
-            }
-            return element;
-        }
+        CnATreeElement elementFromCache = getElementFromCache(element);
+        if(elementFromCache!=null) {
+            return elementFromCache;
+        }  
         
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
         ri.setLinksDown(true);
@@ -220,6 +216,24 @@ public class ExportThread extends NotifyingThread {
         }
              
         return element;
+    }
+    
+    private CnATreeElement getElementFromCache(CnATreeElement element) {
+        CnATreeElement fromCache = null;
+        synchronized (lock) {
+            if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
+                Element cachedElement = getCache().get(element.getUuid());
+                if(cachedElement!=null) {
+                    fromCache = (CnATreeElement) cachedElement.getValue();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Element from cache: " + element.getTitle() + ", UUID: " + element.getUuid());
+                    }
+                }
+            } else {
+                LOG.warn("Cache is not alive. Can't put element to cache, uuid: " + element.getUuid());
+            }
+        }
+        return fromCache;
     }
 
     private void cacheElement(CnATreeElement element) {

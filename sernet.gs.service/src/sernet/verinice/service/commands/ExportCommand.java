@@ -257,7 +257,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 public void notifyOfThreadComplete(Thread thread) {
                     ExportThread exportThread = (ExportThread) thread;
                     synchronized(lock) {
-                        transaction.getTarget().getChildren().add(exportThread.getSyncObject());
+                        if(exportThread.getSyncObject()!=null) {
+                            transaction.getTarget().getChildren().add(exportThread.getSyncObject());
+                        }
                         getValuesFromThread(exportThread);
                     }                 
                 }
@@ -275,9 +277,16 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             getLog().debug(transactionList.size() + " export threads finished.");
         }
         
-        for( ExportTransaction childTransaction : transactionList ) {           
-            exportChildren(childTransaction);
+        for( ExportTransaction childTransaction : transactionList ) {
+            if(checkElement(childTransaction.getElement())) {
+                exportChildren(childTransaction);
+            }
         }
+    }
+    
+    private boolean checkElement(CnATreeElement element) {
+        return (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
+         && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
     }
 
     /**
