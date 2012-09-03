@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
-import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
@@ -79,14 +78,14 @@ public class BSIModelViewDragListener implements DragSourceListener {
 			}
 		}
 		event.doit = true;
-		LOG.debug("EVENT.DOIT:\t" + String.valueOf(event.doit));
 	}
 	
 	private boolean validateDrag(DragSourceEvent event){
-	    return (BausteinElementTransfer.getInstance().isSupportedType(event.dataType)
-	            || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
-	            || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
-	            );
+        return (BausteinElementTransfer.getInstance().isSupportedType(event.dataType)
+                || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
+                || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
+                || ISO27kElementTransfer.getInstance().isSupportedType(event.dataType)
+                || ISO27kGroupTransfer.getInstance().isSupportedType(event.dataType));
 	}
 
 }
