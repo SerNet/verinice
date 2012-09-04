@@ -36,6 +36,7 @@
         <action id="addnote" />
         <action id="addsecurityassessment" />
         <action id="assignallisatopics" />
+        <action id="addownmodul"/>
         <action id="auditview" />
         <action id="bausteinzuordnung" />
         <action id="bsidnd" />
