@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -36,6 +37,7 @@ import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRenderOption;
+import org.eclipse.birt.report.engine.api.IRenderTask;
 import org.eclipse.birt.report.engine.api.IReportDocument;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportEngineFactory;
@@ -151,8 +153,47 @@ public class BIRTReportService {
 			log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
 		}
-		
+		task.setLocale(Locale.getDefault());
 		return task;
+	}
+	
+	public IRunTask createRunTask(URL rptDesignURL){
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        
+        IRunTask runTask = null;
+        try{
+            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            runTask = engine.createRunTask(design);
+            runTask.setReportDocument(rptDesignURL.getFile());
+        } catch (EngineException e){
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);            
+        } catch (IOException e) {
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);
+        }
+        
+        return runTask;
+	}
+	
+	public IRenderTask createRenderTask(URL rptDesignURL){
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
+        
+        IRenderTask renderTask = null;
+        try{
+            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+            IReportDocument ird = engine.openReportDocument(rptDesignURL.getFile());
+            renderTask = engine.createRenderTask(ird);
+        } catch (EngineException e){
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);            
+        } catch (IOException e) {
+            log.error("Could not open report design: ", e);
+            throw new IllegalStateException(e);
+        }
+        return renderTask;
 	}
 	
 	public IDataExtractionTask createExtractionTask(URL rptDesignURL)
@@ -235,6 +276,12 @@ public class BIRTReportService {
 		}
 	}
 	
+	private void destroyEngine(){
+	    if(engine != null){
+	        engine.destroy();
+	    }
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
@@ -246,7 +293,6 @@ public class BIRTReportService {
 		} else if(options.getRootElements() != null && options.getRootElements().length > 0){
 			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
 		}
-		
 		task.setRenderOption(renderOptions);
 		
 		try {
@@ -256,10 +302,46 @@ public class BIRTReportService {
 			throw new IllegalStateException(e);
 		} finally{
 		    // ensure .log file is released again (.lck file will be removed)
-		    if(engine != null){
-		        engine.destroy();
-		    }
+		    destroyEngine();
 		}
+	}
+	
+	public void run(IRunTask task, IReportOptions options){
+	    
+	    // Makes the chosen root element available via the appContext variable 'rootElementId'
+        if(options.getRootElement() != null){
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+        } else if(options.getRootElements() != null && options.getRootElements().length > 0){
+            task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+        }
+        try{
+            task.run();
+        } catch(EngineException e){
+            log.error("Could not run report: ", e);
+            throw new IllegalStateException(e);
+        }
+	}
+	
+	public void render(IRenderTask task, IReportOptions options){
+	    IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
+	    renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
+	    // Makes the chosen root element available via the appContext variable 'rootElementId'
+	    if(options.getRootElement() != null){
+	        task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+	    } else if(options.getRootElements() != null && options.getRootElements().length > 0){
+	        task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+	    }
+
+	    task.setRenderOption(renderOptions);
+
+	    try{
+	        task.render();
+	    } catch(EngineException e){
+	        log.error("Could not render design: ", e);
+	        throw new IllegalStateException(e);
+	    } finally {
+	        destroyEngine();
+	    }
 	}
 
 }

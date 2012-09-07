@@ -78,7 +78,6 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
         result = new ArrayList<List<String>>(0);
         try {
             for(ControlGroup cg : getControlGroups(rootElmt)){
-                LOG.error("iterating:\t" + cg.getTitle());
                 LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 for(CnATreeElement c : command.getElements()){

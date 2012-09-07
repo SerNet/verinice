@@ -20,14 +20,15 @@ package sernet.verinice.report.service.impl;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.management.RuntimeErrorException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
+import org.eclipse.birt.report.model.api.PropertyHandle;
+import org.eclipse.birt.report.model.api.ReportDesignHandle;
+import org.eclipse.birt.report.model.api.VariableElementHandle;
 
-import sernet.gs.ui.rcp.main.connect.HibernateBugFixDeleteEventListener;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
@@ -35,6 +36,9 @@ import sernet.verinice.interfaces.report.IReportType;
 public class UserReportType implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(UserReportType.class);
+	
+	private final static String VAR_ENGINE_ITERATIONS = "engineIterations";
+	private final static String PROPERTYHANDLE_PAGEVARIABLE = "pageVariables";
 	
 	private String reportFile = ""; //$NON-NLS-1$
 
@@ -71,7 +75,6 @@ public class UserReportType implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		
 		URL reportDesign;
         try {
             reportDesign = (new File(reportFile)).toURI().toURL();
@@ -83,10 +86,17 @@ public class UserReportType implements IReportType {
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
 			IRunAndRenderTask task = brs.createTask(reportDesign);
-			brs.render(task, reportOptions);
+					    
+		    for(int i = 0;i < getEngineIterations(task); i++){
+			    brs.render(task, reportOptions);
+		    }
+
+		    // just in case a toc was generated, the next toc should start emtpy again
+		    TocHelper2.reset();
 		}
 		else
 		{
+		    // this should be @deprecated, since CSV output format isn't supported anymore
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
 			// in a user report, only one table should be present for the CSV report (first one found is used):
 			brs.extract(task, reportOptions, 1);
@@ -96,6 +106,38 @@ public class UserReportType implements IReportType {
 	@Override
 	public String getUseCaseID() {
 		return IReportType.USE_CASE_ID_ALWAYS_REPORT;
+	}
+	
+	
+	/**
+	 * if a report should run more than once (n-times), the user has to define a ReportVariable called
+	 * "engineIterations" and set it's value to n. This method extracts n.
+	 * more than one engine iterations are needed if the user wants to fill a toc in his report (e.g.)
+	 * @param task
+	 * @return
+	 */
+	private int getEngineIterations(IRunAndRenderTask task){
+	    ReportDesignHandle dh = (ReportDesignHandle)task.getReportRunnable().getDesignHandle();
+	    Iterator<Object> iter = dh.getPropertyIterator();
+	    try{
+	        while(iter.hasNext()){
+	            Object o = iter.next();
+	            PropertyHandle ph = (PropertyHandle)o;
+	            if(ph.getPropertyDefn().getName().equals(PROPERTYHANDLE_PAGEVARIABLE)){
+	                for(Object item : ph.getContents()){
+	                    if(item instanceof VariableElementHandle){
+	                        VariableElementHandle veh = (VariableElementHandle)item;
+	                        if(veh.getVariableName().equals(VAR_ENGINE_ITERATIONS)){
+	                            return Integer.parseInt(veh.getValue());
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    } catch (Throwable t){
+	        LOG.error("Error while determing number of engine iterations", t);
+	    }
+	    return 1; // default / no ReportVariable found
 	}
 
 }

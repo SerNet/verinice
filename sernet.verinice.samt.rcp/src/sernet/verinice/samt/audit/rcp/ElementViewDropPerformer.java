@@ -19,18 +19,23 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.bsi.dnd.DNDHelper;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
@@ -40,21 +45,25 @@ import sernet.verinice.iso27k.service.PasteService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.rcp.IProgressRunnable;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ElementViewDropPerformer implements DropPerformer {
+public class ElementViewDropPerformer extends ViewerDropAdapter implements DropPerformer {
 
     private static final Logger LOG = Logger.getLogger(ElementViewDropPerformer.class);
     
     GenericElementView elementView;
     
+    private Object target = null;
+    
+    private boolean isActive = false;
+    
     /**
      * @param elementView
      */
-    public ElementViewDropPerformer(GenericElementView elementView) {
+    public ElementViewDropPerformer(GenericElementView elementView, TreeViewer viewer) {
+        super(viewer);
         this.elementView = elementView;
     }
 
@@ -63,7 +72,7 @@ public class ElementViewDropPerformer implements DropPerformer {
      */
     @Override
     public boolean isActive() {
-        return true;
+        return isActive;
     }
 
     /* (non-Javadoc)
@@ -77,9 +86,13 @@ public class ElementViewDropPerformer implements DropPerformer {
        if (LOG.isDebugEnabled()) {
            LOG.debug("performDrop...");
        } 
-        
+       
+              
        try {
             if (!validateDropObjects(target)) {
+                return false;
+            }
+            if(!validateLinkTypes(data)){
                 return false;
             }
             
@@ -91,7 +104,7 @@ public class ElementViewDropPerformer implements DropPerformer {
             }
             
             CnATreeElement elementToLink = elementView.getElementToLink();
-            PasteService task = new AuditCutService(groupToAdd, elementToLink, DNDItems.getItems());
+            PasteService task = new AuditCutService(groupToAdd, elementToLink, DNDHelper.arrayToList(data));
             IProgressRunnable operation = new PasteOperation(task,"{0} elements moved to group {1}",PreferenceConstants.INFO_ELEMENTS_CUT) ;
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.run(true, true, operation);
@@ -112,9 +125,50 @@ public class ElementViewDropPerformer implements DropPerformer {
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
+        return isActive = isSupportedData(transferType);
+    }
+    
+    /**
+     * @param target
+     * @return
+     */
+    private boolean validateDropObjects(Object target) {
+        //validation is done in performDrop(), because data is not available here
+        return true;
+    }
+    
+    private boolean isSupportedData(TransferData transferData){
+        return (ISO27kElementTransfer.getInstance().isSupportedType(transferData) ||
+                ISO27kGroupTransfer.getInstance().isSupportedType(transferData));
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
+     */
+    @Override
+    public boolean performDrop(Object arg0) {
+        return false;
+    }
+    
+    private boolean validateLinkTypes(Object data){
         boolean valid = true;
         if(target instanceof CnATreeElement) {
-            Set<String> draggedTypeSet = DNDItems.getTypes();
+            List<Object> list = new ArrayList<Object>();
+            if(data instanceof Object[]){
+                Object[] o = (Object[])data;
+                for(Object object : o){
+                    list.add(object);
+                }
+            } else if (data instanceof Object){
+                list.add(data);
+            }
+            Set<String> draggedTypeSet = new HashSet<String>(0);
+            for(Object object : list){
+                if(object instanceof CnATreeElement){
+                    CnATreeElement c = (CnATreeElement)object;
+                    draggedTypeSet.add(c.getTypeId());
+                }
+            }
             CnATreeElement elementToLink = elementView.getElementToLink();
             String linkToType = elementToLink.getTypeId();
             for (Iterator<String> iterator = draggedTypeSet.iterator(); iterator.hasNext() && valid;) {
@@ -135,17 +189,8 @@ public class ElementViewDropPerformer implements DropPerformer {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validateDrop for target " + linkToType + ": " + valid);
             }
-        }   
+        }
         return valid;
-    }
-    
-    /**
-     * @param target
-     * @return
-     */
-    private boolean validateDropObjects(Object target) {
-        // TODO Auto-generated method stub
-        return true;
     }
 
 }

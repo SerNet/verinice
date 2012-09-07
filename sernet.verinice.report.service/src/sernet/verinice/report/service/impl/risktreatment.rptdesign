@@ -653,146 +653,183 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">asset_abbr</property>
                     <text-property name="displayName">asset_abbr</text-property>
+                    <text-property name="heading">asset_abbr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_name</property>
                     <text-property name="displayName">asset_name</text-property>
+                    <text-property name="heading">asset_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_type</property>
                     <text-property name="displayName">asset_type</text-property>
+                    <text-property name="heading">asset_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_tag</property>
                     <text-property name="displayName">asset_tag</text-property>
+                    <text-property name="heading">asset_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_description</property>
                     <text-property name="displayName">asset_description</text-property>
+                    <text-property name="heading">asset_description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_mtpd</property>
                     <text-property name="displayName">asset_bcm_mtpd</text-property>
+                    <text-property name="heading">asset_bcm_mtpd</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_rpo</property>
                     <text-property name="displayName">asset_bcm_rpo</text-property>
+                    <text-property name="heading">asset_bcm_rpo</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_rto</property>
                     <text-property name="displayName">asset_bcm_rto</text-property>
+                    <text-property name="heading">asset_bcm_rto</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time1</property>
                     <text-property name="displayName">asset_bcm_time1</text-property>
+                    <text-property name="heading">asset_bcm_time1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_tim24</property>
                     <text-property name="displayName">asset_bcm_tim24</text-property>
+                    <text-property name="heading">asset_bcm_tim24</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time48</property>
                     <text-property name="displayName">asset_bcm_time48</text-property>
+                    <text-property name="heading">asset_bcm_time48</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time96</property>
                     <text-property name="displayName">asset_bcm_time96</text-property>
+                    <text-property name="heading">asset_bcm_time96</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time168</property>
                     <text-property name="displayName">asset_bcm_time168</text-property>
+                    <text-property name="heading">asset_bcm_time168</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time720</property>
                     <text-property name="displayName">asset_bcm_time720</text-property>
+                    <text-property name="heading">asset_bcm_time720</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_timegt720</property>
                     <text-property name="displayName">asset_bcm_timegt720</text-property>
+                    <text-property name="heading">asset_bcm_timegt720</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_confidentiality</property>
                     <text-property name="displayName">asset_value_method_confidentiality</text-property>
+                    <text-property name="heading">asset_value_method_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_integrity</property>
                     <text-property name="displayName">asset_value_method_integrity</text-property>
+                    <text-property name="heading">asset_value_method_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_availability</property>
                     <text-property name="displayName">asset_value_method_availability</text-property>
+                    <text-property name="heading">asset_value_method_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_confidentiality</property>
                     <text-property name="displayName">asset_value_confidentiality</text-property>
+                    <text-property name="heading">asset_value_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_integrity</property>
                     <text-property name="displayName">asset_value_integrity</text-property>
+                    <text-property name="heading">asset_value_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_availability</property>
                     <text-property name="displayName">asset_value_availability</text-property>
+                    <text-property name="heading">asset_value_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_replacementcost</property>
                     <text-property name="displayName">asset_replacementcost</text-property>
+                    <text-property name="heading">asset_replacementcost</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_replcost_currency</property>
                     <text-property name="displayName">asset_replcost_currency</text-property>
+                    <text-property name="heading">asset_replcost_currency</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_comment</property>
                     <text-property name="displayName">asset_value_comment</text-property>
+                    <text-property name="heading">asset_value_comment</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_c</property>
                     <text-property name="displayName">asset_riskvalue_c</text-property>
+                    <text-property name="heading">asset_riskvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_c</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_c</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_c</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_c</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_i</property>
                     <text-property name="displayName">asset_riskvalue_i</text-property>
+                    <text-property name="heading">asset_riskvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_i</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_i</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_i</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_i</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_a</property>
                     <text-property name="displayName">asset_riskvalue_a</text-property>
+                    <text-property name="heading">asset_riskvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_a</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_a</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_a</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_a</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_risktreat</property>
                     <text-property name="displayName">asset_risktreat</text-property>
+                    <text-property name="heading">asset_risktreat</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_risktreatexpl</property>
                     <text-property name="displayName">asset_risktreatexpl</text-property>
+                    <text-property name="heading">asset_risktreatexpl</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1271,7 +1308,7 @@ catch (Exception e) {
 }
 
 cols = helper.getAllPropertyTypes("asset");
-c2 = new LoadReportLinkedElements("asset", elmtid, true);
+c2 = new LoadReportLinkedElements("asset", elmtid, true, false);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -1281,27 +1318,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -1319,174 +1360,218 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">control_abbr</property>
                     <text-property name="displayName">control_abbr</text-property>
+                    <text-property name="heading">control_abbr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_name</property>
                     <text-property name="displayName">control_name</text-property>
+                    <text-property name="heading">control_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_tag</property>
                     <text-property name="displayName">control_tag</text-property>
+                    <text-property name="heading">control_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_desc</property>
                     <text-property name="displayName">control_desc</text-property>
+                    <text-property name="heading">control_desc</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented</property>
                     <text-property name="displayName">control_implemented</text-property>
+                    <text-property name="heading">control_implemented</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_explanation</property>
                     <text-property name="displayName">control_implemented_explanation</text-property>
+                    <text-property name="heading">control_implemented_explanation</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_objective</property>
                     <text-property name="displayName">control_implemented_objective</text-property>
+                    <text-property name="heading">control_implemented_objective</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implby</property>
                     <text-property name="displayName">control_implby</text-property>
+                    <text-property name="heading">control_implby</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_confidentiality</property>
                     <text-property name="displayName">control_effectiveness_confidentiality</text-property>
+                    <text-property name="heading">control_effectiveness_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_integrity</property>
                     <text-property name="displayName">control_effectiveness_integrity</text-property>
+                    <text-property name="heading">control_effectiveness_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_availability</property>
                     <text-property name="displayName">control_effectiveness_availability</text-property>
+                    <text-property name="heading">control_effectiveness_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_eff_probability</property>
                     <text-property name="displayName">control_eff_probability</text-property>
+                    <text-property name="heading">control_eff_probability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_explanation2</property>
                     <text-property name="displayName">control_effectiveness_explanation2</text-property>
+                    <text-property name="heading">control_effectiveness_explanation2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity</property>
                     <text-property name="displayName">control_maturity</text-property>
+                    <text-property name="heading">control_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_weight</property>
                     <text-property name="displayName">control_weight</text-property>
+                    <text-property name="heading">control_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_ownweight</property>
                     <text-property name="displayName">control_ownweight</text-property>
+                    <text-property name="heading">control_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min1</property>
                     <text-property name="displayName">control_min1</text-property>
+                    <text-property name="heading">control_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min2</property>
                     <text-property name="displayName">control_min2</text-property>
+                    <text-property name="heading">control_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_comment</property>
                     <text-property name="displayName">control_maturity_comment</text-property>
+                    <text-property name="heading">control_maturity_comment</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_duedate</property>
                     <text-property name="displayName">control_maturity_duedate</text-property>
+                    <text-property name="heading">control_maturity_duedate</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_lastrev</property>
                     <text-property name="displayName">control_lastrev</text-property>
+                    <text-property name="heading">control_lastrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_revision_notes</property>
                     <text-property name="displayName">control_revision_notes</text-property>
+                    <text-property name="heading">control_revision_notes</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_nextrev</property>
                     <text-property name="displayName">control_nextrev</text-property>
+                    <text-property name="heading">control_nextrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_currency</property>
                     <text-property name="displayName">control_kosten_currency</text-property>
+                    <text-property name="heading">control_kosten_currency</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptfix</property>
                     <text-property name="displayName">control_kosten_ptfix</text-property>
+                    <text-property name="heading">control_kosten_ptfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptvar</property>
                     <text-property name="displayName">control_kosten_ptvar</text-property>
+                    <text-property name="heading">control_kosten_ptvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptperiod</property>
                     <text-property name="displayName">control_kosten_ptperiod</text-property>
+                    <text-property name="heading">control_kosten_ptperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachfix</property>
                     <text-property name="displayName">control_kosten_sachfix</text-property>
+                    <text-property name="heading">control_kosten_sachfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachvar</property>
                     <text-property name="displayName">control_kosten_sachvar</text-property>
+                    <text-property name="heading">control_kosten_sachvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachperiod</property>
                     <text-property name="displayName">control_kosten_sachperiod</text-property>
+                    <text-property name="heading">control_kosten_sachperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_findings</property>
                     <text-property name="displayName">control_isa_audit_findings</text-property>
+                    <text-property name="heading">control_isa_audit_findings</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_maturity</property>
                     <text-property name="displayName">control_isa_maturity</text-property>
+                    <text-property name="heading">control_isa_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_weight</property>
                     <text-property name="displayName">control_isa_weight</text-property>
+                    <text-property name="heading">control_isa_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_ownweight</property>
                     <text-property name="displayName">control_isa_ownweight</text-property>
+                    <text-property name="heading">control_isa_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min1</property>
                     <text-property name="displayName">control_isa_min1</text-property>
+                    <text-property name="heading">control_isa_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min2</property>
                     <text-property name="displayName">control_isa_min2</text-property>
+                    <text-property name="heading">control_isa_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_externalnote</property>
                     <text-property name="displayName">control_isa_externalnote</text-property>
+                    <text-property name="heading">control_isa_externalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_internalnote</property>
                     <text-property name="displayName">control_isa_internalnote</text-property>
+                    <text-property name="heading">control_isa_internalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_ra</property>
                     <text-property name="displayName">control_isa_audit_ra</text-property>
+                    <text-property name="heading">control_isa_audit_ra</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_devi</property>
                     <text-property name="displayName">control_isa_audit_devi</text-property>
+                    <text-property name="heading">control_isa_audit_devi</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_compluntil</property>
                     <text-property name="displayName">control_isa_audit_compluntil</text-property>
+                    <text-property name="heading">control_isa_audit_compluntil</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_isaauditnote</property>
                     <text-property name="displayName">control_isa_isaauditnote</text-property>
+                    <text-property name="heading">control_isa_isaauditnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -2039,7 +2124,7 @@ catch (Exception e) {
 }
 
 cols = helper.getAllPropertyTypes("control");
-c2 = new LoadReportLinkedElements("control", elmtid, false);
+c2 = new LoadReportLinkedElements("control", elmtid, false, true);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -2049,27 +2134,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -2087,174 +2176,218 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">control_abbr</property>
                     <text-property name="displayName">control_abbr</text-property>
+                    <text-property name="heading">control_abbr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_name</property>
                     <text-property name="displayName">control_name</text-property>
+                    <text-property name="heading">control_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_tag</property>
                     <text-property name="displayName">control_tag</text-property>
+                    <text-property name="heading">control_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_desc</property>
                     <text-property name="displayName">control_desc</text-property>
+                    <text-property name="heading">control_desc</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented</property>
                     <text-property name="displayName">control_implemented</text-property>
+                    <text-property name="heading">control_implemented</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_explanation</property>
                     <text-property name="displayName">control_implemented_explanation</text-property>
+                    <text-property name="heading">control_implemented_explanation</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_objective</property>
                     <text-property name="displayName">control_implemented_objective</text-property>
+                    <text-property name="heading">control_implemented_objective</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implby</property>
                     <text-property name="displayName">control_implby</text-property>
+                    <text-property name="heading">control_implby</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_confidentiality</property>
                     <text-property name="displayName">control_effectiveness_confidentiality</text-property>
+                    <text-property name="heading">control_effectiveness_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_integrity</property>
                     <text-property name="displayName">control_effectiveness_integrity</text-property>
+                    <text-property name="heading">control_effectiveness_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_availability</property>
                     <text-property name="displayName">control_effectiveness_availability</text-property>
+                    <text-property name="heading">control_effectiveness_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_eff_probability</property>
                     <text-property name="displayName">control_eff_probability</text-property>
+                    <text-property name="heading">control_eff_probability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_explanation2</property>
                     <text-property name="displayName">control_effectiveness_explanation2</text-property>
+                    <text-property name="heading">control_effectiveness_explanation2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity</property>
                     <text-property name="displayName">control_maturity</text-property>
+                    <text-property name="heading">control_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_weight</property>
                     <text-property name="displayName">control_weight</text-property>
+                    <text-property name="heading">control_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_ownweight</property>
                     <text-property name="displayName">control_ownweight</text-property>
+                    <text-property name="heading">control_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min1</property>
                     <text-property name="displayName">control_min1</text-property>
+                    <text-property name="heading">control_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min2</property>
                     <text-property name="displayName">control_min2</text-property>
+                    <text-property name="heading">control_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_comment</property>
                     <text-property name="displayName">control_maturity_comment</text-property>
+                    <text-property name="heading">control_maturity_comment</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_duedate</property>
                     <text-property name="displayName">control_maturity_duedate</text-property>
+                    <text-property name="heading">control_maturity_duedate</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_lastrev</property>
                     <text-property name="displayName">control_lastrev</text-property>
+                    <text-property name="heading">control_lastrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_revision_notes</property>
                     <text-property name="displayName">control_revision_notes</text-property>
+                    <text-property name="heading">control_revision_notes</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_nextrev</property>
                     <text-property name="displayName">control_nextrev</text-property>
+                    <text-property name="heading">control_nextrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_currency</property>
                     <text-property name="displayName">control_kosten_currency</text-property>
+                    <text-property name="heading">control_kosten_currency</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptfix</property>
                     <text-property name="displayName">control_kosten_ptfix</text-property>
+                    <text-property name="heading">control_kosten_ptfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptvar</property>
                     <text-property name="displayName">control_kosten_ptvar</text-property>
+                    <text-property name="heading">control_kosten_ptvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptperiod</property>
                     <text-property name="displayName">control_kosten_ptperiod</text-property>
+                    <text-property name="heading">control_kosten_ptperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachfix</property>
                     <text-property name="displayName">control_kosten_sachfix</text-property>
+                    <text-property name="heading">control_kosten_sachfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachvar</property>
                     <text-property name="displayName">control_kosten_sachvar</text-property>
+                    <text-property name="heading">control_kosten_sachvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachperiod</property>
                     <text-property name="displayName">control_kosten_sachperiod</text-property>
+                    <text-property name="heading">control_kosten_sachperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_findings</property>
                     <text-property name="displayName">control_isa_audit_findings</text-property>
+                    <text-property name="heading">control_isa_audit_findings</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_maturity</property>
                     <text-property name="displayName">control_isa_maturity</text-property>
+                    <text-property name="heading">control_isa_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_weight</property>
                     <text-property name="displayName">control_isa_weight</text-property>
+                    <text-property name="heading">control_isa_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_ownweight</property>
                     <text-property name="displayName">control_isa_ownweight</text-property>
+                    <text-property name="heading">control_isa_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min1</property>
                     <text-property name="displayName">control_isa_min1</text-property>
+                    <text-property name="heading">control_isa_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min2</property>
                     <text-property name="displayName">control_isa_min2</text-property>
+                    <text-property name="heading">control_isa_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_externalnote</property>
                     <text-property name="displayName">control_isa_externalnote</text-property>
+                    <text-property name="heading">control_isa_externalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_internalnote</property>
                     <text-property name="displayName">control_isa_internalnote</text-property>
+                    <text-property name="heading">control_isa_internalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_ra</property>
                     <text-property name="displayName">control_isa_audit_ra</text-property>
+                    <text-property name="heading">control_isa_audit_ra</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_devi</property>
                     <text-property name="displayName">control_isa_audit_devi</text-property>
+                    <text-property name="heading">control_isa_audit_devi</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_compluntil</property>
                     <text-property name="displayName">control_isa_audit_compluntil</text-property>
+                    <text-property name="heading">control_isa_audit_compluntil</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_isaauditnote</property>
                     <text-property name="displayName">control_isa_isaauditnote</text-property>
+                    <text-property name="heading">control_isa_isaauditnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -2807,7 +2940,7 @@ catch (Exception e) {
 }
 
 cols = helper.getAllPropertyTypes("control");
-c2 = new LoadReportLinkedElements("control", elmtid, false);
+c2 = new LoadReportLinkedElements("control", elmtid, false, true);
 elements = helper.execute(c2).getElements();
 return helper.map(
 	elements,
@@ -2817,27 +2950,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>

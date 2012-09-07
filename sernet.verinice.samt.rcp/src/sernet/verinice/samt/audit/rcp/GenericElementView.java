@@ -141,7 +141,7 @@ public class GenericElementView extends ElementView {
         
         metaDropAdapter = new MetaDropAdapter(viewer);
         // add drop performer
-        metaDropAdapter.addAdapter(new ElementViewDropPerformer(this));
+        metaDropAdapter.addAdapter(new ElementViewDropPerformer(this, viewer));
     }
 
     /* (non-Javadoc)

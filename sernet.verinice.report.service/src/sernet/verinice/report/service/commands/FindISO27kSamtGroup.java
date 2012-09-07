@@ -33,7 +33,6 @@ import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.samt.service.FindSamtGroup;
@@ -71,6 +70,10 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         hydrateParent = hydrate;
         dbId = rootId;
     }
+    
+    public FindISO27kSamtGroup(boolean hydrate, String rootId){
+        this(hydrate, Integer.parseInt(rootId));
+    }
 
     /*
      * (non-Javadoc)
@@ -81,10 +84,6 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     public void execute() {
         IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
 
-        // find all ControlGroups
-//        StringBuilder sbHql = new StringBuilder();
-//        sbHql.append("select distinct controlGroup from ControlGroup as controlGroup");
-        
         LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -93,15 +92,7 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         }
         
 
-//        final String hql = sbHql.toString();
-//        if (getLog().isDebugEnabled()) {
-//            getLog().debug("hql: " + hql);
-//        }
-
-//        List<ControlGroup> controlGroupList;
         List<CnATreeElement> controlGroupList = null;
-
-//        controlGroupList = dao.findByQuery(hql, null);
 
         if(command.getElements() != null && command.getElements().size() > 0){
             controlGroupList = command.getElements();
@@ -130,19 +121,6 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
 
         if (resultList != null && !resultList.isEmpty()) {
             selfAssessmentGroup = determineRootControlgroup(resultList);
-//            CnATreeElement parent = resultList.get(0).getParent();
-//            for (ControlGroup g : resultList) {
-//                if (isParent(g, dbId)) {
-//                    selfAssessmentGroup = g;
-//                    if(g.getParent().getUuid().equals(parent.getUuid())){
-//                        parent = g.getParent();
-//                    } else  {
-//                        break;
-//                    }
-//                }
-//            }
-//            if(parent instanceof ControlGroup)
-//                selfAssessmentGroup = (ControlGroup)parent;
             if(selfAssessmentGroup != null)
                 hydrate(selfAssessmentGroup);
         }
@@ -197,21 +175,6 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
         return size;
     }
 
-    /**
-     * @param parent
-     * @return
-     */
-    private boolean isAudit(CnATreeElement parent) {
-        while (parent != null) {
-            if (parent != null && Audit.TYPE_ID.equals(parent.getTypeId())) {
-                return true;
-            } else {
-                parent = parent.getParent();
-            }
-        }
-        return false;
-    }
-
     private boolean isSamtTopicCollection(Collection<CnATreeElement> collection) {
         boolean isSamtTopicSet = true;
         for (CnATreeElement element : collection) {
@@ -236,26 +199,12 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
             selfAssessmentGroup.getParent().getTitle();
     }
 
-    /**
-     * @param controlGroup
-     * @param dbId2
-     * @return
-     */
-    private boolean isParent(CnATreeElement child, Integer parentId) {
-        if (child.getParent() == null)
-            return false;
-        if (child.getParent().getDbId().equals(parentId))
-            return true;
-        return isParent(child.getParent(), parentId);
-    }
-
     private boolean isISO27kControlGroup(ControlGroup group) {
         String is27kGroup = group.getEntity().getValue(CONTROLGROUP_IS27KGROUP_PROPERTY);
         if (is27kGroup != null && is27kGroup.equals("0")) {
             is27kGroup = "true";
         }
-        boolean ret = Boolean.parseBoolean(is27kGroup);
-        return ret;
+        return Boolean.parseBoolean(is27kGroup);
     }
 
     public ControlGroup getSelfAssessmentGroup() {
