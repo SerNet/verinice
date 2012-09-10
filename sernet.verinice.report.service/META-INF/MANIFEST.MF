@@ -29,7 +29,8 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.birt.report.engine.emitter.excel.config,
  org.eclipse.birt.report.engine.emitter.prototype.excel,
  org.eclipse.birt.report.engine.emitter.wpml,
- org.eclipse.birt.report.engine.emitter.wpml.config
+ org.eclipse.birt.report.engine.emitter.wpml.config,
+ com.ibm.icu;bundle-version="4.4.2"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands,
  sernet.verinice.report.service.impl
