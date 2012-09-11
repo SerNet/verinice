@@ -7,7 +7,8 @@ Bundle-Activator: sernet.verinice.report.service.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.verinice.oda.driver
-Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
+Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
+ org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.birt.core,
  org.eclipse.birt.report.engine,
  org.eclipse.birt.chart.engine,
@@ -29,8 +30,7 @@ Require-Bundle: org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.birt.report.engine.emitter.excel.config,
  org.eclipse.birt.report.engine.emitter.prototype.excel,
  org.eclipse.birt.report.engine.emitter.wpml,
- org.eclipse.birt.report.engine.emitter.wpml.config,
- com.ibm.icu;bundle-version="4.4.2"
+ org.eclipse.birt.report.engine.emitter.wpml.config
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands,
  sernet.verinice.report.service.impl
