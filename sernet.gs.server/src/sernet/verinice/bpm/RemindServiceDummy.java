@@ -44,7 +44,7 @@ public class RemindServiceDummy implements IRemindService {
      * @see sernet.verinice.bpm.IRemindService#sendEmail(java.util.Map)
      */
     @Override
-    public void sendEmail(Map<String, String> model) {
+    public void sendEmail(Map<String, String> model, boolean html) {
     }
 
     /* (non-Javadoc)

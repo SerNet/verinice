@@ -50,6 +50,10 @@ public class ComboModel<T> {
         objectList.add(position, new ComboModelObject<T>(object, labelProvider.getLabel(object)));
     }
 	
+	public void addAll(List<T> objectList) {
+	    objectList.addAll(objectList);
+	}
+	
 	public void remove(int i) {
 		objectList.remove(i);
 	}
@@ -81,6 +85,18 @@ public class ComboModel<T> {
 	public void sort() {
 	    Collections.sort(objectList);
 	}
+	
+	public int size() {
+	    return objectList.size();
+	}
+	
+	public int getSize() {
+        return size();
+    }
+	
+	public boolean isEmpty() {
+        return size()<1;
+    }
 	
 	public T getSelectedObject() {
 		return (selectedIndex>=0) ? objectList.get(selectedIndex).getObject() : null;

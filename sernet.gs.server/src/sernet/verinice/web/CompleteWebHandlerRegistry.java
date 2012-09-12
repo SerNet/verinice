@@ -22,16 +22,11 @@ package sernet.verinice.web;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.bpm.ICompleteClientHandler;
-import sernet.verinice.bpm.NewQmIssueClientHandler;
-import sernet.verinice.bpm.SetAssigneeClientHandler;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
-import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 
 
 /**

@@ -56,7 +56,7 @@ public class RefreshTaskView {
                     viewer.setInput(taskList);
                     if(((TaskContentProvider)viewer.getContentProvider()).getNumberOfGroups()==1) {
                         viewer.expandToLevel(2);
-                    }                
+                    }              
                 }
             });
             

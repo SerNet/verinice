@@ -242,12 +242,19 @@ public class TaskFilterDialog extends Dialog {
         typeComboModel.add(new KeyMessage("isa.task.implement")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("isa.task.escalate")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("isa.task.checkImplementation")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage("indi.task.assign")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage("indi.task.assign.deadline")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage("indi.task.assign.nr")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage("indi.task.execute")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage("indi.task.check")); //$NON-NLS-1$
+        
         typeComboModel.sort();
         typeComboModel.add(0,allKeyMessage);
         
         processComboModel.add(new KeyMessage("isa-execution")); //$NON-NLS-1$
         processComboModel.add(new KeyMessage("isa-control-flow")); //$NON-NLS-1$
         processComboModel.add(new KeyMessage("isa-quality-management")); //$NON-NLS-1$
+        processComboModel.add(new KeyMessage("individual-task")); //$NON-NLS-1$
         processComboModel.sort();
         processComboModel.add(0,allKeyMessage);
     }

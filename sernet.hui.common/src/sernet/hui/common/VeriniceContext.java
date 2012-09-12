@@ -95,12 +95,16 @@ public class VeriniceContext {
     public static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
 
     public static String ISA_QM_SERVICE = "isaQmService";
+
+    public static String INDIVIDUAL_SERVICE = "individualService";
     
     public static String RIGHTS_SERVICE = "rightsService";
     
     public static String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
     
     public static String REMIND_SERVICE = "remindService";
+    
+    public static String JBPM_PROCESS_ENGINE = "processEngine";
     
     private static String SERVER_URL = null;
 

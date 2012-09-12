@@ -44,6 +44,8 @@ public interface IGenericProcess {
     String VAR_IMPLEMENTATION = "ISA_IMPLEMENTATION";
     
     String VAR_PRIORITY = "PRIORITY";
+  
+    String VAR_PROPERTY_TYPES = "PROPERTY_TYPES";
     
     String TRANSITION_NOT_IMPLEMENTED = "not implemented";
     

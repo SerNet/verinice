@@ -19,8 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.bpm.qm;
 
+import java.util.Map;
+
 import org.jbpm.api.task.Task;
 
+import sernet.verinice.bpm.DefaultTaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -36,16 +39,14 @@ import sernet.verinice.model.bpm.Messages;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class QmDescriptionHandler implements ITaskDescriptionHandler {
-
-    private ITaskService taskService;
+public abstract class QmDescriptionHandler extends DefaultTaskDescriptionHandler implements ITaskDescriptionHandler {
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(org.jbpm.api.task.Task)
      */
     @Override
-    public String loadDescription(Task task) {
-        Object value = getTaskService().getVariables(task.getId()).get(IIsaQmProcess.VAR_FEEDBACK);
+    public String loadDescription(String taskId, Map<String, Object> varMap) {
+        Object value = varMap.get(IIsaQmProcess.VAR_FEEDBACK);
         String feedback = "emtpy";
         if(value instanceof char[]) {
             feedback = new String((char[])value);
@@ -57,12 +58,6 @@ public abstract class QmDescriptionHandler implements ITaskDescriptionHandler {
     
     protected abstract String getMessageKey();
 
-    public ITaskService getTaskService() {
-        return taskService;
-    }
-
-    public void setTaskService(ITaskService taskService) {
-        this.taskService = taskService;
-    }
+  
 
 }

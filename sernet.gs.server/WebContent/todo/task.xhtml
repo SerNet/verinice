@@ -31,13 +31,6 @@
 					    <p:commandButton id="completeAll" action="#{task.completeAllTask}" value="#{msgTask['completeAll']}" update=":tableForm:taskTable,:editForm" styleClass="button">
 					    	<f:setPropertyActionListener  target="#{message.info}" value="Completing all tasks. Please wait..." />				    		
 					    </p:commandButton>
-					</p:outputPanel>
-					<p:outputPanel id="descriptionPanel">
-						<p:outputPanel rendered="#{task.selectedTask!=null}">
-							<div class="task-description">
-								<h:outputText value="#{task.selectedTask.description}" escape="false"/>
-							</div>				
-						</p:outputPanel>						
 					</p:outputPanel>		 	 
 					<table style="margin-top: 8px">
 						<tr>
@@ -62,6 +55,13 @@
 					 		<td><h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/></td>
 					 	</tr>
 					 </table>
+					 <p:outputPanel id="descriptionPanel">
+						<p:outputPanel rendered="#{task.selectedTask!=null}">
+							<div class="task-description">
+								<h:outputText value="#{task.selectedTask.description}" escape="false"/>
+							</div>				
+						</p:outputPanel>						
+					 </p:outputPanel>
 				</div>			
 				<p:dataTable id="taskTable" 
 					var="item" 
@@ -79,7 +79,7 @@
 					<p:column headerText="#{msgTask['title']}" sortBy="#{item.name}" style="width:100px">
 						<h:outputText value="#{item.name}" styleClass="#{item.style}"/>	
 			        </p:column>
-			        <p:column headerText="#{msgTask['control']}" sortBy="#{item.controlTitle}" style="width:325px">
+			        <p:column headerText="#{msgTask['object']}" sortBy="#{item.controlTitle}" style="width:325px">
 						<h:outputText value="#{item.controlTitle}" styleClass="#{item.style}"/>	
 			        </p:column>		      
 					<p:column headerText="#{msgTask['dueDate']}" sortBy="#{item.dueDate}" style="width:75px">  

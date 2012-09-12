@@ -22,13 +22,12 @@ package sernet.verinice.bpm;
 import java.util.Hashtable;
 import java.util.Map;
 
-import sernet.verinice.bpm.isam.AssignEmailHandler;
 import sernet.verinice.bpm.isam.AuditEmailHandler;
 import sernet.verinice.bpm.isam.DeadlineEmailHandler;
-import sernet.verinice.bpm.isam.ExecuteEmailHandler;
 import sernet.verinice.bpm.isam.NotResponsibleEmailHandler;
 import sernet.verinice.bpm.qm.IssueFixedEmailHandler;
 import sernet.verinice.bpm.qm.IssueNotFixedEmailHandler;
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 
 /**
@@ -42,14 +41,18 @@ public class EmailHandlerFactory {
     
     static {
         handlerMap = new Hashtable<String, IEmailHandler>();
-        handlerMap.put(IIsaControlFlowProcess.TASK_ASSIGN, new AssignEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.TASK_EXECUTE, new ExecuteEmailHandler());
+        // task reminder
+        IEmailHandler taskReminder = new TaskReminderEmailHandler();
+        handlerMap.put(IIsaControlFlowProcess.TASK_ASSIGN, taskReminder);
+        handlerMap.put(IIsaControlFlowProcess.TASK_EXECUTE, taskReminder);
+        handlerMap.put(IIndividualProcess.TASK_EXECUTE, taskReminder);
+        handlerMap.put(IIndividualProcess.TASK_ASSIGN, taskReminder);
+        // special reminder
         handlerMap.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.TASK_AUDIT, new AuditEmailHandler());
+        handlerMap.put(IIsaControlFlowProcess.AUDIT_STARTS, new AuditEmailHandler());
         handlerMap.put(IIsaControlFlowProcess.REMINDER_FIXED, new IssueFixedEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());
-        
+        handlerMap.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());      
     }
     
     /**

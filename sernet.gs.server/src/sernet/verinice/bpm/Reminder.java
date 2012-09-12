@@ -19,7 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+import org.jbpm.api.ExecutionService;
+import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.listener.EventListener;
 import org.jbpm.api.listener.EventListenerExecution;
 import org.springframework.security.context.SecurityContext;
@@ -27,6 +33,8 @@ import org.springframework.security.context.SecurityContextHolder;
 
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
 
 /**
  *
@@ -41,9 +49,17 @@ public class Reminder implements EventListener  {
     
     String taskType;
     String assignee;
-    String uuid; 
-    
+    String uuid;
+
     public void sendEmail(String taskType, String assignee, String uuid) {
+        doSendEmail(Collections.EMPTY_MAP, taskType, assignee, uuid);
+    }
+    
+    public void sendEmail(String executionId, String taskType, String assignee, String uuid) {
+        doSendEmail(loadVariablesForProcess(executionId), taskType, assignee, uuid);
+    }
+   
+    private void doSendEmail(Map<String, Object> variables, String taskType, String assignee, String uuid) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("sendEmail called...");           
         }
@@ -61,7 +77,7 @@ public class Reminder implements EventListener  {
         ctx.setAuthentication(authentication);
              
         IEmailHandler handler = EmailHandlerFactory.getHandler(taskType);
-        handler.send(assignee, uuid);
+        handler.send(assignee, taskType, variables, uuid);     
     }
     
     private boolean validate(String taskType, String assignee, String uuid) {
@@ -89,7 +105,24 @@ public class Reminder implements EventListener  {
      */
     @Override
     public void notify(EventListenerExecution execution) throws Exception {
-        sendEmail(taskType, assignee, uuid);   
+        doSendEmail((Map<String, Object>)execution.getVariables(), taskType, assignee, uuid);   
+    }
+    
+    private Map<String, Object> loadVariablesForProcess(String executionId) {
+        Set<String> varNameSet = getExecutionService().getVariableNames(executionId);
+        Map<String, Object> varMap = Collections.emptyMap();
+        if(varNameSet!=null && !varNameSet.isEmpty()) {
+            varMap = getExecutionService().getVariables(executionId,varNameSet);
+        }
+        return varMap;
+    }
+
+    private ExecutionService getExecutionService() {
+        return getProcessEngine().getExecutionService();
+    }
+
+    protected ProcessEngine getProcessEngine() {
+        return (ProcessEngine) VeriniceContext.get(VeriniceContext.JBPM_PROCESS_ENGINE);
     }
 
 }

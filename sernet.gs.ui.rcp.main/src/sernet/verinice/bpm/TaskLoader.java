@@ -21,14 +21,11 @@ package sernet.verinice.bpm;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.verinice.bpm.rcp.TaskChangeRegistry;
-import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -44,7 +41,6 @@ import sernet.verinice.model.bpm.TaskParameter;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class TaskLoader {
 
     private static final Logger LOG = Logger.getLogger(TaskLoader.class);
@@ -61,12 +57,26 @@ public class TaskLoader {
         List<ITask> taskList = Collections.emptyList();
         Date now = new Date(System.currentTimeMillis());
         if(lastChecked!=null) {
-            ITaskParameter parameter = new TaskParameter();
-            parameter.setSince(lastChecked);
-            taskList = getTaskService().getTaskList(parameter);
-            TaskChangeRegistry.tasksAdded(taskList);       
+            // loadNewTasks() does not detects delete task
+            // loadNewTasks();
+            // We just notify listeners, that something has changed to 
+            // do a reload if needed
+            TaskChangeRegistry.tasksAdded();
         }
+        
         lastChecked = now;
+    }
+
+    /**
+     * Loads new task since las check.
+     * This does not detects delete task
+     */
+    private void loadNewTasks() {
+        List<ITask> taskList;
+        ITaskParameter parameter = new TaskParameter();
+        parameter.setSince(lastChecked);
+        taskList = getTaskService().getTaskList(parameter);
+        TaskChangeRegistry.tasksAdded(taskList);
     }
     
     public ITaskService getTaskService() {

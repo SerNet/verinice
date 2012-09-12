@@ -93,4 +93,20 @@ public class TaskServiceDummy implements ITaskService {
         return Collections.emptyMap();
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#loadTaskDescription(java.lang.String, java.util.Map)
+     */
+    @Override
+    public String loadTaskDescription(String taskId, Map<String, Object> varMap) {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#loadTaskTitle(java.lang.String, java.util.Map)
+     */
+    @Override
+    public String loadTaskTitle(String taskId, Map<String, Object> varMap) {
+        return null;
+    }
+
 }

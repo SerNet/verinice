@@ -24,9 +24,10 @@
    
    <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="542,234,186,52" name="icf.task.assign">
       <on event="timeout">
-      <timer duedate="14 days"/>
+      <!-- <timer duedate="14 days"/> -->
+      <timer duedate="1 minute"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
-          <field name="taskType"><string value="TASK_ASSIGN"/></field>
+          <field name="taskType"><string value="icf.task.assign"/></field>
           <field name="assignee"><object expr="#{ISA_OWNER_NAME}"/></field>
           <field name="uuid"><object expr="#{UUID}"/></field>
         </event-listener>
@@ -51,7 +52,8 @@
     
    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="914,635,186,52" name="icf.task.execute">
       <on event="timeout">
-      <timer duedate="#{ISA_DUEDATE} - 7 days"/>
+      <!-- <timer duedate="#{ISA_DUEDATE} - 7 days"/> -->
+      <timer duedate="1 minute"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
           <field name="taskType"><string value="icf.task.execute"/></field>
           <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
@@ -67,6 +69,7 @@
    </task>
   
    <java class="sernet.verinice.bpm.Reminder" g="544,516,178,34" method="sendEmail" name="java.deadlineExecute">
+      <arg><object expr="#{execution.id}"/></arg>
       <arg><object expr="DEADLINE_PASSED"/></arg>
       <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
@@ -124,6 +127,7 @@
    </task>
    
    <java class="sernet.verinice.bpm.Reminder" g="329,642,182,37" method="sendEmail" name="java.notResponsible">
+      <arg><object expr="#{execution.id}"/></arg>
       <arg><object expr="NOT_RESPONSIBLE"/></arg>
       <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
@@ -211,7 +215,8 @@
    </state>
 
    <java class="sernet.verinice.bpm.Reminder" g="803,1356,156,38" method="sendEmail" name="java.reminderAudit">
-      <arg><object expr="TASK_AUDIT"/></arg>
+      <arg><object expr="#{execution.id}"/></arg>
+      <arg><object expr="AUDIT_STARTS"/></arg>
       <arg><object expr="#{ICF_AUDITOR_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
       <transition to="join1"/>

@@ -102,6 +102,14 @@ public class TaskFilterAction extends Action {
         }
     }
 
+    public String getProcessKey() {
+        return processKey;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
     public boolean isOnlyMyTaskEnabled() {
         return onlyMyTaskEnabled;
     }

@@ -88,9 +88,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
         }   
     }
 
-    /**
-     * 
-     */
     private void startProcess(final String description, final String priority) {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
         try {

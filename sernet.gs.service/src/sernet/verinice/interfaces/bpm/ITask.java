@@ -21,6 +21,9 @@ package sernet.verinice.interfaces.bpm;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
+import sernet.hui.common.connect.PropertyType;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -105,5 +108,12 @@ public interface ITask extends Comparable<ITask> {
     String getPriority();
 
     void setPriority(String priority);
+    
+    /**
+     * @return A set with HUI {@link PropertyType} ids, which are visible in web frontend
+     */
+    Set<String> getProperties();
+
+    void setProperties(Set<String> properties);
 
 }

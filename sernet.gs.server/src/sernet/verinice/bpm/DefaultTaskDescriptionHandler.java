@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.util.Map;
+
 import org.jbpm.api.task.Task;
 
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
@@ -37,8 +39,16 @@ public class DefaultTaskDescriptionHandler implements ITaskDescriptionHandler {
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(org.jbpm.api.task.Task)
      */
     @Override
-    public String loadDescription(Task task) {
-        return Messages.getString(task.getName() + ITaskService.DESCRIPTION_SUFFIX);
+    public String loadDescription(String taskId, Map<String, Object> varMap) {
+        return Messages.getString(taskId + ITaskService.DESCRIPTION_SUFFIX);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadTitle(org.jbpm.api.task.Task)
+     */
+    @Override
+    public String loadTitle(String taskId, Map<String, Object> varMap) {
+        return Messages.getString(taskId);
     }
 
 }

@@ -37,7 +37,7 @@ public interface IEmailHandler {
      * @param assignee A username
      * @param uuid The UUID of an element
      */
-    void send(String assignee, String uuidElement);
+    void send(String assignee, String type, Map<String, Object> processVariables, String uuidElement);
     
     /**
      * Use this method to add parameter used in the template for this handler.
@@ -45,7 +45,7 @@ public interface IEmailHandler {
      * @param uuidElement The UUID of an element
      * @param parameter Parameter for the email template
      */
-    void addParameter(String uuidElement, Map<String, String> parameter);
+    void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter);
     
     /**
      * This method must return the name of the template file without path, locale and file extensions.
@@ -56,5 +56,7 @@ public interface IEmailHandler {
      * @return Name of the template file without path, locale and file extensions
      */
     String getTemplate();
+    
+    boolean isHtml();
 
 }

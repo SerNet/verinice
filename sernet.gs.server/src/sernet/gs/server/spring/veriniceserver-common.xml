@@ -73,6 +73,7 @@ This variant:
                 <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
                 <entry key="remindService" value-ref="remindService" />
                 <entry key="isaQmService" value-ref="isaQmService" />
+                <entry key="processEngine" value-ref="processEngine" />
 			</map>
 		</property>
 	</bean>

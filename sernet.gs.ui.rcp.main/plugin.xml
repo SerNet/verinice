@@ -805,6 +805,21 @@
                tooltip="%action.tooltip.32">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIndividualProcess"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+         <action
+               class="sernet.verinice.bpm.rcp.StartIndividualProcess"
+               enablesFor="+"
+               icon="icons/tasks.gif"
+               id="sernet.verinice.bpm.rcp.StartIndividualProcess.action"
+               label="%action.label.33"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.33">
+         </action>
+      </objectContribution>
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">

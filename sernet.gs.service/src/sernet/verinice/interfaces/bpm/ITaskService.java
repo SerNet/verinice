@@ -131,4 +131,8 @@ public interface ITaskService {
      * @param param
      */
     void setVariables(String taskId, Map<String, Object> param);
+    
+    String loadTaskDescription(String taskId, Map<String, Object> varMap);
+    
+    String loadTaskTitle(String taskId, Map<String, Object> varMap);
 }

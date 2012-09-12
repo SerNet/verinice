@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
+import java.util.Map;
+
 import org.jbpm.api.task.Task;
 
 /**
@@ -30,8 +32,16 @@ public interface ITaskDescriptionHandler {
 
     /**
      * @param task a jBPM task
+     * @param varMap 
      * @return The description of a task
      */
-    String loadDescription(Task task);
+    String loadDescription(String taskId, Map<String, Object> varMap);
 
+    /**
+     * @param task a jBPM task
+     * @param varMap 
+     * @return The title of a task
+     */
+    String loadTitle(String taskId, Map<String, Object> varMap);
+    
 }

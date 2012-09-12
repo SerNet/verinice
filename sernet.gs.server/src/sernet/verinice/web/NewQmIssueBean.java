@@ -30,7 +30,6 @@ import org.primefaces.context.RequestContext;
 
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.bpm.rcp.NewQmIssueDialog;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;

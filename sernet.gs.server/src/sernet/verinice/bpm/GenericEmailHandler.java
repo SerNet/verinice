@@ -28,6 +28,8 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -60,15 +62,28 @@ public abstract class GenericEmailHandler implements IEmailHandler {
      * @see sernet.verinice.bpm.IEmailHandler#send(java.lang.String, java.lang.String)
      */
     @Override
-    public void send(String assignee, String uuid) {
+    public void send(String assignee, String type, Map<String, Object> processVariables, String uuid) {
         try {            
             Map<String , String> parameter = getRemindService().loadUserData(assignee);
             parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
-            addParameter(uuid, parameter);                          
-            getRemindService().sendEmail(parameter);
+            addParameter(type, processVariables, uuid, parameter);                          
+            getRemindService().sendEmail(parameter, isHtml());
+        } catch(MissingParameterException e) {
+            LOG.error("Email can not be send: " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.error("stacktrace: ", e);
+            }         
         } catch(Exception e) {
             LOG.error("Error while sending email", e);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.IEmailHandler#isHtml()
+     */
+    @Override
+    public boolean isHtml() {
+        return false;
     }
     
     /**
@@ -109,4 +124,9 @@ public abstract class GenericEmailHandler implements IEmailHandler {
         }
         return commandService;
     }
+    
+    protected ITaskService getTaskService() {
+        return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+
 }

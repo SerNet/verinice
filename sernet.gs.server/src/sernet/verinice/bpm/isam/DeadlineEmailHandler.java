@@ -47,11 +47,11 @@ public class DeadlineEmailHandler extends GenericEmailHandler implements IEmailH
      * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
      */
     @Override
-    public void addParameter(String uuidElement, Map<String, String> parameter) {
+    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) {
         CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
         String title = element.getTitle();
-        parameter.put(TEMPLATE_ELEMENT_TITLE, title);
-        parameter.put(IRemindService.TEMPLATE_SUBJECT, "Deadline passed for control: " + title);
+        emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "Deadline passed for control: " + title);
     }
 
     /* (non-Javadoc)

@@ -22,6 +22,7 @@ package sernet.verinice.model.bpm;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
@@ -69,6 +70,8 @@ public class TaskInformation implements ITask, Serializable {
     private boolean processed = false;
     
     private String priority;
+    
+    private Set<String> properties;
     
     /**
      * 
@@ -283,6 +286,14 @@ public class TaskInformation implements ITask, Serializable {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public Set<String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Set<String> properties) {
+        this.properties = properties;
     }
 
     @Override

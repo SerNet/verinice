@@ -117,6 +117,9 @@ public class TaskBean {
             
             getEditBean().setSaveMessage(Util.getMessage(TaskBean.BOUNDLE_NAME, "elementSaved"));
             getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
+            if(getSelectedTask().getProperties()!=null) {
+                getEditBean().setVisiblePropertyIds(getSelectedTask().getProperties());
+            }
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
             String title = getSelectedTask().getControlTitle();

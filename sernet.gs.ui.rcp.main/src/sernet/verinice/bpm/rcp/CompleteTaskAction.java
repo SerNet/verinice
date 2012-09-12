@@ -80,7 +80,7 @@ final class CompleteTaskAction extends Action {
                             }
                             return;
                         }
-                        CompleteTaskAction.this.taskView.showInformation("Information", number + " task(s) completed.");
+                        CompleteTaskAction.this.taskView.showInformation("Information", number + " task(s) completed.");                   
                         CompleteTaskAction.this.taskView.loadTasks();
                     }
                 });          

@@ -27,6 +27,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bpm.rcp.messages"; //$NON-NLS-1$
+    public static String StartIndividualProcess_0;
+    public static String StartIndividualProcess_1;
+    public static String StartIndividualProcess_2;
     public static String StartIsaProcess_0;
     public static String StartIsaProcess_1;
     public static String StartIsaProcess_3;
@@ -36,6 +39,25 @@ public class Messages extends NLS {
     public static String ButtonCancel;
     public static String ConfirmTaskDelete_0;
     public static String ConfirmTaskDelete_1;
+    public static String DatePage_10;
+    public static String DatePage_11;
+    public static String DatePage_3;
+    public static String DatePage_4;
+    public static String DatePage_5;
+    public static String DatePage_6;
+    public static String DatePage_7;
+    public static String DatePage_8;
+    public static String DatePage_9;
+    public static String DescriptionPage_0;
+    public static String DescriptionPage_10;
+    public static String DescriptionPage_11;
+    public static String DescriptionPage_2;
+    public static String DescriptionPage_3;
+    public static String DescriptionPage_4;
+    public static String DescriptionPage_5;
+    public static String DescriptionPage_6;
+    public static String DescriptionPage_8;
+    public static String IndividualProcessWizard_2;
     public static String NewQmIssueDialog_0;
     public static String NewQmIssueDialog_1;
     public static String NewQmIssueDialog_10;
@@ -45,6 +67,22 @@ public class Messages extends NLS {
     public static String NewQmIssueDialog_6;
     public static String NewQmIssueDialog_7;
     public static String NewQmIssueDialog_9;
+    public static String PersonPage_1;
+    public static String PersonPage_2;
+    public static String PersonPage_3;
+    public static String PersonPage_4;
+    public static String PropertyPage_1;
+    public static String PropertyPage_10;
+    public static String PropertyPage_2;
+    public static String PropertyPage_3;
+    public static String PropertyPage_4;
+    public static String PropertyPage_5;
+    public static String PropertyPage_6;
+    public static String PropertyPage_7;
+    public static String PropertyPage_8;
+    public static String RelationPage_1;
+    public static String RelationPage_2;
+    public static String RelationPage_3;
     public static String TaskFilterAction_0;
     public static String TaskFilterDialog_1;
     public static String TaskFilterDialog_2;
@@ -63,6 +101,20 @@ public class Messages extends NLS {
     public static String TaskViewColumn_1;
     public static String TaskViewColumn_2;
     public static String TaskViewColumn_3;
+    public static String TemplatePage_1;
+    public static String TemplatePage_10;
+    public static String TemplatePage_11;
+    public static String TemplatePage_12;
+    public static String TemplatePage_13;
+    public static String TemplatePage_15;
+    public static String TemplatePage_2;
+    public static String TemplatePage_3;
+    public static String TemplatePage_4;
+    public static String TemplatePage_5;
+    public static String TemplatePage_6;
+    public static String TemplatePage_7;
+    public static String TemplatePage_8;
+    public static String TemplatePage_9;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

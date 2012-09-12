@@ -43,7 +43,7 @@ public interface IRemindService {
     
     Map<String,String> loadUserData(String name);
     
-    void sendEmail(final Map<String,String> model);
+    void sendEmail(final Map<String,String> model, boolean html);
     
     CnATreeElement retrieveElement(String uuid, RetrieveInfo ri);
 }

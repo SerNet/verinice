@@ -87,6 +87,7 @@ public class ActionRightIDs {
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
     public static final String GROUP_BY_TAG = "groupbytag";
+    public static final String CREATE_INDIVIDUAL_TASKS = "createindividualtasks";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

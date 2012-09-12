@@ -280,8 +280,6 @@ public class TaskService implements ITaskService {
         TaskInformation taskInformation = new TaskInformation();
         taskInformation.setId(task.getId());
         taskInformation.setType(task.getName());
-        taskInformation.setName(Messages.getString(task.getName()));
-        taskInformation.setDescription(loadTaskDescription(task));
         taskInformation.setCreateDate(task.getCreateTime()); 
         taskInformation.setAssignee(getConfigurationService().getName(task.getAssignee()));
         if (log.isDebugEnabled()) {
@@ -289,12 +287,22 @@ public class TaskService implements ITaskService {
         }          
         
         Map<String, Object> varMap = loadVariables(task);  
+        taskInformation.setName(loadTaskTitle(task.getName(), varMap));
+        taskInformation.setDescription(loadTaskDescription(task.getName(), varMap));
+        
+        
         taskInformation.setIsRead(ITaskService.VAR_READ.equals(varMap.get(ITaskService.VAR_READ_STATUS)));       
         String priority =  (String) varMap.get(IGenericProcess.VAR_PRIORITY);
         if(priority==null) {
             priority = ITask.PRIO_NORMAL;
         }
         taskInformation.setPriority(priority);
+        
+        Object value = varMap.get(IGenericProcess.VAR_PROPERTY_TYPES);
+        if(value!=null && value instanceof Set<?>) {
+            taskInformation.setProperties((Set<String>) value);
+        }
+        
         mapControl(taskInformation, varMap);       
         mapAudit(taskInformation, varMap);
         
@@ -304,7 +312,7 @@ public class TaskService implements ITaskService {
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
         taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
-        taskInformation.setProcessName(getProcessName(task));
+        taskInformation.setProcessName(getProcessName(task));      
         if (log.isDebugEnabled()) {
             log.debug("map finished"); //$NON-NLS-1$
         }
@@ -321,16 +329,20 @@ public class TaskService implements ITaskService {
         return Messages.getString(processKey);
     }
 
-    /**
-     * @param task
-     * @return
-     */
-    private String loadTaskDescription(Task task) {
-        ITaskDescriptionHandler handler = getDescriptionHandler().get(task.getName());
+    public String loadTaskDescription(String taskId, Map<String, Object> varMap) {
+        ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
         if(handler==null) {
             handler = getDefaultDescriptionHandler();
         }
-        return handler.loadDescription(task);
+        return handler.loadDescription(taskId, varMap);
+    }
+    
+    public String loadTaskTitle(String taskId, Map<String, Object> varMap) {
+        ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
+        if(handler==null) {
+            handler = getDefaultDescriptionHandler();
+        }
+        return handler.loadTitle(taskId, varMap);
     }
 
     /**
@@ -342,12 +354,15 @@ public class TaskService implements ITaskService {
             log.debug("map, loading element..."); //$NON-NLS-1$
         }
         String executionId = task.getExecutionId();
-        Set<String> varNameSet = new HashSet<String>();
-        varNameSet.add(IGenericProcess.VAR_UUID);
-        varNameSet.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
-        varNameSet.add(IGenericProcess.VAR_TYPE_ID);
-        varNameSet.add(ITaskService.VAR_READ_STATUS);
-        varNameSet.add(IGenericProcess.VAR_PRIORITY);
+        return loadVariablesForProcess(executionId);
+    }
+
+    /**
+     * @param executionId
+     * @return
+     */
+    private Map<String, Object> loadVariablesForProcess(String executionId) {
+        Set<String> varNameSet = getExecutionService().getVariableNames(executionId);      
         Map<String, Object> varMap = getExecutionService().getVariables(executionId,varNameSet);
         return varMap;
     }

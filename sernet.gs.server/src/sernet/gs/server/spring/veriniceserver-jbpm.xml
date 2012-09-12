@@ -26,6 +26,7 @@
                 <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
                 <value>sernet/verinice/bpm/isam/isa-control-flow.jpdl.xml</value>
                 <value>sernet/verinice/bpm/qm/isa-quality-management.jpdl.xml</value>
+                <value>sernet/verinice/bpm/indi/individual-task.jpdl.xml</value>
             </set>
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -57,6 +58,13 @@
         <property name="defaultAssignee" value="qm-review" />
     </bean>
     
+    <bean id="individualService" class="sernet.verinice.bpm.indi.IndividualService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="authService" ref="authService" />
+    </bean>
+    
     <!-- Provides methods to interact with jBPM tasks.                                          -->
     <!-- Server side implementation of the ITaskService interface.                              -->
     <!-- TaskService is accessible from verinice client by Spring remoting, configured in       -->
@@ -72,6 +80,7 @@
         <property name="taskOutcomeBlacklist">
             <set>
                 <value>icf.trans.reminderDeadline</value>
+                <value>indi.trans.reminderDeadline</value>
             </set>
         </property>
         <!-- Add task complete handler here -->
@@ -90,7 +99,13 @@
         <property name="descriptionHandler">
             <map>
                 <entry key="iqm.task.setAssignee" value-ref="setAssigneeDescriptionHandler"/>
-                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>
+                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>              
+                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>
+                <entry key="indi.task.check" value-ref="indiCheckDescriptionHandler"/>
+                <entry key="indi.task.assign" value-ref="indiAssignDescriptionHandler"/>
+                <entry key="indi.task.assign.deadline" value-ref="indiDeadlineDescriptionHandler"/>
+                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>
+                
             </map>
         </property>
         <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
@@ -103,16 +118,15 @@
     <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
         <property name="taskService" ref="taskService" />
     </bean>
-    
+   
     <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
-      
-    <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
-    
-    <bean id="checkFeedbackDescriptionHandler" class="sernet.verinice.bpm.qm.CheckFeedbackDescriptionHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>  
+    <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler" />
+    <bean id="checkFeedbackDescriptionHandler" class="sernet.verinice.bpm.qm.CheckFeedbackDescriptionHandler" /> 
+    <bean id="indiDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualTaskDescriptionHandler" />
+    <bean id="indiCheckDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualCheckDescriptionHandler" />
+    <bean id="indiAssignDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualAssignDescriptionHandler" />
+    <bean id="indiDeadlineDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualDeadlineDescriptionHandler" />
+    <bean id="indiNrDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualNotResponsibleDescriptionHandler" />
     
     <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
         <property name="mailSender" ref="mailSender" />

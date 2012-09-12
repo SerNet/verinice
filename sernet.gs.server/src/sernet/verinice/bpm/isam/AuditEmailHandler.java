@@ -38,11 +38,11 @@ public class AuditEmailHandler extends GenericEmailHandler implements IEmailHand
     
     private static final String TEMPLATE_ELEMENT_TITLE = "elementTitle";
   
-    public void addParameter(String uuidElement, Map<String, String> parameter) {
+    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) {
         CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
         String title = element.getTitle();
-        parameter.put(TEMPLATE_ELEMENT_TITLE, title);
-        parameter.put(IRemindService.TEMPLATE_SUBJECT, "Audit starts in 6 weeks: " + title);
+        emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "Audit starts in 6 weeks: " + title);
     }
 
     /* (non-Javadoc)

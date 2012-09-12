@@ -36,6 +36,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bpm.Messages;
+import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -66,7 +67,10 @@ public class RemindService implements IRemindService {
     
     private IBaseDao<Configuration, Integer> configurationDao;
 
-    public void sendEmail(final Map<String,String> parameter) {
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.IRemindService#sendEmail(java.util.Map)
+     */
+    public void sendEmail(final Map<String,String> parameter, final boolean html) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             
             public void prepare(MimeMessage mimeMessage) throws Exception {
@@ -84,7 +88,7 @@ public class RemindService implements IRemindService {
                        parameter.get(TEMPLATE_PATH), 
                        VeriniceCharset.CHARSET_UTF_8.name(), 
                        parameter);
-               message.setText(text, false);
+               message.setText(text, html);
             }
      
          };
@@ -109,7 +113,11 @@ public class RemindService implements IRemindService {
             List<Object[]> configurationList = getConfigurationDao().findByQuery(HQL,params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
-                model.put(TEMPLATE_EMAIL, (String) configurationList.get(0)[1]);
+                String email = (String) configurationList.get(0)[1];
+                if(email==null || email.trim().isEmpty()) {
+                    throw new MissingParameterException("Email address of user " + name + " not set.");
+                }
+                model.put(TEMPLATE_EMAIL, email);
                 dbId = (Integer) configurationList.get(0)[0];
                 loadPerson(dbId, model);
             }

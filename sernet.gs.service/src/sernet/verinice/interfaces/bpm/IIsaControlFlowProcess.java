@@ -28,11 +28,11 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
 
     String KEY = "isa-control-flow";
     
-    String TASK_ASSIGN = "TASK_ASSIGN";
+    String TASK_ASSIGN = "icf.task.assign";
     
     String TASK_EXECUTE = "icf.task.execute";
     
-    String TASK_AUDIT = "TASK_AUDIT";
+    String AUDIT_STARTS = "AUDIT_STARTS";
     
     String DEADLINE_PASSED = "DEADLINE_PASSED";
     

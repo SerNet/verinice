@@ -197,6 +197,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     void loadTasks() {
         TaskParameter param = new TaskParameter();
         param.setAllUser(!onlyMyTasks);
+        if(taskFilterAction!=null) {
+            param.setProcessKey(taskFilterAction.getProcessKey());
+            param.setTaskId(taskFilterAction.getTaskId());
+        }
         List<ITask> taskList = Collections.emptyList();
         final LoadTaskJob job = new LoadTaskJob(param);
         final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -210,7 +214,11 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 }
             }
         });
-        
+        Display.getDefault().syncExec(new Runnable(){
+            public void run() {
+                getInfoPanel().setText("");                          
+            }
+        });
         taskList = job.getTaskList();
         
         RefreshTaskView refresh = new RefreshTaskView(taskList, getViewer());
@@ -581,7 +589,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                         }
                     }
                 });
-                showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));
+                getInfoPanel().setText("");
+                showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));               
             }
 
         }

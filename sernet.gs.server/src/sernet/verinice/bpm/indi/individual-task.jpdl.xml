@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="individual-task" name="Individual task workflow" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>Workflow to manage individual tasks.</description>
+   
+   <start g="685,3,186,52" name="start1">
+      <transition to="isRelation" g="462,27:"/>
+   </start>
+   
+   <decision g="439,118,80,40" name="isRelation">
+      <transition g="-74,-20" name="no relation" to="isAssignee">
+        <condition expr="#{INDI_RELATION_ID==null}"/>
+      </transition>
+      <transition g="-43,-27" name="relation" to="java.loadAssignee">
+        <condition expr="#{INDI_RELATION_ID!=null}"/>
+      </transition>
+   </decision>
+   
+   <java class="sernet.verinice.bpm.ProzessExecution" g="507,53,150,36" method="loadAssignee" name="java.loadAssignee" var="ISA_ASSIGNEE_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="#{INDI_RELATION_ID}"/></arg>      
+      <transition to="isAssignee"/>
+   </java>  
+   
+   <decision g="685,120,80,40" name="isAssignee">
+      <transition g="-71,-32" name="not assigned" to="indi.task.assign">
+        <condition expr="#{ISA_ASSIGNEE_NAME==null}"/>
+      </transition>
+      <transition g="5,-79" name="assigned" to="indi.task.execute">
+        <condition expr="#{ISA_ASSIGNEE_NAME!=null}"/>
+      </transition>
+   </decision>
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="509,244,146,52" name="indi.task.assign">
+      <on event="timeout">
+      <timer duedate="1 minute"/>
+        <event-listener class="sernet.verinice.bpm.Reminder">
+          <field name="taskType"><string value="indi.task.assign"/></field>
+          <field name="assignee"><object expr="#{ISA_OWNER_NAME}"/></field>
+          <field name="uuid"><object expr="#{UUID}"/></field>
+        </event-listener>
+      </on>
+      <transition g="-118,19" name="indi.trans.complete" to="isRelation"/>
+   </task>
+    
+    
+   <!-- Execute --> 
+    
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="615,354,186,52" name="indi.task.execute">
+      <on event="timeout">
+      <timer duedate="1 minute"/>
+        <event-listener class="sernet.verinice.bpm.Reminder">
+          <field name="taskType"><string value="indi.task.execute"/></field>
+          <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
+          <field name="uuid"><object expr="#{UUID}"/></field>
+        </event-listener>
+      </on>
+      <transition g="7,-24" name="indi.trans.complete" to="indi.task.check"/>
+      <transition g="603,397;197,397:-202,-85" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
+      <transition g="383,378:3,-71" name="indi.trans.reminderDeadline" to="indi.task.assign.deadline">
+          <!-- <timer duedate="#{ISA_DUEDATE}"/> -->
+          <timer duedate="2 minutes"/>
+      </transition>
+   </task> 
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="290,245,188,52" name="indi.task.assign.deadline">
+      <transition g="383,143:-130,83" name="indi.trans.assigned" to="isRelation"/>
+   </task>
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="121,245,147,52" name="indi.task.assign.nr">
+      <transition g="194,139;434,137:-109,58" name="indi.trans.assigned" to="isRelation"/>
+   </task>   
+   
+   <!-- Check -->
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE} + 14 days" g="617,497,186,52" name="indi.task.check">
+      <transition g="654,489;653,414:-119,-17" name="indi.trans.decline" to="indi.task.execute"/>
+      <transition g="10,-12" name="indi.trans.accept" to="end"/>
+   </task>
+   
+   <end g="686,627,48,48" name="end"/>
+
+</process>

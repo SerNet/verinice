@@ -104,6 +104,8 @@ public class EditBean {
     
     private List<String> visibleTags = Arrays.asList(TAG_ALL);
     
+    private Set<String> visiblePropertyIds = new HashSet<String>(); 
+    
     private String saveMessage = null;
        
     public void init() {
@@ -180,11 +182,25 @@ public class EditBean {
     }
 
     private boolean isVisible(PropertyType huiType) {
-        return isVisible(getTagSet(huiType.getTags()));
+        return isVisible(getTagSet(huiType.getTags()))           
+                || isVisible(huiType.getId());
+    }
+
+    private boolean isVisible(String id) {
+        return getVisiblePropertyIds().contains(id);
     }
 
     private boolean isVisible(PropertyGroup groupHui) {
-        return isVisible(getTagSet(groupHui.getTags()));
+        boolean visible = isVisible(getTagSet(groupHui.getTags()));
+        if(!visible) {
+            for (PropertyType type : groupHui.getPropertyTypes()) {
+                if(isVisible(type)) {
+                    visible = true;
+                    break;
+                }
+            }
+        }
+        return visible;
     }
 
     private Set<String> getTagSet(String allTags) {
@@ -549,6 +565,14 @@ public class EditBean {
 
     public void setVisibleTags(List<String> visibleTags) {
         this.visibleTags = visibleTags;
+    }
+
+    public Set<String> getVisiblePropertyIds() {
+        return visiblePropertyIds;
+    }
+
+    public void setVisiblePropertyIds(Set<String> visiblePropertyIds) {
+        this.visiblePropertyIds = visiblePropertyIds;
     }
 
     public boolean isGeneralOpen() {

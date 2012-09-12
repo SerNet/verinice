@@ -69,6 +69,17 @@
         </property>
     </bean>
     
+    <bean name="/individualHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="individualService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IIndividualService</value>
+        </property>
+    </bean>
+    
     <bean name="/rightsServiceHttpInvoker"
           class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
           lazy-init="false">
