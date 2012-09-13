@@ -84,6 +84,39 @@ public class Messages extends NLS {
     public static String ExistingRisksReport_0;
     public static String ExistingRisksReport_1;
     public static String ExistingRisksReport_3;
+    public static String VulnerabilitiesReport_0;
+    public static String VulnerabilitiesReport_1;
+    public static String VulnerabilitiesReport_2;
+    public static String ThreatsReport_0;
+    public static String ThreatsReport_1;
+    public static String ThreatsReport_2;
+    public static String ScenariosReport_0;
+    public static String ScenariosReport_1;
+    public static String ScenariosReport_2;
+    public static String ResponsesReport_0;
+    public static String ResponsesReport_1;
+    public static String ResponsesReport_2;
+    public static String RequirementsReport_0;
+    public static String RequirementsReport_1;
+    public static String RequirementsReport_2;
+    public static String RecordsReport_0;
+    public static String RecordsReport_1;
+    public static String RecordsReport_2;
+    public static String ProcessesReport_0;
+    public static String ProcessesReport_1;
+    public static String ProcessesReport_2;
+    public static String PersonsReport_0;
+    public static String PersonsReport_1;
+    public static String PersonsReport_2;
+    public static String IncidentsReport_0;
+    public static String IncidentsReport_1;
+    public static String IncidentsReport_2;    
+    public static String ExceptionsReport_0;
+    public static String ExceptionsReport_1;
+    public static String ExceptionsReport_2; 
+    public static String DocumentsReport_0;
+    public static String DocumentsReport_1;
+    public static String DocumentsReport_2;
     
     static {
         // initialize resource bundle

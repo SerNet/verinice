@@ -46,7 +46,23 @@ public class ReportService implements IReportService {
 		        
 		        new RiskByAssetReport(), // 27001 reports
 		        new RiskTreatmentReport(),
-
+		        
+		        new ControlMaturityReport(),
+		        new StatementOfApplicabilityReport(),
+		        new InventoryOfAssetsReport(),
+		        
+		        new VulnerabilitiesReport(), // new Export Reports, since v1.6.0
+		        new ThreatsReport(),
+		        new ScenariosReport(),
+		        new ResponsesReport(),
+		        new RequirementsReport(),
+		        new RecordsReport(),
+		        new ProcessesReport(),
+		        new PersonsReport(),
+		        new IncidentsReport(),
+		        new ExceptionsReport(),
+		        new DocumentsReport(),
+		        
 		        new StrukturanalyseReport(), // BSI reports
 		        new AbhaengigkeitenReport(),
 		        new AllItemsReport(), // this is report ID "schutzbedarf"
@@ -55,12 +71,9 @@ public class ReportService implements IReportService {
 		        new ErgaenzendeSicherheitsanalyseReport(),
 		        new RisikoanalyseReport(),
 		        new RealisierungsplanReport(),
-		        new AuditberichtReport(),
 		        new ExistingRisksReport(),
 		        new ComprehensiveSamtReportType(),
-		        new ControlMaturityReport(),
-		        new StatementOfApplicabilityReport(),
-		        new InventoryOfAssetsReport()
+		        new AuditberichtReport()
 		    };
 		
 		return reportTypes;
