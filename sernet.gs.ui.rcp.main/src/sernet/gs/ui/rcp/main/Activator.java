@@ -260,6 +260,12 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		// Set the derby log file path
 		System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE);
 		
+		// set db-config to derby, if standalone is used
+		if(isStandalone()){
+		    prefs.setValue(PreferenceConstants.DB_DIALECT, PreferenceConstants.DB_DIALECT_derby);
+		    prefs.setValue(PreferenceConstants.DB_URL, prefs.getDefaultString(PreferenceConstants.DB_URL));
+		    prefs.setValue(PreferenceConstants.DB_DRIVER, PreferenceConstants.DB_DRIVER_DERBY);
+		}
 		// Provide initial DB connection details to server.
 		internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
 
