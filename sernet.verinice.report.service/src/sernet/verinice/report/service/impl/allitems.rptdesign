@@ -5155,6 +5155,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="971">
                             <text-property name="text">Kürzel</text-property>
                         </label>
@@ -5172,6 +5173,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="973">
                             <text-property name="text">Name</text-property>
                         </label>
@@ -5189,6 +5191,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="975">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
@@ -5206,6 +5209,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="977">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
@@ -5223,6 +5227,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="979">
                             <text-property name="text">Integrität</text-property>
                         </label>
@@ -5240,6 +5245,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="981">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -5586,31 +5592,51 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="986">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1019">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="987">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1021">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="988">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1025">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="989">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="textAlign">left</property>
                         <label id="1023">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="990">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1027">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="991">
+                        <property name="textAlign">left</property>
                         <label id="1029">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -5630,26 +5656,41 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <cell id="993">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1020">
                             <property name="resultSetColumn">server_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="994">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1022">
                             <property name="resultSetColumn">server_name</property>
                         </data>
                     </cell>
                     <cell id="995">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1026">
                             <property name="resultSetColumn">server_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="996">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1024">
                             <property name="resultSetColumn">server_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="997">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1028">
                             <property name="resultSetColumn">server_integritaet</property>
                         </data>
@@ -5670,15 +5711,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1000"/>
-                    <cell id="1001"/>
-                    <cell id="1002"/>
+                    <cell id="1000">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1001">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1002">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1003">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1031">
                             <property name="resultSetColumn">server_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1004">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1032">
                             <property name="resultSetColumn">server_integritaet_begruendung</property>
                         </data>
@@ -5869,31 +5928,49 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1101">
+                        <property name="textAlign">left</property>
                         <label id="1325">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1103">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1327">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1105">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1329">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1107">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1331">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1109">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1333">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1111">
+                        <property name="textAlign">left</property>
                         <label id="1335">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -5913,26 +5990,41 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1114">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1326">
                             <property name="resultSetColumn">client_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1116">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1328">
                             <property name="resultSetColumn">client_name</property>
                         </data>
                     </cell>
                     <cell id="1118">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1330">
                             <property name="resultSetColumn">client_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1120">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1332">
                             <property name="resultSetColumn">client_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="1122">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1334">
                             <property name="resultSetColumn">client_integritaet</property>
                         </data>
@@ -5953,15 +6045,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1127"/>
-                    <cell id="1128"/>
-                    <cell id="1129"/>
+                    <cell id="1127">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1128">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1129">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1130">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1337">
                             <property name="resultSetColumn">client_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1132">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1339">
                             <property name="resultSetColumn">client_integritaet_begruendung</property>
                         </data>
@@ -6142,31 +6252,52 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1186">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1354">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1187">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1356">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1188">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1358">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1189">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1360">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1190">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1362">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1191">
+                        <property name="textAlign">left</property>
                         <label id="1364">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -6187,25 +6318,40 @@ columns(cols);</value>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1193">
                         <data id="1355">
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
                             <property name="resultSetColumn">tkkomponente_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1194">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1357">
                             <property name="resultSetColumn">tkkomponente_name</property>
                         </data>
                     </cell>
                     <cell id="1195">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1359">
                             <property name="resultSetColumn">tkkomponente_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1196">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1361">
                             <property name="resultSetColumn">tkkomponente_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="1197">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1363">
                             <property name="resultSetColumn">tkkomponente_integritaet</property>
                         </data>
@@ -6226,15 +6372,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1200"/>
-                    <cell id="1201"/>
-                    <cell id="1202"/>
+                    <cell id="1200">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1201">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1202">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1203">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1366">
                             <property name="resultSetColumn">tkkomponente_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1204">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1367">
                             <property name="resultSetColumn">tkkomponente_integritaet_begruendung</property>
                         </data>
@@ -6425,31 +6589,52 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1221">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1370">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1222">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1372">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1223">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1374">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1224">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1376">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1225">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1378">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1226">
+                        <property name="textAlign">left</property>
                         <label id="1380">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -6469,26 +6654,42 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1228">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <data id="1371">
                             <property name="resultSetColumn">sonstit_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1229">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1373">
                             <property name="resultSetColumn">sonstit_name</property>
                         </data>
                     </cell>
                     <cell id="1230">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1375">
                             <property name="resultSetColumn">sonstit_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1231">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1377">
                             <property name="resultSetColumn">sonstit_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="1232">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1379">
                             <property name="resultSetColumn">sonstit_integritaet</property>
                         </data>
@@ -6509,15 +6710,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1235"/>
-                    <cell id="1236"/>
-                    <cell id="1237"/>
+                    <cell id="1235">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1236">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1237">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1238">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1382">
                             <property name="resultSetColumn">sonstit_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1239">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1383">
                             <property name="resultSetColumn">sonstit_integritaet_begruendung</property>
                         </data>
@@ -6673,32 +6892,53 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1256">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1386">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1257">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1388">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1258">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1390">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1259">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1392">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1260">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1394">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1261">
                         <label id="1396">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -6717,26 +6957,41 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1263">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1387">
                             <property name="resultSetColumn">raum_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1264">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1389">
                             <property name="resultSetColumn">raum_name</property>
                         </data>
                     </cell>
                     <cell id="1265">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1391">
                             <property name="resultSetColumn">raum_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1266">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1393">
                             <property name="resultSetColumn">raum_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="1267">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1395">
                             <property name="resultSetColumn">raum_integritaet</property>
                         </data>
@@ -6757,15 +7012,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1270"/>
-                    <cell id="1271"/>
-                    <cell id="1272"/>
+                    <cell id="1270">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1271">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1272">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1273">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1398">
                             <property name="resultSetColumn">raum_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1274">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1399">
                             <property name="resultSetColumn">raum_integritaet_begruendung</property>
                         </data>
@@ -6921,31 +7194,52 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1291">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1402">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1292">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1404">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1293">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1406">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1294">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1408">
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1295">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1410">
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1296">
+                        <property name="textAlign">left</property>
                         <label id="1412">
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
@@ -6965,26 +7259,41 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1298">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1403">
                             <property name="resultSetColumn">gebaeude_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1299">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1405">
                             <property name="resultSetColumn">gebaeude_name</property>
                         </data>
                     </cell>
                     <cell id="1300">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1407">
                             <property name="resultSetColumn">gebaeude_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1301">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1409">
                             <property name="resultSetColumn">gebaeude_vertraulichkeit</property>
                         </data>
                     </cell>
                     <cell id="1302">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1411">
                             <property name="resultSetColumn">gebaeude_integritaet</property>
                         </data>
@@ -7005,15 +7314,33 @@ columns(cols);</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">medium</property>
-                    <cell id="1305"/>
-                    <cell id="1306"/>
-                    <cell id="1307"/>
+                    <cell id="1305">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1306">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
+                    <cell id="1307">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                    </cell>
                     <cell id="1308">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1414">
                             <property name="resultSetColumn">gebaeude_vertraulichkeit_begruendung</property>
                         </data>
                     </cell>
                     <cell id="1309">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1415">
                             <property name="resultSetColumn">gebaeude_integritaet_begruendung</property>
                         </data>
@@ -7156,26 +7483,43 @@ columns(cols);</value>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1151">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1341">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1152">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1343">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1153">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1345">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1154">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="1347">
                             <text-property name="text">netzkomponente_kritikalitaet</text-property>
                         </label>
                     </cell>
                     <cell id="1155">
+                        <property name="textAlign">left</property>
                         <label id="1349">
                             <text-property name="text">netzkomponente_extnetz</text-property>
                         </label>
@@ -7196,20 +7540,32 @@ columns(cols);</value>
                     <property name="borderTopWidth">medium</property>
                     <cell id="1158">
                         <data id="1342">
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
                             <property name="resultSetColumn">netzkomponente_kuerzel</property>
                         </data>
                     </cell>
                     <cell id="1159">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1344">
                             <property name="resultSetColumn">netzkomponente_name</property>
                         </data>
                     </cell>
                     <cell id="1160">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1346">
                             <property name="resultSetColumn">netzkomponente_erlaeuterung</property>
                         </data>
                     </cell>
                     <cell id="1161">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1348">
                             <property name="resultSetColumn">netzkomponente_kritikalitaet</property>
                         </data>
