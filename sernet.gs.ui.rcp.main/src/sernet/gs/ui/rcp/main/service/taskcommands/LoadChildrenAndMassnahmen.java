@@ -50,6 +50,8 @@ import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -74,6 +76,8 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(10);
 	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(10);
 	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(10);
+    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(10);
+    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(10);
 	
 	private Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
 	
@@ -171,7 +175,11 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 						raumList.add(clcl);
 					} else if(Server.TYPE_ID.equals(entityTypeId)) {
 						serverList.add(clcl);
-					} else  {
+					} else if(TelefonKomponente.TYPE_ID.equals(entityTypeId)) {
+                        tkKomponenteList.add(clcl);
+                    } else if(SonstIT.TYPE_ID.equals(entityTypeId)) {
+                        sonstItList.add(clcl);
+                    } else  {
 						log.error("Unknown object type: " + entityTypeId);
 					}
 				}
@@ -185,6 +193,8 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 		Collections.sort(netzList, cnAComparator);
 		Collections.sort(raumList, cnAComparator);
 		Collections.sort(serverList, cnAComparator);
+        Collections.sort(tkKomponenteList, cnAComparator);
+        Collections.sort(sonstItList, cnAComparator);
 		
 		// find persons according to roles and relation:
 		FindResponsiblePersons command = new FindResponsiblePersons(unresolvedItems, MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
@@ -324,7 +334,15 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 		this.personList = personList;
 	}
 
-	public void setMassnahmen(Set<TodoViewItem> massnahmen) {
+	public List<CnATreeElement> getTkKomponenteList() {
+        return tkKomponenteList;
+    }
+
+    public List<CnATreeElement> getSonstItList() {
+        return sonstItList;
+    }
+
+    public void setMassnahmen(Set<TodoViewItem> massnahmen) {
 		this.massnahmen = massnahmen;
 	}
 

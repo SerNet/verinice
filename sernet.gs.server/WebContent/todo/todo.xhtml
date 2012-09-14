@@ -160,21 +160,6 @@
 							    </ui:repeat>
 							</ul>
 				        </p:tab>
-				        <p:tab title="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
-				        	<ul>
-						 		<ui:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
-						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
-								  		<p:commandLink 
-								  			value="#{item.title}" 
-								  			actionListener="#{toDo.loadToDoListForElement}"
-								  			update=":tablePanel,:elementsForm,:editPanel" 
-								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
-								            <f:param name="itemId" value="#{item.dbId}" />
-								        </p:commandLink>
-								    </li>
-							    </ui:repeat>
-							</ul>
-				        </p:tab>
 				        <p:tab title="#{msg['todo.applications']}" rendered="#{not empty assetNavigation.anwendungList}">
 				        	<ul>
 						 		<ui:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
@@ -204,7 +189,52 @@
 								    </li>
 							    </ui:repeat>
 							</ul>
-				        </p:tab>			        
+				        </p:tab>
+				        <p:tab title="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
+				        	<ul>
+						 		<ui:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.netzkomponente']}" rendered="#{not empty assetNavigation.sonstItList}">
+				        	<ul>
+						 		<ui:repeat id="netzkomponenteList" value="#{assetNavigation.sonstItList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.tkkomponente']}" rendered="#{not empty assetNavigation.tkKomponenteList}">
+				        	<ul>
+						 		<ui:repeat id="tkList" value="#{assetNavigation.tkKomponenteList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>      			        
 				    </p:accordionPanel>			        
      			</h:form>
      		</div>
@@ -278,7 +308,7 @@
 								selection="#{toDo.selectedItem}" 
 				                selectionMode="single"
 				                scrollable="true"
-								scrollHeight="450" 
+								scrollHeight="508" 
 								resizableColumns="true"
 				                style="width: 650px"
 				                rendered="#{!empty toDo.todoList}">

@@ -22,6 +22,10 @@ public interface ILoadChildren extends ICommand{
 	public abstract List<CnATreeElement> getAnwendungList();
 
 	public abstract List<CnATreeElement> getPersonList();
+	
+	public abstract List<CnATreeElement> getTkKomponenteList();
+
+    public abstract List<CnATreeElement> getSonstItList();
 
 	public abstract void setId(Integer id);
 

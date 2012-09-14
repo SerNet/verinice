@@ -66,6 +66,8 @@ public class AssetNavigationBean {
 	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(10);
 	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(10);
 	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(10);
+    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(10);
+    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(10);
 	
 	public AssetNavigationBean() {
 		super();
@@ -118,6 +120,8 @@ public class AssetNavigationBean {
 					setPersonList(command.getPersonList());
 					setRaumList(command.getRaumList());
 					setServerList(command.getServerList());
+                    setTkKomponenteList(command.getTkKomponenteList());
+                    setSonstItList(command.getSonstItList());
 				}	
 			} 
 		} catch (CommandException e) {
@@ -222,4 +226,20 @@ public class AssetNavigationBean {
 	public void setPersonList(List<CnATreeElement> personList) {
 		this.personList = personList;
 	}
+
+    public List<CnATreeElement> getTkKomponenteList() {
+        return tkKomponenteList;
+    }
+
+    public List<CnATreeElement> getSonstItList() {
+        return sonstItList;
+    }
+
+    public void setTkKomponenteList(List<CnATreeElement> tkKomponenteList) {
+        this.tkKomponenteList = tkKomponenteList;
+    }
+
+    public void setSonstItList(List<CnATreeElement> sonstItList) {
+        this.sonstItList = sonstItList;
+    }
 }
