@@ -5761,8 +5761,8 @@ the value between <param></param> will be used directly if no string is found fo
                 id="samt_topic_desc"
                 inputtype="text"
                 tags="Web"
-                editable="true"
-                visible="true"/>
+                editable="false"
+                visible="false"/>
           </huipropertygroup>
                
           <huiproperty 
