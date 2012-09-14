@@ -212,6 +212,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			    chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+                if(reportTypes[comboReportType.getSelectionIndex()].getId().equals("user") && !reportTypes[comboReportType.getSelectionIndex()].getReportFile().equals("")){
+                    chosenReportType.setReportFile(""); // forget before chosen user-report template
+                }
 				setupComboOutputFormatContent();
 				enableFileSelection();
 			}
@@ -307,7 +310,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if(chosenReportType!=null) {
-                    chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];    
+                    chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
                 }
                 setupOutputFilepath();
             }
