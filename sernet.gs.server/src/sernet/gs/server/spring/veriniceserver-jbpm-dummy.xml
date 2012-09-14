@@ -6,6 +6,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+    <bean id="processEngine" class="sernet.verinice.bpm.ProcessEngineDummy"/>
+
     <bean id="processServiceIsa" class="sernet.verinice.bpm.ProcessServiceDummy"/>
     
     <bean id="taskService" class="sernet.verinice.bpm.TaskServiceDummy"/>
@@ -34,5 +36,7 @@
     <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowServiceDummy" />
     
     <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmServiceDummy" />
+    
+    <bean id="individualService" class="sernet.verinice.bpm.indi.IndividualServiceDummy" />
   
 </beans>
