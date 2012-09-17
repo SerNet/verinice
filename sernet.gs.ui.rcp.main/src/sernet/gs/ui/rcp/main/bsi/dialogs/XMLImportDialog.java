@@ -246,13 +246,8 @@ public class XMLImportDialog extends Dialog {
         cryptGroup.setLayout(pbeLayout);
         
         final Button useNoEncryptionRadio = new Button(cryptGroup, SWT.RADIO);
+        
         useNoEncryptionRadio.setText(Messages.XMLImportDialog_36);
-        useNoEncryptionRadio.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e){
-                selectedEncryptionMethod = null;
-            }
-        });
         // by default, no encryption is selected
         useNoEncryptionRadio.setSelection(true);
 
@@ -260,20 +255,11 @@ public class XMLImportDialog extends Dialog {
         new Label(cryptGroup, SWT.NONE);
         new Label(cryptGroup, SWT.NONE);
 
-        // ==== Password Based Encryption controls
-        final Button passwordEncryptionRadio = new Button(cryptGroup, SWT.RADIO);
+        // ==== Password Based Encryption controls 
+        final Button passwordEncryptionRadio = new Button(cryptGroup, SWT.RADIO);      
         passwordEncryptionRadio.setText(Messages.XMLImportDialog_16);
-        passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if(EncryptionMethod.PASSWORD.equals(selectedEncryptionMethod) ) {
-                    passwordEncryptionRadio.setSelection(false);
-                    selectedEncryptionMethod = null;
-                } else {
-                    selectedEncryptionMethod = EncryptionMethod.PASSWORD;
-                }
-            }
-        });
+        // by default, no encryption is selected
+        passwordEncryptionRadio.setSelection(false);
         
         passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
@@ -288,20 +274,21 @@ public class XMLImportDialog extends Dialog {
         certificateEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(EncryptionMethod.X509_CERTIFICATE.equals(selectedEncryptionMethod) ) {
-                    certificateEncryptionRadio.setSelection(false);
-                    selectedEncryptionMethod = null;
-                } else {
-                    selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
-                }
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                certificateEncryptionRadio.setSelection(true);
+                passwordEncryptionRadio.setSelection(false);
+                useNoEncryptionRadio.setSelection(false);          
             }
         });
+        // by default, no encryption is selected
+        certificateEncryptionRadio.setSelection(false);
         
         passwordField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 passwordEncryptionRadio.setSelection(true);
                 certificateEncryptionRadio.setSelection(false);
+                useNoEncryptionRadio.setSelection(false);
                 selectedEncryptionMethod = EncryptionMethod.PASSWORD;
             }
             public void focusLost(FocusEvent e) {
@@ -323,9 +310,10 @@ public class XMLImportDialog extends Dialog {
         certificatePathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                passwordEncryptionRadio.setSelection(false);
-                certificateEncryptionRadio.setSelection(true);
                 selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                certificateEncryptionRadio.setSelection(true);
+                passwordEncryptionRadio.setSelection(false);
+                useNoEncryptionRadio.setSelection(false);
             }
         });
         
@@ -334,6 +322,10 @@ public class XMLImportDialog extends Dialog {
         browseX509CertificateButton.addSelectionListener(new SelectionAdapter() {         
             @Override
             public void widgetSelected(SelectionEvent e) {
+                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                certificateEncryptionRadio.setSelection(true);
+                passwordEncryptionRadio.setSelection(false);
+                useNoEncryptionRadio.setSelection(false);
                 FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                 dialog.setFilterExtensions(new String[]{ "*.pem",}); //$NON-NLS-1$
                 String certificatePath = dialog.open();
@@ -343,9 +335,26 @@ public class XMLImportDialog extends Dialog {
                 } else {
                     certificatePathField.setText(""); //$NON-NLS-1$
                 }             
+            }
+        });      
+
+        useNoEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e){
+                selectedEncryptionMethod = null;
+                useNoEncryptionRadio.setSelection(true);
                 passwordEncryptionRadio.setSelection(false);
-                certificateEncryptionRadio.setSelection(true);
-                selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                certificateEncryptionRadio.setSelection(false);
+            }
+        });
+        
+        passwordEncryptionRadio.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                 selectedEncryptionMethod = EncryptionMethod.PASSWORD;
+                 passwordEncryptionRadio.setSelection(true);
+                 certificateEncryptionRadio.setSelection(false);
+                 useNoEncryptionRadio.setSelection(false);
             }
         });
         
@@ -358,9 +367,10 @@ public class XMLImportDialog extends Dialog {
         privateKeyPathField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                passwordEncryptionRadio.setSelection(false);
-                certificateEncryptionRadio.setSelection(true);
                 selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
+                certificateEncryptionRadio.setSelection(true);
+                passwordEncryptionRadio.setSelection(false);
+                useNoEncryptionRadio.setSelection(false);
             }
         });
         

@@ -19,11 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
+import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IISO27kGroup;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
 public enum ChildrenExist {
+    
     YES, NO, UNKNOWN;
     
     public static ChildrenExist convert(Boolean hasChildren) {
@@ -36,5 +41,10 @@ public enum ChildrenExist {
             }
         }
         return childrenState;
+    }
+    
+    public static boolean isAlwaysChildless(CnATreeElement element) {
+        return !(element instanceof IISO27kGroup)
+            && !(element instanceof IBSIStrukturKategorie);
     }
 }

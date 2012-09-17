@@ -122,6 +122,8 @@ public class ElementManager {
             CacheObject cachedElement = cache.getCachedObject(parentElement);
             if (cachedElement != null) {
                 hasChildren = (cachedElement.getHasChildren() == ChildrenExist.YES);
+            } else if(ChildrenExist.isAlwaysChildless(parentElement)) {
+                hasChildren = false;
             } else {
                 String uuid = (parentElement != null) ? parentElement.getUuid() : "unknown";
                 LOG.warn("Can't determine if element has children (returning true). Element not found in cache, uuid: " + uuid);

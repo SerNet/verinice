@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.tree;
 
-import java.util.Enumeration;
-
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
