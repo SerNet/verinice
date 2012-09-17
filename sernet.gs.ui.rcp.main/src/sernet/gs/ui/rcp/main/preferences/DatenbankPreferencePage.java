@@ -125,8 +125,8 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 
     private void setEnabledFields(boolean enable) {
         Composite parent = getFieldEditorParent();
-        dbDriver.setEnabled(!enable, parent);
-        dialect.setEnabled(!Activator.getDefault().isStandalone(), parent);
+        dbDriver.setEnabled(enable, parent);
+        dialect.setEnabled(false, parent);
         url.setEnabled(enable, parent);
         user.setEnabled(enable, parent);
         pass.setEnabled(enable, parent);
@@ -161,14 +161,6 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
             if (event.getSource() == dbDriver) {
                 setDefaults((String) event.getNewValue());
             } 
-            if(event.getSource() == url){
-                if(!url.getStringValue().startsWith("jdbc:derby:")){
-                    while(url.getStringValue().contains(":")){
-                        url.setStringValue(url.getStringValue().substring(url.getStringValue().indexOf(":")));
-                    }
-                    url.setStringValue("jdbc:derby:" + url.getStringValue());
-                }
-            }
             checkState();
         }
 
