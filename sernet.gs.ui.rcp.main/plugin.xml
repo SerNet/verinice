@@ -980,6 +980,10 @@
             name="%page.name.1">
       </page>
       <page
+            class="sernet.gs.ui.rcp.main.preferences.DatenbankPreferencePage"
+            id="sernet.gs.ui.rcp.main.page2"
+            name="%page.name.2"/>      
+      <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"
             name="%page.name.4">
