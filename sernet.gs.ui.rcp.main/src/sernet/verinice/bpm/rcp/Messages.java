@@ -101,6 +101,7 @@ public class Messages extends NLS {
     public static String TaskViewColumn_1;
     public static String TaskViewColumn_2;
     public static String TaskViewColumn_3;
+    public static String TemplatePage_0;
     public static String TemplatePage_1;
     public static String TemplatePage_10;
     public static String TemplatePage_11;

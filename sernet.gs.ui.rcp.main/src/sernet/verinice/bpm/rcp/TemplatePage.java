@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Hashtable;
 
@@ -55,8 +56,13 @@ public class TemplatePage extends WizardPage {
 
     public static final String NAME = "TEMPLATE_PAGE"; //$NON-NLS-1$
 
+    private Preferences preferences;
+    private Preferences bpmPreferences;
+    private Hashtable<String, IndividualServiceParameter> templateMap;
+    
     Label title, date, reminder, assignee, assigneeRelation;
     Text description, properties;
+    Button button;
 
     protected TemplatePage() {
         super(NAME);
@@ -124,7 +130,7 @@ public class TemplatePage extends WizardPage {
         properties.setLayoutData(gd);
         properties.setFont(newFont);
 
-        Button button = new Button(container, SWT.PUSH);
+        button = new Button(container, SWT.PUSH);
         button.setText(Messages.TemplatePage_12);
         button.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -136,27 +142,30 @@ public class TemplatePage extends WizardPage {
 
     public void saveTemplate(boolean onlyIfNew) {
         try {
-            Preferences preferences = ConfigurationScope.INSTANCE.getNode(Activator.PLUGIN_ID);
-            Preferences bpmPreferences = preferences.node(IndividualProcessWizard.PREFERENCE_NODE_NAME);
-            String value = bpmPreferences.get(IndividualProcessWizard.PREFERENCE_NAME, null);
-            Hashtable<String, IndividualServiceParameter> templateMap;
-            if (value != null) {
-                templateMap = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
-            } else {
-                templateMap = new Hashtable<String, IndividualServiceParameter>();
-            }
             IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
-            if(templateMap.get(parameter.getTitle())==null || !onlyIfNew )  {         
-                templateMap.put(parameter.getTitle(), parameter);
-                value = IndividualProcessWizard.toString(templateMap);
-                bpmPreferences.put(IndividualProcessWizard.PREFERENCE_NAME, value);
-                preferences.flush();
+            if(getTemplateMap().get(parameter.getTitle())==null || !onlyIfNew )  {         
+                getTemplateMap().put(parameter.getTitle(), parameter);
+                String value = IndividualProcessWizard.toString(templateMap);
+                getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
+                getPreferences().flush();
                 setMessage(Messages.TemplatePage_13 + parameter.getTitle());
             }
         } catch (Exception e) {
             LOG.error("Error while saving template", e); //$NON-NLS-1$
             setErrorMessage(Messages.TemplatePage_15);
         }
+    }
+
+    private Hashtable<String, IndividualServiceParameter> getTemplateMap()  {
+        if(templateMap==null) {
+            String value = getBpmPreferences().get(IndividualProcessWizard.PREFERENCE_NAME, null);
+            if (value != null) {
+                templateMap = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
+            } else {
+                templateMap = new Hashtable<String, IndividualServiceParameter>();
+            }
+        }
+        return templateMap;
     }
 
     /*
@@ -169,7 +178,13 @@ public class TemplatePage extends WizardPage {
         super.setVisible(visible);
         if (visible) {
             IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
-            title.setText(parameter.getTitle());
+            String taskTitle = parameter.getTitle();
+            title.setText(taskTitle);
+            if(getTemplateMap().get(taskTitle)!=null) {
+                button.setText(Messages.TemplatePage_0);
+            } else {
+                button.setText(Messages.TemplatePage_12);
+            }
             description.setText(parameter.getDescription());
             date.setText(DateFormat.getDateInstance().format(parameter.getDueDate()));
             reminder.setText(String.valueOf(parameter.getReminderPeriodDays()));
@@ -243,6 +258,20 @@ public class TemplatePage extends WizardPage {
             newTitle = trimTitleByWidthSize(gc, newTitle, width);
         }
         return newTitle;
+    }
+
+    public Preferences getPreferences() {
+        if(preferences==null) {
+            preferences = ConfigurationScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+        }
+        return preferences;
+    }
+
+    public Preferences getBpmPreferences() {
+        if(bpmPreferences==null) {
+            bpmPreferences = getPreferences().node(IndividualProcessWizard.PREFERENCE_NODE_NAME);
+        }
+        return bpmPreferences;
     }
 
 }

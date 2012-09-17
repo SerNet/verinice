@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
@@ -50,6 +51,7 @@ import org.eclipse.swt.widgets.Label;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.auth.Action;
 
@@ -59,6 +61,7 @@ import sernet.verinice.model.auth.Action;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("unchecked")
 public class PropertyPage extends WizardPage {
     
     private static final Logger LOG = Logger.getLogger(PropertyPage.class);
@@ -67,14 +70,19 @@ public class PropertyPage extends WizardPage {
     
     private String elementType;
     
-    private TableViewer tableSelected;
-    private TableViewer table;
+    private TreeViewer tableSelected;
+    private TreeViewer table;
+    PropertyTreeContentProvider selectedContentProvider = new PropertyTreeContentProvider();
+    PropertyTreeContentProvider contentProvider = new PropertyTreeContentProvider();
     
     Button addAllButton;
     Button removeAllButton;
     
-    private List<PropertyType> selectedProperties; 
+    private List selectedItems; 
+    private List unselectedItems = new ArrayList();
+    private List<PropertyType> selectedProperties;
     private List<PropertyType> unselectedProperties = new ArrayList<PropertyType>();
+    
     private List<PropertyType> allProperties;
     private Map<String, PropertyType> allPropertiesMap;
     
@@ -124,16 +132,18 @@ public class PropertyPage extends WizardPage {
         gridLayout.marginWidth = 0;
         rightComposite.setLayout(gridLayout);
         
-        tableSelected = createTable(leftComposite,Messages.PropertyPage_3);
+        tableSelected = createTreeTable(leftComposite,Messages.PropertyPage_3);
         tableSelected.setLabelProvider(new PropertyTypeLabelProvider());
-        tableSelected.setComparator(new PropertyTypeComparator());
-        tableSelected.setContentProvider(new ArrayContentProvider());     
+        //tableSelected.setComparator(new PropertyTypeComparator());
+        //tableSelected.setContentProvider(new ArrayContentProvider()); 
+        tableSelected.setContentProvider(selectedContentProvider); 
         tableSelected.refresh(true);
        
-        table = createTable(rightComposite,Messages.PropertyPage_4);
+        table = createTreeTable(rightComposite,Messages.PropertyPage_4);
         table.setLabelProvider(new PropertyTypeLabelProvider());
-        table.setComparator(new PropertyTypeComparator());
-        table.setContentProvider(new ArrayContentProvider());       
+        //table.setComparator(new PropertyTypeComparator());
+        //table.setContentProvider(new ArrayContentProvider()); 
+        table.setContentProvider(contentProvider);    
         table.refresh(true);
         
         initializeContent();
@@ -144,16 +154,17 @@ public class PropertyPage extends WizardPage {
     private void initializeContent() {
         EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(elementType);
         allProperties = entityType.getAllPropertyTypes();
+        selectedProperties = entityType.getAllPropertyTypes();
         allPropertiesMap = new Hashtable<String, PropertyType>();
         for (PropertyType property : allProperties) {
             allPropertiesMap.put(property.getId(), property);
         }
-        selectedProperties = new ArrayList<PropertyType>(allProperties.size());
-        for (PropertyType property : allProperties) {
-            selectedProperties.add(property);
-        }
-        tableSelected.setInput(selectedProperties);
-        table.setInput(unselectedProperties);
+        selectedItems = entityType.getPropertyTypes();
+        selectedItems.addAll(entityType.getPropertyGroups());
+        selectedContentProvider.setVisibleTyps(selectedProperties);
+        contentProvider.setVisibleTyps(unselectedProperties);
+        tableSelected.setInput(selectedItems);
+        table.setInput(selectedItems);
     }
     
     /**
@@ -161,12 +172,25 @@ public class PropertyPage extends WizardPage {
      */
     private void addSelection() {
         IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-        List selectionList = selection.toList();
-        selectedProperties.addAll(selectionList);
-        unselectedProperties.removeAll(selectionList);
-        Object[] selectedElements = selection.toArray();
-        tableSelected.add(selectedElements);
-        table.remove(selectedElements);
+        List selectionList = selection.toList();      
+        //selectedItems.addAll(selectionList);
+        //unselectedItems.removeAll(selectionList);
+        for (Object item : selectionList) {
+            if(item instanceof PropertyType) {
+                PropertyType propertyType = (PropertyType) item;
+                selectedProperties.add(propertyType);
+                unselectedProperties.remove(propertyType);
+            }
+            if(item instanceof PropertyGroup) {
+                PropertyGroup group = (PropertyGroup) item;
+                selectedProperties.addAll(group.getPropertyTypes());
+                unselectedProperties.removeAll(group.getPropertyTypes());
+            } 
+        }
+        selectedContentProvider.setVisibleTyps(selectedProperties);
+        contentProvider.setVisibleTyps(unselectedProperties);       
+        tableSelected.setInput(selectedItems);
+        table.setInput(selectedItems);
         tableSelected.setSelection(selection);
         table.getControl().setFocus();
     }
@@ -177,11 +201,24 @@ public class PropertyPage extends WizardPage {
     private void removeSelection() {
         IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
         List selectionList = selection.toList();
-        selectedProperties.removeAll(selectionList);
-        unselectedProperties.addAll(selectionList);
-        Object[] selectedElements = selection.toArray();
-        table.add(selectedElements);
-        tableSelected.remove(selectedElements); 
+        //selectedItems.removeAll(selectionList);
+        //unselectedItems.addAll(selectionList);
+        for (Object item : selectionList) {
+            if(item instanceof PropertyType) {
+                PropertyType propertyType = (PropertyType) item;
+                selectedProperties.remove(propertyType);
+                unselectedProperties.add(propertyType);
+            }
+            if(item instanceof PropertyGroup) {
+                PropertyGroup group = (PropertyGroup) item;
+                selectedProperties.removeAll(group.getPropertyTypes());
+                unselectedProperties.addAll(group.getPropertyTypes());
+            } 
+        }
+        selectedContentProvider.setVisibleTyps(selectedProperties);
+        contentProvider.setVisibleTyps(unselectedProperties);      
+        tableSelected.setInput(selectedItems);
+        table.setInput(selectedItems);       
         table.setSelection(selection);
         tableSelected.getControl().setFocus();
     }
@@ -198,7 +235,7 @@ public class PropertyPage extends WizardPage {
         addAllButton = new Button(parent, SWT.PUSH);
         addAllButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
         addAllButton.setText(Messages.PropertyPage_6);
-        addAllButton.setEnabled(!unselectedProperties.isEmpty());
+        addAllButton.setEnabled(!unselectedItems.isEmpty());
 
         final Button removeButton = new Button(parent, SWT.PUSH);
         removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP,true, false));
@@ -208,7 +245,7 @@ public class PropertyPage extends WizardPage {
         removeAllButton = new Button(parent, SWT.PUSH);
         removeAllButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false));
         removeAllButton.setText(Messages.PropertyPage_8);
-        removeAllButton.setEnabled(!selectedProperties.isEmpty());
+        removeAllButton.setEnabled(!selectedItems.isEmpty());
 
         table.addSelectionChangedListener(new ISelectionChangedListener() {          
             @Override
@@ -244,7 +281,7 @@ public class PropertyPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 removeSelection();
                 addAllButton.setEnabled(true);
-                removeAllButton.setEnabled(!selectedProperties.isEmpty());
+                removeAllButton.setEnabled(!selectedItems.isEmpty());
             }
         });
 
@@ -252,7 +289,7 @@ public class PropertyPage extends WizardPage {
             public void doubleClick(DoubleClickEvent event) {
                 removeSelection();
                 addAllButton.setEnabled(true);
-                removeAllButton.setEnabled(!selectedProperties.isEmpty());
+                removeAllButton.setEnabled(!selectedItems.isEmpty());
             }
         });
 
@@ -261,8 +298,12 @@ public class PropertyPage extends WizardPage {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             public void widgetSelected(SelectionEvent e) { 
+                //selectedItems.addAll(unselectedItems);
+                //unselectedItems.clear();
                 selectedProperties.addAll(unselectedProperties);
                 unselectedProperties.clear();
+                selectedContentProvider.setVisibleTyps(selectedProperties);
+                contentProvider.setVisibleTyps(unselectedProperties);
                 table.refresh();
                 tableSelected.refresh();
                 addAllButton.setEnabled(false);
@@ -275,8 +316,12 @@ public class PropertyPage extends WizardPage {
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             public void widgetSelected(SelectionEvent e) {
+                //unselectedItems.addAll(selectedItems);
+                //selectedItems.clear();
                 unselectedProperties.addAll(selectedProperties);
                 selectedProperties.clear();
+                selectedContentProvider.setVisibleTyps(selectedProperties);
+                contentProvider.setVisibleTyps(unselectedProperties);
                 table.refresh();
                 tableSelected.refresh();
                 removeAllButton.setEnabled(false);
@@ -284,6 +329,21 @@ public class PropertyPage extends WizardPage {
             }
         });
 
+    }
+    
+    private TreeViewer createTreeTable(Composite parent, String title) {
+        Label label = new Label(parent, SWT.WRAP);
+        label.setText(title);
+        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+        TreeViewer table = new TreeViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        table.getControl().setLayoutData(gd);
+
+        table.setUseHashlookup(true);
+
+        return table;
     }
     
     private TableViewer createTable(Composite parent, String title) {
@@ -317,10 +377,6 @@ public class PropertyPage extends WizardPage {
         
         addFormElements(composite);
                   
-        // Build the separator line
-        //Label separator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
-        //separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
         composite.pack(); 
         
         // Required to avoid an error in the system
@@ -385,6 +441,9 @@ public class PropertyPage extends WizardPage {
             String text = Messages.PropertyPage_10;
             if (element instanceof PropertyType) {
                 text = ((PropertyType) element).getName();
+            }
+            if (element instanceof PropertyGroup) {
+                text = ((PropertyGroup) element).getName();
             }
             return text;
         }

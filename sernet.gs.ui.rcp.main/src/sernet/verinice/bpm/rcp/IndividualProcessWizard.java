@@ -232,11 +232,16 @@ public class IndividualProcessWizard extends Wizard {
         return new String(BASE64EncoderStream.encode(baos.toByteArray()));
     }
 
-    static Object fromString(String s) throws IOException, ClassNotFoundException {
-        byte[] data = BASE64DecoderStream.decode(s.getBytes());
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-        Object o = ois.readObject();
-        ois.close();
+    static Object fromString(String s) {
+        Object o = null;
+        try {
+            byte[] data = BASE64DecoderStream.decode(s.getBytes());
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+            o = ois.readObject();
+            ois.close();
+        } catch (Exception e) {
+            LOG.error("Error while deserializing.", e);
+        }
         return o;
     }
 
