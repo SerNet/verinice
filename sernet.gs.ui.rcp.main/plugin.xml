@@ -820,6 +820,36 @@
                tooltip="%action.tooltip.33">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.itverbundreport"
+            objectClass="sernet.verinice.model.bsi.ITVerbund">
+         <action
+               class="sernet.verinice.report.rcp.GenerateReportAction"
+               enablesFor="+"
+               icon="icons/report.png"
+               id="sernet.verinice.report.rcp.GenerateITVerbundReportAction.action"
+               label="%action.label.34"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.34">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.organisationreport"
+            objectClass="sernet.verinice.model.iso27k.Organization">
+         <action
+               class="sernet.verinice.report.rcp.GenerateReportAction"
+               enablesFor="+"
+               icon="icons/report.png"
+               id="sernet.verinice.report.rcp.GenerateOrganisationReportAction.action"
+               label="%action.label.35"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.35">
+         </action>
+      </objectContribution>      
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
