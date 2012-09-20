@@ -37,6 +37,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class LoadTagsOfGroupElements extends GenericCommand {
 
+    private static final String GSM_PREFIX = "gsm_";
+    
     private static final String TAG_SUFFIX = "_tag";
     
     private String groupUuid;
@@ -65,13 +67,18 @@ public class LoadTagsOfGroupElements extends GenericCommand {
         if(group!=null) {
             for (CnATreeElement child : group.getChildren()) {
                 tagSet.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateTagPropertyName(child.getTypeId()))));
+                tagSet.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateGsmTagPropertyName(child.getTypeId()))));
             }
         }
     }
-
     
     private String generateTagPropertyName(String typeId) {
         return new StringBuilder(typeId).append(TAG_SUFFIX).toString();
+    }
+
+    
+    private String generateGsmTagPropertyName(String typeId) {
+        return new StringBuilder(GSM_PREFIX).append(typeId).append(TAG_SUFFIX).toString();
     }
 
     /**
