@@ -24,9 +24,13 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.GS2BSITransformOperation;
 import sernet.verinice.iso27k.service.ItemTransformException;
@@ -35,7 +39,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
-public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerformer {
+public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerformer, RightEnabledUserInteraction {
 	
 	private boolean isActive = false;
 	
@@ -116,7 +120,7 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 	@Override
 	public boolean validateDrop(Object target, int operation,
 			TransferData transferType) {
-		boolean valid = false;
+	    boolean valid = false;
 		if(target != null){
 		    this.target = target;
 		}
@@ -140,6 +144,10 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 			LOG.debug("validateDrop, target: " + target); //$NON-NLS-1$
 		}
 		boolean valid = false;
+		
+		if(!checkRights()){
+		    return valid = false;
+		}
 
 		List items = new ArrayList<Object>(0);
 		
@@ -209,15 +217,38 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
     }
     
     private boolean isSupportedData(TransferData transferType){
-        return BausteinElementTransfer.getInstance().isSupportedType(transferType);
+        return IGSModelElementTransfer.getInstance().isSupportedType(transferType);
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
      */
-    @Override
     public boolean performDrop(Object data, Object target, Viewer viewer) {
         return performDrop(data);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.TREEDND;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
     }
  
 

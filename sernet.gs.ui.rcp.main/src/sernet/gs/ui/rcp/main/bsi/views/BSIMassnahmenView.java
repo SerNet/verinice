@@ -56,7 +56,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIMassnahmenViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
@@ -222,7 +222,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	}
 
 	private void hookDNDListener() {
-		Transfer[] types = new Transfer[] { BausteinElementTransfer.getInstance() };
+	    final Transfer igsmTransfer = IGSModelElementTransfer.getInstance();
+	    Transfer[] types = new Transfer[] {igsmTransfer};
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		viewer.addDragSupport(operations, types, new BSIMassnahmenViewDragListener(viewer));
 	}

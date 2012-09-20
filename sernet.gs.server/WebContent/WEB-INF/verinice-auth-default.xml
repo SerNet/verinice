@@ -39,7 +39,7 @@
         <action id="addownmodul"/>
         <action id="auditview" />
         <action id="bausteinzuordnung" />
-        <action id="bsidnd" />
+        <action id="treednd" />
         <action id="bsibrowser" />
         <action id="bsimassnahmen" />
         <action id="bsimodelview" />
@@ -100,7 +100,7 @@
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
-	        <action id="bsidnd" />
+	        <action id="treednd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
@@ -157,7 +157,7 @@
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
-	        <action id="bsidnd" />
+	        <action id="treednd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
@@ -216,7 +216,7 @@
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
-	        <action id="bsidnd" />
+	        <action id="treednd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />

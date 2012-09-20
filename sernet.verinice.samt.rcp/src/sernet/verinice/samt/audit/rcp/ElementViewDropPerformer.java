@@ -37,9 +37,13 @@ import sernet.gs.ui.rcp.main.bsi.dnd.DNDHelper;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.iso27k.service.PasteService;
 import sernet.verinice.model.common.CnATreeElement;
@@ -49,16 +53,16 @@ import sernet.verinice.rcp.IProgressRunnable;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ElementViewDropPerformer extends ViewerDropAdapter implements DropPerformer {
+public class ElementViewDropPerformer extends ViewerDropAdapter implements DropPerformer, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(ElementViewDropPerformer.class);
-    
+
     GenericElementView elementView;
-    
+
     private Object target = null;
-    
+
     private boolean isActive = false;
-    
+
     /**
      * @param elementView
      */
@@ -82,27 +86,32 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
     public boolean performDrop(Object data, Object target, Viewer viewer) {
         // TODO Auto-generated method stub
         // get dragged items: DNDItems.getItems()
-        
-       if (LOG.isDebugEnabled()) {
-           LOG.debug("performDrop...");
-       } 
-       
-              
-       try {
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("performDrop...");
+        } 
+
+
+        try {
+
+            if(!checkRights()){
+                return false;
+            }
+
             if (!validateDropObjects(target)) {
                 return false;
             }
             if(!validateLinkTypes(data)){
                 return false;
             }
-            
+
             CnATreeElement groupToAdd = null;
             if(target instanceof Group) {
                 groupToAdd = (CnATreeElement) target;
             } else {
                 groupToAdd = elementView.getGroupToAdd();
             }
-            
+
             CnATreeElement elementToLink = elementView.getElementToLink();
             PasteService task = new AuditCutService(groupToAdd, elementToLink, DNDHelper.arrayToList(data));
             IProgressRunnable operation = new PasteOperation(task,"{0} elements moved to group {1}",PreferenceConstants.INFO_ELEMENTS_CUT) ;
@@ -117,7 +126,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
             LOG.error("Error while dropping items.", e);
             return false;
         }
-        
+
     }
 
     /* (non-Javadoc)
@@ -127,7 +136,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         return isActive = isSupportedData(transferType);
     }
-    
+
     /**
      * @param target
      * @return
@@ -136,7 +145,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
         //validation is done in performDrop(), because data is not available here
         return true;
     }
-    
+
     private boolean isSupportedData(TransferData transferData){
         return (ISO27kElementTransfer.getInstance().isSupportedType(transferData) ||
                 ISO27kGroupTransfer.getInstance().isSupportedType(transferData));
@@ -149,7 +158,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
     public boolean performDrop(Object arg0) {
         return false;
     }
-    
+
     private boolean validateLinkTypes(Object data){
         boolean valid = true;
         if(target instanceof CnATreeElement) {
@@ -191,6 +200,31 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
             }
         }
         return valid;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.TREEDND;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // nothing to do
     }
 
 }

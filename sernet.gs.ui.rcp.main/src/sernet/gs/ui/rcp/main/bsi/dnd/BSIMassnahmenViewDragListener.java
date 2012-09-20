@@ -19,72 +19,64 @@ package sernet.gs.ui.rcp.main.bsi.dnd;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 
 public class BSIMassnahmenViewDragListener implements DragSourceListener {
 
 	private TreeViewer viewer;
 
-	private Logger LOG = Logger.getLogger(BSIMassnahmenViewDragListener.class);
+	private static transient Logger LOG = Logger.getLogger(BSIMassnahmenViewDragListener.class);
 
 	public BSIMassnahmenViewDragListener(TreeViewer viewer) {
 		this.viewer = viewer;
 	}
 
-	@Override
 	public void dragFinished(DragSourceEvent event) {
 		// do nothing
 	}
 	
-	@Override
 	public void dragSetData(DragSourceEvent event) {
-	    DragSource ds = (DragSource) event.widget;
-	    IStructuredSelection selection = null;
-	    try{
-	        selection = (IStructuredSelection)viewer.getSelection();
-	        if(selection.getFirstElement() instanceof Baustein){
-	            event.data = transferToBausteinArray(selection.toArray());
-	        }
-	    } catch (Throwable t){
-	        LOG.error("error: ", t);
+	    IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
+	    if(validateDrag(event)){
+	        event.data = DNDHelper.castDataArray(selection.toArray());
+	        
 	    }
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
 	public void dragStart(DragSourceEvent event) {
-		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+        IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
+        if(selection==null) {
+            event.doit = false;
+            return; 
+        }
+        List selectionList = new ArrayList(selection.size());
+        
+        for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
-            if (!(o instanceof Baustein || o instanceof Massnahme || o instanceof Gefaehrdung)) {
-				event.doit = false;
-				return;	
-			} else {
-			    event.data = transferToBausteinArray(selection.toArray());
-			}
-		}
-		event.doit = true;
-		dragSetData(event);
+            selectionList.add(o);
+            if (!(o instanceof Baustein
+                  || o instanceof Gefaehrdung
+                  || o instanceof Massnahme)) {
+                event.doit = false;
+                return; 
+            }
+        }
+        event.doit = true;
 	}
 	
-	private Object[] transferToBausteinArray(Object[] source){
-	    ArrayList<Baustein> dest = new ArrayList<Baustein>(0);
-	    for(Object o : source){
-	        if(o instanceof Baustein){
-	            dest.add((Baustein)o);
-	        }
-	    }
-	    return dest.toArray(new Baustein[dest.size()]);
+	private boolean validateDrag(DragSourceEvent event){
+	    return (IGSModelElementTransfer.getInstance().isSupportedType(event.dataType));
 	}
 
 }

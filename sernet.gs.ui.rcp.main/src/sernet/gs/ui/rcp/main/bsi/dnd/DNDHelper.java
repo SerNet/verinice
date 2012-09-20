@@ -32,12 +32,11 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.GefaehrdungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.MassnahmeTransfer;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.iso27k.Item;
@@ -58,12 +57,11 @@ public class DNDHelper {
     
     private static Class<?> transferClasses[] = new Class[]{ BausteinElementTransfer.class,
                                                              BausteinUmsetzungTransfer.class,
-                                                             GefaehrdungTransfer.class,
                                                              IBSIStrukturElementTransfer.class,
                                                              ISO27kElementTransfer.class,
                                                              ISO27kGroupTransfer.class,
                                                              ItemTransfer.class,
-                                                             MassnahmeTransfer.class
+                                                             IGSModelElementTransfer.class
                                                 };
     
     public static List arrayToList(Object data){

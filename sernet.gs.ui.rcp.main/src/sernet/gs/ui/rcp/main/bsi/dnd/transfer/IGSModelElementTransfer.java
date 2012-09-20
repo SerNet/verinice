@@ -30,32 +30,32 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
-import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.IGSModel;
 
 /**
  *
  */
-public class GefaehrdungTransfer extends ByteArrayTransfer {
+public class IGSModelElementTransfer extends ByteArrayTransfer {
+
+    private static final String TYPENAME_IGSMODELELEMENT = "igsModelElement";
+    private static final int TYPEID_IGSMODELELEMENT = registerType(TYPENAME_IGSMODELELEMENT);
     
-    private static final String TYPENAME_GEFAEHRDUNGELEMENT = Gefaehrdung.class.getCanonicalName();
-    private static final int TYPEID_GEFAEHRDUNGELEMENT = registerType(TYPENAME_GEFAEHRDUNGELEMENT);
+    private static Logger LOG = Logger.getLogger(IGSModelElementTransfer.class);
     
-    private static Logger LOG = Logger.getLogger(GefaehrdungTransfer.class);
+    private static IGSModelElementTransfer instance = new IGSModelElementTransfer();
     
-    private static GefaehrdungTransfer instance = new GefaehrdungTransfer();
-    
-    public static GefaehrdungTransfer getInstance(){
+    public static IGSModelElementTransfer getInstance(){
         return instance;
     }
     
-    private GefaehrdungTransfer(){}
-
+    private IGSModelElementTransfer(){}
+    
     /* (non-Javadoc)
      * @see org.eclipse.swt.dnd.Transfer#getTypeNames()
      */
     @Override
     protected String[] getTypeNames() {
-        return new String[]{TYPENAME_GEFAEHRDUNGELEMENT};
+        return new String[]{TYPENAME_IGSMODELELEMENT};
     }
 
     /* (non-Javadoc)
@@ -63,20 +63,20 @@ public class GefaehrdungTransfer extends ByteArrayTransfer {
      */
     @Override
     protected int[] getTypeIds() {
-        return new int[]{TYPEID_GEFAEHRDUNGELEMENT};
+        return new int[]{TYPEID_IGSMODELELEMENT};
     }
     
     public void javaToNative (Object data, TransferData transferData){
         if (data == null || !(validateData(data))) return;
         if (isSupportedType(transferData)) {
-            ArrayList<Gefaehrdung> gefaehrdungen = new ArrayList<Gefaehrdung>(0);
-            if(data instanceof Gefaehrdung[]){
-                Gefaehrdung[] gefaehrdungElements = (Gefaehrdung[]) data;
-                for(Gefaehrdung b : gefaehrdungElements){
-                    gefaehrdungen.add(b);
+            ArrayList<IGSModel> igsElements = new ArrayList<IGSModel>(0);
+            if(data instanceof IGSModel[]){
+                IGSModel[] igsModelElements = (IGSModel[]) data;
+                for(IGSModel b : igsModelElements){
+                    igsElements.add(b);
                 }
-            } else if (data instanceof Gefaehrdung){
-                gefaehrdungen.add((Gefaehrdung)data);
+            } else if (data instanceof IGSModel){
+                igsElements.add((IGSModel)data);
             }
             ByteArrayOutputStream out = null;
             ObjectOutputStream objectOut = null;
@@ -84,7 +84,7 @@ public class GefaehrdungTransfer extends ByteArrayTransfer {
                 out = new ByteArrayOutputStream();
                 objectOut = new ObjectOutputStream(out);
                 
-                objectOut.writeObject(gefaehrdungen.toArray(new Object[gefaehrdungen.size()]));
+                objectOut.writeObject(igsElements.toArray(new Object[igsElements.size()]));
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
@@ -125,9 +125,8 @@ public class GefaehrdungTransfer extends ByteArrayTransfer {
     }
     
     private boolean validateData(Object data){
-        return (data instanceof Gefaehrdung[]||
-                data instanceof Gefaehrdung);
+        return (data instanceof IGSModel[]||
+                data instanceof IGSModel);
     }
-
 
 }

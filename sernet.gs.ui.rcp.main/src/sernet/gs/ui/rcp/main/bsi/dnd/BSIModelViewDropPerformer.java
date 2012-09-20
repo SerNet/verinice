@@ -241,7 +241,7 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
      */
     @Override
     public String getRightID() {
-        return ActionRightIDs.BSIDND;
+        return ActionRightIDs.TREEDND;
     }
 
     /* (non-Javadoc)

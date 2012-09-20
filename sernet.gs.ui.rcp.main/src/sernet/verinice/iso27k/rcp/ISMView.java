@@ -62,14 +62,12 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.GefaehrdungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.MassnahmeTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -146,13 +144,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
 	
-	private static Transfer[] types = new Transfer[] { IBSIStrukturElementTransfer.getInstance(), 
-	                                                   ISO27kElementTransfer.getInstance(),
-	                                                   ISO27kGroupTransfer.getInstance(),
-	                                                   MassnahmeTransfer.getInstance(),
-	                                                   GefaehrdungTransfer.getInstance(),
-	                                                   BausteinElementTransfer.getInstance(),
-	                                                   ItemTransfer.getInstance()};
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
 	protected TreeViewer viewer;
@@ -484,13 +475,14 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	    Transfer[] dragTypes = new Transfer[] { ISO27kElementTransfer.getInstance(),
 	                                            ISO27kGroupTransfer.getInstance()
 	                                          };
-	    Transfer[] dropTypes = new Transfer[] { BausteinElementTransfer.getInstance(),
+	    Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
 	                                            BausteinUmsetzungTransfer.getInstance(),
 	                                            ItemTransfer.getInstance(),
 	                                            ISO27kElementTransfer.getInstance(),
 	                                            ISO27kGroupTransfer.getInstance(),
 	                                            IBSIStrukturElementTransfer.getInstance()
 	                                          };
+	    
 
 		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
 		viewer.addDropSupport(operations, dropTypes, metaDropAdapter);

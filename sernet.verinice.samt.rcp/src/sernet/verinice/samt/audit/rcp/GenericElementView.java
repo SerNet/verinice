@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
@@ -84,7 +86,7 @@ public class GenericElementView extends ElementView {
         commandMap.put(Organization.TYPE_ID, new OrganizationCommandFactory());
     }
     
-    private static Transfer[] types = new Transfer[] { TextTransfer.getInstance(),FileTransfer.getInstance() };
+    
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
     
     private MetaDropAdapter metaDropAdapter;
@@ -149,6 +151,9 @@ public class GenericElementView extends ElementView {
      */
     @Override
     protected void hookDndListeners() {
+        final Transfer isoElementTransfer = ISO27kElementTransfer.getInstance();
+        final Transfer isoGroupTransfer = ISO27kGroupTransfer.getInstance();
+        Transfer[] types = new Transfer[] { isoElementTransfer, isoGroupTransfer };
         viewer.addDragSupport(operations, types, new BSIModelViewDragListener(viewer));
         viewer.addDropSupport(operations, types, metaDropAdapter);  
     }

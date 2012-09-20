@@ -37,7 +37,7 @@ import sernet.gs.model.Baustein;
  */
 public class BausteinElementTransfer extends ByteArrayTransfer {
 
-    private static final String TYPENAME_BAUSTEINELEMENT = Baustein.class.getCanonicalName();
+    private static final String TYPENAME_BAUSTEINELEMENT = Baustein.TYPE_ID;
     private static final int TYPEID_BAUSTEINELEMENT = registerType(TYPENAME_BAUSTEINELEMENT);
     
     private static Logger LOG = Logger.getLogger(BausteinElementTransfer.class);

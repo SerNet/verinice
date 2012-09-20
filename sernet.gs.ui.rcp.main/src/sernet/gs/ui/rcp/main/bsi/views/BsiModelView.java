@@ -71,11 +71,9 @@ import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
@@ -361,8 +359,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	}
 
 	private void hookDNDListeners() {
-		Transfer[] dropTypes = new Transfer[] { BausteinElementTransfer.getInstance(),
-		                                        BausteinUmsetzungTransfer.getInstance(), 
+		Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+		                                        BausteinUmsetzungTransfer.getInstance(),
 		                                        IBSIStrukturElementTransfer.getInstance() 
 		                                      };
 		Transfer[] dragTypes = new Transfer[]{  IBSIStrukturElementTransfer.getInstance(),

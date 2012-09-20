@@ -45,7 +45,6 @@ public class ActionRightIDs {
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
-    public static final String BSIDND = "bsidnd";
     public static final String BSIBROWSER = "bsibrowser";
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
@@ -83,6 +82,8 @@ public class ActionRightIDs {
     public static final String TASKVIEW = "taskview";
     public static final String TASKDELETE = "taskdelete";
     public static final String TASKSHOWALL = "taskshowall";
+    // value "bsidnd" kept due to historical reasons
+    public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
