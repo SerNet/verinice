@@ -87,6 +87,7 @@ public class RelationPage extends WizardPage {
             relationCombo.setItems(relationComboModel.getLabelArray());
             relationCombo.select(0);
             relationComboModel.setSelectedIndex(0);
+            relation=relationComboModel.getSelectedObject();
         } else {
             relationCombo.setEnabled(false);
         }

@@ -46,5 +46,5 @@ public interface IIndividualProcess extends IGenericProcess {
 
     String VAR_RELATION_ID = "INDI_RELATION_ID";
     
-    String VAR_REMINDER_PERIOD = "INDI_REMINDER_PERIOD";
+    String VAR_REMINDER_DATE = "INDI_REMINDER_DATE";
 }

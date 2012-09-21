@@ -38,4 +38,10 @@ public interface IRightsServerHandler {
      */
     boolean isEnabled(String username, String actionId);
     
+    /**
+     * Discards all data saved in the handler.
+     * This method causes a reinitialization of the handler.
+     */
+    void discardData();
+    
 }

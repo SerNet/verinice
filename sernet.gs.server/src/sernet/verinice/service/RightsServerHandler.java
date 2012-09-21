@@ -176,7 +176,10 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
    
-    private void discardData() {
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsServerHandler#discardData()
+     */
+    public void discardData() {
         profileMap=null;
         userActionMap=null;
         userprofileMap=null;

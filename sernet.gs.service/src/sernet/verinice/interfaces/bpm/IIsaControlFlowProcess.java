@@ -44,6 +44,8 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
     
     String VAR_AUDITOR_NAME = "ICF_AUDITOR_NAME";
     
+    String VAR_REMINDER_PERIOD = "ICF_REMINDER_PERIOD";
+    
     String REMINDER_FIXED = "REMINDER_FIXED";
     
     String REMINDER_NOT_CHANGED = "REMINDER_NOT_CHANGED";

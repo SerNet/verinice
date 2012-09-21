@@ -66,6 +66,8 @@ public class DatePage extends WizardPage {
     private Calendar dueDate;
     
     Combo priorityCombo;
+    
+    Button[] radios;
 
     private String period;
 
@@ -74,8 +76,6 @@ public class DatePage extends WizardPage {
     private static final int MAX_PERIOD = 30;
 
     private static final int DEFAULT_PERIOD = 6;
-
-    private int pageWidth = 300;
 
     private Calendar now = Calendar.getInstance();
 
@@ -131,7 +131,7 @@ public class DatePage extends WizardPage {
         });
 
         if(isRelation) {
-            final Button[] radios = new Button[2];
+            radios = new Button[2];
     
             radios[0] = new Button(composite, SWT.RADIO);
             radios[0].setSelection(true);
@@ -297,12 +297,20 @@ public class DatePage extends WizardPage {
         setPageComplete(isValid());   
     }
 
-    /**
-     * @param relation
-     */
-    public void setIsRelation(boolean relation) {
-        // TODO Auto-generated method stub
-        
+    public String getAssigneeSelectionMode() {
+        return assigneeSelectionMode;
+    }
+
+    public void setAssigneeSelectionMode(String assigneeSelectionMode) {
+        this.assigneeSelectionMode = assigneeSelectionMode;
+        if(ASSIGNEE_SELECTION_DIRECT.equals(this.assigneeSelectionMode)) {
+            radios[0].setSelection(true);
+            radios[1].setSelection(false);
+        }
+        if(ASSIGNEE_SELECTION_RELATION.equals(this.assigneeSelectionMode)) {
+            radios[1].setSelection(true);
+            radios[0].setSelection(false);
+        }
     }
 
 }

@@ -81,10 +81,7 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
                 }
             } else if (e instanceof ControlGroup) {
                 loadSamtTopics((ControlGroup) e);
-            } else {
-                getLog().warn("found unexpected child for control group: " + e); //$NON-NLS-1$
             }
-
         }
     }
 

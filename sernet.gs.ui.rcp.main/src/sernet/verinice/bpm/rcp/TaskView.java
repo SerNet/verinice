@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -202,18 +203,15 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             param.setTaskId(taskFilterAction.getTaskId());
         }
         List<ITask> taskList = Collections.emptyList();
-        final LoadTaskJob job = new LoadTaskJob(param);
-        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        Display.getDefault().syncExec(new Runnable(){
+        final LoadTaskJob job = new LoadTaskJob(param);  
+        
+        BusyIndicator.showWhile(null, new Runnable() {          
+            @Override
             public void run() {
-                try {
-                    progressService.run(true, true, job);
-                } catch (Throwable t) {
-                    LOG.error("Error while loading tasks.", t); //$NON-NLS-1$
-                    showError(Messages.TaskView_2, Messages.TaskView_3);
-                }
+                job.loadTasks();
             }
         });
+        
         Display.getDefault().syncExec(new Runnable(){
             public void run() {
                 getInfoPanel().setText("");                          

@@ -13,7 +13,7 @@
       <transition g="522,142:4,2" name="iqm.trans.noFix" to="java.reminderNotChanged"/>
    </task>
    
-   <task assignee="#{IQM_ASSIGNEE}" g="292,201,127,52" name="iqm.task.check"  duedate="3 months">
+   <task assignee="#{ISA_ASSIGNEE_NAME}" g="292,201,127,52" name="iqm.task.check"  duedate="3 months">
       <transition g="-55,-35" name="iqm.trans.fix" to="java.reminderFixed"/>
       <transition g="-32,-33" name="iqm.trans.noFix" to="java.reminderNotChanged"/>
    </task>

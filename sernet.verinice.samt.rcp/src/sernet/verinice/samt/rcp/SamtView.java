@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.GroupMarker;
 
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -115,8 +117,10 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
      * @see sernet.verinice.iso27k.rcp.ISMView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
     protected void fillContextMenu(IMenuManager manager) {
-        super.fillContextMenu(manager); 
-        manager.appendToGroup("content",addIsaAction);
+        super.fillContextMenu(manager);
+        manager.add(new Separator());
+        manager.add(new GroupMarker("workflow")); 
+        manager.appendToGroup("workflow",addIsaAction);
     }
     
     protected void expand() {

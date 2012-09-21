@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
@@ -41,8 +42,8 @@ public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
     private ITaskService taskService;
     
     /**
-     * Value of param  IIsaQmProcess.VAR_IQM_ASSIGNEE is added
-     * to task as var IIsaQmProcess.VAR_IQM_ASSIGNEE.
+     * Value of param IIsaQmProcess.VAR_IQM_ASSIGNEE is added
+     * to task as var IGenericProcess.VAR_ASSIGNEE_NAME.
      *  
      * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#execute(java.util.Map)
      */
@@ -52,7 +53,7 @@ public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
             String assignee = (String) parameter.get(IIsaQmProcess.VAR_IQM_ASSIGNEE);
             if(assignee!=null) {
                 Map<String, Object> param = new HashMap<String, Object>();
-                param.put(IIsaQmProcess.VAR_IQM_ASSIGNEE, assignee);
+                param.put(IGenericProcess.VAR_ASSIGNEE_NAME, assignee);
                 getTaskService().setVariables(taskId, param);
             }
         }

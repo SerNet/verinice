@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.jbpm.pvm.internal.cmd.GetResourceAsStreamCmd;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.common.ApplicationRoles;
@@ -41,6 +42,8 @@ import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IHibernateCommandService;
 import sernet.verinice.interfaces.INoAccessControl;
+import sernet.verinice.interfaces.IRightsServerHandler;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
@@ -75,6 +78,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	private VeriniceContext.State workObjects;
 	
 	private IConfigurationService configurationService;
+	
+	private IRightsServerHandler rightsServerHandler;
 	
 	IBaseDao<BSIModel, Serializable> dao;
 	
@@ -255,6 +260,22 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     }
 
 
+    /**
+     * @return the rightsService
+     */
+    public IRightsServerHandler getRightsServerHandler() {
+        return rightsServerHandler;
+    }
+
+
+    /**
+     * @param rightsService the rightsService to set
+     */
+    public void setRightsServerHandler(IRightsServerHandler rightsServerHandler) {
+        this.rightsServerHandler = rightsServerHandler;
+    }
+
+
     public Properties getProperties() {
         return properties;
     }
@@ -320,6 +341,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	public void discardUserData(){
 	    getConfigurationService().discardUserData();
+	    getRightsServerHandler().discardData();
 	}
 	
 	private IBaseDao<BSIModel, Serializable> getBsiModelDao() {

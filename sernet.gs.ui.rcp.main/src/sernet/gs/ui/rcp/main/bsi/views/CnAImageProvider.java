@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -58,6 +59,7 @@ public class CnAImageProvider {
 	public static Image getImage(CnATreeElement elmt) {
 		if (elmt instanceof MassnahmenUmsetzung) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) elmt;
+			mn = (MassnahmenUmsetzung) Retriever.checkRetrieveElement(mn);
 			String state = mn.getUmsetzung();			
 			return getImage(state);
 		}

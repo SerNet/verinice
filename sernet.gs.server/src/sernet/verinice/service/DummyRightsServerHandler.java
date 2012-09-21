@@ -36,4 +36,11 @@ public class DummyRightsServerHandler implements IRightsServerHandler {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IRightsServerHandler#discardData()
+     */
+    @Override
+    public void discardData() { 
+    }
+
 }

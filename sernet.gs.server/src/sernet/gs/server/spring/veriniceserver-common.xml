@@ -246,6 +246,7 @@ This variant:
 		<property name="authService" ref="authService" />
 		<property name="ldapService" ref="ldapService" />
         <property name="configurationService" ref="configurationService" />
+        <property name="rightsServerHandler" ref="rightsServerHandler" />
 	</bean>
     
 	<bean id="commandService" parent="baseTxProxy">

@@ -42,6 +42,10 @@ final class LoadTaskJob implements IRunnableWithProgress {
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        loadTasks();
+    }
+    
+    public void loadTasks() {
         Activator.inheritVeriniceContextState();
         taskList = ServiceFactory.lookupTaskService().getTaskList(param);
         Collections.sort(taskList);

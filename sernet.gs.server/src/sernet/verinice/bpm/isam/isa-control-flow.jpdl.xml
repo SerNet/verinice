@@ -3,12 +3,9 @@
 <process key="isa-control-flow" name="verinice ISA control flow" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
    <description>ISA control flow in verinice</description>
    
-   
-   
    <start g="982,145,186,52" name="start1">
       <transition to="isAssignee"/>
    </start>
-   
    
    
    <!--  Assign -->
@@ -24,8 +21,7 @@
    
    <task assignee="#{ISA_OWNER_NAME}" duedate="21 days" g="542,234,186,52" name="icf.task.assign">
       <on event="timeout">
-      <!-- <timer duedate="14 days"/> -->
-      <timer duedate="1 minute"/>
+      <timer duedate="14 days"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
           <field name="taskType"><string value="icf.task.assign"/></field>
           <field name="assignee"><object expr="#{ISA_OWNER_NAME}"/></field>
@@ -52,8 +48,7 @@
     
    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="914,635,186,52" name="icf.task.execute">
       <on event="timeout">
-      <!-- <timer duedate="#{ISA_DUEDATE} - 7 days"/> -->
-      <timer duedate="1 minute"/>
+      <timer duedate="#{ISA_DUEDATE} - 7 days"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
           <field name="taskType"><string value="icf.task.execute"/></field>
           <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
@@ -209,8 +204,7 @@
    
    <state g="642,1357,92,35" name="wait">
       <transition g="-77,23" name="6 weeks before audit" to="java.reminderAudit">
-        <!--<timer duedate="#{AUDIT_DATE} - 6 weeks"/>-->
-        <timer duedate="#{AUDIT_DATE} - 1 minute"/>
+         <timer duedate="#{AUDIT_DATE} - 6 weeks"/>
       </transition>
    </state>
 

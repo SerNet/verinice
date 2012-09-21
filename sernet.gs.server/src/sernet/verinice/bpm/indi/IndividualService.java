@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm.indi;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +67,8 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IGenericProcess.VAR_UUID, parameter.getUuid());
         map.put(IGenericProcess.VAR_ASSIGNEE_NAME, parameter.getAssignee());
         map.put(IIndividualProcess.VAR_RELATION_ID, parameter.getAssigneeRelationId());
-        map.put(IGenericProcess.VAR_DUEDATE, parameter.getDueDate());
-        map.put(IIndividualProcess.VAR_REMINDER_PERIOD, parameter.getReminderPeriodDays());
+        map.put(IGenericProcess.VAR_DUEDATE, parameter.getDueDate());       
+        map.put(IIndividualProcess.VAR_REMINDER_DATE, getReminderDate(parameter));
         map.put(IGenericProcess.VAR_OWNER_NAME, getAuthService().getUsername());
         String description = parameter.getDescription();
         if(description!=null) {
@@ -80,6 +82,16 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IGenericProcess.VAR_TYPE_ID, parameter.getTypeId());
         map.put(IIndividualProcess.VAR_PROPERTY_TYPES, parameter.getProperties());
         return map;
+    }
+
+    /**
+     * @param parameter
+     */
+    private Date getReminderDate(IndividualServiceParameter parameter) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(parameter.getDueDate());
+        cal.add(Calendar.DAY_OF_MONTH, -1*parameter.getReminderPeriodDays());  
+        return cal.getTime();
     }
 
     public IAuthService getAuthService() {
