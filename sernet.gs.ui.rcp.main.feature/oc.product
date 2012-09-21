@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.5.3" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.5.9.92" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
       <text>
-         SerNet verinice 1.6.0 BETA - Codename &apos;Constructa&apos;
+         SerNet verinice 1.6.0 BETA - Codename &apos;Costa Rica&apos;
 
 (c) SerNet Service Network GmbH and others
 1996-2012
@@ -61,17 +61,17 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       <vmArgs>-Xms64m -Xmx512m -XX:MaxPermSize=128m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext</vmArgs>
    </launcherArgs>
 
-   <windowImages i16="/sernet.gs.ui.rcp.main/icons/window16.gif" i32="/sernet.gs.ui.rcp.main/icons/window32.gif"/>
+   <windowImages i16="/sernet.gs.ui.rcp.main/icons/v-16.gif" i32="/sernet.gs.ui.rcp.main/icons/v-32.gif" i48="/sernet.gs.ui.rcp.main/icons/v-48.gif" i64="/sernet.gs.ui.rcp.main/icons/v-64.gif" i128="/sernet.gs.ui.rcp.main/icons/v-128.gif"/>
 
    <splash
       location="sernet.gs.ui.rcp.main"
       startupProgressRect="5,5,300,15" />
    <launcher name="verinice">
-      <linux icon="/sernet.gs.ui.rcp.main.feature/wxcas.xpm"/>
+      <linux icon="/sernet.gs.ui.rcp.main.feature/v.xpm"/>
       <macosx icon="/sernet.gs.ui.rcp.main.feature/v_logo_mac.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/sernet.gs.ui.rcp.main.feature/v_48.ico"/>
+         <ico path="/sernet.gs.ui.rcp.main.feature/v-128-16.ico"/>
          <bmp/>
       </win>
    </launcher>

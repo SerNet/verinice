@@ -680,7 +680,7 @@
                icon="icons/derive.gif"
                id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction.menu"
                label="%action.label.28"
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="%action.tooltip.28">
          </action>
@@ -710,7 +710,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaProcess.action"
                label="%action.label.26"
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="%action.tooltip.25">
          </action>
@@ -725,7 +725,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control.action"
                label="Start control flow..."
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -755,7 +755,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit.action"
                label="Start control flow..."
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -770,7 +770,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group.action"
                label="Start control flow..."
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="Start an ISA control flow prozess...">
          </action>
@@ -800,7 +800,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartQmProcess.action"
                label="%action.label.32"
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="%action.tooltip.32">
          </action>
@@ -815,7 +815,7 @@
                icon="icons/tasks.gif"
                id="sernet.verinice.bpm.rcp.StartIndividualProcess.action"
                label="%action.label.33"
-               menubarPath="special"
+               menubarPath="workflow"
                style="push"
                tooltip="%action.tooltip.33">
          </action>
@@ -1012,7 +1012,7 @@
       <page
             class="sernet.gs.ui.rcp.main.preferences.DatenbankPreferencePage"
             id="sernet.gs.ui.rcp.main.page2"
-            name="%page.name.2"/>      
+            name="%page.name.2"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.GSImportPreferencePage"
             id="sernet.gs.ui.rcp.main.page5"
