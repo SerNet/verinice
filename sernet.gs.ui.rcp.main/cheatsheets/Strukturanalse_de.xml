@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?> 
 <cheatsheet title="Strukturanalyse">
 
-	<intro 
-		>
+	<intro>
 		<description>
 		In diesem Tutorial lernen Sie, wie Sie ihren IT-Verbund mit Verinice erfassen.
 		<br/><br/>
@@ -11,22 +10,16 @@
 		</description>
 	</intro>
 
-	<item title="DB Verbindung">
-		<description>
-		Klicken Sie mit der rechten Maustaste in die Ansicht "GS-Modell".
-		Wählen Sie den Menüpunkt "Öffne Datenbankverbindung".
-		</description>
-	</item>
-	
-	<item title="Die integrierte Datenbank">
-		<description>
-		Da Sie noch keine andere Datenbank konfiguriert haben, verwendet verinice
-		die integrierte Derby-Datenbank. Bestätigen Sie die Meldung.
-		</description>
-	</item>
+    <item
+         title="Wechseln zur BSI Grundschutz Perspektive">
+      <description>
+         Wechseln Sie zur BSI Grundschutz Perspektive indem Sie aus dem Hauptmenü auswählen: <br/>
+         Ansicht -&gt; Zeige Perspektive -&gt; BSI Grundschutz Perspektive</description>
+    </item>
 	
 	<item title="Neuer IT-Verbund">
 		<description>
+		In der Ansicht "Grundschutz Modell" finden Sie einen leeren IT-Verbund.
 		Öffnen Sie den neu erstellten IT-Verbund durch Doppelklick.
 		Hier können Sie eine Bezeichnung für den Verbund und die zugehörige Organisation
 		definieren.
@@ -70,7 +63,4 @@
 		</onCompletion>
 	</item>
 
-	
-	
-	
 </cheatsheet>
