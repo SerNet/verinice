@@ -33,7 +33,7 @@ public class SubtypenZielobjekte {
 
     private static final Logger LOG = Logger.getLogger(SubtypenZielobjekte.class);
 
-    List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(50);
+    List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(70);
 
     private Properties properties;
 

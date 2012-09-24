@@ -196,6 +196,18 @@
             name="%command.name.6">
       </command>
       <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.9"
+            id="sernet.gs.ui.rcp.main.gsmbausteinzuordnungaction"
+            name="%command.name.9">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.10"
+            id="sernet.gs.ui.rcp.main.gsmbasicsecuritycheckaction"
+            name="%command.name.10">
+      </command>
+      <command
       		categoryId="sernet.gs.ui.rcp.commands"
       		defaultHandler="sernet.verinice.rcp.DefaultHandler"
       		id="sernet.verinice.iso27k.rcp.commands.charset"
@@ -244,6 +256,14 @@
             commandId="sernet.gs.ui.rcp.main.bausteinzuordnungaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+O">
+      </key>
+      <key
+            commandId="sernet.gs.ui.rcp.main.actions.gsmbausteinzuordnungaction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            commandId="sernet.gs.ui.rcp.main.gsmbasicsecuritycheckaction"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             commandId="sernet.gs.ui.rcp.main.reloadaction"

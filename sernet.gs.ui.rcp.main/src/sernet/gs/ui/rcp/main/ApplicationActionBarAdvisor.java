@@ -56,6 +56,7 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
 import sernet.gs.ui.rcp.main.actions.TestAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
+import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
@@ -162,6 +163,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openDocumentViewAction;
 
     private BausteinZuordnungAction bausteinZuordnungAction;
+    
+    private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
+    
 
 	private ImportGstoolNotesAction importGSNotesAction;
 
@@ -286,6 +290,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
+        
+        gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(window);
+        register(gsmbausteinZuordnungAction);
         
         changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
         
