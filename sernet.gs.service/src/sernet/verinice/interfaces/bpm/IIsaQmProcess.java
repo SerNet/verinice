@@ -30,7 +30,11 @@ public interface IIsaQmProcess extends IGenericProcess {
     
     String TASK_IQM_SET_ASSIGNEE = "iqm.task.setAssignee";
     
+    String TASK_IQM_CHECK = "iqm.task.check";
+    
     String TRANS_IQM_SET_ASSIGNEE = "iqm.trans.setAssignee";
+
+    String TRANS_IQM_FIX = "iqm.trans.fix";
     
     String VAR_FEEDBACK = "IQM_FEEDBACK";
     

@@ -37,6 +37,23 @@ public interface IIsaExecutionProcess extends IGenericProcess {
     // see https://docs.jboss.org/jbpm/v4/devguide/html_single/#timer 
     String DEFAULT_DUEDATE = "10 business days";
 
+    String TASK_SET_ASSIGNEE = "isa.task.setAssignee";
+    
+    String TASK_CHECK_IMPLEMENTATION = "isa.task.checkImplementation";
+
+    String TASK_ESCALATE = "isa.task.escalate";
+    
+    String TASK_IMPLEMENT = "isa.task.implement";
+    
+    String TASK_WRITE_PERMISSION = "isa.task.setWritePermission";
+
+    String TRANS_COMPLETE = "isa.transition.complete";
+
+    String TRANS_ACCEPT = "isa.transition.accepted";
+
+    String TRANS_ESCALATE = "isa.transition.escalate";
+
+
    
 
     

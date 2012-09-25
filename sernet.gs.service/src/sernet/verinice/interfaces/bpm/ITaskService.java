@@ -49,14 +49,6 @@ public interface ITaskService {
     
     String VAR_UNREAD = "TASK_UNREAD";
     
-    String TASK_SET_ASSIGNEE = "isa.task.setAssignee";
-    String OUTCOME_COMPLETE = "isa.transition.complete";
-    String TASK_IMPLEMENT = "isa.task.implement";
-    String OUTCOME_ESCALATE = "isa.transition.escalate";
-    String TASK_ESCALATE = "isa.task.escalate";
-    String TASK_CHECK_IMPLEMENTATION = "isa.task.checkImplementation";
-    String OUTCOME_ACCEPT = "isa.transition.accepted";
-    
     /**
      * Returns the task list for currently logged in user.
      * If no tasks exists or current user cannot be determined an empty list is returned.

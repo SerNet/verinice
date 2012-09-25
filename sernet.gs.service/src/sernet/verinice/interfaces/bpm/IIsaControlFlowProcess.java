@@ -28,28 +28,33 @@ public interface IIsaControlFlowProcess extends IGenericProcess {
 
     String KEY = "isa-control-flow";
     
-    String TASK_ASSIGN = "icf.task.assign";
-    
-    String TASK_EXECUTE = "icf.task.execute";
-    
-    String AUDIT_STARTS = "AUDIT_STARTS";
-    
-    String DEADLINE_PASSED = "DEADLINE_PASSED";
-    
-    String NOT_RESPONSIBLE = "NOT_RESPONSIBLE";
-    
-    String VAR_DEADLINE_COMMENT = "ISA_DEADLINE_COMMENT";
-    
-    String VAR_ASSIGN_DUEDATE = "ISA_ASSIGN_DUEDATE";
-    
-    String VAR_AUDITOR_NAME = "ICF_AUDITOR_NAME";
-    
+    String VAR_DEADLINE_COMMENT = "ISA_DEADLINE_COMMENT";   
+    String VAR_ASSIGN_DUEDATE = "ISA_ASSIGN_DUEDATE";   
+    String VAR_AUDITOR_NAME = "ICF_AUDITOR_NAME";   
     String VAR_REMINDER_PERIOD = "ICF_REMINDER_PERIOD";
     
-    String REMINDER_FIXED = "REMINDER_FIXED";
-    
-    String REMINDER_NOT_CHANGED = "REMINDER_NOT_CHANGED";
+    String TASK_ASSIGN = "icf.task.assign";   
+    String TASK_EXECUTE = "icf.task.execute";   
+    String TASK_ASSIGN_DEADLINE = "icf.task.assign.deadline";
+    String TASK_COMMENT = "icf.task.comment";
+    String TASK_ASSIGN_NOT_RESPONSIBLE = "icf.task.assign.nr";
+    String TASK_OBTAIN_ADVISE = "icf.task.obtainAdvise";
+    String TASK_CHECK = "icf.task.check";
+    String TASK_ASSIGN_AUDITOR = "icf.task.assignAuditor";
     
     String TRANS_ERROR = "icf.trans.error";
+    String TRANS_ASSIGNED = "icf.trans.assigned";
+    String TRANS_CHECK = "icf.trans.check";
+    String TRANS_COMPLETE = "icf.trans.complete";
+    String TRANS_FINISH = "icf.trans.finish";
+    String TRANS_OK = "icf.trans.ok";
+    String TRANS_WAIT = "icf.trans.wait";
+    
+    String REMINDER_FIXED = "REMINDER_FIXED";   
+    String REMINDER_NOT_CHANGED = "REMINDER_NOT_CHANGED";
+
+    String AUDIT_STARTS = "AUDIT_STARTS";   
+    String DEADLINE_PASSED = "DEADLINE_PASSED";    
+    String NOT_RESPONSIBLE = "NOT_RESPONSIBLE";
     
 }

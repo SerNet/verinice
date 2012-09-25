@@ -47,7 +47,10 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
+import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
+import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -79,10 +82,30 @@ public class TaskService implements ITaskService {
     
     static {
         DEFAULT_OUTCOMES = new HashMap<String, String>();
-        DEFAULT_OUTCOMES.put(TASK_SET_ASSIGNEE,OUTCOME_COMPLETE);
-        DEFAULT_OUTCOMES.put(TASK_IMPLEMENT,OUTCOME_COMPLETE);
-        DEFAULT_OUTCOMES.put(TASK_ESCALATE,OUTCOME_COMPLETE);
-        DEFAULT_OUTCOMES.put(TASK_CHECK_IMPLEMENTATION,OUTCOME_ACCEPT);  
+        DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_SET_ASSIGNEE,IIsaExecutionProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_IMPLEMENT,IIsaExecutionProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_ESCALATE,IIsaExecutionProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_CHECK_IMPLEMENTATION,IIsaExecutionProcess.TRANS_ACCEPT);  
+        DEFAULT_OUTCOMES.put(IIsaExecutionProcess.TASK_WRITE_PERMISSION, IIsaExecutionProcess.TRANS_COMPLETE);
+        
+        DEFAULT_OUTCOMES.put(IIsaQmProcess.TASK_IQM_CHECK, IIsaQmProcess.TRANS_IQM_FIX);
+        DEFAULT_OUTCOMES.put(IIsaQmProcess.TASK_IQM_SET_ASSIGNEE, IIsaQmProcess.TRANS_IQM_FIX);
+        
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_ASSIGN,IIsaControlFlowProcess.TRANS_ASSIGNED);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_ASSIGN_AUDITOR,IIsaControlFlowProcess.TRANS_WAIT);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_ASSIGN_DEADLINE,IIsaControlFlowProcess.TRANS_ASSIGNED);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_ASSIGN_NOT_RESPONSIBLE,IIsaControlFlowProcess.TRANS_ASSIGNED);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_CHECK,IIsaControlFlowProcess.TRANS_OK);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_COMMENT,IIsaControlFlowProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_EXECUTE,IIsaControlFlowProcess.TRANS_CHECK);
+        DEFAULT_OUTCOMES.put(IIsaControlFlowProcess.TASK_OBTAIN_ADVISE,IIsaControlFlowProcess.TRANS_FINISH);
+        
+        DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_ASSIGN,IIndividualProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_CHECK,IIndividualProcess.TRANS_ACCEPT);
+        DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_DEADLINE,IIndividualProcess.TRANS_ASSIGNED);
+        DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_EXECUTE,IIndividualProcess.TRANS_COMPLETE);
+        DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_NOT_RESPOSIBLE,IIndividualProcess.TRANS_ASSIGNED);
+        
     }
     
     private ProcessEngine processEngine;

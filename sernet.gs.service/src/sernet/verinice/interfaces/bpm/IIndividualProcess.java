@@ -28,23 +28,18 @@ public interface IIndividualProcess extends IGenericProcess {
     
     String KEY = "individual-task";
     
-    String TASK_ASSIGN = "indi.task.assign";
+    String VAR_TITLE = "INDI_TITLE";   
+    String VAR_DESCRIPTION = "INDI_DESCRIPTION";
+    String VAR_RELATION_ID = "INDI_RELATION_ID";   
+    String VAR_REMINDER_DATE = "INDI_REMINDER_DATE";
     
-    String TASK_EXECUTE = "indi.task.execute"; 
-    
-    String TASK_CHECK = "indi.task.check";
-    
-    String TASK_ASSIGN_RELATION = "indi.task.assign"; 
-    
-    String TASK_DEADLINE = "indi.task.assign.deadline";
-    
+    String TASK_ASSIGN = "indi.task.assign";  
+    String TASK_EXECUTE = "indi.task.execute";    
+    String TASK_CHECK = "indi.task.check";   
+    String TASK_DEADLINE = "indi.task.assign.deadline"; 
     String TASK_NOT_RESPOSIBLE = "indi.task.assign.nr";
     
-    String VAR_TITLE = "INDI_TITLE";
-    
-    String VAR_DESCRIPTION = "INDI_DESCRIPTION";
-
-    String VAR_RELATION_ID = "INDI_RELATION_ID";
-    
-    String VAR_REMINDER_DATE = "INDI_REMINDER_DATE";
+    String TRANS_COMPLETE = "indi.trans.complete";
+    String TRANS_ASSIGNED = "indi.trans.assigned";
+    String TRANS_ACCEPT = "indi.trans.accept";
 }

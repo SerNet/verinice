@@ -106,7 +106,9 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         props.put(IGenericProcess.VAR_UUID, control.getUuid()); 
         props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());            
         props.put(IGenericProcess.VAR_OWNER_NAME, context.getOwnerName());
-        props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
+        if(context.getUuidAudit()!=null) {
+            props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
+        }
         Object comment = context.getComment();
         if(comment!=null && comment instanceof String) {
             String text = (String) comment;

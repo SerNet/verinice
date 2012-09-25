@@ -188,9 +188,7 @@ public class IsaControlFlowService extends ProcessServiceVerinice implements IIs
         props.put(IGenericProcess.VAR_OWNER_NAME, getAuthService().getUsername());
         props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());
         props.put(IGenericProcess.VAR_IMPLEMENTATION, control.getImplementation());
-        if(context.getUuidAudit()!=null) {
-            props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit()); 
-        }
+        props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
         startProcess(IIsaControlFlowProcess.KEY, props);
         context.increaseProcessNumber(); 
     }
