@@ -31,6 +31,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -74,12 +75,12 @@ public class TaskBean {
     
     private boolean showUnread = true;
     
-    /**
-     * @return
-     */
+    
     public List<ITask> loadTasks() {  
+        long start = 0;
         if (LOG.isDebugEnabled()) {
-            LOG.debug("loadTasks called..."); //$NON-NLS-1$
+            start = System.currentTimeMillis();
+            LOG.debug("loadTasks() called ..."); //$NON-NLS-1$
         }
         
         ITaskParameter parameter = new TaskParameter();
@@ -90,23 +91,30 @@ public class TaskBean {
         }
         taskList = getTaskService().getTaskList(parameter);
         Collections.sort(taskList);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("loadTasks finished"); //$NON-NLS-1$
-        }
         for (ITask task : taskList) {
             String controlTitle = task.getControlTitle();
             if(controlTitle.length()>100) {
                 task.setControlTitle(controlTitle.substring(0, 99) + "...");
             }
         }
+        if (LOG.isDebugEnabled()) {
+            long duration = System.currentTimeMillis() - start;
+            LOG.debug("loadTasks() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+        }
         return taskList;
     }
     
     public void openTask() {
+        long start = 0;
     	if (LOG.isDebugEnabled()) {
+    	    start = System.currentTimeMillis();
             LOG.debug("openTask() called ..."); //$NON-NLS-1$
         }
     	doOpenTask();
+    	if (LOG.isDebugEnabled()) {
+            long duration = System.currentTimeMillis() - start;
+            LOG.debug("openTask() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+        }
     }
     
     private void doOpenTask() {  

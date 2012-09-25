@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
@@ -96,7 +97,7 @@ public class EditBean {
     
     private boolean groupOpen = false;
     
-    private boolean linkOpen = false;
+    private boolean linkCollapsed = true;
     
     private boolean attachmentOpen = true;
     
@@ -109,76 +110,93 @@ public class EditBean {
     private String saveMessage = null;
        
     public void init() {
+        long start = 0;
+        if (LOG.isDebugEnabled()) {
+            start = System.currentTimeMillis();
+            LOG.debug("init() called ..."); //$NON-NLS-1$
+        }
         try {
-            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            ri.setLinksDownProperties(true);
-            ri.setLinksUpProperties(true);
-            ri.setPermissions(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
-            command = getCommandService().executeCommand(command);    
-            setElement(command.getElement());
-            
-            if(getElement()!=null) {
-                Entity entity = getElement().getEntity();           
-                setEntityType(getHuiService().getEntityType(getTypeId())); 
-                
-                getLinkBean().setElement(getElement());
-                getLinkBean().setEntityType(getEntityType());
-                getLinkBean().setTypeId(getTypeId());
-                getLinkBean().init();
-                
-                getAttachmentBean().setElement(getElement());
-                getAttachmentBean().init();
-                
-                groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
-                List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
-                for (PropertyGroup groupHui : groupListHui) {
-                    if(isVisible(groupHui)) {
-                        sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
-                        List<PropertyType> typeListHui = groupHui.getPropertyTypes();
-                        List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String,String>>();
-                        for (PropertyType huiType : typeListHui) {
-                            if(isVisible(huiType)) {
-                                String id = huiType.getId();
-                                String value = entity.getValue(id);
-                                HuiProperty<String, String> prop = new HuiProperty<String, String>(huiType, id, value);
-                                if(getNoLabelTypeList().contains(id)) {
-                                    prop.setShowLabel(false);
-                                }
-                                listOfGroup.add(prop);
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
-                                }
-                            }
-                        }
-                        group.setPropertyList(listOfGroup);
-                        groupList.add(group);
-                    }
-                }              
-                propertyList = new ArrayList<HuiProperty<String,String>>();
-                List<PropertyType> typeList = entityType.getPropertyTypes();        
-                for (PropertyType propertyType : typeList) {
-                    if(isVisible(propertyType)) {
-                        String id = propertyType.getId();
-                        String value = entity.getValue(id);
-                        HuiProperty<String, String> prop = new HuiProperty<String, String>(propertyType, id, value);
-                        if(getNoLabelTypeList().contains(id)) {
-                            prop.setShowLabel(false);
-                        }
-                        propertyList.add(prop);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
-                        }
-                    }
-                }   
-            } else {
-                LOG.error("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
-                Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
-            }
+            doInit();
         } catch(Throwable t) {
             LOG.error("Error while initialization. ", t);
             Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
         }
+        if (LOG.isDebugEnabled()) {
+            long duration = System.currentTimeMillis() - start;
+            LOG.debug("init() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+        }
+    }
+    
+    private void doInit() throws CommandException {
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+        //ri.setLinksDownProperties(true);
+        //ri.setLinksUpProperties(true);
+        ri.setPermissions(true);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
+        command = getCommandService().executeCommand(command);    
+        setElement(command.getElement());
+        
+        if(getElement()!=null) {
+            Entity entity = getElement().getEntity();           
+            setEntityType(getHuiService().getEntityType(getTypeId())); 
+            
+            getLinkBean().setElement(getElement());
+            getLinkBean().setEntityType(getEntityType());
+            getLinkBean().setTypeId(getTypeId());
+            getLinkBean().reset();
+            if(!(getLinkCollapsed())) {
+                getLinkBean().init();
+            } 
+            
+            getAttachmentBean().setElement(getElement());
+            getAttachmentBean().init();
+            
+            groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
+            List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
+            for (PropertyGroup groupHui : groupListHui) {
+                if(isVisible(groupHui)) {
+                    sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
+                    List<PropertyType> typeListHui = groupHui.getPropertyTypes();
+                    List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String,String>>();
+                    for (PropertyType huiType : typeListHui) {
+                        if(isVisible(huiType)) {
+                            String id = huiType.getId();
+                            String value = entity.getValue(id);
+                            HuiProperty<String, String> prop = new HuiProperty<String, String>(huiType, id, value);
+                            if(getNoLabelTypeList().contains(id)) {
+                                prop.setShowLabel(false);
+                            }
+                            listOfGroup.add(prop);
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
+                            }
+                        }
+                    }
+                    group.setPropertyList(listOfGroup);
+                    groupList.add(group);
+                }
+            }              
+            propertyList = new ArrayList<HuiProperty<String,String>>();
+            List<PropertyType> typeList = entityType.getPropertyTypes();        
+            for (PropertyType propertyType : typeList) {
+                if(isVisible(propertyType)) {
+                    String id = propertyType.getId();
+                    String value = entity.getValue(id);
+                    HuiProperty<String, String> prop = new HuiProperty<String, String>(propertyType, id, value);
+                    if(getNoLabelTypeList().contains(id)) {
+                        prop.setShowLabel(false);
+                    }
+                    propertyList.add(prop);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
+                    }
+                }
+            }   
+        } else {
+            LOG.error("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
+            Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
+        }
+        
     }
 
     private boolean isVisible(PropertyType huiType) {
@@ -591,12 +609,12 @@ public class EditBean {
         this.groupOpen = groupOpen;
     }
 
-    public boolean isLinkOpen() {
-        return linkOpen;
+    public boolean getLinkCollapsed() {
+        return linkCollapsed;
     }
 
-    public void setLinkOpen(boolean linkOpen) {
-        this.linkOpen = linkOpen;
+    public void setLinkCollapsed(boolean linkCollapsed) {
+        this.linkCollapsed = linkCollapsed;
     }
     
     public boolean isAttachmentOpen() {

@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
@@ -237,11 +238,11 @@ public class TaskFilterDialog extends Dialog {
         typeComboModel.add(new KeyMessage("icf.task.obtainAdvise")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("icf.task.check")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("icf.task.assignAuditor")); //$NON-NLS-1$
-        typeComboModel.add(new KeyMessage("isa.task.setAssignee")); //$NON-NLS-1$
-        typeComboModel.add(new KeyMessage("isa.task.setWritePermission")); //$NON-NLS-1$
-        typeComboModel.add(new KeyMessage("isa.task.implement")); //$NON-NLS-1$
-        typeComboModel.add(new KeyMessage("isa.task.escalate")); //$NON-NLS-1$
-        typeComboModel.add(new KeyMessage("isa.task.checkImplementation")); //$NON-NLS-1$
+        typeComboModel.add(new KeyMessage(IIsaExecutionProcess.TASK_SET_ASSIGNEE)); 
+        typeComboModel.add(new KeyMessage(IIsaExecutionProcess.TASK_WRITE_PERMISSION)); 
+        typeComboModel.add(new KeyMessage(IIsaExecutionProcess.TASK_IMPLEMENT)); 
+        typeComboModel.add(new KeyMessage(IIsaExecutionProcess.TASK_ESCALATE));
+        typeComboModel.add(new KeyMessage(IIsaExecutionProcess.TASK_CHECK_IMPLEMENTATION)); 
         typeComboModel.add(new KeyMessage("indi.task.assign")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("indi.task.assign.deadline")); //$NON-NLS-1$
         typeComboModel.add(new KeyMessage("indi.task.assign.nr")); //$NON-NLS-1$

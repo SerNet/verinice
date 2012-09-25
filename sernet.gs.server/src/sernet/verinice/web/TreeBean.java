@@ -184,7 +184,11 @@ public class TreeBean implements IElementListener {
         if(path!=null && path.contains(element)) {
             path.set(path.indexOf(element), element);
             createMenuModel();
-            getEditBean().setTitle(element.getTitle());
+            String title = element.getTitle();
+            if(title.length()>100) {
+                title = title.substring(0, 99) + "...";
+            }
+            getEditBean().setTitle(title);
         }       
     }
 
@@ -247,7 +251,11 @@ public class TreeBean implements IElementListener {
                 getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_ALL));
                 getEditBean().setSaveButtonHidden(true);
                 getEditBean().setUuid(getElement().getUuid());
-                getEditBean().setTitle(getElement().getTitle());
+                String title = getElement().getTitle();
+                if(title.length()>100) {
+                    title = title.substring(0, 99) + "...";
+                }
+                getEditBean().setTitle(title);
                 getEditBean().setTypeId(getElement().getTypeId());
                 getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
                 getEditBean().init();

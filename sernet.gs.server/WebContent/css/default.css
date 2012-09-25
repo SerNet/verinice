@@ -57,7 +57,8 @@
 }
 
 .hui {
-	width: 300px;
+	width: 280px;
+	border: 1px solid #D8DCDF;
 }
 
 input.submit {
@@ -65,7 +66,7 @@ input.submit {
 }
 
 .breadcrumb {	
-	width: 800px;
+	width: 803px;
 	height: 22px;
 	display: inline-block; 
 	vertical-align: middle;
@@ -214,14 +215,6 @@ h1+a:visited {
 	font-weight: bold;
 }
 
-.hasDatepicker {
-	width: 100px;
-}
-.ui-datepicker-trigger {
-	width: 33px;
-	margin-left: 2px;
-}
-
 .ui-widget .up-button {
 	background-image: url("../image/up.gif");
 }
@@ -301,4 +294,49 @@ h1+a:visited {
 	border-radius: 6px 6px 6px 6px;
 	margin-top: 5px;
 	padding: 3px;
+}
+
+.ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield {
+    background: none repeat scroll 0 0 #FFFFFF;
+    box-shadow: 0 0 0 0;
+    color: #004276;
+    padding-bottom: 2px;
+    padding-top: 2px;
+}
+
+.hasDatepicker {
+	width: 244px;
+}
+.ui-datepicker-trigger {
+	width: 33px;
+	height: 21px;
+	margin-left: 2px;
+	margin-bottom: 1px;
+	vertical-align: middle;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+    padding: 2px 0 2px 0;
+}
+
+.ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus {
+    box-shadow: 0 0 0 0;  
+    padding: 2px 0 2px 0;
+}
+
+.ui-selectonemenu .ui-selectonemenu-label {
+    border: medium none;
+    display: block;
+    float: left;
+    font-weight: normal;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    padding: 3px;
+}
+
+.ui-spinner-input {
+	width: 258px;
 }

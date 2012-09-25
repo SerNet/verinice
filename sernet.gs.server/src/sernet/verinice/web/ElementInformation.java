@@ -48,7 +48,11 @@ public class ElementInformation {
     }
 
     public String getTitle() {
-        return element.getTitle();
+        String title = element.getTitle();
+        if(title.length()>100) {
+            title = title.substring(0, 99) + "...";
+        }
+        return title;
     }
     
     public String getIcon() {

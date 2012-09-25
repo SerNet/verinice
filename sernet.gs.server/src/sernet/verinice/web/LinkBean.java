@@ -22,7 +22,6 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +29,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.ExceptionHandler;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -43,6 +43,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadElementByTypeId;
+import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveLink;
 
 /**
@@ -59,12 +60,12 @@ public class LinkBean {
     
     private EntityType entityType;
 
-    private List<ILink> linkList;
+    private List<ILink> linkList = new ArrayList<ILink>();
     
     private ILink selectedLink;
     
-    private List<String> linkTypeList;
-    private Map<String, HuiRelation> huiRelationMap;
+    private List<String> linkTypeList = new ArrayList<String>();
+    private Map<String, HuiRelation> huiRelationMap = new Hashtable<String, HuiRelation>();
     
     private String selectedLinkType;
     
@@ -76,7 +77,41 @@ public class LinkBean {
     
     private boolean deleteVisible = false;
     
+    private boolean loading = true;
+    
+    public void reset() {
+        loading = true;
+        linkList = new ArrayList<ILink>();
+        linkTypeList = new ArrayList<String>();
+        huiRelationMap = new Hashtable<String, HuiRelation>();
+    }
+    
     public void init() {
+        long start = 0;
+        if (LOG.isDebugEnabled()) {
+            start = System.currentTimeMillis();
+            LOG.debug("init() called ..."); //$NON-NLS-1$
+        }
+        try {
+            if(loading) {
+                doInit();
+            }
+        } catch (Exception e) {
+            LOG.error("Error while loading links.", e);
+        } 
+        if (LOG.isDebugEnabled()) {
+            long duration = System.currentTimeMillis() - start;
+            LOG.debug("init() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+        }
+    }
+    
+    private void doInit() throws CommandException {
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setLinksDownProperties(true);
+        ri.setLinksUpProperties(true);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getElement().getUuid(),ri);        
+        command = getCommandService().executeCommand(command);    
+        setElement(command.getElement());
         linkList = new ArrayList<ILink>();
         for (CnALink link : getElement().getLinksDown()) {
             linkList.add(map(link));
@@ -93,6 +128,7 @@ public class LinkBean {
             linkTypeList.add(label);
             huiRelationMap.put(label, huiRelation);
         }
+        loading = false;
     }
     
     private String getLinkTypeLabel(HuiRelation huiRelation) {
@@ -437,6 +473,14 @@ public class LinkBean {
 
     public void setDeleteVisible(boolean deleteVisible) {
         this.deleteVisible = deleteVisible;
+    }
+
+    public boolean getLoading() {
+        return loading;
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
     }
 
     private HUITypeFactory getHuiService() {

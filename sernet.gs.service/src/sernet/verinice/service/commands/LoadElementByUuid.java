@@ -19,13 +19,25 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand {
 
+    private transient Logger log = Logger.getLogger(LoadElementByUuid.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadElementByUuid.class);
+        }
+        return log;
+    }
+    
 	private String uuid;
 	protected T element;
     private String typeId;
@@ -58,7 +70,16 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 	}
 	
     public void execute() {
-		element = getDao().findByUuid(this.uuid,ri);
+        long start = 0;
+        if (getLog().isDebugEnabled()) {
+            start = System.currentTimeMillis();
+            getLog().debug("execute() called ..."); //$NON-NLS-1$
+        }
+        element = getDao().findByUuid(this.uuid,ri);       
+        if (getLog().isDebugEnabled()) {
+            long duration = System.currentTimeMillis() - start;
+            getLog().debug("execute() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+        }		
     }
 
 	public T getElement() {
