@@ -67,7 +67,6 @@ import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
