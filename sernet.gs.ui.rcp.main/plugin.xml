@@ -201,12 +201,12 @@
             id="sernet.gs.ui.rcp.main.gsmbausteinzuordnungaction"
             name="%command.name.9">
       </command>
-      <command
+      <!--command
             categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.10"
             id="sernet.gs.ui.rcp.main.gsmbasicsecuritycheckaction"
             name="%command.name.10">
-      </command>
+      </command-->
       <command
       		categoryId="sernet.gs.ui.rcp.commands"
       		defaultHandler="sernet.verinice.rcp.DefaultHandler"
@@ -261,10 +261,10 @@
             commandId="sernet.gs.ui.rcp.main.actions.gsmbausteinzuordnungaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
-      <key
+      <!--key
             commandId="sernet.gs.ui.rcp.main.gsmbasicsecuritycheckaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
+      </key-->
       <key
             commandId="sernet.gs.ui.rcp.main.reloadaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"

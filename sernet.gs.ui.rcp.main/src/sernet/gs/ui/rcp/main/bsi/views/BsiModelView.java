@@ -155,7 +155,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private ShowKonsolidatorAction konsolidatorAction;
 	
-	private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
+	//private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
 
 	private BausteinZuordnungAction bausteinZuordnungAction;
 	
@@ -326,7 +326,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		manager.add(selectEqualsAction);
 		selectEqualsAction.setEnabled(bausteinSelected());
 		manager.add(konsolidatorAction);
-		manager.add(gsmbasicsecuritycheckAction);
+		//manager.add(gsmbasicsecuritycheckAction);
 		manager.add(bausteinZuordnungAction);
 		manager.add(gsmbausteinZuordnungAction);
 		
@@ -430,7 +430,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 		konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_15);
 		
-		gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_19);
+		//gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_19);
 
 		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 		

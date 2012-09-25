@@ -44,6 +44,7 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
+import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
 import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
@@ -165,7 +166,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private BausteinZuordnungAction bausteinZuordnungAction;
     
     private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
-    
+
+    //private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
 
 	private ImportGstoolNotesAction importGSNotesAction;
 
@@ -288,6 +290,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
         register(konsolidatorAction);
 
+        //gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(window, Messages.ApplicationActionBarAdvisor_34);
+        //register(gsmbasicsecuritycheckAction);
+        
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         register(bausteinZuordnungAction);
         
