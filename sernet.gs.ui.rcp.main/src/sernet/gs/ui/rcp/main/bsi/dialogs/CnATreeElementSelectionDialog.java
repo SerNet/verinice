@@ -48,6 +48,8 @@ public class CnATreeElementSelectionDialog extends Dialog {
     
     private ElementSelectionComponent selectionComponent;
     
+    private boolean scopeOnly=true, showScopeCheckbox=true;
+    
     /**
      * @param shell
      * @param selectedType
@@ -57,6 +59,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         this.entityType = selectedType;
         this.inputElmt = inputElmt;
+        
     }
     
     @Override
@@ -73,7 +76,9 @@ public class CnATreeElementSelectionDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        selectionComponent = new ElementSelectionComponent(container, this.entityType, this.inputElmt);       
+        selectionComponent = new ElementSelectionComponent(container, this.entityType, this.inputElmt);
+        selectionComponent.setScopeOnly(scopeOnly);
+        selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
         selectionComponent.init();
 
         selectionComponent.getViewer().addDoubleClickListener(new IDoubleClickListener() {           
@@ -93,11 +98,17 @@ public class CnATreeElementSelectionDialog extends Dialog {
     }
 
     public void setScopeOnly(boolean scopeOnly) {
-        selectionComponent.setScopeOnly(scopeOnly);
+        this.scopeOnly = scopeOnly;
+        if(selectionComponent!=null) {
+            selectionComponent.setScopeOnly(scopeOnly);
+        }
     }
 
     public void setShowScopeCheckbox(boolean showScopeCheckbox) {
-        selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
+        this.showScopeCheckbox = showScopeCheckbox;
+        if(selectionComponent!=null) {
+            selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
+        }
     }
 
 }

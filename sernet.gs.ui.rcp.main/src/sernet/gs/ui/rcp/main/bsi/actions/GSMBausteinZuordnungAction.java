@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -81,14 +82,12 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
     private String rightID = null;
 
     private boolean serverIsRunning = true;
-    
 
     private static final String GSMTYP_MAPPING_FILE = "gsm_baustein.properties"; //$NON-NLS-1$
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
     private Properties gsmtypproperties;
     private Properties subtypproperties;
-    
-    
+
     List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(70);
 
     public GSMBausteinZuordnungAction(IWorkbenchWindow window) {
@@ -99,12 +98,12 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
             serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
+            IInternalServerStartListener listener = new IInternalServerStartListener() {
                 @Override
                 public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
+                    if (e.isStarted()) {
                         serverIsRunning = true;
                         setEnabled(checkRights());
                     }
@@ -117,13 +116,10 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     }
 
-    
-
     public void run() {
-       
-        
+
         loadtemplates();
-        
+
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
@@ -138,16 +134,16 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
 
         try {
-          
+
             String[] bausteine = getSplitBausteine();
-            if(bausteine.length==0){
-                Exception ee = new Exception();
-                ExceptionUtil.log(ee, Messages.GSMBausteinZuordnungAction_2);
+            if (bausteine.length == 0) {
+                MessageDialog.openError(window.getShell(), "Error", Messages.GSMBausteinZuordnungAction_2);
+                return;
             }
             for (String bst : bausteine) {
-               
+
                 Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
-                
+
                 if (baustein == null) {
                     LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
                 } else {
@@ -155,19 +151,16 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                     for (IBSIStrukturElement target : selectedElements) {
                         if (target instanceof CnATreeElement) {
                             CnATreeElement targetElement = (CnATreeElement) target;
-                           if (!targetElement.containsBausteinUmsetzung(baustein.getId()))
-                            CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
-                        }
+                            if (!targetElement.containsBausteinUmsetzung(baustein.getId()))
+                                CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
                         }
                     }
                 }
-
-            
+            }
 
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.BausteinZuordnungAction_4);
         }
-       
 
     }
 
@@ -180,10 +173,10 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             gsmtypproperties.load(stream);
             subtypproperties.load(stream2);
         } catch (IOException e) {
-            LOG.error(e); 
+            LOG.error(e);
+        }
     }
-    }
-    
+
     private ArrayList<String> tagList() {
         ArrayList<String> gsmtaglist = new ArrayList<String>();
 
@@ -227,7 +220,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                     name = strList[i];
                     if (name.equals(subtyp)) {
                         value = property;
-                       // bausteinlist.add(name);
+                        // bausteinlist.add(name);
                         bausteinlist.add(value);
                     }
 
@@ -237,7 +230,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         return bausteinlist;
     }
 
-    private String[] bausteine() {
+    private String[] getSplitBausteine() {
         ArrayList<String> bausteinlist = readBausteine();
         Object[] objList = bausteinlist.toArray();
         String[] strList = Arrays.copyOf(objList, objList.length, String[].class);
@@ -289,10 +282,4 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
     }
 
-    public String[] getSplitBausteine() {
-        String[] baustein = bausteine();
-        return baustein;
-    }
-   
-   
 }
