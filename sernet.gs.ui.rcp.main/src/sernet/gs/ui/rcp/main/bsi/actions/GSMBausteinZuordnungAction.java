@@ -137,7 +137,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
             String[] bausteine = getSplitBausteine();
             if (bausteine.length == 0) {
-                MessageDialog.openError(window.getShell(), "Error", Messages.GSMBausteinZuordnungAction_2);
+                MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_2);
                 return;
             }
             for (String bst : bausteine) {
