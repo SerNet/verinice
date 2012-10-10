@@ -71,17 +71,19 @@ public class LoadAssetTotalRiskFigures extends GenericCommand {
             List<CnATreeElement> elements = command.getElements();
 
             for (CnATreeElement process : elements) {
-                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
+                // use of hashmap that prohibit double asset use allows to use true for doUpLinksAlso parameter
+                // otherwise this would produce wrong results in some reports
+                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, true);
                 cmnd2 = getCommandService().executeCommand(cmnd2);
                 List<CnATreeElement> assets = cmnd2.getElements();
                 for (CnATreeElement asset : assets) {
-                        if (  ! (seenAssets.contains(asset.getDbId())) )  {
-                            result.add(makeRow(asset));
-                            seenAssets.add(asset.getDbId());
-                        }
+                    if (  ! (seenAssets.contains(asset.getDbId())) )  {
+                        result.add(makeRow(asset));
+                        seenAssets.add(asset.getDbId());
+                    }
                 }
             }
-            
+
         } catch (CommandException e){
             throw new RuntimeCommandException(e);
         }
