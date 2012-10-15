@@ -877,28 +877,33 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 
 	public final void compoundAdded(final ITVerbund compound) {
-		log.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+			    if (log.isDebugEnabled()) {
+			        log.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
+                }
 				compoundChoser.compoundAdded(compound);
 			}
 		});
 	}
 
-	public final void compoundRemoved(final ITVerbund compound) {
-		log.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
-
+	public final void compoundRemoved(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+			    if (log.isDebugEnabled()) {
+			        log.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
+                }
 				compoundChoser.compoundRemoved(compound);
 			}
 		});
 	}
 
-	public final void compoundChanged(final ITVerbund compound) {
-		log.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
+	public final void compoundChanged(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+			    if (log.isDebugEnabled()) {
+			        log.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
+                }
 				compoundChoser.compoundChanged(compound);
 			}
 		});
