@@ -173,7 +173,7 @@ public class ExportDialog extends TitleAreaDialog {
 	                selectedElementSet.add(selectedElement);
 	                if(txtLocation!=null) {
 	                    filePath = selectedElement.getTitle() + getDefaultExtension();
-	                    filePath = System.getProperty("user.dir") + File.separatorChar +  filePath;
+	                    filePath = System.getProperty("user.home") + File.separatorChar +  filePath;
 	                    txtLocation.setText(filePath);
 	                }
 	                setSourceId(selectedElement);
