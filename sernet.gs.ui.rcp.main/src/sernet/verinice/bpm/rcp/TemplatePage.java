@@ -25,6 +25,8 @@ import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -62,7 +64,6 @@ public class TemplatePage extends WizardPage {
     
     Label title, date, reminder, assignee, assigneeRelation;
     Text description, properties;
-    Button button;
 
     protected TemplatePage() {
         super(NAME);
@@ -130,26 +131,33 @@ public class TemplatePage extends WizardPage {
         properties.setLayoutData(gd);
         properties.setFont(newFont);
 
-        button = new Button(container, SWT.PUSH);
-        button.setText(Messages.TemplatePage_12);
-        button.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                saveTemplate(false);
-            }
-        });
-
     }
 
-    public void saveTemplate(boolean onlyIfNew) {
+    public void saveTemplate() {   
+        IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
+        if(getTemplateMap().get(parameter.getTitle())!=null)  {         
+            MessageDialog dialog = new MessageDialog( getShell(),
+                "Template exists",
+                null,
+                "A template with the same title exists. Do you want to override the template?",
+                MessageDialog.QUESTION,
+                new String[] { "Yes", "No" },
+                1);
+            if(dialog.open()==1) {
+                return;
+            }           
+        }  
+        doSaveTemplate();
+    }
+    
+    private void doSaveTemplate() {
         try {
-            IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
-            if(getTemplateMap().get(parameter.getTitle())==null || !onlyIfNew )  {         
-                getTemplateMap().put(parameter.getTitle(), parameter);
-                String value = IndividualProcessWizard.toString(templateMap);
-                getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
-                getPreferences().flush();
-                setMessage(Messages.TemplatePage_13 + parameter.getTitle());
-            }
+            IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();                  
+            getTemplateMap().put(parameter.getTitle(), parameter);
+            String value = IndividualProcessWizard.toString(templateMap);
+            getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
+            getPreferences().flush();
+            setMessage(Messages.TemplatePage_13 + parameter.getTitle());
         } catch (Exception e) {
             LOG.error("Error while saving template", e); //$NON-NLS-1$
             setErrorMessage(Messages.TemplatePage_15);
@@ -180,11 +188,6 @@ public class TemplatePage extends WizardPage {
             IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
             String taskTitle = parameter.getTitle();
             title.setText(taskTitle);
-            if(getTemplateMap().get(taskTitle)!=null) {
-                button.setText(Messages.TemplatePage_0);
-            } else {
-                button.setText(Messages.TemplatePage_12);
-            }
             description.setText(parameter.getDescription());
             date.setText(DateFormat.getDateInstance().format(parameter.getDueDate()));
             reminder.setText(String.valueOf(parameter.getReminderPeriodDays()));

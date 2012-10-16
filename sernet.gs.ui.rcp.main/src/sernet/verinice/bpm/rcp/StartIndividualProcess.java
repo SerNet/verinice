@@ -32,8 +32,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -96,9 +101,9 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
             if(!selectedUuids.isEmpty()) {
                 if(isValid()) {
                     IndividualProcessWizard wizard = new IndividualProcessWizard(selectedTitles.get(0),selectedTypeIds.get(0));
-                    WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(),wizard);
+                    WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
                     if (wizardDialog.open() == Window.OK) {
-                        wizard.saveAsTemplateIfNew();
+                        wizard.saveTemplate();
                         parameter = wizard.getParameter();                                 
                         startProcess();
                     }
@@ -221,5 +226,14 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     @Override
     public void setRightID(String rightID) {
     }
-
+    
+    class NonModalWizardDialog extends WizardDialog {
+        public NonModalWizardDialog(Shell parentShell, IWizard newWizard) {
+            super(parentShell, newWizard);
+            setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER
+                     | SWT.RESIZE | getDefaultOrientation());         
+        }
+    }
 }
+
+

@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
@@ -35,6 +37,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -64,8 +67,13 @@ public class DescriptionPage extends WizardPage {
     private ComboModel<IndividualServiceParameter> templateComboModel;
     private Text text;  
     private Text textArea;
+    private Button deleteButton;
+    
+    private Map<String, IndividualServiceParameter> templateMap;
     
     private IndividualServiceParameter template;
+    Preferences preferences;
+    Preferences bpmPreferences;
     
     private String elementTitle;
     
@@ -110,21 +118,36 @@ public class DescriptionPage extends WizardPage {
         final Label templateLabel = new Label(composite, SWT.NONE);
         templateLabel.setText(Messages.DescriptionPage_4);
         
-        templateCombo = new Combo(composite, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
-        GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
+        Composite templateComposite = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout(2, false);
+        layout.marginWidth = 0;
+        layout.marginHeight = 0;
+        templateComposite.setLayout(layout);
+        GridData gd = new GridData(SWT.FILL, SWT.TOP, true,false);       
+        templateComposite.setLayoutData(gd);
+        
+        templateCombo = new Combo(templateComposite, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
+        gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         templateCombo.setLayoutData(gd);
+           
+        deleteButton = new Button(templateComposite, SWT.PUSH);
+        deleteButton.setText("Delete");
+        deleteButton.setEnabled(false);
+        deleteButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                deleteTemplate();
+            }
+        });
+        
         templateCombo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 templateComboModel.setSelectedIndex(templateCombo.getSelectionIndex());
                 template=templateComboModel.getSelectedObject();
                 ((IndividualProcessWizard) getWizard()).setTemplate(template);
+                deleteButton.setEnabled(true);
             }
         });
-        if(!templateComboModel.isEmpty()) {
-            templateCombo.setItems(templateComboModel.getLabelArray());
-        } else {
-            templateCombo.setEnabled(false);
-        }
+        showComboValues();
         
         final Label titleLabel = new Label(composite, SWT.NONE);
         titleLabel.setText(Messages.DescriptionPage_5);
@@ -160,7 +183,34 @@ public class DescriptionPage extends WizardPage {
             public void keyPressed(KeyEvent e) {}
         });
     }
+
+    public void showComboValues() {
+        if(!templateComboModel.isEmpty()) {
+            templateCombo.setItems(templateComboModel.getLabelArray());
+        } else {
+            templateCombo.setEnabled(false);
+            deleteButton.setEnabled(false);
+        }
+    }
     
+    protected void deleteTemplate() {
+        try {
+            IndividualServiceParameter template = templateComboModel.getSelectedObject();
+            if(template!=null) {
+                getTemplateMap().remove(template.getTitle());
+                String value = IndividualProcessWizard.toString((Serializable) getTemplateMap());
+                getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
+                getPreferences().flush();
+                templateComboModel.removeSelected();
+                showComboValues();
+                deleteButton.setEnabled(false);
+            }
+        } catch(Exception e) {
+            LOG.error("Error while deleting template", e); //$NON-NLS-1$
+            setErrorMessage("Error while deleting template.");
+        }
+    }
+
     private void initComboValues() {
         templateComboModel = new ComboModel<IndividualServiceParameter>(new ComboModelLabelProvider<IndividualServiceParameter>() {
             @Override
@@ -168,20 +218,9 @@ public class DescriptionPage extends WizardPage {
                 return template.getTitle();
             }
         });
-        Preferences preferences = null;
-        Preferences bpmPreferences = null;
-        try {
-            preferences = ConfigurationScope.INSTANCE.getNode(Activator.PLUGIN_ID);
-            bpmPreferences = preferences.node(IndividualProcessWizard.PREFERENCE_NODE_NAME);
-            String value = bpmPreferences.get(IndividualProcessWizard.PREFERENCE_NAME, null);
-            Hashtable<String, IndividualServiceParameter> templateMap;
-            if(value!=null) {
-                templateMap = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
-            } else {
-                templateMap = new Hashtable<String, IndividualServiceParameter>();
-            }
-            for (String name : templateMap.keySet()) {
-                templateComboModel.add(templateMap.get(name));
+        try {          
+            for (String name : getTemplateMap().keySet()) {
+                templateComboModel.add(getTemplateMap().get(name));
             }
             if(!templateComboModel.isEmpty()) {
                 templateComboModel.sort();
@@ -189,17 +228,38 @@ public class DescriptionPage extends WizardPage {
         } catch (Exception e) {
             LOG.error("Error while loading templates", e); //$NON-NLS-1$
             setErrorMessage(Messages.DescriptionPage_8);
-            if(bpmPreferences!=null && preferences!=null) {
-                bpmPreferences.remove(IndividualProcessWizard.PREFERENCE_NAME);
-                try {
-                    preferences.flush();
-                } catch (BackingStoreException e1) {
-                    LOG.error("Error while flushing preferences.", e); //$NON-NLS-1$
-                }
-            }
+            removeTemplatesFromPreferences();
         }
     }
     
+    private Map<String, IndividualServiceParameter> getTemplateMap() {
+        if(templateMap==null) {
+            templateMap = loadTemplateMap(); 
+        }
+        return templateMap;
+    }
+    
+    private Map<String, IndividualServiceParameter> loadTemplateMap() {
+       String value = getBpmPreferences().get(IndividualProcessWizard.PREFERENCE_NAME, null);           
+        Map<String, IndividualServiceParameter> map;
+        if(value!=null) {
+            map = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
+        } else {
+            map = new Hashtable<String, IndividualServiceParameter>();
+        }
+        return map;
+    }
+    
+    public void removeTemplatesFromPreferences() {
+        if(getBpmPreferences()!=null && getPreferences()!=null) {
+            getBpmPreferences().remove(IndividualProcessWizard.PREFERENCE_NAME);
+            try {
+                getPreferences().flush();
+            } catch (BackingStoreException e1) {
+                LOG.error("Error while flushing preferences.", e1); //$NON-NLS-1$
+            }
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
@@ -208,7 +268,7 @@ public class DescriptionPage extends WizardPage {
     public void createControl(Composite parent) {  
         final Composite composite = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(1, true);
-        layout.marginWidth = 10;
+        //layout.marginWidth = 10;
         composite.setLayout(layout);
         //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
@@ -276,6 +336,20 @@ public class DescriptionPage extends WizardPage {
         this.taskDescription = taskDescription;
         this.textArea.setText(taskDescription);
         setPageComplete(isValid());
+    }
+    
+    public Preferences getPreferences() {
+        if(preferences==null) {
+            preferences = ConfigurationScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+        }
+        return preferences;
+    }
+
+    public Preferences getBpmPreferences() {
+        if(bpmPreferences==null) {
+            bpmPreferences = getPreferences().node(IndividualProcessWizard.PREFERENCE_NODE_NAME);
+        }
+        return bpmPreferences;
     }
 
 }

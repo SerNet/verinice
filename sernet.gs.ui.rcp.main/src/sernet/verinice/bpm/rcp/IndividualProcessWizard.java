@@ -103,14 +103,16 @@ public class IndividualProcessWizard extends Wizard {
         cal.set(Calendar.DAY_OF_MONTH, dueDate.getDate());
         datePage.setDueDate(cal);
         datePage.setPeriod(String.valueOf(template.getReminderPeriodDays()));
-        if(template.getAssignee()!=null) {
+        if(template.getAssignee()!=null || !relationPage.isRelation()) {
             datePage.setAssigneeSelectionMode(DatePage.ASSIGNEE_SELECTION_DIRECT);
-            personPage.setSelectedLogin(template.getAssignee());
-            CnATreeElement person = loadPersonForLogin(template.getAssignee());
-            personPage.setSelectedPerson(person);
             relationPage.setActive(false);
+            if(template.getAssignee()!=null) {
+                personPage.setSelectedLogin(template.getAssignee());
+                CnATreeElement person = loadPersonForLogin(template.getAssignee());
+                personPage.setSelectedPerson(person);
+            }
         }
-        if(template.getAssigneeRelationId()!=null) {
+        if(template.getAssigneeRelationId()!=null && relationPage.isRelation()) {
             datePage.setAssigneeSelectionMode(DatePage.ASSIGNEE_SELECTION_RELATION);
             relationPage.setRelationId(template.getAssigneeRelationId());
             personPage.setActive(false);
@@ -139,8 +141,8 @@ public class IndividualProcessWizard extends Wizard {
         return parameter;
     }
     
-    public void saveAsTemplateIfNew() {
-        templatePage.saveTemplate(true);
+    public void saveTemplate() {
+        templatePage.saveTemplate();
     }
 
     @Override

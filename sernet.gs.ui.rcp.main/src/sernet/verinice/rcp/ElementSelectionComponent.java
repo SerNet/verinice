@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -217,10 +218,15 @@ public class ElementSelectionComponent {
             }
         });
         
-        loadElements();
+        //loadElements();
     }
     
-    private void loadElements() {
+ 
+    public void loadElements() {
+        loadElementsAndSelect(null);
+    }
+
+    public void loadElementsAndSelect(final CnATreeElement selected) {
         if (entityType == null || entityType.length()==0)
             return;
         
@@ -249,6 +255,7 @@ public class ElementSelectionComponent {
                                     ArrayList temp = new ArrayList(0);
                                     viewer.setInput(temp);
                                 }
+                                setSelectedElement(selected);
                             }
                         });
                         
@@ -264,9 +271,10 @@ public class ElementSelectionComponent {
                                     ArrayList temp = new ArrayList(0);
                                     viewer.setInput(temp);
                                 }
+                                setSelectedElement(selected);
                             }
                         });
-                    }
+                    }                 
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
@@ -274,8 +282,16 @@ public class ElementSelectionComponent {
             }
         };
         job.setUser(false);
-        job.schedule();
-        
+        job.schedule();        
+    }
+
+    /**
+     * 
+     */
+    protected void setSelection() {
+        if(selectedElements!=null && !selectedElements.isEmpty()) {
+            getViewer().setSelection(new StructuredSelection(selectedElements));
+        }
     }
 
     private String makeTitle(CnATreeElement elmt) {
@@ -326,11 +342,13 @@ public class ElementSelectionComponent {
      * @param selectedPerson
      */
     public void setSelectedElement(CnATreeElement selectedElement) {
-        int i = elementList.indexOf(selectedElement);
-        if(i!=-1) {
-            getViewer().getTable().deselectAll();
-            getViewer().getTable().select(i);
-            selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
+        if(selectedElement!=null) {
+            int i = elementList.indexOf(selectedElement);
+            if(i!=-1) {
+                getViewer().getTable().deselectAll();
+                getViewer().setSelection(new StructuredSelection(selectedElement));
+                selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
+            }
         }
     }
 }
