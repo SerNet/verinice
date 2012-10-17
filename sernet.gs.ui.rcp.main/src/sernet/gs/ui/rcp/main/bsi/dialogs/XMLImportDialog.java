@@ -3,7 +3,6 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -35,7 +34,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
@@ -261,6 +259,7 @@ public class XMLImportDialog extends Dialog {
         // by default, no encryption is selected
         passwordEncryptionRadio.setSelection(false);
         
+        
         passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
         data.widthHint = 280;
@@ -301,7 +300,7 @@ public class XMLImportDialog extends Dialog {
                password = passwordField.getText();
                 
             }
-        });
+        });        
        
         certificatePathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER);
         data = new GridData();
@@ -463,7 +462,9 @@ public class XMLImportDialog extends Dialog {
                 displayFiles(container.getShell(), dataPathText, dataFile);
             }
         });
-
+        // prevent passwordtextfield from gaining focus automatically
+        // which happens in osx client, and causes wrong default radio selection (bug 341)
+        dataPathText.setFocus();
         return container;
     }
 
