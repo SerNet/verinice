@@ -23,7 +23,8 @@
 		  				update=":editForm :tableForm" />
 		  			<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 		  				<p:commandButton action="#{actionHandler.execute}" 
-		  				value="#{actionHandler.label}"   
+		  				value="#{actionHandler.label}"
+		  				oncomplete="loadLinks();"
                     	update=":editForm :tableForm" />  				
 		  			</ui:repeat>
 		  			<p:remoteCommand name="submitEditForm" process="@form" update=":editForm :tableForm :navForm" action="#{edit.save}"/>

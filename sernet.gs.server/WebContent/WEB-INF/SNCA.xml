@@ -5756,14 +5756,12 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="incident_scenario"
         id="rel_samt_topic_incident_scenario" />
                 
-          <huipropertygroup id="samt_topic_groupdesc" name="Description" tags="Web">
           <huiproperty 
-                id="samt_topic_desc"
-                inputtype="text"
-                tags="Web"
-                editable="false"
-                visible="false"/>
-          </huipropertygroup>
+            id="samt_topic_desc"
+            inputtype="text"
+            tags="Web"
+            editable="false"
+            visible="false"/>
                
           <huiproperty 
             id="samt_topic_name" 
