@@ -102,6 +102,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         } 
 	    if (isPermissionHandlingNeeded(username)) {
 	        String[] roleArray = getDynamicRoles(username);
+	        if(roleArray==null) {
+	            log.error("Role array is null for user: " + username);
+	        }
 	        if(!hasAdminRole(roleArray)) {	    
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < roleArray.length; i++) {
@@ -171,11 +174,12 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	}
 
 	private boolean hasAdminRole(String[] roles) {
-		for (String r : roles) {
-			if (ApplicationRoles.ROLE_ADMIN.equals(r))
-				return true;
-		}
-
+	    if(roles!=null) {
+    		for (String r : roles) {
+    			if (ApplicationRoles.ROLE_ADMIN.equals(r))
+    				return true;
+    		}
+	    }
 		return false;
 	}
 

@@ -23,6 +23,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,6 +52,7 @@ import org.eclipse.swt.widgets.Label;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.IEntityElement;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.auth.Action;
@@ -151,16 +153,33 @@ public class PropertyPage extends WizardPage {
         createButtons(centerComposite);
     } 
     
+    @SuppressWarnings("rawtypes")
     private void initializeContent() {
         EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(elementType);
-        allProperties = entityType.getAllPropertyTypes();
-        selectedProperties = entityType.getAllPropertyTypes();
+        allProperties = new LinkedList<PropertyType>();
+        selectedProperties = new LinkedList<PropertyType>();
         allPropertiesMap = new Hashtable<String, PropertyType>();
-        for (PropertyType property : allProperties) {
-            allPropertiesMap.put(property.getId(), property);
+        for (PropertyType property : entityType.getAllPropertyTypes()) {
+            if(property.isVisible()) {
+                allProperties.add(property);
+                selectedProperties.add(property);
+                allPropertiesMap.put(property.getId(), property);
+            }
         }
-        selectedItems = entityType.getPropertyTypes();
-        selectedItems.addAll(entityType.getPropertyGroups());
+        
+        selectedItems = new LinkedList();     
+        for (IEntityElement element : entityType.getElements()) {
+           if(element instanceof PropertyType) {
+               PropertyType propertyType = (PropertyType) element;
+               if(propertyType.isVisible()) {
+                   selectedItems.add(propertyType);
+               }
+           }
+           if(element instanceof PropertyGroup) {
+               selectedItems.add(element);
+           }
+        }
+        
         selectedContentProvider.setVisibleTyps(selectedProperties);
         contentProvider.setVisibleTyps(unselectedProperties);
         tableSelected.setInput(selectedItems);
@@ -449,54 +468,5 @@ public class PropertyPage extends WizardPage {
         }
         
     }
-    
-    class PropertyTypeComparator extends ViewerComparator {
-        private int propertyIndex;
-        private static final int ASCENDING = 0;
-        private static final int DESCENDING = 1;
-        private int direction = ASCENDING;
-        Collator collator = Collator.getInstance();
-
-        public PropertyTypeComparator() {
-            this.propertyIndex = 0;
-            direction = ASCENDING;
-        }
-
-        public int getDirection() {
-            return direction == 1 ? SWT.DOWN : SWT.UP;
-        }
-
-        public void setColumn(int column) {
-            if (column == this.propertyIndex) {
-                // Same column as last sort; toggle the direction
-                direction = 1 - direction;
-            } else {
-                // New column; do an ascending sort
-                this.propertyIndex = column;
-                direction = DESCENDING;
-            }
-        }
-
-        @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            PropertyType p1 = (PropertyType) e1;
-            PropertyType p2 = (PropertyType) e2;
-            int rc = 0;
-            switch (propertyIndex) {
-            case 0:            
-                rc = collator.compare(p1.getName(), p2.getName());
-                break;
-            default:
-                rc = 0;
-            }
-            // If descending order, flip the direction
-            if (direction == DESCENDING) {
-                rc = -rc;
-            }
-            return rc;
-        }
-    }
-
-   
 
 }

@@ -200,14 +200,23 @@ public class EditBean {
     }
 
     private boolean isVisible(PropertyType huiType) {
-        return isVisible(getTagSet(huiType.getTags()))           
-                || isVisible(huiType.getId());
+        if(getVisiblePropertyIds()!=null && !getVisiblePropertyIds().isEmpty()) {
+            return isVisibleType(huiType);
+        } else {
+            return isVisible(getTagSet(huiType.getTags()));
+        }
     }
 
-    private boolean isVisible(String id) {
-        return getVisiblePropertyIds().contains(id);
+    private boolean isVisibleType(PropertyType type) {
+        return type.isVisible() && getVisiblePropertyIds().contains(type.getId());
     }
 
+    /**
+     * 
+     * 
+     * @param groupHui
+     * @return
+     */
     private boolean isVisible(PropertyGroup groupHui) {
         boolean visible = isVisible(getTagSet(groupHui.getTags()));
         if(!visible) {
@@ -231,8 +240,10 @@ public class EditBean {
     }
 
     /**
-     * @param tagSet
-     * @return
+     * Returns true if tagSet contains one of the visible tags for this bean instance. 
+     * 
+     * @param tagSet A set of tags
+     * @return true if tagSet contains one of the visible tags
      */
     private boolean isVisible(Set<String> tagSet) {
         boolean visible = getVisibleTags().contains(TAG_ALL);
