@@ -38,7 +38,7 @@
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable}">
-								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" styleClass="hui"/>
+								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" onkeydown="return false;" styleClass="hui"/>
 							</p:outputPanel>
 							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
 						</td>
@@ -74,7 +74,7 @@
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList and p.isEditable}">
-								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}"/>
+								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}" onkeydown="return false;"/>
 							</p:outputPanel>
 							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
 						</td>
