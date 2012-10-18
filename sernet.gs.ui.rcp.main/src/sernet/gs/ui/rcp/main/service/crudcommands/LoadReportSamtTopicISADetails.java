@@ -83,11 +83,9 @@ public class LoadReportSamtTopicISADetails extends GenericCommand {
                     list.add(st.getEntity().getSimpleValue(SAMT_TOPIC_ISA_FINDINGS)); // add findings
                     
                     PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, SamtTopic.PROP_MATURITY);
-                    String maturity = type.getNameForValue(Integer.parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)));
                     list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)))); // add maturity
                     
                     type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, PROP_SAMT_RISK);
-                    String riskValue = type.getNameForValue(Integer.parseInt(st.getEntity().getValue(PROP_SAMT_RISK)));
                     list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(PROP_SAMT_RISK)))); // add risk    
                     
                     list.add(String.valueOf(st.getDbId())); // add dbid

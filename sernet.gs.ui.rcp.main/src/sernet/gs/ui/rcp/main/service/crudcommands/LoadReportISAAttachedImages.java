@@ -40,6 +40,8 @@ public class LoadReportISAAttachedImages extends GenericCommand {
     
     private List<byte[]> results;
     
+    private boolean oddNumbers = false; // return only images with odd number
+    
     private static final String[] IMAGEMIMETYPES = new String[]{
         "jpg",
         "png"
@@ -54,7 +56,12 @@ public class LoadReportISAAttachedImages extends GenericCommand {
     }
     
     public LoadReportISAAttachedImages(Integer root){
+        this(root, false);
+    }
+    
+    public LoadReportISAAttachedImages(Integer root, boolean odd){
         this.rootElmt = root;
+        this.oddNumbers = odd;
     }
 
     /* (non-Javadoc)
@@ -66,11 +73,16 @@ public class LoadReportISAAttachedImages extends GenericCommand {
         LoadAttachments attachmentLoader = new LoadAttachments(rootElmt);
         try {
             attachmentLoader = ServiceFactory.lookupCommandService().executeCommand(attachmentLoader);
-            for(Attachment attachment : attachmentLoader.getAttachmentList()){
-                if(isSupportedMIMEType(attachment.getMimeType())){
-                    LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
-                    fileLoader = ServiceFactory.lookupCommandService().executeCommand(fileLoader);
-                    results.add(fileLoader.getAttachmentFile().getFileData());
+            for(int i = 0; i < attachmentLoader.getAttachmentList().size(); i++){
+                // report uses two tables next to each other showing odd/even numbered images only
+                // done to restriction showing always two images in a row
+                if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
+                    Attachment attachment = (Attachment)attachmentLoader.getAttachmentList().get(i);
+                    if(isSupportedMIMEType(attachment.getMimeType())){
+                        LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
+                        fileLoader = ServiceFactory.lookupCommandService().executeCommand(fileLoader);
+                        results.add(fileLoader.getAttachmentFile().getFileData());
+                    }
                 }
             }
         } catch (CommandException e) {

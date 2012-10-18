@@ -45,6 +45,10 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand {
     public LoadReportISAChapterAverageMaturity(Integer root) {
         this.rootElmnt = root;
     }
+    
+    public LoadReportISAChapterAverageMaturity(String root){
+        this.rootElmnt = new Integer(Integer.parseInt(root));
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()

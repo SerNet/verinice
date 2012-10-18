@@ -160,7 +160,6 @@ public class LoadReportISARiskChapter extends GenericCommand {
     public List<List<String>> getResult(){
         ArrayList<String> unsortedKeyList = new ArrayList<String>(results.size());
         unsortedKeyList.addAll(results.keySet());
-        Collections.sort(unsortedKeyList, new NumericStringComparator()); // from now on, list is sorted
         ArrayList<List<String>> result = new ArrayList<List<String>>(0);
         for(int i = 0; i < unsortedKeyList.size(); i++){
             String key = unsortedKeyList.get(i);
@@ -174,7 +173,7 @@ public class LoadReportISARiskChapter extends GenericCommand {
             @Override
             public int compare(List<String> o1, List<String> o2) {
                 NumericStringComparator nc = new NumericStringComparator();
-                return nc.compare(o1.get(0), o2.get(0));
+                return nc.compare(o1.get(o1.size() - 1), o2.get(o2.size() - 1));
             }
         });
         return result;

@@ -85,10 +85,8 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
                         ArrayList<String> list = new ArrayList<String>(0);
                         SamtTopic t = (SamtTopic)c;
                         String[] splittedTitle = splitTopicTitle(t.getTitle());
-                        PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, SamtTopic.PROP_MATURITY);
-                        String maturity = type.getNameForValue(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
-                        type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, SamtTopic.PROP_MATURITY);
-                        String riskValue = type.getNameForValue(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
+                        String maturity = String.valueOf(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
+                        String riskValue = String.valueOf(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
                         StringBuilder sb = new StringBuilder();
                         for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
                             if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){

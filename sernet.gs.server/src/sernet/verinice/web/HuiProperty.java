@@ -141,6 +141,9 @@ public class HuiProperty<K,V> implements Serializable{
         List<String> itemList = Collections.emptyList();
         if(type.getOptions()!=null) {
             itemList = new ArrayList<String>(type.getOptions().size());
+            if(getIsSingleSelect()){
+                itemList.add(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE));
+            }
             for (IMLPropertyOption option : type.getOptions()) {
                 itemList.add(option.getName());
             }   
@@ -168,6 +171,10 @@ public class HuiProperty<K,V> implements Serializable{
   
     public void setSelectedOption(String item) {
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
+            return;
+        }
+        if(getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))){
+            value = null;
             return;
         }
         if(item!=null) {

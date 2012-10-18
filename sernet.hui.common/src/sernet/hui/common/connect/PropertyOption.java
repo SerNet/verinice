@@ -31,6 +31,8 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class PropertyOption implements IMLPropertyOption {		
 
+    public final static String SINGLESELECTDUMMYVALUE = "SingleSelectDummyValue";
+    
 	private String id;
 	private String name;
 	private ICheckBoxHandler checkboxHandler;

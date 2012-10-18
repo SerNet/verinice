@@ -47,7 +47,7 @@ import sernet.snutils.AssertException;
  * @author koderman[at]sernet[dot]de
  */
 public class SingleSelectionControl implements IHuiControl {
-
+    
 	private Entity entity;
 
 	private PropertyType fieldType;
@@ -106,8 +106,9 @@ public class SingleSelectionControl implements IHuiControl {
 			fgColor = combo.getForeground();
 			bgColor = combo.getBackground();
 			options = fieldType.getOptions();
-			labels = new String[options.size()];
-			int i = 0;
+			labels = new String[options.size() + 1];
+			labels[0] = Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE); 
+			int i = 1;
 			for (Iterator<IMLPropertyOption> iter = options.iterator(); iter.hasNext(); i++) {
 				labels[i] = iter.next().getName();
 			}
@@ -115,11 +116,11 @@ public class SingleSelectionControl implements IHuiControl {
 			if (savedProp == null) {
 				// create property in which to save entered value:
 				savedProp = entity.createNewProperty(fieldType, "");
-				combo.deselectAll();
+				combo.select(0);
 			} else {
 				// use saved property:
 				int index = indexForOption(savedProp.getPropertyValue());
-				combo.select(index);
+				combo.select(index + 1 ); // #comboItems = #propertyValues + 1
 			}
 
 			GridData comboLData = new GridData();
@@ -133,10 +134,14 @@ public class SingleSelectionControl implements IHuiControl {
 
 			combo.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent evt) {
-					PropertyOption selection = (PropertyOption) options
-							.get(combo.getSelectionIndex());
-					savedProp.setPropertyValue(selection.getId(), true, combo);
-					validate();
+				    String propertyValue = null;
+				    if(combo.getSelectionIndex() != 0){
+				        PropertyOption selection = (PropertyOption) options
+				                .get(combo.getSelectionIndex() - 1); // substrate one because of former addition of dummy value
+				        propertyValue = selection.getId();
+				    }
+				    savedProp.setPropertyValue(propertyValue, true, combo);
+				    validate();
 				}
 			});
 			combo.pack(true);
@@ -179,7 +184,7 @@ public class SingleSelectionControl implements IHuiControl {
 			entityProp = propList != null ? propList.getProperty(0) : null;
 		if (entityProp != null) {
 			savedProp = entityProp;
-			final int index = indexForOption(savedProp.getPropertyValue());
+			final int index = indexForOption(savedProp.getPropertyValue()) + 1;
 
 			if (Display.getCurrent() != null) {
 				combo.select(index);
