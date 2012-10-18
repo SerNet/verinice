@@ -22,6 +22,7 @@ package sernet.verinice.bpm;
 import java.util.Map;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -41,7 +42,7 @@ public interface IRemindService {
     public static final String TEMPLATE_SUBJECT = "subject"; //$NON-NLS-1$
     public static final String TEMPLATE_PATH = "path"; //$NON-NLS-1$
     
-    Map<String,String> loadUserData(String name);
+    Map<String,String> loadUserData(String name) throws MissingParameterException;
     
     void sendEmail(final Map<String,String> model, boolean html);
     

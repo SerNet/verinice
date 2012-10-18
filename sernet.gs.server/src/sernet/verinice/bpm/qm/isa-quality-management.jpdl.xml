@@ -21,7 +21,7 @@
    <java class="sernet.verinice.bpm.Reminder" g="114,300,167,37" method="sendEmail" name="java.reminderFixed">
       <arg><object expr="#{execution.id}"/></arg>
       <arg><object expr="REMINDER_FIXED"/></arg>
-      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
       <transition to="end"/>
    </java>
@@ -29,7 +29,7 @@
    <java class="sernet.verinice.bpm.Reminder" g="417,296,211,37" method="sendEmail" name="java.reminderNotChanged">
       <arg><object expr="#{execution.id}"/></arg>
       <arg><object expr="REMINDER_NOT_CHANGED"/></arg>
-      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
       <arg><object expr="#{UUID}"/></arg>
       <transition to="end"/>
    </java>

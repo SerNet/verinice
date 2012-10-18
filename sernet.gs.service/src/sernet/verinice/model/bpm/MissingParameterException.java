@@ -24,7 +24,7 @@ package sernet.verinice.model.bpm;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class MissingParameterException extends RuntimeException {
+public class MissingParameterException extends Exception {
 
     /**
      * @param string

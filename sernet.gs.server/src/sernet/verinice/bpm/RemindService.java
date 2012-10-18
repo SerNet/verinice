@@ -95,7 +95,10 @@ public class RemindService implements IRemindService {
          getMailSender().send(preparator);
     }
     
-    public Map<String,String> loadUserData(String name) {
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.IRemindService#loadUserData(java.lang.String)
+     */
+    public Map<String,String> loadUserData(String name) throws MissingParameterException {
         Map<String,String> model = new HashMap<String,String>();
         if (name != null) {
             String HQL = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
