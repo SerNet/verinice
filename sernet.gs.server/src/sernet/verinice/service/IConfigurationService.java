@@ -20,8 +20,9 @@
 package sernet.verinice.service;
 
 /**
+ * User configuration service to load information about users. 
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public interface IConfigurationService {
 

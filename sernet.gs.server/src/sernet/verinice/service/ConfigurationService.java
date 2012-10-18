@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
@@ -32,17 +34,19 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
+ * Thread save implementation of {@link IConfigurationService}.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class ConfigurationService implements IConfigurationService {
     
-    private HashMap<String, String[]> roleMap = new HashMap<String, String[]>();
+    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private final Lock readLock = readWriteLock.readLock();
+    private final Lock writeLock = readWriteLock.writeLock();
     
-    private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>();
-    
-    private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
-    
+    private HashMap<String, String[]> roleMap = new HashMap<String, String[]>();   
+    private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>(); 
+    private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();    
     private Map<String, String> nameMap = new HashMap<String, String>();
     
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -51,25 +55,27 @@ public class ConfigurationService implements IConfigurationService {
  
     private void loadUserData() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
-        for (Configuration c : configurations) {
-            String[] roleArray = getRoles(c);
-            String user = c.getUser();
-            // Put result into map and save asking the DB next time.
-            roleMap.put(user, roleArray);           
-            scopeMap.put(user, c.isScopeOnly());     
-            scopeIdMap.put(user, c.getPerson().getScopeId());  
-            nameMap.put(user, c.getPerson().getTitle());  
-        }
-        String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
-        roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
-        scopeMap.put(getAuthService().getAdminUsername(), false);       
+        // Block all other threads before filling the maps
+        writeLock.lock();
+        try {
+            for (Configuration c : configurations) {
+                String[] roleArray = getRoles(c);
+                String user = c.getUser();
+                // Put result into map and save asking the DB next time.
+                roleMap.put(user, roleArray);           
+                scopeMap.put(user, c.isScopeOnly());     
+                scopeIdMap.put(user, c.getPerson().getScopeId());  
+                nameMap.put(user, c.getPerson().getTitle());  
+            }
+            String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
+            roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
+            scopeMap.put(getAuthService().getAdminUsername(), false);
+        } finally {
+            writeLock.unlock();
+        }    
         getConfigurationDao().clear();
     }
 
-    /**
-     * @param c
-     * @return
-     */
     private String[] getRoles(Configuration c) {
         Set<String> roleSet = c.getRoles();
         if(c.isAdminUser()) {
@@ -86,11 +92,20 @@ public class ConfigurationService implements IConfigurationService {
         return roleArray;
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.IConfigurationService#discardUserData()
+     */
     public void discardUserData() {
-        roleMap.clear();
-        scopeMap.clear();
-        scopeIdMap.clear();
-        nameMap.clear();
+        // Block all other threads before clearing the maps
+        writeLock.lock();
+        try {
+            roleMap.clear();
+            scopeMap.clear();
+            scopeIdMap.clear();
+            nameMap.clear();
+        } finally {
+            writeLock.unlock();
+        }
     }
     
     /* (non-Javadoc)
@@ -98,15 +113,33 @@ public class ConfigurationService implements IConfigurationService {
      */
     @Override
     public boolean isScopeOnly(String user) {
-        Boolean result = scopeMap.get(user);
+        Boolean result = null;
+        // prevent reading the configuration while another thread is writing it
+        readLock.lock();
+        try {
+            result = scopeMap.get(user);
+        } finally {
+            readLock.unlock(); 
+        }    
         if (result == null) {
             loadUserData();
-            result = scopeMap.get(user);
+            readLock.lock();
+            try {
+                result = scopeMap.get(user);
+            } finally {
+                readLock.unlock(); 
+            }
             if(result==null) {
                 // prevent calling loadUserData() again
                 // if user was not found in db
                 result = false;
-                scopeMap.put(user,result);
+                // Block all other threads before filling the maps
+                writeLock.lock();
+                try {
+                    scopeMap.put(user,result);
+                } finally {
+                    writeLock.unlock();
+                }
             }
         }
         return (result==null) ? false : result;
@@ -117,10 +150,21 @@ public class ConfigurationService implements IConfigurationService {
      */
     @Override
     public Integer getScopeId(String user) {
-        Integer result = scopeIdMap.get(user);
+        Integer result = null;
+        readLock.lock();
+        try {
+            result = scopeIdMap.get(user);
+        } finally {
+            readLock.unlock(); 
+        } 
         if (result == null) {
             loadUserData();
-            result = scopeIdMap.get(user);
+            readLock.lock();
+            try {
+                result = scopeIdMap.get(user);
+            } finally {
+                readLock.unlock(); 
+            }          
         }
         return result;
     }
@@ -130,52 +174,61 @@ public class ConfigurationService implements IConfigurationService {
      */
     @Override
     public String[] getRoles(String user) {
-        String[] result = roleMap.get(user);
+        String[] result = null;
+        readLock.lock();
+        try {
+            result = roleMap.get(user);
+        } finally {
+            readLock.unlock(); 
+        }   
         if (result == null) {
             loadUserData();
-            result = roleMap.get(user);
+            readLock.lock();
+            try {
+                result = roleMap.get(user);
+            } finally {
+                readLock.unlock(); 
+            }           
         }
         return result;
     }
-    
-   
+      
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#getName(java.lang.String)
      */
     @Override
     public String getName(String user) {
-        String result = nameMap.get(user);
+        String result = null;
+        readLock.lock();
+        try {
+            result = nameMap.get(user);
+        } finally {
+            readLock.unlock(); 
+        }
         if (result == null) {
             loadUserData();
-            result = nameMap.get(user);
+            readLock.lock();
+            try {
+                result = nameMap.get(user);
+            } finally {
+                readLock.unlock(); 
+            }
         }
         return result;
     }
     
-    /**
-     * @return the configurationDao
-     */
     public IBaseDao<Configuration, Serializable> getConfigurationDao() {
         return configurationDao;
     }
 
-    /**
-     * @param configurationDao the configurationDao to set
-     */
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
     }
 
-    /**
-     * @return the authService
-     */
     public IAuthService getAuthService() {
         return authService;
     }
 
-    /**
-     * @param authService the authService to set
-     */
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
