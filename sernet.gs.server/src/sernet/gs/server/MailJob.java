@@ -109,60 +109,67 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		// NotificationJob can not do a real login
         // authentication is a fake instance to run secured commands and dao actions
         // without a login
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		// Retrieves the notification information.
-		try {
-			commandService.executeCommand(pniCommand);
-		} catch (CommandException e) {
-			log.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
-		}
-		
-		// Iterates through the result, generate and send the individual messages.
-		for (NotificationInfo ei : pniCommand.getNotificationInfos())
-		{
-			MessageHelper mh = new MessageHelper(
-					notificationEmailReplyTo,
-					notificationEmailFrom,
-					ei.getConfiguration(),
-					mailSender.createMimeMessage(),
-					notificationEmailDateFormat,
-					notificationEmailLinkTo);
-			
-			try
-			{
-				if (ei.isCompletionExpired())
-					mh.addCompletionExpirationEvent();
-				
-				if (ei.isRevisionExpired())
-					mh.addRevisionExpirationEvent();
-				
-				for (MassnahmenUmsetzung mu : ei.getGlobalExpiredCompletions())
-					mh.addCompletionExpirationEvent(mu);
-				
-				for (MassnahmenUmsetzung mu : ei.getGlobalExpiredRevisions())
-					mh.addRevisionExpirationEvent(mu);
-				
-				for (MassnahmenUmsetzung mu : ei.getModifiedMeasures())
-					mh.addMeasureModifiedEvent(mu);
-				
-				for (MassnahmenUmsetzung mu : ei.getAssignedMeasures())
-					mh.addMeasureAssignmentEvent(mu);
-
-				mailSender.send(mh.createMailMessage());
-			}
-			catch (MessagingException me)
-			{
-				log.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
-			}
-			catch (MailSendException mse)
-			{
-				log.warn("failed to send notification message: " + mse); //$NON-NLS-1$
-			}
-			
-		}
+		boolean dummyAuthAdded = false;
+        SecurityContext securityContext = SecurityContextHolder.getContext(); 
+        try {                    
+            if(securityContext.getAuthentication()==null) {
+                securityContext.setAuthentication(authentication);
+                dummyAuthAdded = true;
+            }
+    		sendMail();
+        } finally {
+            if(dummyAuthAdded) {
+                securityContext.setAuthentication(null);
+            }
+        }
 		
 	}
+
+    private void sendMail() {
+        // Retrieves the notification information.
+        try {
+        	commandService.executeCommand(pniCommand);
+        } catch (CommandException e) {
+        	log.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
+        }
+        
+        // Iterates through the result, generate and send the individual messages.
+        for (NotificationInfo ei : pniCommand.getNotificationInfos()) {
+        	MessageHelper mh = new MessageHelper(
+        			notificationEmailReplyTo,
+        			notificationEmailFrom,
+        			ei.getConfiguration(),
+        			mailSender.createMimeMessage(),
+        			notificationEmailDateFormat,
+        			notificationEmailLinkTo);
+        	
+        	try {
+        		if (ei.isCompletionExpired())
+        			mh.addCompletionExpirationEvent();
+        		
+        		if (ei.isRevisionExpired())
+        			mh.addRevisionExpirationEvent();
+        		
+        		for (MassnahmenUmsetzung mu : ei.getGlobalExpiredCompletions())
+        			mh.addCompletionExpirationEvent(mu);
+        		
+        		for (MassnahmenUmsetzung mu : ei.getGlobalExpiredRevisions())
+        			mh.addRevisionExpirationEvent(mu);
+        		
+        		for (MassnahmenUmsetzung mu : ei.getModifiedMeasures())
+        			mh.addMeasureModifiedEvent(mu);
+        		
+        		for (MassnahmenUmsetzung mu : ei.getAssignedMeasures())
+        			mh.addMeasureAssignmentEvent(mu);
+   
+        		mailSender.send(mh.createMailMessage());
+        	} catch (MessagingException me) {
+        		log.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
+        	} catch (MailSendException mse) {
+        		log.warn("failed to send notification message: " + mse); //$NON-NLS-1$
+        	}			
+        }
+    }
 	
 	public void setCommandService(ICommandService commandService) {
 		this.commandService = commandService;

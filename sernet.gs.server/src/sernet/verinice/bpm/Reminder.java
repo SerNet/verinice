@@ -73,11 +73,21 @@ public class Reminder implements EventListener  {
         // NotificationJob can not do a real login
         // authentication is a fake instance to run secured commands and dao actions
         // without a login
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        ctx.setAuthentication(authentication);
-             
-        IEmailHandler handler = EmailHandlerFactory.getHandler(taskType);
-        handler.send(assignee, taskType, variables, uuid);     
+        boolean dummyAuthAdded = false;
+        SecurityContext ctx = SecurityContextHolder.getContext(); 
+        try {                    
+            if(ctx.getAuthentication()==null) {
+                ctx.setAuthentication(authentication);
+                dummyAuthAdded = true;
+            }
+                 
+            IEmailHandler handler = EmailHandlerFactory.getHandler(taskType);
+            handler.send(assignee, taskType, variables, uuid);
+        } finally {
+            if(dummyAuthAdded) {
+                ctx.setAuthentication(null);
+            }
+        }
     }
     
     private boolean validate(String taskType, String assignee, String uuid) {

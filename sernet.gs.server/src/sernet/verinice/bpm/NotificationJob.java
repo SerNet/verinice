@@ -142,9 +142,25 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
         // NotificationJob can not do a real login
         // authentication is a fake instance to run secured commands and dao actions
         // without a login
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        ctx.setAuthentication(authentication);
+        boolean dummyAuthAdded = false;
+        SecurityContext ctx = SecurityContextHolder.getContext(); 
+        try {                    
+            if(ctx.getAuthentication()==null) {
+                ctx.setAuthentication(authentication);
+                dummyAuthAdded = true;
+            }    
+            
+            sendNotification(context);  
+            
+        } finally {
+            if(dummyAuthAdded) {
+                ctx.setAuthentication(null);
+            }
+        }
+    
+    }
 
+    private void sendNotification(JobExecutionContext context) {
         // search for user names
         List<String> nameList = getUserList(context);
         for (String name : nameList) {
@@ -189,7 +205,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                  };
                  this.mailSender.send(preparator);
             }
-        }      
+        }
     }
 
     /**
