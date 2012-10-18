@@ -38,7 +38,6 @@
         <action id="assignallisatopics" />
         <action id="addownmodul"/>
         <action id="auditview" />
-        <action id="bausteinzuordnung" />
         <action id="bsidnd" />
         <action id="bsibrowser" />
         <action id="bsimassnahmen" />
@@ -97,6 +96,7 @@
 	        <action id="addismgroup" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
+	        <action id="addownmodul"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
@@ -153,6 +153,7 @@
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addnote" />
+	        <action id="addownmodul"/>
 	        <action id="addsecurityassessment" />
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
@@ -213,6 +214,7 @@
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
+	        <action id="addownmodul"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
