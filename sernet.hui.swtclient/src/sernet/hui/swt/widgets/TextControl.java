@@ -162,7 +162,10 @@ public class TextControl implements IHuiControl {
 
 	public void setFocus() {
 		this.text.setFocus();
-		this.text.selectAll();
+		// outcommented due to bug 497
+		// does not matter how long input string is
+		// cursor will always stay at idx=0 now
+//		this.text.selectAll();
 	}
 
 	public void update() {
