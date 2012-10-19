@@ -14,6 +14,7 @@
 	<property name="ignoreResourceNotFound" value="true"/>
     <property name="locations">
     	<list>
+            <value>/WEB-INF/veriniceserver-plain.properties.default</value>
         	<value>/WEB-INF/veriniceserver-plain.properties</value>
         	<value>/WEB-INF/veriniceserver-plain.properties.local</value>
         	<value>/WEB-INF/verinice-ldap.properties</value>
