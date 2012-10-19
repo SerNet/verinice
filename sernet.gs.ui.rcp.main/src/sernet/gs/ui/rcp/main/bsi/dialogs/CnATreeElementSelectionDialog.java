@@ -80,6 +80,7 @@ public class CnATreeElementSelectionDialog extends Dialog {
         selectionComponent.setScopeOnly(scopeOnly);
         selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
         selectionComponent.init();
+        selectionComponent.loadElements();
 
         selectionComponent.getViewer().addDoubleClickListener(new IDoubleClickListener() {           
             @Override

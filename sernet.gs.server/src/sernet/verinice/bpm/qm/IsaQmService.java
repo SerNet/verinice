@@ -81,24 +81,11 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
             context.setComment(feedback);
         }
         context.setPriority(priority);
-        context = startProcessIfMissing(context);         
+        startProcess(context);         
         return new ProcessInformation(context.getNumberOfProcesses());
     }
-
-    private IsaQmContext startProcessIfMissing(IsaQmContext context) {
-        CnATreeElement control = context.getElement();
-        String uuid = control.getUuid();
-        List<ExecutionImpl> executionList = findExecutionForElement(IIsaQmProcess.KEY, uuid);
-        if(executionList==null || executionList.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No process for control: " + uuid);
-            }
-            startProcess(context);
-        }
-        return context;
-    }
     
-    private void startProcess(IsaQmContext context) {
+    private void startProcess(/*not final*/IsaQmContext context) {
         CnATreeElement control = context.getElement();
         Map<String, Object> props = new HashMap<String, Object>();      
         String username = getAuthService().getUsername(); 

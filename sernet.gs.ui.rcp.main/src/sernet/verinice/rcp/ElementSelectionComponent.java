@@ -217,8 +217,6 @@ public class ElementSelectionComponent {
                 selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
             }
         });
-        
-        //loadElements();
     }
     
  
