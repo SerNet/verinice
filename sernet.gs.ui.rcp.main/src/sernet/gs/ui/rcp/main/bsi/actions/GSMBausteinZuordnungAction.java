@@ -142,9 +142,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         String[] bausteine = getSplitBausteine(serverelement);
         if (bausteine.length == 0 || bausteine == null) {
             showInfoMessage();
-          //  MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_3 + " " + serverelement);
-         //   return;
-        }
+       }
         for (String bst : bausteine) {
 
             Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
