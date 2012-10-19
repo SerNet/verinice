@@ -542,7 +542,7 @@ public class CnAElementHome {
                 // calling linkAdded for one link reloads all changed links
                 if(newLinks!=null && !newLinks.isEmpty()) {
                     CnALink link = newLinks.get(newLinks.size()-1);
-                    if (link.getDependant() instanceof IBSIStrukturElement || link.getDependency() instanceof IBSIStrukturElement) {
+                    if ((link.getDependant() instanceof IBSIStrukturElement || link.getDependant() instanceof MassnahmenUmsetzung)  || (link.getDependency() instanceof IBSIStrukturElement || link.getDependency() instanceof MassnahmenUmsetzung)) {
                         CnAElementFactory.getLoadedModel().linkAdded(link);
                     }
                     if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
