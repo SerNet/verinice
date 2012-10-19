@@ -403,13 +403,20 @@
             adaptable="false"
             id="sernet.verinice.model.iso27k.Audit"
             objectClass="sernet.verinice.model.iso27k.Audit">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
          <action
                class="sernet.verinice.samt.rcp.AssignAllIsaTopics"
                enablesFor="+"
                icon="icons/user.png"
                id="sernet.verinice.samt.rcp.AssignAllIsaTopics"
                label="%action.label.15"
-               menubarPath="workflow"
+               menubarPath="workflow/special"
                style="push"
                tooltip="%action.tooltip.3">
          </action>

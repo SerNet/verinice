@@ -689,21 +689,6 @@
                style="push"
                tooltip="%action.tooltip.20">
          </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
-            objectClass="sernet.verinice.model.iso27k.ControlGroup">
-         <action
-               class="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
-               enablesFor="1"
-               icon="icons/derive.gif"
-               id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction.menu"
-               label="%action.label.28"
-               menubarPath="workflow"
-               style="push"
-               tooltip="%action.tooltip.28">
-         </action>
       </objectContribution>      
       <objectContribution
             adaptable="false"
@@ -718,36 +703,6 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.12">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartIsaProcess"
-            objectClass="sernet.verinice.model.iso27k.Audit">
-         <action
-               class="sernet.verinice.bpm.rcp.StartIsaProcess"
-               enablesFor="1"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartIsaProcess.action"
-               label="%action.label.26"
-               menubarPath="workflow"
-               style="push"
-               tooltip="%action.tooltip.25">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control"
-            objectClass="sernet.verinice.model.iso27k.Control">
-         <action
-               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
-               enablesFor="+"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control.action"
-               label="Start control flow..."
-               menubarPath="workflow"
-               style="push"
-               tooltip="Start an ISA control flow prozess...">
          </action>
       </objectContribution>
       <objectContribution
@@ -767,36 +722,6 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit"
-            objectClass="sernet.verinice.model.iso27k.Audit">
-         <action
-               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
-               enablesFor="+"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit.action"
-               label="Start control flow..."
-               menubarPath="workflow"
-               style="push"
-               tooltip="Start an ISA control flow prozess...">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group"
-            objectClass="sernet.verinice.model.iso27k.ControlGroup">
-         <action
-               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
-               enablesFor="+"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group.action"
-               label="Start control flow..."
-               menubarPath="workflow"
-               style="push"
-               tooltip="Start an ISA control flow prozess...">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="sernet.gs.ui.rcp.main.auditreport"
             objectClass="sernet.verinice.model.iso27k.Audit">
          <action
@@ -808,36 +733,6 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.26">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartQmProcess"
-            objectClass="sernet.verinice.model.common.CnATreeElement">
-         <action
-               class="sernet.verinice.bpm.rcp.StartQmProcess"
-               enablesFor="1"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartQmProcess.action"
-               label="%action.label.32"
-               menubarPath="workflow"
-               style="push"
-               tooltip="%action.tooltip.32">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.bpm.rcp.StartIndividualProcess"
-            objectClass="sernet.verinice.model.common.CnATreeElement">
-         <action
-               class="sernet.verinice.bpm.rcp.StartIndividualProcess"
-               enablesFor="+"
-               icon="icons/tasks.gif"
-               id="sernet.verinice.bpm.rcp.StartIndividualProcess.action"
-               label="%action.label.33"
-               menubarPath="workflow"
-               style="push"
-               tooltip="%action.tooltip.33">
          </action>
       </objectContribution>
       <objectContribution
@@ -868,6 +763,160 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.35">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaProcess"
+            objectClass="sernet.verinice.model.iso27k.Audit">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+	     </menu>
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaProcess"
+               enablesFor="1"
+               icon="icons/workflow.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaProcess.action"
+               label="%action.label.26"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="%action.tooltip.25">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
+            objectClass="sernet.verinice.model.iso27k.ControlGroup">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+         <action
+               class="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
+               enablesFor="1"
+               icon="icons/derive.gif"
+               id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction.menu"
+               label="%action.label.28"
+               menubarPath="workflow/special"
+               style="push"
+               tooltip="%action.tooltip.28">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control"
+            objectClass="sernet.verinice.model.iso27k.Control">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/workflow.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.control.action"
+               label="%menu.label.start_audit_workflow"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit"
+            objectClass="sernet.verinice.model.iso27k.Audit">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/workflow.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.audit.action"
+               label="%menu.label.start_audit_workflow"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group"
+            objectClass="sernet.verinice.model.iso27k.ControlGroup">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+         <action
+               class="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess"
+               enablesFor="+"
+               icon="icons/workflow.gif"
+               id="sernet.verinice.bpm.rcp.StartIsaControlFlowProcess.group.action"
+               label="%menu.label.start_audit_workflow"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="Start an ISA control flow prozess...">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartQmProcess"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+         <action
+               class="sernet.verinice.bpm.rcp.StartQmProcess"
+               enablesFor="1"
+               icon="icons/task-qm.gif"
+               id="sernet.verinice.bpm.rcp.StartQmProcess.action"
+               label="%action.label.32"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="%action.tooltip.32">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIndividualProcess"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+        <action
+               class="sernet.verinice.bpm.rcp.StartIndividualProcess"
+               enablesFor="+"
+               icon="icons/task-start.gif"
+               id="sernet.verinice.bpm.rcp.StartIndividualProcess.action"
+               label="%action.label.33"
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="%action.tooltip.33">
          </action>
       </objectContribution>      
    </extension>
