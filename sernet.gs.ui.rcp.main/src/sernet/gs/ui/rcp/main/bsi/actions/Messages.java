@@ -48,6 +48,8 @@ public class Messages extends NLS {
 	public static String BausteinZuordnungAction_4;
 	public static String GSMBausteinZuordnungAction_1;
 	public static String GSMBausteinZuordnungAction_2;
+	public static String GSMBausteinZuordnungAction_3;
+	public static String GSMBausteinZuordnungAction_4;
 	public static String DeleteActionDelegate_0;
     public static String DeleteActionDelegate_1;
 	public static String DeleteActionDelegate_3;

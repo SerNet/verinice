@@ -21,52 +21,45 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.Collator;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.model.Baustein;
-
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
-
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.BausteinVorschlag;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.Server;
 
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
- * assing automaticly BSI modules of the basis of GSM-Scan
+ * assing automaticly BSI modules on the basis of GSM-Scan
  * 
  * @author Julia Haas <jh[at]sernet[dot]de>
  * 
@@ -79,16 +72,13 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
     private final IWorkbenchWindow window;
 
-    private String rightID = null;
-
     private boolean serverIsRunning = true;
 
     private static final String GSMTYP_MAPPING_FILE = "gsm_baustein.properties"; //$NON-NLS-1$
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
     private Properties gsmtypproperties;
     private Properties subtypproperties;
-
-    List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(70);
+    final List<Server> selectedElements = new ArrayList<Server>();
 
     public GSMBausteinZuordnungAction(IWorkbenchWindow window) {
         this.window = window;
@@ -120,49 +110,74 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
         loadtemplates();
 
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
+        final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
-        final List<IBSIStrukturElement> selectedElements = new ArrayList<IBSIStrukturElement>();
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-
-            Object o = iter.next();
-            if (o instanceof IBSIStrukturElement) {
-                selectedElements.add((IBSIStrukturElement) o);
-            }
-        }
 
         try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+                    for (Iterator iter = selection.iterator(); iter.hasNext();) {
 
-            String[] bausteine = getSplitBausteine();
-            if (bausteine.length == 0) {
-                MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_2);
-                return;
-            }
-            for (String bst : bausteine) {
-
-                Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
-
-                if (baustein == null) {
-                    LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
-                } else {
-                    // assign baustein to every selected target object:
-                    for (IBSIStrukturElement target : selectedElements) {
-                        if (target instanceof CnATreeElement) {
-                            CnATreeElement targetElement = (CnATreeElement) target;
-                            if (!targetElement.containsBausteinUmsetzung(baustein.getId()))
-                                CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
+                        Object o = iter.next();
+                        if (o instanceof Server) {
+                            loadModulForServer((Server) o);
                         }
                     }
                 }
-            }
-
+            });
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.BausteinZuordnungAction_4);
+            LOG.error("Error while adding module",e);
+            ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);
         }
 
     }
+
+    /**
+     * @param serverelement
+     */
+    private void loadModulForServer(Server serverelement) {
+        String[] bausteine = getSplitBausteine(serverelement);
+        if (bausteine.length == 0 || bausteine == null) {
+            showInfoMessage();
+          //  MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_3 + " " + serverelement);
+         //   return;
+        }
+        for (String bst : bausteine) {
+
+            Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
+
+            if (baustein == null) {
+                LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
+            } else {
+
+                // assign baustein to every selected target
+                // object:
+                if (!serverelement.containsBausteinUmsetzung(baustein.getId())) {
+                    try {
+                        CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
+                    } catch (Exception e) {
+                        LOG.error("Error by saving.", e);
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void showInfoMessage(){
+    Display.getDefault().asyncExec(new Runnable() {
+        
+        @Override
+        public void run() {
+            // code der in der GUI laufen soll 
+            MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_3);
+        }
+    });
+    }
+
 
     private void loadtemplates() {
         gsmtypproperties = new Properties();
@@ -177,79 +192,63 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     }
 
-    private ArrayList<String> tagList() {
+    private ArrayList<String> tagList(Server server) {
         ArrayList<String> gsmtaglist = new ArrayList<String>();
-
-        Set<Entry<Object, Object>> entrySet = gsmtypproperties.entrySet();
-        for (Entry<Object, Object> entry : entrySet) {
-            String gsmkey = entry.getKey().toString();
-            String tags = getTags();
-            String[] splittags = tags.split(",\\s*");
+        String property = "";
+        Collection<? extends String> tags = server.getTags();
+        String tagstoString = tags.toString();
+        String tag = tagstoString.substring(1, tagstoString.length() - 1);
+        String[] splittags = tag.split(",\\s*");
+        try {
             for (int split = 0; split < splittags.length; split++) {
                 String name = splittags[split];
-
-                String gsmproperty = entry.getValue().toString();
-                if (name.equals(gsmkey)) {
-                    String property = gsmproperty;
-
-                    gsmtaglist.add(name);
-                    gsmtaglist.add(property);
+                Set<Entry<Object, Object>> entrySet = gsmtypproperties.entrySet();
+                for (Entry<Object, Object> entry : entrySet) {
+                    String gsmkey = entry.getKey().toString();
+                    String gsmproperty = entry.getValue().toString();
+                    if (name.equals(gsmkey)) {
+                        property = gsmproperty;
+                        // gsmtaglist.add(name);
+                    }
                 }
-
+                gsmtaglist.add(property);
             }
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);
         }
         return gsmtaglist;
     }
 
-    private ArrayList<String> readBausteine() {
-        String value = "";
-        String name = "";
+    private ArrayList<String> readBausteine(Server server) {
         ArrayList<String> bausteinlist = new ArrayList<String>();
         Set<Entry<Object, Object>> subtypentrySet = subtypproperties.entrySet();
+
         for (Entry<Object, Object> subtypentry : subtypentrySet) {
             String subtyp = subtypentry.getKey().toString();
             String subtypproperty = subtypentry.getValue().toString();
             String[] subproperty = subtypproperty.split(",\\s*");
             for (int split = 0; split < subproperty.length; split++) {
                 String property = subproperty[split];
-                List gsmlist = tagList();
+                ArrayList<String> gsmlist = tagList(server);
 
-                Object[] objList = gsmlist.toArray();
-                String[] strList = Arrays.copyOf(objList, objList.length, String[].class);
-                for (int i = 0; i < strList.length; i++) {
-                    name = strList[i];
-                    if (name.equals(subtyp)) {
-                        value = property;
-                        // bausteinlist.add(name);
+                for (String namesEntry : gsmlist) {
+
+                    if (namesEntry.equals(subtyp)) {
+                        String value = property;
                         bausteinlist.add(value);
                     }
-
                 }
             }
+
         }
         return bausteinlist;
     }
 
-    private String[] getSplitBausteine() {
-        ArrayList<String> bausteinlist = readBausteine();
+    private String[] getSplitBausteine(Server server) {
+        ArrayList<String> bausteinlist = readBausteine(server);
         Object[] objList = bausteinlist.toArray();
         String[] strList = Arrays.copyOf(objList, objList.length, String[].class);
         return strList;
-    }
-
-    private String getTags() {
-        String tag = null;
-        IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-            Object o = iter.next();
-            if (o instanceof Server) {
-                Collection<? extends String> elementtags = ((IBSIStrukturElement) o).getTags();
-                String tags = elementtags.toString();
-                tag = tags.substring(1, tags.length() - 1);
-
-            }
-        }
-        return tag;
     }
 
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
@@ -264,7 +263,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                 return;
             }
 
-            String kapitel = null;
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 if (!(o instanceof Server)) {
@@ -277,7 +275,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             }
             return;
         }
-        // no structured selection:
         setEnabled(false);
 
     }
