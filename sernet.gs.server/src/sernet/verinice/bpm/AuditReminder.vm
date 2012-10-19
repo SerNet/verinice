@@ -15,8 +15,11 @@
 ##
 Dear ${address} ${name},
 
-one of your verinice audits starts in 6 weeks:
+one of your verinice audits starts soon:
 ${elementTitle}
+
+You will find a list with all your task here:
+${url}
 
 [This e-mail has been automatically generated.]
 

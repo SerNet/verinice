@@ -13,22 +13,15 @@
 ## ${emailFrom}: Sender
 ## ${replyTo}: reply to email
 ##
-Dear ${address} ${name},
+Sehr geehrte(r) ${address} ${name},
 
-assignee of task to implement control:
-${elementTitle}
-has indicated that he is not responsible for this task. 
+ihre Aufgabe für das Qualitätsmanagement wurde akzeptiert.
+Die Aufgabe betraf das Objekt: "${elementTitle}".
 
-Explanation:
-"${comment}"
-
-It's now your task to select another assignee.
-
-You will find a list with all your task here:
+Eine Liste mit allen Ihren Aufgaben finden Sie hier:
 ${url}
-After logged in you can edit your tasks in the browser.
 
-[This e-mail has been automatically generated.]
+[Diese Email wurde automatisch erzeugt.]
 
-verinice is a tool for managing information security.
-http://www.verinice.org/en/
+verinice ist ein ISMS-Tool für das Management von Informationssicherheit:
+http://www.verinice.org/
