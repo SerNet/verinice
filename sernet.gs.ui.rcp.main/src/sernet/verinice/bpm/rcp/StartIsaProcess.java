@@ -24,9 +24,11 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -87,11 +89,15 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
                         }
                     }
                 });
+                if(numberOfProcess > 0){
                 InfoDialogWithShowToggle.openInformation(
                         Messages.StartIsaProcess_0,  
                         Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),// "Succesfully created " + numberOfProcess + " tasks.",; 
                         Messages.StartIsaProcess_3,
                         PreferenceConstants.INFO_PROCESSES_STARTED);
+                } else {
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.StartIsaProcess_0, Messages.StartIsaProcess_7);
+                }
             } catch (Throwable t) {
                 LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
                 ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 

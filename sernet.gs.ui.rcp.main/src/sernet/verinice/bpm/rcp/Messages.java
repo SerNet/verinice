@@ -34,6 +34,8 @@ public class Messages extends NLS {
     public static String StartIsaProcess_1;
     public static String StartIsaProcess_3;
     public static String StartIsaProcess_5;
+    public static String StartIsaProcess_6;
+    public static String StartIsaProcess_7;
     public static String ButtonUserTasks;
     public static String ButtonRefresh;
     public static String ButtonCancel;
