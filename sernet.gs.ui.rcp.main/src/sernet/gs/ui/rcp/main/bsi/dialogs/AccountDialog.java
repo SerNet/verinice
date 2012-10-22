@@ -158,20 +158,6 @@ public class AccountDialog extends TitleAreaDialog {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
             
-//            this.getButton(IDialogConstants.CANCEL_ID).addSelectionListener(new SelectionListener() {
-//                
-//                @Override
-//                public void widgetSelected(SelectionEvent e) {
-//                    textName.removeFocusListener(nameValidator);
-//                    textPassword2.removeFocusListener(pwValidator);
-//                }
-//                
-//                @Override
-//                public void widgetDefaultSelected(SelectionEvent e) {
-//                    widgetSelected(e);
-//                }
-//            });
-            
             scrolledComposite.setVisible(true);
             Point size = innerComposite.computeSize(SWT.DEFAULT,SWT.DEFAULT);
             innerComposite.setSize(size); 
