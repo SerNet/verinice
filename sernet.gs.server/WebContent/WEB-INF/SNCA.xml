@@ -3565,56 +3565,22 @@ the value between <param></param> will be used directly if no string is found fo
 					id="asset_value_comment" />
 		</huipropertygroup>
         
-<huipropertygroup name="Greenbone GSM" id="gsm_asset_group" tags="Greenbone_GSM" >
-        <!-- TODO translate this property -->
-        <huiproperty id="gsm_asset_tag" name="GSM Tag" tags="Greenbone_GSM" />
-		
-        <!-- TODO translate this property -->
-        <huiproperty id="gsm_asset_description" name="GSM Desc." tags="Greenbone_GSM"
-            inputtype="line"
-        />
-        
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_hostname" name="Hostname" inputtype="line" tags="Greenbone_GSM" />
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_installed_apps" name="Installed Software" inputtype="text" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_traceroute" name="Traceroute" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_memory" name="Memory" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_cpuinfo" name="CPU" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_os" name="OS" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_os_cpe" name="CPE" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_open_ports" name="Open Ports" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_scan_started" name="Scan start" inputtype="line" tags="Greenbone_GSM" />
- 
-
-        <!-- TODO translate this property -->
-<huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" />
-
-
-</huipropertygroup>
-		
+        <huipropertygroup name="Greenbone GSM" id="gsm_asset_group" tags="Greenbone_GSM" >
+            <huiproperty id="gsm_asset_tag" name="GSM Tag" tags="Greenbone_GSM" editable="false"/>
+            <huiproperty id="gsm_asset_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="line" editable="false"/>
+            <huiproperty id="gsm_hostname" name="Hostname" inputtype="line" tags="Greenbone_GSM" editable="false"/>
+            <huiproperty id="gsm_installed_apps" name="Installed Software" inputtype="text" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_traceroute" name="Traceroute" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_memory" name="Memory" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_cpuinfo" name="CPU" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_os" name="OS" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_os_cpe" name="CPE" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_ip_address" name="IP Address" inputtype="line" tags="Greenbone_GSM" editable="false" /> 
+            <huiproperty id="gsm_mac_address" name="MAC Address" inputtype="line" tags="Greenbone_GSM" editable="false" /> 
+            <huiproperty id="gsm_open_ports" name="Open Ports" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_scan_started" name="Scan start" inputtype="line" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" editable="false" />
+        </huipropertygroup>		
 	
 		<huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
 			<huiproperty
