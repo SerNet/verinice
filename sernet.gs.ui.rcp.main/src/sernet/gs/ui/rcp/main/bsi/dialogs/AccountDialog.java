@@ -70,6 +70,8 @@ public class AccountDialog extends TitleAreaDialog {
     
     private static transient Logger LOG = Logger.getLogger(AccountDialog.class);
     
+    private static String[] reservedUsernames = new String[]{"admin"};
+    
     private EntityType entType;
     private Entity entity = null;
     private boolean useRules = false;
@@ -277,24 +279,14 @@ public class AccountDialog extends TitleAreaDialog {
 	}
 	
 	private boolean checkPassword2(){
-	    final boolean passwordsEqual = textPassword.getText().equals(textPassword2.getText());
-	    final boolean passwordEmpty = textPassword.getText().isEmpty() && !isPasswordSet();
+	    boolean passwordsEqual = textPassword.getText().equals(textPassword2.getText());
+	    boolean passwordEmpty = textPassword.getText().isEmpty() && !isPasswordSet();
 	    if(!passwordsEqual ||  passwordEmpty){
-	        Display.getDefault().asyncExec(new Runnable() {
-
-	            @Override
-	            public void run() {
-	                textPassword2.setToolTipText(Messages.AccountDialog_8);
-	                textPassword.selectAll();
-	                if(!passwordsEqual){
-	                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_8);
-	                } else if(passwordEmpty){
-	                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_11);
-	                }
-	                textPassword.setFocus();
-	                textPassword.forceFocus();
-	            }
-	        });
+	        if(!passwordsEqual){
+	            toggleValidationError(textPassword, Messages.AccountDialog_8, Messages.AccountDialog_8);
+	        } else if(passwordEmpty){
+	            toggleValidationError(textPassword, Messages.AccountDialog_8, Messages.AccountDialog_11);
+	        }
 	        return false;
 	    } else {
 	        textPassword2.setToolTipText("");
@@ -307,11 +299,11 @@ public class AccountDialog extends TitleAreaDialog {
 	            getEntity().getProperties(Configuration.PROP_PASSWORD) != null &&
 	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0) != null &&
 	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue() != null){
-	                String pw = getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue();
-	                if(pw != null && !pw.isEmpty()){
-	                    return true;
-	                }
-	            } 
+	        String pw = getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue();
+	        if(pw != null && !pw.isEmpty()){
+	            return true;
+	        }
+	    } 
 	    return false;
 	}
 	
@@ -319,32 +311,25 @@ public class AccountDialog extends TitleAreaDialog {
 	    boolean retVal = false;
 	    String enteredName = textName.getText();
 	    final boolean noPasswordEntered = enteredName.isEmpty();
+	    if(isReservedUsername(enteredName)){
+	        toggleValidationError(textName, Messages.AccountDialog_7, Messages.AccountDialog_7);
+            return false;
+	    }
         if((initialUserName != null && !initialUserName.equals(enteredName)) ||
                 (initialUserName == null && !enteredName.isEmpty())){
             CheckUserName command = new CheckUserName(enteredName);
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                final boolean userNameExists = command.getResult();
-                if(userNameExists || noPasswordEntered){
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            textName.setToolTipText(Messages.AccountDialog_7);
-                            textName.selectAll();
-                            if(userNameExists){
-                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_7);
-                            } else if(noPasswordEntered){
-                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_10);
-                            }
-                            textName.setFocus();
-                            textName.forceFocus();
-                        }
-                    });
-                    retVal = false;;
+                boolean userNameExists = command.getResult();
+                if(userNameExists){
+                    toggleValidationError(textName, Messages.AccountDialog_7, Messages.AccountDialog_7);
+                    return false;
+                } else if(noPasswordEntered){
+                    toggleValidationError(textName, Messages.AccountDialog_10, Messages.AccountDialog_10);
+                    return false;
                 } else {
                     textName.setToolTipText("");
-                    retVal = true;
+                    return true;
                 }
             } catch (CommandException e1) {
                 LOG.error("Error while checking username", e1);
@@ -352,19 +337,31 @@ public class AccountDialog extends TitleAreaDialog {
         } else if (enteredName.equals(initialUserName)){
             return true;
         } else if(initialUserName == null && noPasswordEntered){
-            Display.getDefault().asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    textName.setToolTipText(Messages.AccountDialog_7);
-                    textName.selectAll();
-                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_10);
-                    textName.setFocus();
-                    textName.forceFocus();
-                }
-            });
+            toggleValidationError(textName, Messages.AccountDialog_10, Messages.AccountDialog_10);
         }
         return retVal;
+	}
+	
+	private boolean isReservedUsername(String username){
+	    for(String s : reservedUsernames){
+	        if(username.equals(s) || username.toLowerCase().equals(s) || username.toUpperCase().equals(s)){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
+	private void toggleValidationError(final Text control, final String dialogMsg, final String tooltip){
+	    Display.getDefault().asyncExec(new Runnable(){
+	       @Override
+	       public void run(){
+	           control.setToolTipText(tooltip);
+	           control.selectAll();
+	           MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, dialogMsg);
+	           control.setFocus();
+	           control.forceFocus();
+	       }
+	    });
 	}
 	
 }
