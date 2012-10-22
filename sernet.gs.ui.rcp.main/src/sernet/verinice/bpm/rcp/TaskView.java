@@ -26,10 +26,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,6 +41,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -139,6 +144,23 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private IModelLoadListener modelLoadListener;
 
     private ITaskListener taskListener;
+    
+    private static String[] dynamicActionIDs = new String[]{
+        "trans.assigned",
+        "trans.complete",
+        "trans.decline",
+        "trans.wait",
+        "trans.fix",
+        "trans.noFix",
+        "trans.decline",
+        "trans.accept",
+        "trans.notResposible",
+        "trans.setAssignee",
+        "transition.complete", 
+        "transition.escalate",
+        "transition.accepted",
+        "transition.decline"
+    };
 
     /*
      * (non-Javadoc)
@@ -452,6 +474,23 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     } catch (Throwable t) {
                         LOG.error("Error while configuring task actions.", t); //$NON-NLS-1$
                     }
+                } else if(getViewer().getSelection().isEmpty()){
+                    IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
+                    ArrayList<IContributionItem> itemsToRemove = new ArrayList<IContributionItem>(0);
+                    for (IContributionItem item : manager.getItems()){
+                        if(item instanceof ActionContributionItem){
+                            ActionContributionItem aItem = (ActionContributionItem)item;
+                            IAction action = aItem.getAction();
+                            String id = action.getId();
+                            if(id != null && isDynamicActionID(id)){
+                                itemsToRemove.add(aItem);
+                            }
+                        }
+                    }
+                    for(IContributionItem item : itemsToRemove){
+                        manager.remove(item);
+                    }
+                    getInfoPanel().setText("");
                 }
                 getViewSite().getActionBars().updateActionBars();
             }
@@ -492,9 +531,11 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         List<KeyValue> outcomeList = task.getOutcomes();
         for (KeyValue keyValue : outcomeList) {
             CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());
+            LOG.error("key:\t" + keyValue.getKey());
             completeAction.setText(keyValue.getValue());
             completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
             ActionContributionItem item = new ActionContributionItem(completeAction);
+            
             item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
             manager.add(item);
         }
@@ -606,6 +647,15 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
+    }
+    
+    private boolean isDynamicActionID(String input){
+        for(String s : dynamicActionIDs){
+            if(input.contains(s)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
