@@ -56,6 +56,8 @@ public class Messages extends NLS {
     public static String AccountDialog_7;
     public static String AccountDialog_8;
     public static String AccountDialog_9;
+    public static String AccountDialog_10;
+    public static String AccountDialog_11;
     public static String AutoBausteinDialog_0;
     public static String AutoBausteinDialog_1;
     public static String AutoBausteinDialog_10;
