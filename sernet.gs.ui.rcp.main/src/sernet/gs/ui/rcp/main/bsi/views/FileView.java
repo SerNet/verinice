@@ -35,6 +35,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -107,7 +109,7 @@ import sernet.verinice.service.commands.LoadAttachments;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class FileView extends ViewPart implements ILinkedWithEditorView {
+public class FileView extends ViewPart implements ILinkedWithEditorView, IPropertyChangeListener {
     
     static final Logger LOG = Logger.getLogger(FileView.class);
     private CnATreeElement inputElmt;
@@ -196,6 +198,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
     
     public FileView() {
         super();
+        Activator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
     }
 
     public String getRightID() {
@@ -246,18 +249,13 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
             }
          });
            
-        if(getThumbnailSize()>0) {
-            imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
-            imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
-            imageColumn.setLabelProvider(getImageCellProvider());
+        imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        imageColumn.setLabelProvider(getImageCellProvider());
+        if(getThumbnailSize()>0) {         
+            imageColumn.getColumn().setWidth(getThumbnailSize() + 4);          
         } else {
             // dummy column
-            imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
             imageColumn.getColumn().setWidth(0);
-            imageColumn.setLabelProvider(new CellLabelProvider() {               
-                @Override
-                public void update(ViewerCell arg0) {}
-            });
         }
         
         iconColumn = new TableColumn(table, SWT.LEFT);
@@ -404,8 +402,12 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
     public void loadFiles() {
         try {
             Integer id = null;
-            if (isLinkingActive() && getCurrentCnaElement() != null) {
-                id = getCurrentCnaElement().getDbId();
+            if(isLinkingActive()) {
+                if(getCurrentCnaElement() != null) {
+                    id = getCurrentCnaElement().getDbId();
+                } else {
+                    return;
+                }
             }
             LoadAttachments command = new LoadAttachments(id);
             command = getCommandService().executeCommand(command);
@@ -458,6 +460,25 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
     @Override
     public void setFocus() {
         viewer.getControl().setFocus();
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent changeEvent) {
+        if(changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE) && imageCellProvider!=null) {
+            if(!changeEvent.getNewValue().equals(changeEvent.getOldValue())) {
+                imageCellProvider.setThumbSize(Integer.valueOf(changeEvent.getNewValue().toString()));
+                imageCellProvider.clearCache();
+                if(getThumbnailSize()>0) {
+                    imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
+                } else {
+                    imageColumn.getColumn().setWidth(0);
+                }
+                loadFiles();
+            }
+        }        
     }
 
     private void fillLocalToolBar() {
@@ -664,6 +685,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView {
         super.dispose();
         getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
+        Activator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
         for (Attachment attachment : attachmentList) {
             attachment.removeAllListener();
         }

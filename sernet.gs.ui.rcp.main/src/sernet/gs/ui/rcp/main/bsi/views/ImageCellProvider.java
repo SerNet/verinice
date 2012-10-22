@@ -29,6 +29,8 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -37,7 +39,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Attachment;
@@ -58,9 +62,8 @@ public class ImageCellProvider extends OwnerDrawLabelProvider {
     
     private static final Object EMPTY_CACHE_ELEMENT = new Object();
     
-    int thumbSize;
-    ICommandService commandService;     
-    ImageLoader loader = new ImageLoader();
+    private int thumbSize;
+    private ICommandService commandService;
 
     private CacheManager manager = null;
     private String cacheId = null;
@@ -72,25 +75,27 @@ public class ImageCellProvider extends OwnerDrawLabelProvider {
     
     @Override
     protected void paint(Event event, Object element){
-       long start = System.currentTimeMillis();       
-       Image img = getImage(element);      
-       if (LOG.isDebugEnabled()) {
-           LOG.debug("get image: " + (System.currentTimeMillis() - start));
+       long start = System.currentTimeMillis();   
+       if(thumbSize>0) {
+           Image img = getImage(element);      
+           if (LOG.isDebugEnabled()) {
+               LOG.debug("get image: " + (System.currentTimeMillis() - start));
+           }
+           if(img!=null) {         
+               int imgWidth = img.getBounds().width;
+               int imgHeight = img.getBounds().height;
+               Rectangle tableItemBounds = ((TableItem) event.item).getBounds(event.index);
+               int cellWidth = tableItemBounds.width;
+               int cellHeight = tableItemBounds.height;
+               cellWidth /= 2;
+               cellWidth -= imgWidth / 2;
+               cellHeight /= 2;
+               cellHeight -= imgHeight / 2;
+               int x = (cellWidth > 0 ? tableItemBounds.x + cellWidth : tableItemBounds.x);
+               int y = cellHeight > 0 ? tableItemBounds.y + cellHeight : tableItemBounds.y;
+               event.gc.drawImage(img, 0, 0, imgWidth, imgHeight, x, y, imgWidth, imgHeight);         
+            }
        }
-       if(img!=null) {         
-           int imgWidth = img.getBounds().width;
-           int imgHeight = img.getBounds().height;
-           Rectangle tableItemBounds = ((TableItem) event.item).getBounds(event.index);
-           int cellWidth = tableItemBounds.width;
-           int cellHeight = tableItemBounds.height;
-           cellWidth /= 2;
-           cellWidth -= imgWidth / 2;
-           cellHeight /= 2;
-           cellHeight -= imgHeight / 2;
-           int x = (cellWidth > 0 ? tableItemBounds.x + cellWidth : tableItemBounds.x);
-           int y = cellHeight > 0 ? tableItemBounds.y + cellHeight : tableItemBounds.y;
-           event.gc.drawImage(img, 0, 0, imgWidth, imgHeight, x, y, imgWidth, imgHeight);         
-        }
         if (LOG.isDebugEnabled()) {
             LOG.debug("paint: " + (System.currentTimeMillis() - start));
         }
@@ -160,6 +165,14 @@ public class ImageCellProvider extends OwnerDrawLabelProvider {
         }
     }
 
+    public int getThumbSize() {
+        return thumbSize;
+    }
+
+    public void setThumbSize(int thumbSize) {
+        this.thumbSize = thumbSize;
+    }
+
     public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = createCommandServive();
@@ -187,6 +200,10 @@ public class ImageCellProvider extends OwnerDrawLabelProvider {
             cache = getManager().getCache(cacheId);
         }
         return cache;
+    }
+    
+    public void clearCache() {
+        getCache().removeAll();
     }
     
     private Cache createCache() {

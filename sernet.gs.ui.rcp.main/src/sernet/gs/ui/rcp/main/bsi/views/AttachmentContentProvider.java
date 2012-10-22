@@ -3,12 +3,9 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.bsi.Attachment;
 

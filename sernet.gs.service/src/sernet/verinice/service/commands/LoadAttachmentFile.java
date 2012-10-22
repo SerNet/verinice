@@ -25,9 +25,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
@@ -148,7 +155,52 @@ public class LoadAttachmentFile extends GenericCommand {
 
     private BufferedImage readImageFromByteArray() throws IOException {
         InputStream in = new ByteArrayInputStream(getAttachmentFile().getFileData());
-        BufferedImage image = ImageIO.read(in);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(in);
+        } catch(Exception e) {
+            getLog().warn("Error while reading image the simple way. DbId: " + getAttachmentFile().getDbId() + " cause: " + e.getMessage() + ", Will now try the advanced method...");
+            if(getLog().isDebugEnabled()) {
+                getLog().debug("Stacktrace: ", e);
+            }
+            image = readImageFromByteArrayFallback();
+        }
+        return image;
+    }
+
+    private BufferedImage readImageFromByteArrayFallback() throws IOException {
+        ImageInputStream in = ImageIO.createImageInputStream(new ByteArrayInputStream(getAttachmentFile().getFileData()));
+        Iterator<ImageReader> iter=ImageIO.getImageReaders(in);
+        BufferedImage image = null;
+      
+        while (iter.hasNext()) {
+            ImageReader reader = null;
+            try {
+                reader = (ImageReader)iter.next();
+                ImageReadParam param = reader.getDefaultReadParam();
+                reader.setInput(in, true, true);
+                Iterator<ImageTypeSpecifier> imageTypes = reader.getImageTypes(0);
+                while (imageTypes.hasNext()) {
+                    ImageTypeSpecifier imageTypeSpecifier = imageTypes.next();
+                    int bufferedImageType = imageTypeSpecifier.getBufferedImageType();
+                    if (bufferedImageType == BufferedImage.TYPE_BYTE_GRAY) {
+                        param.setDestinationType(imageTypeSpecifier);
+                        break;
+                    }
+                }
+                image = reader.read(0, param);
+                if (null != image) {
+                    break;
+                }
+            } catch (Exception e) {
+                getLog().error("Error while reading image the advanced way. DbId: " + getAttachmentFile().getDbId(),e);
+            } finally {
+                if(null != reader) {
+                    reader.dispose();               
+                }
+            }
+
+        }
         return image;
     }
     
