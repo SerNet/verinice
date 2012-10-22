@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -114,7 +115,6 @@ public class BIRTReportService {
 		
 		HashMap hm = config.getAppContext();
 		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
-		
 		config.setAppContext(hm);
 		
 		VeriniceOdaDriver driver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
@@ -128,7 +128,9 @@ public class BIRTReportService {
 		    config.setLogFile(logFile);
 		    config.setLogMaxBackupIndex(10);
 		    config.setLogRollingSize(3000000); // equals 3MB
-		    
+		    if(log.isDebugEnabled()){
+		        log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir + "\tLogLvl:\t" + driver.getLogLvl());
+		    }
 		}
 
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
@@ -139,6 +141,12 @@ public class BIRTReportService {
 	
 	public IRunAndRenderTask createTask(URL rptDesignURL)
 	{
+	    
+	    if(log.isDebugEnabled()){
+	        log.debug("DesignURL:\t" + rptDesignURL);
+	        log.debug("Locale:\t" + Locale.getDefault().toString());
+	    }
+	    
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 		
@@ -154,10 +162,16 @@ public class BIRTReportService {
 			throw new IllegalStateException(e);
 		}
 		task.setLocale(Locale.getDefault());
+		
 		return task;
 	}
 	
-	public IRunTask createRunTask(URL rptDesignURL){
+	public IRunTask createRunTask(URL rptDesignURL, URL rptDocumentURL){
+	    
+	    if(log.isDebugEnabled()){
+	        log.debug("DesignURL:\t" + rptDesignURL + "\tDocumentURL:\t" + rptDocumentURL);
+	    }
+	    
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
         
@@ -165,7 +179,7 @@ public class BIRTReportService {
         try{
             design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
             runTask = engine.createRunTask(design);
-            runTask.setReportDocument(rptDesignURL.getFile());
+            runTask.setReportDocument(rptDocumentURL.toString());
         } catch (EngineException e){
             log.error("Could not open report design: ", e);
             throw new IllegalStateException(e);            
@@ -177,27 +191,32 @@ public class BIRTReportService {
         return runTask;
 	}
 	
-	public IRenderTask createRenderTask(URL rptDesignURL){
+	public IRenderTask createRenderTask(URL rptDocumentURL){
+	    
+	    if(log.isDebugEnabled()){
+	        log.debug("ReportDocumentURL:\t" + rptDocumentURL.toString());
+	    }
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
         
         IRenderTask renderTask = null;
         try{
-            design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-            IReportDocument ird = engine.openReportDocument(rptDesignURL.getFile());
+            IReportDocument ird = engine.openReportDocument(rptDocumentURL.toString());
             renderTask = engine.createRenderTask(ird);
         } catch (EngineException e){
             log.error("Could not open report design: ", e);
             throw new IllegalStateException(e);            
-        } catch (IOException e) {
-            log.error("Could not open report design: ", e);
-            throw new IllegalStateException(e);
-        }
+        } 
         return renderTask;
 	}
 	
 	public IDataExtractionTask createExtractionTask(URL rptDesignURL)
 	{
+	    
+	    if(log.isDebugEnabled()){
+	        log.debug("ReportDesignURL:\t" + rptDesignURL.toString());
+	    }
+	    
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 		
@@ -290,13 +309,24 @@ public class BIRTReportService {
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
 		if(options.getRootElement() != null){
 			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+			if(log.isDebugEnabled()){
+			    log.debug("Root-Element:\t" + options.getRootElement());
+			}
 		} else if(options.getRootElements() != null && options.getRootElements().length > 0){
 			task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+			if(log.isDebugEnabled()){
+			    log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+			}
 		}
 		task.setRenderOption(renderOptions);
 		
 		try {
+		    long startTime = System.currentTimeMillis();
 			task.run();
+			if(log.isDebugEnabled()){
+			    long duration = (System.currentTimeMillis() - startTime) / 1000;
+			    log.debug("RunAndRenderTask lasts " + String.valueOf(duration) + " seconds");
+			}
 		} catch (EngineException e) {
 		    log.error("Could not render design: ", e);
 			throw new IllegalStateException(e);
@@ -311,11 +341,22 @@ public class BIRTReportService {
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
         if(options.getRootElement() != null){
             task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+            if(log.isDebugEnabled()){
+                log.debug("Root-Element:\t" + options.getRootElement());
+            }
         } else if(options.getRootElements() != null && options.getRootElements().length > 0){
             task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+            if(log.isDebugEnabled()){
+                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+            }
         }
         try{
+            long startTime = System.currentTimeMillis();
             task.run();
+            if(log.isDebugEnabled()){
+                long duration = (System.currentTimeMillis() - startTime) / 1000;
+                log.debug("RunTask lasts " + String.valueOf(duration) + " seconds");
+            }
         } catch(EngineException e){
             log.error("Could not run report: ", e);
             throw new IllegalStateException(e);
@@ -328,14 +369,25 @@ public class BIRTReportService {
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
 	    if(options.getRootElement() != null){
 	        task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
+            if(log.isDebugEnabled()){
+                log.debug("Root-Element:\t" + options.getRootElement());
+            }
 	    } else if(options.getRootElements() != null && options.getRootElements().length > 0){
 	        task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME, options.getRootElements());
+            if(log.isDebugEnabled()){
+                log.debug("Root-Elements: " + Arrays.toString(options.getRootElements()));
+            }
 	    }
 
 	    task.setRenderOption(renderOptions);
 
 	    try{
+	        long startTime = System.currentTimeMillis();
 	        task.render();
+            if(log.isDebugEnabled()){
+                long duration = (System.currentTimeMillis() - startTime) / 1000;
+                log.debug("RenderTask lasts " + String.valueOf(duration) + " seconds");
+            }
 	    } catch(EngineException e){
 	        log.error("Could not render design: ", e);
 	        throw new IllegalStateException(e);

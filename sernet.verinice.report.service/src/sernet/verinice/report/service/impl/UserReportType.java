@@ -18,13 +18,16 @@
 package sernet.verinice.report.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
+import org.eclipse.birt.report.engine.api.IRenderTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
+import org.eclipse.birt.report.engine.api.IRunTask;
 import org.eclipse.birt.report.model.api.PropertyHandle;
 import org.eclipse.birt.report.model.api.ReportDesignHandle;
 import org.eclipse.birt.report.model.api.VariableElementHandle;
@@ -39,6 +42,9 @@ public class UserReportType implements IReportType {
 	
 	private final static String VAR_ENGINE_ITERATIONS = "engineIterations";
 	private final static String PROPERTYHANDLE_PAGEVARIABLE = "pageVariables";
+	
+    private URL reportDocument;
+    private URL reportDesign;
 	
 	private String reportFile = ""; //$NON-NLS-1$
 
@@ -74,20 +80,26 @@ public class UserReportType implements IReportType {
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
-		
-		URL reportDesign;
+
         try {
             reportDesign = (new File(reportFile)).toURI().toURL();
+            
         } catch (MalformedURLException e) {
             LOG.error("Could not load user supplied report file.", e); //$NON-NLS-1$
             throw new RuntimeException("Could not load user report file.", e); //$NON-NLS-1$
+        } catch (IOException e) {
+            LOG.error("Could not create reportDocument tmpFile.", e); //$NON-NLS-1$
+            throw new RuntimeException("Could create tmpFile for reportDocument.", e); //$NON-NLS-1$
         }
-		
-		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
-		{
-			IRunAndRenderTask task = brs.createTask(reportDesign);
-					    
-		    for(int i = 0;i < getEngineIterations(task); i++){
+
+        if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
+        {
+            IRunAndRenderTask task = brs.createTask(reportDesign);
+            int iterations = getEngineIterations(task);
+            if(LOG.isDebugEnabled()){
+                LOG.debug("EngineIterations for UserTypeReport:\t" + iterations);
+            }
+		    for(int i = 0;i < iterations; i++){
 			    brs.render(task, reportOptions);
 		    }
 
@@ -101,6 +113,22 @@ public class UserReportType implements IReportType {
 			// in a user report, only one table should be present for the CSV report (first one found is used):
 			brs.extract(task, reportOptions, 1);
 		}
+	}
+	
+	private IRenderTask runAndRenderReport(int timesToRun, int timesToRender, IRunTask runTask, IReportOptions reportOptions, BIRTReportService brs){
+	    try{
+	        for(int i = 0;i < timesToRun; i++){
+	            brs.run(runTask, reportOptions);
+	        }
+	    } catch (Exception e){
+	            LOG.error("error while running report", e);
+	    }
+	    IRenderTask renderTask = brs.createRenderTask(reportDocument);
+	    for(int i = 0;i < timesToRender; i++){
+	        brs.render(renderTask, reportOptions);
+	    } 
+	    return renderTask;
+
 	}
 
 	@Override
