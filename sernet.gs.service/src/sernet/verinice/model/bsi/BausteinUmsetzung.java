@@ -67,6 +67,10 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public BausteinUmsetzung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    
 	}
 	
 	protected BausteinUmsetzung() {
@@ -92,6 +96,9 @@ public class BausteinUmsetzung extends CnATreeElement {
 			+ " " + getEntity().getSimpleValue(P_NAME); //$NON-NLS-1$
 	}
 	
+	public String getName(){
+	    return getEntity().getSimpleValue(P_NAME);
+	}
 	public String getKapitel() {
 		return getEntity().getSimpleValue(P_NR);
 	}
@@ -117,7 +124,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	}
 	
 	public List<MassnahmenUmsetzung> getMassnahmenUmsetzungen() {
-		List<MassnahmenUmsetzung> result = new ArrayList<MassnahmenUmsetzung>(40);
+		List<MassnahmenUmsetzung> result = new ArrayList<MassnahmenUmsetzung>(100);
 		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
 			MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) iter.next();
 			result.add(mnu);
