@@ -531,7 +531,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         List<KeyValue> outcomeList = task.getOutcomes();
         for (KeyValue keyValue : outcomeList) {
             CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());
-            LOG.error("key:\t" + keyValue.getKey());
             completeAction.setText(keyValue.getValue());
             completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
             ActionContributionItem item = new ActionContributionItem(completeAction);
