@@ -4940,20 +4940,11 @@ the value between <param></param> will be used directly if no string is found fo
             
 			        	
         </huipropertygroup>
-<huipropertygroup name="Greenbone GSM" id="gsm_incscen_group" tags="Greenbone_GSM" >
-   <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_scenario_description" name="GSM Desc." tags="Greenbone_GSM" 
-            inputtype="text"
-        />
-    
-    
-   <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_scenario_cve" name="GSM CVE" tags="Greenbone_GSM" />
-    
-    
-   <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_scenario_level" name="GSM Lvl." tags="Greenbone_GSM" />
-</huipropertygroup>
+        <huipropertygroup name="Greenbone GSM" id="gsm_incscen_group" tags="Greenbone_GSM" >
+            <huiproperty id="gsm_ism_scenario_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false" />
+            <huiproperty id="gsm_ism_scenario_cve" name="GSM CVE" tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_ism_scenario_level" name="GSM Lvl." tags="Greenbone_GSM" editable="false" />
+        </huipropertygroup>
         
     </huientity>
     
@@ -5075,18 +5066,11 @@ the value between <param></param> will be used directly if no string is found fo
             <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
             <option id="vulnerability_level_3" name="3: Probable" value="3"/>
 		</huiproperty>
-<huipropertygroup name="Greenbone GSM" id="gsm_vuln_group" tags="Greenbone_GSM" >
-  <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_vulnerability_description" name="GSM Desc." tags="Greenbone_GSM" 
-            inputtype="text"
-        />
-    
-  <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_vulnerability_cve" name="GSM CVE" tags="Greenbone_GSM" />
-    
-  <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_vulnerability_level" name="GSM Lvl." tags="Greenbone_GSM" />
-</huipropertygroup>
+        <huipropertygroup name="Greenbone GSM" id="gsm_vuln_group" tags="Greenbone_GSM" >
+            <huiproperty id="gsm_ism_vulnerability_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false"/>
+            <huiproperty id="gsm_ism_vulnerability_cve" name="GSM CVE" tags="Greenbone_GSM" editable="false"/>
+            <huiproperty id="gsm_ism_vulnerability_level" name="GSM Lvl." tags="Greenbone_GSM" editable="false" />
+        </huipropertygroup>
        
     </huientity>
     
@@ -5849,11 +5833,8 @@ the value between <param></param> will be used directly if no string is found fo
 	            inputtype="text"
 	            />    		
   
-<huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
-        <!-- TODO translate this property -->
-        <huiproperty id="gsm_ism_control_description" name="" tags="Greenbone_GSM" 
-            inputtype="text"
-        />
-</huipropertygroup>
+            <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
+                <huiproperty id="gsm_ism_control_description" name="" tags="Greenbone_GSM" inputtype="text" editable="false" />
+            </huipropertygroup>
       </huientity> 
 </huientities>
