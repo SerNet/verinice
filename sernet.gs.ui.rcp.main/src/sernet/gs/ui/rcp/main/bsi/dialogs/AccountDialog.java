@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.apache.log4j.Logger;
 import org.aspectj.bridge.Message;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -27,6 +28,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -79,8 +82,7 @@ public class AccountDialog extends TitleAreaDialog {
 	private String name;
 	private boolean isScopeOnly;
 	
-	private FocusListener nameValidator;
-	private FocusListener pwValidator;
+	private String initialUserName;
 	
 
     private AccountDialog(Shell parent, EntityType entType) {
@@ -156,6 +158,20 @@ public class AccountDialog extends TitleAreaDialog {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
             
+//            this.getButton(IDialogConstants.CANCEL_ID).addSelectionListener(new SelectionListener() {
+//                
+//                @Override
+//                public void widgetSelected(SelectionEvent e) {
+//                    textName.removeFocusListener(nameValidator);
+//                    textPassword2.removeFocusListener(pwValidator);
+//                }
+//                
+//                @Override
+//                public void widgetDefaultSelected(SelectionEvent e) {
+//                    widgetSelected(e);
+//                }
+//            });
+            
             scrolledComposite.setVisible(true);
             Point size = innerComposite.computeSize(SWT.DEFAULT,SWT.DEFAULT);
             innerComposite.setSize(size); 
@@ -200,65 +216,11 @@ public class AccountDialog extends TitleAreaDialog {
 		gdText.horizontalAlignment = GridData.FILL;
 		textName.setLayoutData(gdText);
 		
-		nameValidator = new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                CheckUserName command = new CheckUserName(textName.getText());
-                try {
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    if(command.getResult()){
-                        Display.getDefault().asyncExec(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                textName.setToolTipText(Messages.AccountDialog_7);
-                                textName.selectAll();
-                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_7);
-                                textName.setFocus();
-                                textName.forceFocus();
-                            }
-                        });
-                    } else {
-                        textName.setToolTipText("");
-                    }
-                } catch (CommandException e1) {
-                    LOG.error("Error while checking username", e1);
-                }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-            }
-        };
-		
-        textName.addFocusListener(nameValidator);
-		
 		Label labelPassword = new Label(compositePassword, SWT.NONE);
 		labelPassword.setText(Messages.AccountDialog_2);
 		
 		textPassword = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
 		textPassword.setLayoutData(gdText);
-		textPassword.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                String pwd = textPassword.getText();
-                if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
-                    MessageDialog.openWarning(AccountDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
-                    textPassword.setText(""); //$NON-NLS-1$
-                    textPassword2.setText(""); //$NON-NLS-1$
-                    textPassword.setFocus();
-                }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
- 
-            }
-        });
-		
-		
 		
 		Label labelPassword2 = new Label(compositePassword, SWT.NONE);
 		labelPassword2.setText(Messages.AccountDialog_3);
@@ -266,54 +228,25 @@ public class AccountDialog extends TitleAreaDialog {
 		textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
 		textPassword2.setLayoutData(gdText);
 		
-		pwValidator = new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                if(!textPassword.getText().equals(textPassword2.getText())){
-                Display.getDefault().asyncExec(new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                        textPassword2.setToolTipText(Messages.AccountDialog_8);
-                        textPassword.selectAll();
-                        MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_8);
-                        textPassword.setFocus();
-                        textPassword.forceFocus();
-                    }
-                });
-            } else {
-                textPassword2.setToolTipText("");
-            }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-            }
-        };
-        
-        textPassword2.addFocusListener(pwValidator);
-		
 		if(getEntity()!=null 
 			&& getEntity().getProperties(Configuration.PROP_USERNAME)!=null
 			&& getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) !=null
 		    && getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue() !=null) {
 			textName.setText(getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue());
+			initialUserName = textName.getText();
 		}
 	}
 	
-	@Override
 	protected void okPressed() {
 		password=textPassword.getText();
 		password2=textPassword2.getText();
 		name=textName.getText();
-		super.okPressed();
+		if(validateInput()){
+		    super.okPressed();
+		}
 	}
 	
-	@Override
 	protected void cancelPressed(){
-	    textName.removeFocusListener(nameValidator);
-	    textPassword2.removeFocusListener(pwValidator);
 	    super.cancelPressed();
 	}
 	
@@ -338,6 +271,114 @@ public class AccountDialog extends TitleAreaDialog {
 	        LOG = Logger.getLogger(AccountDialog.class);
 	    }
 	    return LOG;
+	}
+	
+	private boolean validateInput(){
+	    return checkUserName() && checkPassword1() && checkPassword2();
+	}
+	
+	private boolean checkPassword1(){
+        String pwd = textPassword.getText();
+        if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
+            MessageDialog.openWarning(AccountDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
+            textPassword.setText(""); //$NON-NLS-1$
+            textPassword2.setText(""); //$NON-NLS-1$
+            textPassword.setFocus();
+            return false;
+        } else {
+            return true;
+        }
+	}
+	
+	private boolean checkPassword2(){
+	    final boolean passwordsEqual = textPassword.getText().equals(textPassword2.getText());
+	    final boolean passwordEmpty = textPassword.getText().isEmpty() && !isPasswordSet();
+	    if(!passwordsEqual ||  passwordEmpty){
+	        Display.getDefault().asyncExec(new Runnable() {
+
+	            @Override
+	            public void run() {
+	                textPassword2.setToolTipText(Messages.AccountDialog_8);
+	                textPassword.selectAll();
+	                if(!passwordsEqual){
+	                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_8);
+	                } else if(passwordEmpty){
+	                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_11);
+	                }
+	                textPassword.setFocus();
+	                textPassword.forceFocus();
+	            }
+	        });
+	        return false;
+	    } else {
+	        textPassword2.setToolTipText("");
+	        return true;
+	    }
+	}
+	
+	private boolean isPasswordSet(){
+	    if(getEntity() != null &&
+	            getEntity().getProperties(Configuration.PROP_PASSWORD) != null &&
+	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0) != null &&
+	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue() != null){
+	                String pw = getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue();
+	                if(pw != null && !pw.isEmpty()){
+	                    return true;
+	                }
+	            } 
+	    return false;
+	}
+	
+	private boolean checkUserName(){
+	    boolean retVal = false;
+	    String enteredName = textName.getText();
+	    final boolean noPasswordEntered = enteredName.isEmpty();
+        if((initialUserName != null && !initialUserName.equals(enteredName)) ||
+                (initialUserName == null && !enteredName.isEmpty())){
+            CheckUserName command = new CheckUserName(enteredName);
+            try {
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                final boolean userNameExists = command.getResult();
+                if(userNameExists || noPasswordEntered){
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            textName.setToolTipText(Messages.AccountDialog_7);
+                            textName.selectAll();
+                            if(userNameExists){
+                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_7);
+                            } else if(noPasswordEntered){
+                                MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_10);
+                            }
+                            textName.setFocus();
+                            textName.forceFocus();
+                        }
+                    });
+                    retVal = false;;
+                } else {
+                    textName.setToolTipText("");
+                    retVal = true;
+                }
+            } catch (CommandException e1) {
+                LOG.error("Error while checking username", e1);
+            }
+        } else if (enteredName.equals(initialUserName)){
+            return true;
+        } else if(initialUserName == null && noPasswordEntered){
+            Display.getDefault().asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    textName.setToolTipText(Messages.AccountDialog_7);
+                    textName.selectAll();
+                    MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, Messages.AccountDialog_10);
+                    textName.setFocus();
+                    textName.forceFocus();
+                }
+            });
+        }
+        return retVal;
 	}
 	
 }
