@@ -27,6 +27,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
 import sernet.verinice.bpm.IRemindService;
+import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -48,8 +49,11 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
      * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
      */
     @Override
-    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) {
+    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException {
         CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
+        if(element==null) {
+            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
+        }
         String title = element.getTitle();
         if(isHtml()) {
             title = replaceSpecialChars(title);

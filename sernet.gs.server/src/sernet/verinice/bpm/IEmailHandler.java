@@ -21,6 +21,8 @@ package sernet.verinice.bpm;
 
 import java.util.Map;
 
+import sernet.verinice.model.bpm.MissingParameterException;
+
 /**
  * Sends template based emails.
  * Templates uses a customizable parameter map.
@@ -44,8 +46,9 @@ public interface IEmailHandler {
      * 
      * @param uuidElement The UUID of an element
      * @param parameter Parameter for the email template
+     * @throws MissingParameterException 
      */
-    void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter);
+    void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException;
     
     /**
      * This method must return the name of the template file without path, locale and file extensions.
