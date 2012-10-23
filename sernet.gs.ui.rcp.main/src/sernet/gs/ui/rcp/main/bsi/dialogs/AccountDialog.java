@@ -17,17 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
-import org.aspectj.bridge.Message;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -37,10 +34,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -54,10 +48,15 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.CheckUserName;
 
@@ -86,6 +85,8 @@ public class AccountDialog extends TitleAreaDialog {
 	private boolean isScopeOnly;
 	
 	private String initialUserName;
+	
+	private HitroUIComposite huiComposite;
 	
 
     private AccountDialog(Shell parent, EntityType entType) {
@@ -140,20 +141,21 @@ public class AccountDialog extends TitleAreaDialog {
     		
     		createPasswordComposite(innerComposite);
     		
-            HitroUIComposite huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
+            huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
             try {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
                 }
-                
+
                 String[] tags = BSIElementEditor.getEditorTags(); 
-                
+
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
-     
+
                 huiComposite.createView(entity, true, useRules, tags, strict);
-                
+
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
-               
+                
+                configureIsAdmin((Combo)huiComposite.getField(Configuration.PROP_ISADMIN));
                 
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 //return huiComposite;
@@ -183,7 +185,188 @@ public class AccountDialog extends TitleAreaDialog {
             }
             combo.setEnabled(false);
         }
+        combo.addSelectionListener(getScopeGroupSelectionListener());
     }
+    
+    private void configureIsAdmin(Combo combo){
+        combo.addSelectionListener(getIsAdminSelectionListener());
+    }
+    
+    /**
+     *  ensures that admin groups are set / unset when isAdmin value is changed
+     * @return
+     */
+    private SelectionListener getIsAdminSelectionListener(){
+        return new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(e.getSource() instanceof Combo){
+                    Combo combo = (Combo)e.getSource();
+                    String isAdminYES = HUITypeFactory.getInstance().getMessage(Configuration.PROP_ISADMIN_YES);
+                    String isAdminNO  = HUITypeFactory.getInstance().getMessage(Configuration.PROP_ISADMIN_NO);
+                    if(combo.getItem(combo.getSelectionIndex()).equals(isAdminYES)){
+                        toggleIsAdminGroup(true);
+                    } else if(combo.getItem(combo.getSelectionIndex()).equals(isAdminNO)){
+                        toggleIsAdminGroup(false);
+                    }
+                }
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        };
+    }
+    
+    
+    /**
+     * ensures that usergroups are set when changed 
+     * every user has to be in one of the 4 groups definend via IRightsService
+     * @return
+     */
+    private SelectionListener getScopeGroupSelectionListener(){
+        return new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Combo combo = null;
+                if(e.getSource() instanceof Combo){
+                    combo = (Combo)e.getSource();
+                }
+                String scopeYes = HUITypeFactory.getInstance().getMessage(Configuration.PROP_SCOPE_YES);
+                String scopeNo = HUITypeFactory.getInstance().getMessage(Configuration.PROP_SCOPE_NO);
+                if(combo != null && combo.getItem(combo.getSelectionIndex()).equals(scopeYes)){
+                    toggleScopeGroup(true);
+                } else if(combo != null && combo.getItem(combo.getSelectionIndex()).equals(scopeNo)){
+                    toggleScopeGroup(false);
+                }
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        };
+    }
+    
+    /**
+     * removes every default group from user configuration entity but groupNotToRemove
+     * creates groupNotToRemove if not existent before
+     * @param groupNotToRemove
+     */
+    private void removeAllButOneGroup(String groupNotToRemove){
+        String[] groupNames = new String[]{IRightsService.ADMINDEFAULTGROUPNAME,
+                IRightsService.ADMINSCOPEDEFAULTGROUPNAME,
+                IRightsService.USERDEFAULTGROUPNAME,
+                IRightsService.USERSCOPEDEFAULTGROUPNAME};
+        PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Configuration.TYPE_ID, Configuration.PROP_ROLES);
+        ArrayList<Property> propsToRemove = new ArrayList<Property>(0);
+        Property notRemovedProp = null;
+        for(Property prop : getEntity().getProperties(Configuration.PROP_ROLES).getProperties()){
+            if(Arrays.asList(groupNames).contains(prop.getPropertyValue())){
+                if(prop.getPropertyValue().equals(groupNotToRemove)){
+                    notRemovedProp = prop;
+                } else {
+                    propsToRemove.add(prop);
+                }
+            }
+        }
+        for(Property prop : propsToRemove){
+            removeProperty(Configuration.PROP_ROLES, prop);
+        }
+        if(notRemovedProp == null){
+            type.getReferenceResolver().addNewEntity(this.entity, groupNotToRemove);
+        }
+    }
+    
+    
+    private void toggleIsAdminGroup(boolean isAdmin){
+        if(isAdmin && isScopeOnly()){
+            removeAllButOneGroup(IRightsService.ADMINSCOPEDEFAULTGROUPNAME);
+        } else if(isAdmin && !isScopeOnly()){
+            removeAllButOneGroup(IRightsService.ADMINDEFAULTGROUPNAME);
+        } else if(!isAdmin && isScopeOnly()){
+            removeAllButOneGroup(IRightsService.USERSCOPEDEFAULTGROUPNAME);
+        } else if(!isAdmin && !isScopeOnly()){
+            removeAllButOneGroup(IRightsService.USERDEFAULTGROUPNAME);
+        }
+        toggleGroupText();
+    }
+    
+    /**
+     * returns true if scopeOnly-Combo has "Yes"-value selected
+     * @return
+     */
+    private boolean isScopeOnly(){
+        return ((Combo)huiComposite.getField(Configuration.PROP_SCOPE)).
+                getItem(((Combo)huiComposite.getField(Configuration.PROP_SCOPE)).
+                        getSelectionIndex()).equals(HUITypeFactory.getInstance().
+                                getMessage(Configuration.PROP_SCOPE_YES));
+    }
+    
+    /**
+     * returns true if admin-Combo has "Yes"-value selected
+     * @return
+     */
+    private boolean isAdmin(){
+        return((Combo)huiComposite.getField(Configuration.PROP_ISADMIN)).
+                getItem(((Combo)huiComposite.getField(Configuration.PROP_ISADMIN)).
+                        getSelectionIndex()).equals(HUITypeFactory.getInstance().
+                                getMessage(Configuration.PROP_ISADMIN_YES));
+                
+    }
+    /**
+     * removes defined property from current entity
+     * @param propertyType
+     * @param property
+     */
+    private void removeProperty(String propertyType, Property property){
+        getEntity().getProperties(propertyType).getProperties().remove(property);
+    }
+    
+    private boolean isPropertySet(String propertyID){
+        return getEntity() != null &&
+                getEntity().getProperties(propertyID) != null &&
+                getEntity().getProperties(propertyID).getProperty(0) != null &&
+                getEntity().getProperties(propertyID).getProperty(0).getPropertyValue() != null;
+    }
+    
+    /**
+     * 
+     */
+    private void toggleScopeGroup(boolean isScope) {
+            if(isScope && isAdmin()){
+                removeAllButOneGroup(IRightsService.ADMINSCOPEDEFAULTGROUPNAME);
+            }
+            if(!isScope && isAdmin()){
+                removeAllButOneGroup(IRightsService.ADMINDEFAULTGROUPNAME);
+            }
+            if(isScope && !isAdmin()){
+                removeAllButOneGroup(IRightsService.USERSCOPEDEFAULTGROUPNAME);
+            }
+            if(!isScope && !isAdmin()){
+                removeAllButOneGroup(IRightsService.USERDEFAULTGROUPNAME);
+            }
+            toggleGroupText();
+    }
+    
+    
+    private void toggleGroupText(){
+        Text text = (Text)huiComposite.getField(Configuration.PROP_ROLES);
+        StringBuilder sb = new StringBuilder();
+        for(Property prop : getEntity().getProperties(Configuration.PROP_ROLES).getProperties()){
+            if(sb.length() == 0){
+                sb.append(prop.getPropertyValue());
+            } else {
+                sb.append(" / " + prop.getPropertyValue());
+            }
+        }
+        text.setText(sb.toString());
+    }
+    
+
 
     private void createPasswordComposite(final Composite composite) {
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
@@ -217,10 +400,7 @@ public class AccountDialog extends TitleAreaDialog {
 		textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
 		textPassword2.setLayoutData(gdText);
 		
-		if(getEntity()!=null 
-			&& getEntity().getProperties(Configuration.PROP_USERNAME)!=null
-			&& getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) !=null
-		    && getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue() !=null) {
+		if(isPropertySet(Configuration.PROP_USERNAME)) {
 			textName.setText(getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue());
 			initialUserName = textName.getText();
 		}
@@ -296,10 +476,7 @@ public class AccountDialog extends TitleAreaDialog {
 	}
 	
 	private boolean isPasswordSet(){
-	    if(getEntity() != null &&
-	            getEntity().getProperties(Configuration.PROP_PASSWORD) != null &&
-	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0) != null &&
-	            getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue() != null){
+	    if(isPropertySet(Configuration.PROP_PASSWORD)){
 	        String pw = getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0).getPropertyValue();
 	        if(pw != null && !pw.isEmpty()){
 	            return true;
