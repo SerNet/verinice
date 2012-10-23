@@ -61,8 +61,10 @@ public class LoadAncestors extends LoadElementByUuid {
     @Override
     public void execute() {
         super.execute();
-        CnATreeElement elementWithParent = loadParent(getElement());
-        element.setParent(elementWithParent.getParent());
+        if(getElement()!=null) {
+            CnATreeElement elementWithParent = loadParent(getElement());
+            element.setParent(elementWithParent.getParent());
+        }
     }
 
     /**

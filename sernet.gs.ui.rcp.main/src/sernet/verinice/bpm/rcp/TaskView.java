@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.Icon;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -144,23 +142,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private IModelLoadListener modelLoadListener;
 
     private ITaskListener taskListener;
-    
-    private static String[] dynamicActionIDs = new String[]{
-        "trans.assigned",
-        "trans.complete",
-        "trans.decline",
-        "trans.wait",
-        "trans.fix",
-        "trans.noFix",
-        "trans.decline",
-        "trans.accept",
-        "trans.notResposible",
-        "trans.setAssignee",
-        "transition.complete", 
-        "transition.escalate",
-        "transition.accepted",
-        "transition.decline"
-    };
 
     /*
      * (non-Javadoc)
@@ -357,7 +338,11 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                         LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
-                        EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
+                        if(loadControl.getElement()!=null) {
+                            EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
+                        } else {
+                            MessageDialog.openError(getSite().getShell(), "Error", "Object not found.");
+                        }
                     } catch (Throwable t) {
                         LOG.error("Error while opening control.", t); //$NON-NLS-1$
                     }
@@ -468,31 +453,21 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {         
-                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
+                if (isTaskSelected()) {
                     try {
                         taskSelected();
                     } catch (Throwable t) {
                         LOG.error("Error while configuring task actions.", t); //$NON-NLS-1$
                     }
-                } else if(getViewer().getSelection().isEmpty()){
-                    IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-                    ArrayList<IContributionItem> itemsToRemove = new ArrayList<IContributionItem>(0);
-                    for (IContributionItem item : manager.getItems()){
-                        if(item instanceof ActionContributionItem){
-                            ActionContributionItem aItem = (ActionContributionItem)item;
-                            IAction action = aItem.getAction();
-                            String id = action.getId();
-                            if(id != null && isDynamicActionID(id)){
-                                itemsToRemove.add(aItem);
-                            }
-                        }
-                    }
-                    for(IContributionItem item : itemsToRemove){
-                        manager.remove(item);
-                    }
+                } else {
+                    resetToolbar();
                     getInfoPanel().setText("");
                 }
                 getViewSite().getActionBars().updateActionBars();
+            }
+
+            private boolean isTaskSelected() {
+                return getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation;
             }
         });
         // First we create a menu Manager
@@ -518,10 +493,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
      * @param manager
      */
     private void taskSelected() { 
-        IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
-        manager.removeAll();
-         
-        addToolBarActions();
+        IToolBarManager manager = resetToolbar();
         
         cancelTaskAction.setEnabled(false);
         cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
@@ -538,6 +510,14 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
             manager.add(item);
         }
+    }
+
+    private IToolBarManager resetToolbar() {
+        IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
+        manager.removeAll();
+         
+        addToolBarActions();
+        return manager;
     }
 
     /**
@@ -646,15 +626,6 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
-    }
-    
-    private boolean isDynamicActionID(String input){
-        for(String s : dynamicActionIDs){
-            if(input.contains(s)){
-                return true;
-            }
-        }
-        return false;
     }
 
 }
