@@ -71,10 +71,14 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
@@ -164,7 +168,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData5.left = new FormAttachment(buttonLink, 5);
         buttonUnlink.setLayoutData(formData5);
         buttonUnlink.setText(Messages.LinkMaker_3);
-        buttonUnlink.setEnabled(writeable);
+        buttonUnlink.setEnabled(writeable && checkRights());
         buttonUnlink.setToolTipText(Messages.LinkMaker_4);
         // buttonUnlink.pack();
 
@@ -237,7 +241,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         elementTypeFilter.setEntityType(entType);
 
         // enable link button if we have write permissions:
-        buttonLink.setEnabled(writeable);
+        buttonLink.setEnabled(writeable && checkRights());
     }
 
     /**
@@ -489,7 +493,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                     FindRelationsFor command = new FindRelationsFor(inputElmt);
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     final CnATreeElement linkElmt = command.getElmt();
-
+                    
                     Display.getDefault().asyncExec(new Runnable() {
                         public void run() {
                             viewer.setInput(linkElmt);
@@ -510,5 +514,31 @@ public class LinkMaker extends Composite implements IRelationTable {
         job.setUser(false);
         job.schedule();
 
+    }
+
+    private String getRightID(){
+        return ActionRightIDs.EDITLINKS;
+    }
+
+    private boolean checkRights(){
+        /**
+         * no right management should be used
+         */
+        if(getRightID() == null){
+            return true; 
+        }
+        /**
+         * id  set but empty, right not granted, action disabled
+         */
+        else if(getRightID().equals("")){
+            return false;
+            /**
+             * right management enabled, check rights and return true if right enabled / false if not
+             */
+        } else {
+            Activator.inheritVeriniceContextState();
+            RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            return service.isEnabled(getRightID());
+        }
     }
 }

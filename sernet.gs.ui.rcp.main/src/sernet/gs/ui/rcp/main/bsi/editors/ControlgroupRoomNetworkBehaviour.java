@@ -50,7 +50,7 @@ public class ControlgroupRoomNetworkBehaviour implements IEditorBehavior {
     SelectionListener selectionListenerRoomInspectionDate = new SelectionListener() {
         @Override
         public void widgetDefaultSelected(SelectionEvent e) {
-            // empty
+            widgetSelected(e);
         }
         @Override
         public void widgetSelected(SelectionEvent e) {      
@@ -105,7 +105,6 @@ public class ControlgroupRoomNetworkBehaviour implements IEditorBehavior {
     public void init() {
         Control field = huiComposite.getField(CONTROLGROUP_ISROOM);
         if(field!=null && field instanceof Button) {
-            LOG.error("Button:" + String.valueOf(((Button)field).getSelection()));
             huiComposite.setFieldEnabled(ROOM_CATEGORISATION,((Button)field).getSelection());
         }
         field = huiComposite.getField(CONTROLGROUP_ISROOM);

@@ -31,6 +31,10 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnALink;
 
 /**
@@ -39,7 +43,7 @@ import sernet.verinice.model.common.CnALink;
  * @author akoderman[at]sernet[dot]de
  * 
  */
-public class DeleteLinkActionDelegate implements IObjectActionDelegate {
+public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private IWorkbenchPart targetPart;
 
@@ -48,6 +52,10 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
     }
 
     public void run(IAction action) {
+        
+        if(!checkRights()){
+            return;
+        }
 
         if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), Messages.DeleteLinkActionDelegate_0, Messages.DeleteLinkActionDelegate_1)) {
             return;
@@ -93,6 +101,31 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate {
             }
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.EDITLINKS;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // empty
     }
 
 }

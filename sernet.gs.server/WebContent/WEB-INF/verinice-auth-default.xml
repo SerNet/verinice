@@ -51,6 +51,7 @@
         <action id="derivestatus" />
         <action id="documentview" />
         <action id="dsmodelview" />
+        <action id="editlinks" />
         <action id="files" />
         <action id="generateauditreport" />
         <action id="generateorgreport" />
@@ -113,6 +114,7 @@
 	        <action id="derivestatus" />
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
+	        <action id="editlinks" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
@@ -171,6 +173,7 @@
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
+	        <action id="editlinks" />
             <action id="editprofile" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
@@ -231,6 +234,7 @@
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
+	        <action id="editlinks" />
             <action id="editprofile" />
 	        <action id="files" />
 	        <action id="generateauditreport" />

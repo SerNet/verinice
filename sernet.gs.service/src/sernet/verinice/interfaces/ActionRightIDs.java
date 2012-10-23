@@ -57,6 +57,7 @@ public class ActionRightIDs {
     public static final String DOCUMENTVIEW = "documentview";
     public static final String DSMODELVIEW = "dsmodelview";
     public static final String EDITPROFILE = "editprofile";
+    public static final String EDITLINKS = "editlinks";
     public static final String FILES = "files";
     public static final String GENERATEORGREPORT = "generateorgreport";
     public static final String GENERATEAUDITREPORT = "generateauditreport";

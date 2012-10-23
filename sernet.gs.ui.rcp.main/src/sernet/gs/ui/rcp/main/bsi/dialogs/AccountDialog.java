@@ -70,6 +70,7 @@ public class AccountDialog extends TitleAreaDialog {
     
     private static transient Logger LOG = Logger.getLogger(AccountDialog.class);
     
+    // usernames that should not be assigned by a user, use only lowercase here
     private static String[] reservedUsernames = new String[]{"admin"};
     
     private EntityType entType;
@@ -344,7 +345,7 @@ public class AccountDialog extends TitleAreaDialog {
 	
 	private boolean isReservedUsername(String username){
 	    for(String s : reservedUsernames){
-	        if(username.equals(s) || username.toLowerCase().equals(s) || username.toUpperCase().equals(s)){
+	        if(username.toLowerCase().equals(s)){
 	            return true;
 	        }
 	    }
@@ -360,6 +361,7 @@ public class AccountDialog extends TitleAreaDialog {
 	           MessageDialog.openWarning(getParentShell(), Messages.AccountDialog_9, dialogMsg);
 	           control.setFocus();
 	           control.forceFocus();
+	           
 	       }
 	    });
 	}
