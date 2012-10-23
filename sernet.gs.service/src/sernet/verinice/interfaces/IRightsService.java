@@ -33,6 +33,11 @@ import sernet.verinice.model.auth.Userprofile;
  */
 public interface IRightsService {
 
+    public static String USERDEFAULTGROUPNAME = "user-default-group";
+    public static String USERSCOPEDEFAULTGROUPNAME = "user-scope-default-group";
+    public static String ADMINSCOPEDEFAULTGROUPNAME = "admin-scope-default-group";
+    public static String ADMINDEFAULTGROUPNAME = "admin-default-group";
+    
     /**
      * Returns the authorization configuration
      * which is defined in one or more 
