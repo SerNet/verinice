@@ -16,7 +16,7 @@ public class OpenTaskViewAction extends OpenViewAction {
     Boolean isActive = null;
     
     public OpenTaskViewAction(IWorkbenchWindow window) {
-        super(window, "Tasks", TaskView.ID, ImageCache.VIEW_TASK);
+        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
             public void closed(BSIModel model) {                
             }
@@ -33,7 +33,7 @@ public class OpenTaskViewAction extends OpenViewAction {
     }
     
     public OpenTaskViewAction(IWorkbenchWindow window, String rightID){
-        super(window, "Tasks", TaskView.ID, ImageCache.VIEW_TASK, rightID);
+        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK, rightID);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
             public void closed(BSIModel model) {                
             }

@@ -82,7 +82,7 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
                     }
                     if (!dontShow) {
                         MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ControlDropPerformer.1"), //$NON-NLS-1$
-                                NLS.bind(objectType, operation.getNumberOfControls(), ((Group) target).getTitle()), //$NON-NLS-1$
+                                NLS.bind(objectType, operation.getNumberProcessed(), ((Group) target).getTitle()), //$NON-NLS-1$
                                 Messages.getString("ControlDropPerformer.3"), //$NON-NLS-1$
                                 dontShow, preferenceStore, PreferenceConstants.INFO_CONTROLS_ADDED);
                         preferenceStore.setValue(PreferenceConstants.INFO_CONTROLS_ADDED, dialog.getToggleState());

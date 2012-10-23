@@ -68,6 +68,7 @@ public class DescriptionPage extends WizardPage {
     private Text text;  
     private Text textArea;
     private Button deleteButton;
+    private Button overwriteTemplateCheckbox;
     
     private Map<String, IndividualServiceParameter> templateMap;
     
@@ -80,6 +81,8 @@ public class DescriptionPage extends WizardPage {
     private String taskTitle;
 
     private String taskDescription;
+    
+    private boolean overwriteTemplate = true;
     
     private int pageWidth = 600;
     
@@ -131,11 +134,23 @@ public class DescriptionPage extends WizardPage {
         templateCombo.setLayoutData(gd);
            
         deleteButton = new Button(templateComposite, SWT.PUSH);
-        deleteButton.setText("Delete");
+        deleteButton.setText(Messages.DescriptionPage_1);
         deleteButton.setEnabled(false);
         deleteButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 deleteTemplate();
+            }
+        });
+           
+        overwriteTemplateCheckbox = new Button(composite, SWT.CHECK);
+        overwriteTemplateCheckbox.setText(Messages.DescriptionPage_7);
+        overwriteTemplateCheckbox.setSelection(true);
+        overwriteTemplateCheckbox.setEnabled(false);
+        overwriteTemplateCheckbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button checkBox = (Button) e.getSource();
+                overwriteTemplate = checkBox.getSelection();
             }
         });
         
@@ -145,6 +160,7 @@ public class DescriptionPage extends WizardPage {
                 template=templateComboModel.getSelectedObject();
                 ((IndividualProcessWizard) getWizard()).setTemplate(template);
                 deleteButton.setEnabled(true);
+                overwriteTemplateCheckbox.setEnabled(true);
             }
         });
         showComboValues();
@@ -185,11 +201,13 @@ public class DescriptionPage extends WizardPage {
     }
 
     public void showComboValues() {
+        templateCombo.setItems(templateComboModel.getLabelArray());
         if(!templateComboModel.isEmpty()) {
-            templateCombo.setItems(templateComboModel.getLabelArray());
+            
         } else {
             templateCombo.setEnabled(false);
             deleteButton.setEnabled(false);
+            overwriteTemplateCheckbox.setEnabled(false);
         }
     }
     
@@ -204,10 +222,11 @@ public class DescriptionPage extends WizardPage {
                 templateComboModel.removeSelected();
                 showComboValues();
                 deleteButton.setEnabled(false);
+                overwriteTemplateCheckbox.setEnabled(false);
             }
         } catch(Exception e) {
             LOG.error("Error while deleting template", e); //$NON-NLS-1$
-            setErrorMessage("Error while deleting template.");
+            setErrorMessage(Messages.DescriptionPage_9);
         }
     }
 
@@ -338,6 +357,10 @@ public class DescriptionPage extends WizardPage {
         setPageComplete(isValid());
     }
     
+    public boolean isOverwriteTemplate() {
+        return overwriteTemplate;
+    }
+
     public Preferences getPreferences() {
         if(preferences==null) {
             preferences = ConfigurationScope.INSTANCE.getNode(Activator.PLUGIN_ID);

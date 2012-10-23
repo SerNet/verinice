@@ -64,10 +64,10 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
 	/**
 	 * @return
 	 */
-	public int getNumberOfControls() {
+	public int getNumberProcessed() {
 		int n = 0;
 		if(service!=null) {
-			n = service.getNumberOfControls();
+			n = service.getNumberProcessed();
 		}
 		return n;
 	}

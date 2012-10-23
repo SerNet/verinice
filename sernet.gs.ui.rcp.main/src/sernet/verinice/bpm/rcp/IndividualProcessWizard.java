@@ -142,7 +142,7 @@ public class IndividualProcessWizard extends Wizard {
     }
     
     public void saveTemplate() {
-        templatePage.saveTemplate();
+        templatePage.saveTemplate(overwriteTemplate());
     }
 
     @Override
@@ -190,6 +190,10 @@ public class IndividualProcessWizard extends Wizard {
             period = Integer.valueOf(datePage.getPeriod());
         }
         return period;
+    }
+    
+    public boolean overwriteTemplate() {
+        return descriptionPage.isOverwriteTemplate();
     }
 
     public String getElementType() {

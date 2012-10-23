@@ -55,7 +55,9 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
@@ -100,7 +102,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         try {
             if(!selectedUuids.isEmpty()) {
                 if(isValid()) {
-                    IndividualProcessWizard wizard = new IndividualProcessWizard(selectedTitles.get(0),selectedTypeIds.get(0));
+                    IndividualProcessWizard wizard = new IndividualProcessWizard(selectedTitles.get(0),selectedTypeIds.get(0));                 
                     WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
                     if (wizardDialog.open() == Window.OK) {
                         wizard.saveTemplate();
@@ -118,17 +120,40 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
      * @return
      */
     private boolean isValid() {
+        boolean valid = true;
         if(!selectedTypeIds.isEmpty()) {
-            String lastTypeId = null;
-            for (String typeId : selectedTypeIds) {
-                if(lastTypeId!=null && !lastTypeId.equals(typeId)) {
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_2);
-                    return false;
-                }
-                lastTypeId = typeId;
+            valid = isOfTheSameType();
+            if(valid) {
+                valid = isValidType();
             }
         }
-        return true;
+        return valid;
+    }
+
+    private boolean isOfTheSameType() {
+        boolean valid = true;
+        String lastTypeId = null;
+        for (String typeId : selectedTypeIds) {
+            if(lastTypeId!=null && !lastTypeId.equals(typeId)) {
+                MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_2);
+                valid = false;
+                break;
+            }
+            lastTypeId = typeId;
+        }
+        return valid;
+    }
+    
+    private boolean isValidType() {
+        boolean valid = true;
+        if(!selectedTypeIds.isEmpty()) {
+           String type = selectedTypeIds.get(0);
+           if(ImportBsiGroup.TYPE_ID.equals(type) || ImportIsoGroup.TYPE_ID.equals(type)) {
+               MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_3);
+               valid = false;              
+           }
+        }
+        return valid;
     }
 
     private void startProcess() {

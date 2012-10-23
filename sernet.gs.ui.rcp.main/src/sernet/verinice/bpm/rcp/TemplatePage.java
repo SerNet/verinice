@@ -133,17 +133,17 @@ public class TemplatePage extends WizardPage {
 
     }
 
-    public void saveTemplate() {   
+    public void saveTemplate(boolean overwrite) {   
         IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();
-        if(getTemplateMap().get(parameter.getTitle())!=null)  {         
+        if(getTemplateMap().get(parameter.getTitle())!=null && !overwrite)  {         
             MessageDialog dialog = new MessageDialog( getShell(),
-                "Template exists",
+                Messages.TemplatePage_14,
                 null,
-                "A template with the same title exists. Do you want to override the template?",
+                Messages.TemplatePage_16,
                 MessageDialog.QUESTION,
-                new String[] { "Yes", "No" },
+                new String[] { Messages.TemplatePage_17, Messages.TemplatePage_18 },
                 1);
-            if(dialog.open()==1) {
+            if(dialog.open()==0) {
                 return;
             }           
         }  

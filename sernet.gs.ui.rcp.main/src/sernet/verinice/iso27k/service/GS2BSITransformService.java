@@ -93,8 +93,8 @@ public class GS2BSITransformService {
 
 	public void run(){
 		try{
-			this.numberOfControls = 0;
-			progressObserver.beginTask(Messages.getString("ControlTransformService.4", numberOfControls), numberOfControls); //$NON-NLS-1$
+			this.numberOfControls = itemList.size();
+			progressObserver.beginTask(Messages.getString("GS2BSITransformService.0", numberOfControls), -1); //$NON-NLS-1$
 			for(Object o : itemList){
 				insertItem(progressObserver, selectedGroup, o);
 			}
@@ -108,10 +108,9 @@ public class GS2BSITransformService {
 	 * @param group 
 	 * @param item
 	 */
-	@SuppressWarnings("unchecked")
 	private void insertItem(IProgressObserver monitor, Group group, Object item) {
 		if(monitor.isCanceled()) {
-			LOG.warn("Transforming canceled. " + numberProcessed + " of " + numberOfControls + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			LOG.warn("Transforming canceled. " + numberProcessed + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
 		List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
@@ -192,7 +191,6 @@ public class GS2BSITransformService {
                             isScenario = true;
                         }
                         command = getCommandService().executeCommand(command);
-                        numberOfControls++;
                     } catch (CommandException ce) {
                         LOG.error("Error while inserting control", ce); //$NON-NLS-1$
                         throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
@@ -226,7 +224,7 @@ public class GS2BSITransformService {
 	 * @param title
 	 */
 	private String getText(int n, int i, String title) {
-		return Messages.getString("ControlTransformService.2", i, n, title); //$NON-NLS-1$
+		return Messages.getString("GS2BSITransformService.1", i, title); //$NON-NLS-1$
 	}
 	
 	private Control generateControl(Massnahme m, CnATreeElement parent){
@@ -257,6 +255,10 @@ public class GS2BSITransformService {
 		return numberOfControls;
 	}
 	
+    public int getNumberProcessed() {
+        return numberProcessed;
+    }
+
     public IAuthService getAuthService() {
         if (authService == null) {
             authService = createAuthService();

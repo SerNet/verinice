@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -47,14 +48,14 @@ final class CompleteTaskAction extends Action {
     private static final Logger LOG = Logger.getLogger(CompleteTaskAction.class);
     
     private final TaskView taskView;
-    final String id = TaskView.class.getName() + ".complete";
+    final String id = TaskView.class.getName() + ".complete"; //$NON-NLS-1$
     String outcomeId;
 
     public CompleteTaskAction(TaskView taskView, String outcomeId) {
         super();
         this.taskView = taskView;
         this.outcomeId = outcomeId;
-        setId(id + "." + outcomeId);
+        setId(id + "." + outcomeId); //$NON-NLS-1$
     }
 
     @Override
@@ -76,23 +77,24 @@ final class CompleteTaskAction extends Action {
                             }
                         } catch (CompletionAbortedException e) {
                             if (LOG.isDebugEnabled()) {
-                                LOG.debug("Completion aborted: " + e.getMessage());
+                                LOG.debug("Completion aborted: " + e.getMessage()); //$NON-NLS-1$
                             }
                             return;
                         }
-                        CompleteTaskAction.this.taskView.showInformation("Information", number + " task(s) completed.");                   
+                        
+                        CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, NLS.bind(Messages.CompleteTaskAction_4, number));                   
                         CompleteTaskAction.this.taskView.loadTasks();
                     }
                 });          
         } catch (Throwable t) {
-            LOG.error("Error while completing tasks.", t);
-            this.taskView.showError("Error", "Error while completing task.");
+            LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
+            this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
         }
     }
     
     protected void completeTask(TaskInformation task, String outcomeId) {
         String type = task.getType();
-        ICompleteClientHandler handler = CompleteHandlerRegistry.getHandler(new StringBuilder(type).append(".").append(outcomeId).toString());
+        ICompleteClientHandler handler = CompleteHandlerRegistry.getHandler(new StringBuilder(type).append(".").append(outcomeId).toString()); //$NON-NLS-1$
         Map<String, Object> parameter = null;
         if(handler!=null) {
             handler.setShell(this.taskView.getViewSite().getShell());

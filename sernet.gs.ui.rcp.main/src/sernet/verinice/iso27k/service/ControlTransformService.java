@@ -147,7 +147,7 @@ public class ControlTransformService {
             }
 			element = GenericItemTransformer.transform(item);							
 		}
-		
+		numberProcessed++;
 		monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
         if (group.canContain(element)) {         
             element.setParentAndScope(group);           
@@ -169,7 +169,7 @@ public class ControlTransformService {
 		element = (CnATreeElement) command.getElement();
 		element.setParentAndScope(group);		
 		monitor.processed(1);
-		numberProcessed++;
+		
 		if(item.getItems()!=null) {
 			for (IItem child : item.getItems()) {
 				insertItem(monitor,(Group) element,child);
@@ -223,11 +223,6 @@ public class ControlTransformService {
 		}
 	}
 
-	/**
-	 * @param n
-	 * @param i
-	 * @param title
-	 */
 	private String getText(int n, int i, String title) {
 		return Messages.getString("ControlTransformService.2", i, n, title); //$NON-NLS-1$
 	}
