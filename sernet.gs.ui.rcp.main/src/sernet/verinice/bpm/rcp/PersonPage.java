@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -57,6 +58,8 @@ public class PersonPage extends WizardPage {
     
     private String selectedLogin;
     
+    private String personTypeId = PersonIso.TYPE_ID;
+    
     private boolean isActive = true;
     
     ElementSelectionComponent component;
@@ -74,7 +77,7 @@ public class PersonPage extends WizardPage {
      * @param composite
      */
     private void addFormElements(Composite composite) {
-        component = new ElementSelectionComponent(composite, PersonIso.TYPE_ID, null);
+        component = new ElementSelectionComponent(composite, personTypeId, null);
         component.setScopeOnly(false);
         component.setShowScopeCheckbox(false);
         component.init();
@@ -194,6 +197,13 @@ public class PersonPage extends WizardPage {
 
     public String getSelectedLogin() {
         return selectedLogin;
+    }
+
+    public void setPersonTypeId(String personTypeId) {
+        this.personTypeId = personTypeId;
+        if(component!=null) {
+            component.loadElementsAndSelect(selectedPerson);  
+        }
     }
 
     public void setSelectedLogin(String selectedLogin) {

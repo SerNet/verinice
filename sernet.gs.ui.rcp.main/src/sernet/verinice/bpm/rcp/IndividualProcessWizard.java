@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.LoadPersonForLogin;
 
 import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
@@ -63,13 +65,18 @@ public class IndividualProcessWizard extends Wizard {
     private String elementTitle;
 
     private String elementType;
+    
+    private String personTypeId = PersonIso.TYPE_ID;
+    
+    private List<String> uuids;
 
     public static final String PREFERENCE_NAME = "task_templates"; //$NON-NLS-1$
 
     public static final String PREFERENCE_NODE_NAME = "bpm"; //$NON-NLS-1$
 
-    public IndividualProcessWizard(String elementTitle, String typeId) {
+    public IndividualProcessWizard(List<String> selectedUuids, String elementTitle, String typeId) {
         super();
+        this.uuids = new ArrayList<String>(selectedUuids);
         this.elementTitle = elementTitle;
         this.elementType = typeId;
         setNeedsProgressMonitor(true);
@@ -84,6 +91,7 @@ public class IndividualProcessWizard extends Wizard {
         relationPage = new RelationPage(elementType);
         datePage = new DatePage(relationPage.isRelation());
         personPage = new PersonPage();
+        personPage.setPersonTypeId(getPersonTypeId());
         propertyPage = new PropertyPage(elementType);
         templatePage = new TemplatePage();
         
@@ -198,6 +206,18 @@ public class IndividualProcessWizard extends Wizard {
 
     public String getElementType() {
         return elementType;
+    }
+
+    public String getPersonTypeId() {
+        return personTypeId;
+    }
+
+    public void setPersonTypeId(String personTypeId) {
+        this.personTypeId = personTypeId;
+    }
+
+    public List<String> getUuids() {
+        return uuids;
     }
 
     public Set<String> getProperties() {

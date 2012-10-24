@@ -55,9 +55,12 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
@@ -78,6 +81,8 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     private List<String> selectedTitles = new LinkedList<String>();
 
     private List<String> selectedTypeIds = new LinkedList<String>();
+    
+    private String personTypeId = PersonIso.TYPE_ID;
     
     private IndividualServiceParameter parameter = new IndividualServiceParameter();
     
@@ -102,12 +107,13 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         try {
             if(!selectedUuids.isEmpty()) {
                 if(isValid()) {
-                    IndividualProcessWizard wizard = new IndividualProcessWizard(selectedTitles.get(0),selectedTypeIds.get(0));                 
+                    IndividualProcessWizard wizard = new IndividualProcessWizard(selectedUuids, selectedTitles.get(0),selectedTypeIds.get(0));                 
+                    wizard.setPersonTypeId(personTypeId);
                     WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
                     if (wizardDialog.open() == Window.OK) {
                         wizard.saveTemplate();
                         parameter = wizard.getParameter();                                 
-                        startProcess();
+                        startProcess(wizard.getUuids());
                     }
                 }
             }
@@ -156,7 +162,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         return valid;
     }
 
-    private void startProcess() {
+    private void startProcess(final List<String> uuids) {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
         try {
             progressService.run(true, true, new IRunnableWithProgress() {  
@@ -165,8 +171,8 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                     Activator.inheritVeriniceContextState();
                     numberOfProcess=0;
                     IProcessStartInformation info = null;
-                    if(!selectedUuids.isEmpty() ) {
-                        for (String uuid : selectedUuids) {
+                    if(uuids!=null && !uuids.isEmpty() ) {
+                        for (String uuid : uuids) {
                             parameter.setUuid(uuid);
                             info = ServiceFactory.lookupIndividualService().startProcess(parameter);
                             if(info!=null) {
@@ -211,6 +217,11 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                         selectedUuids.add(element.getUuid());
                         selectedTitles.add(element.getTitle());
                         selectedTypeIds.add(element.getTypeId());
+                    }
+                    if(selectedElement instanceof IBSIStrukturElement) {
+                        personTypeId = Person.TYPE_ID;
+                    } else {
+                        personTypeId = PersonIso.TYPE_ID;
                     }
                 }
                 
