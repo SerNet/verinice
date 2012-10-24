@@ -2,12 +2,16 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -30,20 +34,21 @@ import sernet.verinice.iso27k.rcp.ISMView;
 @SuppressWarnings("restriction")
 public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
-	private static final Logger LOG = Logger.getLogger(GenerateReportAction.class);
+    private static final Logger LOG = Logger.getLogger(GenerateReportAction.class);
 
-	Shell shell;
-	
-	private GenerateReportDialog dialog;
+    Shell shell;
 
-	@Override
-	public void init(IWorkbenchWindow window) {
-	    try {
-	        shell = window.getShell();
-	    } catch( Throwable t) {
+    private GenerateReportDialog dialog;
+    private List<Object> rootObjects;
+
+    @Override
+    public void init(IWorkbenchWindow window) {
+        try {
+            shell = window.getShell();
+        } catch( Throwable t) {
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
-	}
+    }
 	
 	@Override
 	public void init(final IAction action){
@@ -77,10 +82,19 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	 */
 	@Override
 	public void run(IAction action) {
+
+	    if(action.getText().equals(sernet.gs.ui.rcp.main.Messages.ApplicationActionBarAdvisor_13)){
+	        rootObjects = new ArrayList<Object>(0); // action called via actionBar, no rootObject preselected
+	    }
 	    try {
-	        if(dialog==null) {
-	            dialog = new GenerateReportDialog(shell, IReportType.USE_CASE_ID_GENERAL_REPORT);
+	        if(rootObjects.size() == 0){
+	            dialog = new GenerateReportDialog(shell);
 	        }
+            if(rootObjects.size() == 1){
+                dialog = new GenerateReportDialog(shell, rootObjects.get(0));
+            } else {
+                dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_GENERAL_REPORT);
+            }
             
     		if (dialog.open() == Dialog.OK) {
     			final IReportOptions ro = new IReportOptions() {
@@ -140,6 +154,18 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     @Override
     public void setRightID(String rightID) {
         // DO nothing, no need for an implementation              
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
+        if(selection instanceof ITreeSelection) {
+            ITreeSelection treeSelection = (ITreeSelection) selection;
+            rootObjects = treeSelection.toList();
+        }
     }
 
 }

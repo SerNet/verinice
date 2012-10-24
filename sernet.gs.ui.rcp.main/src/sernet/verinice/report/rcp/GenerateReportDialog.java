@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 
 public class GenerateReportDialog extends TitleAreaDialog {
@@ -110,8 +111,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * @param audit
      */
     public GenerateReportDialog(Shell shell, Object audit) {
-        this(shell, IReportType.USE_CASE_ID_AUDIT_REPORT);
-
+        this(shell);
+        if(audit instanceof Audit){
+            this.useCase = IReportType.USE_CASE_ID_AUDIT_REPORT;
+        } else if(audit instanceof Organization) {
+            this.useCase = IReportType.USE_CASE_ID_GENERAL_REPORT;
+        } else {
+            this.useCase = IReportType.USE_CASE_ID_ALWAYS_REPORT;
+        }
+        filterReportTypes();
         CnATreeElement cnaElmt = (CnATreeElement) audit;
         
         
@@ -354,9 +362,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	      public void widgetSelected(SelectionEvent event) {
 	        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
 	        dlg.setFilterPath(textFile.getText());
-	        //dlg.setFilterNames(FILTER_NAMES);
-	        //chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-	        //chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
 	        ArrayList<String> extensionList = new ArrayList<String>();
 	        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
 	            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
@@ -522,9 +527,25 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		}
 
 		outputFile = new File(f);
-
+		resetScopeCombo();
 		super.okPressed();
 	}
+    
+    @Override
+    protected void cancelPressed(){
+        resetScopeCombo();
+        super.cancelPressed();
+    }
+    
+    private void resetScopeCombo(){
+        if(preSelectedElments != null){
+            preSelectedElments = null;
+        }
+        if(auditId != null){
+            auditId = null;
+        }
+        setupComboScopes();
+    }
 
 	public File getOutputFile() {
 		return outputFile;
@@ -581,7 +602,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_20);
         }
-        
         return compoundLoader.getElements();
     }
     
