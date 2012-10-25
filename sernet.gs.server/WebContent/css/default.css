@@ -211,7 +211,7 @@ h1+a:visited {
 .read, .read_processed, .processed_read, .read_unprocessed, .unprocessed_read {
 }
 
-.unread .unread_processed, .processed_unread, .unread_unprocessed, .unprocessed_unread {
+.unread, .unread_processed, .processed_unread, .unread_unprocessed, .unprocessed_unread {
 	font-weight: bold;
 }
 

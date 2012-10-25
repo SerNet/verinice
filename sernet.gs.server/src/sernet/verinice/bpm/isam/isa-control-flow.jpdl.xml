@@ -3,6 +3,8 @@
 <process key="isa-control-flow" name="verinice ISA control flow" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
    <description>ISA control flow in verinice</description>
    
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/>
+   
    <start g="982,145,186,52" name="start1">
       <transition to="isAssignee"/>
    </start>

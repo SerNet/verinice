@@ -686,8 +686,10 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         Activator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
-        for (Attachment attachment : attachmentList) {
-            attachment.removeAllListener();
+        if(attachmentList!=null) {
+            for (Attachment attachment : attachmentList) {
+                attachment.removeAllListener();
+            }
         }
         if(imageCellProvider!=null) {
             imageCellProvider.shutdownCache();

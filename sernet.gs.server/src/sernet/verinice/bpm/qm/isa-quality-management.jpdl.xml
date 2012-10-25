@@ -3,6 +3,8 @@
 <process key="isa-quality-management" name="verinice ISA quality management process" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
    <description>ISA quality management process in verinice</description>
 
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/>
+
    <start g="332,25,80,40" name="start">
       <transition to="iqm.task.setAssignee"/>
    </start>
