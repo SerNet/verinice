@@ -7674,6 +7674,7 @@ columns(cols);</value>
                                 <cell id="949">
                                     <property name="fontSize">12pt</property>
                                     <data name="riskacpt_c" id="969">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "confidentialityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_confid</property>
                                     </data>
                                 </cell>
@@ -7688,6 +7689,7 @@ columns(cols);</value>
                                 <cell id="952">
                                     <property name="fontSize">12pt</property>
                                     <data id="970">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "integrityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_integ</property>
                                     </data>
                                 </cell>
@@ -7702,6 +7704,7 @@ columns(cols);</value>
                                 <cell id="955">
                                     <property name="fontSize">12pt</property>
                                     <data id="971">
+                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "availabilityValue", this.value )]]></method>
                                         <property name="resultSetColumn">org_riskaccept_avail</property>
                                     </data>
                                 </cell>
@@ -11911,7 +11914,7 @@ columns(cols);</value>
                                                                                         <property name="operator">gt</property>
                                                                                         <expression name="testExpr" type="javascript">Number(row["treatedRiskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
+                                                                                            <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue"))</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_red</property>
                                                                                     </structure>
@@ -11919,16 +11922,16 @@ columns(cols);</value>
                                                                                         <property name="operator">between</property>
                                                                                         <expression name="testExpr" type="javascript">Number(row["treatedRiskC"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"]-3)</value>
+                                                                                            <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue"))-3</value>
                                                                                         </simple-property-list>
-                                                                                        <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</expression>
+                                                                                        <expression name="value2" type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue"))</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskC"]+2)</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskC"])+2</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_confid"])</value>
+                                                                                            <value type="javascript">Number(reportContext.getPersistentGlobalVariable( "confidentialityValue"))</value>
                                                                                         </simple-property-list>
                                                                                         <property name="style">bg_green</property>
                                                                                     </structure>
@@ -11954,14 +11957,14 @@ columns(cols);</value>
                                                                                         <property name="operator">between</property>
                                                                                         <expression name="testExpr" type="javascript">Number(row["treatedRiskI"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"]-4)</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])-4</value>
                                                                                         </simple-property-list>
                                                                                         <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskI"]+3)</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskI"])+3</expression>
                                                                                         <simple-property-list name="value1">
                                                                                             <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_integ"])</value>
                                                                                         </simple-property-list>
@@ -11989,14 +11992,14 @@ columns(cols);</value>
                                                                                         <property name="operator">between</property>
                                                                                         <expression name="testExpr" type="javascript">Number(row["treatedRiskA"])</expression>
                                                                                         <simple-property-list name="value1">
-                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"]-3)</value>
+                                                                                            <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])-3</value>
                                                                                         </simple-property-list>
                                                                                         <expression name="value2" type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</expression>
                                                                                         <property name="style">bg_yellow</property>
                                                                                     </structure>
                                                                                     <structure>
                                                                                         <property name="operator">lt</property>
-                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskA"]+2)</expression>
+                                                                                        <expression name="testExpr" type="javascript">Number(row["treatedRiskA"])+2</expression>
                                                                                         <simple-property-list name="value1">
                                                                                             <value type="javascript">Number(row._outer._outer._outer["org_riskaccept_avail"])</value>
                                                                                         </simple-property-list>
