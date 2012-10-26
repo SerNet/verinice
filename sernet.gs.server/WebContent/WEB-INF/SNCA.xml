@@ -2072,6 +2072,8 @@ the value between <param></param> will be used directly if no string is found fo
 		<huirelation to="document" id="rel_mnums_document"
 		 	name="verknüpft mit" reversename="modelliert mit"/>
 		 	
+		<huirelation to="mnums" id="rel_mnums_mnums" name="notwendig für" reversename="hängt ab von"/>
+		 	
 		<huiproperty
 				id="mnums_id"
                 editable="true"
@@ -4292,6 +4294,25 @@ the value between <param></param> will be used directly if no string is found fo
      			<option name="Partly" id="control_implemented_partly"/>
      			<option name="N.a." id="control_implemented_na"/>
      		</huiproperty>
+   		<huiproperty id="control_selected" 
+        	name="Control selected"
+        	inputtype="booleanoption"
+        	defaultValue="0"
+        	tags="SoA, Risk, Web" />
+        	
+        <huiproperty
+	           id="control_reason_for_selection" name="Reason for selection"
+               inputtype="singleoption" 
+               min="-1" 
+               max="1" 
+               defaultValue="-1" 
+               tags="SoA, Risk, Web"
+            >
+            <option id="control_reason_for_selection_1"  name="LR: legal requirements" />
+            <option id="control_reason_for_selection_2"  name="CO: contractual obligations" />
+            <option id="control_reason_for_selection_3"  name="BR: business requirement" />
+			<option id="control_reason_for_selection_4"  name="RRA: result of risk assessment" />
+          </huiproperty> 
      		<huiproperty 
             tags="Risk,Web"
      			name="Explanation" 
@@ -4654,6 +4675,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <defaultRule class="Today"/>
             </huiproperty>
         </huipropertygroup>
+        
     </huientity>
     
     <huientity

@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -30,9 +29,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -64,6 +60,7 @@ import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -282,6 +279,8 @@ public class BSIElementEditor extends EditorPart {
             initBehaviour(new LikelihoodBehaviour(huiComposite));
         } else if(cnAElement instanceof ControlGroup){
             initBehaviour(new ControlgroupRoomNetworkBehaviour(huiComposite));
+        } else if(cnAElement instanceof Control){
+            initBehaviour(new ControlIsSelectedBehaviour(huiComposite));
         }
     }
     

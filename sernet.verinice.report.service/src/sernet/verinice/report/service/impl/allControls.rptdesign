@@ -2,24 +2,6 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <property name="units">in</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">sncaUrl</property>
-            <property name="id">954</property>
-        </structure>
-        <structure>
-            <property name="name">serverURI</property>
-            <property name="id">954</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileName</property>
-            <property name="id">954</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileStorePath</property>
-            <property name="id">954</property>
-        </structure>
-    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">90</property>
@@ -52,172 +34,259 @@
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="Controls" id="955">
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">control_document</property>
+                    <text-property name="displayName">control_document</text-property>
+                    <text-property name="heading">control_document</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">control_abbr</property>
                     <text-property name="displayName">control_abbr</text-property>
+                    <text-property name="heading">control_abbr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_name</property>
                     <text-property name="displayName">control_name</text-property>
+                    <text-property name="heading">control_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_selected</property>
+                    <text-property name="displayName">control_selected</text-property>
+                    <text-property name="heading">control_selected</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_tag</property>
                     <text-property name="displayName">control_tag</text-property>
+                    <text-property name="heading">control_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_reason_for_selection</property>
+                    <text-property name="displayName">control_reason_for_selection</text-property>
+                    <text-property name="heading">control_reason_for_selection</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_desc</property>
                     <text-property name="displayName">control_desc</text-property>
+                    <text-property name="heading">control_desc</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented</property>
                     <text-property name="displayName">control_implemented</text-property>
+                    <text-property name="heading">control_implemented</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_explanation</property>
                     <text-property name="displayName">control_implemented_explanation</text-property>
+                    <text-property name="heading">control_implemented_explanation</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implemented_objective</property>
                     <text-property name="displayName">control_implemented_objective</text-property>
+                    <text-property name="heading">control_implemented_objective</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_implby</property>
                     <text-property name="displayName">control_implby</text-property>
+                    <text-property name="heading">control_implby</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_confidentiality</property>
                     <text-property name="displayName">control_effectiveness_confidentiality</text-property>
+                    <text-property name="heading">control_effectiveness_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_integrity</property>
                     <text-property name="displayName">control_effectiveness_integrity</text-property>
+                    <text-property name="heading">control_effectiveness_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_availability</property>
                     <text-property name="displayName">control_effectiveness_availability</text-property>
+                    <text-property name="heading">control_effectiveness_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_eff_probability</property>
                     <text-property name="displayName">control_eff_probability</text-property>
+                    <text-property name="heading">control_eff_probability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_explanation2</property>
                     <text-property name="displayName">control_effectiveness_explanation2</text-property>
+                    <text-property name="heading">control_effectiveness_explanation2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity</property>
                     <text-property name="displayName">control_maturity</text-property>
+                    <text-property name="heading">control_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_weight</property>
                     <text-property name="displayName">control_weight</text-property>
+                    <text-property name="heading">control_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_ownweight</property>
                     <text-property name="displayName">control_ownweight</text-property>
+                    <text-property name="heading">control_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min1</property>
                     <text-property name="displayName">control_min1</text-property>
+                    <text-property name="heading">control_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_min2</property>
                     <text-property name="displayName">control_min2</text-property>
+                    <text-property name="heading">control_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_comment</property>
                     <text-property name="displayName">control_maturity_comment</text-property>
+                    <text-property name="heading">control_maturity_comment</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_maturity_duedate</property>
                     <text-property name="displayName">control_maturity_duedate</text-property>
+                    <text-property name="heading">control_maturity_duedate</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_isr_maturity</property>
+                    <text-property name="displayName">control_isr_maturity</text-property>
+                    <text-property name="heading">control_isr_maturity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_isr_quantity_of_maturity</property>
+                    <text-property name="displayName">control_isr_quantity_of_maturity</text-property>
+                    <text-property name="heading">control_isr_quantity_of_maturity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_isr_note_external</property>
+                    <text-property name="displayName">control_isr_note_external</text-property>
+                    <text-property name="heading">control_isr_note_external</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_isr_note_internal</property>
+                    <text-property name="displayName">control_isr_note_internal</text-property>
+                    <text-property name="heading">control_isr_note_internal</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_lastrev</property>
                     <text-property name="displayName">control_lastrev</text-property>
+                    <text-property name="heading">control_lastrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_revision_notes</property>
                     <text-property name="displayName">control_revision_notes</text-property>
+                    <text-property name="heading">control_revision_notes</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_nextrev</property>
                     <text-property name="displayName">control_nextrev</text-property>
+                    <text-property name="heading">control_nextrev</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_currency</property>
                     <text-property name="displayName">control_kosten_currency</text-property>
+                    <text-property name="heading">control_kosten_currency</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptfix</property>
                     <text-property name="displayName">control_kosten_ptfix</text-property>
+                    <text-property name="heading">control_kosten_ptfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptvar</property>
                     <text-property name="displayName">control_kosten_ptvar</text-property>
+                    <text-property name="heading">control_kosten_ptvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_ptperiod</property>
                     <text-property name="displayName">control_kosten_ptperiod</text-property>
+                    <text-property name="heading">control_kosten_ptperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachfix</property>
                     <text-property name="displayName">control_kosten_sachfix</text-property>
+                    <text-property name="heading">control_kosten_sachfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachvar</property>
                     <text-property name="displayName">control_kosten_sachvar</text-property>
+                    <text-property name="heading">control_kosten_sachvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_kosten_sachperiod</property>
                     <text-property name="displayName">control_kosten_sachperiod</text-property>
+                    <text-property name="heading">control_kosten_sachperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_findings</property>
                     <text-property name="displayName">control_isa_audit_findings</text-property>
+                    <text-property name="heading">control_isa_audit_findings</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_maturity</property>
                     <text-property name="displayName">control_isa_maturity</text-property>
+                    <text-property name="heading">control_isa_maturity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_weight</property>
                     <text-property name="displayName">control_isa_weight</text-property>
+                    <text-property name="heading">control_isa_weight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_ownweight</property>
                     <text-property name="displayName">control_isa_ownweight</text-property>
+                    <text-property name="heading">control_isa_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min1</property>
                     <text-property name="displayName">control_isa_min1</text-property>
+                    <text-property name="heading">control_isa_min1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_min2</property>
                     <text-property name="displayName">control_isa_min2</text-property>
+                    <text-property name="heading">control_isa_min2</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_externalnote</property>
                     <text-property name="displayName">control_isa_externalnote</text-property>
+                    <text-property name="heading">control_isa_externalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_internalnote</property>
                     <text-property name="displayName">control_isa_internalnote</text-property>
+                    <text-property name="heading">control_isa_internalnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_ra</property>
                     <text-property name="displayName">control_isa_audit_ra</text-property>
+                    <text-property name="heading">control_isa_audit_ra</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_devi</property>
                     <text-property name="displayName">control_isa_audit_devi</text-property>
+                    <text-property name="heading">control_isa_audit_devi</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_audit_compluntil</property>
                     <text-property name="displayName">control_isa_audit_compluntil</text-property>
+                    <text-property name="heading">control_isa_audit_compluntil</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_isa_isaauditnote</property>
                     <text-property name="displayName">control_isa_isaauditnote</text-property>
+                    <text-property name="heading">control_isa_isaauditnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_feedback_note</property>
+                    <text-property name="displayName">control_feedback_note</text-property>
+                    <text-property name="heading">control_feedback_note</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_feedback_date</property>
+                    <text-property name="displayName">control_feedback_date</text-property>
+                    <text-property name="heading">control_feedback_date</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -238,212 +307,257 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">control_abbr</property>
+                        <property name="name">control_document</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">control_name</property>
+                        <property name="name">control_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">control_tag</property>
+                        <property name="name">control_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">control_desc</property>
+                        <property name="name">control_selected</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">control_implemented</property>
+                        <property name="name">control_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">control_implemented_explanation</property>
+                        <property name="name">control_reason_for_selection</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">control_implemented_objective</property>
+                        <property name="name">control_desc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">control_implby</property>
+                        <property name="name">control_implemented</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">control_effectiveness_confidentiality</property>
+                        <property name="name">control_implemented_explanation</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">control_effectiveness_integrity</property>
+                        <property name="name">control_implemented_objective</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">control_effectiveness_availability</property>
+                        <property name="name">control_implby</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">control_eff_probability</property>
+                        <property name="name">control_effectiveness_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">control_effectiveness_explanation2</property>
+                        <property name="name">control_effectiveness_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">control_maturity</property>
+                        <property name="name">control_effectiveness_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">control_weight</property>
+                        <property name="name">control_eff_probability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">control_ownweight</property>
+                        <property name="name">control_effectiveness_explanation2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">control_min1</property>
+                        <property name="name">control_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">control_min2</property>
+                        <property name="name">control_weight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">control_maturity_comment</property>
+                        <property name="name">control_ownweight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">control_maturity_duedate</property>
+                        <property name="name">control_min1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">control_lastrev</property>
+                        <property name="name">control_min2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">control_revision_notes</property>
+                        <property name="name">control_maturity_comment</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
-                        <property name="name">control_nextrev</property>
+                        <property name="name">control_maturity_duedate</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">control_kosten_currency</property>
+                        <property name="name">control_isr_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
-                        <property name="name">control_kosten_ptfix</property>
+                        <property name="name">control_isr_quantity_of_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">control_kosten_ptvar</property>
+                        <property name="name">control_isr_note_external</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">control_kosten_ptperiod</property>
+                        <property name="name">control_isr_note_internal</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">control_kosten_sachfix</property>
+                        <property name="name">control_lastrev</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">control_kosten_sachvar</property>
+                        <property name="name">control_revision_notes</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">control_kosten_sachperiod</property>
+                        <property name="name">control_nextrev</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
-                        <property name="name">control_isa_audit_findings</property>
+                        <property name="name">control_kosten_currency</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">32</property>
-                        <property name="name">control_isa_maturity</property>
+                        <property name="name">control_kosten_ptfix</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
-                        <property name="name">control_isa_weight</property>
+                        <property name="name">control_kosten_ptvar</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">34</property>
-                        <property name="name">control_isa_ownweight</property>
+                        <property name="name">control_kosten_ptperiod</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">35</property>
-                        <property name="name">control_isa_min1</property>
+                        <property name="name">control_kosten_sachfix</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">36</property>
-                        <property name="name">control_isa_min2</property>
+                        <property name="name">control_kosten_sachvar</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">37</property>
-                        <property name="name">control_isa_externalnote</property>
+                        <property name="name">control_kosten_sachperiod</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">38</property>
-                        <property name="name">control_isa_internalnote</property>
+                        <property name="name">control_isa_audit_findings</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">39</property>
-                        <property name="name">control_isa_audit_ra</property>
+                        <property name="name">control_isa_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">40</property>
-                        <property name="name">control_isa_audit_devi</property>
+                        <property name="name">control_isa_weight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">41</property>
-                        <property name="name">control_isa_audit_compluntil</property>
+                        <property name="name">control_isa_ownweight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">42</property>
+                        <property name="name">control_isa_min1</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">control_isa_min2</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">control_isa_externalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">control_isa_internalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">control_isa_audit_ra</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">control_isa_audit_devi</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">control_isa_audit_compluntil</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
                         <property name="name">control_isa_isaauditnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">control_feedback_note</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">51</property>
+                        <property name="name">control_feedback_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -452,295 +566,358 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">control_document</property>
+                    <property name="nativeName">control_document</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">control_abbr</property>
                     <property name="nativeName">control_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                     <property name="name">control_name</property>
                     <property name="nativeName">control_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
+                    <property name="name">control_selected</property>
+                    <property name="nativeName">control_selected</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
                     <property name="name">control_tag</property>
                     <property name="nativeName">control_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
+                    <property name="name">control_reason_for_selection</property>
+                    <property name="nativeName">control_reason_for_selection</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
                     <property name="name">control_desc</property>
                     <property name="nativeName">control_desc</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                     <property name="name">control_implemented</property>
                     <property name="nativeName">control_implemented</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">9</property>
                     <property name="name">control_implemented_explanation</property>
                     <property name="nativeName">control_implemented_explanation</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">10</property>
                     <property name="name">control_implemented_objective</property>
                     <property name="nativeName">control_implemented_objective</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">11</property>
                     <property name="name">control_implby</property>
                     <property name="nativeName">control_implby</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">12</property>
                     <property name="name">control_effectiveness_confidentiality</property>
                     <property name="nativeName">control_effectiveness_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">13</property>
                     <property name="name">control_effectiveness_integrity</property>
                     <property name="nativeName">control_effectiveness_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">14</property>
                     <property name="name">control_effectiveness_availability</property>
                     <property name="nativeName">control_effectiveness_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">15</property>
                     <property name="name">control_eff_probability</property>
                     <property name="nativeName">control_eff_probability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
                     <property name="name">control_effectiveness_explanation2</property>
                     <property name="nativeName">control_effectiveness_explanation2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">17</property>
                     <property name="name">control_maturity</property>
                     <property name="nativeName">control_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">18</property>
                     <property name="name">control_weight</property>
                     <property name="nativeName">control_weight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">control_ownweight</property>
                     <property name="nativeName">control_ownweight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">20</property>
                     <property name="name">control_min1</property>
                     <property name="nativeName">control_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">21</property>
                     <property name="name">control_min2</property>
                     <property name="nativeName">control_min2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">22</property>
                     <property name="name">control_maturity_comment</property>
                     <property name="nativeName">control_maturity_comment</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">23</property>
                     <property name="name">control_maturity_duedate</property>
                     <property name="nativeName">control_maturity_duedate</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">24</property>
+                    <property name="name">control_isr_maturity</property>
+                    <property name="nativeName">control_isr_maturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">control_isr_quantity_of_maturity</property>
+                    <property name="nativeName">control_isr_quantity_of_maturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">control_isr_note_external</property>
+                    <property name="nativeName">control_isr_note_external</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">control_isr_note_internal</property>
+                    <property name="nativeName">control_isr_note_internal</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
                     <property name="name">control_lastrev</property>
                     <property name="nativeName">control_lastrev</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">29</property>
                     <property name="name">control_revision_notes</property>
                     <property name="nativeName">control_revision_notes</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">30</property>
                     <property name="name">control_nextrev</property>
                     <property name="nativeName">control_nextrev</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">31</property>
                     <property name="name">control_kosten_currency</property>
                     <property name="nativeName">control_kosten_currency</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">32</property>
                     <property name="name">control_kosten_ptfix</property>
                     <property name="nativeName">control_kosten_ptfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">33</property>
                     <property name="name">control_kosten_ptvar</property>
                     <property name="nativeName">control_kosten_ptvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">34</property>
                     <property name="name">control_kosten_ptperiod</property>
                     <property name="nativeName">control_kosten_ptperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">35</property>
                     <property name="name">control_kosten_sachfix</property>
                     <property name="nativeName">control_kosten_sachfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">36</property>
                     <property name="name">control_kosten_sachvar</property>
                     <property name="nativeName">control_kosten_sachvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">37</property>
                     <property name="name">control_kosten_sachperiod</property>
                     <property name="nativeName">control_kosten_sachperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">38</property>
                     <property name="name">control_isa_audit_findings</property>
                     <property name="nativeName">control_isa_audit_findings</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">39</property>
                     <property name="name">control_isa_maturity</property>
                     <property name="nativeName">control_isa_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">40</property>
                     <property name="name">control_isa_weight</property>
                     <property name="nativeName">control_isa_weight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">41</property>
                     <property name="name">control_isa_ownweight</property>
                     <property name="nativeName">control_isa_ownweight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">42</property>
                     <property name="name">control_isa_min1</property>
                     <property name="nativeName">control_isa_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">43</property>
                     <property name="name">control_isa_min2</property>
                     <property name="nativeName">control_isa_min2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">37</property>
+                    <property name="position">44</property>
                     <property name="name">control_isa_externalnote</property>
                     <property name="nativeName">control_isa_externalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">38</property>
+                    <property name="position">45</property>
                     <property name="name">control_isa_internalnote</property>
                     <property name="nativeName">control_isa_internalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">39</property>
+                    <property name="position">46</property>
                     <property name="name">control_isa_audit_ra</property>
                     <property name="nativeName">control_isa_audit_ra</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">40</property>
+                    <property name="position">47</property>
                     <property name="name">control_isa_audit_devi</property>
                     <property name="nativeName">control_isa_audit_devi</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">41</property>
+                    <property name="position">48</property>
                     <property name="name">control_isa_audit_compluntil</property>
                     <property name="nativeName">control_isa_audit_compluntil</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">42</property>
+                    <property name="position">49</property>
                     <property name="name">control_isa_isaauditnote</property>
                     <property name="nativeName">control_isa_isaauditnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">50</property>
+                    <property name="name">control_feedback_note</property>
+                    <property name="nativeName">control_feedback_note</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">51</property>
+                    <property name="name">control_feedback_date</property>
+                    <property name="nativeName">control_feedback_date</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -769,34 +946,40 @@ return helper.map(
 );]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_abbr</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>control_abbr</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -814,8 +997,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_name</design:name>
-            <design:position>2</design:position>
+            <design:identifier>
+              <design:name>control_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -833,8 +1018,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_tag</design:name>
-            <design:position>3</design:position>
+            <design:identifier>
+              <design:name>control_tag</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -852,8 +1039,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_desc</design:name>
-            <design:position>4</design:position>
+            <design:identifier>
+              <design:name>control_desc</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -871,8 +1060,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_implemented</design:name>
-            <design:position>5</design:position>
+            <design:identifier>
+              <design:name>control_implemented</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -890,8 +1081,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_implemented_explanation</design:name>
-            <design:position>6</design:position>
+            <design:identifier>
+              <design:name>control_implemented_explanation</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -909,8 +1102,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_implemented_objective</design:name>
-            <design:position>7</design:position>
+            <design:identifier>
+              <design:name>control_implemented_objective</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -928,8 +1123,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_implby</design:name>
-            <design:position>8</design:position>
+            <design:identifier>
+              <design:name>control_implby</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -947,8 +1144,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_effectiveness_confidentiality</design:name>
-            <design:position>9</design:position>
+            <design:identifier>
+              <design:name>control_effectiveness_confidentiality</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -966,8 +1165,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_effectiveness_integrity</design:name>
-            <design:position>10</design:position>
+            <design:identifier>
+              <design:name>control_effectiveness_integrity</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -985,8 +1186,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_effectiveness_availability</design:name>
-            <design:position>11</design:position>
+            <design:identifier>
+              <design:name>control_effectiveness_availability</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1004,8 +1207,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_eff_probability</design:name>
-            <design:position>12</design:position>
+            <design:identifier>
+              <design:name>control_eff_probability</design:name>
+              <design:position>12</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1023,8 +1228,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_effectiveness_explanation2</design:name>
-            <design:position>13</design:position>
+            <design:identifier>
+              <design:name>control_effectiveness_explanation2</design:name>
+              <design:position>13</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1042,8 +1249,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_maturity</design:name>
-            <design:position>14</design:position>
+            <design:identifier>
+              <design:name>control_maturity</design:name>
+              <design:position>14</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1061,8 +1270,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_weight</design:name>
-            <design:position>15</design:position>
+            <design:identifier>
+              <design:name>control_weight</design:name>
+              <design:position>15</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1080,8 +1291,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_ownweight</design:name>
-            <design:position>16</design:position>
+            <design:identifier>
+              <design:name>control_ownweight</design:name>
+              <design:position>16</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1099,8 +1312,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_min1</design:name>
-            <design:position>17</design:position>
+            <design:identifier>
+              <design:name>control_min1</design:name>
+              <design:position>17</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1118,8 +1333,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_min2</design:name>
-            <design:position>18</design:position>
+            <design:identifier>
+              <design:name>control_min2</design:name>
+              <design:position>18</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1137,8 +1354,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_maturity_comment</design:name>
-            <design:position>19</design:position>
+            <design:identifier>
+              <design:name>control_maturity_comment</design:name>
+              <design:position>19</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1156,8 +1375,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_maturity_duedate</design:name>
-            <design:position>20</design:position>
+            <design:identifier>
+              <design:name>control_maturity_duedate</design:name>
+              <design:position>20</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1175,8 +1396,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_lastrev</design:name>
-            <design:position>21</design:position>
+            <design:identifier>
+              <design:name>control_lastrev</design:name>
+              <design:position>21</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1194,8 +1417,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_revision_notes</design:name>
-            <design:position>22</design:position>
+            <design:identifier>
+              <design:name>control_revision_notes</design:name>
+              <design:position>22</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1213,8 +1438,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_nextrev</design:name>
-            <design:position>23</design:position>
+            <design:identifier>
+              <design:name>control_nextrev</design:name>
+              <design:position>23</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1232,8 +1459,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_currency</design:name>
-            <design:position>24</design:position>
+            <design:identifier>
+              <design:name>control_kosten_currency</design:name>
+              <design:position>24</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1251,8 +1480,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_ptfix</design:name>
-            <design:position>25</design:position>
+            <design:identifier>
+              <design:name>control_kosten_ptfix</design:name>
+              <design:position>25</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1270,8 +1501,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_ptvar</design:name>
-            <design:position>26</design:position>
+            <design:identifier>
+              <design:name>control_kosten_ptvar</design:name>
+              <design:position>26</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1289,8 +1522,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_ptperiod</design:name>
-            <design:position>27</design:position>
+            <design:identifier>
+              <design:name>control_kosten_ptperiod</design:name>
+              <design:position>27</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1308,8 +1543,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_sachfix</design:name>
-            <design:position>28</design:position>
+            <design:identifier>
+              <design:name>control_kosten_sachfix</design:name>
+              <design:position>28</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1327,8 +1564,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_sachvar</design:name>
-            <design:position>29</design:position>
+            <design:identifier>
+              <design:name>control_kosten_sachvar</design:name>
+              <design:position>29</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1346,8 +1585,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_kosten_sachperiod</design:name>
-            <design:position>30</design:position>
+            <design:identifier>
+              <design:name>control_kosten_sachperiod</design:name>
+              <design:position>30</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1365,8 +1606,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_audit_findings</design:name>
-            <design:position>31</design:position>
+            <design:identifier>
+              <design:name>control_isa_audit_findings</design:name>
+              <design:position>31</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1384,8 +1627,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_maturity</design:name>
-            <design:position>32</design:position>
+            <design:identifier>
+              <design:name>control_isa_maturity</design:name>
+              <design:position>32</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1403,8 +1648,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_weight</design:name>
-            <design:position>33</design:position>
+            <design:identifier>
+              <design:name>control_isa_weight</design:name>
+              <design:position>33</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1422,8 +1669,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_ownweight</design:name>
-            <design:position>34</design:position>
+            <design:identifier>
+              <design:name>control_isa_ownweight</design:name>
+              <design:position>34</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1441,8 +1690,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_min1</design:name>
-            <design:position>35</design:position>
+            <design:identifier>
+              <design:name>control_isa_min1</design:name>
+              <design:position>35</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1460,8 +1711,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_min2</design:name>
-            <design:position>36</design:position>
+            <design:identifier>
+              <design:name>control_isa_min2</design:name>
+              <design:position>36</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1479,8 +1732,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_externalnote</design:name>
-            <design:position>37</design:position>
+            <design:identifier>
+              <design:name>control_isa_externalnote</design:name>
+              <design:position>37</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1498,8 +1753,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_internalnote</design:name>
-            <design:position>38</design:position>
+            <design:identifier>
+              <design:name>control_isa_internalnote</design:name>
+              <design:position>38</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1517,8 +1774,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_audit_ra</design:name>
-            <design:position>39</design:position>
+            <design:identifier>
+              <design:name>control_isa_audit_ra</design:name>
+              <design:position>39</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1536,8 +1795,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_audit_devi</design:name>
-            <design:position>40</design:position>
+            <design:identifier>
+              <design:name>control_isa_audit_devi</design:name>
+              <design:position>40</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1555,8 +1816,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_audit_compluntil</design:name>
-            <design:position>41</design:position>
+            <design:identifier>
+              <design:name>control_isa_audit_compluntil</design:name>
+              <design:position>41</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1574,8 +1837,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>control_isa_isaauditnote</design:name>
-            <design:position>42</design:position>
+            <design:identifier>
+              <design:name>control_isa_isaauditnote</design:name>
+              <design:position>42</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1750,7 +2015,7 @@ columns(cols);</value>
     </page-setup>
     <body>
         <table id="1216">
-            <property name="width">7.777777777777778in</property>
+            <property name="width">7.78125in</property>
             <property name="dataSet">Controls</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1963,23 +2228,38 @@ columns(cols);</value>
                     <expression name="expression" type="javascript">dataSetRow["control_isa_isaauditnote"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
+                <structure>
+                    <property name="name">control_selected</property>
+                    <text-property name="displayName">control_selected</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["control_selected"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">control_reason_for_selection</property>
+                    <text-property name="displayName">control_reason_for_selection</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["control_reason_for_selection"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
             </list-property>
             <column id="1246">
-                <property name="width">0.8555555555555555in</property>
+                <property name="width">0.5416666666666666in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="1245">
-                <property name="width">1.788888888888889in</property>
+                <property name="width">1.3020833333333333in</property>
                 <property name="repeat">1</property>
             </column>
-            <column id="1247">
-                <property name="width">2.3333333333333335in</property>
-            </column>
             <column id="1248">
-                <property name="width">0.9777777777777777in</property>
+                <property name="width">1.2083333333333333in</property>
             </column>
             <column id="1249">
-                <property name="width">1.8111111111111111in</property>
+                <property name="width">1.4166666666666667in</property>
+            </column>
+            <column id="1265">
+                <property name="width">0.6666666666666666in</property>
+            </column>
+            <column id="1268">
+                <property name="width">1.0104166666666667in</property>
             </column>
             <header>
                 <row id="1217">
@@ -2008,17 +2288,6 @@ columns(cols);</value>
                             <text-property name="content"><![CDATA[Name]]></text-property>
                         </text>
                     </cell>
-                    <cell id="1221">
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <text id="1259">
-                            <property name="fontWeight">bold</property>
-                            <property name="textAlign">left</property>
-                            <property name="contentType">auto</property>
-                            <text-property name="content"><![CDATA[Description]]></text-property>
-                        </text>
-                    </cell>
                     <cell id="1222">
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
@@ -2031,12 +2300,35 @@ columns(cols);</value>
                         </text>
                     </cell>
                     <cell id="1223">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <text id="1261">
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
                             <property name="contentType">auto</property>
                             <text-property name="content"><![CDATA[Objective]]></text-property>
                         </text>
+                    </cell>
+                    <cell id="1263">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="1269">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Selected</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1266">
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <label id="1271">
+                            <property name="fontWeight">bold</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Reason for Selection</text-property>
+                        </label>
                     </cell>
                 </row>
             </header>
@@ -2076,18 +2368,6 @@ columns(cols);</value>
                         <data id="1252">
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">control_name</property>
-                        </data>
-                    </cell>
-                    <cell id="1230">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <data id="1254">
-                            <property name="textAlign">left</property>
-                            <property name="resultSetColumn">control_desc</property>
                         </data>
                     </cell>
                     <cell id="1231">
@@ -2132,9 +2412,66 @@ columns(cols);</value>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
                         <data id="1256">
                             <property name="textAlign">left</property>
                             <property name="resultSetColumn">control_implemented_objective</property>
+                        </data>
+                    </cell>
+                    <cell id="1264">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <data id="1270">
+                            <list-property name="mapRules">
+                                <structure>
+                                    <expression name="testExpr" type="javascript">row["control_selected"]</expression>
+                                    <property name="operator">eq</property>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">1</value>
+                                    </simple-property-list>
+                                    <text-property name="display">Yes</text-property>
+                                </structure>
+                                <structure>
+                                    <expression name="testExpr" type="javascript">row["control_selected"]</expression>
+                                    <property name="operator">eq</property>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">0</value>
+                                    </simple-property-list>
+                                    <text-property name="display">No</text-property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">control_selected</property>
+                        </data>
+                    </cell>
+                    <cell id="1267">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <data id="1272">
+                            <list-property name="mapRules">
+                                <structure>
+                                    <expression name="testExpr" type="javascript">row["control_selected"]</expression>
+                                    <property name="operator">eq</property>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">0</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <expression name="testExpr" type="javascript">row["control_reason_for_selection"]</expression>
+                                    <property name="operator">eq</property>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">""</value>
+                                    </simple-property-list>
+                                    <text-property name="display">no value</text-property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">control_reason_for_selection</property>
                         </data>
                     </cell>
                 </row>
