@@ -81,6 +81,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	 * currently thats:
 	 *     -   org.eclipse.datatools.connectivity.ui.preferences.dataNode
 	 *     -   org.eclipse.birt.report.designer.ui.preferences
+	 *     -   org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage
 	 */
 	private void removeUnneededPrefPages(){
 	    PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();

@@ -20,16 +20,18 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
@@ -52,6 +54,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.CommandException;
@@ -77,6 +80,7 @@ public class ExportDialog extends TitleAreaDialog {
     private boolean encryptOutput = false;
     private boolean reImport = true;
     private CnATreeElement selectedElement;
+    private ITreeSelection selection;
     private Set<CnATreeElement> selectedElementSet;
     private String filePath;
     private String sourceId;
@@ -96,10 +100,15 @@ public class ExportDialog extends TitleAreaDialog {
      * @param activeShell
      * @param selectedOrganization
      */
-    public ExportDialog(Shell activeShell, Organization selectedOrganization) {
+    public ExportDialog(Shell activeShell, CnATreeElement selectedOrganization) {
         super(activeShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         selectedElement = selectedOrganization;
+    }
+    
+    public ExportDialog(Shell activeShell, CnATreeElement elmt, ITreeSelection selection){
+        this(activeShell, null);
+        this.selection = selection;
     }
 
     @Override
@@ -140,7 +149,7 @@ public class ExportDialog extends TitleAreaDialog {
             return null;
         } 
         
-        List<CnATreeElement> orgsAndITVs = new LinkedList<CnATreeElement>();
+        List<CnATreeElement> orgsAndITVs = new ArrayList<CnATreeElement>();
         orgsAndITVs.addAll(cmdLoadOrganization.getElements());
         orgsAndITVs.addAll(cmdItVerbund.getElements());
         orgsAndITVs = sortOrgListByTitle(orgsAndITVs);
@@ -184,26 +193,33 @@ public class ExportDialog extends TitleAreaDialog {
             }
         };
 
-        CnATreeElement oldSelectedElement = selectedElement;
         selectedElement = null;
-        selectedElementSet = new HashSet<CnATreeElement>();        List<Organization> organizationList = cmdLoadOrganization.getElements();
-
-        Iterator<CnATreeElement> organizationIter = orgsAndITVs.iterator();
-        while (organizationIter.hasNext()) {
-            final Button radioOrganization = new Button(innerComposite, SWT.CHECK);
-            CnATreeElement organization = organizationIter.next();
-            radioOrganization.setText(organization.getTitle());
-            radioOrganization.setData(organization);
-            radioOrganization.addSelectionListener(organizationListener);
-            if (oldSelectedElement != null && oldSelectedElement.equals(organization)) {
-                radioOrganization.setSelection(true);
-                selectedElement = organization; 
-                selectedElementSet.add(organization);             
+        selectedElementSet = new HashSet<CnATreeElement>();      
+        
+        ArrayList<CnATreeElement> preSelectedElements = new ArrayList<CnATreeElement>(0);
+        if(selection != null && !selection.isEmpty()){
+            Iterator<CnATreeElement> iter = selection.iterator();
+            while(iter.hasNext()){
+                preSelectedElements.add(iter.next());
             }
-            if (organizationList.size() == 1) {
+        } else if(selectedElement != null) {
+            preSelectedElements.add(selectedElement);
+        }
+                
+        for(CnATreeElement elmt : orgsAndITVs) {
+            final Button radioOrganization = new Button(innerComposite, SWT.CHECK);
+            radioOrganization.setText(elmt.getTitle());
+            radioOrganization.setData(elmt);
+            radioOrganization.addSelectionListener(organizationListener);
+            if (preSelectedElements.contains(elmt)) {
                 radioOrganization.setSelection(true);
-                selectedElement = organization;
-                selectedElementSet.add(organization);
+                selectedElement = elmt; 
+                selectedElementSet.add(elmt);             
+            }
+            if (orgsAndITVs.size() == 1) {
+                radioOrganization.setSelection(true);
+                selectedElement = elmt;
+                selectedElementSet.add(elmt);
                 setSourceId(selectedElement);
             }
         }
@@ -442,21 +458,14 @@ public class ExportDialog extends TitleAreaDialog {
     }
     
     private List<CnATreeElement> sortOrgListByTitle(List<CnATreeElement> list){
-    	List<CnATreeElement> retVal = new LinkedList<CnATreeElement>();
-    	List<String> titleList = new LinkedList<String>();
-    	for(CnATreeElement e : list){
-    			titleList.add(e.getTitle());
-    	}
-    	Collections.sort(titleList);
-    	for(String title : titleList){
-    		for(CnATreeElement e : list){
-    			if(e.getTitle().equals(title)){
-    				retVal.add(e);
-    				break;
-    			}
-    		}
-    	}
-    	return retVal;
+    	Collections.sort(list, new Comparator<CnATreeElement>() {
+            @Override
+            public int compare(CnATreeElement o1, CnATreeElement o2) {
+                NumericStringComparator comparator = new NumericStringComparator();
+                return comparator.compare(o1.getTitle(), o2.getTitle());
+            }
+        });
+    	return list;
     }
 
 }

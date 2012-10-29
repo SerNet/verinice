@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +74,7 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.iso27k.rcp.ExportDialog;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.ExportCommand;
@@ -107,7 +109,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private static ISchedulingRule iSchedulingRule = new Mutex();
 	
-	Organization selectedOrganization;
+	CnATreeElement selectedOrganization;
+	
+	ITreeSelection selection;
 	
 	private IViewPart view;
 	
@@ -158,7 +162,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	 */
     @Override
     public void run(IAction action) {
-		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selectedOrganization);
+		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), null, selection);
 		if(action instanceof ViewPluginAction) {
 
 		}
@@ -320,8 +324,19 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             Object selectedElement = treeSelection.getFirstElement();
-            if (selectedElement instanceof Organization) {
-                selectedOrganization = (Organization) selectedElement;
+            Iterator<CnATreeElement> iter = treeSelection.iterator();
+            while(iter.hasNext()){
+                CnATreeElement elmt = iter.next();
+                if(!(elmt instanceof ITVerbund) && !(elmt instanceof Organization) ){
+                    if(this.selection != null){
+                        this.selection = null;
+                    }
+                    return;
+                }
+            }
+            if (selectedElement instanceof Organization || selectedElement instanceof ITVerbund) {
+                selectedOrganization = (CnATreeElement)selectedElement;
+                this.selection = treeSelection;
             }
         }
     }
