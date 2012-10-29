@@ -5,28 +5,6 @@
         <value>vulnerabilities</value>
     </simple-property-list>
     <property name="units">in</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">8</property>
-        </structure>
-        <structure>
-            <property name="name">sncaUrl</property>
-            <property name="id">7</property>
-        </structure>
-        <structure>
-            <property name="name">serverURI</property>
-            <property name="id">7</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileName</property>
-            <property name="id">7</property>
-        </structure>
-        <structure>
-            <property name="name">OdaConnProfileStorePath</property>
-            <property name="id">7</property>
-        </structure>
-    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -52,12 +30,12 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="7">
-            <property name="sncaUrl">http://localhost:8080/veriniceserver-1.5.3/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8080/veriniceserver-1.5.3/</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver/</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="threats" id="8">
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="vulnerabilities" id="8">
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">vulnerability_abbr</property>
@@ -88,6 +66,21 @@
                     <property name="columnName">vulnerability_desc</property>
                     <text-property name="displayName">vulnerability_desc</text-property>
                     <text-property name="heading">vulnerability_desc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_vulnerability_description</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_description</text-property>
+                    <text-property name="heading">gsm_ism_vulnerability_description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_vulnerability_cve</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_cve</text-property>
+                    <text-property name="heading">gsm_ism_vulnerability_cve</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_vulnerability_level</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_level</text-property>
+                    <text-property name="heading">gsm_ism_vulnerability_level</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -136,6 +129,21 @@
                         <property name="name">vulnerability_desc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">gsm_ism_vulnerability_description</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">gsm_ism_vulnerability_cve</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">gsm_ism_vulnerability_level</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -179,6 +187,27 @@
                     <property name="position">6</property>
                     <property name="name">vulnerability_desc</property>
                     <property name="nativeName">vulnerability_desc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">gsm_ism_vulnerability_description</property>
+                    <property name="nativeName">gsm_ism_vulnerability_description</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">gsm_ism_vulnerability_cve</property>
+                    <property name="nativeName">gsm_ism_vulnerability_cve</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">gsm_ism_vulnerability_level</property>
+                    <property name="nativeName">gsm_ism_vulnerability_level</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1151,7 +1180,7 @@ columns(new String[] { "scopeName" });</value>
     <body>
         <table id="2235">
             <property name="width">7.765217391304348in</property>
-            <property name="dataSet">threats</property>
+            <property name="dataSet">vulnerabilities</property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">vulnerability_abbr</property>
@@ -1172,6 +1201,12 @@ columns(new String[] { "scopeName" });</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">vulnerability_level</property>
+                    <text-property name="displayName">vulnerability_level</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["vulnerability_level"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">vulnerability_document</property>
                     <text-property name="displayName">vulnerability_document</text-property>
                     <expression name="expression" type="javascript">dataSetRow["vulnerability_document"]</expression>
@@ -1184,9 +1219,21 @@ columns(new String[] { "scopeName" });</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">vulnerability_level</property>
-                    <text-property name="displayName">vulnerability_level</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["vulnerability_level"]</expression>
+                    <property name="name">gsm_ism_vulnerability_description</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_description</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_ism_vulnerability_description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_ism_vulnerability_cve</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_cve</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_ism_vulnerability_cve"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_ism_vulnerability_level</property>
+                    <text-property name="displayName">gsm_ism_vulnerability_level</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_ism_vulnerability_level"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
