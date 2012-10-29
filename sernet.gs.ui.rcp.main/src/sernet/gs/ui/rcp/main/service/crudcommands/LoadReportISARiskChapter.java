@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.bsi.editors.ControlgroupRoomNetworkBehaviour;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -97,7 +96,7 @@ public class LoadReportISARiskChapter extends GenericCommand {
                 c1 = ServiceFactory.lookupCommandService().executeCommand(c1);
                 samtRootGroup = c1.getSelfAssessmentGroup();
             }
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, samtRootGroup.getDbId());
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, samtRootGroup.getDbId(), true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             for(CnATreeElement e : command.getElements()){
                 if(e instanceof SamtTopic && isRelevantChild((SamtTopic)e) && !samtCache.contains(e.getUuid())){

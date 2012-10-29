@@ -66,7 +66,7 @@ public class LoadReportISARoomsDetails extends GenericCommand {
     public void execute() {
         results = new ArrayList<List<String>>();
         ControlGroup roomGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(roomID);
-        LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID);
+        LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID, true);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> stList = command.getElements();

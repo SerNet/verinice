@@ -71,7 +71,7 @@ public class LoadReportSamtTopicISADetails extends GenericCommand {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 CnATreeElement elmt = command.getElement();
             }
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId());
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             for(CnATreeElement c : command.getElements()){
                 ArrayList<String> list = new ArrayList<String>(0);

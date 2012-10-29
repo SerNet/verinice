@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -41,11 +43,11 @@ import sernet.verinice.model.common.HydratorUtil;
  */
 public class LoadReportElementList extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadNotes.class);
+    private transient Logger log = Logger.getLogger(LoadReportElementList.class);
     
     public Logger getLog() {
         if(log==null) {
-            log = Logger.getLogger(LoadNotes.class);
+            log = Logger.getLogger(LoadReportElementList.class);
         }
         return log;
     }
@@ -77,8 +79,15 @@ public class LoadReportElementList extends GenericCommand {
 	        this.elements.add(root);
 	    }
 	    else {
-	        getElements(typeId, items, root);
-	        this.elements = items;
+//	        getElements(typeId, items, root);
+//	        this.elements = items;
+	        try {
+	            LoadReportElements elementLoader = new LoadReportElements(typeId, root.getDbId(), true);
+	            elementLoader = ServiceFactory.lookupCommandService().executeCommand(elementLoader);
+	            this.elements.addAll(elementLoader.getElements());
+	        } catch (CommandException e) {
+	            getLog().error("Error while retrieving elements", e);
+	        }
 	    }
 	    
 	    // load lazy fields:

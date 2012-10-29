@@ -17,15 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import net.sf.ehcache.Element;
 
 import org.apache.log4j.Logger;
 
@@ -34,7 +31,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -90,7 +86,7 @@ public class LoadReportISARisk extends GenericCommand {
     public void execute() {
         
 //        Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
-        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt);
+        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt, true);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (CommandException e) {
@@ -112,7 +108,7 @@ public class LoadReportISARisk extends GenericCommand {
         HashSet<String> alreadySeenST = new HashSet<String>();
         for(ControlGroup g : groups){
             if(!alreadySeenCG.contains(g.getUuid())){
-                command = new LoadReportElements(SamtTopic.TYPE_ID, g.getDbId());
+                command = new LoadReportElements(SamtTopic.TYPE_ID, g.getDbId(), true);
                 try {
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     for(CnATreeElement c : command.getElements()){

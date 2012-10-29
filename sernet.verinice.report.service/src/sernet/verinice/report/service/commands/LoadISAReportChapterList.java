@@ -82,7 +82,7 @@ public class LoadISAReportChapterList extends GenericCommand {
         ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
         try {
-            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root);
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root, true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
             if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){

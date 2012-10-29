@@ -54,7 +54,7 @@ public class LoadReportISASignificantFindings extends GenericCommand {
     public void execute() {
         try {
             result = new ArrayList<List<String>>(0);
-            LoadReportElements command = new LoadReportElements(Finding.TYPE_ID, rootElmt);
+            LoadReportElements command = new LoadReportElements(Finding.TYPE_ID, rootElmt, true);
             command = getCommandService().executeCommand(command);
             if (command.getElements() == null || command.getElements().size() == 0) {
                 return;

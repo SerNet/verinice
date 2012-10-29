@@ -22,17 +22,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnALink;
@@ -78,7 +76,7 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
         result = new ArrayList<List<String>>(0);
         try {
             for(ControlGroup cg : getControlGroups(rootElmt)){
-                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId());
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 for(CnATreeElement c : command.getElements()){
                     if(c instanceof SamtTopic){
@@ -169,49 +167,11 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
         return result;
     }
     
-//    private List<ControlGroup> getControlGroups(Integer root){
-//        LoadISAR command = new LoadReportISARiskChapter(root);
-//        command = ServiceFactory.lookupCommandService().executeCommand(command);
-//        
-//        ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
-//        try {
-//            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root);
-//            command = ServiceFactory.lookupCommandService().executeCommand(command);
-//            List<CnATreeElement> groups = command.getElements();
-//            if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
-//                groups.clear();
-//                command.getElements(ControlGroup.TYPE_ID, groups, groups.get(0));
-//            }
-//            for(CnATreeElement e : groups){
-//                if(e instanceof ControlGroup){
-//                    ControlGroup c = (ControlGroup)e;
-//                    if(e.getParent() instanceof ControlGroup &&
-//                            c.getEntity().getSimpleValue(PROP_CONTROLGROUP_ISELEMENT)
-//                            .equals(VALUE_CONTROLGROUP_ISELEMENT)){ // avoids rootControlGroup
-//                        retList.add((ControlGroup)e);
-//                    }
-//                }
-//            }
-//        } catch (CommandException e) {
-//            LOG.error("Error while determing controlgroups");
-//        }
-//        retList.trimToSize();
-//        Collections.sort(retList, new Comparator<ControlGroup>() {
-//
-//            @Override
-//            public int compare(ControlGroup o1, ControlGroup o2) {
-//                NumericStringComparator comp = new NumericStringComparator();
-//                return comp.compare(o1.getTitle(), o2.getTitle());
-//            }
-//        });
-//        return retList;
-//    }
-    
     private List<ControlGroup> getControlGroups(Integer root){
         ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
         try {
-            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root);
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root, true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
             if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){

@@ -68,7 +68,7 @@ public class LoadReportInsufficientSamtPersons extends GenericCommand {
         result = new ArrayList<List<String>>(0);
         Set<List<String>> personSet = new HashSet<List<String>>(0);
         try{
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt);
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             for(CnATreeElement c : command.getElements()){
                 if(SamtTopic.class.isInstance(c)){

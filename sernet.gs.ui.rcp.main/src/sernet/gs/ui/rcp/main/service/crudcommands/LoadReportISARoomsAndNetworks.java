@@ -30,7 +30,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
@@ -87,7 +86,7 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 rootControlGroup = command.getSelfAssessmentGroup();
             }
-            LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootControlGroup.getDbId());
+            LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootControlGroup.getDbId(), true);
             cgFinder = ServiceFactory.lookupCommandService().executeCommand(cgFinder);
             List<CnATreeElement> cList = new ArrayList<CnATreeElement>();
             cgFinder.getElements(ControlGroup.TYPE_ID, cList, rootControlGroup);

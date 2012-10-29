@@ -29,9 +29,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -69,7 +67,7 @@ public class LoadReportSamtClassifications extends GenericCommand {
     public void execute() {
         result = new ArrayList<List<String>>(0);
         try{
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt);
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             for(CnATreeElement c : command.getElements()){
                 if(c instanceof SamtTopic){
@@ -121,14 +119,5 @@ public class LoadReportSamtClassifications extends GenericCommand {
                 setChildrenProperties(true).setProperties(true);
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeID);
         return dao.findByUuid(el.getUuid(), ri);
-//        try {
-//            command = ServiceFactory.lookupCommandService().executeCommand(command);
-//            CnATreeElement newElement = command.getElementWithChildren();
-//            newElement.setChildrenLoaded(true);
-//            return newElement;
-//        } catch (CommandException e) {
-//            LOG.error("error while loading children of CnaTreeElment", e);
-//        }
-//        return null;
     }
 }

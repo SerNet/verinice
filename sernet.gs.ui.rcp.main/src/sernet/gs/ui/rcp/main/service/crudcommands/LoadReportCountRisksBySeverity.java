@@ -104,7 +104,7 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
 
             // load risk values from elements (following links to process, asset, scenario)
             
-            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
+            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
             command = getCommandService().executeCommand(command);
             if (command.getElements() == null || command.getElements().size() == 0) {
                 return;

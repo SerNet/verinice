@@ -3,18 +3,11 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import org.w3c.dom.stylesheets.LinkStyle;
-
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.bsi.views.chart.ISRSpiderChart;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -27,8 +20,6 @@ import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
  * Starting with all process for a given scope, load all linked assets and their
@@ -129,7 +120,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
             seenScenarios = new HashSet<Integer>();
             seenAssets = new HashSet<Integer>();
             
-            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
+            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
             command = getCommandService().executeCommand(command);
             if (command.getElements() == null || command.getElements().size() == 0) {
                 result = new ArrayList<List<String>>(0);
