@@ -95,7 +95,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	        idSet.add(s);
 	    }
 	    for (IPreferenceNode node : pm.getRootSubNodes()){
-	        System.out.println("nodeId:\t" +  node.getId());
 	        if(idSet.contains(node.getId())){
 	            // removing prefPages
 	            pm.remove(node);
