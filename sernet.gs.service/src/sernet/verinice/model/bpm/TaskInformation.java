@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
 
@@ -326,13 +327,18 @@ public class TaskInformation implements ITask, Serializable {
      */
     @Override
     public int compareTo(ITask o) {
+        NumericStringComparator comparator = new NumericStringComparator();
         int result = 0;
         if(this.getName()!=null && o!=null && o.getName()!=null) {
-            result = this.getName().compareTo(o.getName());
+            result = comparator.compare(this.getName(), o.getName());
         }
         if(result==0
            && this.getSortValue()!=null && o!=null && o.getSortValue()!=null) {
-            result = this.getSortValue().compareTo(o.getSortValue());
+            result = comparator.compare(this.getSortValue(), o.getSortValue());
+        }
+        if(result==0 &&
+                this.getDueDate()!=null && o!=null && o.getDueDate()!=null){
+            result = this.getDueDate().compareTo(o.getDueDate());
         }
         return result;
     }

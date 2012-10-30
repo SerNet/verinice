@@ -190,6 +190,18 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
+        Display d = Display.getCurrent();
+        if(d == null){
+            d = Display.getDefault();
+        }
+        d.asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                for(TreeColumn tc : treeViewer.getTree().getColumns()){
+                    tc.pack();
+                }
+            }
+        });
     }
 
     void loadTasks() {
@@ -249,7 +261,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.treeViewer.getControl().setLayoutData(gridData);
         this.treeViewer.setUseHashlookup(true);
-
+        
         /*** Tree table specific code starts ***/
 
         tree.setHeaderVisible(true);
@@ -257,7 +269,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
         
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText(Messages.TaskViewColumn_0);      
+        treeColumn.setText(Messages.TaskViewColumn_0); 
         
         treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskView_4);

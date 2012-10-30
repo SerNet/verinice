@@ -26,10 +26,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
-import sernet.gs.ui.rcp.main.service.grundschutzparser.GetMassnahmeText;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
-import sernet.verinice.model.bpm.TaskInformation;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -41,7 +39,7 @@ public class TaskContentProvider implements ITreeContentProvider {
     private TreeViewer viewer;
 
     private TaskTreeModel model;
-
+    
     /**
      * @param treeViewer
      */

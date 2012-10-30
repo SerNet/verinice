@@ -20,7 +20,6 @@
 package sernet.verinice.bpm.rcp;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,7 +78,6 @@ public class TaskTreeModel {
         if(children==null) {
             taskArray = new ITask[0];
         } else {
-            Collections.sort(children);
             taskArray = children.toArray();
         }
         return taskArray;
