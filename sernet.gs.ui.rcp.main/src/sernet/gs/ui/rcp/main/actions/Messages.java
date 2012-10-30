@@ -87,6 +87,7 @@ public class Messages extends NLS {
     public static String GSMBasicSecurityCheckAction_4;
     public static String GSMBasicSecurityCheckAction_5;
     public static String GSMBasicSecurityCheckAction_6;
+    public static String GSMBasicSecurityCheckAction_7;
     public static String UpdateAction_1;
     public static String UpdateAction_2;
     public static String UpdateAction_3;

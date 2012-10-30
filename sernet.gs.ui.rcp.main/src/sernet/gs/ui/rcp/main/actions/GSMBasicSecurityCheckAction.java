@@ -50,9 +50,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -118,18 +116,19 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
-
                     BausteinUmsetzung source = (BausteinUmsetzung) selection.getFirstElement();
+                    monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, selection.size() +1);
                     try {
                         // change targets on server:
                         GSMKonsolidatorCommand command = new GSMKonsolidatorCommand(selectedElements, source);
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        
                         CnAElementFactory.getInstance().reloadModelFromDatabase();
                         // reload state from server:
                         for (CnATreeElement element : command.getChangedElements()) {
                             CnAElementFactory.getLoadedModel().databaseChildChanged(element);
                         }
-
+                        monitor.worked(1);
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
                     }
