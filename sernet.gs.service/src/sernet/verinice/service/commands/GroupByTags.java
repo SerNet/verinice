@@ -68,6 +68,8 @@ public class GroupByTags extends GenericCommand {
         }
         return log;
     }
+    
+    private static final String GSM_PREFIX = "gsm_";
 
     private static final String TAG_SUFFIX = "_tag";
 
@@ -133,6 +135,7 @@ public class GroupByTags extends GenericCommand {
                 existingChildrenGroups.put(child.getTitle(), child);
             } else {
                 List<String> childTagList = new ArrayList<String>(TagHelper.getTags(child.getEntity().getSimpleValue(generateTagPropertyName(child.getTypeId()))));
+                childTagList.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateGsmTagPropertyName(child.getTypeId()))));
                 Collections.sort(childTagList);
                 for (String childTag : childTagList) {
                     if(tags.contains(childTag)) {
@@ -182,6 +185,10 @@ public class GroupByTags extends GenericCommand {
 
     private String generateTagPropertyName(String typeId) {
         return new StringBuilder(typeId).append(TAG_SUFFIX).toString();
+    }
+    
+    private String generateGsmTagPropertyName(String typeId) {
+        return new StringBuilder(GSM_PREFIX).append(typeId).append(TAG_SUFFIX).toString();
     }
 
     public Set<String> getTags() {
