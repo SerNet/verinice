@@ -113,7 +113,7 @@
       <plugin id="org.eclipse.birt.chart.reportitem.ui" version="3.7.0.v20110512"/>
       <plugin id="org.eclipse.birt.chart.ui" version="3.7.0.v20110331"/>
       <plugin id="org.eclipse.birt.chart.ui.extension" version="3.7.0.v20110414"/>
-      <plugin id="org.eclipse.birt.chart" version="3.7.0.v20110126 />
+      <plugin id="org.eclipse.birt.chart" version="3.7.0.v20110126" />
       <plugin id="org.eclipse.birt.core" version="3.7.0.v20110608"/>
       <plugin id="org.eclipse.birt.core.script.function" version="3.7.0.v20110602"/>
       <plugin id="org.eclipse.birt.core.ui" version="3.7.0.v20110407"/>
