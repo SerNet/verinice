@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +32,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+
+
 /**
  *
  */
@@ -38,6 +44,7 @@ public class TocHelper2 {
     
     private static int tocEntryCount = 0;
     
+    
     private static int listOfTablesEntryCount = 0;
     
     private static int listOfFiguresEntryCount = 0;
@@ -45,6 +52,8 @@ public class TocHelper2 {
     private static int engineIteration = 0;
     
     private static int pageStartCount = 0;
+    
+    private static int maxTocEntryLength = 0;
     
     private static Logger LOG = Logger.getLogger(TocHelper2.class);
     
@@ -85,7 +94,17 @@ public class TocHelper2 {
     }
     
     public static void reset(){
-        if(engineIteration > 1){
+        switch(engineIteration){
+        
+        case 1:
+            tocEntryCount = 0;
+            break;
+            
+        case 2: 
+            
+            break;
+        
+        case 3:
             tocMap.clear();
             pageBreakCount = 0;
             tocEntryCount = 0;
@@ -93,21 +112,25 @@ public class TocHelper2 {
             listOfFiguresEntryCount = 0;
             engineIteration = 0;
             pageStartCount = 0;
+            break;
         }
     }
     
+    public static void resetTOC(){
+        tocMap.clear();
+        tocEntryCount = 0;
+    }
+    
     public static void addTocEntry(String entryTitle, Integer pageNumber){
-        if(engineIteration < 2){
-            entryTitle = removeTags(entryTitle);
-            TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle, pageNumber);
-            tocMap.put(tocEntryCount, entry);
-            tocEntryCount++;
-        }
+        entryTitle = removeTags(entryTitle);
+        TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle, pageNumber);
+        tocMap.put(tocEntryCount, entry);
+        tocEntryCount++;
     }
     
     public static String[] getTocLine(Integer i){
         String[] tocEntryLine = new String[]{"dummyTitle", "dummyPage"};
-        if(engineIteration > 1){
+        if(engineIteration > 2){
             TocEntry<String, Integer> entry = tocMap.get(i);
             tocEntryLine[0] = entry.getTitle();
             tocEntryLine[1] = String.valueOf(entry.getPageNumber());
@@ -157,17 +180,13 @@ public class TocHelper2 {
     }
     
     public static void addLoTEntry(String tableName, Integer pageNumber){
-        if(engineIteration > 1){
             TocEntry<String, Integer> entry = new TocEntry<String, Integer>(tableName, pageNumber);
             loTMap.put(listOfTablesEntryCount, entry);
-        }
     }
     
     public static void addLoFEntry(String figureName, Integer pageNumber){
-        if(engineIteration > 1){
             TocEntry<String, Integer> entry = new TocEntry<String, Integer>(figureName, pageNumber);
             loFMap.put(listOfFiguresEntryCount, entry);
-        }
     }
     
     public static void addTocEntry(String entryTitle, int indent, Integer pageNumber){
@@ -196,11 +215,20 @@ public class TocHelper2 {
             sb.append(String.valueOf(chapterNumber));
             entryTitle = entryTitle.substring(entryTitle.indexOf(" ")).trim();
         }
-        for(int i = 0; i < indent; i++){
-            sb.append("    "); // \t wont get rendered by birt engine, so here we use 4 times space to generate indent 
-        }
         sb.append(entryTitle);
         addTocEntry(sb.toString(), pageNumber);
+    }
+    
+    public static void checkTocEntryLength(String entry){
+        if(engineIteration < 3){
+            if(entry.length() > maxTocEntryLength){
+                maxTocEntryLength = getStringDisplaySize(entry);
+            }
+        }
+    }
+    
+    public static int getMaxTocEntryLength(){
+        return maxTocEntryLength;
     }
     
     private static final Pattern REMOVE_TAGS = Pattern.compile("<.+?>");
@@ -264,12 +292,18 @@ public class TocHelper2 {
         return String.valueOf(engineIteration);
     }
     
-    public static String parseDate(String date, SimpleDateFormat destFormat){
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd.MM.yyyy", Locale.US);
-        SimpleDateFormat dateFormate = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+    public static void inspectObject(Object object){
+        log(object.getClass().getCanonicalName());
+    }
+    
+    public static String parseDate(String date, Locale locale){
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("EE, dd.MM.yyyy", locale);
+        SimpleDateFormat destinationFormat = new SimpleDateFormat("dd.MM.yyyy", locale);
+        formatter.setLenient(true);
         try {
             Date fDate = formatter.parse(date);
-            String ret = destFormat.format(fDate);
+            String ret = destinationFormat.format(fDate);
             return ret;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -277,7 +311,19 @@ public class TocHelper2 {
         }
     }
     
-    public static class TocEntry<TITLE, PAGENUMBER>{
+   public static String addTocPadding(String entry, boolean left){
+       return entry;
+   }
+   
+   public static int getStringDisplaySize(String input){
+       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+       BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+       Font font = new Font("Arial", Font.PLAIN, 10); 
+       FontMetrics fm = bi.getGraphics().getFontMetrics(font);
+       return fm.stringWidth(input);
+   }
+   
+   public static class TocEntry<TITLE, PAGENUMBER>{
         private final TITLE title;
         private final PAGENUMBER pagenumber;
         
@@ -296,6 +342,17 @@ public class TocHelper2 {
         
         public String toString(){
            return "<" + title + ", " + pagenumber + ">"; 
+        }
+        
+        public boolean equals(Object entry){
+            if(!(entry instanceof TocEntry)){
+                return false;
+            }
+            return this.toString().equals(((TocEntry<TITLE, PAGENUMBER>)entry).toString());
+        }
+        
+        public int hashCode(){
+            return toString().hashCode();
         }
     }
 

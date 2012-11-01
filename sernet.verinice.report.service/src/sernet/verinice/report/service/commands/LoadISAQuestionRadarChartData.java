@@ -19,22 +19,19 @@ package sernet.verinice.report.service.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
-import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummary;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.iso27k.IISRControl;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.report.service.impl.TocHelper2;
 
 /**
  *
@@ -42,11 +39,14 @@ import sernet.verinice.model.samt.SamtTopic;
 public class LoadISAQuestionRadarChartData extends GenericCommand {
     
     private static transient Logger LOG = Logger.getLogger(LoadISAQuestionRadarChartData.class);
-    private static final String PROP_ISATOPIC_MATURITY = "samt_topic_maturity";
+    private static final int THRESHOLD_VALUE = 3;
     
     public static String[] COLUMNS = new String[]{"title", 
-                                                  "riskValue"
+                                                  "riskValue",
+                                                  "threshold"
                                                  };
+    
+    private static final int MINIMUM_CHART_ENTRIES = 7;
 
     private Integer rootElmnt;
     
@@ -57,21 +57,26 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
         result = new ArrayList<List<String>>(0);
     }
     
+    public LoadISAQuestionRadarChartData(String root){
+        this(new Integer(Integer.parseInt(root)));
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         try {
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt);
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt, true);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> elements = command.getElements();
             for(CnATreeElement e : elements){
                 if(e instanceof SamtTopic){
                     SamtTopic topic = (SamtTopic)e;
                     ArrayList<String> list = new ArrayList<String>(0);
-                    list.add(topic.getTitle());
-                    list.add(String.valueOf(getWeightedMaturity(topic)));
+                    list.add(adjustTitle(topic.getTitle()));
+                    list.add(String.valueOf(getMaturityByWeight(topic)));
+                    list.add(String.valueOf(THRESHOLD_VALUE));
                     list.trimToSize();
                     result.add(list);
                 }
@@ -83,7 +88,24 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
     }
     
     public List<List<String>> getResult(){
+        if(result.size() < MINIMUM_CHART_ENTRIES){
+            addPaddingValues();
+        }
         return result;
+    }
+    
+    public void addPaddingValues(){
+        while(result.size() < MINIMUM_CHART_ENTRIES){
+            ArrayList<String> paddingEntry = new ArrayList<String>();
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < result.size(); i++){
+                sb.append(" ");
+            }
+            paddingEntry.add(sb.toString());
+            paddingEntry.add(String.valueOf(0));
+            paddingEntry.add(String.valueOf(THRESHOLD_VALUE));
+            result.add(paddingEntry);
+        }
     }
     
     public Integer getWeights(ControlGroup cg) {
@@ -117,6 +139,24 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
     public int getMaturity(IControl control) {
         return control.getMaturity();
     }
-
-
+    
+    private String adjustTitle(String title){
+        if(TocHelper2.getStringDisplaySize(title) > 50){
+            StringBuilder sb = new StringBuilder();
+            StringTokenizer tokenizer = new StringTokenizer(title); // space is one of the standard delimiters
+            while(tokenizer.hasMoreElements()){
+                sb.append(tokenizer.nextToken());
+                if(TocHelper2.getStringDisplaySize(title) > 25){
+                    sb.append("\n");
+                } else {
+                    sb.append(" ");
+                }
+               
+            }
+            
+        }
+        
+        return title;
+    }
+    
 }
