@@ -27,6 +27,7 @@ import org.eclipse.core.expressions.PropertyTester;
 
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.iso27k.service.CopyService;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
 
@@ -87,10 +88,19 @@ public class GroupTester extends PropertyTester {
 					}
 					break;
 				}
+				
+				if(element instanceof RisikoMassnahmenUmsetzung) {
+				    enabled = false;
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("object is RisikoMassnahmenUmsetzung");
+                    }
+                    break;
+				}
+				if (LOG.isDebugEnabled()) {
+	                LOG.debug("Cut/Copy of element ok. Type: " + element.getTypeId() + ", " + element);
+	            }
 			}
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Cut/Copy of element ok: " + object);
-			}
+			
 		}
 		
 		return enabled;
