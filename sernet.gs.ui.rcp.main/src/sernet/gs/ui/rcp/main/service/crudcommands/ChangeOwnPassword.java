@@ -24,7 +24,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -42,7 +41,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwareCommand, IChangeLoggingCommand {
 
     private String pass;
-    private IAuthService authService;
+    private transient IAuthService authService;
     private String stationId;
     
     

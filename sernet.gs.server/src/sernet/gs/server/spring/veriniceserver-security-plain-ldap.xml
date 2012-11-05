@@ -73,15 +73,15 @@
             name="adminUsername"
             value="${admin.username}" />
             
-        <property name="configurationDao" ref="configurationDao" />     
-
+        <property name="configurationDao" ref="configurationDao" />          
+            
         <security:intercept-methods>
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.getRoles"
                 access="ROLE_USER,ROLE_WEB" />
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.hashPassword"
-                access="ROLE_ADMIN" />
+                access="ROLE_USER,ROLE_WEB" />
         </security:intercept-methods>
     </bean>
     

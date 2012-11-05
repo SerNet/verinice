@@ -61,12 +61,12 @@
 -->
     <bean id="authService" class="sernet.gs.server.security.DigestAuthenticationService">
         <property name="entryPoint" ref="digestProcessingFilterEntryPoint" />
-		<property name="adminUsername" value="${admin.username}" /> 
+		<property name="adminUsername" value="${admin.username}" />
         <security:intercept-methods>
              <!-- must be logged in to access roles: -->
             <security:protect method="sernet.gs.server.security.DigestAuthenticationService.getRoles" access="ROLE_USER,ROLE_WEB" />
              <!-- must be logged in as admin to change passwords:--> 
-            <security:protect method="sernet.gs.server.security.DigestAuthenticationService.hashPassword" access="ROLE_ADMIN" />
+            <security:protect method="sernet.gs.server.security.DigestAuthenticationService.hashPassword" access="ROLE_USER,ROLE_WEB" />
         </security:intercept-methods>
     </bean>
     

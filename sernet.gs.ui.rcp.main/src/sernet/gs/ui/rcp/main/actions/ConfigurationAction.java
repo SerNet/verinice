@@ -89,15 +89,11 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 
 	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
+	    if(!checkRights()) {
+	        return;
+	    }
+	    
 		Activator.inheritVeriniceContextState();
-		// If this code is run then something is wrong, because the action
-		// should have been
-		// disabled programmatically. See method selectionChanged().
-		boolean hasRole = AuthenticationHelper.getInstance().currentUserHasRole(ALLOWED_ROLES);
-		if (!hasRole) {
-			MessageDialog.openWarning((Shell) targetPart.getAdapter(Shell.class), Messages.ConfigurationAction_0, Messages.ConfigurationAction_1);
-			return;
-		}
 
 		IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
 		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();

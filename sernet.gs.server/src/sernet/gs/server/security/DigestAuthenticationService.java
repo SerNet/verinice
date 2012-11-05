@@ -26,7 +26,10 @@ import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint;
 
 import sernet.gs.service.SecurityException;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IRightsServerHandler;
 
 /**
  * HTTP digest method authentication service.
@@ -69,6 +72,9 @@ public final class DigestAuthenticationService implements IAuthService {
 	 * Protected by Spring's security config, must have ROLE_ADMIN to use.
 	 */
 	public String hashPassword(String username, String pass) {
+	    if(!getRightsServerHandler().isEnabled(getUsername(), ActionRightIDs.ACCOUNTSETTINGS)) {
+	        throw new SecurityException("Action is not allowed for the current user");
+	    }
 		return DigestProcessingFilter.encodePasswordInA1Format(username,
 		        entryPoint.getRealmName(), pass);
 	}
@@ -139,5 +145,9 @@ public final class DigestAuthenticationService implements IAuthService {
         }
         // no user authenticated:
         return false;
+    }
+
+    private IRightsServerHandler getRightsServerHandler() {
+        return (IRightsServerHandler) VeriniceContext.get(VeriniceContext.RIGHTS_SERVER_HANDLER);
     }
 }

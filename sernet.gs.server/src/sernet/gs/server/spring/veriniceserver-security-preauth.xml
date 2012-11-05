@@ -67,7 +67,7 @@
                 access="ROLE_USER,ROLE_WEB" />
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.hashPassword"
-                access="ROLE_ADMIN" />
+                access="ROLE_USER,ROLE_WEB" />
         </security:intercept-methods>
     </bean>
 

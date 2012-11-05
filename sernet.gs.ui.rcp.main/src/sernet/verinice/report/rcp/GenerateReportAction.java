@@ -82,7 +82,9 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	 */
 	@Override
 	public void run(IAction action) {
-
+	    if(!checkRights()){
+	        return;
+	    }
 	    if(action.getText().equals(sernet.gs.ui.rcp.main.Messages.ApplicationActionBarAdvisor_13)){
 	        rootObjects = new ArrayList<Object>(0); // action called via actionBar, no rootObject preselected
 	    }
@@ -161,7 +163,6 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        action.setEnabled(checkRights());
         if(selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();
