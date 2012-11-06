@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.hibernate.mapping.Set;
 
 import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
@@ -149,7 +150,12 @@ public class TreeContentProvider implements ITreeContentProvider {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("getParent called for uuid: " + ((CnATreeElement) element).getUuid());
             }
-            return ((CnATreeElement) element).getParent();
+            CnATreeElement elementWithParent = Retriever.checkRetrieveParent((CnATreeElement) element);
+            if(elementWithParent==null) {
+                return null;
+            } else {
+                return elementWithParent.getParent();
+            }
         } else {
             return null;
         }
