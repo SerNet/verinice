@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -137,7 +138,7 @@ public class CnAElementFactory {
 	
 	private Object mutex = new Object();
 	
-	private static List<IModelLoadListener> listeners = new ArrayList<IModelLoadListener>();
+	private static List<IModelLoadListener> listeners = new CopyOnWriteArrayList<IModelLoadListener>();
 
 	private static CnAElementFactory instance;
 

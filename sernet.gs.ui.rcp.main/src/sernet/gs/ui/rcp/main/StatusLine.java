@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -26,10 +27,11 @@ import org.eclipse.ui.PlatformUI;
 
 public class StatusLine {
 
+    private static final Logger LOG = Logger.getLogger(StatusLine.class);
+    
 	private static IStatusLineManager getStatusLine() {
 		try {
-			IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-			.getActivePart();
+			IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
 			if (activePart instanceof IViewPart) {
 				return ((IViewPart)activePart).getViewSite().getActionBars().getStatusLineManager();
 			}
@@ -37,6 +39,7 @@ public class StatusLine {
 				return ((IEditorPart)activePart).getEditorSite().getActionBars().getStatusLineManager();
 			}
 		} catch (RuntimeException e) {
+		    LOG.error("Error while getting status line manager.", e);
 		}
 		return null;
 	}

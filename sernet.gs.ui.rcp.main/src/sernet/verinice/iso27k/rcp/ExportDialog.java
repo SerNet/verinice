@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -79,11 +80,13 @@ public class ExportDialog extends TitleAreaDialog {
      */
     private boolean encryptOutput = false;
     private boolean reImport = true;
-    private CnATreeElement selectedElement;
     private ITreeSelection selection;
-    private Set<CnATreeElement> selectedElementSet;
+    private CnATreeElement selectedElement;
+    //private Set<CnATreeElement> selectedElementSet;
     private String filePath;
     private String sourceId;
+    
+    OrganizationWidget organizationWidget = null;
     
     private Text sourceIdText;
     private Text txtLocation;
@@ -91,11 +94,19 @@ public class ExportDialog extends TitleAreaDialog {
     // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
     private int format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
+    private boolean serverConnectionMode = false;
     
     public ExportDialog(Shell activeShell) {
         this(activeShell, null);
     }
 
+    public ExportDialog(Shell activeShell, boolean serverConnectionMode, String filePath) {
+        super(activeShell);
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
+        this.serverConnectionMode = serverConnectionMode;
+        this.filePath = filePath;
+    }
+    
     /**
      * @param activeShell
      * @param selectedOrganization
@@ -127,241 +138,169 @@ public class ExportDialog extends TitleAreaDialog {
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);
         
-        /*
-         * Widgets for selection of an IT network or organization:
-         */
-
-        LoadCnAElementByType<Organization> cmdLoadOrganization = new LoadCnAElementByType<Organization>(Organization.class);
         try {
-            cmdLoadOrganization = ServiceFactory.lookupCommandService().executeCommand(cmdLoadOrganization);
+            organizationWidget = new OrganizationWidget(composite, selection, selectedElement);
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
             return null;
         }
-        
-        LoadCnAElementByType<ITVerbund> cmdItVerbund = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
-        try {
-            cmdItVerbund = ServiceFactory.lookupCommandService().executeCommand(cmdItVerbund);
-        } catch (CommandException ex) {
-            LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
-            setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
-            return null;
-        } 
-        
-        List<CnATreeElement> orgsAndITVs = new ArrayList<CnATreeElement>();
-        orgsAndITVs.addAll(cmdLoadOrganization.getElements());
-        orgsAndITVs.addAll(cmdItVerbund.getElements());
-        orgsAndITVs = sortOrgListByTitle(orgsAndITVs);
-        
-        final Group groupOrganization = new Group(composite, SWT.NONE);    
-        groupOrganization.setText(Messages.SamtExportDialog_2);
-        GridLayout groupOrganizationLayout = new GridLayout(1, true);
-        groupOrganization.setLayout(groupOrganizationLayout);
-        gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        gd.minimumWidth = 662;
-        gd.heightHint = 200; 
-        groupOrganization.setLayoutData(gd);
-
-        ScrolledComposite scrolledComposite = new ScrolledComposite(groupOrganization, SWT.V_SCROLL);
-        scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        scrolledComposite.setExpandHorizontal(true);
-        
-        Composite innerComposite = new Composite (scrolledComposite, SWT.NONE); 
-        scrolledComposite.setContent(innerComposite); 
-        innerComposite.setLayoutData(new GridData (SWT.FILL, SWT.FILL,true, false)); 
-        innerComposite.setLayout(new GridLayout (1, false));
-        
         
         SelectionListener organizationListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-            	Button checkbox = (Button) e.getSource();
-                selectedElement = (CnATreeElement) checkbox.getData();
+                Button checkbox = (Button) e.getSource();
                 if(checkbox.getSelection()) {
-	                selectedElementSet.add(selectedElement);
-	                if(txtLocation!=null) {
-	                    filePath = selectedElement.getTitle() + getDefaultExtension();
-	                    filePath = System.getProperty("user.home") + File.separatorChar +  filePath;
-	                    txtLocation.setText(filePath);
-	                }
-	                setSourceId(selectedElement);
-                } else {
-                	selectedElementSet.remove(selectedElement);
-                }
+                    if(txtLocation!=null) {
+                        filePath = organizationWidget.getSelectedElement().getTitle() + getDefaultExtension();
+                        filePath = System.getProperty("user.home") + File.separatorChar +  filePath;
+                        txtLocation.setText(filePath);
+                    }
+                    setSourceId(organizationWidget.getSelectedElement());
+                } 
                 super.widgetSelected(e);
             }
         };
-
-        selectedElement = null;
-        selectedElementSet = new HashSet<CnATreeElement>();      
         
-        ArrayList<CnATreeElement> preSelectedElements = new ArrayList<CnATreeElement>(0);
-        if(selection != null && !selection.isEmpty()){
-            Iterator<CnATreeElement> iter = selection.iterator();
-            while(iter.hasNext()){
-                preSelectedElements.add(iter.next());
-            }
-        } else if(selectedElement != null) {
-            preSelectedElements.add(selectedElement);
-        }
-                
-        for(CnATreeElement elmt : orgsAndITVs) {
-            final Button radioOrganization = new Button(innerComposite, SWT.CHECK);
-            radioOrganization.setText(elmt.getTitle());
-            radioOrganization.setData(elmt);
-            radioOrganization.addSelectionListener(organizationListener);
-            if (preSelectedElements.contains(elmt)) {
-                radioOrganization.setSelection(true);
-                selectedElement = elmt; 
-                selectedElementSet.add(elmt);             
-            }
-            if (orgsAndITVs.size() == 1) {
-                radioOrganization.setSelection(true);
-                selectedElement = elmt;
-                selectedElementSet.add(elmt);
-                setSourceId(selectedElement);
-            }
-        }
+        organizationWidget.addSelectionLiustener(organizationListener);
         
-        scrolledComposite.setVisible(true);
-        Point size = innerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT); 
-        size.y += orgsAndITVs.size() * 2;
-        innerComposite.setSize(size); 
-        groupOrganization.layout(); 
         
-        final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
-        sourceIdComposite.setLayout(new GridLayout(3,false));
-        ((GridLayout) sourceIdComposite.getLayout()).marginTop = 15;
-        gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
-        gd.grabExcessHorizontalSpace=true;
-        sourceIdComposite.setLayoutData(gd);
-        
-        /*
-         * Widgets for re-import
-         */
-        
-        final Button reImportCheckbox = new Button(sourceIdComposite, SWT.CHECK);
-        reImportCheckbox.setText(Messages.ExportDialog_0);
-        gd = new GridData();
-        gd.horizontalSpan = 3;
-        reImportCheckbox.setLayoutData(gd);
-        reImportCheckbox.setSelection(true);
-        reImportCheckbox.setEnabled(true);
-        reImportCheckbox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button checkBox = (Button) e.getSource();
-                reImport = checkBox.getSelection();
-            }
-        });
-        
-        /*
-         * Widgets for source-id
-         */
-        
-        final Label sourceIdLabel = new Label(sourceIdComposite, SWT.NONE);
-        sourceIdLabel.setText(Messages.SamtExportDialog_14);
-        sourceIdText = new Text(sourceIdComposite, SWT.BORDER);
-        gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        gd.minimumWidth = 150;
-        sourceIdText.setLayoutData(gd);
-        sourceIdText.addModifyListener(new ModifyListener() {         
-            @Override
-            public void modifyText(ModifyEvent e) {
-                sourceId = sourceIdText.getText();          
-            }
-        });      
-
-        /*
-         * Widgets to browse for storage location:
-         */
-
-        final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
-        labelLocation.setText(Messages.SamtExportDialog_6);
-        txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-        gd = new GridData(SWT.FILL, SWT.TOP, true,false);
-        gd.grabExcessHorizontalSpace=true;
-        gd.minimumWidth = 302;
-        txtLocation.setLayoutData(gd);
-        txtLocation.addKeyListener(new KeyListener() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                filePath = txtLocation.getText();
-            }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // nothing to do
-            }
-        });
-        
-        final Button buttonBrowseLocations = new Button(sourceIdComposite, SWT.NONE);
-        buttonBrowseLocations.setText(Messages.SamtExportDialog_7);
-        buttonBrowseLocations.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
-                dialog.setText(Messages.SamtExportDialog_3);
-                if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
-                    try {
-                        dialog.setFilterPath(System.getProperty("user.dir"));
-                        dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
-                    } catch (Exception e1) {
-                        LOG.warn(Messages.ExportDialog_1, e1);
-                        dialog.setFileName(""); //$NON-NLS-1$
-                    }
-                }             
-                dialog.setFilterExtensions(new String[] {
-                        "*"+EXTENSION_ARRAY[0], //$NON-NLS-1$
-                        "*"+EXTENSION_ARRAY[1] }); //$NON-NLS-1$          
-                dialog.setFilterNames(new String[] {
-                        Messages.ExportDialog_2,
-                        Messages.SamtExportDialog_15 });
-                // set the default extension to EXTENSION_VERINICE_ARCHIVE
-                dialog.setFilterIndex(0);
-                String exportPath = dialog.open();
-                // set export-format to filter index of dialog
-                // filter index must match ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV 
-                // or ExportCommand.EXPORT_FORMAT_XML_PURE
-                setFormat(dialog.getFilterIndex());
-                if (exportPath != null) {
-                    txtLocation.setText(ExportAction.addExtension(exportPath,EXTENSION_ARRAY[dialog.getFilterIndex()]));
-                    filePath = exportPath;
-                } else {
-                    txtLocation.setText(""); //$NON-NLS-1$
-                    filePath = ""; //$NON-NLS-1$
+        if(!serverConnectionMode) {    
+            final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
+            sourceIdComposite.setLayout(new GridLayout(3,false));
+            ((GridLayout) sourceIdComposite.getLayout()).marginTop = 15;
+            gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
+            gd.grabExcessHorizontalSpace=true;
+            sourceIdComposite.setLayoutData(gd);
+            
+            /*
+             * Widgets for re-import
+             */
+            
+            final Button reImportCheckbox = new Button(sourceIdComposite, SWT.CHECK);
+            reImportCheckbox.setText(Messages.ExportDialog_0);
+            gd = new GridData();
+            gd.horizontalSpan = 3;
+            reImportCheckbox.setLayoutData(gd);
+            reImportCheckbox.setSelection(true);
+            reImportCheckbox.setEnabled(true);
+            reImportCheckbox.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    Button checkBox = (Button) e.getSource();
+                    reImport = checkBox.getSelection();
                 }
-            }
-        });
-        
-        /*
-         *  Widgets to enable/disable encryption:
-         */
-
-        final Button encryptionCheckbox = new Button(sourceIdComposite, SWT.CHECK);
-        encryptionCheckbox.setText(Messages.SamtExportDialog_5);
-        gd = new GridData();
-        gd.horizontalSpan = 3;
-        encryptionCheckbox.setLayoutData(gd);
-        encryptionCheckbox.setSelection(encryptOutput);
-        encryptionCheckbox.setEnabled(true);
-        encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button checkBox = (Button) e.getSource();
-                encryptOutput = checkBox.getSelection();
-            }
-        });
-        
-        if(selectedElement!=null) {
-            filePath = selectedElement.getTitle() + getDefaultExtension();
+            });
+            
+            /*
+             * Widgets for source-id
+             */
+            
+            final Label sourceIdLabel = new Label(sourceIdComposite, SWT.NONE);
+            sourceIdLabel.setText(Messages.SamtExportDialog_14);
+            sourceIdText = new Text(sourceIdComposite, SWT.BORDER);
+            gd = new GridData(GridData.GRAB_HORIZONTAL);
+            gd.horizontalSpan = 2;
+            gd.minimumWidth = 150;
+            sourceIdText.setLayoutData(gd);
+            sourceIdText.addModifyListener(new ModifyListener() {         
+                @Override
+                public void modifyText(ModifyEvent e) {
+                    sourceId = sourceIdText.getText();          
+                }
+            });      
+            
+            setSourceId(organizationWidget.getSelectedElement());
+    
+            /*
+             * Widgets to browse for storage location:
+             */
+    
+            final Label labelLocation = new Label(sourceIdComposite, SWT.NONE);
+            labelLocation.setText(Messages.SamtExportDialog_6);
+            txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+            gd = new GridData(SWT.FILL, SWT.TOP, true,false);
+            gd.grabExcessHorizontalSpace=true;
+            gd.minimumWidth = 302;
+            txtLocation.setLayoutData(gd);
+            txtLocation.addKeyListener(new KeyListener() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    filePath = txtLocation.getText();
+                }
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    // nothing to do
+                }
+            });
+            
+            final Button buttonBrowseLocations = new Button(sourceIdComposite, SWT.NONE);
+            buttonBrowseLocations.setText(Messages.SamtExportDialog_7);
+            buttonBrowseLocations.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+                    dialog.setText(Messages.SamtExportDialog_3);
+                    if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
+                        try {
+                            dialog.setFilterPath(System.getProperty("user.dir"));
+                            dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
+                        } catch (Exception e1) {
+                            LOG.warn(Messages.ExportDialog_1, e1);
+                            dialog.setFileName(""); //$NON-NLS-1$
+                        }
+                    }             
+                    dialog.setFilterExtensions(new String[] {
+                            "*"+EXTENSION_ARRAY[0], //$NON-NLS-1$
+                            "*"+EXTENSION_ARRAY[1] }); //$NON-NLS-1$          
+                    dialog.setFilterNames(new String[] {
+                            Messages.ExportDialog_2,
+                            Messages.SamtExportDialog_15 });
+                    // set the default extension to EXTENSION_VERINICE_ARCHIVE
+                    dialog.setFilterIndex(0);
+                    String exportPath = dialog.open();
+                    // set export-format to filter index of dialog
+                    // filter index must match ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV 
+                    // or ExportCommand.EXPORT_FORMAT_XML_PURE
+                    setFormat(dialog.getFilterIndex());
+                    if (exportPath != null) {
+                        txtLocation.setText(ExportAction.addExtension(exportPath,EXTENSION_ARRAY[dialog.getFilterIndex()]));
+                        filePath = exportPath;
+                    } else {
+                        txtLocation.setText(""); //$NON-NLS-1$
+                        filePath = ""; //$NON-NLS-1$
+                    }
+                }
+            });
+            
+            /*
+             *  Widgets to enable/disable encryption:
+             */
+    
+            final Button encryptionCheckbox = new Button(sourceIdComposite, SWT.CHECK);
+            encryptionCheckbox.setText(Messages.SamtExportDialog_5);
+            gd = new GridData();
+            gd.horizontalSpan = 3;
+            encryptionCheckbox.setLayoutData(gd);
+            encryptionCheckbox.setSelection(encryptOutput);
+            encryptionCheckbox.setEnabled(true);
+            encryptionCheckbox.addSelectionListener(new SelectionAdapter() {
+    
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    Button checkBox = (Button) e.getSource();
+                    encryptOutput = checkBox.getSelection();
+                }
+            });
+            sourceIdComposite.pack(); 
+        }
+            
+        if(organizationWidget.getSelectedElement()!=null) {
+            filePath = organizationWidget.getSelectedElement().getTitle() + getDefaultExtension();
             filePath = System.getProperty("user.dir") + File.separatorChar + filePath;
             txtLocation.setText(filePath);
         }
-        
-        sourceIdComposite.pack();     
+               
         composite.pack();     
         return composite;
     }
@@ -413,7 +352,7 @@ public class ExportDialog extends TitleAreaDialog {
                 sb.append(Messages.SamtExportDialog_11);
             }
         }
-        if (selectedElement == null) {
+        if (organizationWidget.getSelectedElement() == null) {
             sb.append(Messages.SamtExportDialog_12);
         }
         if (sb.length() > 0) {
@@ -423,16 +362,6 @@ public class ExportDialog extends TitleAreaDialog {
             super.okPressed();
         }
     }
-
-    /* Getters and Setters: */
-
-    public CnATreeElement getSelectedElement() {
-        return selectedElement;
-    }
-
-    public Set<CnATreeElement> getSelectedElementSet() {
-		return selectedElementSet;
-	}
 
 	public String getFilePath() {
         return filePath;
@@ -456,16 +385,19 @@ public class ExportDialog extends TitleAreaDialog {
     public void setFormat(int exportFormat) {
         this.format = exportFormat;
     }
-    
-    private List<CnATreeElement> sortOrgListByTitle(List<CnATreeElement> list){
-    	Collections.sort(list, new Comparator<CnATreeElement>() {
-            @Override
-            public int compare(CnATreeElement o1, CnATreeElement o2) {
-                NumericStringComparator comparator = new NumericStringComparator();
-                return comparator.compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-    	return list;
+
+    /**
+     * @return
+     */
+    public Set<CnATreeElement> getSelectedElementSet() {
+        return organizationWidget.getSelectedElementSet();
+    }
+
+    /**
+     * @return
+     */
+    public CnATreeElement getSelectedElement() {
+        return organizationWidget.getSelectedElement();
     }
 
 }

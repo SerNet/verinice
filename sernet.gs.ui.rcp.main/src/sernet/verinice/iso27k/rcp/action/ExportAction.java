@@ -37,19 +37,15 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -220,7 +216,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     return status;
                 }
             };
-            exportJob.addJobChangeListener(new JobChangeListener(Display.getDefault().getActiveShell(),filePath,dialog.getSelectedElement().getTitle()));
+            exportJob.addJobChangeListener(new ExportJobChangeListener(Display.getDefault().getActiveShell(),filePath,dialog.getSelectedElement().getTitle()));
             JobScheduler.scheduleJob(exportJob,iSchedulingRule);
             
 		}
@@ -348,64 +344,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             exportPath = exportPath + extension;
         }      
         return exportPath;
-    }
-
-    class JobChangeListener implements IJobChangeListener {
-        Shell shell; 
-        String path;
-        String title;
-        public JobChangeListener(Shell shell, String path, String title) {
-            super();
-            this.shell = shell;
-            this.path = path;
-            this.title = title;
-        }
-  
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void aboutToRun(IJobChangeEvent event) {}
-
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#awake(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void awake(IJobChangeEvent event) {}
-
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void done(IJobChangeEvent event) {
-            if(Status.OK_STATUS.equals(event.getResult())) {
-                shell.getDisplay().asyncExec(new Runnable() {          
-                    @Override
-                    public void run() {
-                        MessageDialog.openInformation(shell, 
-                                Messages.getString("ExportAction_2"), 
-                                NLS.bind(Messages.getString("ExportAction_3"), new Object[] {title, path}));
-                    }
-                });   
-            }
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#running(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void running(IJobChangeEvent event) {}
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#scheduled(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void scheduled(IJobChangeEvent event) {}
-        /* (non-Javadoc)
-         * @see org.eclipse.core.runtime.jobs.IJobChangeListener#sleeping(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-         */
-        @Override
-        public void sleeping(IJobChangeEvent event) {}
-     
     }
 
     /* (non-Javadoc)

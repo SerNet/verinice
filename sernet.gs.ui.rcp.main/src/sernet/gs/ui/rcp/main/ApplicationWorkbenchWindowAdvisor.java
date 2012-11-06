@@ -253,4 +253,5 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
         }
     }
+
 }

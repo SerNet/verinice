@@ -23,8 +23,10 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.internal.Workbench;
 
 import sernet.gs.ui.rcp.main.Activator;
 
@@ -38,13 +40,13 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 
 	private RadioGroupFieldEditor operationMode;
 	private StringFieldEditor serverURI;
-	private boolean warningShown;
+	
+	private String oldServerMode, newServerMode; 
 
 	public ClientServerPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription(Messages.getString("ClientServerPreferencePage.0")); //$NON-NLS-1$
-		warningShown = false;
 	}
 
 	/**
@@ -75,21 +77,26 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	public void propertyChange(PropertyChangeEvent event) {
 		super.propertyChange(event);
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
-			if (event.getSource() == operationMode) {
-				Object newValue = event.getNewValue();
-				boolean servermode = newValue.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
+			if (event.getSource() == operationMode ) {
+				newServerMode = (String) event.getNewValue();
+				boolean servermode = newServerMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
 				serverURI.setEnabled(servermode, getFieldEditorParent());
-
-				if (!warningShown) {
-					warningShown = true;
-					MessageDialog.openInformation(getShell(), Messages.getString("ClientServerPreferencePage.2"), Messages.getString("ClientServerPreferencePage.3")); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-
 			}
 		}
 	}
 
-	private void createRadioGroup() {
+	/**
+     * @param event
+     * @return
+     */
+    private boolean propertyChanged() {       
+        if(newServerMode!=null) {
+            return !(newServerMode.equals(oldServerMode));
+        }
+        return oldServerMode!=null;
+    }
+
+    private void createRadioGroup() {
 		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, Messages.getString("ClientServerPreferencePage.4"), 1, new String[][] { { Messages.getString("ClientServerPreferencePage.5"), PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER }, { Messages.getString("ClientServerPreferencePage.6"), PreferenceConstants.OPERATION_MODE_REMOTE_SERVER } }, getFieldEditorParent()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		addField(operationMode);
 	}
@@ -101,6 +108,29 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
+	    oldServerMode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
+	 */
+	@Override
+	public boolean performOk() {
+	    boolean returnValue = super.performOk();
+	    if(propertyChanged()) {
+	        MessageDialog mDialog = new MessageDialog(
+	                Display.getDefault().getActiveShell(), 
+	                Messages.getString("ClientServerPreferencePage.2"), //$NON-NLS-1$
+	                null,
+	                Messages.getString("ClientServerPreferencePage.3"), //$NON-NLS-1$
+	                MessageDialog.QUESTION, 
+	                new String[] { Messages.getString("ClientServerPreferencePage.7"), Messages.getString("ClientServerPreferencePage.8") }, 1); //$NON-NLS-1$ //$NON-NLS-2$
+	        int result = mDialog.open();
+    	    if(result==1) {
+                Workbench.getInstance().restart();
+            }
+	    }
+	    return returnValue;
 	}
 
 }

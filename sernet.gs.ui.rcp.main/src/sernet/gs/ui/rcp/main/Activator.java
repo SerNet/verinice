@@ -68,6 +68,7 @@ import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
 
 import org.osgi.framework.FrameworkUtil;
@@ -302,6 +303,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		};
 		repositoryJob.schedule();
 			
+		StartupImporter.importVna();
+		
 		// Log the system and application configuration
 		ConfigurationLogger.logSystemProperties();
 		ConfigurationLogger.logApplicationProperties();

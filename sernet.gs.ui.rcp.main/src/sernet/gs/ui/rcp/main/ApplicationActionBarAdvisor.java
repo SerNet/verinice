@@ -22,11 +22,14 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
@@ -66,6 +69,7 @@ import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -74,6 +78,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 import sernet.verinice.rcp.ProfileEditAction;
+import sernet.verinice.rcp.ServerConnectionToggleAction;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -167,6 +172,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	private ImportGstoolNotesAction importGSNotesAction;
 
     private RunRiskAnalysisAction runRiskAnalysisAction;
+    
+    private ServerConnectionToggleAction serverConnectionToggleAction;
 
     private TestAction testAction;
 
@@ -296,8 +303,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
         
-
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
+        
+        serverConnectionToggleAction = new ServerConnectionToggleAction(window);
         
         testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         
@@ -317,6 +325,28 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(createEditMenu(window));
         menuBar.add(createWindowMenu(window));
         menuBar.add(createHelpMenu());
+    }
+    
+    @Override
+    protected void fillStatusLine(IStatusLineManager statusLine) {
+        if(isServerMode()) {
+            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",100);
+            statusItem.setText("Server: " + getShortServerUrl());
+            statusLine.add(statusItem);
+        }       
+    }
+    
+    private String getShortServerUrl() {
+        String url = getServerUrlPreference();
+        if(url!=null && !url.isEmpty()) {
+           if(url.startsWith("http://")) {
+               url = url.substring(7);
+           }
+           if(url.startsWith("https://")) {
+               url = url.substring(8);
+           }
+        }
+        return url;
     }
 
     private IContributionItem createHelpMenu() {
@@ -370,6 +400,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(importPersonFromLdap);
 
         fileMenu.add(new Separator());
+        fileMenu.add(serverConnectionToggleAction);
         fileMenu.add(exitAction);
         //fileMenu.add(testAction);
         return fileMenu;
@@ -507,6 +538,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             IExtension ext = actionSets[i].getConfigurationElement().getDeclaringExtension();
             reg.removeExtension(ext, new Object[] { actionSets[i] });
         }
+    }
+    
+    public static boolean isServerMode() {
+        return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER.equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
+    }
+
+    private String getServerUrlPreference() {        
+        return getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);
+    }
+
+    private static IPreferenceStore getPreferenceStore() {
+        return Activator.getDefault().getPreferenceStore();
     }
 
 }
