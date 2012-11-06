@@ -19,9 +19,11 @@ package sernet.verinice.iso27k.service;
 
 import java.util.Map;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
+import org.apache.log4j.Logger;
+
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -29,6 +31,7 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 
@@ -42,6 +45,8 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  */
 public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
+    
+    private static transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
 
     /*
      * (non-Javadoc)
@@ -237,6 +242,69 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         return new Integer[] {impactC, impactI, impactA};
         
     }
+
+    /**
+     * computes if a given risk (given by asset & scenario) is red, yellow or green
+     */
+    @Override
+    public int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields){
+        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        
+        int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+        
+        // prob. / impact:
+        int riskC = probability + valueAdapter.getVertraulichkeit();
+        int riskI = probability + valueAdapter.getIntegritaet();
+        int riskA = probability + valueAdapter.getVerfuegbarkeit();
+        
+        int riskColour = 0;
+        // risk values:
+        switch(riskType) {
+        case 'c':
+            riskColour = (getRiskColor(riskC, getTolerableRisks(asset, 'c'), numOfYellowFields));
+            break;
+        case 'i':
+            riskColour = (getRiskColor(riskI, getTolerableRisks(asset, 'i'), numOfYellowFields));
+            break;
+        case 'a':
+            riskColour = (getRiskColor(riskA, getTolerableRisks(asset, 'a'), numOfYellowFields));
+            break;
+        }
+        return riskColour;
+    }
+    
+    private int getTolerableRisks(CnATreeElement elmt, char riskType){
+        LoadPolymorphicCnAElementById rootLoader = new LoadPolymorphicCnAElementById(new Integer[]{elmt.getScopeId()});
+        try {
+            elmt = ServiceFactory.lookupCommandService().executeCommand(rootLoader).getElements().get(0);
+            elmt = (CnATreeElement)rootLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(elmt);
+        } catch (CommandException e) {
+            LOG.error("Error while executing command");
+        }
+        if(elmt instanceof Organization){
+            switch(riskType){
+            case 'c':
+                return elmt.getNumericProperty("org_riskaccept_confid");
+            case 'i':
+                return elmt.getNumericProperty("org_riskaccept_integ");
+            case 'a': 
+                return elmt.getNumericProperty("org_riskaccept_avail");
+            }
+        }
+        return 0;
+    }
+    
+    private int getRiskColor(int risk, int tolerableRisk, int numOfYellowFields){
+        if(risk > tolerableRisk){
+            return IRiskAnalysisService.RISK_COLOR_RED;
+        } else if(risk < tolerableRisk-numOfYellowFields+1){
+            return IRiskAnalysisService.RISK_COLOR_GREEN;
+        } else {
+            return IRiskAnalysisService.RISK_COLOR_YELLOW;
+        }
+    }
+
+   
 
 
 }

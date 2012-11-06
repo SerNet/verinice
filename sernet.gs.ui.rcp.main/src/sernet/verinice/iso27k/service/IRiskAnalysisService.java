@@ -18,7 +18,6 @@
 package sernet.verinice.iso27k.service;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -71,6 +70,11 @@ public interface IRiskAnalysisService {
     public static final int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
     public static final int RISK_WITH_ALL_CONTROLS = 2;
     
+    public static final int RISK_COLOR_GREEN = 0;
+    public static final int RISK_COLOR_YELLOW = 1;
+    public static final int RISK_COLOR_RED = 2;
+    
+    
 
     /**
      * Determine probability for this scenario, based on threat and vulnerability.
@@ -103,6 +107,8 @@ public interface IRiskAnalysisService {
      * @throws CommandException
      */
     public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
+    
+    int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields);
 
 }
 
