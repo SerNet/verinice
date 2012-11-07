@@ -144,7 +144,7 @@
             id="sernet.verinice.bpm.rcp.TaskView"
             name="%view.name.12"
             restorable="true">
-      </view>
+      </view>     
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -740,7 +740,7 @@
             id="sernet.gs.ui.rcp.main.itverbundreport"
             objectClass="sernet.verinice.model.bsi.ITVerbund">
          <action
-               class="sernet.verinice.report.rcp.GenerateReportAction"
+               class="sernet.verinice.report.rcp.GenerateSpecificReportAction"
                enablesFor="+"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateITVerbundReportAction.action"
@@ -755,7 +755,7 @@
             id="sernet.gs.ui.rcp.main.organisationreport"
             objectClass="sernet.verinice.model.iso27k.Organization">
          <action
-               class="sernet.verinice.report.rcp.GenerateReportAction"
+               class="sernet.verinice.report.rcp.GenerateSpecificReportAction"
                enablesFor="+"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateOrganisationReportAction.action"
@@ -1265,7 +1265,7 @@
             label="%actionSet.label"
             visible="true">
          <action
-               class="sernet.verinice.report.rcp.GenerateReportAction"
+               class="sernet.verinice.report.rcp.GenerateGenericReportAction"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateReportAction"
                label="%action.label.25"

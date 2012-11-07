@@ -2,7 +2,6 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -13,7 +12,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -22,14 +20,13 @@ import org.eclipse.ui.actions.ActionDelegate;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.interfaces.report.IReportOptions;
-import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.interfaces.report.IReportType;
 
 @SuppressWarnings("restriction")
 public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
@@ -40,6 +37,8 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 
     private GenerateReportDialog dialog;
     private List<Object> rootObjects;
+    
+    private boolean isContextMenuCall;
 
     @Override
     public void init(IWorkbenchWindow window) {
@@ -85,9 +84,6 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	    if(!checkRights()){
 	        return;
 	    }
-	    if(action.getText().equals(sernet.gs.ui.rcp.main.Messages.ApplicationActionBarAdvisor_13)){
-	        rootObjects = new ArrayList<Object>(0); // action called via actionBar, no rootObject preselected
-	    }
 	    try {
 	        if(rootObjects.size() == 0){
 	            dialog = new GenerateReportDialog(shell);
@@ -97,7 +93,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
             } else {
                 dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_GENERAL_REPORT);
             }
-            
+            dialog.setContextMenuCall(isContextMenuCall());
     		if (dialog.open() == Dialog.OK) {
     			final IReportOptions ro = new IReportOptions() {
     			    Integer rootElmt; 
@@ -167,6 +163,10 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();
         }
+    }
+
+    public boolean isContextMenuCall() {
+        return isContextMenuCall;
     }
 
 }

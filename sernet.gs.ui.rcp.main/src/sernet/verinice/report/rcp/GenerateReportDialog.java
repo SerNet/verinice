@@ -87,6 +87,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	private List<CnATreeElement> preSelectedElments;
 	
 	private String useCase;
+	
+	public boolean isContextMenuCall;
     
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 700;
@@ -103,7 +105,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	public GenerateReportDialog(Shell parentShell, String useCase){
 		this(parentShell);
 		this.useCase = useCase;
-		filterReportTypes();
 	}
 	
 	/**
@@ -119,7 +120,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else {
             this.useCase = IReportType.USE_CASE_ID_ALWAYS_REPORT;
         }
-        filterReportTypes();
         CnATreeElement cnaElmt = (CnATreeElement) audit;
         
         
@@ -143,7 +143,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     public GenerateReportDialog(Shell shell, List<Object> objects, String useCase){
     	this(shell, objects);
     	this.useCase = useCase;
-    	filterReportTypes();
     }
     
     @Override
@@ -170,6 +169,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Override
 	protected Control createDialogArea(Composite parent) {
+        if(useCase != null){
+            filterReportTypes();
+        }
         setTitle(Messages.GenerateReportDialog_0);
         setMessage(Messages.GenerateReportDialog_7);
 
@@ -403,7 +405,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     private void setupComboScopes() {
         // check if audit was selected by context menu:
-        if (this.auditId != null){
+        if (this.auditId != null && isContextMenuCall()){
             scopeCombo.removeAll();
             scopeCombo.add(this.auditName);
             rootElement=auditId;
@@ -411,7 +413,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             scopeCombo.select(0);
             scopeCombo.redraw();
             return;
-        } else if(this.preSelectedElments != null && this.preSelectedElments.size() > 0) {
+        } else if(this.preSelectedElments != null && this.preSelectedElments.size() > 0 && isContextMenuCall()) {
             scopeCombo.removeAll();
             ArrayList<Integer> auditIDList = new ArrayList<Integer>();
             StringBuilder sb = new StringBuilder();
@@ -632,6 +634,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
 			}
 		}
 		reportTypes = list.toArray(new IReportType[list.size()]);
+    }
+
+    public boolean isContextMenuCall() {
+        return isContextMenuCall;
+    }
+
+    public void setContextMenuCall(boolean isContextMenuCall) {
+        this.isContextMenuCall = isContextMenuCall;
     }
     
 	

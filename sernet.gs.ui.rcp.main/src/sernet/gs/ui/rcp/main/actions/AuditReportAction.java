@@ -20,13 +20,13 @@ import org.eclipse.ui.actions.ActionDelegate;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 public class AuditReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
     private static final Logger LOG = Logger.getLogger(AuditReportAction.class);
@@ -51,6 +51,7 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
         	} else {
         		dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_AUDIT_REPORT);
         	}
+        	dialog.setContextMenuCall(true);
             if (dialog.open() == Dialog.OK) {
                 final IReportOptions ro = new IReportOptions() {
                     Integer rootElmt;
