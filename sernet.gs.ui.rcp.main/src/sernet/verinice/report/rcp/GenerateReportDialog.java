@@ -109,18 +109,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	
 	/**
      * @param shell
-     * @param audit
+     * @param reportScope
      */
-    public GenerateReportDialog(Shell shell, Object audit) {
+    public GenerateReportDialog(Shell shell, Object reportScope) {
         this(shell);
-        if(audit instanceof Audit){
+        if(reportScope instanceof Audit){
             this.useCase = IReportType.USE_CASE_ID_AUDIT_REPORT;
-        } else if(audit instanceof Organization) {
+        } else if(reportScope instanceof Organization || reportScope instanceof ITVerbund) {
             this.useCase = IReportType.USE_CASE_ID_GENERAL_REPORT;
         } else {
             this.useCase = IReportType.USE_CASE_ID_ALWAYS_REPORT;
         }
-        CnATreeElement cnaElmt = (CnATreeElement) audit;
+        CnATreeElement cnaElmt = (CnATreeElement) reportScope;
         
         
         this.auditId=cnaElmt.getDbId();
