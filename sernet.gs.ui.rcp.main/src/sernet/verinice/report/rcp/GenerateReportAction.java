@@ -88,7 +88,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	        if(rootObjects.size() == 0){
 	            dialog = new GenerateReportDialog(shell);
 	        }
-            if(rootObjects.size() == 1){
+	        else if(rootObjects.size() == 1 && isContextMenuCall()){
                 dialog = new GenerateReportDialog(shell, rootObjects.get(0));
             } else {
                 dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_GENERAL_REPORT);
