@@ -1,7 +1,6 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +13,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -108,7 +106,6 @@ public class LoadReportElements extends GenericCommand {
     	        }
     	    });
 	    }
-	    
 	}
 
 	
@@ -135,16 +132,8 @@ public class LoadReportElements extends GenericCommand {
                 items.add(child);
                 child.getParent().getTitle();
             }
-            if(child instanceof Group){
-                Group g = (Group)child;
-                if(Arrays.asList(g.getChildTypes()).contains(typeFilter) || g.getTypeId().equals(typeFilter)){
-                    getElements(typeFilter, items, child);
-                }
-            } 
+            getElements(typeFilter, items, child);
         }
         
     }
-	
-
-
 }
