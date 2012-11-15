@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,10 +99,14 @@ public class TocHelper2 {
         
         case 1:
             tocEntryCount = 0;
+            listOfTablesEntryCount = 0;
+            listOfFiguresEntryCount = 0;
             break;
             
         case 2: 
-            
+            tocEntryCount = 0;
+            listOfTablesEntryCount = 0;
+            listOfFiguresEntryCount = 0;
             break;
         
         case 3:
@@ -124,8 +129,16 @@ public class TocHelper2 {
     public static void addTocEntry(String entryTitle, Integer pageNumber){
         entryTitle = removeTags(entryTitle);
         TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle, pageNumber);
-        tocMap.put(tocEntryCount, entry);
-        tocEntryCount++;
+        int entryNumberToPut = tocEntryCount;
+        for(Entry<Integer, TocEntry<String, Integer>> mapEntry : tocMap.entrySet()){
+            if(mapEntry.getValue().getTitle().equals(entry.getTitle())){
+                entryNumberToPut = mapEntry.getKey();
+            }
+        }
+        if(!tocMap.containsValue(entry)){
+            tocMap.put(entryNumberToPut, entry);
+            tocEntryCount++;
+        }
     }
     
     public static String[] getTocLine(Integer i){
@@ -180,13 +193,39 @@ public class TocHelper2 {
     }
     
     public static void addLoTEntry(String tableName, Integer pageNumber){
-            TocEntry<String, Integer> entry = new TocEntry<String, Integer>(tableName, pageNumber);
-            loTMap.put(listOfTablesEntryCount, entry);
+            int entryNumberToPut = listOfTablesEntryCount;
+            String entryToPut = tableName.trim();
+            for(Entry<Integer, TocEntry<String, Integer>> mapEntry : loTMap.entrySet()){
+                String entryTitle = tableName.substring(tableName.indexOf(":") + 1).trim();
+                String mapEntryTitle = mapEntry.getValue().getTitle().substring(mapEntry.getValue().getTitle().indexOf(":") + 1).trim();
+                if(entryTitle.equals(mapEntryTitle)){
+                    String preFix = mapEntry.getValue().getTitle().substring(0, mapEntry.getValue().getTitle().indexOf(":") + 1);
+                    entryToPut = preFix.trim() + " " + mapEntryTitle.trim();
+                    entryNumberToPut = mapEntry.getKey();
+                }
+            }
+            TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryToPut, pageNumber);
+            if(!loTMap.containsValue(entry)){
+                loTMap.put(entryNumberToPut, entry);
+            }
     }
     
     public static void addLoFEntry(String figureName, Integer pageNumber){
-            TocEntry<String, Integer> entry = new TocEntry<String, Integer>(figureName, pageNumber);
-            loFMap.put(listOfFiguresEntryCount, entry);
+            int entryNumberToPut = listOfFiguresEntryCount;
+            String entryToPut = figureName.trim();
+            for(Entry<Integer, TocEntry<String, Integer>> mapEntry : loFMap.entrySet()){
+                String entryTitle = figureName.substring(figureName.indexOf(":") + 1).trim();
+                String mapEntryTitle = mapEntry.getValue().getTitle().substring(mapEntry.getValue().getTitle().indexOf(":") + 1).trim();
+                if(entryTitle.equals(mapEntryTitle)){
+                    String preFix = mapEntry.getValue().getTitle().substring(0, mapEntry.getValue().getTitle().indexOf(":") + 1);
+                    entryToPut = preFix.trim() + " " + mapEntryTitle.trim();
+                    entryNumberToPut = mapEntry.getKey();
+                }
+            }
+            TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryToPut, pageNumber);
+            if(!loFMap.containsValue(entry)){
+                loFMap.put(entryNumberToPut, entry);
+            }
     }
     
     public static void addTocEntry(String entryTitle, int indent, Integer pageNumber){
@@ -323,36 +362,49 @@ public class TocHelper2 {
        return fm.stringWidth(input);
    }
    
-   public static class TocEntry<TITLE, PAGENUMBER>{
-        private final TITLE title;
-        private final PAGENUMBER pagenumber;
+   public static class TocEntry<TITLE, PAGENUMBER> implements Comparable<TocEntry<TITLE, PAGENUMBER>>{
+        private final String title;
+        private final Integer pagenumber;
         
-        public TocEntry(TITLE title, PAGENUMBER pagenumber){
+        public TocEntry(String title, Integer pagenumber){
             this.title = title;
             this.pagenumber = pagenumber;
         }
         
-        public TITLE getTitle(){
+        public String getTitle(){
             return title;
         }
         
-        public PAGENUMBER getPageNumber(){
+        public Integer getPageNumber(){
             return pagenumber;
         }
         
         public String toString(){
-           return "<" + title + ", " + pagenumber + ">"; 
+           return "<" + title + ", " + pagenumber.toString() + ">"; 
         }
         
         public boolean equals(Object entry){
             if(!(entry instanceof TocEntry)){
                 return false;
             }
-            return this.toString().equals(((TocEntry<TITLE, PAGENUMBER>)entry).toString());
+            boolean retVal = this.toString().equals(((TocEntry<TITLE, PAGENUMBER>)entry).toString()); 
+            return retVal;
         }
         
         public int hashCode(){
             return toString().hashCode();
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Comparable#compareTo(java.lang.Object)
+         */
+        @Override
+        public int compareTo(TocEntry<TITLE, PAGENUMBER> o) {
+            if(this.pagenumber > o.pagenumber){
+                return 1;
+            } else if(this.pagenumber < o.pagenumber){
+                return -1;
+            } else return 0;
         }
     }
 
