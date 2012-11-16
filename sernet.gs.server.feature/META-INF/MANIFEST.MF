@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Feature Plug-in
+Bundle-SymbolicName: sernet.gs.server.feature
+Bundle-Version: 1.1.1.qualifier

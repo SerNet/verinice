@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Eclipse BIRT Project
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Name: BIRT Chart Framework
+Bundle-SymbolicName: org.eclipse.birt.chart
+Bundle-Version: 3.7.0.v20110126
+Bundle-ManifestVersion: 2
+
+Name: eclipse32.png
+SHA1-Digest: eCk/A3/COXL3S6qAVDOSrlsqmLw=
+
+Name: about.ini
+SHA1-Digest: 2w8BfdBzQbbWHJNbazxzu9YMYwo=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: about.properties
+SHA1-Digest: Tui4emedj5g+JZfXuuFjxCyMJ9k=
+
+Name: about.mappings
+SHA1-Digest: R4hkDhLrAI6mikImTmP7le3bSOw=
+
+Name: about.html
+SHA1-Digest: ObsP47Fq6CSfBimdpGOcNnxQyPA=
+

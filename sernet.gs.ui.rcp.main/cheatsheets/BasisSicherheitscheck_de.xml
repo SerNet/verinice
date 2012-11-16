@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Basis-Sicherheitscheck">
+
+	<intro 
+		>
+		<description>
+		Im Rahmen des Basis-Sicherheitschecks bestimmen Sie, inwieweit Sie die Maßnahmen
+		der BSI IT-Grundschutzkataloge bereits umgesetzt haben.
+		</description>
+	</intro>
+	
+	<item title="Ansicht optimieren">
+	<description>
+	Das Fenster mit den Grundschutzkatalogen benötigen Sie nun nicht mehr so oft.
+	Schaffen Sie ein wenig Platz auf dem Bildschirm, indem Sie das Fenster "GS Modell" an seiner 
+	Überschrift mit der Maus rüber ins Fenster "GS Kataloge" ziehen.
+	<br/><br/>
+	Die beiden Fenster teilen sich nun denselben Bereich. Anhand der Reiter können Sie von 
+	einem zum anderen wechseln. Auf diese Weise lassen sich alle Fenster verschieben und 
+	zurechtrücken.
+	<br/><br/>
+	Sie können sie sogar aus der Anwendung herausziehen. Das ist 
+	praktisch, um bei einem Dual-Screen System den Objektbrowser auf
+	einen eigenen Monitor groß anzuzeigen. Jetzt haben Sie also ein Argument, bei ihrem Chef ein zweites
+	TFT-Display anzufordern.
+	</description>
+	</item>
+
+	<item title="Interview">
+		<description>
+		Legen wir los mit der Modellierung!
+		<br/><br/>
+		Öffnen Sie den ersten Baustein B 1.0 durch Doppelklick. Tragen Sie ihren eigenen 
+		Namen in das Feld "Erfasst durch" ein, und den ihres Interviewpartners in das Feld "Gesprächspartner". 
+		Das Datum wird automatisch auf den heutigen Tag gesetzt, sie können es ändern falls nötig.
+		<br/><br/>
+		Beachten Sie, wie der Text des Bausteins im Browser-Fenster angezeigt wird, sobald 
+		Sie ihn selektieren. Hier können Sie die Inhalte noch einmal nachlesen.
+		<br/><br/>
+		Speichern Sie den Baustein (Strg-S).
+		</description>
+	</item>
+
+	<item title="Maßnahmenumsetzung">
+		<description>
+		Öffnen Sie die erste Maßnahme durch Doppelklick. Der Text der Maßnahme erscheint im 
+		Browserfenster, damit Sie die Anforderungen nachlesen können.
+		<br/><br/>
+		Setzen Sie den Umsetzungsstatus auf "Ja". Schließen und Speichern Sie die Maßnahme 
+		(Strg-W).
+		</description>
+	</item>
+	
+	<item title="Bulk Edit 1">
+		<description>
+		Sie möchten (nach sorgfältiger Prüfung) alle Maßnahmen des Bausteins B 1.0 auf den 
+		Status "umgesetzt" setzen. Selektieren Sie (durch Shift-Klick) alle Maßnahmen des 
+		Bausteins.
+		<br/><br/>
+		Wählen Sie dann "Bearbeiten", "Bulk Edit". Setzen Sie den Umsetzungsstatus auf "Ja" 
+		und wählen Sie "Okay".
+		</description>
+	</item>
+	
+	<item title="Bulk Edit 2">
+		<description>
+		Die Änderung wurde bei allen gewählten Objekten vorgenommen. Dies funktioniert mit
+		allen andern Objekten, als auch mit Bausteinen, Zielobjekten usw. Voraussetzung ist, 
+		dass Sie gleichartige Objekte selektiert haben - also z.B. NUR Server oder nur Bausteine.
+		<br/><br/>
+		Alle Felder, die Sie beim Bulk-Edit leer lassen, werden ignoriert. Es werden 
+		also nur die Felder überschrieben, die Sie ändern möchten, alle anderen bleiben 
+		unangetastet.
+		</description>
+	</item>
+	
+	<item title="Der Konsolidator 1">
+		<description>
+		Eine weitere Hilfe beim Erfassen der Maßnahmen ist der Konsolidator. Wenn Sie den gleichen 
+		Baustein auf mehrere Zielobjekte anwenden, ähnelt sich oft der Umsetzungsgrad der Maßnahmen.
+		<br/><br/>
+		Klappen Sie das Buchhaltungssystem und den Baustein 3.101 auf. Setzen Sie für die 
+		Maßnahme 1.28 "Lokale USV" die Umsetzung auf "Ja". Speichern Sie (Strg-S) und klappen Sie den Baustein zu.
+		<br/><br/>
+		Erzeugen Sie einen neuen Server mit dem Namen "Mailserver". Ordnen Sie den Baustein 
+		B 3.101 erneut zu - per Drag'n'Drop oder Copy'n'Paste aus dem Fenster "IT-Grundschutz".
+		<br/><br/>
+		Klicken Sie rechts auf den Baustein 3.101 und wählen Sie "Gleiche Bausteine 
+		selektieren".
+		</description>
+	</item>
+	
+	<item title="I'll be back.">
+		<description>
+		ALLE ihre Server sind an die USV angeschlossen. Sie möchten das nicht für jeden 
+		Server einzeln auswählen.
+		<br/><br/>
+		Wählen Sie nun im Menü :"Bearbeiten", "Konsolidator". Wählen Sie als Vorlage das 
+		Buchhaltungssystem. Wenn Sie jetzt den Baustein 3.101 beim Mailserver aufklappen, 
+		sehen Sie, dass der Umsetzungsstatus der Maßnahme 1.28 übernommen wurde.
+		<br/><br/>
+		Wenn Sie weitere Maßnahmen oder den Vorlagenbaustein selbst bearbeitet hätten, wären auch
+		diese Änderungen übernommen worden. So können Sie schnell die Maßnahmen über mehrere 
+		Zielobjekte hinweg dokumentieren.
+		</description>
+	</item>
+	
+	<item title="Tipp">
+	<description>
+		Tipp: Sie können auch extra ein Zielobjekt z.B. mit der Bezeichnung "Vorlage" anlegen 
+		und dort Bausteine als Vorlagen vorbereiten. Es werden immer nur die Felder 
+		übernommen, die sie in der Vorlage editiert haben, alle anderen bleiben 
+		unangetastet.
+	</description>
+	</item>
+	
+	<item title="Realisierung">
+		<description>
+		Arbeiten Sie sich durch alle Maßnahmen durch, dokumentieren Sie Umsetzungsgrad 
+		und Begründung. Für nicht-umgesetzte Maßnahmen legen Sie Umsetzungszeitpunkt 
+		und Verantwortlichen fest.
+		<br/><br/>
+		Eine Liste aller umzusetzenden Maßnahmen erhalten Sie über "Ansicht", "Zeige View", 
+		"Realisierungsplan". Sie können diese Ansicht nach dem Verantwortlichen filtern.
+		<br/><br/>
+		Sie können auch einen Realisierungsplan nach OpenOffice exportieren, wie im Spickzettel 
+		"Reports" beschrieben.
+		</description>
+		
+		<onCompletion>
+		Sehr gut! Machen Sie weiter mit der ergänzenden Sicherheitsanalyse.
+		</onCompletion>
+	</item>
+	
+		
+	
+</cheatsheet>

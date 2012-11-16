@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+    xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition template="/layout.xhtml">
+<ui:define name="content">
+	<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
+		<div id="col3_content">
+			<h:form id="tableForm" rendered="#{auth.isoTasks}">
+				<div class="csc-header csc-header-n1" style="height:40px;">
+					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
+				</div>
+				<div style="margin-bottom:6px;">
+					<p:outputPanel id="completePanel">
+						<ui:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
+					    	<p:commandButton id="complete" 
+					    		action="#{task.completeTask}" 
+					    		value="#{outcome.value}" 
+					    		update=":tableForm,:editForm,:completeHandlerForm">
+					    		<f:setPropertyActionListener target="#{task.outcomeId}" value="#{outcome.key}" />					    		
+					    	</p:commandButton>						    
+					    </ui:repeat>
+					    <p:commandButton id="completeAll" action="#{task.completeAllTask}" value="#{msgTask['completeAll']}" update=":tableForm:taskTable,:editForm" styleClass="button">
+					    	<f:setPropertyActionListener  target="#{message.info}" value="Completing all tasks. Please wait..." />				    		
+					    </p:commandButton>
+					</p:outputPanel>		 	 
+					<table style="margin-top: 8px">
+						<tr>
+					 		<td>
+					 			<p:selectOneMenu id="audit" value="#{task.selectedAuditName}" style="margin-right: 10px">	
+									 <f:selectItem itemLabel="#{msgTask['selectIsa']}" itemValue="" /> 
+									 <f:selectItems value="#{task.auditNameList}" var="name" itemLabel="#{name}" itemValue="#{name}"/>
+									 <p:ajax update=":tableForm:taskTable,:editForm" event="change" listener="#{task.selectAudit}" process="audit"/>
+								</p:selectOneMenu>
+					 		</td>
+					 		<td>
+					 			<p:selectBooleanCheckbox value="#{task.showRead}">  
+					 				<p:ajax update=":tableForm:taskTable,:editForm" listener="#{task.loadTasks}"/>
+					 			</p:selectBooleanCheckbox>
+					 		</td>
+					 		<td><h:outputText value="#{msgTask['read']}" style="margin-right:8px;"/></td>
+					 		<td>
+					 			<p:selectBooleanCheckbox value="#{task.showUnread}">  
+					 				<p:ajax update=":tableForm:taskTable,:editForm" listener="#{task.loadTasks}"/>
+					 			</p:selectBooleanCheckbox>
+					 		</td>
+					 		<td><h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/></td>
+					 		<td><p:commandButton id="complete" 
+					    		action="#{task.loadTasks}" 
+					    		value="#{msgTask['reload']}" 
+					    		update=":tableForm:taskTable,:editForm"/>
+					        </td>
+					 	</tr>
+					 </table>
+					 <p:outputPanel id="descriptionPanel">
+						<p:outputPanel rendered="#{task.selectedTask!=null}">
+							<div class="task-description">
+								<h:outputText value="#{task.selectedTask.description}" escape="false"/>
+							</div>				
+						</p:outputPanel>						
+					 </p:outputPanel>
+				</div>			
+				<p:dataTable id="taskTable" 
+					var="item" 
+					value="#{task.taskList}" 
+					rowKey="#{item.id}"
+					selection="#{task.selectedTask}" 
+					selectionMode="single"
+					scrollHeight="450" 
+					scrollable="true"
+					resizableColumns="true"
+					style="width: 500px">
+					<p:ajax event="rowSelect" 
+						listener="#{task.openTask}"
+						oncomplete="loadLinks();"   
+                    	update=":tableForm,:editForm " /> 	
+					<p:column headerText="#{msgTask['title']}" sortBy="#{item.name}" style="width:100px">
+						<h:outputText value="#{item.name}" styleClass="#{item.style}"/>	
+			        </p:column>
+			        <p:column headerText="#{msgTask['object']}" sortBy="#{item.controlTitle}" style="width:325px">
+						<h:outputText value="#{item.controlTitle}" styleClass="#{item.style}"/>	
+			        </p:column>		      
+					<p:column headerText="#{msgTask['dueDate']}" sortBy="#{item.dueDate}" style="width:75px">  
+			            <h:outputText value="#{item.dueDate}" styleClass="#{item.style}">
+					    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{task.timeZone}" />
+					    </h:outputText> 
+			        </p:column> 
+				</p:dataTable>  
+			</h:form>
+			<!-- Dont't remove navForm. It's referenced by editor.xhtml -->
+			<h:form id="navForm"/>			
+		</div>
+	</div>
+	<div id="col2">
+		<div id="col2_content">									    				
+	    	<vn:editor rendered="#{auth.isoTasks}"/>    		 				    			    							
+		</div>
+	</div>
+	<ui:insert name="extensions">
+		<ui:include src="/todo/extensions.xhtml"/>
+	</ui:insert>
+	<h:outputText value="" style="#{newQmBean.description}" />
+</ui:define>
+</ui:composition>
+</html>

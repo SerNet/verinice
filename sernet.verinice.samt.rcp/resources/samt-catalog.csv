@@ -1,0 +1,1775 @@
+"5","5 Security Policy",,,,,,,
+"5.1","5.1 Information Security Policy","3","(Reference to ISO 27002: Control 5.1.1 and 5.1.2)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have information security policies been created, published and distributed? </h1>",,,,,
+,,,,,,,,
+,,,"(Reference to ISO 27002: Control 5.1.1 and 5.1.2)",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no or incomplete information security policies / regulations.",,,,,
+,,,"Level 1:  Implemented
+- Comprehensive information security policies / regulations exist within the company.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- There exists a security policy that defines the company goals regarding information security.
+- The security policy is signed by the CEO.
+- Information security policies / regulations are centrally provided (e. g. on the intranet) or regularly distributed to every single employee of the company. 
+- Responsible persons are identified for the creation and maintenance of information security policies / regulations.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points (version control, change management, approval process etc.).",,,,,
+,,,"Level 3:  Established
+- The described process in the 2nd level regarding creation and maintenance of  information security policies / regulations is entirely defined and implemented within the company. 
+- The process is integrated within other central processes within the company using standardized interfaces (e. g. global change management).
+- The described process up to level 3 is documented in accordance with a standardized company documentation process.",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"6","6 Organization of Information Security",,,,,,,
+"6.1","6.1 Information Security Responsibilities Assigned","3","(Reference to ISO 27002: Control 6.1.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How is information security organized within the company?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no information security organization or function ",,,,,
+,,,"Level 1:  Implemented
+- Persons that are basically not in charge with information security are tasked with this topic.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- There exists an information security function / organization within the company.
+- Information security function / organization is described in the organizational plan of the company.
+- Tasks of  information security function / organization are described in appropriate job descriptions or binding documents of the company in accordance with the goals of the security policy. 
+- Responsible persons are identified for information security function / organization.
+- Process managers are provided with sufficient resources.
+- Information security function / organization as described in the 2nd level are documented for all points.",,,,,
+,,,"Level 3:  Established
+- The information security function / organization as described in the 2nd level is a global part within the company.
+- The information security function / organization is integrated with other central processes within the company using standardized interfaces (e.g. global change management, purchasing / procurement etc.). 
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.
+",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually information security function / organization, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"6.2","6.2 Risks resulting through external parties ","3","(Reference to ISO 27002: Control 6.2.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>Has a risk analysis of the the personnel and organizational risks been carried out before contracting with external companies?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There are no risk analyses carried out when contracting with external companies.",,,,,
+,,,"Level 1:  Implemented
+- Risk analyses are carried out when contracting with critical contents with external companies.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Standard method is defined for the risk analysis when contracting with external companies.
+- Risk analysis is carried out for every contracting with external companies.
+- Responsible persons are identified for the implementation process of the risk analysis.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The process of risk analyses as described in the 2nd level is entirely defined and implemented within the company.
+- The risk analyses are a global part of the procurement processes that have a decisive influence on decisions for or against the contract award process.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"6.3","6.3 Contracts with third parties","3","(Reference to ISO 27002: Control 6.2.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How is none-disclosure agreement ensured in cooperation with external companies?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0: Incomplete
+- There exist no non-disclosure agreements and no arrangements with external companies regarding information security topics. ",,,,,
+,,,"Level 1:  Implemented
+- Non-disclosure agreements are signed with external companies when handling sensitive information.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+-  Every external company must always sign a non-disclosure agreement.
+-  Separate / special non-disclosure agreements are signed when handling sensitive data in projects / assignments.
+- Responsible persons are identified non-disclosure agreement handling process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The handling process of non-disclosure agreements as described in the 2nd level is entirely defined and implemented within the company.  
+- The process is integrated within other central processes within the company using standardized interfaces (e.g. legal department, security, purchasing / procurement, contract management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"7","7 Asset Management",,,,,,,
+"7.1","7.1 Inventory sheet","3","(Reference to ISO 27002: Control 7.1.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are the company's (physical and digital) assets inventoried?
+</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no tables, overviews or directories of assets.",,,,,
+,,,"Level 1:  Implemented
+- There exists an overview of assets including the responsible areas, but incomplete and not up to date.
+- The process is neither structured nor organized. ",,,,,
+,,,"Level 2:  Managed
+- The assets of the following categories are documented and updated and reviewed with the corresponding, responsible areas :
+    - Information assets: Information in files and databases, contracts and agreements,
+      system documentation, process details, emergency plans.
+    - Software: The existing software and its licenses.
+    - Physical IT assets storing or processing data e. g. computer systems, communication systems and all the corresponding periphery equipment
+    - IT support infrastructure: electrical supply lines, environmental control units, fire protection, etc.
+- Responsible persons are identified for ""documentation maintenance / reviews"".                                                     -- Process managers are provided with sufficient resources.
+- Documentation maintenance / reviews as described in the 2nd level are documented for all points.",,,,,
+,,,"Level 3:  Established
+- The ""documentation maintenance / review"" process as described in the 2nd level are a global part / process within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (e.g. global change management, purchasing / procurement etc.).
+- The described process up to level 3 is documented in accordance with a standardized company documentation process.",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"7.2","7.2 Description and handling of information","3","(Reference to ISO 27002: Control 7.2.1)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>How is the company's information classified?
+</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no information classification within the company.",,,,,
+,,,"Level 1:  Implemented
+- Policies for information classification are defined within the company. 
+- They are neither structured nor organized with the implementation.",,,,,
+,,,"Level 2:  Managed
+- Standardized scheme is defined for the information classification within the company.
+- The classification scheme considers the classification of information regarding assets, legal requirements (e.g. data privacy), sensibility and criticality for the company.
+- The classification scheme is published within the company and is available to all employees.
+- It is defined that the information owner is responsible for the information classification.
+- Responsible persons are defined for the process of consulting the information owner regarding information classification.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points (version control, change management, approval process etc.).",,,,,
+,,,"Level 3:  Established
+- The process of the information classification as described in the 2nd level is a global part / process within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (e.g. global change management, purchasing / procurement, etc.).
+- The described process up to level 3 is documented in accordance with a standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"8","8 Human Resources Security",,,,,,,
+"8.1","8.1 Employment contract","3","(Reference to ISO 27002: Control 8.1.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent are employees obligated to comply with information security requirements?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no security related paragraphs in employment contracts or separate documents.",,,,,
+,,,"Level 1:  Implemented
+- There exist essential security related paragraphs in employment contracts or separate documents. 
+- Separate documents are partially handed out and confirmed in writing after receipt. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Every employee signs with his own employment contract or separate documents security related paragraphs for information security. 
+- Separate / special non-disclosure agreements are signed when handling sensitive data in projects / assignments. 
+- Security policies of the company are included in the paragraphs. 
+- Responsibilities and rights for the handling of sensitive information are included in paragraphs.
+- Employment contract includes information describing non-compliance with security related paragraphs.
+- Responsible persons are identified for the handling process of non-disclosure agreements.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The handling process of non-disclosure agreements as described in the 2nd level is entirely defined and implemented within the company. 
+- The support process is integrated with other central processes within the company using standardized interfaces (e.g. legal department, security, human resources etc.).
+- The described process up to level 3 is documented in accordance with a standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"8.2","8.2 Awareness and key user training","3","(Reference to ISO 27002: Control 8.2.1 and 8.2.2)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>How are employees trained and made aware of handling threats regarding information and its processing? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- No information / awareness programs are initiated / organized by the company. ",,,,,
+,,,"Level 1: Implemented
+- Sporadic, incident activities / information events are carried out regarding handling threats of information.
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Every employee is trained when hired regarding risks of handling and information processing. 
+- Security Awareness for employees takes place regularly, at a minimum once per year. 
+- Every employee is obliged to participate in training and awareness measures. 
+- Responsible persons are defined for the realization of training and awareness measures process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The process for realization of trainings and awareness measures as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. information security, security, human resources etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"8.3","8.3 Access control implementations","3","(Reference to ISO 27002: Control 8.3.1 and 8.3.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have access rights or authorizations been adapted (granting / revoking rights) in the case of employment changes and how are these changes documented? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0: Incomplete
+- There exist no steps to modify access rights or authorizations for job changes of employees.",,,,,
+,,,"Level 1:  Implemented
+- Not required rights or authorizations are adapted.
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Job changes of employees are communicated to the involved departments using a formal human resource process. 
+- Audits for access rights of the respective employee is carried out by the involved departments.
+- Access rights of the respective employees are accordingly changed. 
+- Response is sent to human resources regarding the status of the carried out changes.
+- Responsible persons are identified for the adaptation process of access rights. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The assignment process of access rights as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. information security, security etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"9","9 Physical and Environmental Security",,,,,,,
+"9.1","9.1 Security areas","3","(Reference to ISO 27002: Control 9.1.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are security areas defined and how are they secured?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There are no security areas identified and defined.",,,,,
+,,,"Level 1:  Implemented
+- Security areas are partially defined and secured (barriers such as walls, access card controlled entrances or guarded reception areas) 
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Risk assessment was carried out regarding assets that have to be protected in specified areas.
+- Security requirements for existing assets of an area were established on a risk assessment basis. 
+- Measures are implemented in accordance with security requirements for specified areas (e. g. barriers such as durable walls, access card controlled entrances or guarded reception areas).
+- Responsible persons are identified for the protection process of security areas.
+- Process managers are provided with sufficient resources. 
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process of security areas as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces  (e. g. information security, security, Risk Management, Security Incident Management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"9.2","9.2 Protection against external and environment related threats  ","3","(Reference to ISO 27002: Control 9.1.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent is the company prepared for physical threats (e. g. fire, earthquake etc.)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- No analyses and measures are carried out for protection against physical threats.",,,,,
+,,,"Level 1:  Implemented
+- Analyses and measures are carried out for protection against physical threats.
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Risk assessment was carried out regarding physical threats for the security area.
+- Security requirements for security areas were established on a risk assessment basis.
+- Measures are implemented in accordance with security requirements (e. g. raised floor, fire alarm, water detectors, emergency plans, etc.) 
+- Responsible persons are identified for the protection process against physical threats.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process against physical threats as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g.  information security, security, risk management, Security Incident Management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"9.3","9.3 Access Control Management","3","(Reference to ISO 27002: Control 9.1.6)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>How is the access control management organized within the company?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There exist no policies for the access to the security areas. ",,,,,
+,,,"Level 1:  Implemented
+- The access to the security areas is checked.
+- This is carried out neither structured nor organized. ",,,,,
+,,,"Level 2:  Managed
+- Risk assessment of the access to security areas was carried out.
+- Security requirements for the access to security areas were established on a risk assessment basis.
+- Policies for the access to security areas are defined and appropriate measures are implemented in accordance with security requirements. 
+- Responsible persons are identified for the access control management process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The access control management process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g.  Information Security, Security, Risk Management, Security Incident Management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"9.4","9.4 Protection of delivered and dispatched goods","3","(Reference to ISO 27002: Control 9.1.6)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>What precautions are taken for protection of delivered or dispatched goods?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no policies or precautions for protection of goods.",,,,,
+,,,"Level 1:  Implemented
+- Individual employees protect their delivered and dispatched goods sporadically.
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Requirements for the protection of goods were established by means of a risk assessment.
+- Measures are defined and documented in a policy. 
+- Responsible persons are identified for the protection process of delivered and dispatched goods.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process of delivered and dispatched goods as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"9.5","9.5 Resources removal authorization","3","(Reference to ISO 27002: Control 9.2.5, 9.2.6 and 9.2.7)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How is the process defined for resource usage (including removal, disposal and recycling)? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- No requirements / policies or measures are defined regarding the handling of resources (removal from the company's premises, disposal and recycling).",,,,,
+,,,"Level 1:  Implemented
+- Several regulations are defined for the handling of resources (removal from the company's premises, disposal and recycling).
+- This is carried out neither structured nor organized.",,,,,
+,,,"Level 2: Managed
+- Risk assessment was carried out for handling of resources.
+- Based on risk assessment, regulations are defined for handling of resources particularly for removal from the company's premises, disposal and recycling. 
+- Processes are established in accordance with the regulations, that ensure their compliance. 
+- Process is defined and documented, appropriate regulations are published.
+- Responsible persons are identified for these processes.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The handling process of resources as described in the 2nd level is entirely defined and implemented within the company. 
+- Processes are integrated with other central processes within the company using standardized interfaces (e. g. information security, security, risk management, security incident management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10","10 Communications and Operations Management",,,,,,,
+"10.1","10.1 Hardware and software documentation (Change Management) ","3","(Reference to ISO 27002: Control 10.1.1 and 10.1.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has the change management been established on systems within the company and are these systems up to date? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There exists no change management.
+- Changes are carried out without any control.",,,,,
+,,,"Level 1:  Implemented
+- The concerned departments are not informed regarding changes.
+- The documentation of configurations and changes is incomplete and incorrect.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- All modifications necessary on systems for continuing operations goes through a defined formal process. 
+- All modifications are planned, tested and evaluated regarding its consequences.
+- There exists an approval process for changes.
+- Change management is supported by a software in important departments.
+- Fallback solutions are developed and tested in case of errors.
+- This process is consistently applied for all changes.
+- Responsible persons are identified for the change management process on systems.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The change management process on systems as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. incident management, operation management etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.2","10.2 Separation of development, test and production environments","3","(Reference to ISO 27002: Control 10.1.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have development and test environments been separated from the production environments? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no separate development, test and production environments.",,,,,
+,,,"Level 1:  Implemented
+- The development, test and production environments are partially separated.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Development, test and production systems are established and are in operation.
+- Requirements are defined for the software transfer from development to production.
+- Changes are only carried out in accordance with the process.
+- There exist no sensitive data on test systems. If necessary, data will be anonymized.
+- Different user profiles are established for test and production systems.
+- There exist no development and system tools on production systems.
+- Responsible persons are identified for the separation of system environments.
+- Process managers are provided with sufficient resources. 
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The separation of system environments as described in the 2nd level is entirely defined and implemented within the company.  
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. change management).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.3","10.3 Audits of services provided by external companies","3","(Reference to ISO 27002: Control 10.2.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are services that are provided by external companies, reports and records monitored and audited / inspected regarding information security? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no monitoring and audit of services, reports and records of third party.",,,,,
+,,,"Level 1:  Implemented
+- There exists a monitoring and audit of the agreed services, reports and records. 
+- The quality of  monitoring / audit depends on the knowledge of individual persons in charge.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Regarding the information security the following items are monitored and inspected:
+   - Compliance of contractual agreements
+   - Service reports created by third party 
+   - Documentation created by third party
+   - Implementation of technical and organizational requirements
+- Responsible persons are identified for the monitoring process of services by third party.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The monitoring processes of third party services as described in the 2nd level is entirely defined and implemented within the company.  
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. information security, change management, quality management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.4","10.4 Antivirus Program","3","(Reference to ISO 27002: Control 10.4.1)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has the protection against malware (virus, worms,…) been developed within the company?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no protection such as detection and prevention of malicious code execution (virus, worms, ...).",,,,,
+,,,"Level 1:  Implemented
+- Security software is individually or sporadically installed without any secure update process.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- The required technical and organizational measures are defined for the protection against malware.
+- Systems (groups) to be protected were evaluated using a risk analysis
+- Programs for protection against malware were installed on the evaluated systems. 
+- Software updates and current detection patterns of malware are automatically installed for the security software. 
+- A check is completed once per day for availability updates of malware detection patterns. Updates are immediately installed.
+- Before execution, received files and programs are automatically checked for malware (On-Access-Scan).
+- If available, the central Gateways (e. g. email, internet, networks of third party) are checked using security software that transfers data via encrypted connections. 
+- Regular reviews of the entire database systems for malware is carried out.  
+- Check for malware is carried out before making data exchange or data transfer.
+- It is ensured that the users are not able to deactivate the anti virus security software. 
+- It is ensured that the users are not able to carry out security relevant changes in settings of the anti virus security software.
+- Responsible persons are identified for the protection process of malware.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process of malware as described in the 2nd level is entirely defined and implemented within the company.  
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. patch management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.5","10.5 Firewall on local systems ","3","(Reference to ISO 27002: Control 10.4.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has a local firewall and / or IDS/IPS software been installed on all systems?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There are no firewall and / or IDS/IPS software installed on the systems. ",,,,,
+,,,"Level 1:  Implemented
+- A local firewall and / or IDS/IPS software are / is individually or sporadically installed without any secure update process. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The required technical and organizational measures are defined for the protection against malware.
+- Programs for protection against malware were installed on the evaluated systems. 
+- Local firewalls and / or IDS/IPS software for protection against malware were installed from the evaluated systems. 
+- Software updates and current detection patterns of malware are automatically installed for the security software.
+- It is automatically checked at least once a day if updates of malware detection patterns are available. Updates are immediately installed. 
+- If available, the central email gateway is secured by a local firewall and / or IDS/IPS software. 
+- Protection against malware is ensured by a local firewall and / or IDS/IPS software for the internet services. 
+- It is ensured that the users are not able to deactivate the local firewall and / or IDS/IPS software. 
+- It is ensured that the users are not able to carry out security relevant changes in settings of the local firewall and / or IDS/IPS software.
+- Responsible persons are identified for the protection process against malware.
+- Process managers are provided with sufficient resources.
+- The proces described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The process for company-wide distribution of anti virus protection as described in the 2nd level is entirely defined and implemented within the company.  
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. patch management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.6","10.6 Protective measures against active contents","3","(Reference to ISO 27002: Control 10.4.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have security measures been taken against active contents (e. g. ActiveX-Controls, Java-Applets)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no control and protection against active contents.",,,,,
+,,,"Level 1:  Implemented
+- Several protective measures against active contents are defined and implemented. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Regulations for protection against malicious programs are defined.
+- Active contents such as Java and JavaScript's can only be carried out if they are derived from a trusted source. 
+- Formal process is defined and implemented for the inclusion in the list of trusted sources. 
+- Cryptographic measures (certificates) are implemented for identification of trusted sources. 
+- The protective measures are implemented for all concerned systems / software (e. g. browser, operating systems, applications...).
+- Responsible persons are identified for the protection process against active contents.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process against active contents as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.7","10.7 Information Backup  ","3","(Reference to ISO 27002: Control 10.5.1)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>How are data backups created and controlled and to what extent has restoring been regularly tested? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no data backups.",,,,,
+,,,"Level 1:  Implemented
+- Data backups are carried out on several systems and restoring is tested.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It is identified from which systems data backup is required.
+- It is identified which intervals of data backup are required. 
+- The type of data backup is defined for the systems (incremental /full).
+- It is checked if data backup was successfully carried out.
+- Data backups are stored in different places (at minimum in different fire protection areas).
+- Restoring of data backups is regularly tested.
+- Responsible persons are identified for the implementation process of data backups. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The implementation process of data backups as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. global change management, global order management, ...).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured (e. g. restoring level of the restores)
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.8","10.8 Administration of networks","3","(Reference to ISO 27002: Control 10.6.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are networks managed and controlled in order to protect them against threats?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no administration of networks.",,,,,
+,,,"Level 1:  Implemented
+- The network or its parts are managed and controlled.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The network is centrally managed, controlled, monitored and protected using technical measures.
+  Technical measures could be: 
+- Use of firewall, IDS/IPS, network administration tools or security software for networks. 
+- The responsibility for the networks operation is separated from the computer operation.
+- The network is regularly tested using a technical analysis to detect abnormalities. 
+- The log files are regularly evaluated by the network administrator.
+- The configurations of active network components are documented in a central register.
+- Responsible persons are identified for the network administration process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The network administration process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. system management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.9","10.9 Policies for modem operations","3","(Reference to ISO 27002: Control 10.6.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How is the usage of modem devices  (e.g. Analog, ISDN, DSL, UMTS, GPRS etc.) regulated within the company?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no regulations for the use of modem devices.",,,,,
+,,,"Level 1:  Implemented
+- There exist individual regulations for the use of modem devices.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The policies include at least the following requirements,
+   - that end devices cannot be operated simultaneously on modems and network connections. 
+   - under what conditions modems can be used.
+   - in which cases data transfers should be logged. 
+     (e. g. on the transmission of personal data). 
+- Formal process is defined and implemented for the implementation and exceptions of policies.
+- Responsible persons are identified for the process to use modem devices.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The process for using modem devices as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+-  In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.10","10.10 Network services: Definition of the security requirements","3","(Reference to ISO 27002: Control 10.6.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have security requirements been defined and implemented for network services (e. g. DNS, DHCP, VPN, MPLS, ERP, email, DMS, ...)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There are no security requirements (organizational and technical measures) defined for network services. ",,,,,
+,,,"Level 1:  Implemented
+- Security requirements are defined and implemented for several networks and systems.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Security requirements are defined and implemented for all internal and external network services.
+- These security requirements could be:
+   - security technologies (e. g. authentication, encryption)
+   - technical parameters (e. g. Session-Timeout)
+   - Network Security Services (e. g. firewall, IDS/IPS)
+   - Process for protection and usage of network services. 
+   - Process for monitoring (e. g. traffic flow analyses, availability measurements)  
+- Responsible persons are identified for the network services security requirements process . 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The network services security requirements process as described in the 2nd level is defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.11","10.11 Network services: Service Level Agreement ","3","(Reference to ISO 27002: Control 10.6.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have Service Level Agreements (SLAs) been completed for network services (e. g. DNS, DHCP, VPN, MPLS, ERP, email, DMS, ...)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no Service Level Agreements (SLAs) for network services.",,,,,
+,,,"Level 1:  Implemented
+- SLAs exist for several network services.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Requirements have been identified for specific network services availability.
+- Appropriate SLAs are completed for internal and external service providers in accordance with these requirements.
+- The SLAs are centrally managed.
+- Deviations from SLAs are identified and the departments in charge are informed.
+- Regular service meetings take place in which non compliance / compliance of SLAs are reviewed.
+- Responsible persons are identified for the SLAs process for network services.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The SLAs process for network services as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.12","10.12 Administration of removable media","3","(Reference to ISO 27002: Control 10.7.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent do policies exist regarding the handling of mobile storage media (e. g. tapes, USB memory sticks, USB hard drive, CDs, DVDs, ...)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no regulations regarding the usage of mobile storage media.",,,,,
+,,,"Level 1:  Implemented
+- There exist partial regulations for the usage of mobile storage media.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- There exists regulations regarding the usage of mobile storage media.
+- The usage, deletion, transmission and disposal of mobile storage media is regulated in accordance with data classification.
+- The usage of mobile storage media is regulated in cooperation with external partners / service providers.
+- Responsible persons are identified for the handling process of mobile storage media.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The handling process of mobile storage media as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (disposal management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.13","10.13 Media disposal ","3","(Reference to ISO 27002: Control 10.7.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent does a process exist for the safe disposal of computer media that is no longer needed? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no regulations for safe disposal of computer media.",,,,,
+,,,"Level 1:  Implemented 
+- There exist regulations for safe disposal of computer media.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The disposal of computer media is regulated with regard to data classification.  
+- Computer media to be disposed of are accordingly marked, collected and stored in special areas.
+- Computer media to be disposed of are destroyed using an appropriate physical procedure. 
+- Certified service provider for external disposal is contractually obliged to observe their own policies and country specific laws (e. g. BDSG).
+- Responsible persons are identified for the safe disposal of computer media.
+- Process managers are provided with sufficient resources. 
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The process for the safe disposal of computer media is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (disposal management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.14","10.14 Physical transport of media","3","(Reference to ISO 27002: Control 10.8.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have precautions been taken when media (e. g. CDs, DVDs, paper documents) with confidential information is physically transported (e. g. DHL, UPS)? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete  
+- There are no measures defined and implemented for protection of transported media.",,,,,
+,,,"Level 1:  Implemented
+- Several measures are defined and implemented for protection of transported media.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Regulations and measures are defined and communicated for safe transport of media with confidential content. 
+- Only certified messengers are used and their identification is verified. 
+- Special containers / boxes are chosen which enable the detection of unauthorized access (e. g. broken seal).
+- The delivery must exclusively be carried out in person.
+- Attention is paid to the integrity of the packaging.
+- Responsible persons are identified for the transport process of media with confidential content.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The transport process of media with confidential content as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (disposal management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.15","10.15 Electronic information exchange ","3","(Reference to ISO 27002: Control 10.8.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>What  precautions have been taken when confidential information is to be electronically exchanged?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- No precautions have been taken for the electronic exchange of information.",,,,,
+,,,"Level 1:  Implemented
+- Individual network connections are protected using encryption.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It is identified which services are used for the information transfer (e. g. email, Instand Messaging, EDI, Web-Meeting)
+- Regulations and processes are defined and communicated within the company for the electronic exchange of information in accordance with data classification requirements
+- These include the following considerations:
+            - for protection against unauthorized access to the messages
+            - for securing correct addresses and message transport 
+            - for legal requirements such as e. g. usage of digital signatures 
+            - for availability and liability of services
+            - for granting authorizations for the usage of external services (e. g. Instant Messaging, Web Meeting, 
+              Web-Mail)    
+            - for the usage of strong authentication accessible from public networks
+- Electronic data exchange is carried out by encrypted items depending on confidentiality levels (e. g. email, email attachments (PGP, S/Mime)) and / or encrypted media (e. g. ENX, VPN, encrypted WAN connections (HTTPS, SFTP, TLS))
+- Responsible persons are identified for the electronic exchange process of information.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The electronic exchange process of confidential information as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (disposal management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.16","10.16 Monitoring: logging","3","(Reference to ISO 27002: Control 10.10.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are activities of system administrators and operators logged on critical systems? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no activity logging of system administrators and operators for critical systems. ",,,,,
+,,,"Level 1:  Implemented
+- Activities are logged on individual systems but they are not evaluated.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It was evaluated using a risk analysis on which system-logging is required.
+- Activities of system administrators and operators are logged on the evaluated systems. 
+- Activity logging is regularly checked for non-compliance. 
+- Noncompliance is reported to the responsible department (CERT) according to a defined reporting process. 
+- Responsible persons are identified for the system administrators activity logging process. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The system administrators activity logging process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (disposal management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"10.17","10.17 Monitoring: legal retention period","3","(Reference to ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 and 10.10.5)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have processes been defined and implemented fulfilling the legal requirements regarding monitoring and logging of the information system usage? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0: Incomplete
+- There exists no monitoring and logging.",,,,,
+,,,"Level 1:  Implemented
+- The usage is monitored and logged on individual systems.",,,,,
+,,,"Level 2:  Managed 
+- Operational and legal requirements are identified (e. g. retention period, protection of personal rights).
+- Regulations including operational and legal requirements are defined for monitoring and logging. 
+- Central monitoring and usage process of information systems are defined and documented. 
+- Monitoring and usage of information systems is supported by the System Management Software.
+- Responsible persons are identified for the monitoring and logging process of information systems usage. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The monitoring and logging process of information systems usage is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. compliance management)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11","11 Access Control ",,,,,,,
+"11.1","11.1 User registration","3","(Reference to ISO 27002: Control 11.2.1)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent does a process exist for registration, change and deletion of users to ensure the appropriate access to all information systems and services?  </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There exists no process for registration, change and deletion of users.",,,,,
+,,,"Level 1:  Implemented
+- There exist individual application processes for the IT system users.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Central process for registration, change and deletion of users is implemented and includes all IT systems.
+- Following points are included in the application process:
+   - Usage of a clear user identification
+   - Acceptance / approval of the application by the system owner
+   - Conformity audit regarding authorization and area of responsibilities 
+   - Removal of authorizations after contract termination for services.
+   - Removal of user authorizations after organizational change or termination of the user. 
+   - Documentation of the assigned rights.
+- There exists a process to ensure that unique user IDs are assigned. 
+- Responsible persons are identified for the user process. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established 
+- The user process as described in the 2nd level is defined and implemented within the company.  
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.2","11.2 Rights management","3","(Reference to ISO 27002: Control 11.2.2 and 10.2.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How are user and administrator rights ensured and checked for various use cases?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no dedicated process for the allocation and regular monitoring of the access rights.",,,,,
+,,,"Level 1:  Implemented 
+- Allocation of rights is a dedicated process 
+- Only general audit is carried out.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- Following points are noticed for assignment of access rights:
+   - systems are identified
+   - rights can be assigned only if necessary 
+   - authorization assignments are documented
+- On checking the assigned rights the following points are noticed:
+
+   - short intervals of audits for critical access rights
+   - changes of the user's responsibility area are considered
+   - regular execution of audits
+   - Documentation of the audit
+- Responsible persons are identified for the assignment and audit of access rights.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The assignment and audit process for access rights as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.3","11.3 User password utilization","3","(Reference to ISO 27002: Control 11.2.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have policies been defined for the handling of personal passwords? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There are no policies defined for the handling of passwords. ",,,,,
+,,,"Level 1:  Implemented
+- There are policies defined and published for the handling of passwords.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The policy includes the requirements for password handling:
+   - password change intervals
+   - temporary passwords have to be changed after the first login.
+   - further distributions of passwords is forbidden
+   - business and private passwords have to be separated 
+   - no saving of passwords
+- the policy is applied for all IT systems 
+- Responsible persons are identified for the policy that describes the development and handling process of passwords. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The policy that describes the development and handling process of passwords as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.4","11.4 Password complexity","3","(Reference to ISO 27002: Control 11.3.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have policies been defined outlining the structure and complexity level of passwords? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no policies for the structure and complexity of passwords.",,,,,
+,,,"Level 1:  Implemented
+- Policies for the structure and complexity of passwords are established but not systematic or in full.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- The policy includes the complexity requirements of passwords:
+   - length of the passwords
+   - use of the defined combination attributes
+   - no use of words and consecutive figures or letters
+   - no reuse of passwords (history of passwords)
+- The policy is applied to all IT systems.
+- The requirements for the policy is implemented in all IT systems. 
+- Responsible persons are identified for the policy development process for the complexity of passwords. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The policy development process for the complexity of passwords as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.5","11.5 Clean Desk and Clear Screen policy","3","(Reference to ISO 27002: Control 11.3.3)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>What requirements exist for handling devices and documents when leaving the work area? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist no requirements regarding ""principle of clear desk and clear screen""",,,,,
+,,,"Level 1:  Implemented
+- Requirements regarding ""principal of cleaned desk and empty screen"" are established but not systematic or in full.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- Requirements are defined in consideration of information classification.
+- The requirement policy regarding ""principle of clear desk and clear screen"" includes the following points:
+   - confidential or business critical information has to be kept under lock
+   - computer and terminals have to be locked when leaving the work area
+   - mail office and fax devices have to be protected
+   - the unauthorized usage of electronic tools (copier, scanner, cameras) for reproduction has to be prevented
+   - confidential and business critical documents have to be removed immediately from the output devices (printer, copier)
+- Responsible persons are identified for the ""principle of clear desk and clear screen"" process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The ""principal of clear desk and clear screen"" process as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.6","11.6 User authentication for remote users / connections","3","(Reference to ISO 27002: Control 11.4.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have policies and measures been defined and implemented for remote access to the company's network? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There are no policies / measures defined and implemented for remote access to the companies network.",,,,,
+,,,"Level 1: Implemented
+- Authentication measures are implemented for various remote access capabilities. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- Security requirements were identified for remote access to the company's network.
+- Regulations are established that define the security requirements.
+- Regulations include at least the following requirements:
+   - Requirements for user authentication
+   - Requirements for hardware
+   - Requirements for software (operating system, applications) and their up-to-dateness
+- The resulted measures from security requirements are implemented.  
+- Responsible persons are identified for the remote access authentication process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The remote access authentication process as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.7","11.7 Protection of configuration ports and remote monitoring ","3","(Reference to ISO 27002: Control 11.4.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has the technical network access been monitored for access to system and infrastructure component diagnostic and configuration ports?  </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no monitoring of the diagnostic and configuration ports.",,,,,
+,,,"Level 1:  Implemented 
+- Individual diagnostic and configuration ports are monitored.
+- The process in neither structured nor organized.",,,,,
+,,,"Level 2: Managed
+- Requirements are identified for the monitoring of diagnostic and configuration ports.
+- Policies of requirements are established for the monitoring of diagnostic and configuration ports.
+- There exists an approval process for the use of diagnostic and monitoring tools. 
+- Diagnostic and configuration ports are monitored in accordance with these requirements.
+- Responsible persons are identified for the monitoring process of diagnostic and configuration ports. 
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The monitoring process of diagnostic and configuration ports as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.8","11.8 Separation of networks","3","(Reference to ISO 27002: Control 11.4.5)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has network security been increased through segmentation / separation? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- The corporate network is not segmented.",,,,,
+,,,"Level 1:  Implemented
+- Networks are segmented from case to case.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- Requirements of a network segmentation are established.
+- Policies of requirements are established for the network segmentation or security areas.
+- The corporate network is segmented in accordance with these requirements.
+- Requirements are implemented in all areas or services.
+- Responsible persons are identified for the network segmentation process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The network segmentation process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized 
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.9","11.9 User identification and authentication","3","(Reference to ISO 27002: Control 11.5.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has the user authentication been implemented for the access to IT systems in accordance with data and information classification?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There exists no user authentication in accordance with classification.",,,,,
+,,,"Level 1:  Implemented
+- Users authenticate themselves during the access to systems.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- Requirements to the user authentication were established in accordance with data and information classification. 
+- Regulations are established that define the requirements regarding user authentication.
+- The regulations include at least the following requirements:
+   - The usage of a definite user ID
+   - Requirements for the authentication process (e. g. token, smartcard, biometric)
+   - Requirements for an exceptional process
+- Responsible persons are identified for the user authentication process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The user authentication process as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"11.10","11.10 Mobile data processing and communication","3","(Reference to ISO 27002: Control 11.7.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has the policy been developed with references to risks associated with mobile computers? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exist nor regulations in the field of mobile computing.",,,,,
+,,,"Level 1:  Implemented
+- Based on incidents Individual policies are established and published. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It was identified which end devices are in operation in the field of mobile computing.
+- It was identified which target groups of persons implement mobile computing.
+- Following points were taken into account for the establishment of the policy:
+   - physical protection requirements
+   - Access controls
+   - Encryption technologies
+   - Data backup
+   - Protection against malware
+- Responsible persons are identified for the policy development process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The policy development process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces.
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"12","12 Information Systems Acquisition, Development and Management",,,,,,,
+"12.1","12.1 Encryption of information","3","(Reference to ISO 27002: Control 12.3.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has information been appropriately protected using encryption (cryptography)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no encryption use of critical information.",,,,,
+,,,"Level 1:  Implemented
+- The encryption use of critical information is carried out by individual employees. 
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed                                                                                                                                                                                                                                                                                                                                               - The encryption requirements are established in accordance with data and information classification.
+- Regulations are established defining requirements regarding encryption.
+- Encryption concept includes at least the following requirements for:
+   - the encryption strength
+   - the administration of keys 
+   - the encryption algorythms 
+- The resulted measures from the encryption concept are implemented.  
+- Responsible persons are identified for the encryption use process. 
+- Process managers are provided with sufficient resources.
+- The process as described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The encryption use process as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. change management, purchasing / procurement, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+-  Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"12.2","12.2 Loss of information ","3","(Reference to ISO 27002: Control 12.5.4) 
+or 12.5 Security of development and processes","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have information security requirements been taken into account when purchasing or developing software?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no consideration of the requirements.",,,,,
+,,,"Level 1:  Implemented
+- Individual employees take into account the requirements of information security when purchasing or developing software.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Information security requirements are identified  when purchasing or developing software.
+- Specification documents are checked against information security policies.
+- Compliance of requirements are checked before the approval / use of software.
+- Responsible persons are identified for the purchasing and development process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The purchasing and development process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. change management, purchasing / procurement, etc.) 
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"12.3","12.3 Detection of vulnerabilities","3","(Reference to ISO 27002: Control 12.6.1)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has information been promptly assessed regarding technical vulnerabilities of information systems and to what extent have appropriate measures been taken for the security implementations (patch anagement)? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- Information regarding vulnerabilities is not available.",,,,,
+,,,"Level 1:  Implemented
+- Individual employees obtain information and take measures for the implementation.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+-Systems / software information was identified regarding technical vulnerabilities. 
+- The required information is promptly obtained and analyzed.
+- Appropriate benchmarks and requirements are defined for:
+   - the time of known vulnerabilities and provision of a patch.
+   - the patch installation (change management) including the prioritization of systems with high risk potential 
+   - documentation
+- Responsible persons are identified for the patch management process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established 
+- The patch management process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. change management, purchasing / procurement, etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable 
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"13","13 Information Security Incident Management",,,,,,,
+"13.1","13.1 Information Security Incident Management","3","(Reference to ISO 27002: Control 13.1.1 and 13.1.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>How and where are information security incidents reported within the company?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- Information security incidents / vulnerabilities are not reported within the company.",,,,,
+,,,"Level 1:  Implemented
+- There exists a sporadic, incident related report of information security incidents / vulnerabilities.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed 
+- There exist a formal reporting process for the report of information security incidents / vulnerabilities.
+- It includes the following points:
+   - requirements for the action process in case of incidents, 
+   - reporting form, 
+   - organization in charge,
+   - requirements for the feedback process and 
+   - references to technical and organizational measures (among others disciplinary measures).
+- Responsible persons are identified for the reporting process of information security incidents / vulnerabilities.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The reporting process of information security incidents / vulnerabilities as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. central compliance management, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable 
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"13.2","13.2 Responsibilities and procedures (CERT)  ","3","(Reference to ISO 27002: Control 13.2.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have information security incidents and vulnerabilities been evaluated and handled?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There exists no evaluation and handling of information security incidents / vulnerabilities. ",,,,,
+,,,"Level 1:  Implemented
+- The evaluation and processing is carried out in individual cases.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- There exists a defined process for handling information security incidents / vulnerabilities.
+- Information security incidents / vulnerabilities are documented.
+- Information security incidents / vulnerabilities are evaluated.
+- improved measures are planned and implemented.
+- Responsible persons are identified for the handling process of information security incidents / vulnerabilities.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The handling process of information security incidents / vulnerabilities as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. compliance management, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"14","14 Business Continuity Management",,,,,,,
+"14.1","14.1 Business Continuity Management","3","(Reference to ISO 27002: Control 14.1.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have measures been implemented for the development and maintenance of business continuity (continuity of a stable business) within the company? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete 
+- There are no measures implemented for the development and maintenance of business continuity.",,,,,
+,,,"Level 1:  Implemented
+- Individual measures are implemented for the development and maintenance of business continuity.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Risk identification are carried out for a stable business continuity. 
+- The concerned assets are identified.
+- Risks are evaluated using a risk analysis.
+- Identification of preventive measures are carried out to reduce loss. 
+- Implementation of measures regarding business continuity is checked. 
+- Emergency plans are developed and tested.
+- Emergency training is regularly carried out.
+- Responsible persons are identified for the business continuity management process (BCM).
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The business continuity management process (BCM) as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. central compliance management, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"15","15 Compliance",,,,,,,
+"15.1","15.1 Rights of intellectual property","3","(Reference to ISO 27002: Control 15.1.2)","2","2",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent has compliance of legal requirements been ensured regarding intellectual property (e. g. patents, software development and codes etc.)?</h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- Compliance of legal requirements regarding intellectual property is not ensured.",,,,,
+,,,"Level 1:  Implemented
+- If applicable legal requirements regarding intellectual property are considered.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It is identified which legal and contractual requirements have to be observed.
+- Policies are developed for protection of the intellectual property.
+- Security awareness of employees are carried out.
+- Software is obtained from safe sources, evidences are stored and the ownership is documented (license management).
+- While using the software, technical and / or organizational measures are ensured that license conditions are met.
+- There exists policies for disposal of software or reuse.
+- Responsible persons are identified for the protection process of intellectual property.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process of intellectual property as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. central compliance management, purchasing / procurement, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"15.2","15.2 Protection against misuse of personal data ","3","(Reference to ISO 27002: Control 15.1.4)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>Which regulations and measures are implemented in order to protect personal information in compliance with legal / contractual regulations (e. g. Data Privacy Law)? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- There are no measures implemented for protection of personal information.",,,,,
+,,,"Level 1:  Implemented
+- It was partially identified which information is person-related.
+- There exists measures for protection of personal information within the company.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It is completely identified which information is personal related.
+- It is identified which legal requirements exist regarding procedure and processing of personal information (e. g. BDSG process directory, EU policy 95/46/EG) 
+- It is identified which systems can be used for the processing of personal information.
+- Regulations for protection of personal information meet the operating and legal requirements. (e.g. BDSG, EU policy 95/46/EG).
+- Policy requirements are implemented.
+- Responsible persons are identified for the protection process of personal information.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The protection process of personal information as described in the 2nd level is integrated with other central processes within the company using standardized interfaces (e. g. central change management, purchasing / procurement, etc.).
+- Measures for protection of personal information are a global part / process within the company. 
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"15.3","15.3 Technical audit of Compliance ","3","(Reference to ISO 27002: Control 15.2.1)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have organization departments been checked for compliance with corporate security policies and standards? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- No security audits are carried out within the organization.",,,,,
+,,,"Level 1:  Implemented
+- Security audits are carried out within the organization field.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- Audit general conditions are defined.
+- General conditions include the scope, scheduling, process (self assessment, on site audit), software support.
+- Audit results are documented.
+- Corrective measures are recommended for deviations.
+- Audit results are reported to the management.
+- Responsible persons are identified for the security audit process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The security audit process as described in the 2nd level is entirely defined and implemented within the company. 
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. compliance management, etc.)
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,
+,,,,,,,,
+"15.4","15.4 Audits of information systems","3","(Reference to ISO 27002: Control 15.2.2)","1","1",,"2","3"
+,,,,,,,,
+,,,"<h1>To what extent have security audits (penetration and vulnerability tests) been carefully planned, coordinated and carried out on operational information systems? </h1>",,,,,
+,,,,,,,,
+,,,"Please choose a maturity level 0-5 or na for not applicable.",,,,,
+,,,,,,,,
+,,,"Level 0:  Incomplete
+- No security audits are carried out.",,,,,
+,,,"Level 1:  Implemented
+- Security audits are carried out.
+- The process is neither structured nor organized.",,,,,
+,,,"Level 2:  Managed
+- It is identified for which infrastructure components, systems and applications security, audits are necessary.
+- Security audits are carried out by trained specialists.
+- Security audits are coordinated with the operator and users of the systems.
+- Security audit results are documented and the necessary measures identified. 
+- Audit results are documented.
+- Corrective measures are recommended for deviations.
+- Audit results are reported to the management.
+- Responsible persons are identified for the security audit process.
+- Process managers are provided with sufficient resources.
+- The process described in the 2nd level is documented for all points.",,,,,
+,,,"Level 3:  Established
+- The security audit process as described in the 2nd level is entirely defined and implemented within the company.
+- The process is integrated with other central processes within the company using standardized interfaces (e. g. central compliance management, etc.).
+- The described process up to level 3 is documented in accordance with the standardized company documentation process. ",,,,,
+,,,"Level 4:  Predictable
+- Key Performance Indicators describing the effectiveness and functionality for the 3rd level process are defined and  measured.
+- Goals for the effectiveness and functionality improvement are derived from these Key Performance Indicators.
+- Corrective measures derived from these indicators in order to achieve the defined goals are carried out.
+- The  process described in the 4th level is documented in accordance with the standardized company documentation process.",,,,,
+,,,"Level 5:  Optimized
+- In addition to the 4th level, in order to optimize the continually process, projects are started including their own resources (staff and budget).
+- In these projects further goals for improvements are defined which are explicitly aligned with the company's goals.
+- The identified improvements are tested, implemented and documented in accordance with the standardized company documentation process. ",,,,,

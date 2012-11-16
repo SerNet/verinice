@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="individual-task" name="Individual task workflow" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>Workflow to manage individual tasks.</description>
+   
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
+   
+   <start g="685,3,186,52" name="start1">
+      <transition g="462,27:" to="isRelation"/>
+   </start>
+   
+   <decision g="439,118,80,40" name="isRelation">
+      <transition g="-74,-20" name="no relation" to="isAssignee">
+        <condition expr="#{INDI_RELATION_ID==null}"/>
+      </transition>
+      <transition g="-43,-27" name="relation" to="java.loadAssignee">
+        <condition expr="#{INDI_RELATION_ID!=null}"/>
+      </transition>
+   </decision>
+   
+   <java class="sernet.verinice.bpm.ProzessExecution" g="507,53,150,36" method="loadAssignee" name="java.loadAssignee" var="ISA_ASSIGNEE_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="#{INDI_RELATION_ID}"/></arg>      
+      <transition to="isAssignee"/>
+   </java>  
+   
+   <decision g="685,120,80,40" name="isAssignee">
+      <transition g="694,165;693,271:-109,9" name="not assigned" to="indi.task.assign">
+        <condition expr="#{ISA_ASSIGNEE_NAME==null}"/>
+      </transition>
+      <transition g="5,-79" name="assigned" to="indi.task.execute">
+        <condition expr="#{ISA_ASSIGNEE_NAME!=null}"/>
+      </transition>
+   </decision>
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="306,244,146,52" name="indi.task.assign">
+      <on event="timeout">
+      <timer duedate="#{INDI_REMINDER_DATE}"/>
+        <event-listener class="sernet.verinice.bpm.Reminder">
+          <field name="taskType"><string value="indi.task.assign"/></field>
+          <field name="assignee"><object expr="#{ISA_OWNER_NAME}"/></field>
+          <field name="uuid"><object expr="#{UUID}"/></field>
+        </event-listener>
+      </on>
+      <transition g="378,169;236,169:81,52" name="indi.trans.complete" to="checkDate"/>
+   </task>
+   
+   <java class="sernet.verinice.bpm.DateChecker" g="165,126,100,35" method="checkIfDateIsPast" name="checkDate" var="ISA_DUEDATE">
+      <arg><object expr="#{ISA_DUEDATE}"/></arg>
+      <arg><object expr="7"/></arg>
+      <transition to="checkReminderDate"/>
+   </java>
+   
+   <java class="sernet.verinice.bpm.DateChecker" g="269,125,161,35" method="checkIfDateIsPast" name="checkReminderDate" var="INDI_REMINDER_DATE">
+      <arg><object expr="#{INDI_REMINDER_DATE}"/></arg>
+      <arg><object expr="7" /></arg>
+      <transition to="isRelation"/>
+   </java>
+    
+    
+   <!-- Execute --> 
+    
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="615,354,186,52" name="indi.task.execute">
+      <on event="timeout">
+      <timer duedate="#{INDI_REMINDER_DATE}"/>
+        <event-listener class="sernet.verinice.bpm.Reminder">
+          <field name="taskType"><string value="indi.task.execute"/></field>
+          <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
+          <field name="uuid"><object expr="#{UUID}"/></field>
+        </event-listener>
+      </on>
+      <transition g="7,-24" name="indi.trans.complete" to="indi.task.check"/>
+      <transition g="603,397;46,396:112,9" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
+      <transition g="216,380:195,-26" name="indi.trans.reminderDeadline" to="indi.task.assign.deadline">
+          <timer duedate="#{ISA_DUEDATE}"/>
+      </transition>
+   </task> 
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="121,244,188,52" name="indi.task.assign.deadline">
+      <transition g="6,18" name="indi.trans.assigned" to="checkDate"/>
+   </task>
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="-29,244,147,52" name="indi.task.assign.nr">
+      <transition g="44,141:5,82" name="indi.trans.assigned" to="checkDate"/>
+   </task>   
+   
+   <!-- Check -->
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE} + 14 days" g="617,497,186,52" name="indi.task.check">
+      <transition g="654,489;653,414:-119,-17" name="indi.trans.decline" to="indi.task.execute"/>
+      <transition g="10,-12" name="indi.trans.accept" to="end"/>
+   </task>
+   
+   <end g="686,627,48,48" name="end"/>
+
+</process>

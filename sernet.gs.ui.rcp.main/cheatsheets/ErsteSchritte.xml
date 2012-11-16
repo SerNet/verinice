@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Getting started">
+
+	<intro 
+		>
+		<description>
+			<b>Welcome to verinice!</b>
+			<br/>
+			<br/>
+			This tutorial will help you to configure verinice and guide you along the first few steps.
+		</description>
+	</intro>
+	
+	<item title="Switch to ISM perspective">
+	<description>
+	Since you're reading this in English, we assume that you wish to use the ISM perspective. 
+	This perspective allows you to model requirements and controls, to calculate risk and generate reports. 
+		<br/>
+		<br/>
+		Open the ISM perspective now by clicking on the menu "View, Open Perspective, ISM Perspective".
+	</description>
+	</item>
+
+	<item
+		title="Download control catalog">
+
+		<description>
+			First you need to download a control catalog. Some free catalogs are available from the verinice website.
+			You can also create your own catalogs using Excel or StarCalc and import them into verinice.
+			<br/>
+			<br/>
+			Use your web browser to go to
+			<br/>
+			<b>http://www.verinice.org/download/</b>
+			<br/>
+			<br/>
+			Download the catalog &quot;Free ISO 27001 implementation guidance&quot;.
+			<br/>
+			<br/>
+			Save the file on your hard drive.
+		</description>
+	</item>
+	
+	<item title="Import control catalog">
+	<description>
+		Now you have to import the catalog file. On the lefthand side of the verinice worbench you will find the &quot;Catalogs&quot; view.
+		Click on the leftmost button (&quot;Import catalog...&quot;).
+		<br/>
+		<br/>
+		Choose your downloaded catalog file and click &quot;OK&quot;.
+	</description>
+	</item>
+
+	<item title="Create a scope">
+	<description>
+	The catalog is now being loaded. When the parser has finished, you will see the contents in the catalog view.
+	<br/><br/>
+	Open the browser view (&quot;View, Show view, Object Browser&quot;). Click on a control to show its contents in the browser view.
+	<br/><br/>
+	To actually work with the imported controls, you have to create your organization in the database. Go to the view &quot;Information Security Model&quot;.
+	It should be displayed in the middle of the verinice workbench. Click on the rightmost button (&quot;Add new organization&quot;). 
+	Drag some controls from the catalog view to the &quot;Controls&quot; group underneath your new organization. The controls will be created. 
+	Double-click on them to open the editor for each control.
+	</description>
+	<onCompletion>
+	Excellent! If you want to continue, you'll find more tutorials in the Help menu.
+	</onCompletion>
+	
+	</item>
+		
+	
+</cheatsheet>
