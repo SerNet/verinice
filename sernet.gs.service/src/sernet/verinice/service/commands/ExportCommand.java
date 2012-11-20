@@ -156,6 +156,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.exportedEntityTypes = new HashSet<EntityType>();
 	}
 	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.ICommand#execute()
+	 */
 	public void execute() {
 	    try {
 	        createFields();
@@ -267,11 +270,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             taskExecutor.execute(thread);
         }
         
-        if (getLog().isDebugEnabled() && transactionList.size()>0) {
-            getLog().debug("Export threads: " + transactionList.size() + ", concurrent: " + getMaxNumberOfThreads() + ", waiting for termination...");
-        }
-        
-        awaitTermination(transactionList.size() * 10);
+        awaitTermination(transactionList.size() * 40);
         
         if (getLog().isDebugEnabled() && transactionList.size()>0) {
             getLog().debug(transactionList.size() + " export threads finished.");
@@ -333,6 +332,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         try {
             // Wait a while for existing tasks to terminate
             if (!taskExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                getLog().error("Export executer timeout reached: " + timeout + "s. Terminating execution now.");
                 taskExecutor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
                 if (!taskExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
