@@ -193,6 +193,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
                     newMode = PreferenceConstants.OPERATION_MODE_REMOTE_SERVER;
                 } 
                 prefs.setValue(PreferenceConstants.OPERATION_MODE, newMode);
+                prefs.setValue(PreferenceConstants.RESTART, true);
                 
                 Workbench.getInstance().restart();
             }

@@ -97,6 +97,7 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.ImageCellProvider;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 
@@ -194,7 +195,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
-    private ImageCellProvider imageCellProvider = null;
+    private AttachmentImageCellProvider imageCellProvider = null;
     
     public FileView() {
         super();
@@ -298,7 +299,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
      */
     private CellLabelProvider getImageCellProvider() {
         if(imageCellProvider==null) {
-            imageCellProvider = new ImageCellProvider(getThumbnailSize());
+            imageCellProvider = new AttachmentImageCellProvider(getThumbnailSize());
         }
         return imageCellProvider;
     }

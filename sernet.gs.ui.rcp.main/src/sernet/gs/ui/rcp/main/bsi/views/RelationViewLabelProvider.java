@@ -133,6 +133,11 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	 * @return
 	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
+	    Image image = CnAImageProvider.getCustomImage((CnATreeElement)elmt);
+        if(image!=null) {
+            return image;
+        }
+	    
 		String typeId = elmt.getTypeId();
 		
 	    if (typeId.equals(Control.TYPE_ID) || typeId.equals(SamtTopic.TYPE_ID) ) {
@@ -145,5 +150,5 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    }
 		return ImageCache.getInstance().getObjectTypeImage(typeId);
 	}
-
+	
 }

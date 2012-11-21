@@ -110,7 +110,7 @@ public class ElementCache {
             Statistics s = getCache().getStatistics();
             LOG.debug("Size of cache before clearing, size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());
         }
-		manager.clearAll();
+        getManager().clearAll();
 		if (LOG.isInfoEnabled()) {
             LOG.info("Cache cleared");
         }
@@ -207,7 +207,7 @@ public class ElementCache {
         if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
             cache = createCache();
         } else {
-            cache = manager.getCache(cacheId);
+            cache = getManager().getCache(cacheId);
         }
         return cache;
     }
@@ -231,6 +231,13 @@ public class ElementCache {
                 LOG.info("Cache shutdown." );
             }
         }
+    }
+    
+    private CacheManager getManager() {
+        if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus())) {
+            createCache();
+        }
+        return manager;
     }
     
     /* (non-Javadoc)

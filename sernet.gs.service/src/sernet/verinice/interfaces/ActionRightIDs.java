@@ -49,6 +49,7 @@ public class ActionRightIDs {
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
+    public static final String CHANGEICON = "changeicon";   
     public static final String CREATEISATASKS = "createisatasks";
     public static final String DELETECATALOG = "deletecatalog";
     public static final String DELETEFILE = "deletefile";

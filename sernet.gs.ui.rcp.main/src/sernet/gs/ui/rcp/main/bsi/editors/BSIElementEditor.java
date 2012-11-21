@@ -43,6 +43,7 @@ import org.hibernate.StaleObjectStateException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -57,6 +58,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
@@ -309,21 +311,42 @@ public class BSIElementEditor extends EditorPart {
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
-            if (cnAElement instanceof Organization) {
-                icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
-            } else if (cnAElement instanceof Group) {
-                // TODO - getChildTypes()[0] might be a problem for more than
-                // one type
-                icon = ImageCache.getInstance().getISO27kTypeImage(((Group) cnAElement).getChildTypes()[0]);
-            } else if (cnAElement instanceof IISO27kElement) {
-                icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
-            } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
-                icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
-            }
+            icon = CnAImageProvider.getCustomImage(cnAElement);
+            if(icon==null) {
+                icon = getDefaultIcon();
+            }       
         }
         setTitleImage(icon);
     }
 
+    private Image getDefaultIcon() {
+        Image icon;
+        if (cnAElement instanceof Organization) {
+            icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
+        } else if (cnAElement instanceof Group) {
+            // TODO - getChildTypes()[0] might be a problem for more than
+            // one type
+            icon = ImageCache.getInstance().getISO27kTypeImage(((Group) cnAElement).getChildTypes()[0]);
+        } else if (cnAElement instanceof IISO27kElement) {
+            icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
+        } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
+            icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
+        } else if (cnAElement instanceof BausteinUmsetzung) {         
+            icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
+        } else {
+            icon = CnAImageProvider.getImage(cnAElement);
+        }
+        return icon;
+    }
+
+    private Image getCustomImage(CnATreeElement element) {
+        Image image = null;
+        if(element.getIconPath()!=null) {
+            image = ImageCache.getInstance().getCustomImage(element.getIconPath());
+        }
+        return image;
+    }
+    
     @Override
     public boolean isDirty() {
         return isModelModified;

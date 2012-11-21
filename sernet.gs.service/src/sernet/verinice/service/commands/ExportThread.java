@@ -147,6 +147,9 @@ public class ExportThread extends NotifyingThread {
             SyncObject syncObject = new SyncObject();
             syncObject.setExtId(extId);
             syncObject.setExtObjectType(typeId);
+            if(element.getIconPath()!=null) {
+                syncObject.setIcon(element.getIconPath());
+            }
 
             List<de.sernet.sync.data.SyncAttribute> attributes = syncObject.getSyncAttribute();
             
@@ -202,7 +205,7 @@ public class ExportThread extends NotifyingThread {
         CnATreeElement elementFromCache = getElementFromCache(element);
         if(elementFromCache!=null) {
             return elementFromCache;
-        }  
+        }     
         
         RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
         ri.setLinksDown(true);
@@ -210,11 +213,11 @@ public class ExportThread extends NotifyingThread {
         element = getDao().retrieve(element.getDbId(), ri);
         
         cacheElement(element);       
-        
+       
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Hydrating element: " + element.getTitle() + ", UUID: " + element.getUuid());
+            LOG.debug("Element: " + element.getTitle() + " hydrated, UUID: " + element.getUuid());
         }
-             
+        
         return element;
     }
     

@@ -144,4 +144,12 @@ public class CnAImageProvider {
 		
 	}
 	
+	public static Image getCustomImage(CnATreeElement element) {
+        Image image = null;
+        if(element.getIconPath()!=null) {
+            image = ImageCache.getInstance().getCustomImage(element.getIconPath());
+        }
+        return image;
+    }
+	
 }

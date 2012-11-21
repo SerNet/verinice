@@ -41,6 +41,12 @@
                 minOccurs="1"
                 nillable="false" />
             <xsd:element
+                name="icon"
+                type="xsd:string"
+                minOccurs="0"
+                maxOccurs="1"
+                nillable="false" />
+            <xsd:element
                 name="children"
                 minOccurs="0"
                 maxOccurs="unbounded"

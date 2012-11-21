@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -37,7 +38,6 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-@SuppressWarnings("restriction")
 public class TreeLabelProvider extends LabelProvider  {
 
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
@@ -52,32 +52,46 @@ public class TreeLabelProvider extends LabelProvider  {
 	public Image getImage(Object obj) {
 		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 		try {
-    		if (!(obj instanceof IISO27kElement)) {
+    		if (!(obj instanceof IISO27kElement) && !(obj instanceof CnATreeElement)) {
     			return image;
-    		} else if (obj instanceof Group && !(obj instanceof ImportIsoGroup)) {
-    			Group group = (Group) obj;
-    			// TODO - getChildTypes()[0] might be a problem for more than one type
-                image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
-    			return image;
-    		} else if (obj instanceof SamtTopic) {
-    	          SamtTopic topic = (SamtTopic) obj;
-    	          image = ImageCache.getInstance().getControlImplementationImage(maturityService.getIsaState(topic));
-    	    } else if (obj instanceof Control) {
-    		    Control control = (Control) obj;
-    		    image = ImageCache.getInstance().getControlImplementationImage(control.getImplementation());
-    		    
     		} else {
-    			// else return type icon:
-    			IISO27kElement elmt = (IISO27kElement) obj;
-    			image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
-    		}
+    		    return getImage((IISO27kElement) obj);
+    		} 		
 		} catch(Exception e) {
             LOG.error("Error while getting image for tree item.", e);
-        }
-		return image;
+            return image;
+        }		
 	}
+    
+    private Image getImage(IISO27kElement element) {
+        Image image = CnAImageProvider.getCustomImage((CnATreeElement)element);
+        if(image!=null) {
+            return image;
+        }
+        if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
+            Group group = (Group) element;
+            // TODO - getChildTypes()[0] might be a problem for more than one type
+            image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
+        } else if (element instanceof SamtTopic) {
+              SamtTopic topic = (SamtTopic) element;
+              image = ImageCache.getInstance().getControlImplementationImage(maturityService.getIsaState(topic));
+        } else if (element instanceof Control) {
+            Control control = (Control) element;
+            image = ImageCache.getInstance().getControlImplementationImage(control.getImplementation());
+            
+        } else {
+            // else return type icon:
+            IISO27kElement elmt = (IISO27kElement) element;
+            image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
+        }
+        
+        if(image==null) {
+            image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+        }
+        return image;
+    }
 
-	@Override
+    @Override
 	public String getText(Object obj) {
 		String text = "unknown";
 		try {

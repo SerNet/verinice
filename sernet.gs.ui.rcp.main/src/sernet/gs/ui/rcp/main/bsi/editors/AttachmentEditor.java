@@ -181,7 +181,13 @@ public class AttachmentEditor extends EditorPart {
 
     @Override
     public void dispose() {
-        EditorRegistry.getInstance().closeEditor(String.valueOf(((NoteEditorInput) getEditorInput()).getId()));
+        IEditorInput editorInput = getEditorInput();
+        if(editorInput instanceof NoteEditorInput) {
+            EditorRegistry.getInstance().closeEditor(String.valueOf(((NoteEditorInput) editorInput).getId()));
+        }
+        if(editorInput instanceof AttachmentEditorInput) {
+            EditorRegistry.getInstance().closeEditor(String.valueOf(((AttachmentEditorInput) editorInput).getId()));
+        }
         super.dispose();
     }
 

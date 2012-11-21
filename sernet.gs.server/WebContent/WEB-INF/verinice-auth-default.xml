@@ -43,6 +43,7 @@
         <action id="bsimassnahmen" />
         <action id="bsimodelview" />
         <action id="bulkedit" />
+        <action id="changeicon" />
         <action id="createindividualtasks" />
         <action id="createisatasks" />
         <action id="deletecatalog" />
@@ -106,6 +107,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+            <action id="changeicon" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />
@@ -165,6 +167,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+            <action id="changeicon" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />
@@ -226,6 +229,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+            <action id="changeicon" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />

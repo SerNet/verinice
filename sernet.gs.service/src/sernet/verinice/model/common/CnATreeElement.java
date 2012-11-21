@@ -80,6 +80,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	private String objectType;
 	
+	private String iconPath;
+	
 	public int getNumericProperty(String propertyTypeId) {
 	    PropertyList properties = getEntity().getProperties(propertyTypeId);
 	    if (properties == null || properties.getProperties().size()==0)
@@ -406,7 +408,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		return links;
 	}
 	
-	/**
+	public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
+    /**
      * dependant in linksDown is this {@link CnATreeElement}
      */
 	public void addLinkDown(CnALink link) {

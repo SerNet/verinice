@@ -284,6 +284,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
          * set the associated attributes:
          */
         if (null != elementInDB && setAttributes) {
+            if(so.getIcon()!=null && !so.getIcon().isEmpty()) {
+                elementInDB.setIconPath(so.getIcon());
+            }
             // for all <syncAttribute>-Elements below current
             // <syncObject>...
             HUITypeFactory huiTypeFactory = getHuiTypeFactory();

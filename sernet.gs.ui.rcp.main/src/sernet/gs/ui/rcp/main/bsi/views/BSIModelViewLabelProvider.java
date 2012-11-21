@@ -46,9 +46,13 @@ public class BSIModelViewLabelProvider extends LabelProvider {
 
     @Override
     public Image getImage(Object obj) {
-
-        Object cachedObject = null;
-
+        if(obj instanceof CnATreeElement) {
+            Image image = CnAImageProvider.getCustomImage((CnATreeElement)obj);
+            if(image!=null) {
+                return image;
+            }
+        }
+        
         if (obj instanceof BausteinUmsetzung) {         
             return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
         }

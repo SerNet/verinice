@@ -108,7 +108,6 @@ public class AddIsaControl implements IObjectActionDelegate, RightEnabledUserInt
         this.targetPart = targetPart;
     }
 
-    @SuppressWarnings("unchecked")
     public void run(IAction action) {
         try {
             

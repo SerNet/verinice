@@ -22,8 +22,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+
+import org.osgi.framework.Bundle;
 
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -56,7 +61,6 @@ import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.Exception;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -81,6 +85,8 @@ public class ImageCache {
     // FIXME ak exception accessing read only element as normal user
     // FIXME ak secureDAO not used on all elements, ie bausteinumsetzung
     // FIXME ak exception sving element, entity exists in session with separate instance...
+    
+    public static final String ICON_DIRECTORY = "icons/";
     
 	public static final String UNKNOWN = "generic_element.gif";
 	
@@ -289,6 +295,8 @@ public class ImageCache {
 	
 	// for ISO27k elements: map of <element type> : <icon name> 
 	private static final HashMap<String, String> ISO27K_ICON_MAP;
+	
+	private static Bundle bundle;
 
 	
 	static {
@@ -345,7 +353,7 @@ public class ImageCache {
 	}
 	
 	private ImageCache() {
-		
+	    bundle = Platform.getBundle(Activator.PLUGIN_ID);
 	}
 	
 
@@ -353,7 +361,7 @@ public class ImageCache {
 	public static ImageCache getInstance() {
 		if (instance == null) {
 			instance = new ImageCache();
-			imagePath = Activator.getDefault().getBundle().getEntry("icons/");
+			imagePath = Activator.getDefault().getBundle().getEntry(ICON_DIRECTORY);
 		}
 		return instance;
 	}
@@ -391,23 +399,51 @@ public class ImageCache {
 		return descriptor;
 	
 	}
+    
+    public Image getCustomImage(String url) {
+        ImageDescriptor descriptor = ImageDescriptor.createFromURL(
+                FileLocator.find(bundle,
+                new Path(url),
+                null));
+        if(descriptor.equals(ImageDescriptor.getMissingImageDescriptor())) {
+            descriptor = ImageDescriptor.createFromURL(
+                    FileLocator.find(bundle,
+                    new Path(getIconPath(UNKNOWN)),
+                    null));
+        }
+        return getImage(descriptor);
+    }
 	
 	public Image getImage(String url) {
-		ImageDescriptor descriptor;
-		try {
-			descriptor = ImageDescriptor.createFromURL(new URL(imagePath, url));
-		} catch (MalformedURLException e) {
-			descriptor = ImageDescriptor.getMissingImageDescriptor();
-		}
-		return getImage(descriptor);
-	}
+	    ImageDescriptor descriptor = ImageDescriptor.createFromURL(
+	            FileLocator.find(bundle,
+	            new Path(getIconPath(url)),
+	            null));
+	    if(descriptor.equals(ImageDescriptor.getMissingImageDescriptor())) {
+	        descriptor = ImageDescriptor.createFromURL(
+	                FileLocator.find(bundle,
+	                new Path(getIconPath(UNKNOWN)),
+	                null));
+	    }
+        return getImage(descriptor);
+    }
+
+
+
+    private String getIconPath(String url) {
+        return new StringBuilder(ICON_DIRECTORY).append(url).toString();
+    }
+
 
 	public Image getImage(ImageDescriptor id) {
 		if (id == null)
 			return null;
 		Image image = imageMap.get(id);
 		if (image == null) {
-			image = id.createImage();
+			image = id.createImage(false);
+			if(image==null) {
+			    image = getImage(ImageCache.UNKNOWN);
+			}
 			imageMap.put(id, image);
 		}
 		return image;

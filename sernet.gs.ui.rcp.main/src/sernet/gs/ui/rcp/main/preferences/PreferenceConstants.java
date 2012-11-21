@@ -96,7 +96,7 @@ public class PreferenceConstants {
 	public static final String OPERATION_MODE_REMOTE_SERVER = "gs_cna_operationmode_withserver";
 	
 	public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-	public static final String VNSERVER_URI_INTERNAL = "http://localhost:8800";
+	public static final String VNSERVER_URI_INTERNAL = "http://localhost:8888";
 	public static final String VNSERVER_URI_DEFAULT = "http://localhost:8080/veriniceserver";
 	public static final String VNSERVER_USER = "gs_cna_serveruser";
 	public static final String VNSERVER_PASS = "gs_cna_serverpass";
@@ -135,6 +135,8 @@ public class PreferenceConstants {
     public static final String SHOW_LINK_MAKER_IN_EDITOR = "link_maker_in_editor";
     
     public static final String THUMBNAIL_SIZE = "thumbnail_size";
+    
+    public static final String RESTART = "is_restart";
     
 	/**
 	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
