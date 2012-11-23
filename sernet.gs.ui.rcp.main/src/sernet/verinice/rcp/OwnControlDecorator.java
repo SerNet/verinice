@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
+import sernet.gs.service.ServerInitializer;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
@@ -39,9 +40,9 @@ public class OwnControlDecorator extends LabelProvider implements ILightweightLa
 
     public void decorate(Object o, IDecoration decoration) {
         if (o instanceof MassnahmenUmsetzung ) {
+            ServerInitializer.inheritVeriniceContextState();
             MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) o;
             if (massnahme.getUrl() == null || massnahme.getUrl().isEmpty() || massnahme.getUrl().equals("null")) {
-
                 decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
             }
 

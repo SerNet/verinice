@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmeById;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -300,6 +301,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				log.warn("Element with no IT-Verbund ancestor. Skipping ...");
 				return false;
 			}
+			parent = Retriever.checkRetrieveParent(parent);
 			parent = parent.getParent();
 		}
 		

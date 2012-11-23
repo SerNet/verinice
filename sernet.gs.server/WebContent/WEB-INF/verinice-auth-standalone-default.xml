@@ -25,7 +25,8 @@
                 "createisatasks"
 	            "editprofile"
 	            "taskdelete" 
-	            "taskshowall" -->
+	            "taskshowall" 
+                "importldap" -->
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -59,7 +60,6 @@
 	        <action id="gsnotesimport" />
 	        <action id="gstoolimport" />
 	        <action id="importcsv" />
-	        <action id="importldap" />
 	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />

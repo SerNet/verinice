@@ -19,11 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
@@ -122,12 +127,58 @@ public class Retriever {
     }
 	
 	private static boolean isElementInitialized(CnATreeElement element) {
-        return Hibernate.isInitialized(element)
-            && (element==null || Hibernate.isInitialized(element.getEntity()))
-            && (element==null || element.getEntity()==null || Hibernate.isInitialized(element.getEntity().getTypedPropertyLists()));
-    }
+        if(element==null) {
+            return true;
+        }
+        if(!Hibernate.isInitialized(element)) {
+            return false;
+        }
+        return isEntityInitialized(element.getEntity());
+	}
 	
-	public static boolean areChildrenInitialized(CnATreeElement element) {
+    private static boolean isEntityInitialized(Entity entity) {
+        if(entity==null) {
+            return true;
+        }
+        if(!Hibernate.isInitialized(entity)) {
+            return false;
+        }
+        return isPropertyListInitialize(entity.getTypedPropertyLists());
+    }
+
+    private static boolean isPropertyListInitialize(Map<String, PropertyList> typedPropertyLists) {
+        if(typedPropertyLists==null) {
+            return true;
+        }
+        if(!Hibernate.isInitialized(typedPropertyLists)) {
+            return false;
+        }
+        for (PropertyList properties : typedPropertyLists.values()) {
+            if(!isPropertiesInitialized(properties)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private static boolean isPropertiesInitialized(PropertyList properties) {
+        if(properties==null) {
+            return true;
+        }
+        if(!Hibernate.isInitialized(properties)) {
+            return false;
+        }
+        if(properties.getProperties()==null) {
+            return true;
+        }
+        if(!Hibernate.isInitialized(properties.getProperties())) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean areChildrenInitialized(CnATreeElement element) {
         return Hibernate.isInitialized(element) 
             && (element==null || Hibernate.isInitialized(element.getChildren()));
     }
