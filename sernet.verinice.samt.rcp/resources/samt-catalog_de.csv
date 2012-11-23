@@ -1,26 +1,35 @@
-"5","5 Security Policy",,,,,,,
-"5.1","5.1 Informationssicherheitsrichtlinie ","3",,"2","2",,"2","3"
+0,0 VDA Information Security Assessment (DE),,,,,,,
+,,,"Dieser Fragenkatalog, basierend auf der ISO 27002, kann auf dem Weg zur eigenen Zertifizierung, für Selbstauskünfte der Lieferanten, für Vor-Ort-Audits bei Lieferanten oder interne Audits, genutzt werden.
+
+
+
+
+
+",,,,,
+,,,(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA),,,,,
+,,,Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/,,,,,
+,,,"VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten.",,,,,
+5,5 Security Policy,,,,,,,
+5.1,5.1 Informationssicherheitsrichtlinie ,3,(Referenz zu ISO 27002: Control 5.1.1 und 5.1.2),2,2,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden Richtlinien zur Informationssicherheit erstellt, veröffentlicht und verteilt? </h1>",,,,,
+,,,"<h1>In wie weit werden Richtlinien zur Informationssicherheit erstellt, veröffentlicht und verteilt?</h1>",,,,,
 ,,,,,,,,
-,,,"(Referenz zu ISO 27002: Control 5.1.1 und 5.1.2)",,,,,
-,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es existieren keine bzw. nur unvollständige Richtlinien/Regelungen zur Informationssicherheit.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Umfassende Richtlinien/Regelungen zur Informationssicherheit sind im Unternehmen vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
-- Es existiert eine Sicherheitspolitik (security policy) in der die Ziele des Unternehmens hinsichtlich des Informationsschutzes definiert sind.
+- Es existiert eine Sicherheitspolitik in der die Ziele des Unternehmens hinsichtlich des Informationsschutzes definiert sind.
 - Die Sicherheitspolitik ist von der Geschäftsführung unterschrieben.
-- Die Richtlinien/Regelungen zur Informationssicherheit werden jedem Mitarbeiter des Unternehmens zentral (z.B. im Intranet) zur Verfügung gestellt oder regelmäßig an die Mitarbeiter verteilt. 
-- Für den Prozess der Erstellung und Pflege der Richtlinien/Regelungen zur Informationssicherheit sind Verantwortliche benannt.
+- Die Sicherheitspolitik und Richtlinien/Regelungen zur Informationssicherheit werden jedem Mitarbeiter des Unternehmens zentral (z.B. im Intranet) zur Verfügung gestellt oder regelmäßig an die Mitarbeiter verteilt. 
+- Für den Prozess der Erstellung und Pflege der Sicherheitspolitik und Richtlinien/Regelungen zur Informationssicherheit sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert (Versionskontrolle, Änderungsmanagement, Freigabeprozesse etc.).",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebene Prozess zur Erstellung und Pflege der Richtlinien/Regelungen zur Informationssicherheit ist im Unternehmen ganzheitlich definiert und umgesetzt. 
+- Der im Level 2 beschriebene Prozess zur Erstellung und Pflege der Sicherheitspolitik und Richtlinien/Regelungen zur Informationssicherheit ist im Unternehmen ganzheitlich definiert und umgesetzt. 
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens integriert (z.B. zentrales Änderungsmanagement).
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -33,18 +42,18 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.  ",,,,,
 ,,,,,,,,
-"6","6 Organization of Information Security",,,,,,,
-"6.1","6.1 Zuweisung der Informationssicherheits-Verantwortung ","3","(Referenz zu ISO 27002: Control 6.1.3)","1","1",,"2","3"
+6,6 Organization of Information Security,,,,,,,
+6.1,6.1 Zuweisung der Informationssicherheit’s Verantwortung ,3,(Referenz zu ISO 27002: Control 6.1.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie ist die Informationssicherheit im Unternehmen organisiert?</h1>",,,,,
+,,,<h1>Wie ist die Informationssicherheit im Unternehmen organisiert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Keine Informationssicherheitsorganisation bzw. Informationssicherheitsfunktion vorhanden",,,,,
 ,,,"Level 1:  Durchgeführt
-- Personen, die sich nicht hauptsächlich mit der Informationssicherheit beschäftigen, befassen sich mit dem Thema.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+- Personen, die sich nicht hauptsächlich mit der Informationssicherheit beschäftigen, befassen sich mit dem Thema. 
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt 
 - Es existiert eine Informationssicherheitsfunktion/-organisation im Unternehmen.
 - Die Informationssicherheitsfunktion/-organisation ist im Organisationsplan des Unternehmens beschrieben.
@@ -67,17 +76,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.2","6.2 Durch externe Parteien entstehenden Risiken ","3","(Referenz zu ISO 27002: Control 6.2.1)","1","1",,"2","3"
+6.2,6.2 Durch externe Parteien entstehenden Risiken ,3,(Referenz zu ISO 27002: Control 6.2.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wird vor Auftragsvergabe an Fremdfirmen eine Risikoanalyse der personellen u. organisatorischen Risken durchgeführt?</h1>",,,,,
+,,,<h1>Wird vor Auftragsvergabe an Fremdfirmen eine Risikoanalyse der personellen u. organisatorischen Risiken durchgeführt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es werden keine Risikoanalysen im Falle der Auftragsvergabe an Fremdfirmen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt 
 - Es werden Risikoanalysen bei der Vergabe von Aufträgen mit kritischen Inhalten an Fremdfirmen durchgeführt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Für die Risikoanalyse bei Auftragsvergabe an Fremdfirmen ist eine einheitliche Methode definiert.
 - Für jede Auftragsvergabe an Fremdfirmen wird eine Risikoanalyse durchgeführt.
@@ -98,17 +107,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"6.3","6.3 Verträge mit Dritten ","3","(Referenz zu ISO 27002: Control 6.2.3)","1","1",,"2","3"
+6.3,6.3 Verträge mit Dritten ,3,(Referenz zu ISO 27002: Control 6.2.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie wird die Geheimhaltung bei der Zusammenarbeit mit Fremdfirmen sichergestellt?</h1>",,,,,
+,,,<h1>Wie wird die Geheimhaltung bei der Zusammenarbeit mit Fremdfirmen sichergestellt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es werden keine Geheimhaltungsverpflichtungen und keine Vereinbarungen hinsichtlich Themen des Informationsschutzes mit Fremdfirmen vereinbart.",,,,,
 ,,,"Level 1:  Durchgeführt 
 - Es werden Geheimhaltungsverpflichtungen mit Fremdfirmen beim Umgang mit sensiblen Informationen unterzeichnet.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Jede Fremdfirma muss grundsätzlich eine Geheimhaltungsverpflichtung unterzeichnen.
 - Beim Umgang mit sensiblen Daten in Projekten/Aufträgen werden separate/spezielle Geheimhaltungsverpflichtungen unterschrieben.
@@ -129,18 +138,18 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"7","7 Asset Management",,,,,,,
-"7.1","7.1 Inventarverzeichnis ","3","(Referenz zu ISO 27002: Control 7.1.1)","1","1",,"2","3"
+7,7 Asset Management,,,,,,,
+7.1,7.1 Inventarverzeichnis ,3,(Referenz zu ISO 27002: Control 7.1.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden die (physischen und digitalen) Vermögenswerte des Unternehmens inventarisiert?</h1>",,,,,
+,,,<h1>Wie werden die (physischen und digitalen) Vermögenswerte des Unternehmens inventarisiert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Tabellen, Übersichten oder Verzeichnisse von Vermögenswerten vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind Übersichten der Vermögenswerten inklusive der verantwortlichen Stellen vorhanden, aber nicht aktuell und unvollständig
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Unternehmenswerte der folgenden Kategorien werden in Übersichten mit den dazugehörigen verantwortlichen Stellen dokumentiert und aktuell gehalten:
     - Informationswerte: Informationen in Dateien und Datenbanken, Verträge und Vereinbarungen,
@@ -166,17 +175,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"7.2","7.2 Kennzeichnung und Behandlung von Informationen ","3","(Referenz zu ISO 27002: Control 7.2.1)","2","2",,"2","3"
+7.2,7.2 Kennzeichnung und Behandlung von Informationen ,3,(Referenz zu ISO 27002: Control 7.2.1),2,2,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden die Informationen im Unternehmen eingestuft / klassifiziert?</h1>",,,,,
+,,,<h1>Wie werden die Informationen im Unternehmen eingestuft / klassifiziert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Eine Klassifikation von Informationen im Unternehmen ist nicht vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind Regeln für die Klassifikation von Informationen im Unternehmen definiert.
-- Diese sind weder strukturiert noch ist die Umsetzung organisiert.",,,,,
+  Diese sind weder strukturiert noch ist die Umsetzung organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Für die Klassifikation von Informationen ist im Unternehmen ein einheitliches Schema definiert.
 - Das Klassifikationsschema berücksichtigt die Einstufung von Informationen bezüglich ihres Wertes,
@@ -200,19 +209,19 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8","8 Human Resources Security",,,,,,,
-"8.1","8.1 Arbeitsvertrag ","3","(Referenz zu ISO 27002: Control 8.1.3)","1","1",,"2","3"
+8,8 Human Resources Security,,,,,,,
+8.1,8.1 Arbeitsvertrag ,3,(Referenz zu ISO 27002: Control 8.1.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden Mitarbeiter auf Einhaltung der Vorgaben zur Informationssicherheit verpflichtet?</h1>",,,,,
+,,,<h1>In wie weit werden Mitarbeiter auf Einhaltung der Vorgaben zur Informationssicherheit verpflichtet?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - In den Arbeitsverträgen bzw. separaten Dokumenten sind keine sicherheitsbezogene Paragraphen enthalten.",,,,,
 ,,,"Level 1:  Durchgeführt
 - In den Arbeitsverträgen bzw. separaten Dokumenten sind wesentliche sicherheitsbezogene Paragraphen enthalten.
-- Zum Teil werden die separaten Dokumente ausgehändigt und der Erhalt schriftlich bestätigt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Zum Teil werden die separaten Dokumente ausgehändigt und der Erhalt schriftlich bestätigt.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Jeder Mitarbeiter unterschreibt mit seinem Arbeitsvertrag bzw. separaten Dokumenten sicherheitsbezogene Paragraphen zur Informationssicherheit.
 - Beim Umgang mit sensiblen Daten in Projekten/Aufträgen werden separate/spezielle Geheimhaltungsverpflichtungen unterschrieben.
@@ -236,18 +245,19 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.2","8.2 Sensibilisierung und User Schulung ","3","(Referenz zu ISO 27002: Control 8.2.1 und 8.2.2)","2","2",,"2","3"
+8.2,8.2 Sensibilisierung und User Schulung ,3,(Referenz zu ISO 27002: Control 8.2.1 und 8.2.2),2,2,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden die Mitarbeiter über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult und sensibilisiert?</h1>",,,,,
+,,,<h1>Wie werden die Mitarbeiter über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult und sensibilisiert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es werden keine Informations- / Sensibilisierungsprogramme durch das Unternehmen initiiert/veranstaltet.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es werden sporadische, vorfallsbedingte Aktivitäten / Informationsveranstaltungen bezüglich der Gefahren beim Umgang mit Informationen durchgeführt.
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
+- Die Schulungen und Sensibilisierungprogramme werden vom Management sichergestellt.
 - Jeder Mitarbeiter wird bei seiner Einstellung über die Gefahren beim Umgang mit Informationen und deren Verarbeitung geschult. 
 - Es finden regelmäßig, jedoch mindestens einmal pro Jahr, Sensibilisierungen der Mitarbeiter statt.
 - Jeder Mitarbeiter ist verpflichtet an den Schulungen und Sensibilisierungsmaßnahmen teilzunehmen.
@@ -268,17 +278,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"8.3","8.3 Anpassung der Zutritts-, Zugangs- und Zugriffsmöglichkeiten","3","(Referenz zu ISO 27002: Control 8.3.1 und 8.3.3)","1","1",,"2","3"
+8.3,"8.3 Anpassung der Zutritts-, Zugangs- und Zugriffsmöglichkeiten",3,(Referenz zu ISO 27002: Control 8.3.1 und 8.3.3),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit werden bei Änderungen des Arbeitsverhältnisses Zutritts-, Zugangs- und Zugriffs- Rechte oder Berechtigungen angepasst (gewähren / widerrufen) und wie werden diese Änderungen dokumentiert?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0: Unvollständig
 - Es findet keine Anpassungen von Zutritts-, Zugangs- und Zugriffs- Rechten oder Berechtigungen bei Änderungen des Arbeitsverhältnisses von Mitarbeitern statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Nicht mehr benötigte Rechte oder Berechtigungen werden angepasst.
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Über einen formalen Prozess des Personalwesens werden Änderungen von Arbeitsverhältnissen von Mitarbeitern an die betroffenen Stellen im Unternehmen kommuniziert.
 - Es erfolgt durch die betroffenen Stellen eine Prüfung auf Zutritts-, Zugangs- und Zugriffs- Rechten des betroffenen Mitarbeiters.
@@ -301,18 +311,18 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9","9 Physical and Environmental Security",,,,,,,
-"9.1","9.1 Sicherheitszonen ","3","(Referenz zu ISO 27002: Control 9.1.1)","1","1",,"2","3"
+9,9 Physical and Environmental Security,,,,,,,
+9.1,9.1 Sicherheitszonen ,3,(Referenz zu ISO 27002: Control 9.1.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden Sicherheitszonen definiert und wie sind diese abgesichert?</h1>",,,,,
+,,,<h1>Wie werden Sicherheitszonen definiert und wie sind diese abgesichert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Sicherheitszonen identifiziert und definiert.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Sicherheitszonen sind teilweise definiert und abgesichert (Hindernisse wie Wände, über Zutrittskarten kontrollierte Zugänge oder mit Pförtnern besetzte Empfangsbereiche).
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wurde eine Risikobetrachtung bezüglich der zu schützenden Assets in bestimmten Bereichen/Zonen durchgeführt.
 - Auf Basis der Risikobetrachtung wurden Sicherheitsanforderungen für die in einer Zone befindlichen Assets ermittelt.
@@ -334,17 +344,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.2","9.2 Schutz gegen äußere und umgebungsbezogene Bedrohungen ","3","(Referenz zu ISO 27002: Control 9.1.4)","1","1",,"2","3"
+9.2,9.2 Schutz gegen äußere und umgebungsbezogene Bedrohungen ,3,(Referenz zu ISO 27002: Control 9.1.4),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit ist das Unternehmen auf physikalische Bedrohungen (z.B. Feuer, Erdbeben usw.) vorbereitet?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es erfolgen keine Analysen und Maßnahmen zum Schutz vor physikalischen Bedrohungen.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es erfolgen Analysen und Maßnahmen zum Schutz vor physikalischen Bedrohungen.
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wurde eine Risikobetrachtung bezüglich physikalischen Bedrohungen für Sicherheitszonen durchgeführt.
 - Auf Basis der Risikobetrachtung wurden Sicherheitsanforderungen für die Sicherheitszone ermittelt.
@@ -366,17 +376,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.3","9.3 Zutrittsmanagement ","3","(Referenz zu ISO 27002: Control 9.1.6)","2","2",,"2","3"
+9.3,9.3 Zutrittsmanagement ,3,(Referenz zu ISO 27002: Control 9.1.6),2,2,,2,3
 ,,,,,,,,
-,,,"<h1>Wie ist das Zutrittsmanagement im Unternehmen organisiert?</h1>",,,,,
+,,,<h1>Wie ist das Zutrittsmanagement im Unternehmen organisiert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es existieren keine Regeln für den Zutritt zu den Sicherheitszonen.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Der Zutritt zu den Sicherheitszonen wird überprüft.
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt 
 - Es wurde eine Risikobetrachtung des Zutritts zu den Sicherheitszonen durchgeführt.
 - Auf Basis der Risikobetrachtung wurden Sicherheitsanforderungen für den Zutritt zu den Sicherheitszonen ermittelt.
@@ -398,17 +408,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.4","9.4 Schutz von Gütern bei Anlieferung und Versand ","3","(Referenz zu ISO 27002: Control 9.1.6)","1","1",,"2","3"
+9.4,9.4 Schutz von Gütern bei Anlieferung und Versand ,3,(Referenz zu ISO 27002: Control 9.1.6),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Welche Vorsichtsmaßnahmen werden zum Schutz der Waren bei Anlieferung und Versand getroffen?</h1>",,,,,
+,,,<h1>Welche Vorsichtsmaßnahmen werden zum Schutz der Waren bei Anlieferung und Versand getroffen?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regeln bzw. Vorsichtsmaßnahmen zum Schutz der Güter getroffen worden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Mitarbeiter schützen die Waren bei Anlieferung und Versand, aber nicht systematisch.
-- Dies erfolgt weder strukturiert noch organisiert.",,,,,
+  Dies erfolgt weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Mittels einer Risikobetrachtung wurden die Anforderungen für den Schutz der Waren ermittelt.
 - Die Maßnahmen sind definiert und in einer Richtlinie dokumentiert worden.
@@ -429,17 +439,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"9.5","9.5 Berechtigung zur Entfernung von Betriebsmitteln ","3","(Referenz zu ISO 27002: Control 9.2.5, 9.2.6 und 9.2.7)","1","1",,"2","3"
+9.5,9.5 Berechtigung zur Entfernung von Betriebsmitteln ,3,"(Referenz zu ISO 27002: Control 9.2.5, 9.2.6 und 9.2.7)",1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Wie ist der Prozess zum Gebrauch von Betriebsmitteln definiert (einschließlich Mitnahme, Entsorgung und Wiederverwendung)?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Vorgaben / Regeln bzw. Maßnahmen definiert bezüglich des Umgangs mit Betriebsmitteln (Mitnahme außerhalb des Unternehmensgeländes, Entsorgung und Wiederverwendung).",,,,,
 ,,,"Level 1:  Durchgeführt
 - Für den Umgang mit den Betriebsmitteln (Mitnahme außerhalb des Unternehmensgeländes, Entsorgung und Wiederverwendung) sind einige Regelungen definiert.
-- Dies erfolgt weder strukturiert noch organisiert",,,,,
+  Dies erfolgt weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wurde eine Risikobetrachtung des Umgangs mit Betriebsmitteln durchgeführt.
 - Basierend auf der Risikobetrachtung wurden Regelungen zum Gebrauch von Betriebsmitteln im speziellen für die Mitnahme außerhalb des Unternehmensgeländes, der Entsorgung und der Wiederverwendung definiert.
@@ -462,20 +472,20 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10","10 Communications and Operations Management",,,,,,,
-"10.1","10.1 Hard- und Software Dokumentation (Change Management) ","3","(Referenz zu ISO 27002: Control 10.1.1 und 10.1.2)","1","1",,"2","3"
+10,10 Communications and Operations Management,,,,,,,
+10.1,10.1 Hard- und Software Dokumentation (Change Management) ,3,(Referenz zu ISO 27002: Control 10.1.2),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit ist das Änderungs-Management an Systemen im Unternehmen etabliert und werden die Systeme auf dem aktuellsten Stand gehalten?</h1>",,,,,
+,,,<h1>In wie weit ist das Änderungs-Management an Systemen im Unternehmen etabliert und werden die Systeme auf dem aktuellsten Stand gehalten?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es existiert kein Änderungs-Management.
 - Änderungen werden ohne jede Kontrolle durchgeführt werden",,,,,
 ,,,"Level 1:  Durchgeführt
-- Betroffene Stellen werden nicht über Änderungen informiert.
 - Die Dokumentationen von Konfigurationen und deren Änderungen sind unvollständig und fehlerhaft.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Betroffene Stellen werden nicht über Änderungen informiert.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Jede Änderung an Systemen, die für die Fortführung des Betriebes notwendig sind, durchläuft einen definierten formellen Prozess.
 - Jede Änderung wird geplant, getestet und bezüglich seiner Auswirkungen bewertet.
@@ -483,11 +493,11 @@
 - In wichtigen Bereichen wird das Änderungs-Management durch Software unterstützt.
 - Für den Fehler-Fall sind Rückfall-Lösungen erarbeitet und getestet.
 - Der Prozess wird für alle Änderungen konsequent angewandt.
-- Für den Änderungs-Mangement-Prozess an Systemen sind Verantwortliche benannt.
+- Für den Änderungs-Management-Prozess an Systemen sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebenen Änderungs-Mangement-Prozess an Systemen ist ganzheitlich im Unternehmen definiert und umgesetzt.
+- Der im Level 2 beschriebenen Änderungs-Management-Prozess an Systemen ist ganzheitlich im Unternehmen definiert und umgesetzt.
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens eingebunden (z.B. Incident-Management; Betriebsmanagement, usw.).
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -500,20 +510,20 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.2","10.2 Trennung der Entwicklungs-, Test- und Produktionsumgebung ","3","(Referenz zu ISO 27002: Control 10.1.4)","1","1",,"2","3"
+10.2,"10.2 Trennung der Entwicklungs-, Test- und Produktivumgebung ",3,(Referenz zu ISO 27002: Control 10.1.4),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?</h1>",,,,,
+,,,<h1>In wie weit sind die Entwicklungs- und Testumgebungen von den Produktivumgebungen getrennt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
-- Es sind keine separaten Entwicklungs-, Test- und Produktionsumgebungen vorhanden.",,,,,
+- Es sind keine separaten Entwicklungs-, Test- und Produktivumgebungen vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
-- Die Entwicklungs-, Test- und Produktionsumgebungen sind zum Teil getrennt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+- Die Entwicklungs-, Test- und Produktivumgebungen sind zum Teil getrennt.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
-- Entwicklungs-, Test- und Produktionssysteme sind aufgebaut und im Betrieb.
-- Es sind Vorgaben zur Überführung von Software aus dem Entwicklungs- in den Produktionsstatus definiert.
+- Entwicklungs-, Test- und Produktivsysteme sind aufgebaut und im Betrieb.
+- Es sind Vorgaben zur Überführung von Software aus dem Entwicklungs- in den Produktivstatus definiert.
 - Die Änderungen werden ausschließlich nach diesem Verfahren durchgeführt.
 - In Testsysteme werden keine sensitive Daten verwendet. Sofern notwendig, werden die Daten anonymisiert.
 - Für Test- und Produktivsysteme sind unterschiedliche Benutzerprofile eingerichtet.
@@ -535,18 +545,18 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.3","10.3 Überprüfung der von Fremdfirmen erbrachten Leistungen ","3","(Referenz zu ISO 27002: Control 10.2.2)","1","1",,"2","3"
+10.3,10.3 Überprüfung der von Fremdfirmen erbrachten Leistungen ,3,(Referenz zu ISO 27002: Control 10.2.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Wie werden die durch Fremdfirmen erbrachten Leistungen, Berichte und Aufzeichnungen im Bezug auf die Informationssicherheit überwacht und überprüft?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung und Überprüfung der Leistungen, Berichte und Aufzeichnungen von Dritten statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es findet eine Überwachung und Überprüfung der vereinbarten Leistungen, Berichte oder Aufzeichnungen statt.
 - Die Qualität der Überwachung/Überprüfung hängt von dem Wissen einzelner Personen in den beauftragenden Fachabteilungen ab.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Im Bezug auf die Informationssicherheit wird folgendes überwacht und überprüft:
    - Einhaltung der vertraglichen Vereinbarungen
@@ -570,17 +580,17 @@
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.4","10.4 Antivirus Programm ","3","(Referenz zu ISO 27002: Control 10.4.1)","2","2",,"2","3"
+10.4,10.4 Antivirus Programm ,3,(Referenz zu ISO 27002: Control 10.4.1),2,2,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit ist der Schutz vor Schadsoftware (Viren, Würmer, …) im Unternehmen ausgeprägt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es ist kein Schutz, wie die Erkennung und Verhinderung der Ausführung von Schadsoftware (Viren, Würmer, ...) vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Schutzsoftware ist individuell bzw. sporadisch und ohne abgesicherten Aktualisierungsprozess installiert.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die zum Schutz gegen Schadsoftware erforderlichen technischen und organisatorischen Maßnahmen sind definiert.
 - Mit einer Risikoanalyse wurden die zu schützenden Systeme(-Gruppen) ermittelt.
@@ -612,33 +622,33 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.5","10.5 Firewall auf lokalen Systemen ","3","(Referenz zu ISO 27002: Control 10.4.1)","1","1",,"2","3"
+10.5,10.5 Firewall auf lokalen Systemen ,3,(Referenz zu ISO 27002: Control 10.4.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit ist auf den Systemen eine lokale Firewall und/oder IDS/IPS Software installiert?</h1>",,,,,
+,,,<h1>In wie weit ist auf den Systemen eine lokale Firewall und/oder HIDS/HIPS Software installiert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
-- Auf den Systemen ist keine lokale Firewall und/oder IDS/IPS Software installiert.",,,,,
+- Auf den Systemen ist keine lokale Firewall und/oder HIDS/HIPS Software installiert.",,,,,
 ,,,"Level 1:  Durchgeführt
-- Lokale Firewall- und/oder IDS/IPS- Software sind/ist individuell bzw. sporadisch und ohne abgesicherten Aktualisierungsprozess installiert.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+- Lokale Firewall- und/oder HIDS/HIPS- Software sind/ist individuell bzw. sporadisch und ohne abgesicherten Aktualisierungsprozess installiert.
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Die zum Schutz gegen Schadsoftware erforderlichen technischen und organisatorischen Maßnahmen sind definiert.
 - Mit einer Risikoanalyse wurden die zu schützenden Systeme(-Gruppen) ermittelt.
-- Aus den ermittelten Systemen wurden lokale Firewalls und/oder IDS/IPS Software zum Schutz vor Schadsoftware installiert.
+- Aus den ermittelten Systemen wurden lokale Firewalls und/oder HIDS/HIPS Software zum Schutz vor Schadsoftware installiert.
 - Es werden Softwareaktualisierungen (Updates) sowie aktuelle Erkennungsmuster von Schadsoftware für die Schutzsoftware automatisiert eingespielt.
 - Es wird mindestens einmal pro Tag automatisiert geprüft, ob Aktualisierungen der Erkennungsmuster von Schadsoftware verfügbar sind. Diese werden unverzüglich eingespielt.
-- Das zentrale E-Mail-Gateway, sofern vorhanden, ist durch eine lokale Firewall und/oder IDS/IPS Software abgesichert. 
-- Für die genutzten Internet-Dienste ist ein Schutz vor Schadsoftware über die lokale Firewall- und/oder IDS/IPS- Software gewährleistet.
-- Es ist sichergestellt, dass die Benutzer die lokale Firewall und/oder IDS/IPS Software nicht deaktivieren können. 
+- Das zentrale E-Mail-Gateway, sofern vorhanden, ist durch eine lokale Firewall und/oder HIDS/HIPS Software abgesichert. 
+- Für die genutzten Internet-Dienste ist ein Schutz vor Schadsoftware über die lokale Firewall- und/oder HIDS/HIPS- Software gewährleistet.
+- Es ist sichergestellt, dass die Benutzer die lokale Firewall und/oder HIDS/HIPS Software nicht deaktivieren können. 
 - Es ist sichergestellt, dass die Benutzer keine sicherheitsrelevanten Änderungen an den Einstellungen
-  der lokalen Firewall und/oder IDS/IPS Software vornehmen können.
+  der lokalen Firewall und/oder HIDS/HIPS Software vornehmen können.
 - Für den Prozess zum Schutz vor Schadsoftware sind Prozessverantwortliche benannt.
 - Den Prozessverantwortlichen werden ausreichend Ressourcen zur Verfügung gestellt.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebene Prozess für die unternehmensweite Verteilung von Antivirenschutz ist ganzheitlich im Unternehmen definiert und umgesetzt
+- Der im Level 2 beschriebene Prozess für die unternehmensweiten Schutz von Systemen durch lokale Firewall und/oder HIDS/HIPS ist ganzheitlich im Unternehmen definiert und umgesetzt
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens eingebunden (z.B. Patch-Management)
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -651,20 +661,20 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.6","10.6 Schutzvorkehrungen gegen aktive Inhalte ","3","(Referenz zu ISO 27002: Control 10.4.2)","1","1",,"2","3"
+10.6,10.6 Schutzvorkehrungen gegen aktive Inhalte ,3,(Referenz zu ISO 27002: Control 10.4.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Schutzvorkehrungen gegen aktive Inhalte (z.B. ActiveX-Controls, Java-Applets) getroffen?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Kontrolle und kein Schutz gegen aktive Inhalte statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einige Schutzvorkehrungen gegen aktive Inhalte sind definiert und umgesetzt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind Regelungen zum Schutz vor Schadprogrammen definiert.  
-- Aktive Inhalte wie z.B. Java und Javascript dürfen nur ausgeführt werden, wenn sie aus einer vertrauenswürdigen Quelle stammen.
+- Aktive Inhalte wie z.B. Java und JavaScript dürfen nur ausgeführt werden, wenn sie aus einer vertrauenswürdigen Quelle stammen.
 - Für die Aufnahme in die Liste der vertrauenswürdigen Quellen ist ein formaler Prozess definiert und umgesetzt.
 - Zur Identifikation von vertrauenswürdigen Quellen werden kryptographische Maßnahmen eingesetzt (Zertifikate).
 - Die Schutzvorkehrungen sind für alle betroffenen Systeme / Software (z.B. Browser, Betriebssysteme, Applikationen ...) umgesetzt.
@@ -685,17 +695,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.7","10.7 Informationssicherung  (Back-Up) ","3","(Referenz zu ISO 27002: Control 10.5.1)","2","2",,"2","3"
+10.7,10.7 Informationssicherung  (Back-Up) ,3,(Referenz zu ISO 27002: Control 10.5.1),2,2,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden die Datensicherungen (Back-Up's) erstellt und kontrolliert und in wie weit wird die Wiederherstellung (Restores) regelmäßig getestet?</h1>",,,,,
+,,,<h1>Wie werden die Datensicherungen (Back-ups) erstellt und kontrolliert und in wie weit wird die Wiederherstellung (Restores) regelmäßig getestet?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es werden keine Datensicherungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Von einigen Systemen werden Datensicherungen erstellt und die Wiederherstellung wird getestet.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wird ermittelt, von welchen Systemen einen Datensicherung erforderlich ist.
 - Es wird ermittelt, welche Intervalle bei der Datensicherung erforderlich sind.
@@ -720,17 +730,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.8","10.8 Verwaltung der Netzwerke ","3","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
+10.8,10.8 Verwaltung der Netzwerke ,3,(Referenz zu ISO 27002: Control 10.6.1),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Wie werden die Netzwerke verwaltet und gesteuert, damit sie vor Bedrohungen geschützt sind?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Eine Verwaltung der Netzwerke findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Das Netzwerk oder Teile dessen werden verwaltet und gesteuert.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Das Netzwerk wird zentral verwaltet, gesteuert, überwacht und durch technische Maßnahmen geschützt.
   Technische Maßnahmen können sein: Einsatz von Firewall, IDS/IPS, Netzwerk-Verwaltungstools oder 
@@ -756,17 +766,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.9","10.9 Regeln zum Betrieb von Modems","3","(Referenz zu ISO 27002: Control 10.6.1)","1","1",,"2","3"
+10.9,10.9 Regeln zum Betrieb von Modems,3,(Referenz zu ISO 27002: Control 10.6.1),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Wie ist der Einsatz von Modemgeräten (z.B. Analog, ISDN, DSL, UMTS, GPRS usw.) im Unternehmen geregelt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regelungen zur Benutzung von Modemgeräten vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind einzelne Regelungen zum Einsatz von Modemgeräten vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Regeln beinhalten mindestens folgende Vorgaben,
    - dass Endgeräte nicht gleichzeitig an Modems und Netzwerkverbindungen betrieben werden dürfen.
@@ -791,17 +801,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.10","10.10 Netzwerkdienste: Definition der Sicherheitsanforderungen ","3","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
+10.10,10.10 Netzwerkdienste: Definition der Sicherheitsanforderungen ,3,(Referenz zu ISO 27002: Control 10.6.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Sicherheitsanforderungen für die Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) definiert und umgesetzt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Sicherheitsanforderungen (organisatorische- u. technische Maßnahmen) für Netzwerkdienste definiert.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Für einige Netzwerke und Systeme sind Sicherheitsanforderungen definiert und umgesetzt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind für alle Netzwerkdienste, interne wie externe, Sicherheitsanforderungen definiert und umgesetzt.
 - Diese Sicherheitsanforderungen können sein:
@@ -827,28 +837,28 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.11","10.11 Netzwerkdienste: Service Level Agreement ","3","(Referenz zu ISO 27002: Control 10.6.2)","1","1",,"2","3"
+10.11,10.11 Netzwerkdienste: Service Level Agreement ,3,(Referenz zu ISO 27002: Control 10.6.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit sind für Netzwerkdienste (z.B. DNS, DHCP, VPN, MPLS, ERP, E-Mail, DMS, ...) Service-Level-Agreements (SLA) vereinbart?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
-- Es sind keine Service-Level-Agreements (SLA's) für Netzwerkdienste vorhanden.",,,,,
+- Es sind keine Service-Level-Agreements (SLAs) für Netzwerkdienste vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt 
-- SLA's sind für einige Netzwerkdienste vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+- SLAs sind für einige Netzwerkdienste vorhanden.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wurde ermittelt, welche Anforderungen bezüglich der Verfügbarkeit für bestimmte Netzwerkdienste bestehen.
-- Gemäß diesen Anforderungen sind entsprechende SLA's, sowohl für interne wie externen Dienstleister, vereinbart.
-- Die SLA's werden zentral verwaltet.
-- Abweichungen von SLA's werden identifiziert und die betroffene Stelle wird informiert.
-- Es finden regelmäßig Servicemeetings statt, in denen SLA's Verletzungen/Einhaltungen gemanaged werden.
-- Für den Prozess der SLA's für Netzwerkdienste sind Verantwortliche benannt.
+- Gemäß diesen Anforderungen sind entsprechende SLAs, sowohl für interne wie externen Dienstleister, vereinbart.
+- Die SLAs werden zentral verwaltet.
+- Abweichungen von SLAs werden identifiziert und die betroffene Stelle wird informiert.
+- Es finden regelmäßig Servicemeetings statt, in denen SLAs Verletzungen/Einhaltungen gemanagt werden.
+- Für den Prozess der SLAs für Netzwerkdienste sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebene Prozess SLA's für Netzwerkdienste ist ganzheitlich im Unternehmen definiert und umgesetzt.
+- Der im Level 2 beschriebene Prozess SLAs für Netzwerkdienste ist ganzheitlich im Unternehmen definiert und umgesetzt.
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens eingebunden 
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -861,17 +871,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.12","10.12 Verwaltung von entfernbaren Medien ","3","(Referenz zu ISO 27002: Control 10.7.1)","1","1",,"2","3"
+10.12,10.12 Verwaltung von entfernbaren Medien ,3,(Referenz zu ISO 27002: Control 10.7.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit gibt es Richtlinien zum Umgang mit mobilen Datenträgern (z.B. Bänder, USB-Speichersticks, USB-Festplatten, CD's, DVD's, ...)?</h1>",,,,,
+,,,"<h1>In wie weit gibt es Richtlinien zum Umgang mit mobilen Datenträgern (z.B. Bänder, USB-Speichersticks, USB-Festplatten, CDs, DVDs, ...)?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es sind keine Regelung bezüglich der Nutzung von mobilen Datenträgern vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind teilweise Regelungen für die Nutzung von mobilen Datenträgern sind vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind Regelungen bezüglich der Nutzung von mobilen Datenträgern vorhanden.
 - Die Nutzung, Löschung, Weitergabe und Entsorgung von mobilen Datenträgern ist, bezogen auf die Datenklassifizierung, geregelt.
@@ -893,17 +903,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.13","10.13 Entsorgung von Medien ","3","(Referenz zu ISO 27002: Control 10.7.2)","1","1",,"2","3"
+10.13,10.13 Entsorgung von Medien ,3,(Referenz zu ISO 27002: Control 10.7.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit gibt es eine Prozess für die sichere Entsorgung von Computermedien, wenn diese nicht mehr gebraucht werden?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regelungen bezüglich der sicheren Entsorgung von Computermedien vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Regelungen zur sicheren Entsorgung von Computermedien sind vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Entsorgung von Computermedien ist, hinsichtlich der Datenklassifizierung, geregelt.
 - Die zu entsorgenden Computermedien sind entsprechend gekennzeichnet und werden an speziell dafür vorgesehenen Orten gesammelt und gelagert.
@@ -926,17 +936,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.14","10.14 Physischer Transport von Medien ","3","(Referenz zu ISO 27002: Control 10.8.3)","1","1",,"2","3"
+10.14,10.14 Physischer Transport von Medien ,3,(Referenz zu ISO 27002: Control 10.8.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden Vorkehrungen getroffen, wenn  Medien (z.B. CD's, DVD's, Papier-Dokumente), die vertrauliche Informationen enthalten, physisch transportiert werden müssen (z.B. DHL, UPS)? </h1>",,,,,
+,,,"<h1>In wie weit werden Vorkehrungen getroffen, wenn  Medien (z.B. CDs, DVDs, Papier-Dokumente), die vertrauliche Informationen enthalten, physisch transportiert werden müssen (z.B. DHL, UPS)? </h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Maßnahmen zum Schutz von Medien beim Transport definiert und umgesetzt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind einige Maßnahmen zum Schutz von Medien beim Transport definiert und umgesetzt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind Regelungen und Maßnahmen zum gesicherten Transport von Medien mit vertraulichen Inhalt definiert und kommuniziert.
 - Es werden nur zugelassene Kuriere beauftragt und dessen Identität wird geprüft.
@@ -960,17 +970,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.15","10.15 Elektronischen Austausch von Informationen ","3","(Referenz zu ISO 27002: Control 10.8.4)","1","1",,"2","3"
+10.15,10.15 Elektronischen Austausch von Informationen ,3,(Referenz zu ISO 27002: Control 10.8.4),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Welche Vorsichtsmaßnahmen sind getroffen worden, wenn Informationen elektronisch ausgetauscht werden müssen?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Vorsichtsmaßnahmen für den elektronischen Austausch von Informationen getroffen.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Übertragungswege werden durch eine Verschlüsselung geschützt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt 
 - Es wurde ermittelt welche Dienste zur Übertragung verwendet werden (z.B. E-Mail, Instant Messaging, EDI, Web-Meeting). 
 - Für den elektronischen Austausch von Informationen sind Regelungen und Verfahren, gemäß den Vorgaben aus der Datenklassifikation, im Unternehmen definiert und kommuniziert. 
@@ -978,11 +988,11 @@ Schutzsoftware vornehmen können.
     - zum Schutz vor unberechtigtem Zugriff auf die Nachrichten
     - zur Sicherstellung der korrekten Adressen und des korrekten Transports der Nachricht
     - zu rechtlichen Vorgaben wie z.B. die Verwendung von digitalen Signaturen
-    - zur Verfügbarekeit und Zuverlässigkeit des Dienstes
+    - zur Verfügbarkeit und Zuverlässigkeit des Dienstes
     - zur Erteilung von Genehmigungen für die Verwendung von externen Diensten
       (z.B. Instant Messaging, Web Meeting, Web-Mail)
-    - zur Verwendung von starker Authentisierung  bei Zugriffen aus öffentlichen Netzen 
-- Der elektronische Datenaustausch findet je nach Vertraulichkeitsstufe durch verschlüsselte Objekte (z.B. E-Mail, E-Mail Anhänge( PGP, S/Mime))  und / oder mit verschlüsselten Medien statt (z.B. ENX, VPN, verschlüsselte WAN-Verbindungen (HTTPS, SFTP, TLS) ).
+    - zur Verwendung von starker Authentisierung bei Zugriffen aus öffentlichen Netzen 
+- Der elektronische Datenaustausch findet je nach Vertraulichkeitsstufe durch verschlüsselte Objekte (z.B. E-Mail, E-Mail Anhänge (PGP, S/Mime))  und / oder mit verschlüsselten Medien statt (z.B. ENX, VPN, verschlüsselte WAN-Verbindungen (HTTPS, SFTP, TLS) ).
 - Für den Prozess zum elektronischen Austausch von Informationen sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
@@ -1000,20 +1010,20 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.16","10.16 Überwachung: Protokollierung","3","(Referenz zu ISO 27002: Control 10.10.4)","1","1",,"2","3"
+10.16,10.16 Überwachung: Protokollierung,3,(Referenz zu ISO 27002: Control 10.10.4),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden die Aktivitäten von Systemadministratoren und Operatoren auf kritischen Systemen protokolliert?</h1>",,,,,
+,,,<h1>Wie werden die Aktivitäten von Systemadministratoren und Operatoren auf kritischen Systemen protokolliert?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Eine Protokollierung der Aktivitäten von Systemadministratoren und Betreibern für kritische Systeme findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Bei einzelnen Systemen werden die Aktivitäten protokolliert, aber nicht ausgewertet.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Mittels einer Risikoanalyse wurde ermittelt auf welchen Systemen eine Protokollierung notwendig ist.
-- Auf den ermittlten Systemen werden die Aktivitäten von Systemadministratoren und Operatoren protokolliert.
+- Auf den ermittelten Systemen werden die Aktivitäten von Systemadministratoren und Operatoren protokolliert.
 - Die Protokolle der Aktivitäten werden regelmäßig auf Regelverstöße überprüft.
 - Verstöße werden nach einem definierten Meldeverfahren an die zuständige Stelle (CERT) gemeldet.
 - Für den Prozess der Protokollierung der Aktivitäten von Systemadministratoren sind Verantwortliche benannt.
@@ -1033,16 +1043,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"10.17","10.17 Überwachung: Gesetzliche Aufbewahrungsfristen ","3","(Referenz zu ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 und 10.10.5)","1","1",,"2","3"
+10.17,10.17 Überwachung: Gesetzliche Aufbewahrungsfristen ,3,"(Referenz zu ISO 27002: Control 10.10.1, 10.10.2, 10.10.3 und 10.10.5)",1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit sind Prozesse definiert und umgesetzt, die die gesetzlichen Anforderungen an die Überwachung und Protokollierung der Nutzung von Informationssystemen erfüllen?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung und Protokollierung statt.",,,,,
 ,,,"Level 1:  Durchgeführt
-- Auf einzelnen Systemen wird die Nutzung überwacht und protokolliert.",,,,,
+- Auf einzelnen Systemen wird die Nutzung überwacht und protokolliert.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die betrieblichen und gesetzlichen Anforderungen (z.B. Aufbewahrungsfristen, Schutz des Persönlichkeitsrechts) wurden ermittelt.
 - Es sind Regelungen mit den betrieblichen und gesetzlichen Anforderungen für die Überwachung und Protokollierung definiert.
@@ -1065,18 +1076,18 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11","11 Access Control",,,,,,,
-"11.1","11.1 Benutzer Registrierung ","3","(Referenz zu ISO 27002: Control 11.2.1)","2","2",,"2","3"
+11,11 Access Control,,,,,,,
+11.1,11.1 Benutzer Registrierung ,3,(Referenz zu ISO 27002: Control 11.2.1),2,2,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit besteht ein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern, um Zugriff zu allen Informationssystemen und -diensten zu gewähren, zu ändern bzw. aufzuheben?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig  
 - Es ist kein Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es bestehen einzelne Antragsverfahren für Benutzer für die IT-Systeme.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Ein zentrales Antragsverfahren zur Registrierung, Änderung und Löschung von Benutzern ist implementiert und umfasst alle IT-Systeme
 - Im Antragsverfahren sind folgende Punkte enthalten:
@@ -1104,18 +1115,18 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.2","11.2 Rechte Management ","3","(Referenz zu ISO 27002: Control 11.2.2 und 10.2.4)","1","1",,"2","3"
+11.2,11.2 Rechte Management ,3,(Referenz zu ISO 27002: Control 11.2.2 und 11.2.4),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie werden Anwender- als auch Administratoren- Rechte im jeweiligen Anwendungsfall gewährt und überprüft?</h1>",,,,,
+,,,<h1>Wie werden Anwender- als auch Administratoren- Rechte im jeweiligen Anwendungsfall gewährt und überprüft?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine dediziert Vergabe und keine regelmäßige Überwachung der Zugriffsrechte statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Die Vergabe von Rechten erfolgt dediziert.
 - Nur eine allgemeine Kontrolle wird durchgeführt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Bei der Vergabe von Rechten werden folgende Punkte beachtet:
    - die Systeme sind identifiziert
@@ -1143,30 +1154,31 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.3","11.3 Benutzer Passwort Verwendung ","3","(Referenz zu ISO 27002: Control 11.2.3)","1","1",,"2","3"
+11.3,11.3 Passwort-Regeln für Anwender ,3,(Referenz zu ISO 27002: Control 11.3.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit sind Regeln für den Umgang mit persönlichen Passwörtern definiert?</h1>",,,,,
+,,,<h1>In wie weit gibt es verbindliche Regeln für den Anwender zur Erstellung und den Umgang mit Passwörtern?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es sind keine Regeln zum Umgang mit persönlichen Passwörtern definiert.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind Regeln zum Umgang mit persönlichen Passwörtern definiert und veröffentlicht.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
-- Die Richtlinie beinhaltet die Anforderungen an die Verwendung von Passwörter:
+- Die Richtlinie beinhaltet die Anforderungen an die Verwendung von persönlichen Passwörter:
    - Intervall zum Wechseln der Passwörter
    - temporäre Passwörter sind nach dem ersten Anmelden zu ändern
    - die Weitergabe von Passwörtern ist zu verbieten
-   - geschäftliche und private Passwörtern müssen getrennt werden
+   - geschäftliche und private Passwörter müssen getrennt werden
    - keine Speicherung von unverschlüsselten Passwörtern
-- Die Richtlinie gilt für alle IT-Systeme 
+   - Vorgehensweise für die Erstellung eines sicheren Passwortes ist definiert
+- Die Richtlinie gilt verbindlich für alle Anwender auf allen IT-Systemen.
 - Für den Prozess zur Erstellung einer Richtlinie zum Umgang mit persönlichen Passwörtern sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebene Prozess zur Erstellung einer Richtlinie zum Umgang mit persönlichen Passwörtern ist ganzheitlich im Unternehmen definiert und umgesetzt.
+- Der im Level 2 beschriebene Prozess zur Erstellung einer Richtlinie zur Erstellung und den Umgang mit persönlichen Passwörtern ist ganzheitlich im Unternehmen definiert und umgesetzt.
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens eingebunden.
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -1179,30 +1191,39 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.4","11.4 Passwort Komplexität","3","(Referenz zu ISO 27002: Control 11.3.1)","1","1",,"2","3"
+11.4,11.4 Komplexität und Zustellung von Passwörtern,3,(Referenz zu ISO 27002: Control 11.2.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit sind Regeln zum Aufbau und Komplexitätsgrad für Passwörter definiert?</h1>",,,,,
+,,,<h1>In wie weit ist der Aufbau und Komplexitätsgrad von Passwörtern in Systemen definiert und gibt es Regeln für den Umgang und der Zustellung von Passwörtern an die Anwender?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
-- Es sind keine Regel zum Aufbau und der Komplexität von Passwörtern vorhanden.",,,,,
+- Es sind keine Regel zum Aufbau und der Komplexität von Passwörtern in Systemen vorhanden.
+- Es sind keine Regeln für den Umgang und der Zustellung von Passwörtern an die Benutzer vorhanden.",,,,,
 ,,,"Level 1:  Durchgeführt
-- Es sind Regeln zum Aufbau und der Komplexität von Passwörter etabliert, aber nicht systematisch oder vollständig.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+- Es sind Regeln zum Aufbau und der Komplexität von Passwörter in Systemen etabliert, aber nicht systematisch oder vollständig.
+- Es sind Regeln für den Umgang und der Zustellung von Passwörtern an die Benutzer vorhanden, aber nicht systematisch oder vollständig.
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
-- Die Richtlinie beinhaltet die Anforderungen zur Komplexität der Passwörter:
+- Die Richtlinie beinhaltet die Anforderungen zur Komplexität der Passwörter in Systemen:
    - Länge der Passwörter
    - Gebrauch der Kombination von den definierten Merkmalen
    - keine Verwendung von Wörtern und aufeinander folgenden Zahlen oder Buchstaben
    - keine Wiederverwendung von Passwörtern (Passworthistorie)
-- Die Richtlinie besitzt Gültigkeit alle IT-Systeme.
-- Die Vorgaben der Richtlinie sind in allen IT-Systemen umgesetzt. 
-- Für den Prozess zur Erstellung einer Richtlinie zum Aufbau und der Komplexität von Passwörtern sind Verantwortliche benannt.
+- Die Richtlinie beinhaltet die Anforderungen für den Umgang und der Zustellung von Passwörtern an die Benutzer
+   - bevor ein Benutzer ein neues Passwort, ein Ersatzpasswort oder ein temporäres Passwort erhält ist dessen Identität zu überprüfen
+   - sichere Übergabe der temporäre Passwörter an die Benutzer
+   - temporäre Passwörter müssen für jeden Benutzer einmalig und nicht erratbar sein
+   - Benutzer müssen den Empfang von Passwörtern bestätigen
+   - Passwörter dürfen niemals ungeschützt auf Computersystemen gespeichert werden
+   - Standardpasswörter der Hersteller sind nach der Installation von Systemen oder Software zu ändern
+- Die Richtlinie besitzt Gültigkeit für alle IT-Systeme und alle beteiligte Personen.
+- Die Vorgaben der Richtlinie sind in allen IT-Systemen umgesetzt und allen beteiligten Personen bekannt. 
+- Für den Prozess zur Erstellung einer Richtlinie zum Aufbau und der Komplexität von Passwörtern in Systemen und den Umgang und der Zustellung von Passwörtern an die Benutzer sind Verantwortliche benannt.
 - Den Prozessverantwortlichen stehen ausreichend Ressourcen zur Verfügung.
 - Der in Level 2 beschriebene Prozess ist in allen Punkten dokumentiert.",,,,,
 ,,,"Level 3:  Etabliert
-- Der im Level 2 beschriebene Prozess zur Erstellung einer Richtlinie zum Aufbau und der Komplexität von Passwörtern ist ganzheitlich im Unternehmen definiert und umgesetzt.
+- Der im Level 2 beschriebene Prozess zur Erstellung einer Richtlinie zum Aufbau und Komplexitätsgrad von Passwörtern, und dem Umgang und der Zustellung von Passwörtern an die Anwender ist ganzheitlich im Unternehmen definiert und umgesetzt.
 - Der Prozess ist über standardisierte Schnittstellen in andere zentrale Prozesse des Unternehmens eingebunden.
 - Der bis Level 3 beschriebene Prozess ist, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,"Level 4:  Vorhersehbar
@@ -1215,17 +1236,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.5","11.5 Clean Desk und Clear Screen Richtlinie","3","(Referenz zu ISO 27002: Control 11.3.3)","1","1",,"2","3"
+11.5,11.5 Clean Desk und Clear Screen Richtlinie,3,(Referenz zu ISO 27002: Control 11.3.3),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Welche Vorgaben zum Umgang mit Geräten und Dokumenten beim Verlassen des Arbeitsplatzes gibt es?</h1>",,,,,
+,,,<h1>Welche Vorgaben zum Umgang mit Geräten und Dokumenten beim Verlassen des Arbeitsplatzes gibt es?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es gibt keine Vorgaben zum ""Grundsatz des aufgeräumten Schreibtisches und des leeren Bildschirms""",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es sind Vorgaben bezüglich des ""Grundsatzes des aufgeräumten Schreibtisches und des leeren Bildschirms""  etabliert, aber nicht systematisch oder vollständig.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Anforderungen sind unter Berücksichtigung der Klassifikation von Informationen definiert.
 - Die Regel mit Vorgaben bezüglich des ""Grundsatzes des aufgeräumten Schreibtisches und des leeren Bildschirms"" berücksichtigt folgende Punkte:
@@ -1251,17 +1272,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.6","11.6 Benutzer Authentifizierung für Remote User / Verbindungen ","3","(Referenz zu ISO 27002: Control 11.4.2)","1","1",,"2","3"
+11.6,11.6 Benutzer Authentifizierung für Remote User / Verbindungen ,3,(Referenz zu ISO 27002: Control 11.4.2),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit sind Regeln und Maßnahmen für den Fernzugriff (Remote Access) auf das Unternehmensnetz definiert und umgesetzt?</h1>",,,,,
+,,,<h1>In wie weit sind Regeln und Maßnahmen für den Fernzugriff (Remote Access) auf das Unternehmensnetz definiert und umgesetzt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig  
 - Es sind keine Regeln/Maßnahmen für den Fernzugriff auf das Unternehmensnetzwerk definiert und umgesetzt.",,,,,
 ,,,"Level 1:  Aufgeführt
 - Für einzelne Möglichkeiten des Fernzugriffs sind Maßnahmen zur Authentisierung umgesetzt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Sicherheitsanforderungen für den Fernzugriff auf das Unternehmensnetzwerk wurden ermittelt.
 - Es sind Regelungen erstellt, welche die Sicherheitsanforderungen definieren.
@@ -1288,17 +1309,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.7","11.7 Schutz von Konfigurationsports und Fernüberwachung ","3","(Referenz zu ISO 27002: Control 11.4.4)","1","1",,"2","3"
+11.7,11.7 Schutz von Konfigurationsports und Fernüberwachung ,3,(Referenz zu ISO 27002: Control 11.4.4),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit wird der netzwerktechnische Zugriff auf Diagnose- und Konfigurationsports von Systemen und Infrastrukturkomponenten überwacht?</h1>",,,,,
+,,,<h1>In wie weit wird der netzwerktechnische Zugriff auf Diagnose- und Konfigurationsports von Systemen und Infrastrukturkomponenten überwacht?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Überwachung der Diagnose- und Konfigurationsports statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Diagnose- und Konfigurationsports werden überwacht.
-- Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind die Anforderungen an eine Überwachung der Diagnose- und Konfigurationsports ermittelt worden.
 - Es sind Richtlinien mit Vorgaben für die Überwachung der Diagnose- und Konfigurationsports erstellt worden.
@@ -1321,17 +1342,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.8","11.8 Trennung von Netzwerken ","3","(Referenz zu ISO 27002: Control 11.4.5)","1","1",,"2","3"
+11.8,11.8 Trennung von Netzwerken ,3,(Referenz zu ISO 27002: Control 11.4.5),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit wird die Sicherheit der Netzwerke durch eine Segmentierung (Trennung) erhöht?</h1>",,,,,
+,,,<h1>In wie weit wird die Sicherheit der Netzwerke durch eine Segmentierung (Trennung) erhöht?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Das Unternehmensnetzwerk ist nicht segmentiert.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Von Fall zu Fall sind die Netzwerke segmentiert.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es sind die Anforderungen an eine Netzwerk-Segmentierung ermittelt worden.
 - Es sind Richtlinien mit Vorgaben für die Netzwerkaufteilung oder Sicherheitszonen erstellt worden.
@@ -1354,17 +1375,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.9","11.9 Benutzer Identifizierung und Authentifizierung ","3","(Referenz zu ISO 27002: Control 11.5.2)","1","1",,"2","3"
+11.9,11.9 Benutzer Identifizierung und Authentifizierung ,3,(Referenz zu ISO 27002: Control 11.5.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit ist die Authentifikation der Benutzter für den Zugriff auf IT Systeme, unter Berücksichtigung der Klassifizierung von Daten und Informationen, umgesetzt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Authentifikation der Benutzer gemäß einer Klassifizierung statt",,,,,
 ,,,"Level 1:  Durchgeführt
 - Die Nutzer authentifizieren sich beim Zugriff auf Systeme.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Anforderungen an die Authentifikation der Benutzer wurden gemäß der Klassifizierung von Daten und Informationen ermittelt.
 - Es sind Regelungen erstellt, welche die Anforderungen hinsichtlich der Authentifikation von Benutzer definieren.
@@ -1389,17 +1410,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"11.10","11.10 Mobile Datenverarbeitung und Kommunikation ","3","(Referenz zu ISO 27002: Control 11.7.1)","1","1",,"2","3"
+11.10,11.10 Mobile Datenverarbeitung und Kommunikation ,3,(Referenz zu ISO 27002: Control 11.7.1),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit wurde eine Richtlinie, die auf die Risiken beim Arbeiten mit mobilen Computern hinweist, entwickelt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es existieren keine Reglungen im Bereich des Mobile Computing",,,,,
 ,,,"Level 1:  Durchgeführt
 - Basierend auf Vorfällen werden einzelne Regeln erstellt und veröffentlicht. 
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt 
 - Es wurde ermittelt, welche Endgeräte im Bereich des Mobile Computing im Einsatz sind.
 - Es wurde ermittelt, welche Personen-Zielgruppen Mobile Computing einsetzen.
@@ -1426,18 +1447,18 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12","12 Information Systems Acquisition, Development and Management",,,,,,,
-"12.1","12.1 Verschlüsselung von Informationen ","3","(Referenz zu ISO 27002: Control 12.3.1)","1","1",,"2","3"
+12,"12 Information Systems Acquisition, Development and Management",,,,,,,
+12.1,12.1 Verschlüsselung von Informationen ,3,(Referenz zu ISO 27002: Control 12.3.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden Informationen durch Verschlüsselung (Kryptographie) in angemessener Weise geschützt?</h1>",,,,,
+,,,<h1>In wie weit werden Informationen durch Verschlüsselung (Kryptographie) in angemessener Weise geschützt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Der Einsatz von Verschlüsselung von schutzbedürftigen Informationen findet nicht statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Der Einsatz von Verschlüsselung von schutzbedürftigen Informationen wird von einzelnen Mitarbeitern durchgeführt. 
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt                                                                                                                                                                                                                                                                                                                                                 - Die Anforderungen an die Verschlüsselung wurden gemäß der Klassifizierung von Daten und Informationen ermittelt.
 - Es sind Regelungen erstellt, welche die Anforderungen hinsichtlich der Verschlüsselung definieren.
 - Ein Verschlüsselungskonzept beinhaltet mindestens folgende Vorgaben für:
@@ -1462,18 +1483,17 @@ Schutzsoftware vornehmen können.
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.2","12.2 Verlust von Informationen ","3","(Referenz zu ISO 27002: Control 12.5.4) 
-oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1","1",,"2","3"
+12.2,12.2 Verlust von Informationen ,3,(Referenz zu ISO 27002: Control 12.5.4) ,1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden beim Kauf bzw. bei der Erstellung von Software die Anforderungen der Informationssicherheit berücksichtigt?</h1>",,,,,
+,,,<h1>In wie weit werden beim Kauf bzw. bei der Erstellung von Software die Anforderungen der Informationssicherheit berücksichtigt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es findet keine Berücksichtigung der Anforderungen statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Mitarbeiter berücksichtigen Anforderungen der Informationssicherheit bei der Beschaffung oder Erstellung von Software.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es werden die Anforderungen an die Informationssicherheit beim Kauf oder der Erstellung von Software ermittelt.
 - Lastenhefte werden gegen die Richtlinien zur Informationssicherheit geprüft.
@@ -1495,17 +1515,17 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"12.3","12.3 Verfolgung von Schwachstellen ","3","(Referenz zu ISO 27002: Control 12.6.1)","2","2",,"2","3"
+12.3,12.3 Verfolgung von Schwachstellen ,3,(Referenz zu ISO 27002: Control 12.6.1),2,2,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Informationen über die technischen Schwachstellen der eingesetzten Informationssysteme zeitnah beschafft, beurteilt und geeignete Maßnahmen für eine Umsetzung ergriffen (Patch-Management)?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Informationen über Schwachstellen werden nicht beschafft.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Mitarbeiter beschaffen sich Informationen und treffen Maßnahmen für die Umsetzung.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt 
 - Es wurde ermittelt für welche Systeme/Software Informationen über die technischen Schwachstellen beschafft werden müssen.
 - Die benötigten Informationen werden zeitnah beschafft und analysiert.
@@ -1530,18 +1550,18 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"13","13 Information Security Incident Management",,,,,,,
-"13.1","13.1 Berichtswesen für Vorfälle in der Informationssicherheit ","3","(Referenz zu ISO 27002: Control 13.1.1 und 13.1.2)","1","1",,"2","3"
+13,13 Information Security Incident Management,,,,,,,
+13.1,13.1 Berichtswesen für Vorfälle in der Informationssicherheit ,3,(Referenz zu ISO 27002: Control 13.1.1 und 13.1.2),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>Wie und wohin werden Informationssicherheitsvorfälle im Unternehmen gemeldet?</h1>",,,,,
+,,,<h1>Wie und wohin werden Informationssicherheitsvorfälle im Unternehmen gemeldet?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Die Informationssicherheitsvorfälle / -schwachstellen werden im Unternehmen nicht gemeldet.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es findet eine sporadische, vorfallsbedingte Meldung von Informationssicherheitsvorfällen / -schwachstellen statt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Für die Meldung von Informationssicherheitsvorfällen / -schwachstellen existiert ein formales Meldeverfahren.
 - Es beinhaltet u.a.
@@ -1567,17 +1587,17 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"13.2","13.2 Verantwortlichkeiten und Vorgehensweisen (CERT) ","3","(Referenz zu ISO 27002: Control 13.2.1)","1","1",,"2","3"
+13.2,13.2 Verantwortlichkeiten und Vorgehensweisen (CERT) ,3,(Referenz zu ISO 27002: Control 13.2.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden Informationssicherheitsvorfälle / -schwachstellen ausgewertet und behandelt?</h1>",,,,,
+,,,<h1>In wie weit werden Informationssicherheitsvorfälle / -schwachstellen ausgewertet und behandelt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig 
 - Es findet keine Auswertung und Behandlung von Informationssicherheitsvorfällen / -schwachstellen statt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Die Auswertung und Bearbeitung findet in Einzelfällen statt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Für die Behandlung von Informationssicherheitsvorfällen / -schwachstellen existiert ein definiertes Verfahren.
 - Die Informationssicherheitsvorfälle / -schwachstellen werden dokumentiert.
@@ -1600,18 +1620,18 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"14","14 Business Continuity Management",,,,,,,
-"14.1","14.1 Business Continuity Management","3","(Referenz zu ISO 27002: Control 14.1.1)","1","1",,"2","3"
+14,14 Business Continuity Management,,,,,,,
+14.1,14.1 Business Continuity Management,3,(Referenz zu ISO 27002: Control 14.1.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit sind Maßnahmen für die Entwicklung und Aufrechterhaltung der Business Continuity (Fortführung des ordnungsgemäßen Geschäftsbetriebs) im Unternehmen eingeführt?</h1>",,,,,
+,,,<h1>In wie weit sind Maßnahmen für die Entwicklung und Aufrechterhaltung der Business Continuity (Fortführung des ordnungsgemäßen Geschäftsbetriebs) im Unternehmen eingeführt?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es sind keine Maßnahmen zur Entwicklung und Aufrechterhaltung der Business Continuity eingeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Einzelne Maßnahmen zur Entwicklung und Aufrechterhaltung der Business Continuity sind umgesetzt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Eine Ermittlung der Gefahren für die Fortführung des ordnungsgemäßen Geschäftsbetrieb wurde durchgeführt. 
 - Die betroffenen Vermögenswerte (Assets) wurden ermittelt.
@@ -1637,18 +1657,18 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15","15 Compliance",,,,,,,
-"15.1","15.1 Rechte des geistigen Eigentums ","3","(Referenz zu ISO 27002: Control 15.1.2)","2","2",,"2","3"
+15,15 Compliance,,,,,,,
+15.1,15.1 Rechte des geistigen Eigentums ,3,(Referenz zu ISO 27002: Control 15.1.2),2,2,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit wird die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum sichergestellt (z.B. Patente, Softwareentwicklungen und Codes usw.)?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Die Einhaltung gesetzlicher Bestimmungen über geistiges Eigentum ist nicht sichergestellt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Gesetzlichen Bestimmungen über geistiges Eigentum werden, soweit bekannt, beachtet.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wird ermittelt welche gesetzlichen bzw. vertraglichen Anforderungen eingehalten werden müssen.
 - Es wurde eine Richtlinien zur Wahrung des geistigen Eigentums erstellt.
@@ -1673,18 +1693,18 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.2","15.2 Schutz von Missbrauch von Personen bezogenen Daten ","3","(Referenz zu ISO 27002: Control 15.1.4)","1","1",,"2","3"
+15.2,15.2 Schutz von Missbrauch von Personen bezogenen Daten ,3,(Referenz zu ISO 27002: Control 15.1.4),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>Welche Regelungen und Maßnahmen sind eingeführt, um personenbezogene Informationen unter Einhaltung der gesetzlichen / vertraglichen Regelungen zu schützen (z.B. Datenschutzgesetz)?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es sind keine Maßnahmen zum Schutz personenbezogener Informationen eingeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Teilweise wurde ermittelt welche Informationen personenbezogen sind.
 - Daraus resultierende Maßnahmen zum Schutz personenbezogener Informationen sind im Unternehmen vorhanden.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wurde vollständig ermittelt welche Informationen personenbezogen sind.
 - Es wird ermittelt welche gesetzliche Anforderungen bezüglich Verfahren und Prozesse bei der Verarbeitung von personenbezogenen Informationen (z.B. BDSG Verfahrensverzeichnis, EU Richtlinie 95/46/EG) bestehen.
@@ -1708,17 +1728,17 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.3","15.3 Technische Überprüfung der Compliance ","3","(Referenz zu ISO 27002: Control 15.2.1)","1","1",,"2","3"
+15.3,15.3 Technische Überprüfung der Compliance ,3,(Referenz zu ISO 27002: Control 15.2.1),1,1,,2,3
 ,,,,,,,,
-,,,"<h1>In wie weit werden die Bereiche der Organisation auf Einhaltung der Unternehmenssicherheitsrichtlinien und -standards überprüft?</h1>",,,,,
+,,,<h1>In wie weit werden die Bereiche der Organisation auf Einhaltung der Unternehmenssicherheitsrichtlinien und -standards überprüft?</h1>,,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Innerhalb der Organisation werden keine Sicherheitsüberprüfungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es werden Sicherheitsüberprüfungen in den Bereichen der Organisation durchgeführt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Die Rahmenbedingungen der Prüfung wurden festgelegt.
 - Die Rahmenbedingungen umfassen Umfang, Terminplanung, Vorgehensweise (Self Assessment, Vorort Audit), Softwareunterstützung.
@@ -1742,17 +1762,17 @@ oder besser 12.5 Sicherheit bei Entwicklungs- und Unterstützungsprozessen","1",
 - In diesen Projekten werden weitere Ziele zur Verbesserung definiert, welche sich jedoch explizit an den Unternehmenszielen ausrichten.
 - Die identifizierten Verbesserungen werden getestet, umgesetzt und sind, gemäß einem im Unternehmen standardisierten Dokumentationsverfahren, dokumentiert.",,,,,
 ,,,,,,,,
-"15.4","15.4 Überprüfung von Informationssystemen ","3","(Referenz zu ISO 27002: Control 15.2.2)","1","1",,"2","3"
+15.4,15.4 Überprüfung von Informationssystemen ,3,(Referenz zu ISO 27002: Control 15.2.2),1,1,,2,3
 ,,,,,,,,
 ,,,"<h1>In wie weit werden Sicherheitsüberprüfungen (Penetrations- / Verwundbarkeits-Test) an operativen Informationssystemen sorgfältig geplant, abgestimmt und durchgeführt?</h1>",,,,,
 ,,,,,,,,
-,,,"Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.",,,,,
+,,,Geben Sie den Reifegrad-Level 0-5 oder na für not applicable ein.,,,,,
 ,,,,,,,,
 ,,,"Level 0:  Unvollständig
 - Es werden keine Sicherheitsüberprüfungen durchgeführt.",,,,,
 ,,,"Level 1:  Durchgeführt
 - Es werden Sicherheitsüberprüfungen durchgeführt.
-- Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
+  Die Vorgehensweise ist weder strukturiert noch organisiert.",,,,,
 ,,,"Level 2:  Gemanagt
 - Es wird ermittelt für welche Infrastrukturkomponenten, Systeme und Anwendungen eine Sicherheitsüberprüfung notwendig ist.
 - Die Sicherheitsüberprüfungen werden von dafür ausgebildeten Spezialisten durchgeführt.
