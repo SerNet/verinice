@@ -79,6 +79,7 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
+import sernet.verinice.validation.CnAValidationView;
 
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of
@@ -130,6 +131,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openFileAction;
 
     private OpenViewAction openRelationViewAction;
+    
+    private OpenViewAction openValidationViewAction;
 
     private OpenMultipleViewAction openCatalogAction;
     
@@ -257,7 +260,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         register(openTaskViewAction);
-
+        
+        openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
+        register(openValidationViewAction);
+        
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         register(reloadAction);
 
@@ -431,6 +437,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openNoteAction);
         viewsMenu.add(openFileAction);
         viewsMenu.add(openRelationViewAction);
+        viewsMenu.add(openValidationViewAction);
         
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         

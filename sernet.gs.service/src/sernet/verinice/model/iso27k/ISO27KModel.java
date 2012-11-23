@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -201,4 +202,22 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
             removeISO27KModelListener(listener);
         }      
     }
+    
+    public void validationAdded(Integer scopeId){
+        for(IISO27KModelListener listener : getListeners()){
+            listener.validationAdded(scopeId);
+        }
+    };
+    
+    public void validationRemoved(Integer scopeId){
+        for(IISO27KModelListener listener : getListeners()){
+            listener.validationRemoved(scopeId);
+        }
+    };
+    
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
+        for(IISO27KModelListener listener : getListeners()){
+//            listener.validationRemoved(scopeId);
+        }
+    };
 }

@@ -33,7 +33,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmeById;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmenForITVerbund;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Anwendung;
@@ -52,6 +51,7 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.
@@ -186,7 +186,16 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 			// TODO server: remove element
 			// TODO akoderman really? this seems to be working fine.
 		}
-
+		
+	    @Override
+	    public void validationAdded(Integer scopeId){};
+	    
+	    @Override
+	    public void validationRemoved(Integer scopeId){};
+	    
+	    @Override
+	    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+		
 	};
 	
 	public MassnahmenUmsetzungContentProvider(GenericMassnahmenView todoView) {

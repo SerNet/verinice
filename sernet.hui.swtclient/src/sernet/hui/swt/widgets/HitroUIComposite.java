@@ -17,13 +17,11 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.internal.SWTEventListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -186,14 +184,14 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiView = new HitroUIView(this,contentComp, fieldsComposite);
 	}
 	
-	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly) throws DBException {
-		huiView.createView(entity, editable, useRules, tags, taggedOnly);
+	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly, List<String> validationList) throws DBException {
+		huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList);
 	}
 	
-	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly) throws DBException {
+	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly, List<String> validationList) throws DBException {
 	    tags = tags.replaceAll("\\s+", "");
         String[] individualTags = tags.split(",");
-        huiView.createView(entity, editable, useRules, individualTags, taggedOnly);
+        huiView.createView(entity, editable, useRules, individualTags, taggedOnly, validationList);
     }
 	
 	public void addSelectionListener(String id, SelectionListener listener) {

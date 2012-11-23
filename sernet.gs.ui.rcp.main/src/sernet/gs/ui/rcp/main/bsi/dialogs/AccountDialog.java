@@ -151,7 +151,8 @@ public class AccountDialog extends TitleAreaDialog {
 
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
 
-                huiComposite.createView(entity, true, useRules, tags, strict);
+                // no validation check here, so empty list passed
+                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0));
 
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
                 

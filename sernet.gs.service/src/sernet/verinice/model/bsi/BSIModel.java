@@ -33,8 +33,7 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
-import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Top level category for all BSI model elements.
@@ -384,5 +383,22 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
             removeBSIModelListener(listener);
         }      
     }
-	
+    
+    public void validationAdded(Integer scopeId){
+        for(IBSIModelListener listener : getListeners()){
+            listener.validationAdded(scopeId);
+        }
+    };
+    
+    public void validationRemoved(Integer scopeId){
+        for(IBSIModelListener listener : getListeners()){
+            listener.validationRemoved(scopeId);
+        }
+    };
+    
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
+        for(IBSIModelListener listener : getListeners()){
+//            listener.validationRemoved(scopeId);
+        }
+    };
 }

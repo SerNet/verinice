@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -42,9 +43,9 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.Addition.INoteChangedListener;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
-import sernet.verinice.model.bsi.Addition.INoteChangedListener;
 import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
@@ -113,7 +114,7 @@ public class AttachmentEditor extends EditorPart {
             attachment = (Attachment) command.getAddition();
             huiComposite.dispose();
             huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-            huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false);
+            huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()));
             parent.layout();
             // file-data is immutable, just save new file-data
             if (isNew) {
@@ -168,7 +169,8 @@ public class AttachmentEditor extends EditorPart {
         this.parent = parent;
         huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
         try {
-            huiComposite.createView(attachment.getEntity(), true, true, new String[] {}, false);
+            // no validation here, so empty list passed
+            huiComposite.createView(attachment.getEntity(), true, true, new String[] {}, false, new ArrayList<String>(0));
         } catch (DBException e) {
             LOG.error("Error while creating editor", e); //$NON-NLS-1$
         }

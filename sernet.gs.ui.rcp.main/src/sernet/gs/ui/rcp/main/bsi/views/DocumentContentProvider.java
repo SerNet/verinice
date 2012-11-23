@@ -33,6 +33,7 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Content Provider for document view.
@@ -173,6 +174,13 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 		
 	}
 	
-
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 
 }

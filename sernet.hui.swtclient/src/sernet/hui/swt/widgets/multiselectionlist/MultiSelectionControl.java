@@ -20,6 +20,7 @@ package sernet.hui.swt.widgets.multiselectionlist;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -62,7 +63,7 @@ public class MultiSelectionControl implements IHuiControl {
 	private Color fgColor;
 	private boolean referencesEntities;
 	private boolean crudButtons;
-	
+	private boolean showValidationHint;
 	
 	public Control getControl() {
 		return text;
@@ -75,13 +76,14 @@ public class MultiSelectionControl implements IHuiControl {
 	 * @param crudButtons 
 	 * @param composite
 	 */
-	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference, boolean crudButtons) {
+	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference, boolean crudButtons, boolean showValidationHint) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
 		this.editable = edit;
 		this.referencesEntities = reference;
 		this.crudButtons = crudButtons;
+		this.showValidationHint = showValidationHint;
 	}
 	
 	/**
@@ -89,6 +91,10 @@ public class MultiSelectionControl implements IHuiControl {
 	 */
 	public void create() {
 		Label label = new Label(parent, SWT.NULL);
+		String labelText = type.getName();
+		if(showValidationHint){
+		    labelText = labelText + sernet.hui.swt.widgets.Messages.getString("LabelValidationHint");
+		}
 		label.setText(type.getName());
 		
 		Composite container = new Composite(parent, SWT.NULL);
@@ -250,7 +256,14 @@ public class MultiSelectionControl implements IHuiControl {
 	}
 	
 	public boolean validate() {
-		if (type.validate(text.getText(), null)) {
+	    boolean valid = true;
+	    for(Entry<String, Boolean> entry : type.validate(text.getText(), null).entrySet()){
+	        if(!entry.getValue().booleanValue()){
+	            valid = false;
+	            break;
+	        }
+	    }
+		if (valid) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
 			return true;

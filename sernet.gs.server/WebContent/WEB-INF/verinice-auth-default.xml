@@ -80,6 +80,7 @@
         <action id="unify" />
         <action id="xmlexport" />
         <action id="xmlimport" />
+        <action id="cnavalidation" />
         </profile>
         <profile name="user-scope-default-profile" origin="default">
         <!-- missing actions: 
@@ -143,6 +144,7 @@
 	        <action id="todo"/>
             <action id="unify" />
 	        <action id="xmlexport"/>
+	        <action id="cnavalidation" />
         </profile>
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions: 
@@ -206,6 +208,7 @@
 	        <action id="todo"/>
             <action id="unify" />
 	        <action id="xmlexport"/>
+	        <action id="cnavalidation" />
         </profile>
         <profile name="admin-default-profile" origin="default" >
         	<!-- this user is allowed to do everything -->
@@ -269,6 +272,7 @@
             <action id="unify" />
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
+	        <action id="cnavalidation" />
         </profile>
     </profiles>
     <userprofiles>

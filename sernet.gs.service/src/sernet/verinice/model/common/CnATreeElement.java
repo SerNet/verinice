@@ -27,8 +27,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
@@ -39,9 +39,9 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
-import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * This is the base class for all model classes of this application.
@@ -705,5 +705,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public String toString() {
 	    return new StringBuilder("uuid: ").append(getUuid()).toString();
 	}
+	
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 
 }

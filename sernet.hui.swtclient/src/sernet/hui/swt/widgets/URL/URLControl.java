@@ -50,20 +50,27 @@ public class URLControl implements IHuiControl {
 	private boolean editable;
 	private Link link;
 	private Property savedProp;
+	private boolean showValidationHint;
 	
 	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
 	public URLControl(Entity entity, PropertyType type, Composite parent,
-			boolean editable) {
+			boolean editable, boolean showValidationHint) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
 		this.editable = editable;
+		this.showValidationHint = showValidationHint;
 	}
 
 	public void create() {
 		Label label = new Label(parent, SWT.NULL);
+		String labelText = type.getName();
+		if(showValidationHint){
+		    labelText = labelText + sernet.hui.swt.widgets.Messages.getString("LabelValidationHint");
+		}
 		label.setText(type.getName());
+		
 
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout contLayout = new GridLayout(3, false);

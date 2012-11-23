@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,6 +51,7 @@ import org.xml.sax.SAXParseException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.rules.IFillRule;
+import sernet.hui.common.rules.IValidationRule;
 import sernet.hui.common.rules.NotEmpty;
 import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
@@ -375,6 +376,10 @@ public class HUITypeFactory {
         if (prop.getAttribute("required").equals("true")) {
             propObj.addValidator(new NotEmpty());
         }
+        // add additional validations
+        for(IValidationRule rule : readValidationRules(prop)){
+            propObj.addValidator(rule);
+        }
 
         propObj.setDefaultRule(readDefaultRule(prop));
 
@@ -444,6 +449,30 @@ public class HUITypeFactory {
         this.allDependecies.addAll(depends);
         return depends;
     }
+    
+    private List<IValidationRule> readValidationRules(Element prop){
+        ArrayList<IValidationRule> ruleList = new ArrayList<IValidationRule>(0);
+        NodeList list = prop.getElementsByTagName("validationRule");
+        for(int i = 0; i < list.getLength(); i++){
+            Element ruleElement = (Element)list.item(i);
+            String className = ruleElement.getAttribute("class");
+            IValidationRule rule = (IValidationRule)RuleFactory.getValidationRule(className);
+            rule.init(readValidationRuleParams(ruleElement, rule));
+            ruleList.add(rule);
+        }
+        return ruleList;
+    }
+    
+    private String[] readValidationRuleParams(Element ruleElement, IValidationRule rule){
+        NodeList paramNodeList = ruleElement.getElementsByTagName("param");
+        String[] params = new String[paramNodeList.getLength()];
+        for(int i = 0; i < paramNodeList.getLength(); i++){
+            Element paramNode = (Element)paramNodeList.item(i);
+            params[i] = paramNode.getTextContent();
+        }
+        return params;
+    }
+    
 
     private IFillRule readDefaultRule(Element prop) {
         IFillRule rule = null;

@@ -17,9 +17,8 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -27,7 +26,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -73,6 +71,8 @@ public class NumericSelectionControl implements IHuiControl {
 	private String[] numericItems;
 
     private Object defaultValue;
+    
+    private boolean showValidationHint;
 
 
 	public Control getControl() {
@@ -90,13 +90,14 @@ public class NumericSelectionControl implements IHuiControl {
 	 * @param composite
 	 */
 	public NumericSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit) {
+			Composite parent, boolean edit, boolean showValidationHint) {
 		this.entity = dyndoc;
 		this.fieldType = type;
 		this.composite = parent;
 		this.editable = edit;
 		this.min = type.getMinValue();
 		this.max = type.getMaxValue();
+		this.showValidationHint = showValidationHint;
 	}
 
 	/**
@@ -106,7 +107,11 @@ public class NumericSelectionControl implements IHuiControl {
 	public void create() {
 		try {
 			Label label = new Label(composite, SWT.NULL);
-			label.setText(fieldType.getName());
+			String labelText = fieldType.getName();
+			if(showValidationHint){
+			    labelText = labelText + Messages.getString("LabelValidationHint");
+			}
+			label.setText(labelText);
 
 			List<Property> savedProps = entity.getProperties(fieldType.getId()).getProperties();
 			savedProp = savedProps != null && !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
@@ -189,7 +194,14 @@ public class NumericSelectionControl implements IHuiControl {
 
 	public boolean validate() {
 		//FIXME bg colour not working in 3.4M4:
-		if (fieldType.validate(combo.getText(), null)) {
+	       boolean valid = true;
+	        for(Entry<String, Boolean> entry : fieldType.validate(combo.getText(), null).entrySet()){
+	            if(!entry.getValue().booleanValue()){
+	                valid = false;
+	                break;
+	            }
+	        }
+		if (valid) {
 //			combo.setForeground(fgColor);
 //			combo.setBackground(bgColor);
 			return true;

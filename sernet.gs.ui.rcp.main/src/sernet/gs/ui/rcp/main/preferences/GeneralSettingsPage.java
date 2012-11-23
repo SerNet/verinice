@@ -52,6 +52,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor showAlienDecorator;
 	private BooleanFieldEditor infoDialogStatusDerivation;
 	private BooleanFieldEditor showDBIDDecorator;
+	private BooleanFieldEditor useAutomaticValidation;
 	
 	private ComboFieldEditor encodingFieldEditor;
 	private static final String[][] encodingComboValues = new String[][]{
@@ -134,7 +135,10 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
 		showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
-
+		
+		useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
+		addField(useAutomaticValidation);
+		
 		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
 				encodingComboValues, 

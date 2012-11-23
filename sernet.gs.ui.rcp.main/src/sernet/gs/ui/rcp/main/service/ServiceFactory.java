@@ -30,6 +30,7 @@ import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.validation.IValidationService;
 
 @SuppressWarnings("restriction")
 public abstract class ServiceFactory {
@@ -126,6 +127,10 @@ public abstract class ServiceFactory {
 		if (permissionHandlingNeeded == null)
 			return true; /* return true, just to be safe */
 		return permissionHandlingNeeded;
+	}
+	
+	public static IValidationService lookupValidationService(){
+	    return (IValidationService)VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
 	}
 	
 	/**

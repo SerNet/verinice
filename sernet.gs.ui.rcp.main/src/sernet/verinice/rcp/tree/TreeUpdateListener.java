@@ -35,6 +35,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * TreeUpdateListener updates a {@link TreeViewer} when a {@link CnATreeElement} was added, changed or removed.
@@ -261,6 +262,15 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
         doModelReload(newModel);      
     }
     
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    
     
     /**
      * @param model A ISO27KModel or BSIModel
@@ -349,5 +359,4 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             return Status.OK_STATUS;
         }
     }
-
 }

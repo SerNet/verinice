@@ -20,6 +20,7 @@ package sernet.verinice.model.bsi;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.validation.CnAValidation;
 
 
 public interface IBSIModelListener {
@@ -91,5 +92,10 @@ public interface IBSIModelListener {
 	
 	public void modelReload(BSIModel newModel);
 	
-
+	public void validationAdded(Integer scopeId);
+	
+	public void validationRemoved(Integer scopeId);
+	
+	public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation);
+	
 }

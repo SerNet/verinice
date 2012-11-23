@@ -19,9 +19,33 @@ package sernet.hui.common.rules;
 
 
 public class NotEmpty implements IValidationRule {
-
+    
+    private String hint = Messages.NotEmptyDefaultHint;
+    
 	public boolean validate(String userInput, String[] args) {
-		return userInput.length() > 0;
+	    if(userInput != null){
+	        return userInput.length() > 0;
+	    } else return false;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.rules.IValidationRule#getHint()
+     */
+    @Override
+    public String getHint() {
+        return hint;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.hui.common.rules.IValidationRule#init(java.lang.String[])
+     */
+    @Override
+    public void init(String[] params) {
+        if(params != null && params.length == 1){
+            hint = params[0];
+        } else {
+            hint = Messages.NotEmptyDefaultHint;
+        }
+    }
 
 }

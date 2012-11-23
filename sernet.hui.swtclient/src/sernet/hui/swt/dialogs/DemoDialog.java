@@ -18,6 +18,7 @@
 package sernet.hui.swt.dialogs;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -68,7 +69,8 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 				
 //				Entity entity = new Entity("mnums");
 				Entity entity = new Entity("mnums");
-				huiComposite.createView(entity, true, true, new String[] {}, false);
+				// no validation here, so empty list is passed
+				huiComposite.createView(entity, true, true, new String[] {}, false, new ArrayList<String>(0));
 
 				PropertyType propertyType = htf.getPropertyType("mnums", "mnums_umsetzung");
 				entity.setSimpleValue(propertyType, "mnums_umsetzung_teilweise");

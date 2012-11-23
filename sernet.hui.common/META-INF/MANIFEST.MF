@@ -13,3 +13,4 @@ Export-Package: sernet.hui.common,
 Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.core.commands;bundle-version="3.5.0",
  org.springframework.core;bundle-version="2.5.6"
+Import-Package: org.eclipse.osgi.util

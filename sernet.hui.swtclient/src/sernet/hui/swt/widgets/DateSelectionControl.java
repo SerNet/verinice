@@ -63,6 +63,8 @@ public class DateSelectionControl implements IHuiControl {
 	private Color oldFgColor;
 
 	private boolean useRule;
+	
+	private boolean showValidationHint;
 
 	public Control getControl() {
 		return dateTime;
@@ -74,12 +76,13 @@ public class DateSelectionControl implements IHuiControl {
 	 * @param composite
 	 */
 	public DateSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit, boolean rules) {
+			Composite parent, boolean edit, boolean rules, boolean showValidationHint) {
 		this.entity = dyndoc;
 		this.fieldType = type;
 		this.composite = parent;
 		this.editable = edit;
 		this.useRule = rules;
+		this.showValidationHint = showValidationHint;
 	}
 	
 	public static boolean isWindows(){
@@ -126,7 +129,11 @@ public class DateSelectionControl implements IHuiControl {
 		label36LData.grabExcessHorizontalSpace = false;
 		label36LData.grabExcessVerticalSpace = false;
 		label.setLayoutData(label36LData);
-		label.setText(fieldType.getName());
+		String labelText = fieldType.getName();
+		if(showValidationHint){
+		    labelText = labelText + Messages.getString("LabelValidationHint");
+		}
+		label.setText(labelText);
 
 		GridData startWvTextLData = new GridData();
 		startWvTextLData.horizontalAlignment = GridData.FILL;

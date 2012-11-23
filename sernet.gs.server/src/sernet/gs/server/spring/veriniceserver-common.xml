@@ -74,6 +74,7 @@ This variant:
                 <entry key="remindService" value-ref="remindService" />
                 <entry key="isaQmService" value-ref="isaQmService" />
                 <entry key="processEngine" value-ref="processEngine" />
+                <entry key="validationService" value-ref="validationService" />
 			</map>
 		</property>
 	</bean>
@@ -247,6 +248,7 @@ This variant:
 		<property name="ldapService" ref="ldapService" />
         <property name="configurationService" ref="configurationService" />
         <property name="rightsServerHandler" ref="rightsServerHandler" />
+        <!-- <property name="validationService" ref="validationService" />  -->
 	</bean>
     
 	<bean id="commandService" parent="baseTxProxy">
@@ -278,6 +280,12 @@ This variant:
         <property name="basename">
             <value>/WEB-INF/verinice-auth-messages</value>
         </property>
+    </bean>
+    
+    <bean id="validationService" class="sernet.verinice.service.ValidationService">
+    	<property name="commandService" ref="commandService" />
+    	<property name="cnaValidationDAO" ref="cnaValidationDAO" />
+    	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
 
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->

@@ -145,6 +145,15 @@
             name="%view.name.12"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.verinice.validation.CnAValidationView"
+            icon="icons/quickfix_warning_obj.gif"
+            id="sernet.verinice.validation.CnAValidationView"
+            name="%view.name.13"
+            restorable="true">
+      </view> 
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -933,7 +942,28 @@
                style="push"
                tooltip="%action.tooltip.33">
          </action>
-      </objectContribution>      
+      </objectContribution>  
+      <objectContribution 
+      		adaptable="false"
+      		id="sernet.verinice.validation.CnAValidationAction"
+      		objectClass="sernet.verinice.model.common.CnATreeElement">
+      		<action
+               class="sernet.verinice.validation.CnAValidationAction"
+               enablesFor="+"
+               icon="icons/quickfix_warning_obj.gif"
+               id="sernet.verinice.validation.CnAValidationAction.action"
+               label="%action.label.36"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.36">
+            	<enablement>
+					<or>
+		   	     		<objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
+		   	     		<objectClass name="sernet.verinice.model.iso27k.Organization"/>
+		      		</or>
+		   		</enablement>
+			</action>
+		</objectContribution>    
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
@@ -1622,5 +1652,5 @@
    <extension point="org.eclipse.core.net.authenticator">
      <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
      </authenticator>
-   </extension>
+   </extension>  
 </plugin>

@@ -19,6 +19,7 @@ package sernet.hui.common.connect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -377,14 +378,13 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		this.validators = validators;
 	}
 
-	public boolean validate(String text, String[] params) {
-		for (Iterator iter = validators.iterator(); iter.hasNext();) {
-			IValidationRule validator = (IValidationRule) iter.next();
-			if (!validator.validate(text, params)) {
-				return false;
-			}
-		}
-		return true;
+	public HashMap<String, Boolean> validate(String text, String[] params) {
+	    HashMap<String, Boolean> validationResults = new HashMap<String, Boolean>();
+	    for (Iterator iter = validators.iterator(); iter.hasNext();) {
+			final IValidationRule validator = (IValidationRule) iter.next();
+			validationResults.put(validator.getHint(), validator.validate(text, params));
+	    }
+		return validationResults; 
 	}
 
 	public void setVisible(boolean b) {

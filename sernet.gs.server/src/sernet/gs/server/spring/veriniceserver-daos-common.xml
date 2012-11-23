@@ -571,6 +571,13 @@
 	<bean id="elementEntityDao" class="sernet.verinice.hibernate.ElementEntityDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean id="cnaValidationDAO" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.validation.CnAValidation</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
     
 	<!-- END dao definitions ============================================================================ -->
 

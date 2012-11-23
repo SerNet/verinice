@@ -91,5 +91,15 @@
         </property>
     </bean>
     
+    <bean name="/validationServiceHttpInvoker"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="validationService" />
+		</property>    
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.validation.IValidationService</value>
+		</property>
+	</bean>
 </beans>
 

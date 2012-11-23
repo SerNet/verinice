@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.HashSet;
 
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -32,6 +31,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -177,4 +177,13 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	public void modelReload(ISO27KModel newModel) {
 	    view.reloadAll();
 	}
+	
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 }

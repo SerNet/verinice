@@ -106,6 +106,8 @@ public class VeriniceContext {
     
     public static String JBPM_PROCESS_ENGINE = "processEngine";
     
+    public static String VALIDATION_SERVICE = "validationService";
+    
     private static String SERVER_URL = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

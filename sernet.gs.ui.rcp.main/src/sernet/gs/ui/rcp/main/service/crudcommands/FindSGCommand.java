@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,10 +30,8 @@ import org.apache.log4j.Logger;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -94,7 +91,7 @@ public class FindSGCommand extends GenericCommand {
     public void execute() {
         IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
 
-        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
+        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId, true);
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (CommandException e) {

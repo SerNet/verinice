@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -137,7 +139,8 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
                 
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
                 
-                huiComposite.createView(entity, true, useRules, tags, strict);
+                // no validation in bulk edit, so empty list passed
+                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0));
                
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
                 

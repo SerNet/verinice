@@ -107,26 +107,27 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
                             scenario = ServiceFactory.lookupCommandService().executeCommand(scenarioReloader).getElement();
                             CnATreeElement parent = scenario.getParent();
                             parent = (CnATreeElement)cmnd3.getDaoFactory().getDAO(IncidentScenarioGroup.TYPE_ID).initializeAndUnproxy(parent);
-                            if(parent instanceof IncidentScenarioGroup){
+                            if(parent instanceof IncidentScenarioGroup && 
+                                    parent.getParent().getDbId().intValue() != scenario.getScopeId().intValue() // avoid rootScenGroup
+                                    ){
                                 String parentUuid = scenario.getParent().getUuid();
                                 int riskColor = getRiskColour(asset, scenario);
                                 // if risk is yellow or red, put parent on map and mark all parents red also, if current is red
                                 if(!scenarioGroupColorMap.containsKey(parentUuid)){
-                                    if(riskColor == IRiskAnalysisService.RISK_COLOR_RED || riskColor == IRiskAnalysisService.RISK_COLOR_YELLOW){
-                                        scenarioGroupColorMap.put(parentUuid, riskColor);
-                                        if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
-                                            scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
-                                        }
+                                    scenarioGroupColorMap.put(parentUuid, riskColor);
+                                    if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
+                                        scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
                                     }
                                 } else {
                                     if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_RED)){
-                                        if(riskColor == IRiskAnalysisService.RISK_COLOR_RED || riskColor == IRiskAnalysisService.RISK_COLOR_YELLOW){
-                                            scenarioGroupColorMap.put(parentUuid, riskColor);
+                                        if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_YELLOW)){
+                                            scenarioGroupColorMap.put(parentUuid, riskColor); // previous value green
+                                        } else {// previous value yellow, if red ==> save
+                                            if(riskColor == IRiskAnalysisService.RISK_COLOR_RED ){
+                                                scenarioGroupColorMap.put(parentUuid, riskColor); 
+                                            }
                                         }
-                                        if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
-                                            scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
-                                        }
-                                    }
+                                    } // if previous == red, done!
                                 }
                             }
                         }
@@ -140,7 +141,19 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
                 groupLoader = ServiceFactory.lookupCommandService().executeCommand(groupLoader);
                 ArrayList<String> result = new ArrayList<String>(0);
                 result.add(groupLoader.getElement().getTitle());
-                result.add(entry.getValue().intValue() == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
+                String colourValue = "";
+                switch(entry.getValue().intValue()){
+                case IRiskAnalysisService.RISK_COLOR_GREEN:
+                       colourValue = "2green";
+                       break;
+                case IRiskAnalysisService.RISK_COLOR_YELLOW:
+                    colourValue = "1yellow";
+                    break;
+                case IRiskAnalysisService.RISK_COLOR_RED:
+                    colourValue = "0red";
+                    break;
+                }
+                result.add(colourValue);
                 result.add(groupLoader.getElement().getDbId().toString());
                 results.add(result);
             }
@@ -182,7 +195,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
                 return IRiskAnalysisService.RISK_COLOR_YELLOW;
             }
         }
-        return 0;
+        return IRiskAnalysisService.RISK_COLOR_GREEN;
     }
 
     /**

@@ -19,6 +19,7 @@ package sernet.verinice.model.common;
 
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Default listener used inside model. Does not do anything.
@@ -96,5 +97,13 @@ public class NullListener implements IBSIModelListener {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 }

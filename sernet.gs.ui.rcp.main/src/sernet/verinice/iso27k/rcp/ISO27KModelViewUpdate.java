@@ -36,6 +36,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
 
 /**
@@ -364,5 +365,14 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             return Status.OK_STATUS;
         }
     }
+    
+    @Override
+    public void validationAdded(Integer scopeId){};
+    
+    @Override
+    public void validationRemoved(Integer scopeId){};
+    
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 
 }

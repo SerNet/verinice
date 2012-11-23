@@ -37,4 +37,19 @@ public abstract class RuleFactory {
 		}
 		return new NullRule();
 	}
+	
+	public static IValidationRule getValidationRule(String name){
+	    IValidationRule rule;
+        try {
+            rule = (IValidationRule) Class.forName("sernet.hui.common.rules."+name).newInstance(); //$NON-NLS-1$
+            return rule;
+        } catch (InstantiationException e) {
+            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+        } catch (IllegalAccessException e) {
+            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+        } catch (ClassNotFoundException e) {
+            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+        }
+        return null;	    
+	}
 }

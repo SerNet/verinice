@@ -22,6 +22,7 @@ package sernet.verinice.model.iso27k;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -94,7 +95,10 @@ public interface IISO27KModelListener {
 	 */
 	void modelReload(ISO27KModel newModel);
 	
-
-
+    public void validationAdded(Integer scopeId);
+    
+    public void validationRemoved(Integer scopeId);
+    
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation);
 	
 }

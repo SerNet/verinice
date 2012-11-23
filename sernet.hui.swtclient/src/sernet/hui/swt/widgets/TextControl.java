@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
+import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -51,6 +53,7 @@ public class TextControl implements IHuiControl {
 	private Color bgColor;
 	private Color fgColor;
 	private boolean useRule;
+	private boolean showValidationHint;
 	
 	// This limit is set in Property.hbm.xml / PropertyList.hbm.xml:
     private static final int HIBERNATE_MAPPED_STRING_LIMIT = 400000;
@@ -59,13 +62,14 @@ public class TextControl implements IHuiControl {
 		return text;
 	}
 
-	public TextControl(Entity ent, PropertyType type, Composite parent, boolean edit, int lines, boolean rules) {
+	public TextControl(Entity ent, PropertyType type, Composite parent, boolean edit, int lines, boolean rules, boolean showValidationHint) {
 		this.entity = ent;
 		this.fieldType = type;
 		this.composite = parent;
 		this.editable = edit;
 		this.lines = lines;
 		this.useRule = rules;
+		this.showValidationHint = showValidationHint;
 	}
 
 	/**
@@ -74,7 +78,11 @@ public class TextControl implements IHuiControl {
 	 */
 	public void create() {
 		Label label = new Label(composite, SWT.NULL);
-		label.setText(fieldType.getName());
+		String labelText = fieldType.getName();
+		if(showValidationHint){
+		    labelText = labelText + Messages.getString("LabelValidationHint"); 
+		}
+		label.setText(labelText);
 		
 		PropertyList propList = entity.getProperties(fieldType.getId());
 		savedProp = propList != null ? propList.getProperty(0) : null;
@@ -108,8 +116,14 @@ public class TextControl implements IHuiControl {
 	}
 
 	public boolean validate() {
-
-		if (this.fieldType.validate(text.getText(), null)) {
+        boolean valid = true;
+        for(Entry<String, Boolean> entry : fieldType.validate(text.getText(), null).entrySet()){
+            if(!entry.getValue().booleanValue()){
+                valid = false;
+                break;
+            }
+        }
+		if (valid) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
 			return true;

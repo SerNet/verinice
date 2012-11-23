@@ -251,7 +251,7 @@ public class BSIElementEditor extends EditorPart {
             }
 
             // create view of all properties, read only or read/write:
-            huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict);
+            huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(entity, cnAElement.getDbId()));
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
             huiComposite.resetInitialFocus();
 

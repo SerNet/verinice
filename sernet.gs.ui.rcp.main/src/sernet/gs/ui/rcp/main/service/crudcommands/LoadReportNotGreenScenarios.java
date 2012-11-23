@@ -40,10 +40,8 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
     private static transient Logger LOG = Logger.getLogger(LoadReportNotGreenScenarios.class);
     
     public static String[] COLUMNS = new String[]{"SCENARIO_NAME",
-                                                  "ASSET_NAME",
                                                   "RISK_COLOUR",
-                                                  "SCENARIO_DBID",
-                                                  "ASSET_DBID"};
+                                                  "SCENARIO_DBID"};
     
     private Integer rootElmt;
     
@@ -63,19 +61,19 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
     @Override
     public void execute() {
         try{
-            HashMap<String, Integer> seenAssetsScenarios = new HashMap<String, Integer>(0);
+            HashMap<String, Integer> seenScenarios = new HashMap<String, Integer>(0);
             RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
             LoadReportElements scenarioLoader = new LoadReportElements(IncidentScenario.TYPE_ID, rootElmt, false);
             scenarioLoader = ServiceFactory.lookupCommandService().executeCommand(scenarioLoader);
             for(CnATreeElement e : scenarioLoader.getElements()){
                 if(e instanceof IncidentScenario){
-                    LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
-                    assetLoader = ServiceFactory.lookupCommandService().executeCommand(assetLoader);
-                    for(CnATreeElement a : assetLoader.getElements()){
-                        if(!seenAssetsScenarios.containsKey(e.getUuid() + a.getUuid())){
+                    if(!seenScenarios.containsKey(e.getUuid())){
+                        LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
+                        assetLoader = ServiceFactory.lookupCommandService().executeCommand(assetLoader);
+                        int riskColour = 0;
+                        for(CnATreeElement a : assetLoader.getElements()){
                             a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
                             char[] riskTypes = new char[]{'c', 'i', 'a'};
-                            int riskColour = 0;
                             for(int i = 0; i < riskTypes.length; i++){
                                 int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i]);
                                 if(riskColour == 0){
@@ -88,16 +86,17 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
                                 }
 
                             }
-                            if(riskColour != 0){
-                                ArrayList<String> result = new ArrayList<String>(0);
-                                result.add(e.getTitle());
-                                result.add(a.getTitle());
-                                result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
-                                result.add(e.getDbId().toString());
-                                result.add(a.getDbId().toString());
-                                results.add(result);
-                                seenAssetsScenarios.put(e.getUuid() + a.getUuid(), 1);
+                            if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
+                                break;
                             }
+                        }
+                        if(riskColour != 0){
+                            ArrayList<String> result = new ArrayList<String>(0);
+                            result.add(e.getTitle());
+                            result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
+                            result.add(e.getDbId().toString());
+                            results.add(result);
+                            seenScenarios.put(e.getUuid(), 1);
                         }
                     }
                 }

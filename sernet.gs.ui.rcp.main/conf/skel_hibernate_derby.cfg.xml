@@ -69,6 +69,7 @@
         <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>
         <mapping resource="Configuration.hbm.xml"/>
         <mapping resource="BausteinVorschlag.hbm.xml"/>
+        <mapping resource="CnAValidation.hbm.xml"/>
         
         
         <!-- Workaround for Hibernate bug HHH-2146

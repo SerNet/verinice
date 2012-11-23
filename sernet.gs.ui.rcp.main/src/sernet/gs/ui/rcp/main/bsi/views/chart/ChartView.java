@@ -29,7 +29,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
@@ -51,6 +50,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * Displays charts to visualize progress and other data.
@@ -479,6 +479,16 @@ public class ChartView extends ViewPart {
 
         public void databaseChildRemoved(ChangeLogEntry entry) {
         }
+        
+        
+        @Override
+        public void validationAdded(Integer scopeId){};
+        
+        @Override
+        public void validationRemoved(Integer scopeId){};
+        
+        @Override
+        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 	}
 
 }

@@ -42,6 +42,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -54,9 +55,9 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * View that allows editing of applications' privacy ("Datenschutz") properties.
@@ -171,6 +172,15 @@ public class DSModelView extends ViewPart {
 			// TODO Auto-generated method stub
 			
 		}
+		
+	    @Override
+	    public void validationAdded(Integer scopeId){};
+	    
+	    @Override
+	    public void validationRemoved(Integer scopeId){};
+	    
+	    @Override
+	    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 	};
 
 	private DSModelViewUpdater viewUpdater;
@@ -323,4 +333,5 @@ public class DSModelView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
+
 }

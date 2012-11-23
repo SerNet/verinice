@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
@@ -48,6 +49,7 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -61,7 +63,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
@@ -98,6 +99,8 @@ public class CnAElementHome {
     private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private ICommandService commandService;
+    
+    private IValidationService validationService;
 
     public ICommandService getCommandService() {
         if (commandService == null) {
@@ -163,6 +166,9 @@ public class CnAElementHome {
         }
         SaveElement<T> saveCommand = new SaveElement<T>(element);
         saveCommand = getCommandService().executeCommand(saveCommand);
+        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            validateElement(saveCommand.getElement());
+        }
         return saveCommand.getElement();
     }
 
@@ -206,6 +212,9 @@ public class CnAElementHome {
         }
         CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
         saveCommand = getCommandService().executeCommand(saveCommand);
+        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            validateElement(saveCommand.getNewElement());
+        }
         return saveCommand.getNewElement();
     }
 
@@ -213,6 +222,9 @@ public class CnAElementHome {
         log.debug("Creating new element in " + container); //$NON-NLS-1$
         CreateBaustein saveCommand = new CreateBaustein(container, baustein);
         saveCommand = getCommandService().executeCommand(saveCommand);
+        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            validateElement(saveCommand.getNewElement());
+        }
         return saveCommand.getNewElement();
     }
 
@@ -234,6 +246,7 @@ public class CnAElementHome {
     public void remove(CnATreeElement element) throws Exception {
         log.debug("Deleting " + element.getTitle()); //$NON-NLS-1$
         RemoveElement command = new RemoveElement(element);
+        deleteValidations(element);
         command = getCommandService().executeCommand(command);
     }
 
@@ -255,12 +268,22 @@ public class CnAElementHome {
     public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
         UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
+        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            validateElement(command.getElement());
+        }
         return (CnATreeElement) command.getElement(); 
     }
 
     public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {
         UpdateMultipleElements command = new UpdateMultipleElements(elements, ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
+        if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            for(Object o :  command.getChangedElements()){
+                if(o instanceof CnATreeElement){
+                    validateElement((CnATreeElement)o);
+                }
+            }
+        }
     }
 
    
@@ -627,6 +650,25 @@ public class CnAElementHome {
         return new UpdateElementEntity<CnATreeElement>(element, true, ChangeLogEntry.STATION_ID);
     }
 
-   
+    private void validateElement(CnATreeElement elmt){
+        getValidationService().createValidationForSingleElement(elmt);
+        CnAElementFactory.getModel(elmt).validationAdded(elmt.getScopeId());
+    }
+    
+    private IValidationService getValidationService(){
+        if(validationService == null){
+            validationService = ServiceFactory.lookupValidationService();
+        }
+        return validationService;
+    }
+    
+    private void deleteValidations(CnATreeElement element){
+        if(element.getScopeId() != null && element.getDbId() != null){
+            getValidationService().deleteValidations(element.getScopeId(), element.getDbId());
+            CnAElementFactory.getModel(element).validationRemoved(element.getScopeId());
+        } else {
+            log.error("Can't delete validations of element, scopeId or elementId not set");
+        }
+    }
 
 }

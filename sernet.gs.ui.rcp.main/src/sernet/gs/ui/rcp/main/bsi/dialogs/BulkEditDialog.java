@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -83,7 +85,8 @@ public class BulkEditDialog extends Dialog {
                 String[] tags = BSIElementEditor.getEditorTags();
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
                 
-                huiComposite.createView(entity, true, useRules, tags, strict);
+                // no validation here, so empty list is passed
+                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0));
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {
