@@ -4287,8 +4287,8 @@ the value between <param></param> will be used directly if no string is found fo
      		 ??? measured effectiveness, notes, date... 
      	</huipropertygroup>
 -->
-     	<huipropertygroup id="control_implementedgroup" name="Implementation" tags="Risk,Web">
-     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption" tags="Risk,Web">
+     	<huipropertygroup id="control_implementedgroup" name="Implementation" tags="Risk,Web,Greenbone_GSM">
+     		<huiproperty name="Implemented" id="control_implemented" inputtype="singleoption" tags="Risk,Web,Greenbone_GSM">
      			<option name="Yes" id="control_implemented_yes"/>
      			<option name="No" id="control_implemented_no"/>
      			<option name="Partly" id="control_implemented_partly"/>
