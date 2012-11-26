@@ -109,7 +109,7 @@ public class NumericSelectionControl implements IHuiControl {
 			Label label = new Label(composite, SWT.NULL);
 			String labelText = fieldType.getName();
 			if(showValidationHint){
-			    labelText = labelText + Messages.getString("LabelValidationHint");
+			    labelText = Messages.getString("LabelValidationHint") + labelText;
 			}
 			label.setText(labelText);
 

@@ -93,7 +93,7 @@ public class MultiSelectionControl implements IHuiControl {
 		Label label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
 		if(showValidationHint){
-		    labelText = labelText + sernet.hui.swt.widgets.Messages.getString("LabelValidationHint");
+		    labelText = sernet.hui.swt.widgets.Messages.getString("LabelValidationHint") + labelText;
 		}
 		label.setText(type.getName());
 		

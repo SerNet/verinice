@@ -131,7 +131,7 @@ public class DateSelectionControl implements IHuiControl {
 		label.setLayoutData(label36LData);
 		String labelText = fieldType.getName();
 		if(showValidationHint){
-		    labelText = labelText + Messages.getString("LabelValidationHint");
+		    labelText = Messages.getString("LabelValidationHint") + labelText;
 		}
 		label.setText(labelText);
 
