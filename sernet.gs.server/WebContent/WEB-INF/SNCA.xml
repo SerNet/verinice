@@ -3596,7 +3596,7 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huipropertygroup name="Greenbone GSM" id="gsm_asset_group" tags="Greenbone_GSM" >
             <huiproperty id="gsm_asset_tag" name="GSM Tag" tags="Greenbone_GSM" editable="false"/>
-            <huiproperty id="gsm_asset_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="line" editable="false"/>
+            <huiproperty id="gsm_asset_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false"/>
             <huiproperty id="gsm_hostname" name="Hostname" inputtype="line" tags="Greenbone_GSM" editable="false"/>
             <huiproperty id="gsm_installed_apps" name="Installed Software" inputtype="text" tags="Greenbone_GSM" editable="false" />
             <huiproperty id="gsm_traceroute" name="Traceroute" inputtype="line" tags="Greenbone_GSM" editable="false" />
@@ -4338,25 +4338,8 @@ the value between <param></param> will be used directly if no string is found fo
      			<option name="Partly" id="control_implemented_partly"/>
      			<option name="N.a." id="control_implemented_na"/>
      		</huiproperty>
-   		<huiproperty id="control_selected" 
-        	name="Control selected"
-        	inputtype="booleanoption"
-        	defaultValue="0"
-        	tags="SoA" />
-        	
-        <huiproperty
-	           id="control_reason_for_selection" name="Reason for selection"
-               inputtype="singleoption" 
-               min="-1" 
-               max="1" 
-               defaultValue="-1" 
-               tags="SoA"
-            >
-            <option id="control_reason_for_selection_1"  name="LR: legal requirements" />
-            <option id="control_reason_for_selection_2"  name="CO: contractual obligations" />
-            <option id="control_reason_for_selection_3"  name="BR: business requirement" />
-			<option id="control_reason_for_selection_4"  name="RRA: result of risk assessment" />
-          </huiproperty> 
+            
+   		 
      		<huiproperty 
             tags="Risk,Web"
      			name="Explanation" 
@@ -4379,6 +4362,32 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
      	</huipropertygroup>
+        
+        <huipropertygroup name="SoA" id="control_soa_group" tags="SoA" >
+            <huiproperty id="control_selected" 
+                name="Control selected"
+                inputtype="booleanoption"
+                defaultValue="0"
+                tags="SoA" />
+                
+            <huiproperty
+                   id="control_reason_for_selection" name="Reason for selection"
+                   inputtype="singleoption" 
+                   min="-1" 
+                   max="1" 
+                   defaultValue="-1" 
+                   tags="SoA"
+                >
+                <option id="control_reason_for_selection_1"  name="LR: legal requirements" />
+                <option id="control_reason_for_selection_2"  name="CO: contractual obligations" />
+                <option id="control_reason_for_selection_3"  name="BR: business requirement" />
+                <option id="control_reason_for_selection_4"  name="RRA: result of risk assessment" />
+              </huiproperty>
+         </huipropertygroup>
+        
+          <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
+                <huiproperty id="gsm_ism_control_description" name="" tags="Greenbone_GSM" inputtype="text" editable="false" />
+            </huipropertygroup>
         
          <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
     <huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="Risk">
@@ -4954,10 +4963,10 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty name="Vulnerability exploitation" id="incscen_vuln_level" inputtype="numericoption"
                 min="0" max="3" defaultValue="1" 
                 tags="Risk">
-                <option id="incscen_vuln_level_0" name="0: Hardly possible" value="0"/>
-                <option id="incscen_vuln_level_1" name="1: Possible" value="1"/>
-                <option id="incscen_vuln_level_2" name="2: Easily possible" value="2"/>
-                <option id="incscen_vuln_level_3" name="3: Probable" value="3"/>
+                <option id="incscen_vuln_level_0" name="0: Very low" value="0"/>
+                <option id="incscen_vuln_level_1" name="1: Low" value="1"/>
+                <option id="incscen_vuln_level_2" name="2: High" value="2"/>
+                <option id="incscen_vuln_level_3" name="3: Very High" value="3"/>
             </huiproperty> 
             
             <!-- Risk analysis, range has to match min to max sum possible from threat + vulnerability -->
@@ -5060,6 +5069,11 @@ the value between <param></param> will be used directly if no string is found fo
             id="threat_name"
             tags="Risk,Basic" />
         <huiproperty
+            name="Description"
+            id="threat_desc"
+            inputtype="text"
+            tags="Risk,Basic" />
+        <huiproperty
             name="Abbreviation"
             id="threat_abbr"
             tags="Risk,Basic" />
@@ -5112,6 +5126,9 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="vulnerability_name" tags="Risk,Basic"/>
         <huiproperty
+            name="Description"
+            id="vulnerability_desc" inputtype="text" tags="Risk,Basic"/>
+        <huiproperty
             name="Abbreviation"
             id="vulnerability_abbr" tags="Risk,Basic"/>
         <huiproperty
@@ -5127,10 +5144,10 @@ the value between <param></param> will be used directly if no string is found fo
                 
 		<huiproperty name="Ease of Exploitation " id="vulnerability_level" inputtype="numericoption"
 			min="0" max="3" defaultValue="0" tags="Risk">
-            <option id="vulnerability_level_0" name="0: Hardly possible" value="0"/>
-            <option id="vulnerability_level_1" name="1: Possible" value="1"/>
-            <option id="vulnerability_level_2" name="2: Easily possible" value="2"/>
-            <option id="vulnerability_level_3" name="3: Probable" value="3"/>
+            <option id="vulnerability_level_0" name="0: Very low" value="0"/>
+            <option id="vulnerability_level_1" name="1: Low" value="1"/>
+            <option id="vulnerability_level_2" name="2: High" value="2"/>
+            <option id="vulnerability_level_3" name="3: Very High" value="3"/>
 		</huiproperty>
         <huipropertygroup name="Greenbone GSM" id="gsm_vuln_group" tags="Greenbone_GSM" >
             <huiproperty id="gsm_ism_vulnerability_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false"/>
@@ -5424,6 +5441,10 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="process_name" />
+        <huiproperty
+            name="Description"
+            inputtype="text"
+            id="process_desc" />
         <huiproperty
             name="Abbreviation"
             id="process_abbr" />
@@ -5904,9 +5925,5 @@ the value between <param></param> will be used directly if no string is found fo
 	            tags="VDA_ISA_Audit"
 	            inputtype="text"
 	            />    		
-  
-            <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
-                <huiproperty id="gsm_ism_control_description" name="" tags="Greenbone_GSM" inputtype="text" editable="false" />
-            </huipropertygroup>
       </huientity> 
 </huientities>
