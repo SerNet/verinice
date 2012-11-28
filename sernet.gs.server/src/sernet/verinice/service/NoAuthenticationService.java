@@ -83,7 +83,14 @@ public final class NoAuthenticationService implements IAuthService {
      */
     @Override
     public boolean isScopeOnly() {
-        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isLogoutPossible()
+     */
+    @Override
+    public boolean isLogoutPossible() {
         return false;
     }
 }

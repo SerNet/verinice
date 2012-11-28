@@ -185,6 +185,14 @@ public class BasicAuthenticationService implements IAuthService {
         this.configurationDao = configurationDao;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isLogoutPossible()
+     */
+    @Override
+    public boolean isLogoutPossible() {
+        return true;
+    }
+
 }
 
 

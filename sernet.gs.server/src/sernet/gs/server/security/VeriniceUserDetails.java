@@ -31,6 +31,7 @@ public class VeriniceUserDetails implements UserDetails {
 	private String pass;
 	private List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
 	private boolean scopeOnly;
+	private boolean logoutPossible = false;
 	
 	public VeriniceUserDetails(String user, String pass) {
         this(user,pass,false);
@@ -60,6 +61,14 @@ public class VeriniceUserDetails implements UserDetails {
      */
     public boolean isScopeOnly() {
         return scopeOnly;
+    }
+
+    public boolean isLogoutPossible() {
+        return logoutPossible;
+    }
+
+    public void setLogoutPossible(boolean logoutPossible) {
+        this.logoutPossible = logoutPossible;
     }
 
     public boolean isAccountNonExpired() {

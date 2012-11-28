@@ -33,6 +33,12 @@ public interface IAuthService {
 	public String getUsername();
 	
 	/**
+     * Get the name of the currently logged in user in the active context.
+     * @return
+     */
+    public boolean isLogoutPossible();
+	
+	/**
 	 * Encrypt the given cleartext password.
 	 * 
 	 * @param username

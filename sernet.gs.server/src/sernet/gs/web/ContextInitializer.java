@@ -19,6 +19,7 @@ package sernet.gs.web;
 
 import java.io.IOException;
 
+import javax.faces.application.ResourceHandler;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -26,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -52,6 +54,9 @@ public class ContextInitializer implements Filter {
 		}
 		
 		ServerInitializer.inheritVeriniceContextState();
+		
+		disableCaching((HttpServletRequest)request, (HttpServletResponse)response);
+		
 		// proceed along the chain
 	    chain.doFilter(request, response);
 	}
@@ -72,6 +77,14 @@ public class ContextInitializer implements Filter {
             sb.append("/");
         }
         return sb.toString();
+    }
+    
+    private void disableCaching(HttpServletRequest request, HttpServletResponse response)  {
+        if (!request.getRequestURI().startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) { // Skip JSF resources (CSS/JS/Images/etc)
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            response.setDateHeader("Expires", 0); // Proxies.
+        }
     }
 
 	public void init(FilterConfig arg0) throws ServletException {

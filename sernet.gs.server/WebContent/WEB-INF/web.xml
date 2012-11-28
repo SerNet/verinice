@@ -28,15 +28,18 @@
         	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
+            classpath:sernet/gs/server/spring/veriniceserver-security.xml
             
-            <!-- Use this configuration for internal authentication: -->        
-        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml      
+            <!-- Use this for digest authentication for rich and web client: -->  
+            classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
             
-            <!-- Use this configuration for LDAP / Active Directory: -->
-            <!--
-        	classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml
-            -->
-        	
+            <!-- Use this for digest authentication for rich client -->
+            <!-- and ordinary form based authentication for web client: -->  
+            <!-- classpath:sernet/gs/server/spring/veriniceserver-security-web.xml -->
+            
+            <!-- Use this for LDAP / Active Directory authentication: -->    
+        	<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
+            
             classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
             classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
             classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
@@ -91,6 +94,10 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/sync/*</url-pattern>
 	</filter-mapping>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/auth/*</url-pattern>
+    </filter-mapping>
 	<filter-mapping>
 		<filter-name>contextInitializer</filter-name>
 		<url-pattern>/todo/*</url-pattern>
@@ -101,7 +108,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>contextInitializer</filter-name>
-        <url-pattern>/explorer/*</url-pattern>
+        <url-pattern>/auth/*</url-pattern>
     </filter-mapping>
     
     <!-- Primefaces fileupload -->

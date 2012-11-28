@@ -35,6 +35,10 @@ public class AuthBean {
         return getAuthService().getUsername();
     }
     
+    public boolean getLogoutPossible() {
+        return getAuthService().isLogoutPossible();
+    }
+    
     public boolean getBsiTasks() {
         return isEnabled(ActionRightIDs.BSIMASSNAHMEN);
     }

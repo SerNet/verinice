@@ -203,18 +203,7 @@ public class InternalServer implements IInternalServer {
 	private void initialSetup() throws ServletException, NamespaceException {
 		wc = Activator.getDefault().getWebContainer();
 
-		ctx = wc.createDefaultHttpContext();
-
-		/*Spring config in gs.server web.xml
-		classpath:sernet/gs/server/spring/veriniceserver-common.xml
-        classpath:sernet/gs/server/spring/veriniceserver-plain.xml
-        classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
-        classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml  
-        classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml  
-        classpath:sernet/gs/server/spring/veriniceserver-webservice.xml   
-        classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
-		*/
-		
+		ctx = wc.createDefaultHttpContext();	
 		
 		Dictionary<String, String> dict = new Hashtable<String, String>();
 		dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        

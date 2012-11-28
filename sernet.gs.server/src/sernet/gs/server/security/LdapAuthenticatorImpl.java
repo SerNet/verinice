@@ -94,8 +94,7 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
         if (!("".equals(principal.trim())) && !("".equals(password.trim()))) {
             
             // compare against the admin definied in the config file:
-            if (adminuser.length() > 0 && adminpass.length() > 0
-                    && username.equals(adminuser)) {
+            if (!adminuser.isEmpty() && !adminpass.isEmpty() && username.equals(adminuser)) {
                 checkAdminPassword(username, password);
                 return defaultAdministrator(); 
             }
@@ -186,6 +185,7 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
         
         roles.add(ApplicationRoles.ROLE_USER);
         roles.add(ApplicationRoles.ROLE_ADMIN);
+        roles.add(ApplicationRoles.ROLE_WEB);
         
         String[] rolesArray= (String[]) roles.toArray(new String[roles.size()]);
         authAdapter.setAttributeValues(LdapAuthenticationProvider.ROLES_ATTRIBUTE, rolesArray);

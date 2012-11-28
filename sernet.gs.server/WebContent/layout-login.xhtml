@@ -85,15 +85,7 @@
 						<h:form id="langForm">
 							<table style="width: 100%">
 								<tr>
-							  		<td style="width: 100%; vertical-align: top">							  			
-							  			<h:outputText value="#{msg['loggedIn']} #{auth.userName}&nbsp;&#124;&nbsp;" />
-							  		</td>						  		
-							  		<td>
-							  			<p:outputPanel id="logoutPanel" rendered="#{auth.logoutPossible}">
-							  				<a href="../auth/j_verinice_logout">Logout</a>&nbsp;&#124;&nbsp;
-							  			</p:outputPanel>
-							  		</td>
-							  		<td><h:commandLink action="#{message.english}"><h:graphicImage value="/image/us.png" alt="#{msg['english']}"/></h:commandLink></td>
+							  		<td style="width: 100%"><h:commandLink action="#{message.english}"><h:graphicImage value="/image/us.png" alt="#{msg['english']}"/></h:commandLink></td>
 							  		<td><h:commandLink action="#{message.german}"><h:graphicImage value="/image/de.png" alt="#{msg['german']}"/></h:commandLink></td>
 							 	</tr>
 							</table>							
@@ -119,9 +111,6 @@
 					</ui:insert>	
 				</div>
 				<div id="subNav">
-					<ui:insert name="subNav">
-						<ui:include src="/subNav.xhtml"/>
-					</ui:insert>
 				</div>
 				<div id="messages" class="clearfix">
 					<div class="messages">

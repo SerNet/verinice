@@ -263,6 +263,16 @@ li.inactive {
 	position: relative;
 }
 
+#col1_login {
+	float: left; 
+	width: 205px;  
+	margin:0;
+	background-image: url("../image/navi-bg.jpg");
+	background-repeat: no-repeat;
+	height: 550px;
+	position: relative;
+}
+
 #col1_banner {
 	bottom: 0;
     position: absolute;

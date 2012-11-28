@@ -116,6 +116,14 @@ public final class DigestAuthenticationService implements IAuthService {
 		return ""; //$NON-NLS-1$
 	}
 	
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isLogoutPossible()
+     */
+    @Override
+    public boolean isLogoutPossible() {
+        return getUserDetails().isLogoutPossible();
+    }
+	
 	private VeriniceUserDetails getUserDetails() {
 	    VeriniceUserDetails details = null;
 	    SecurityContext context = SecurityContextHolder.getContext();
@@ -150,4 +158,6 @@ public final class DigestAuthenticationService implements IAuthService {
     private IRightsServerHandler getRightsServerHandler() {
         return (IRightsServerHandler) VeriniceContext.get(VeriniceContext.RIGHTS_SERVER_HANDLER);
     }
+
+
 }
