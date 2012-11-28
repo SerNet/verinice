@@ -119,10 +119,23 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
+    <bean id="validationService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/validationServiceHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.validation.IValidationService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+    </bean>
+    
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
     	<property name="authService" ref="authService" />
         <property name="rightsServiceExecuter" ref="rightsServiceExecuter" />
     </bean>
+    
+
     
     <!-- timer bean to check for changes every x seconds: -->
      
@@ -245,6 +258,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="individualService" value-ref="individualService" />
             <entry key="processServiceIsa" value-ref="processServiceIsa" />
             <entry key="rightsService" value-ref="rightsServiceClient" />
+            <entry key="validationService" value-ref="validationService" />
 		</map>
 	</property>
 	</bean>

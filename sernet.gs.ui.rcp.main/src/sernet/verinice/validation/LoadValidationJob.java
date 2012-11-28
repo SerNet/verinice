@@ -18,6 +18,7 @@
 package sernet.verinice.validation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,7 +51,11 @@ public class LoadValidationJob implements IRunnableWithProgress {
     
     public void loadValidations(){
         Activator.inheritVeriniceContextState();
-        validationList = ServiceFactory.lookupValidationService().getValidations(scopeId);
+        if(scopeId != null){
+            validationList = ServiceFactory.lookupValidationService().getValidations(scopeId);
+        } else {
+            validationList = Collections.emptyList();
+        }
     }
     
     public List<CnAValidation> getValidations(){

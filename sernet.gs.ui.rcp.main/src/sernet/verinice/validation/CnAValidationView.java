@@ -64,7 +64,10 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -109,6 +112,8 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     private IModelLoadListener modelLoadListener;
     
     private ISelectionListener selectionListener;
+    
+    private RightsServiceClient rightsService;
     
     public CnAValidationView(){
         super();
@@ -610,7 +615,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
 
             } 
         } catch (Exception e) {
-            LOG.error("Error while loading notes", e); //$NON-NLS-1$
+            LOG.error("Error while loading validations", e); //$NON-NLS-1$
         }
     }
     
@@ -629,6 +634,18 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
         loadValidations();
     }
     
-
+    /**
+     * @return the rightsService
+     */
+    public RightsServiceClient getRightsService() {
+        if(rightsService==null) {
+            rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        }
+        return rightsService;
+    }
+    
+    public String getRightID() {
+        return ActionRightIDs.CNAVALIDATION;
+    }
 
 }
