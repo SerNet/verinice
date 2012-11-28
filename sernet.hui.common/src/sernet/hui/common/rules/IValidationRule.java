@@ -22,6 +22,6 @@ public interface IValidationRule {
 	
 	public String getHint();
 	
-	public void init(String[] params);
+	public void init(String[] params, String hint);
 
 }

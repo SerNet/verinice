@@ -40,11 +40,15 @@ public class NotEmpty implements IValidationRule {
      * @see sernet.hui.common.rules.IValidationRule#init(java.lang.String[])
      */
     @Override
-    public void init(String[] params) {
+    public void init(String[] params, String hint) {
         if(params != null && params.length == 1){
             hint = params[0];
-        } else {
-            hint = Messages.NotEmptyDefaultHint;
+        }
+        if(hint != null && !hint.equals("")){
+            this.hint = hint;
+        }
+        else {
+            this.hint = Messages.NotEmptyDefaultHint;
         }
     }
 

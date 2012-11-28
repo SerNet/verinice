@@ -457,7 +457,8 @@ public class HUITypeFactory {
             Element ruleElement = (Element)list.item(i);
             String className = ruleElement.getAttribute("class");
             IValidationRule rule = (IValidationRule)RuleFactory.getValidationRule(className);
-            rule.init(readValidationRuleParams(ruleElement, rule));
+            String hint = ruleElement.getAttribute("hint");
+            rule.init(readValidationRuleParams(ruleElement, rule), hint);
             ruleList.add(rule);
         }
         return ruleList;
@@ -472,7 +473,6 @@ public class HUITypeFactory {
         }
         return params;
     }
-    
 
     private IFillRule readDefaultRule(Element prop) {
         IFillRule rule = null;

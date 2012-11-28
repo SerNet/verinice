@@ -150,6 +150,7 @@ be displayed when one of the given options has been previously selected.
 	        		<xs:element name="param" minOccurs="0" maxOccurs="unbounded"/>
 	        	</xs:sequence>
         	  	<xs:attribute name="class" type="xs:string" use="required"/>
+        	  	<xs:attribute name="hint" type="xs:string" use="optional" />
         	</xs:complexType>
         </xs:element>
 

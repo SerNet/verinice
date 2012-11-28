@@ -68,16 +68,17 @@ public class DateAfterRule implements IValidationRule {
      * @see sernet.hui.common.rules.IValidationRule#init(java.lang.String[])
      */
     @Override
-    public void init(String[] params) {
+    public void init(String[] params, String hint) {
         formatter = new SimpleDateFormat(PATTERN, Locale.getDefault());
         formatter.setLenient(true); // set parser to unprecisely parsing
         try {
             if(params != null && params.length == 1){
                 compareDate = formatter.parse(params[0]);
-                hint = Messages.DateAfterDefaultHint;
-            } else if(params != null && params.length == 2){
-                hint = params[0];
-                compareDate = formatter.parse(params[1]);
+            } 
+            if(hint != null && !hint.equals("")){
+                this.hint = hint;
+            } else {
+                this.hint = Messages.DateAfterDefaultHint;
             }
         } catch (ParseException e) {
             LOG.error("Date specified by parameter not parseable", e);

@@ -46,13 +46,14 @@ public class RegExRule implements IValidationRule {
      * @see sernet.hui.common.rules.IValidationRule#init(java.lang.String[])
      */
     @Override
-    public void init(String[] params) {
-        if(params != null && params.length == 2){
-            hint = params[0];
-            regEx = params[1];
-        } else if( params != null && params.length == 1){
+    public void init(String[] params, String hint) {
+        if( params != null && params.length == 1){
             regEx = params[0];
-            hint = Messages.RegExDefaultHint;
+        }
+        if(hint != null && !hint.equals("")){
+            this.hint = hint;
+        } else {
+            this.hint = Messages.RegExDefaultHint;
         }
     }
 
