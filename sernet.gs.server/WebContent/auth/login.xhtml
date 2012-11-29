@@ -18,40 +18,12 @@
 		</div>
 	</div>
 	<div id="col3" style="width: auto; margin: 0 200px 0 0; *margin-right:0;">
-		<div id="col3_content">	
-			<form action="j_verinice_security_check" method="post">
-	            <table id="loginGrid">
-	            	<tbody>
-	            		<tr>
-	            			<td class="title"><h:outputText value="#{msg['login']}" /></td>
-	            		</tr>
-	            		<tr>
-	            			<td class="label"><h:outputText value="Username" /></td>
-	            		</tr>
-	            		<tr>
-	            			<td><h:inputText id="j_username" /></td>
-	            		</tr>
-	            		<tr>
-	            			<td class="label"><h:outputText value="Password" /></td>
-	            		</tr>
-	            		<tr>
-	            			<td> <h:inputSecret id="j_password" /></td>
-	            		</tr>
-	            		<tr>
-	            			<td>
-	            				<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-	                    			<span class="ui-button-text">Login</span>
-	                			</button>
-	                		</td>
-	            		</tr>
-	            	</tbody> 
-	            </table>
-        	</form>
-		</div>
+		<div id="col3_content">
+            <vn:login />
+         </div>
 	</div>
 	<div id="col2">
-		<div id="col2_content">									    				
-	    		 				    			    							
+		<div id="col2_content">    		 				    			    							
 		</div>
 	</div>
 </ui:define>

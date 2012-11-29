@@ -197,5 +197,9 @@
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
 	<!-- Webclient conf end -->
-
+    
+    <session-config>
+      <!-- Session idle timeout in min. -->
+      <session-timeout>30</session-timeout> 
+    </session-config>
 </web-app>

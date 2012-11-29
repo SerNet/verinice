@@ -12,4 +12,8 @@
         <tag-name>properties</tag-name>
         <source>../template/properties.xhtml</source>
     </tag>
+    <tag>
+        <tag-name>login</tag-name>
+        <source>../template/login.xhtml</source>
+    </tag>
 </facelet-taglib>
