@@ -99,12 +99,12 @@ public class FindURLs extends GenericCommand {
 				root.addChild(link);
 			}
 			
-			CnATreeElement element = treeElements.get(i);
-			
-			DocumentReference reference = new DocumentReference(element);
-			element.getTitle();
-
-			link.addChild(reference);
+			if(treeElements!=null && i<treeElements.size()) {
+    			CnATreeElement element = treeElements.get(i);			
+    			DocumentReference reference = new DocumentReference(element);
+    			element.getTitle();
+    			link.addChild(reference);
+			}
 		}
 	}
 
