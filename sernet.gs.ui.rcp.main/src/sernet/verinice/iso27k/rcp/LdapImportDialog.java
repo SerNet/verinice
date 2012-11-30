@@ -54,6 +54,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.ldap.LoadLdapUser;
@@ -233,14 +234,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 	private void loadLdapUser() {
 		try {
 			LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter());
-			try {
-				loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);
-			} catch (CommandException e) {
-				log.error("Error while loading accounts", e); //$NON-NLS-1$
-				MessageDialog.openError(this.getShell(), 
-						Messages.LdapImportDialog_45,
-						Messages.LdapImportDialog_1);
-			}
+			loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);			
 			personSet.clear();
 			List<PersonInfo> personList = loadLdapUser.getPersonList();		
 			if(personList!=null) {
@@ -250,8 +244,19 @@ public class LdapImportDialog extends TitleAreaDialog {
 			// Get the content for the viewer, setInput will call getElements in the
 			// contentProvider
 			refreshTable();
-		} catch (Throwable t) {
+		} catch (SizeLimitExceededException sizeLimitExceededException) {
+		    log.warn("To many results ehen searching for LDAP users."); //$NON-NLS-1$
+            if (log.isDebugEnabled()) {
+                log.debug("stacktrace: ", sizeLimitExceededException); //$NON-NLS-1$
+            }
+            personSet.clear();
+            refreshTable();
+            MessageDialog.openInformation(getShell(), Messages.LdapImportDialog_6, Messages.LdapImportDialog_7);
+        } catch (Throwable t) {
 			log.error("Error while setting table data", t); //$NON-NLS-1$
+			personSet.clear();
+			refreshTable();
+			MessageDialog.openError(getShell(), Messages.LdapImportDialog_45, Messages.LdapImportDialog_1);        
 		}
 	}
 
