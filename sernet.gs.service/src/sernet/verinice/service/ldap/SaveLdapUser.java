@@ -84,6 +84,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				setImportRootObject(person.getParent());
 				IBaseDao<PersonIso, Integer> dao = getDaoFactory().getDAO(person.getTypeId());
 				person = dao.merge(person);
+				dao.flush();
 				savedPersonList.add(person);
 				// create configuration for person
 				CreateConfiguration createConfiguration = new CreateConfiguration(person);
@@ -95,7 +96,6 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				// save username in person
 				Configuration configuration = createConfiguration.getConfiguration();
 				configuration.setUser(personInfo.getLoginName());
-				configuration.setAdminUser(false);
 				if(person!=null && person.getEmail()!=null && !person.getEmail().isEmpty()) {
 				    configuration.setNotificationEmail(person.getEmail());
 				}

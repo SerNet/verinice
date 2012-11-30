@@ -18,6 +18,9 @@
 package sernet.verinice.service.commands;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -33,12 +36,18 @@ public class CreateConfiguration extends GenericCommand {
 	}
 
 	public void execute() {
-		configuration = new Configuration();
-		if (person == null)
-			throw new RuntimeCommandException("Default Konfiguration wurde bereits gesetzt.");
-			
-		configuration.setPerson(person);
-		getDaoFactory().getDAO(Configuration.class).saveOrUpdate(configuration);
+	    configuration = new Configuration();
+        if (person == null)
+            throw new RuntimeCommandException("Default Konfiguration wurde bereits gesetzt.");
+            
+        configuration.setPerson(person);
+        configuration.addRole(AddDefaultGroups.USER_DEFAULT_GROUP);
+        configuration.setAdminUser(false);
+        configuration.setScopeOnly(true);
+        configuration.setWebUser(true);
+        configuration.setRcpUser(true);       
+       
+        getDaoFactory().getDAO(Configuration.class).saveOrUpdate(configuration);
 	}
 
 	public Configuration getConfiguration() {

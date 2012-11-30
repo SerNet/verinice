@@ -167,12 +167,39 @@ public class Configuration implements Serializable, ITypedElement {
         return isRawPropertyValueEqual(PROP_SCOPE, PROP_SCOPE_YES);
     }
 	
+	public void setScopeOnly(boolean scopeOnly) {
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_SCOPE);
+        if(scopeOnly) {
+            entity.setSimpleValue(type, PROP_SCOPE_YES);
+        } else {
+            entity.setSimpleValue(type, PROP_SCOPE_NO);
+        }
+    }
+	
 	public boolean isWebUser() {
         return !isRawPropertyValueEqual(PROP_WEB, PROP_WEB_NO);
     }
 	
+	public void setWebUser(boolean webUser) {
+        PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_WEB);
+        if(webUser) {
+            entity.setSimpleValue(type, PROP_WEB_YES);
+        } else {
+            entity.setSimpleValue(type, PROP_WEB_NO);
+        }
+    }
+	
 	public boolean isRcpUser() {
         return !isRawPropertyValueEqual(PROP_RCP, PROP_RCP_NO);
+    }
+	
+	public void setRcpUser(boolean rcpUser) {
+        PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_RCP);
+        if(rcpUser) {
+            entity.setSimpleValue(type, PROP_RCP_YES);
+        } else {
+            entity.setSimpleValue(type, PROP_RCP_NO);
+        }
     }
 	
 	public void setAdminUser(boolean isAdmin) {
