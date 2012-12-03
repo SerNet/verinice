@@ -122,12 +122,16 @@ public class ValidationService implements IValidationService {
     }
     
     public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId){
-        String hqlQuery = "from sernet.verinice.model.validation.CnAValidation validation where validation.elmtDbId = ?" +
-        		" AND validation.propertyId = ?" +
-        		" AND validation.hintId = ?"+ 
-        		" AND validation.scopeId = ?";
-        
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId }).size() > 0; 
+        if(scopeId != null){
+            String hqlQuery = "from sernet.verinice.model.validation.CnAValidation validation where validation.elmtDbId = ?" +
+                    " AND validation.propertyId = ?" +
+                    " AND validation.hintId = ?"+ 
+                    " AND validation.scopeId = ?";
+
+            return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId }).size() > 0;
+        } else {
+            return false;
+        }
     }
     
     public boolean isValidationExistant(CnAValidation validation){
