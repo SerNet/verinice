@@ -64,7 +64,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         this.window = window;
         setText(Messages.BausteinZuordnungAction_1);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.BausteinZuordnungAction_2);

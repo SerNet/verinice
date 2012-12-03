@@ -54,7 +54,6 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         this.window = window;
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);

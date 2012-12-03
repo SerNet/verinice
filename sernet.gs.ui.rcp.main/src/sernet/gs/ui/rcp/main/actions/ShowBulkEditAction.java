@@ -91,7 +91,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         this.window = window;
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);

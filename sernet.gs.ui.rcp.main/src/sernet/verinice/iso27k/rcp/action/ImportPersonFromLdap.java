@@ -20,7 +20,6 @@ public class ImportPersonFromLdap extends RightsEnabledAction {
 		this.window = window;
 		setText(label);
 		setId(ID);
-		setActionDefinitionId(ID);
 		setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
 		setToolTipText(Messages.getString("ImportPersonFromLdap.1")); //$NON-NLS-1$
 		setRightID(ActionRightIDs.IMPORTLDAP);

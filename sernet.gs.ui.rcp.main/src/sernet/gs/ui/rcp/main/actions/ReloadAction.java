@@ -41,7 +41,6 @@ public class ReloadAction extends Action {
     public ReloadAction(IWorkbenchWindow window, String label) {
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         setEnabled(false);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {

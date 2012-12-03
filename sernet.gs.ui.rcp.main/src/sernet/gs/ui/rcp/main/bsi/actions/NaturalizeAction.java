@@ -73,7 +73,6 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     public NaturalizeAction(IWorkbenchWindow window) {
         setText(Messages.NaturalizeAction_0);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);

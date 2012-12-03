@@ -84,7 +84,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         this.window = window;
         setText(Messages.GSMBausteinZuordnungAction_1);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);

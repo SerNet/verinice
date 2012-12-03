@@ -312,6 +312,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
      * .IAction, org.eclipse.jface.viewers.ISelection)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (serverIsRunning) {
@@ -320,14 +321,17 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             Object selectedElement = treeSelection.getFirstElement();
-            Iterator<CnATreeElement> iter = treeSelection.iterator();
+            Iterator<Object> iter = treeSelection.iterator();
             while(iter.hasNext()){
-                CnATreeElement elmt = iter.next();
-                if(!(elmt instanceof ITVerbund) && !(elmt instanceof Organization) ){
-                    if(this.selection != null){
-                        this.selection = null;
+                Object obj = iter.next();
+                if(obj instanceof CnATreeElement) {
+                    CnATreeElement elmt = (CnATreeElement) obj;
+                    if(!(elmt instanceof ITVerbund) && !(elmt instanceof Organization) ){
+                        if(this.selection != null){
+                            this.selection = null;
+                        }
+                        return;
                     }
-                    return;
                 }
             }
             if (selectedElement instanceof Organization || selectedElement instanceof ITVerbund) {

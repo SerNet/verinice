@@ -55,7 +55,6 @@ public class ProfileEditAction extends RightsEnabledAction implements ISelection
         this.window = window;
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USERPROFILE));
         setToolTipText(Messages.ProfileEditAction_0);
         window.getSelectionService().addSelectionListener(this);

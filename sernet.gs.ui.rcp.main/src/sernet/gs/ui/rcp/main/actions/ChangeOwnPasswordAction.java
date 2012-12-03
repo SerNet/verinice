@@ -62,7 +62,7 @@ public class ChangeOwnPasswordAction extends Action  {
         this.window = window;
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
+        //setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText(Messages.ChangeOwnPasswordAction_0);
         setEnabled(true);

@@ -17,18 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -36,22 +29,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportAllRisksForScope;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportCountRisksBySeverity;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementList;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportProcessesWithRisk;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportScenarioDetails;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.iso27k.IncidentScenario;
 
 public class TestAction extends Action {
 
@@ -64,7 +44,6 @@ public class TestAction extends Action {
     public TestAction(IWorkbenchWindow window, String label, String typeID, Integer dbID) {
         setText(label);
         setId(ID);
-        setActionDefinitionId(ID);
         this.typeID = typeID;
         this.dbID = dbID;
         
