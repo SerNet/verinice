@@ -339,15 +339,17 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     @Override
     public void dispose() {
         super.dispose();
-//        getSite().getPage().removePostSelectionListener(selectionListener);
+        getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
+        removeModelListeners();
     }
     
     /**
      * 
      */
     protected void removeModelListeners() {
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
     }
     

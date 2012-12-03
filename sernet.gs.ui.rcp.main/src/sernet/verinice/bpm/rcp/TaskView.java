@@ -491,6 +491,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
      */
     @Override
     public void dispose() {
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         TaskChangeRegistry.removeTaskChangeListener(taskListener);
         super.dispose();
     }

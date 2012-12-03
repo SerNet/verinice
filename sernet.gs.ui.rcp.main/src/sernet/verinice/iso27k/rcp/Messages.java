@@ -44,10 +44,6 @@ public class Messages extends NLS {
     public static String ExportDialog_0;
     public static String ExportDialog_1;
     public static String ExportDialog_2;
-    public static String ExportSelfAssessment_1;
-    public static String ExportSelfAssessment_2;
-    public static String ExportSelfAssessment_3;
-    public static String ExportSelfAssessment_4;
 	public static String ISMView_10;
 	public static String ISMView_11;
 	public static String ISMView_12;
@@ -76,9 +72,6 @@ public class Messages extends NLS {
 	public static String LdapImportDialog_3;
     public static String LdapImportDialog_30;
 	public static String LdapImportDialog_31;
-	public static String LdapImportDialog_32;
-	public static String LdapImportDialog_33;
-	public static String LdapImportDialog_34;
 	public static String LdapImportDialog_35;
 	public static String LdapImportDialog_36;
 	public static String LdapImportDialog_37;

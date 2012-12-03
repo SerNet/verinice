@@ -530,7 +530,6 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
                 boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
 
-                // Messages.FileView_19 + count + Messages.FileView_20);
                 if (!confirm)
                     return;
 
