@@ -61,7 +61,6 @@ public class AddISAToOrganisation extends Action implements ISelectionListener {
         super();
         setText(sernet.verinice.samt.rcp.Messages.AddISAToOrganisation_0);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
         setToolTipText(sernet.verinice.samt.rcp.Messages.AddISAToOrganisation_1);
         window.getSelectionService().addSelectionListener(this);

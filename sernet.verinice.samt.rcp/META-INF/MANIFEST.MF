@@ -23,4 +23,3 @@ Import-Package: org.apache.commons.io,
  org.eclipse.osgi.util,
  org.osgi.framework,
  org.osgi.service.component
-Service-Component: OSGI-INF/component-user.xml
