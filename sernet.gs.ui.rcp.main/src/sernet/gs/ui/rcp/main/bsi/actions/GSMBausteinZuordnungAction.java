@@ -44,6 +44,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -55,6 +56,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Server;
 
@@ -84,6 +86,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         this.window = window;
         setText(Messages.GSMBausteinZuordnungAction_1);
         setId(ID);
+        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
@@ -122,13 +125,14 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
                         Object o = iter.next();
                         if (o instanceof Server) {
-                            loadModulForServer((Server) o);
+                            Server server = (Server)o;
+                            loadModulForServer(server);
                         }
                     }
                 }
             });
         } catch (Exception e) {
-            LOG.error("Error while adding module",e);
+            LOG.error("Error while assigning modules",e);
             ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);
         }
 
@@ -142,16 +146,17 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         if (bausteine.length == 0 || bausteine == null) {
             showInfoMessage();
        }
+        serverelement = (Server) Retriever.checkRetrieveChildren(serverelement);
+        serverelement = (Server) Retriever.retrieveElement(serverelement,RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
         for (String bst : bausteine) {
-
+           
             Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
 
             if (baustein == null) {
                 LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
             } else {
-
-                // assign baustein to every selected target
-                // object:
+              
+                // assign baustein to every selected target object:
                 if (!serverelement.containsBausteinUmsetzung(baustein.getId())) {
                     try {
                         CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
@@ -211,12 +216,14 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                 gsmtaglist.add(property);
             }
         } catch (Exception e) {
+            LOG.error("Error while assigning modules", e);
             ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);
         }
         return gsmtaglist;
     }
 
     private ArrayList<String> readBausteine(Server server) {
+        ArrayList<String> gsmlist = tagList(server);
         ArrayList<String> bausteinlist = new ArrayList<String>();
         Set<Entry<Object, Object>> subtypentrySet = subtypproperties.entrySet();
 
@@ -226,10 +233,8 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             String[] subproperty = subtypproperty.split(",\\s*");
             for (int split = 0; split < subproperty.length; split++) {
                 String property = subproperty[split];
-                ArrayList<String> gsmlist = tagList(server);
-
-                for (String namesEntry : gsmlist) {
-
+               
+               for (String namesEntry : gsmlist) {
                     if (namesEntry.equals(subtyp)) {
                         String value = property;
                         bausteinlist.add(value);
@@ -254,11 +259,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
-
-            if (selection.size() < 1) {
-                setEnabled(false);
-                return;
-            }
 
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();

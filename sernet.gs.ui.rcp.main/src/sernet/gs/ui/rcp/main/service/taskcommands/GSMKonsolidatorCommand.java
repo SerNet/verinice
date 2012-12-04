@@ -25,6 +25,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
  */
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,11 +34,13 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
+   
     private List<BausteinUmsetzung> selectedElements;
     private BausteinUmsetzung source;
     protected String stationId;
@@ -47,7 +50,7 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
         this.selectedElements = selectedElements;
         this.source = source;
         this.stationId = ChangeLogEntry.STATION_ID;
-
+       
     }
 
     public void execute() {
@@ -60,7 +63,7 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
             // do not copy source onto itself:
             if (source.equals(target))
                 continue;
-            dao.reload(target, target.getDbId());
+            dao.reload(target, target.getDbId()); //anschauen was noch geladen ist!
             // set values:
             changedElements.add(target);
             changedElements.addAll(GSMKonsolidator.konsolidiereMassnahmen(source, target));
@@ -69,7 +72,7 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
         selectedElements = null;
         source = null;
     }
-
+    
     /*
      * (non-Javadoc)
      * 

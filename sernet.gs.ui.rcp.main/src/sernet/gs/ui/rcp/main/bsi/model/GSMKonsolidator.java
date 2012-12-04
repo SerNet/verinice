@@ -27,7 +27,6 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 
-
 /**
  * The Konsolidator copys values from one object to another,
  * filling in values that the user has already entered. 
@@ -38,7 +37,8 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class GSMKonsolidator {
-   
+   // public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(MassnahmenUmsetzung.getStufen());
+    //private List<String> propertyTypeBlacklist;
 	/**
 	 * Copy values for all Massnahmen from one BausteinUmsetzung to another.
 	 * 
@@ -48,17 +48,20 @@ public class GSMKonsolidator {
 	 */
 	public static List<CnATreeElement> konsolidiereMassnahmen(BausteinUmsetzung source,
 			BausteinUmsetzung target) {
-	//	if (!source.getKapitel().equals(target.getKapitel()))
-		//	return Collections.emptyList();
+	
 		List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
 		
 		for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {
 			MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
 			if (sourceMn != null) {
+		//	    mn.getEntity().copyEntity(source, propertyTypeBlacklist);
 				mn.getEntity().copyEntity(sourceMn.getEntity());
-				changedElements.add(mn);
+			    changedElements.add(mn);
 			}
 		}
 		return changedElements;
 	}
+	
+
+	
 }

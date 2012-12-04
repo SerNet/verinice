@@ -28,17 +28,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Set;
+import org.eclipse.osgi.util.NLS;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -50,7 +54,9 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -64,7 +70,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     private static final Logger LOG = Logger.getLogger(GSMBasicSecurityCheckAction.class);
     private final IWorkbenchWindow window;
     private String gsmresult = "GSM Result";
-
+   
     public GSMBasicSecurityCheckAction(IWorkbenchWindow window, String label) {
         this.window = window;
         setText(label);
@@ -89,58 +95,99 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run() {
+    public void run () {
+
+        try{
+            dorun();
+        }
+        catch(Exception e){
+            LOG.error("Error while security check.", e);
+            ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_6);
+
+        }
+    }
+  
+    public void dorun() {
         Activator.inheritVeriniceContextState();
+
 
         final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
-        final List<BausteinUmsetzung> selectedElements = new ArrayList<BausteinUmsetzung>();
-        
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-            Object o = iter.next();
-            if (o instanceof BausteinUmsetzung) {
-                BausteinUmsetzung baustein = (BausteinUmsetzung) o;
-                selectedElements.add(baustein);
-            }
-        }
+
+        final List<Server> selectedServers = new ArrayList<Server>();
+        final List<BausteinUmsetzung> bausteine = new ArrayList<BausteinUmsetzung>();
+
+
 
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
-                    BausteinUmsetzung source = (BausteinUmsetzung) selection.getFirstElement();
-                    monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, selection.size() +1);
-                    try {
-                        // change targets on server:
-                        GSMKonsolidatorCommand command = new GSMKonsolidatorCommand(selectedElements, source);
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        
-                        CnAElementFactory.getInstance().reloadModelFromDatabase();
-                        // reload state from server:
-                        for (CnATreeElement element : command.getChangedElements()) {
-                            CnAElementFactory.getLoadedModel().databaseChildChanged(element);
+                    BausteinUmsetzung source = null;
+                    for (Iterator serverIter = selection.iterator(); serverIter.hasNext();) {
+                        Object o = serverIter.next();
+                        if (o instanceof Server){
+                            Server serverelement = (Server) o;
+                            selectedServers.add(serverelement);
+                            serverelement = (Server) Retriever.checkRetrieveChildren(serverelement);
+                            serverelement = (Server) Retriever.retrieveElement(serverelement,RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+
+                            for (CnATreeElement bausteineLst : serverelement.getChildren()){
+                                BausteinUmsetzung baustein = (BausteinUmsetzung) bausteineLst;
+                                bausteine.add(baustein);
+                                baustein = (BausteinUmsetzung) Retriever.checkRetrieveElement(baustein);
+                                String gsmname = baustein.getTitle().trim();
+
+                                if(gsmname.equals(gsmresult)){
+                                    source = baustein;
+                                }
+                                
+                            }
                         }
-                        monitor.worked(1);
-                    } catch (CommandException e) {
-                        ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
+                        if (source!=null){
+                            monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, IProgressMonitor.UNKNOWN);
+                            konsolidiereMassnahmen(bausteine, source);
+                            monitor.done();
+                        }
                     }
                 }
+
             });
-        } catch (Exception e) {
-            LOG.error("Error while assigning method", e);
+        }
+        catch (Exception e) {
+            LOG.error("Error while security check", e);
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_6);
         }
-    }
+    }   
+                 /**
+                 * @param bausteine
+                 * @param monitor
+                 * @param source
+                 */
+    
+   // private void konsolidiereMassnahmen(final List<BausteinUmsetzung> bausteine, IProgressMonitor monitor, BausteinUmsetzung source) {
+    private void konsolidiereMassnahmen(final List<BausteinUmsetzung> bausteine, BausteinUmsetzung source) {
+        try {
+                        
+            // change targets on server:
+            GSMKonsolidatorCommand command = new GSMKonsolidatorCommand(bausteine, source);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-    /**
+            // reload state from server:
+            for (CnATreeElement element : command.getChangedElements()) {
+                CnAElementFactory.getLoadedModel().databaseChildChanged(element); //die Bausteine werden nach der Übernahme nicht angezeigt
+                //CnAElementFactory.getModel(element).databaseChildChanged(element);
+            }
+            // monitor.worked(1);
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
+        }
+    }
+         
+    
+      /**
      * Action is enabled when only GSM-Result-Modul selected.
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
@@ -149,46 +196,21 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
-           
-            if (selection.size() < 2) {
-                setEnabled(false);
-                return;
-            }
-
-            String kapitel = null;
-            String title = "";
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                Object o = iter.next();
-                if (o instanceof BausteinUmsetzung) {
-                    BausteinUmsetzung bst = (BausteinUmsetzung) o;
-                    if (kapitel == null) {
-                        kapitel = bst.getKapitel();
-                        if (kapitel.isEmpty()) {
-                            title = bst.getName();
-                            if (!title.equals(gsmresult)) {
-                                setEnabled(false);
-                                return;
-                            }
-                        } else {
-                            setEnabled(false);
-                            return;
-                        }
-
-                    } else {
-                        setEnabled(false);
-                        return;
-                    }
-                }
-                if (checkRights()) {
+                     
+            for (Iterator servers = selection.iterator(); servers.hasNext();) {
+                Object serverelement = servers.next();
+                if (serverelement instanceof Server){
                     setEnabled(true);
+                    return;
                 }
-                return;
+                else {
+                    setEnabled(false);
+                    return;
+                }
             }
-            // no structured selection:
-            setEnabled(false);
         }
     }
-
+                
     private void dispose() {
         window.getSelectionService().removeSelectionListener(this);
     }
