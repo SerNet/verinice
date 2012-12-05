@@ -33,15 +33,15 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 
 	private IGefaehrdungsBaumElement gefaehrdungsParent;
 	
-	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_D = "D";
+	public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A"; //$NON-NLS-1$
+	public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B"; //$NON-NLS-1$
+	public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C"; //$NON-NLS-1$
+	public static final String GEFAEHRDUNG_ALTERNATIVE_D = "D"; //$NON-NLS-1$
 	
-	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_A = "A Reduktion";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_B = "B Umstrukturierung";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_C = "C Übernahme";
-	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_D = "D Transfer";
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_A = Messages.GefaehrdungsUmsetzung_4;
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_B = Messages.GefaehrdungsUmsetzung_5;
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_C = Messages.GefaehrdungsUmsetzung_6;
+	public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_D = Messages.GefaehrdungsUmsetzung_7;
 	
 
 	public static final String[] ALTERNATIVEN = {GEFAEHRDUNG_ALTERNATIVE_A,
@@ -56,20 +56,20 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		GEFAEHRDUNG_ALTERNATIVE_TEXT_D, 
 	};
 	
-	public static final String TYPE_ID 				= "gefaehrdungsumsetzung";
+	public static final String TYPE_ID 				= "gefaehrdungsumsetzung"; //$NON-NLS-1$
 	
-	public static final String PROP_ID 				= "gefaehrdungsumsetzung_id";
-	public static final String PROP_TITEL			= "gefaehrdungsumsetzung_titel";
-	public static final String PROP_KATEGORIE 		= "gefaehrdungsumsetzung_kategorie";
-	public static final String PROP_ALTERNATIVE 	= "gefaehrdungsumsetzung_alternative";
+	public static final String PROP_ID 				= "gefaehrdungsumsetzung_id"; //$NON-NLS-1$
+	public static final String PROP_TITEL			= "gefaehrdungsumsetzung_titel"; //$NON-NLS-1$
+	public static final String PROP_KATEGORIE 		= "gefaehrdungsumsetzung_kategorie"; //$NON-NLS-1$
+	public static final String PROP_ALTERNATIVE 	= "gefaehrdungsumsetzung_alternative"; //$NON-NLS-1$
 	
-	public static final String PROP_OKAY 			= "gefaehrdungsumsetzung_okay";
-	public static final String PROP_OKAY_YES 		= "gefaehrdungsumsetzung_okay_yes";
-	public static final String PROP_OKAY_NO 		= "gefaehrdungsumsetzung_okay_no";
+	public static final String PROP_OKAY 			= "gefaehrdungsumsetzung_okay"; //$NON-NLS-1$
+	public static final String PROP_OKAY_YES 		= "gefaehrdungsumsetzung_okay_yes"; //$NON-NLS-1$
+	public static final String PROP_OKAY_NO 		= "gefaehrdungsumsetzung_okay_no"; //$NON-NLS-1$
 	
-	public static final String PROP_URL 			= "gefaehrdungsumsetzung_url";
-	public static final String PROP_STAND 			= "gefaehrdungsumsetzung_stand";
-	public static final String PROP_DESCRIPTION 	= "gefaehrdungsumsetzung_description";
+	public static final String PROP_URL 			= "gefaehrdungsumsetzung_url"; //$NON-NLS-1$
+	public static final String PROP_STAND 			= "gefaehrdungsumsetzung_stand"; //$NON-NLS-1$
+	public static final String PROP_DESCRIPTION 	= "gefaehrdungsumsetzung_description"; //$NON-NLS-1$
 
 	
 	public int getAlternativeIndex() {
@@ -180,9 +180,9 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 	}
 
 	public String getTitle() {
-		return  "[" + getAlternative() + "] " + 
+		return  "[" + getAlternative() + "] " +  //$NON-NLS-1$ //$NON-NLS-2$
 			getEntity().getSimpleValue(PROP_TITEL)
-			+ " (" + getAlternativeText() + ")";
+			+ " (" + getAlternativeText() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	
@@ -230,7 +230,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement
 		} catch (IndexOutOfBoundsException e) {
 			Logger.getLogger(this.getClass()).debug(e);
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
