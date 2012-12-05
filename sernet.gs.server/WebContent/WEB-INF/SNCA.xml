@@ -3139,7 +3139,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="org_name" 
             focus="true"
             required="true"
-            tags="Basic,VDA-ISA" />
+            tags="Basic,VDA-ISA, VDA_ISA_Audit" />
                     
         <huiproperty
             name="Description"
@@ -4046,13 +4046,16 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty 
 			name="From"
 			id="audit_startdate"
-			inputtype="date">
+			inputtype="date"
+			tags="VDA_ISA_Audit" required="true">
             <defaultRule class="Today" />
 		</huiproperty>
 		<huiproperty 
 			name="Until"
 			id="audit_enddate"
-			inputtype="date">
+			inputtype="date"
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />
 		</huiproperty>
 		<!-- moved from org to audit, bug 277 -->
@@ -4062,7 +4065,7 @@ the value between <param></param> will be used directly if no string is found fo
             tags="Risk,VDA-ISA"/>
 		<huiproperty 
 		    id="audit_isa_creat" 
-            tags="VDA-ISA"
+            tags="VDA-ISA, VDA_ISA_Audit"
             required="true" />
         <huiproperty 
         	id="audit_isa_creatphone" 
@@ -4112,7 +4115,7 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Author Date"
 			id="audit_document_data_author_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit" required="true">
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty
@@ -4126,7 +4129,7 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Date of First Quality Control"
 			id="audit_document_data_first_quality_control_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit" required="true">
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty
@@ -4140,7 +4143,8 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Approval done on"
 			id="audit_document_data_approval_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty
@@ -4154,7 +4158,8 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Coordination with Componay done on"
 			id="audit_document_data_company_coordination_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />
         </huiproperty>            
         <huiproperty
@@ -4168,7 +4173,8 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Adjustment and Approval done on"
 			id="audit_document_data_adjustment_approval_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />
         </huiproperty>            
          <huiproperty
@@ -4182,7 +4188,8 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Date of Second Quality Control"
 			id="audit_document_data_second_quality_control_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />
          </huiproperty>
          <huiproperty
@@ -4196,7 +4203,8 @@ the value between <param></param> will be used directly if no string is found fo
 			name="Audit Document Data, Date of Final Approval and Distribution"
 			id="audit_document_data_final_approval_distribution_date"
 			inputtype="date"
-			tags="VDA-ISA">
+			tags="VDA_ISA_Audit"
+			required="true">
             <defaultRule class="Today" />           
         </huiproperty>            
         </huipropertygroup>
@@ -4227,7 +4235,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="controlgroup" >
         <huiproperty
             name="Title"
-            id="controlgroup_name" required="true"/>
+            id="controlgroup_name" required="true" tags="VDA_ISA_Audit"/>
             
         <huirelation to="person-iso" id="controlgroup_room_inspector" 
         	name="inspector" reversename="is inspector of" tooltip="Person is inspector of this room."/>
@@ -4304,7 +4312,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="control_name" 
             inputtype="text"
-            tags="Web,Basic"
+            tags="Web,Basic, VDA_ISA_Audit"
             required="true"/>
         <huiproperty
             name="Abbreviation"
@@ -4637,7 +4645,8 @@ the value between <param></param> will be used directly if no string is found fo
             max="5" 
             defaultValue="-2" 
             tags="VDA-ISA,VDA_ISA_Audit"
-            focus="true">
+            focus="true"
+            required="true">
                 <option id="control_isa_maturity_null"  value="-2" />
                 <option id="control_isa_maturity_na"  value="-1" />
                 <option id="control_isa_maturity_0"  value="0" />
@@ -4675,6 +4684,7 @@ the value between <param></param> will be used directly if no string is found fo
                min="-1" 
                max="2" 
                defaultValue="-1" 
+               required="true"
             >
                 <option id="control_isa_audit_ra_na"  value="-1" />
                 <option id="control_isa_audit_ra_0"  value="0" />
@@ -4697,7 +4707,7 @@ the value between <param></param> will be used directly if no string is found fo
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
             <huiproperty
-	           id="control_isa_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+	           id="control_isa_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit" required="true">
                 <defaultRule class="Today">
                     <param id="control_isa_audit_compluntil_changeField">MONTH</param>
                     <param id="control_isa_audit_compluntil_timeDifference">2</param>
@@ -5271,7 +5281,8 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="interview_name" 
-            required="true"/>
+            required="true"
+            tags="VDA_ISA_Audit"/>
         <huiproperty
             name="Abbreviation"
             id="interview_abbr" />
@@ -5290,7 +5301,7 @@ the value between <param></param> will be used directly if no string is found fo
 			inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit"/>
 
         <huiproperty 
-       		id="interview_audit_action" name="Audit Action Type" inputtype="singleoption" tags="VDA_ISA_Audit">
+       		id="interview_audit_action" name="Audit Action Type" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
 	       <option name="Interview" id="interview_audit_action_type_interview"/>
 	       <option name="Documentationcheck" id="interview_audit_action_type_documentation_check"/>
 	       <option name="Inspection" id="interview_audit_action_type_inspection"/>
@@ -5375,7 +5386,7 @@ the value between <param></param> will be used directly if no string is found fo
 
         <huiproperty
             name="Title"
-            id="finding_name" required="true"/>
+            id="finding_name" required="true" tags="VDA_ISA_Audit"/>
         <huiproperty
             name="Abbreviation"
             id="finding_abbr" />
@@ -5384,7 +5395,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-			name="Description" id="finding_desc" inputtype="text" required="true"/>
+			name="Description" id="finding_desc" inputtype="text" tags="VDA_ISA_Audit"/>
         <huiproperty
 			name="Root cause" id="finding_cause" inputtype="text"/>
 		<huiproperty
@@ -5408,7 +5419,7 @@ the value between <param></param> will be used directly if no string is found fo
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty 
-       		name="finding Type" id="finding_type2" inputtype="singleoption" tags="VDA_ISA_Audit">
+       		name="finding Type" id="finding_type2" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
 			<option name="technical Finding" id="finding_type2_technical" />       	
 			<option name="significant Detection" id="finding_type2_significant" /> 
         </huiproperty>
@@ -5801,6 +5812,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_name" 
             editable="false" 
             required="true"
+            tags="VDA_ISA_Audit"
             />
           <huiproperty 
             id="samt_topic_abbr" 
@@ -5888,7 +5900,7 @@ the value between <param></param> will be used directly if no string is found fo
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->
             <huiproperty
-	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit">
+	           id="samt_topic_audit_compluntil" name="Complete until" inputtype="date" tags="VDA_ISA_Audit" required="true">
                 <defaultRule class="Today">
                     <param id="samt_topic_audit_compluntil_changeField">MONTH</param>
                     <param id="samt_topic_audit_compluntil_timeDifference">2</param>
@@ -5909,7 +5921,7 @@ the value between <param></param> will be used directly if no string is found fo
     			<option name="N.a." id="samt_topicimplemented_na"/>
     		</huiproperty>
     		
-    		<huiproperty name="userClassification" id="samt_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit">
+    		<huiproperty name="userClassification" id="samt_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
     			<option name="Good implementation" id="samt_classification_good" />
     			<option name="Insufficient implementation" id="samt_classification_insufficient" />
     			<option name="No classification" id="samt_classification_none" />
