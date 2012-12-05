@@ -2,6 +2,7 @@ package sernet.gs.ui.rcp.main.bsi.wizards;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +45,8 @@ public class ImportCSVWizard extends Wizard {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
-	public boolean performFinish() {
+	@Override
+    public boolean performFinish() {
 		Activator.inheritVeriniceContextState();
 
 		SyncRequest sr = null;
@@ -102,7 +104,8 @@ public class ImportCSVWizard extends Wizard {
         }
     }
 
-	public void addPages() {
+	@Override
+    public void addPages() {
 		addPage(entityPage);
 		addPage(propertyPage);
 	}
@@ -110,7 +113,8 @@ public class ImportCSVWizard extends Wizard {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
 	 */
-	public IWizardPage getNextPage(IWizardPage page) {
+	@Override
+    public IWizardPage getNextPage(IWizardPage page) {
 		if (page == entityPage) {
 		    try {
     		    propertyPage.setEntityName(entityPage.getEntityName());
@@ -163,11 +167,18 @@ public class ImportCSVWizard extends Wizard {
 		mot.setExtId(entityName);
 		mot.setIntId(entityPage.getEntityNameId());
 		
+		// list of properties user has mapped
+		List<String> extIdList = new LinkedList<String>();
 		for (List<String> properties : propertyPage.getPropertyTable()) {
-			MapAttributeType mat = new MapAttributeType();
-			mat.setExtId(properties.get(1));
-			mat.setIntId(properties.get(0));
-			mot.getMapAttributeType().add(mat);
+            String intId = properties.get(0);
+		    String extId = properties.get(1);
+		    if(isValid(intId,extId)) {
+    			MapAttributeType mat = new MapAttributeType();
+    			mat.setExtId(extId);
+    			extIdList.add(extId);
+    			mat.setIntId(intId);
+    			mot.getMapAttributeType().add(mat);
+		    }
 		}
 		mots.add(mot);
 
@@ -185,7 +196,7 @@ public class ImportCSVWizard extends Wizard {
 			for (String tableCell : tableLine) {
 			    if(j==0) {
 			        so.setExtId(tableCell);
-			    } else {
+			    } else if(extIdList.contains(columns[j])) { /* only import columns the user has mapped */
     				SyncAttribute sa = new SyncAttribute();
     				sa.setName(columns[j]);
     				
@@ -204,6 +215,10 @@ public class ImportCSVWizard extends Wizard {
 		}
 		return sr;
 	}
+
+    private boolean isValid(String intId, String extId) {       
+        return intId!=null && extId!=null && !intId.trim().isEmpty() && !extId.trim().isEmpty();
+    }
 
 
     /**
