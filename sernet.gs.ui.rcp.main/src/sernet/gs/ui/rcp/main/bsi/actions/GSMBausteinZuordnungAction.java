@@ -86,7 +86,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         this.window = window;
         setText(Messages.GSMBausteinZuordnungAction_1);
         setId(ID);
-        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
@@ -108,6 +107,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     }
 
+    @Override
     public void run() {
 
         loadtemplates();
@@ -119,6 +119,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
                     for (Iterator iter = selection.iterator(); iter.hasNext();) {
@@ -146,8 +147,8 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         if (bausteine.length == 0 || bausteine == null) {
             showInfoMessage();
        }
-        serverelement = (Server) Retriever.checkRetrieveChildren(serverelement);
-        serverelement = (Server) Retriever.retrieveElement(serverelement,RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
+        serverelement = (Server) Retriever.retrieveElement(serverelement,ri);
         for (String bst : bausteine) {
            
             Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
@@ -253,24 +254,25 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         return strList;
     }
 
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (serverIsRunning) {
-            setEnabled(checkRights());
-        }
-        if (input instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) input;
-
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                Object o = iter.next();
-                if (!(o instanceof Server)) {
-                    setEnabled(false);
-                    return;
+            setEnabled(checkRights());      
+            if (input instanceof IStructuredSelection) {
+                IStructuredSelection selection = (IStructuredSelection) input;
+    
+                for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                    Object o = iter.next();
+                    if (!(o instanceof Server)) {
+                        setEnabled(false);
+                        return;
+                    }
                 }
+                if (checkRights()) {
+                    setEnabled(true);
+                }
+                return;
             }
-            if (checkRights()) {
-                setEnabled(true);
-            }
-            return;
         }
         setEnabled(false);
 
