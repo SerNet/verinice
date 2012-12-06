@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
-import org.eclipse.equinox.p2.repository.IRepositoryManager;
+import org.eclipse.equinox.p2.repository.IRepository;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
@@ -50,7 +50,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -71,20 +73,16 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
 
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.util.tracker.ServiceTracker;
-
 
 /**
  * The activator class controls the plug-in life cycle
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class Activator extends AbstractUIPlugin implements IMain {
 
 	private static final Logger LOG = Logger.getLogger(Activator.class);
 	
-	private  ServiceTracker proxyTracker;
+    private  ServiceTracker proxyTracker;
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.gs.ui.rcp.main"; //$NON-NLS-1$
@@ -97,9 +95,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
     
     public static final String UPDATE_SITE_URL = "http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"; //$NON-NLS-1$
     
-    public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file";
+    public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
     
-    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar + "verinice-derby.log";
+    public static final String DERBY_LOG_FILE = "verinice" + File.separatorChar + "verinice-derby.log"; //$NON-NLS-1$ //$NON-NLS-2$
     
 	// The shared instance
 	private static Activator plugin;
@@ -139,7 +137,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	 * Brings the bundle (not the whole RCP application) in a usable state.
 	 * 
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -148,7 +145,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		
 		if (LOG.isInfoEnabled()) {
 		    final Bundle bundle = context.getBundle();
-            LOG.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
+            LOG.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion()); //$NON-NLS-1$ //$NON-NLS-2$
         }
 		
 		// Makes a representation of this bundle as a service available.
@@ -167,14 +164,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	 * 
 	 * @throws BundleException
 	 */
-	@SuppressWarnings("restriction")
 	void startApplication() throws BundleException
 	{	    
 		runsAsApplication = true;
 		
 		Bundle bundle = Platform.getBundle(REPORT_SERVICE_SYMBOLIC_NAME);
 		if (bundle == null){
-			LOG.warn("Report service bundle is not available!");
+			LOG.warn("Report service bundle is not available!"); //$NON-NLS-1$
 		}
 		else {
 			bundle.start();
@@ -188,15 +184,15 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		
 		// May replace the JDK's built-in security settings
         try {
-            String osName = System.getProperty("os.name");
-            String osArch = System.getProperty("os.arch");
-            if(!(osName.toLowerCase().contains("win") && osArch.contains("64"))){
+            String osName = System.getProperty("os.name"); //$NON-NLS-1$
+            String osArch = System.getProperty("os.arch"); //$NON-NLS-1$
+            if(!(osName.toLowerCase().contains("win") && osArch.contains("64"))){ //$NON-NLS-1$ //$NON-NLS-2$
                 VeriniceSecurityProvider.register(prefs); // this fails on a win7/64 system
             } else {
-                LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available");
+                LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available"); //$NON-NLS-1$
             }
         } catch (Exception e) {
-            LOG.error("Error while registering verinice security provider.", e);
+            LOG.error("Error while registering verinice security provider.", e); //$NON-NLS-1$
         }
 		
 	    
@@ -259,7 +255,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		}
 
 		// Set the derby log file path
-		System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE);
+		System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
 		
 		// Provide initial DB connection details to server.
 		internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
@@ -287,15 +283,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 				VeriniceContext.get(VeriniceContext.COMMAND_SERVICE),
 				null);
 		
-		Job repositoryJob = new Job("add-repository") {
+		Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
 		    /* (non-Javadoc)
 		     * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 		     */
-		    protected IStatus run(IProgressMonitor monitor) {
+		    @Override
+            protected IStatus run(IProgressMonitor monitor) {
 		        try {
                     addUpdateRepository();
                 } catch (URISyntaxException e) {
-                    LOG.error("Error while adding update repository.");
+                    LOG.error("Error while adding update repository."); //$NON-NLS-1$
                 }
 		        return Status.OK_STATUS;
 
@@ -326,22 +323,22 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 IProxyService proxyService = getProxyService();
                 IProxyData[] proxyDataForHost = proxyService.select(serverUri);
                 if(proxyDataForHost==null || proxyDataForHost.length==0) {
-                    System.setProperty("http.proxySet", "false");
-                    System.clearProperty("http.proxyHost");            
-                    System.clearProperty("http.proxyPort");
-                    System.clearProperty("http.proxyName");
-                    System.clearProperty("http.proxyPassword");
+                    System.setProperty("http.proxySet", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+                    System.clearProperty("http.proxyHost");             //$NON-NLS-1$
+                    System.clearProperty("http.proxyPort"); //$NON-NLS-1$
+                    System.clearProperty("http.proxyName"); //$NON-NLS-1$
+                    System.clearProperty("http.proxyPassword"); //$NON-NLS-1$
                 } else {
                     for (IProxyData data : proxyDataForHost) {
                         if (data.getHost() != null) {
-                            System.setProperty("http.proxySet", "true");
-                            System.setProperty("http.proxyHost", data.getHost());            
-                            System.setProperty("http.proxyPort", String.valueOf(data.getPort()));
+                            System.setProperty("http.proxySet", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                            System.setProperty("http.proxyHost", data.getHost());             //$NON-NLS-1$
+                            System.setProperty("http.proxyPort", String.valueOf(data.getPort())); //$NON-NLS-1$
                             if(data.getUserId()!=null && !data.getUserId().isEmpty()) {
-                                System.setProperty("http.proxyName", data.getUserId());
+                                System.setProperty("http.proxyName", data.getUserId()); //$NON-NLS-1$
                             }
                             if(data.getPassword()!=null && !data.getPassword().isEmpty()) {
-                                System.setProperty("http.proxyPassword", data.getPassword());
+                                System.setProperty("http.proxyPassword", data.getPassword()); //$NON-NLS-1$
                             }
                         }
                     }
@@ -350,7 +347,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 proxyService = null;
             }
         } catch(Throwable t) {
-            LOG.error("Error while setting proxy.", t);
+            LOG.error("Error while setting proxy.", t); //$NON-NLS-1$
         }
     }
 
@@ -507,14 +504,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 		}
 	}
 	
-	@SuppressWarnings("restriction")
     private void addUpdateRepository() throws URISyntaxException {  
 	    Preferences prefs = Activator.getDefault().getPluginPreferences();
 	    URI repoUri = null;
+	    String name = null;
 	    if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
             repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
+            name = Messages.Activator_4;
 	    } else {
 	        repoUri = new URI(UPDATE_SITE_URL); 
+	        name = Messages.Activator_43;
 	    }
         removeRepository(); 
         
@@ -522,17 +521,19 @@ public class Activator extends AbstractUIPlugin implements IMain {
         //Load repo
         try {
         	getMetadataRepositoryManager().addRepository(repoUri);
+        	getMetadataRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME, name);
 	        if (LOG.isDebugEnabled()) {
-                LOG.debug("MetadataRepository added: " + repoUri);
+                LOG.debug("MetadataRepository added: " + repoUri); //$NON-NLS-1$
             }
 	        getArtifactRepositoryManager().addRepository(repoUri);
+	        getArtifactRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME, name);
 	        if (LOG.isDebugEnabled()) {
-                LOG.debug("ArtifactRepository added: " + repoUri);
+                LOG.debug("ArtifactRepository added: " + repoUri); //$NON-NLS-1$
             }
         } catch( Exception e ) {
-            LOG.warn("Can not add repository: " + repoUri);
+            LOG.warn("Can not add repository: " + repoUri); //$NON-NLS-1$
             if (LOG.isDebugEnabled()) {
-                LOG.debug("stacktrace: ", e);
+                LOG.debug("stacktrace: ", e); //$NON-NLS-1$
             }
         }
 
@@ -555,25 +556,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
 
     private void removeRepository() {
-    	URI[] uriArray = getArtifactRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);     
+    	URI[] uriArray = getMetadataRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL);     
         if(uriArray!=null) {
     	    for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
-                if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
-                	getArtifactRepositoryManager().removeRepository(uri);
+                if(uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {              
+                    getArtifactRepositoryManager().removeRepository(uri);
+                    getMetadataRepositoryManager().removeRepository(uri);
                 }
             }
         }
-        uriArray = getArtifactRepositoryManager().getKnownRepositories(IRepositoryManager.REPOSITORIES_ALL);         
-    	if(uriArray!=null) {
-            for (int i = 0; i < uriArray.length; i++) {
-                URI uri = uriArray[i];
-                if(uri.toString().equals(UPDATE_SITE_URL) || uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
-                	getMetadataRepositoryManager().removeRepository(uri);
-                }
-            }
-        }
-            
     }
 	
 	/**
@@ -665,35 +657,43 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	 */
 	private static class ServerDummy implements IInternalServer {
 
-		public void configure(String url, String user, String pass, String driver, String dialect) {
+		@Override
+        public void configure(String url, String user, String pass, String driver, String dialect) {
 			// Intentionally do nothing.
 		}
 
-		public void start() {
+		@Override
+        public void start() {
 			// Intentionally do nothing.
 		}
 
-		public void stop() {
+		@Override
+        public void stop() {
 			// Intentionally do nothing.
 		}
 
-		public boolean isRunning() {
+		@Override
+        public boolean isRunning() {
 			return true;
 		}
 
-		public void setGSCatalogURL(URL _) {
+		@Override
+        public void setGSCatalogURL(URL _) {
 			// Intentionally do nothing.
 		}
 
-		public void setDSCatalogURL(URL _) {
+		@Override
+        public void setDSCatalogURL(URL _) {
 			// Intentionally do nothing.
 		}
 
+        @Override
         public void addInternalServerStatusListener(IInternalServerStartListener listener) {
             // Intentionally do nothing.
             
         }
 
+        @Override
         public void removeInternalServerStatusListener(IInternalServerStartListener listener) {
             // Intentionally do nothing.
             
@@ -716,7 +716,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 	public void updateServerURI(String uri) {
 		if (!runsAsApplication)
 		{
-			LOG.info("verinice runs in designer mode - retrieving server configuration from ODA driver.");
+			LOG.info("verinice runs in designer mode - retrieving server configuration from ODA driver."); //$NON-NLS-1$
 			ClientPropertyPlaceholderConfigurer.setRemoteServerMode(uri);
 			try {
 				ServiceFactory.openCommandService();

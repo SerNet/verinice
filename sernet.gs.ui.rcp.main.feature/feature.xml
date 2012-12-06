@@ -182,10 +182,6 @@ permanent authorization for you to choose that version for the
 Library.
    </license>
 
-   <url>
-      <update label="Verinice Updates und Features" url="http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"/>
-   </url>
-
    <requires>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="com.ibm.icu"/>
