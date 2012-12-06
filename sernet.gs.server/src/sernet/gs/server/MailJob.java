@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,7 +100,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
     private DateFormat notificationEmailDateFormat;
 
-	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
+	@Override
+    protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		
 		// Do nothing if the notification feature is deactivated in the configuration.
 		if (!notificationEnabled)
@@ -115,6 +116,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
             if(securityContext.getAuthentication()==null) {
                 securityContext.setAuthentication(authentication);
                 dummyAuthAdded = true;
+            }
+            if(pniCommand!=null) {
+                pniCommand.clear();
             }
     		sendMail();
         } finally {
