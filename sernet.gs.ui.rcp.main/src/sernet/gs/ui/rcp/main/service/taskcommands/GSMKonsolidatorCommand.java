@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.bsi.model.GSMKonsolidator;
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -40,7 +40,10 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-   
+    
+    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(BausteinUmsetzung.P_NAME, MassnahmenUmsetzung.P_SIEGEL);
+    private List<String> propertyTypeBlacklist;
+    private transient static IBaseDao<CnATreeElement, Serializable> dao;
     private List<BausteinUmsetzung> selectedElements;
     private BausteinUmsetzung source;
     protected String stationId;
@@ -50,7 +53,7 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
         this.selectedElements = selectedElements;
         this.source = source;
         this.stationId = ChangeLogEntry.STATION_ID;
-       
+        setPropertyTypeBlacklist(PROPERTY_TYPE_BLACKLIST);
     }
 
     public void execute() {
@@ -65,13 +68,23 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
                 continue;
             dao.reload(target, target.getDbId()); //anschauen was noch geladen ist!
             // set values:
-            changedElements.add(target);
-            changedElements.addAll(GSMKonsolidator.konsolidiereMassnahmen(source, target));
+            target = (BausteinUmsetzung) getDao().findByUuid(target.getUuid(), RetrieveInfo.getPropertyChildrenInstance());
+            source = (BausteinUmsetzung) getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyChildrenInstance());
+            for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {
+                MassnahmenUmsetzung sourceMn = source.getMassnahmenUmsetzung(mn.getUrl());
+                if (sourceMn != null) {
+                    mn.getEntity().copyEntity(sourceMn.getEntity(), propertyTypeBlacklist);
+                    getDao().merge(target);
+                    changedElements.add(target);
+                }
+            }         
         }
         // remove elements to make object smaller for transport back to client
         selectedElements = null;
         source = null;
     }
+    
+    
     
     /*
      * (non-Javadoc)
@@ -102,5 +115,18 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_UPDATE;
+    }
+    /**
+     * @param propertyTypeBlacklist the propertyTypeBlacklist to set
+     */
+    protected void setPropertyTypeBlacklist(List<String> propertyTypeBlacklist) {
+        this.propertyTypeBlacklist = propertyTypeBlacklist;
+    }
+
+    protected IBaseDao<CnATreeElement, Serializable> getDao() {
+        if(dao==null) {
+            dao = getDaoFactory().getDAO(CnATreeElement.class);
+        }
+        return dao;
     }
 }

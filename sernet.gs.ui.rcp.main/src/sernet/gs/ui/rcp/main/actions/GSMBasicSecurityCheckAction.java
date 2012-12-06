@@ -115,73 +115,64 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         if (selection == null) {
             return;
         }
-
-        final List<Server> selectedServers = new ArrayList<Server>();
-        final List<BausteinUmsetzung> bausteine = new ArrayList<BausteinUmsetzung>();
-
-
-
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
-                    BausteinUmsetzung source = null;
                     for (Iterator serverIter = selection.iterator(); serverIter.hasNext();) {
                         Object o = serverIter.next();
                         if (o instanceof Server){
                             Server serverelement = (Server) o;
-                            selectedServers.add(serverelement);
-                            serverelement = (Server) Retriever.checkRetrieveChildren(serverelement);
-                            serverelement = (Server) Retriever.retrieveElement(serverelement,RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
-
-                            for (CnATreeElement bausteineLst : serverelement.getChildren()){
-                                BausteinUmsetzung baustein = (BausteinUmsetzung) bausteineLst;
-                                bausteine.add(baustein);
-                                baustein = (BausteinUmsetzung) Retriever.checkRetrieveElement(baustein);
-                                String gsmname = baustein.getTitle().trim();
-
-                                if(gsmname.equals(gsmresult)){
-                                    source = baustein;
-                                }
-                                
-                            }
-                        }
-                        if (source!=null){
                             monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, IProgressMonitor.UNKNOWN);
-                            konsolidiereMassnahmen(bausteine, source);
+                            loadModulForServer(serverelement);
                             monitor.done();
                         }
                     }
                 }
-
             });
         }
         catch (Exception e) {
             LOG.error("Error while security check", e);
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_6);
         }
-    }   
+    } 
+
+    
+    private void loadModulForServer(Server serverelement){
+        final List<Server> selectedServers = new ArrayList<Server>();
+        final List<BausteinUmsetzung> bausteine = new ArrayList<BausteinUmsetzung>();
+        BausteinUmsetzung source = null;
+        BausteinUmsetzung  baustein = null;
+        RetrieveInfo ris = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
+        serverelement = (Server) Retriever.retrieveElement(serverelement,ris);
+        selectedServers.add(serverelement);
+        for (CnATreeElement bausteineLst : serverelement.getChildren()){
+            baustein = (BausteinUmsetzung) bausteineLst;
+            bausteine.add(baustein);
+            String gsmname = baustein.getTitle().trim();
+            if(gsmname.equals(gsmresult)){
+                source = baustein;
+            }
+        }
+        if (source.getParentId().equals(baustein.getParentId()) && source!=null){
+            konsolidiereMassnahmen(bausteine, source);
+        }
+    }
                  /**
                  * @param bausteine
-                 * @param monitor
                  * @param source
                  */
-    
-   // private void konsolidiereMassnahmen(final List<BausteinUmsetzung> bausteine, IProgressMonitor monitor, BausteinUmsetzung source) {
+
     private void konsolidiereMassnahmen(final List<BausteinUmsetzung> bausteine, BausteinUmsetzung source) {
         try {
-                        
             // change targets on server:
             GSMKonsolidatorCommand command = new GSMKonsolidatorCommand(bausteine, source);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-
             // reload state from server:
             for (CnATreeElement element : command.getChangedElements()) {
                 CnAElementFactory.getLoadedModel().databaseChildChanged(element); //die Bausteine werden nach der Übernahme nicht angezeigt
-                //CnAElementFactory.getModel(element).databaseChildChanged(element);
-            }
-            // monitor.worked(1);
-        } catch (CommandException e) {
+                }
+         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
         }
     }

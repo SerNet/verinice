@@ -176,7 +176,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         @Override
         public void run() {
             // code der in der GUI laufen soll 
-            MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_3);
+            MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBausteinZuordnungAction_5);
         }
     });
     }
