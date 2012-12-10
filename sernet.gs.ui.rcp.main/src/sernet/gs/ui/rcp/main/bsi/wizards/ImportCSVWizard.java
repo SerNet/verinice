@@ -15,6 +15,7 @@ import org.eclipse.osgi.util.NLS;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
@@ -75,6 +76,9 @@ public class ImportCSVWizard extends Wizard {
 		Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
         Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);
+        if(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            createValidations(changedElement);
+        }
 		return true;
 	}
 	
@@ -230,5 +234,11 @@ public class ImportCSVWizard extends Wizard {
     
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+    
+    private void createValidations(Set<CnATreeElement> elmts){
+        for(CnATreeElement elmt : elmts){
+            ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
+        }
     }
 }

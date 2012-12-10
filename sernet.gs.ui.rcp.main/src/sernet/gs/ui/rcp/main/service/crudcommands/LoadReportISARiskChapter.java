@@ -28,9 +28,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -38,7 +38,7 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARiskChapter extends GenericCommand {
+public class LoadReportISARiskChapter extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadReportISARiskChapter.class);
     
@@ -68,6 +68,8 @@ public class LoadReportISARiskChapter extends GenericCommand {
     
     private List<SamtTopic> resultTopics;
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadReportISARiskChapter(Integer root){
         this.rootElmt = root;
         this.results = new HashMap<String, Integer[]>(0);
@@ -87,47 +89,49 @@ public class LoadReportISARiskChapter extends GenericCommand {
      */
     @Override
     public void execute() {
-        try{
-            ControlGroup samtRootGroup = null;
-            if(rootSgGroup != null){
-                samtRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(rootSgGroup);
-            } else {
-                FindSGCommand c1 = new FindSGCommand(true, rootElmt);
-                c1 = ServiceFactory.lookupCommandService().executeCommand(c1);
-                samtRootGroup = c1.getSelfAssessmentGroup();
-            }
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, samtRootGroup.getDbId(), true);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            for(CnATreeElement e : command.getElements()){
-                if(e instanceof SamtTopic && isRelevantChild((SamtTopic)e) && !samtCache.contains(e.getUuid())){
-                    String parentTitle = e.getParent().getTitle();
-                    Integer[] values = null;
-                    if(!results.containsKey(parentTitle)){
-                        results.put(parentTitle, new Integer[]{0,0,0,0,0});
-                    }
-                    values = results.get(parentTitle);
-                    switch(e.getNumericProperty(RISK_PROPERTY)){
-                    case RISK_NO:
-                        values[0]++; break;
-                    case RISK_LOW:
-                        values[1]++; break;
-                    case RISK_MEDIUM:
-                        values[2]++; break;
-                    case RISK_HIGH:
-                        values[3]++; break;
-                    case RISK_VERYHIGH:
-                        values[4]++; break;
-                    default:
-                        break;
-                    }
-                    results.put(parentTitle, values);
-                    samtCache.add(e.getUuid());
-                    resultTopics.add((SamtTopic)e);
+        if(!resultInjectedFromCache){
+            try{
+                ControlGroup samtRootGroup = null;
+                if(rootSgGroup != null){
+                    samtRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(rootSgGroup);
+                } else {
+                    FindSGCommand c1 = new FindSGCommand(true, rootElmt);
+                    c1 = getCommandService().executeCommand(c1);
+                    samtRootGroup = c1.getSelfAssessmentGroup();
                 }
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, samtRootGroup.getDbId(), true);
+                command = getCommandService().executeCommand(command);
+                for(CnATreeElement e : command.getElements()){
+                    if(e instanceof SamtTopic && isRelevantChild((SamtTopic)e) && !samtCache.contains(e.getUuid())){
+                        String parentTitle = e.getParent().getTitle();
+                        Integer[] values = null;
+                        if(!results.containsKey(parentTitle)){
+                            results.put(parentTitle, new Integer[]{0,0,0,0,0});
+                        }
+                        values = results.get(parentTitle);
+                        switch(e.getNumericProperty(RISK_PROPERTY)){
+                        case RISK_NO:
+                            values[0]++; break;
+                        case RISK_LOW:
+                            values[1]++; break;
+                        case RISK_MEDIUM:
+                            values[2]++; break;
+                        case RISK_HIGH:
+                            values[3]++; break;
+                        case RISK_VERYHIGH:
+                            values[4]++; break;
+                        default:
+                            break;
+                        }
+                        results.put(parentTitle, values);
+                        samtCache.add(e.getUuid());
+                        resultTopics.add((SamtTopic)e);
+                    }
+                }
+
+            } catch (CommandException e){
+                LOG.error("Error while executing command", e);
             }
-            
-        } catch (CommandException e){
-            LOG.error("Error while executing command", e);
         }
     }
     
@@ -140,7 +144,7 @@ public class LoadReportISARiskChapter extends GenericCommand {
                 if(!parent.isChildrenLoaded()){
                     LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[]{parent.getDbId()});
                     try {
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        command = getCommandService().executeCommand(command);
                         parent = (ControlGroup)command.getElements().get(0);
                         parent.setChildrenLoaded(true);
                     } catch (CommandException e) {
@@ -201,4 +205,46 @@ public class LoadReportISARiskChapter extends GenericCommand {
         return resultTopics;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        if(rootSgGroup != null){
+            cacheID.append(String.valueOf(rootSgGroup));
+        } else {
+            cacheID.append("null");
+        }
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Object[]){
+            Object[] array = (Object[])result;
+            this.results = (HashMap<String, Integer[]>)array[0];
+            this.resultTopics = (ArrayList<SamtTopic>)array[1];
+            resultInjectedFromCache = true;
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        Object[] results = new Object[2];
+        results[0] = this.results;
+        results[1] = resultTopics;
+        return results;
+    }
 }

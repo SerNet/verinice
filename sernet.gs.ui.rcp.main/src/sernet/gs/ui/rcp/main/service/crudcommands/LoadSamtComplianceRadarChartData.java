@@ -29,14 +29,14 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.CSRMassnahmenSummaryHome;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 
 /**
  * Generates data for radarchart in samt-compliance-report
  */
-public class LoadSamtComplianceRadarChartData extends GenericCommand {
+public class LoadSamtComplianceRadarChartData extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
     
@@ -56,6 +56,7 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand {
     private static int THRESHHOLDYELLOW = 3;
     private static int THRESHHOLDGREEN = 5;
     
+    private boolean resultInjectedFromCache = false;
     
     public LoadSamtComplianceRadarChartData(Integer root){
         this.rootElmt = root;
@@ -67,29 +68,30 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand {
      */
     @Override
     public void execute() {
-        try{
-            FindSGCommand samtGroupLoader = new FindSGCommand(true, rootElmt);
-            samtGroupLoader = ServiceFactory.lookupCommandService().executeCommand(samtGroupLoader);
+        if(!resultInjectedFromCache){
+            try{
+                FindSGCommand samtGroupLoader = new FindSGCommand(true, rootElmt);
+                samtGroupLoader = getCommandService().executeCommand(samtGroupLoader);
 
-            CSRMassnahmenSummaryHome dao = new CSRMassnahmenSummaryHome();
+                CSRMassnahmenSummaryHome dao = new CSRMassnahmenSummaryHome();
 
-            Map<String, Double> items1 = dao.getControlGroups(samtGroupLoader.getSelfAssessmentGroup());
-            Set<Entry<String, Double>> entrySet = items1.entrySet();
+                Map<String, Double> items1 = dao.getControlGroups(samtGroupLoader.getSelfAssessmentGroup());
+                Set<Entry<String, Double>> entrySet = items1.entrySet();
 
-            for(Entry<String, Double> entry : sort(entrySet)){
-                ArrayList<String> row = new ArrayList<String>();
-                row.add(entry.getKey());
-                row.add(String.valueOf(entry.getValue()));
-                row.add(String.valueOf(THRESHHOLDRED));
-                row.add(String.valueOf(THRESHHOLDYELLOW));
-                row.add(String.valueOf(THRESHHOLDGREEN));
-                row.trimToSize();
-                result.add(row);
+                for(Entry<String, Double> entry : sort(entrySet)){
+                    ArrayList<String> row = new ArrayList<String>();
+                    row.add(entry.getKey());
+                    row.add(String.valueOf(entry.getValue()));
+                    row.add(String.valueOf(THRESHHOLDRED));
+                    row.add(String.valueOf(THRESHHOLDYELLOW));
+                    row.add(String.valueOf(THRESHHOLDGREEN));
+                    row.trimToSize();
+                    result.add(row);
+                }
+            } catch (CommandException e){
+                getLog().error("Error while executing command", e);
             }
-        } catch (CommandException e){
-            getLog().error("Error while executing command", e);
         }
-        
     }
     
     private Logger getLog(){
@@ -113,6 +115,37 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand {
 
     public List<ArrayList<String>> getResult() {
         return result;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<ArrayList<String>>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
     }
 
 }

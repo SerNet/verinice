@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -36,7 +36,7 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISAQuestionLvlDescriptions extends GenericCommand {
+public class LoadReportISAQuestionLvlDescriptions extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionLvlDescriptions.class);
     private static final String CONTROL_DESCRIPTION = "control_desc"; // content shown in objectbrowser when control selected
@@ -45,6 +45,8 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand {
     private Integer rootElmt;
     
     private List<List<String>> results;
+    
+    private boolean resultInjectedFromCache = false;
     
     public static final String[] COLUMNS = new String[] { 
                                                 "lvl_top"
@@ -61,100 +63,101 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand {
      */
     @Override
     public void execute() {
-        int count = 0;
-        results = new ArrayList<List<String>>(0);
-        StringBuilder measureText = new StringBuilder();
-        Level tLevel = Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").getLevel();
-        Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").setLevel(Level.OFF);
-        try{
-            //load samtTopic from rootElmt (needs to be a samtTopic)
-            SamtTopic st = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById(rootElmt);
-            // compute text of deduced measures
+        if(!resultInjectedFromCache){
+            int count = 0;
+            results = new ArrayList<List<String>>(0);
+            StringBuilder measureText = new StringBuilder();
+            Level tLevel = Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").getLevel();
+            Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").setLevel(Level.OFF);
+            try{
+                //load samtTopic from rootElmt (needs to be a samtTopic)
+                SamtTopic st = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById(rootElmt);
+                // compute text of deduced measures
 
-            // load generic measures
-            LoadReportLinkedElements measureLoader = new LoadReportLinkedElements(Control.TYPE_ID, st.getDbId(), false, true);
-            measureLoader = ServiceFactory.lookupCommandService().executeCommand(measureLoader);
-            // list of measures to inspect
-            ArrayList<Control> measuresOfInterest = new ArrayList<Control>(0);
-            // iterate generic measures
-            for(CnATreeElement cmg : measureLoader.getElements()){
-                LoadCnAElementById controlReloader = new LoadCnAElementById(Control.TYPE_ID, cmg.getDbId());
-                controlReloader = ServiceFactory.lookupCommandService().executeCommand(controlReloader);
-                cmg = controlReloader.getFound();
-                if(cmg instanceof Control){
-                    Control mg = (Control)cmg;
-                    // check if specific measures exist
-                    LoadReportLinkedElements sMeasureLoader = new LoadReportLinkedElements(Control.TYPE_ID, mg.getDbId(), false, true);
-                    sMeasureLoader = ServiceFactory.lookupCommandService().executeCommand(sMeasureLoader);
-                    if(sMeasureLoader.getElements().size() > 0){
-                        //specific measures found, ignore generic measures
-                        for(CnATreeElement cms : sMeasureLoader.getElements()){
-                            if(cms instanceof Control){
-                                measuresOfInterest.add((Control)cms);
+                // load generic measures
+                LoadReportLinkedElements measureLoader = new LoadReportLinkedElements(Control.TYPE_ID, st.getDbId(), false, true);
+                measureLoader = getCommandService().executeCommand(measureLoader);
+                // list of measures to inspect
+                ArrayList<Control> measuresOfInterest = new ArrayList<Control>(0);
+                // iterate generic measures
+                for(CnATreeElement cmg : measureLoader.getElements()){
+                    LoadCnAElementById controlReloader = new LoadCnAElementById(Control.TYPE_ID, cmg.getDbId());
+                    controlReloader = getCommandService().executeCommand(controlReloader);
+                    cmg = controlReloader.getFound();
+                    if(cmg instanceof Control){
+                        Control mg = (Control)cmg;
+                        // check if specific measures exist
+                        LoadReportLinkedElements sMeasureLoader = new LoadReportLinkedElements(Control.TYPE_ID, mg.getDbId(), false, true);
+                        sMeasureLoader = getCommandService().executeCommand(sMeasureLoader);
+                        if(sMeasureLoader.getElements().size() > 0){
+                            //specific measures found, ignore generic measures
+                            for(CnATreeElement cms : sMeasureLoader.getElements()){
+                                if(cms instanceof Control){
+                                    measuresOfInterest.add((Control)cms);
+                                }
                             }
+                        } else {
+                            // no specific measure found, add generic measure
+                            measuresOfInterest.add(mg);
                         }
-                    } else {
-                        // no specific measure found, add generic measure
-                        measuresOfInterest.add(mg);
                     }
                 }
-            }
-            for(Control measure : measuresOfInterest){
-                
-                if(getLevel(loadParent(measure.getParent().getDbId()).getTitle()) == requestedLvl){
-                    String description = measure.getTitle();
-                    Pattern subChapt = Pattern.compile("^\\d+.\\d+.*");
-                    int idIdx = 0;
-                    if(description.contains(" ")){
-                        String[] tokens = description.split(" ");
-                        for(int j = 0; j < tokens.length; j++){
-                            Matcher matcher = subChapt.matcher(tokens[j]);
-                            if(matcher.matches()){
-                                idIdx = j;
-                                break;
-                            }
-                        }
-                        if(idIdx > 0){
-                            StringBuilder sb = new StringBuilder();
-                            for(int j = idIdx + 1; j < tokens.length; j++){
-                                sb.append(tokens[j]);
-                                sb.append(" ");
-                            }
-                            description = sb.toString().trim();
-                        }
-                    }
-                    // first results needs lvlPrefix and be bold
-                    if(count == 0){
-                        description = "<B> Level " + String.valueOf(requestedLvl) + ": " + description + "</B>";
-                    //every result > 1 needs to be a list item
-                    } else {
-                        description = "<LI>" + description + "</LI>";
-                    }
-                    // if more than one result, add <UL>
-                    if(count == 1){
-                        description = "<UL>" + description;
-                    }
-                    measureText.append(description);
-                    count++;
-                }
-            }
-        } catch (CommandException e){
-            LOG.error("Error while executing command", e);
-        }
-        // if more than one result, <ul> needs to be closed
-        if(count > 1){
-            measureText.append("</UL>");
-        }
-        ArrayList<String> nList = new ArrayList<String>(0);
-        nList.add(measureText.toString());
-        results.add(nList);
-        Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").setLevel(tLevel);
+                for(Control measure : measuresOfInterest){
 
+                    if(getLevel(loadParent(measure.getParent().getDbId()).getTitle()) == requestedLvl){
+                        String description = measure.getTitle();
+                        Pattern subChapt = Pattern.compile("^\\d+.\\d+.*");
+                        int idIdx = 0;
+                        if(description.contains(" ")){
+                            String[] tokens = description.split(" ");
+                            for(int j = 0; j < tokens.length; j++){
+                                Matcher matcher = subChapt.matcher(tokens[j]);
+                                if(matcher.matches()){
+                                    idIdx = j;
+                                    break;
+                                }
+                            }
+                            if(idIdx > 0){
+                                StringBuilder sb = new StringBuilder();
+                                for(int j = idIdx + 1; j < tokens.length; j++){
+                                    sb.append(tokens[j]);
+                                    sb.append(" ");
+                                }
+                                description = sb.toString().trim();
+                            }
+                        }
+                        // first results needs lvlPrefix and be bold
+                        if(count == 0){
+                            description = "<B> Level " + String.valueOf(requestedLvl) + ": " + description + "</B>";
+                            //every result > 1 needs to be a list item
+                        } else {
+                            description = "<LI>" + description + "</LI>";
+                        }
+                        // if more than one result, add <UL>
+                        if(count == 1){
+                            description = "<UL>" + description;
+                        }
+                        measureText.append(description);
+                        count++;
+                    }
+                }
+            } catch (CommandException e){
+                LOG.error("Error while executing command", e);
+            }
+            // if more than one result, <ul> needs to be closed
+            if(count > 1){
+                measureText.append("</UL>");
+            }
+            ArrayList<String> nList = new ArrayList<String>(0);
+            nList.add(measureText.toString());
+            results.add(nList);
+            Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").setLevel(tLevel);
+        }
     }
     
     private ControlGroup loadParent(Integer parentid) throws CommandException{
         LoadCnAElementById controlReloader = new LoadCnAElementById(ControlGroup.TYPE_ID, parentid);
-        controlReloader = ServiceFactory.lookupCommandService().executeCommand(controlReloader);
+        controlReloader = getCommandService().executeCommand(controlReloader);
         return (ControlGroup)controlReloader.getFound();
     }
     
@@ -184,6 +187,41 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand {
     }
     
     public List<List<String>> getResults(){
+        return results;
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder(); 
+        cacheID.append(String.valueOf(this.getClass().getSimpleName().hashCode()));
+        cacheID.append(String.valueOf(rootElmt.hashCode()));
+        cacheID.append(String.valueOf(requestedLvl.hashCode()));
+        return cacheID.toString();
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        results = (ArrayList<List<String>>) result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
         return results;
     }
 

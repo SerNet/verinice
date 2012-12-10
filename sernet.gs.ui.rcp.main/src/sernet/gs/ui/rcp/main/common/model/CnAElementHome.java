@@ -664,7 +664,7 @@ public class CnAElementHome {
     
     private void deleteValidations(CnATreeElement element){
         if(element.getScopeId() != null && element.getDbId() != null){
-            getValidationService().deleteValidations(element.getScopeId(), element.getDbId());
+            getValidationService().deleteValidationsOfSubtree(element);
             CnAElementFactory.getModel(element).validationRemoved(element.getScopeId());
         } else {
             log.error("Can't delete validations of element, scopeId or elementId not set");

@@ -18,20 +18,26 @@
 package sernet.verinice.oda.driver.preferences;
 
 
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import java.util.logging.Level;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.jface.util.PropertyChangeEvent;
 
-import java.io.File;
-import java.util.logging.Level;
-
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandCacheClient;
 import sernet.verinice.oda.driver.Activator;
 
 /**
@@ -80,6 +86,8 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         
         logFileNameEditor = new StringFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
         addField(logFileNameEditor);
+        
+        createCacheResetButton();
     }
     
     @Override
@@ -97,6 +105,30 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             return;
         }
 
+    }
+    
+    private void createCacheResetButton(){
+        Button button = new Button((Composite) getControl(), SWT.PUSH);
+        button.setText(Messages.getString("ReportPreferencePage.4")); //$NON-NLS-1$
+        button.setLayoutData(new GridData(GridData.END, GridData.BEGINNING, true, true));
+        button.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(MessageDialog.openConfirm(getShell(), Messages.getString("ReportPreferencePage.5"), Messages.getString("ReportPreferencePage.6"))){
+                    ICommandCacheClient commandCacheClient = (ICommandCacheClient)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
+                    commandCacheClient.resetCache();
+                } else {
+                    return;
+                }
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+            
+        });
     }
     
 }

@@ -108,6 +108,8 @@ public class VeriniceContext {
     
     public static String VALIDATION_SERVICE = "validationService";
     
+    public static String COMMAND_CACHE_SERVICE = "commandCacheClient";
+    
     private static String SERVER_URL = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

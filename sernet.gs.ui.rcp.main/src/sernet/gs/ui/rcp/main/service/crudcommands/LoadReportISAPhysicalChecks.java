@@ -23,9 +23,9 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Interview;
@@ -34,7 +34,7 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISAPhysicalChecks extends GenericCommand {
+public class LoadReportISAPhysicalChecks extends GenericCommand implements ICachedCommand{
     
     private transient Logger log = Logger.getLogger(LoadReportISAPhysicalChecks.class);
     
@@ -52,7 +52,9 @@ public class LoadReportISAPhysicalChecks extends GenericCommand {
                                             "TITLE",
                                             "DESCRIPTION"
     };
-    
+
+    private boolean resultInjectedFromCache = false;
+
     public LoadReportISAPhysicalChecks(Integer root){
         this.rootElement = root;
     }
@@ -62,33 +64,63 @@ public class LoadReportISAPhysicalChecks extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<List<String>>();
-        LoadReportISARiskChapter chapterLoader = new LoadReportISARiskChapter(rootElement);
-        try {
-            chapterLoader = ServiceFactory.lookupCommandService().executeCommand(chapterLoader);
-            for(SamtTopic topic : chapterLoader.getSamtTopics()){
-               for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(topic, Interview.TYPE_ID).entrySet()){
-                   Interview interview = null;
-                   if(entry.getKey() instanceof Interview){
-                       interview = (Interview)entry.getKey();
-                   }
-                   if(entry.getValue().getRelationId().equals(REL_SAMT_INTERVIEW) && 
-                           interview.getEntity().getSimpleValue(INTERVIEW_SHOW_IN_REPORT).equals("1")){
-                        ArrayList<String> result = new ArrayList<String>();
-                        result.add(interview.getTitle());
-                        result.add(interview.getEntity().getSimpleValue(INTERVIEW_AUDIT_ACTION_DESCRIPTION));
-                        results.add(result);
+        if(!resultInjectedFromCache){
+            results = new ArrayList<List<String>>();
+            LoadReportISARiskChapter chapterLoader = new LoadReportISARiskChapter(rootElement);
+            try {
+                chapterLoader = getCommandService().executeCommand(chapterLoader);
+                for(SamtTopic topic : chapterLoader.getSamtTopics()){
+                    for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(topic, Interview.TYPE_ID).entrySet()){
+                        Interview interview = null;
+                        if(entry.getKey() instanceof Interview){
+                            interview = (Interview)entry.getKey();
+                        }
+                        if(entry.getValue().getRelationId().equals(REL_SAMT_INTERVIEW) && 
+                                interview.getEntity().getSimpleValue(INTERVIEW_SHOW_IN_REPORT).equals("1")){
+                            ArrayList<String> result = new ArrayList<String>();
+                            result.add(interview.getTitle());
+                            result.add(interview.getEntity().getSimpleValue(INTERVIEW_AUDIT_ACTION_DESCRIPTION));
+                            results.add(result);
+                        }
                     }
                 }
+            } catch (CommandException e) {
+                log.error("Error while executing command", e);
             }
-        } catch (CommandException e) {
-            log.error("Error while executing command", e);
         }
-        
     }
     
     public List<List<String>> getResult(){
         return results;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElement));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.results = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return results;
+    }
+
 
 }

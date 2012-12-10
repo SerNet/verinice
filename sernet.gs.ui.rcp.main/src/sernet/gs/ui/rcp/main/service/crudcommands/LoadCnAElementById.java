@@ -19,17 +19,22 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 
-public class LoadCnAElementById extends GenericCommand {
+public class LoadCnAElementById extends GenericCommand implements ICachedCommand{
 
 	private int id;
 	private CnATreeElement found;
     private String typeId;
-
+    
+    private boolean resultInjectedFromCache = false;
+    private static transient Logger LOG = Logger.getLogger(LoadCnAElementById.class);
 
 	public LoadCnAElementById(String typeId, int id) {
 		this.typeId= typeId;
@@ -62,14 +67,49 @@ public class LoadCnAElementById extends GenericCommand {
 	}
 
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-		found = dao.findById(id);
-		HydratorUtil.hydrateElement(dao, found, false);
+	    if(!resultInjectedFromCache){
+	        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+	        found = dao.findById(id);
+	        HydratorUtil.hydrateElement(dao, found, false);
+	    }
 	}
 
 	public CnATreeElement getFound() {
 		return found;
 	}
-	
 
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(typeId);
+        cacheID.append(String.valueOf(id));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        found = (CnATreeElement)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return found;
+    }
+	
 }

@@ -5,12 +5,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnATreeElement;
@@ -30,8 +33,10 @@ import sernet.verinice.model.iso27k.Process;
  * 
  * 
  */
-public class LoadReportAllRisksForScope extends GenericCommand {
-
+public class LoadReportAllRisksForScope extends GenericCommand implements ICachedCommand{
+    
+    private static Logger LOG = Logger.getLogger(LoadReportAllRisksForScope.class);
+    
     public static final String[] COLUMNS = new String[] { 
         "Probability", 
         "Impact C", 
@@ -76,6 +81,8 @@ public class LoadReportAllRisksForScope extends GenericCommand {
 
     private int riskType = IRiskAnalysisService.RISK_PRE_CONTROLS;
    
+    private boolean resultInjectedFromCache = false;
+
     public LoadReportAllRisksForScope(Integer rootElement) {
         this(rootElement, false);
     }
@@ -96,7 +103,7 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         try {
             // determine max and tolerable risk values. initialize matrices to save value counts:
             Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
-
+            
             HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
             PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
             int probMax = type.getMaxValue();
@@ -110,49 +117,50 @@ public class LoadReportAllRisksForScope extends GenericCommand {
             cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
             riskMatrixA = new RiskMatrix(probMax, cia_max);
 
-            
-            tolerableC = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
-            tolerableI = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
-            tolerableA = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
+            if(!resultInjectedFromCache){
 
-            // load risk values from elements (following links to process, asset, scenario)
-            
-            seenScenarios = new HashSet<Integer>();
-            seenAssets = new HashSet<Integer>();
-            
-            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
-            command = getCommandService().executeCommand(command);
-            if (command.getElements() == null || command.getElements().size() == 0) {
-                result = new ArrayList<List<String>>(0);
-                return;
-            }
-            List<CnATreeElement> elements = command.getElements();
+                tolerableC = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
+                tolerableI = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
+                tolerableA = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
 
-            for (CnATreeElement process : elements) {
-                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
-                cmnd2 = getCommandService().executeCommand(cmnd2);
-                List<CnATreeElement> assets = cmnd2.getElements();
-                for (CnATreeElement asset : assets) {
-                    LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
-                    cmnd3 = getCommandService().executeCommand(cmnd3);
-                    List<CnATreeElement> scenarios = cmnd3.getElements();
-                    for (CnATreeElement scenario : scenarios) {
-                        // only add distinct values: (starting from different processes, recursion can lead to the same element multiple times)
-                        if (!distinct) {
-                            // just add it:
-                            result.add(makeRow(scenario, asset));
+                // load risk values from elements (following links to process, asset, scenario)
+
+                seenScenarios = new HashSet<Integer>();
+                seenAssets = new HashSet<Integer>();
+                
+                LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
+                command = getCommandService().executeCommand(command);
+                if (command.getElements() == null || command.getElements().size() == 0) {
+                    result = new ArrayList<List<String>>(0);
+                    return;
+                }
+                List<CnATreeElement> elements = command.getElements();
+
+                for (CnATreeElement process : elements) {
+                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
+                    cmnd2 = getCommandService().executeCommand(cmnd2);
+                    List<CnATreeElement> assets = cmnd2.getElements();
+                    for (CnATreeElement asset : assets) {
+                        LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
+                        cmnd3 = getCommandService().executeCommand(cmnd3);
+                        List<CnATreeElement> scenarios = cmnd3.getElements();
+                        for (CnATreeElement scenario : scenarios) {
+                            // only add distinct values: (starting from different processes, recursion can lead to the same element multiple times)
+                            if (!distinct) {
+                                // just add it:
+                                result.add(makeRow(scenario, asset));
+                            }
+                            else if (  ! (seenScenarios.contains(scenario.getDbId()) && seenAssets.contains(asset.getDbId())) )  {
+                                result.add(makeRow(scenario, asset));
+                            }
+
                         }
-                        else if (  ! (seenScenarios.contains(scenario.getDbId()) && seenAssets.contains(asset.getDbId())) )  {
-                            result.add(makeRow(scenario, asset));
-                        }
-
                     }
                 }
             }
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }
-
     }
 
     /**
@@ -266,4 +274,57 @@ public class LoadReportAllRisksForScope extends GenericCommand {
         return riskMatrixA.map;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        cacheID.append(String.valueOf(distinct));
+        cacheID.append(String.valueOf(riskType));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Object[]){
+            HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
+            int probMax = type.getMaxValue();
+
+            int cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
+            riskMatrixC = new RiskMatrix(probMax, cia_max);
+
+            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
+            riskMatrixI = new RiskMatrix(probMax, cia_max);
+
+            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
+            riskMatrixA = new RiskMatrix(probMax, cia_max);
+            Object[] array = (Object[])result;
+            this.result = (ArrayList<List<String>>)array[0];
+            riskMatrixC.map = (Integer[][])array[1];
+            riskMatrixI.map = (Integer[][])array[2];
+            riskMatrixA.map = (Integer[][])array[3];
+            resultInjectedFromCache = true;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        Object[] result = new Object[4];
+        result[0] = this.result;
+        result[1] = riskMatrixC.map;
+        result[2] = riskMatrixI.map;
+        result[3] = riskMatrixA.map;
+        return result;
+    }
+    
 }

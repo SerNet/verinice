@@ -30,16 +30,19 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 
 @SuppressWarnings({ "serial", "restriction" })
-public class LoadPolymorphicCnAElementById extends GenericCommand {
+public class LoadPolymorphicCnAElementById extends GenericCommand implements ICachedCommand{
 
     private Integer[] ids;
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
+    
+    private boolean resultInjectedFromCache = false;
 
     public LoadPolymorphicCnAElementById(Integer[] ds) {
         ids = ds;
@@ -76,4 +79,35 @@ public class LoadPolymorphicCnAElementById extends GenericCommand {
         }
 
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        for(Integer i : ids){
+            cacheID.append(String.valueOf(i));
+        }
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.list = (ArrayList<CnATreeElement>)result;
+        resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.list;
+    }
+    
 }

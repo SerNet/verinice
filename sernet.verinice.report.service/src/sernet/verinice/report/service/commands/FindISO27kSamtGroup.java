@@ -25,13 +25,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -41,9 +41,11 @@ import sernet.verinice.samt.service.FindSamtGroup;
  *
  */
 @SuppressWarnings("serial")
-public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCommand {
+public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCommand, ICachedCommand {
 
     private transient Logger log = Logger.getLogger(FindSamtGroup.class);
+    
+    private boolean resultInjectedFromCache = false;
 
     public Logger getLog() {
         if (log == null) {
@@ -82,49 +84,50 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
      */
     @Override
     public void execute() {
-        IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
+        if(!resultInjectedFromCache){
+            IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
 
-        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            log.error("Error while executing command");
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                log.error("Error while executing command");
+            }
+
+
+            List<CnATreeElement> controlGroupList = null;
+
+            if(command.getElements() != null && command.getElements().size() > 0){
+                controlGroupList = command.getElements();
+            }
+
+            if (controlGroupList == null) {
+                controlGroupList = Collections.emptyList();
+            }
+
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("number of controlGroups " + FindISO27kSamtGroup.nullSaveSize(controlGroupList));
+            }
+
+            // check if parent is Audit and children are SamtTopics
+            List<ControlGroup> resultList = new ArrayList<ControlGroup>();
+            int count = 0;
+            for (CnATreeElement elmt : controlGroupList) {
+                if(elmt instanceof ControlGroup){
+                    ControlGroup controlGroup = (ControlGroup)elmt;
+
+                    if (isISO27kControlGroup(controlGroup) && isSamtTopicCollection(controlGroup.getChildren())) {
+                        resultList.add(controlGroup);
+                    }}
+                count++;
+            }
+
+            if (resultList != null && !resultList.isEmpty()) {
+                selfAssessmentGroup = determineRootControlgroup(resultList);
+                if(selfAssessmentGroup != null)
+                    hydrate(selfAssessmentGroup);
+            }
         }
-        
-
-        List<CnATreeElement> controlGroupList = null;
-
-        if(command.getElements() != null && command.getElements().size() > 0){
-            controlGroupList = command.getElements();
-        }
-        
-        if (controlGroupList == null) {
-            controlGroupList = Collections.emptyList();
-        }
-
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("number of controlGroups " + FindISO27kSamtGroup.nullSaveSize(controlGroupList));
-        }
-
-        // check if parent is Audit and children are SamtTopics
-        List<ControlGroup> resultList = new ArrayList<ControlGroup>();
-        int count = 0;
-        for (CnATreeElement elmt : controlGroupList) {
-            if(elmt instanceof ControlGroup){
-                ControlGroup controlGroup = (ControlGroup)elmt;
-            
-            if (isISO27kControlGroup(controlGroup) && isSamtTopicCollection(controlGroup.getChildren())) {
-                resultList.add(controlGroup);
-            }}
-            count++;
-        }
-
-        if (resultList != null && !resultList.isEmpty()) {
-            selfAssessmentGroup = determineRootControlgroup(resultList);
-            if(selfAssessmentGroup != null)
-                hydrate(selfAssessmentGroup);
-        }
-
     }
     
     private ControlGroup determineRootControlgroup(List<ControlGroup> list){
@@ -236,5 +239,38 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     	this.dbId = dbId;
     	this.hydrateParent = hydrate;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(dbId));
+        cacheID.append(String.valueOf(hydrateParent));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.selfAssessmentGroup = (ControlGroup)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return selfAssessmentGroup;
+    }
+
 
 }

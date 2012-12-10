@@ -17,26 +17,26 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 @SuppressWarnings("serial")
-public class LoadReportControlGroups extends GenericCommand {
+public class LoadReportControlGroups extends GenericCommand implements ICachedCommand{
 
 	private transient Logger log = Logger
 			.getLogger(LoadReportControlGroups.class);
@@ -46,6 +46,8 @@ public class LoadReportControlGroups extends GenericCommand {
 	private List<CnATreeElement> result = new ArrayList<CnATreeElement>();
 
 	private Integer dbId = null;
+	
+    private boolean resultInjectedFromCache = false;
 
 	public Logger getLog() {
 		if (log == null) {
@@ -68,65 +70,66 @@ public class LoadReportControlGroups extends GenericCommand {
 	
 	@Override
 	public void execute() {
+	    if(!resultInjectedFromCache){
+	        LoadCnAElementById command = new LoadCnAElementById(
+	                Organization.TYPE_ID, dbId);
+	        try {
+	            command = getCommandService().executeCommand(
+	                    command);
+	        } catch (CommandException e) {
+	            log.error("Error while executing a command", e);
+	        }
+	        Object o = command.getFound();
+	        if (o instanceof Organization) {
+	            root_object = (Organization) o;
+	        }
 
-		LoadCnAElementById command = new LoadCnAElementById(
-				Organization.TYPE_ID, dbId);
-		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-		} catch (CommandException e) {
-			log.error("Error while executing a command", e);
-		}
-		Object o = command.getFound();
-		if (o instanceof Organization) {
-			root_object = (Organization) o;
-		}
-
-		Queue<ControlGroup> sortedResults = sortResults(root_object);
-		for (ControlGroup g : sortedResults) {
-			result.add(g);
-		}
+	        Queue<ControlGroup> sortedResults = sortResults(root_object);
+	        for (ControlGroup g : sortedResults) {
+	            result.add(g);
+	        }
+	    }
 	}
 
 	private Queue<ControlGroup> sortResults(CnATreeElement group) {
-		Queue<ControlGroup> finalList = new LinkedList<ControlGroup>();
-		if (group != null) {
-			Set<CnATreeElement> children = group.getChildren();
-			List<String> sortedTitleList = new ArrayList<String>();
-			for (CnATreeElement e : children) {
-				if (e instanceof ControlGroup) {
-					ControlGroup g = (ControlGroup) e;
-					sortedTitleList.add(g.getTitle());
-				}
-			}
-			Collections.sort(sortedTitleList);
-			for (String title : sortedTitleList) {
-				ControlGroup g = null;
-				for (CnATreeElement e : children) {
-					if (e instanceof ControlGroup) {
-						g = (ControlGroup) e;
-						if (g.getTitle().equals(title)) {
-							if (!finalList.contains(g) && !hasOnlyControlChildren(g)) {
-								finalList.offer(g);
-							}
-							for (ControlGroup child : sortResults(g)) {
-								if (!finalList.contains(child) && !hasOnlyControlChildren(g)) {
-									finalList.offer(child);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return finalList;
+	    Queue<ControlGroup> finalList = new LinkedList<ControlGroup>();
+	    if (group != null) {
+	        try {
+	            LoadReportElements elementLoader = new LoadReportElements(ControlGroup.TYPE_ID, group.getDbId(), true);
+	            elementLoader = getCommandService().executeCommand(elementLoader);
+	            List<CnATreeElement> commandResults = elementLoader.getElements();
+	            ArrayList<ControlGroup> sortedList = new ArrayList<ControlGroup>(0);
+	            for(CnATreeElement c : commandResults){
+	                if(c instanceof ControlGroup){
+	                    if(!sortedList.contains((ControlGroup)c) && hasOnlyControlChildren((ControlGroup)c)){
+	                        sortedList.add((ControlGroup)c);
+	                    }
+	                }
+	            }
+	            Collections.sort(sortedList,new Comparator<ControlGroup>() {
+
+	                @Override
+	                public int compare(ControlGroup o1, ControlGroup o2) {
+	                    NumericStringComparator comparator = new NumericStringComparator();
+	                    return comparator.compare(o1.getTitle(), o2.getTitle());
+	                }
+	            });
+	            finalList.addAll(sortedList);
+	        } catch (CommandException e) {
+	            getLog().error("Error while executing command", e);
+	        }
+	    }
+	    return finalList;
 	}
 
 	private boolean hasOnlyControlChildren(ControlGroup group) {
 		for (CnATreeElement element : group.getChildren()) {
-			if (element instanceof ControlGroup) {
+			if (!(element instanceof Control)) {
 				return false;
 			}
+		}
+		if(group.getChildren().size() == 0){
+		    return false;
 		}
 		return true;
 	}
@@ -134,5 +137,36 @@ public class LoadReportControlGroups extends GenericCommand {
 	public List<CnATreeElement> getResult() {
 		return result;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(dbId);
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<CnATreeElement>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
+    }
 
 }

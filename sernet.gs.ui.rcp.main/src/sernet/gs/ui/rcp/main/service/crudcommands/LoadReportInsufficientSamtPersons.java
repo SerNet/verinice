@@ -24,30 +24,28 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.orm.hibernate3.HibernateAccessor;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  *
  */
-public class LoadReportInsufficientSamtPersons extends GenericCommand {
+public class LoadReportInsufficientSamtPersons extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportInsufficientSamtPersons.class);
 
     private static final String PROP_CLASSIFICATION_INSUFFICIENT = "samt_classification_insufficient";
     private static final String PROP_SAMT_CLASSIFICATION = "samt_user_classification";
     private static final String PROP_REL_SAMTTOPIC_PERSONISO_RESP = "rel_samttopic_person-iso_resp";
+    
+    private boolean resultInjectedFromCache = false;
     
     public static final String[] COLUMNS = new String[] { 
         "PERSON_NAME"
@@ -65,36 +63,69 @@ public class LoadReportInsufficientSamtPersons extends GenericCommand {
      */
     @Override
     public void execute() {
-        result = new ArrayList<List<String>>(0);
-        Set<List<String>> personSet = new HashSet<List<String>>(0);
-        try{
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            for(CnATreeElement c : command.getElements()){
-                if(SamtTopic.class.isInstance(c)){
-                    SamtTopic t = (SamtTopic)c;
-                    Entity ent = ((Entity)getDaoFactory().getDAO(Entity.TYPE_ID).initializeAndUnproxy(t.getEntity()));
-                    String optionValue = ent.getOptionValue(PROP_SAMT_CLASSIFICATION);
-                    if(optionValue != null && optionValue.equals(PROP_CLASSIFICATION_INSUFFICIENT)){
-                        for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
-                            if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){
-                                PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
-                                ArrayList<String> list = new ArrayList<String>(0);
-                                list.add(e.getSurname() + ", " + e.getName());
-                                personSet.add(list);
+        if(!resultInjectedFromCache){
+            result = new ArrayList<List<String>>(0);
+            Set<List<String>> personSet = new HashSet<List<String>>(0);
+            try{
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
+                command = getCommandService().executeCommand(command);
+                for(CnATreeElement c : command.getElements()){
+                    if(SamtTopic.class.isInstance(c)){
+                        SamtTopic t = (SamtTopic)c;
+                        Entity ent = ((Entity)getDaoFactory().getDAO(Entity.TYPE_ID).initializeAndUnproxy(t.getEntity()));
+                        String optionValue = ent.getOptionValue(PROP_SAMT_CLASSIFICATION);
+                        if(optionValue != null && optionValue.equals(PROP_CLASSIFICATION_INSUFFICIENT)){
+                            for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
+                                if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){
+                                    PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
+                                    ArrayList<String> list = new ArrayList<String>(0);
+                                    list.add(e.getSurname() + ", " + e.getName());
+                                    personSet.add(list);
+                                }
                             }
                         }
                     }
                 }
+            } catch (CommandException e){
+                LOG.error("Error determing persons linked with insufficient samttopics", e);
             }
-        } catch (CommandException e){
-            LOG.error("Error determing persons linked with insufficient samttopics", e);
+            result.addAll(personSet);
         }
-        result.addAll(personSet);
     }
 
     public List<List<String>> getResult(){
         return result;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
     }
     
 }

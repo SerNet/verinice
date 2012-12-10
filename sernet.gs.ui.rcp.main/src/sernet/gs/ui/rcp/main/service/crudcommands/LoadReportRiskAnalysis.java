@@ -1,51 +1,43 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.SchutzbedarfAdapter;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
 
 /**
  * Loads elements for risk analysis report according to BSI 100-3.
  */
-public class LoadReportRiskAnalysis extends GenericCommand {
+public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCommand{
 
     private Integer raElementID;
     private FinishedRiskAnalysisLists lists = null;
     private FinishedRiskAnalysis riskAnalysis = null;
     private List<List<String>> zielobjektResult = new ArrayList<List<String>>(0);
+    
+    private boolean resultInjectedFromCache = false;
+    
+    private transient Logger log = Logger.getLogger(LoadReportRiskAnalysis.class);
+    
+    private boolean getDbId = false;
+    
+    private HashMap<String, Object> localCommandCache;
+    private boolean cacheInserted = false;
     
     public LoadReportRiskAnalysis(Integer rootElement) {
 	    this.raElementID = rootElement;
@@ -60,52 +52,62 @@ public class LoadReportRiskAnalysis extends GenericCommand {
         
        
     }
+    
+    public LoadReportRiskAnalysis(Integer root, boolean getDbId){
+        this(root);
+        this.getDbId = getDbId;
+    }
 	
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public void execute() {
-	    if (this.raElementID == null || this.raElementID == -1)
-	        return;
-	    
-	    IBaseDao dao = getDaoFactory().getDAO(FinishedRiskAnalysis.TYPE_ID);
-	    riskAnalysis = (FinishedRiskAnalysis) dao.findById(this.raElementID);
-	    if (riskAnalysis == null)
-	        return;
-	    
-	    FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(raElementID);
-	    try {
-	        command = getCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
-        }
-        if (command.getFoundLists() == null) {
-            return;
-        }
+        if(!resultInjectedFromCache){
+            if (this.raElementID == null || this.raElementID == -1)
+                return;
 
-        lists = command.getFoundLists();
-        // hydrate collections:
-        lists.getAllGefaehrdungsUmsetzungen();
-        lists.getAssociatedGefaehrdungen();
-        lists.getNotOKGefaehrdungsUmsetzungen();
+            IBaseDao dao = getDaoFactory().getDAO(FinishedRiskAnalysis.TYPE_ID);
+            riskAnalysis = (FinishedRiskAnalysis) dao.findById(this.raElementID);
+            if (riskAnalysis == null)
+                return;
 
-        
-        // load zielobjekt:
-        List<String> row = new ArrayList<String>();
-        CnATreeElement elmt = (CnATreeElement) this.riskAnalysis.getParent();
-        
-        // this is necessary to get the correct type of object instead of a hibernate proxy:
-        CnATypeMapper cnATypeMapper = new CnATypeMapper();
-        if (cnATypeMapper.isStrukturElement(elmt) ) {
-            IBaseDao dao2 = getDaoFactory().getDAO(elmt.getTypeId());
-            IBSIStrukturElement realelmt = (IBSIStrukturElement) dao2.findById(elmt.getDbId());
-            row.add(realelmt.getKuerzel());
+            FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(raElementID);
+            try {
+                    command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            if (command.getFoundLists() == null) {
+                return;
+            }
+
+            lists = command.getFoundLists();
+            // hydrate collections:
+            lists.getAllGefaehrdungsUmsetzungen();
+            lists.getAssociatedGefaehrdungen();
+            lists.getNotOKGefaehrdungsUmsetzungen();
+
+
+            // load zielobjekt:
+            List<String> row = new ArrayList<String>();
+            CnATreeElement elmt = (CnATreeElement) this.riskAnalysis.getParent();
+
+            // this is necessary to get the correct type of object instead of a hibernate proxy:
+            CnATypeMapper cnATypeMapper = new CnATypeMapper();
+            if (cnATypeMapper.isStrukturElement(elmt) ) {
+                IBaseDao dao2 = getDaoFactory().getDAO(elmt.getTypeId());
+                IBSIStrukturElement realelmt = (IBSIStrukturElement) dao2.findById(elmt.getDbId());
+                row.add(realelmt.getKuerzel());
+            }
+
+            row.add(elmt.getTitle());
+            SchutzbedarfAdapter adapter = new SchutzbedarfAdapter(elmt);
+            row.add(Integer.toString(adapter.getVertraulichkeit()));
+            row.add(Integer.toString(adapter.getIntegritaet()));
+            row.add(Integer.toString(adapter.getVerfuegbarkeit()));
+            if(getDbId){
+                row.add(Integer.toString(elmt.getDbId()));
+            }
+            this.zielobjektResult.add(row);
         }
-        
-        row.add(elmt.getTitle());
-        SchutzbedarfAdapter adapter = new SchutzbedarfAdapter(elmt);
-        row.add(Integer.toString(adapter.getVertraulichkeit()));
-        row.add(Integer.toString(adapter.getIntegritaet()));
-        row.add(Integer.toString(adapter.getVerfuegbarkeit()));
-        this.zielobjektResult.add(row);
 	 
 	}
 	
@@ -139,7 +141,50 @@ public class LoadReportRiskAnalysis extends GenericCommand {
 	public List<List<String>>  getZielObjekt() {
 	   return zielobjektResult;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(raElementID));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Object[]){
+            Object[] array = (Object[])result;
+            this.lists = (FinishedRiskAnalysisLists)array[0];
+            this.zielobjektResult = (ArrayList<List<String>>)array[1];
+            resultInjectedFromCache = true;
+            if(getLog().isDebugEnabled()){
+                getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        Object[] results = new Object[2];
+        results[0] = this.lists;
+        results[1] = this.zielobjektResult;
+        return results;
+    }
 	
-  
-   
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(LoadReportRiskAnalysis.class);
+        }
+        return log;
+    }
+
 }

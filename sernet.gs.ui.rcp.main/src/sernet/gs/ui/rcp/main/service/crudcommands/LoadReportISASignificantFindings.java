@@ -24,13 +24,14 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Finding;
 
 /**
  *
  */
-public class LoadReportISASignificantFindings extends GenericCommand {
+public class LoadReportISASignificantFindings extends GenericCommand implements ICachedCommand{
     
     private static Logger LOG = Logger.getLogger(LoadReportISASignificantFindings.class);
     
@@ -43,6 +44,8 @@ public class LoadReportISASignificantFindings extends GenericCommand {
     
     public static final String[] COLUMNS = new String[]{"TITLE", "DESCRIPTION"};
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadReportISASignificantFindings(Integer root){
         this.rootElmt = root;
     }
@@ -52,32 +55,64 @@ public class LoadReportISASignificantFindings extends GenericCommand {
      */
     @Override
     public void execute() {
-        try {
-            result = new ArrayList<List<String>>(0);
-            LoadReportElements command = new LoadReportElements(Finding.TYPE_ID, rootElmt, true);
-            command = getCommandService().executeCommand(command);
-            if (command.getElements() == null || command.getElements().size() == 0) {
-                return;
-            }
-            for(CnATreeElement c : command.getElements()){
-                if(c instanceof Finding){
-                    Finding f = (Finding)c;
-                    if(Integer.parseInt(f.getEntity().getSimpleValue(SHOW_FINDING_IN_REPORT)) == 1){
-                        ArrayList<String> row = new ArrayList<String>(0);
-                        row.add(f.getTitle());
-                        row.add(f.getEntity().getSimpleValue(FINDING_DESCRIPTION));
-                        result.add(row);
+        if(!resultInjectedFromCache){
+            try {
+                result = new ArrayList<List<String>>(0);
+                LoadReportElements command = new LoadReportElements(Finding.TYPE_ID, rootElmt, true);
+                command = getCommandService().executeCommand(command);
+                if (command.getElements() == null || command.getElements().size() == 0) {
+                    return;
+                }
+                for(CnATreeElement c : command.getElements()){
+                    if(c instanceof Finding){
+                        Finding f = (Finding)c;
+                        if(Integer.parseInt(f.getEntity().getSimpleValue(SHOW_FINDING_IN_REPORT)) == 1){
+                            ArrayList<String> row = new ArrayList<String>(0);
+                            row.add(f.getTitle());
+                            row.add(f.getEntity().getSimpleValue(FINDING_DESCRIPTION));
+                            result.add(row);
+                        }
                     }
                 }
+            } catch (CommandException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-        } catch (CommandException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-
     }
     
     public List<List<String>> getResult(){
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
         return result;
     }
 

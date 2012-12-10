@@ -21,18 +21,17 @@ package sernet.verinice.oda.driver;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.ServiceTracker;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
-import sernet.verinice.oda.driver.preferences.ReportPreferencePage;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -65,7 +64,7 @@ public class Activator extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
+	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 		
@@ -125,7 +124,8 @@ public class Activator extends AbstractUIPlugin {
 	
 	public ICommandService getCommandService()
 	{
-		return (ICommandService) commandServiceTracker.getService();
+	    ICommandService commandService = (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
+	    return commandService;
 	}
 
 }

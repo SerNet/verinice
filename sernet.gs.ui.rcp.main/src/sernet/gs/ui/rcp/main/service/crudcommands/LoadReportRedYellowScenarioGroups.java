@@ -26,9 +26,9 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
@@ -46,7 +46,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  *  command categorizes all scenario groups of a rootElmt to red or yellow if they contain a scenario which leads
  *  to a risk which is categorized that way
  */
-public class LoadReportRedYellowScenarioGroups extends GenericCommand {
+public class LoadReportRedYellowScenarioGroups extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadReportRedYellowScenarioGroups.class); 
 
@@ -62,6 +62,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
         "GROUPDBID"
         };
     
+    private boolean resultInjectedFromCache = false;
+
     public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields){
         this.rootElmt = root;
         results = new ArrayList<ArrayList<String>>(0);
@@ -74,91 +76,93 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
      */
     @Override
     public void execute() {
-        HashMap<String, Integer> scenarioGroupColorMap = new HashMap<String, Integer>(0);
-        try{
-            LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElmt});
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            CnATreeElement root = command.getElements().get(0);
-            List<Process> processList = new ArrayList<Process>(0);
-            
-            // determine processes
-            if(root instanceof Organization || root instanceof Audit){
-                processList.addAll(getProcesses(root));
-            } else if(root instanceof Process){
-                processList.add((Process)root);
-            }
-            // iterate all processes
-            for(Process p : processList){
-                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, p.getDbId(), true, false);
-                cmnd2 = getCommandService().executeCommand(cmnd2);
-                List<CnATreeElement> assets = cmnd2.getElements();
-                // iterate assets linked to process
-                for (CnATreeElement asset : assets) {
-                    LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
-                    cmnd3 = getCommandService().executeCommand(cmnd3);
-                    List<CnATreeElement> scenarios = cmnd3.getElements();
-                    // iterate scenarios linked to asset
-                    for (CnATreeElement scenario : scenarios) {
-                        if(affectsCIA(scenario)){
-                            scenario = (IncidentScenario)cmnd3.getDaoFactory().getDAO(IncidentScenario.TYPE_ID).initializeAndUnproxy(scenario);
-                            // reload Scenario with parent && properties
-                            LoadElementByUuid<CnATreeElement> scenarioReloader = new LoadElementByUuid<CnATreeElement>(IncidentScenario.TYPE_ID,
-                                    scenario.getUuid(), new RetrieveInfo().setProperties(true).setParent(true));
-                            scenario = ServiceFactory.lookupCommandService().executeCommand(scenarioReloader).getElement();
-                            CnATreeElement parent = scenario.getParent();
-                            parent = (CnATreeElement)cmnd3.getDaoFactory().getDAO(IncidentScenarioGroup.TYPE_ID).initializeAndUnproxy(parent);
-                            if(parent instanceof IncidentScenarioGroup && 
-                                    parent.getParent().getDbId().intValue() != scenario.getScopeId().intValue() // avoid rootScenGroup
-                                    ){
-                                String parentUuid = scenario.getParent().getUuid();
-                                int riskColor = getRiskColour(asset, scenario);
-                                // if risk is yellow or red, put parent on map and mark all parents red also, if current is red
-                                if(!scenarioGroupColorMap.containsKey(parentUuid)){
-                                    scenarioGroupColorMap.put(parentUuid, riskColor);
-                                    if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
-                                        scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
-                                    }
-                                } else {
-                                    if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_RED)){
-                                        if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_YELLOW)){
-                                            scenarioGroupColorMap.put(parentUuid, riskColor); // previous value green
-                                        } else {// previous value yellow, if red ==> save
-                                            if(riskColor == IRiskAnalysisService.RISK_COLOR_RED ){
-                                                scenarioGroupColorMap.put(parentUuid, riskColor); 
-                                            }
+        if(!resultInjectedFromCache){
+            HashMap<String, Integer> scenarioGroupColorMap = new HashMap<String, Integer>(0);
+            try{
+                LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElmt});
+                command = getCommandService().executeCommand(command);
+                CnATreeElement root = command.getElements().get(0);
+                List<Process> processList = new ArrayList<Process>(0);
+
+                // determine processes
+                if(root instanceof Organization || root instanceof Audit){
+                    processList.addAll(getProcesses(root));
+                } else if(root instanceof Process){
+                    processList.add((Process)root);
+                }
+                // iterate all processes
+                for(Process p : processList){
+                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, p.getDbId(), true, false);
+                    cmnd2 = getCommandService().executeCommand(cmnd2);
+                    List<CnATreeElement> assets = cmnd2.getElements();
+                    // iterate assets linked to process
+                    for (CnATreeElement asset : assets) {
+                        LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
+                        cmnd3 = getCommandService().executeCommand(cmnd3);
+                        List<CnATreeElement> scenarios = cmnd3.getElements();
+                        // iterate scenarios linked to asset
+                        for (CnATreeElement scenario : scenarios) {
+                            if(affectsCIA(scenario)){
+                                scenario = (IncidentScenario)cmnd3.getDaoFactory().getDAO(IncidentScenario.TYPE_ID).initializeAndUnproxy(scenario);
+                                // reload Scenario with parent && properties
+                                LoadElementByUuid<CnATreeElement> scenarioReloader = new LoadElementByUuid<CnATreeElement>(IncidentScenario.TYPE_ID,
+                                        scenario.getUuid(), new RetrieveInfo().setProperties(true).setParent(true));
+                                scenario = getCommandService().executeCommand(scenarioReloader).getElement();
+                                CnATreeElement parent = scenario.getParent();
+                                parent = (CnATreeElement)cmnd3.getDaoFactory().getDAO(IncidentScenarioGroup.TYPE_ID).initializeAndUnproxy(parent);
+                                if(parent instanceof IncidentScenarioGroup && 
+                                        parent.getParent().getDbId().intValue() != scenario.getScopeId().intValue() // avoid rootScenGroup
+                                        ){
+                                    String parentUuid = scenario.getParent().getUuid();
+                                    int riskColor = getRiskColour(asset, scenario);
+                                    // if risk is yellow or red, put parent on map and mark all parents red also, if current is red
+                                    if(!scenarioGroupColorMap.containsKey(parentUuid)){
+                                        scenarioGroupColorMap.put(parentUuid, riskColor);
+                                        if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
+                                            scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
                                         }
-                                    } // if previous == red, done!
+                                    } else {
+                                        if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_RED)){
+                                            if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_YELLOW)){
+                                                scenarioGroupColorMap.put(parentUuid, riskColor); // previous value green
+                                            } else {// previous value yellow, if red ==> save
+                                                if(riskColor == IRiskAnalysisService.RISK_COLOR_RED ){
+                                                    scenarioGroupColorMap.put(parentUuid, riskColor); 
+                                                }
+                                            }
+                                        } // if previous == red, done!
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            // generate result
-            for(Entry<String, Integer> entry : scenarioGroupColorMap.entrySet()){
-                LoadElementByUuid<IncidentScenarioGroup> groupLoader = new LoadElementByUuid<IncidentScenarioGroup>(IncidentScenarioGroup.TYPE_ID, entry.getKey(), 
-                        new RetrieveInfo().setChildren(true).setProperties(true));
-                groupLoader = ServiceFactory.lookupCommandService().executeCommand(groupLoader);
-                ArrayList<String> result = new ArrayList<String>(0);
-                result.add(groupLoader.getElement().getTitle());
-                String colourValue = "";
-                switch(entry.getValue().intValue()){
-                case IRiskAnalysisService.RISK_COLOR_GREEN:
-                       colourValue = "2green";
-                       break;
-                case IRiskAnalysisService.RISK_COLOR_YELLOW:
-                    colourValue = "1yellow";
-                    break;
-                case IRiskAnalysisService.RISK_COLOR_RED:
-                    colourValue = "0red";
-                    break;
+                // generate result
+                for(Entry<String, Integer> entry : scenarioGroupColorMap.entrySet()){
+                    LoadElementByUuid<IncidentScenarioGroup> groupLoader = new LoadElementByUuid<IncidentScenarioGroup>(IncidentScenarioGroup.TYPE_ID, entry.getKey(), 
+                            new RetrieveInfo().setChildren(true).setProperties(true));
+                    groupLoader = getCommandService().executeCommand(groupLoader);
+                    ArrayList<String> result = new ArrayList<String>(0);
+                    result.add(groupLoader.getElement().getTitle());
+                    String colourValue = "";
+                    switch(entry.getValue().intValue()){
+                    case IRiskAnalysisService.RISK_COLOR_GREEN:
+                        colourValue = "2green";
+                        break;
+                    case IRiskAnalysisService.RISK_COLOR_YELLOW:
+                        colourValue = "1yellow";
+                        break;
+                    case IRiskAnalysisService.RISK_COLOR_RED:
+                        colourValue = "0red";
+                        break;
+                    }
+                    result.add(colourValue);
+                    result.add(groupLoader.getElement().getDbId().toString());
+                    results.add(result);
                 }
-                result.add(colourValue);
-                result.add(groupLoader.getElement().getDbId().toString());
-                results.add(result);
+            } catch (CommandException e){
+                LOG.error("Error while executing command", e);
             }
-        } catch (CommandException e){
-            LOG.error("Error while executing command", e);
         }
     }
     
@@ -257,7 +261,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
             useScopeId = true;
         }
         LoadReportElements command = new LoadReportElements(Process.TYPE_ID, elmt.getDbId(), useScopeId);
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        command = getCommandService().executeCommand(command);
         for(CnATreeElement e : command.getElements()){
             if(e instanceof Process){
                 list.add((Process)e);
@@ -278,4 +282,43 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand {
         return LOG;
     }
 
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        for(int i : numOfYellowFields){
+            cacheID.append(String.valueOf(i));
+        }
+        return cacheID.toString();
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.results = (ArrayList<ArrayList<String>>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.results;
+    }
+
+
+    
 }

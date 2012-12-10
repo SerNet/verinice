@@ -84,7 +84,10 @@ public class CopyCommand extends GenericCommand {
     private int number = 0;
     
     private transient IBaseDao<CnATreeElement, Serializable> dao;
+    
+    private List<String> newElements;
       
+
     /**
      * @param uuidGroup Uuid of an group
      * @param uuidList Uuids of the elements to copy
@@ -119,7 +122,7 @@ public class CopyCommand extends GenericCommand {
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
             Map<String, String> sourceDestMap = new Hashtable<String, String>();
             for (CnATreeElement element : copyElements) {             
-                copy(selectedGroup, element, sourceDestMap);         
+                newElements.add(copy(selectedGroup, element, sourceDestMap).getUuid());         
             }
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
                 List<String> copyElementUuidList = new ArrayList<String>(copyElements.size());
@@ -302,6 +305,10 @@ public class CopyCommand extends GenericCommand {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;
+    }
+
+    public List<String> getNewElements() {
+        return newElements;
     }
 
 }

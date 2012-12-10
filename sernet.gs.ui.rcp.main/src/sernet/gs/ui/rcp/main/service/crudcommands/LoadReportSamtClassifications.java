@@ -24,18 +24,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
  *
  */
-public class LoadReportSamtClassifications extends GenericCommand {
+public class LoadReportSamtClassifications extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportSamtClassifications.class);
 
@@ -54,6 +54,7 @@ public class LoadReportSamtClassifications extends GenericCommand {
     
     private List<List<String>> result;
     
+    private boolean resultInjectedFromCache = false;
 
     public LoadReportSamtClassifications(Integer root, boolean getGood){
         this.rootElmt = root;
@@ -65,45 +66,47 @@ public class LoadReportSamtClassifications extends GenericCommand {
      */
     @Override
     public void execute() {
-        result = new ArrayList<List<String>>(0);
-        try{
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            for(CnATreeElement c : command.getElements()){
-                if(c instanceof SamtTopic){
-                    SamtTopic t = (SamtTopic)c;
+        if(!resultInjectedFromCache){
+            result = new ArrayList<List<String>>(0);
+            try{
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmt, true);
+                command = getCommandService().executeCommand(command);
+                for(CnATreeElement c : command.getElements()){
+                    if(c instanceof SamtTopic){
+                        SamtTopic t = (SamtTopic)c;
 
-                    String propertyValueToGet = null;
-                    if(getGood == null){
-                        propertyValueToGet = PROP_CLASSIFICATION_NO;
-                    }
-                    else if(getGood.booleanValue()){
-                        propertyValueToGet = PROP_CLASSIFICATION_GOOD;
-                    } else {
-                        propertyValueToGet = PROP_CLASSIFICATION_INSUFFICIENT;
-                    }
-                    if(!t.isChildrenLoaded()){
-                        t = (SamtTopic)loadChildren(t, SamtTopic.TYPE_ID);
-                    }
-                    t = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).initializeAndUnproxy(t);
-                    Entity ent = ((Entity)getDaoFactory().getDAO(Entity.TYPE_ID).initializeAndUnproxy(t.getEntity()));
-                    String propValue = null;
-                    try{
-                        propValue = ent.getOptionValue(PROP_SAMT_CLASSIFICATION);
-                    } catch (NullPointerException npe){
-                        LOG.error("classification-value not found on samtTopic");
-                    }
-                    
-                    if(propValue != null && propValue.equals(propertyValueToGet)){
-                        ArrayList<String> list = new ArrayList<String>(0);
-                        list.add(t.getTitle());
-                        list.add(String.valueOf(t.getDbId()));
-                        result.add(list);
+                        String propertyValueToGet = null;
+                        if(getGood == null){
+                            propertyValueToGet = PROP_CLASSIFICATION_NO;
+                        }
+                        else if(getGood.booleanValue()){
+                            propertyValueToGet = PROP_CLASSIFICATION_GOOD;
+                        } else {
+                            propertyValueToGet = PROP_CLASSIFICATION_INSUFFICIENT;
+                        }
+                        if(!t.isChildrenLoaded()){
+                            t = (SamtTopic)loadChildren(t, SamtTopic.TYPE_ID);
+                        }
+                        t = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).initializeAndUnproxy(t);
+                        Entity ent = ((Entity)getDaoFactory().getDAO(Entity.TYPE_ID).initializeAndUnproxy(t.getEntity()));
+                        String propValue = null;
+                        try{
+                            propValue = ent.getOptionValue(PROP_SAMT_CLASSIFICATION);
+                        } catch (NullPointerException npe){
+                            LOG.error("classification-value not found on samtTopic");
+                        }
+
+                        if(propValue != null && propValue.equals(propertyValueToGet)){
+                            ArrayList<String> list = new ArrayList<String>(0);
+                            list.add(t.getTitle());
+                            list.add(String.valueOf(t.getDbId()));
+                            result.add(list);
+                        }
                     }
                 }
-            }
-        }catch(CommandException e){
+            }catch(CommandException e){
                 LOG.error("Error while determing samt topics", e);
+            }
         }
     }
     
@@ -119,5 +122,37 @@ public class LoadReportSamtClassifications extends GenericCommand {
                 setChildrenProperties(true).setProperties(true);
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeID);
         return dao.findByUuid(el.getUuid(), ri);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        cacheID.append(String.valueOf(getGood));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return result;
     }
 }

@@ -28,13 +28,13 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
@@ -47,7 +47,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * $LastChangedBy$
  *
  */
-public class LoadReportScenarioDetails extends GenericCommand {
+public class LoadReportScenarioDetails extends GenericCommand implements ICachedCommand{
     
     public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbid",
         "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc", 
@@ -58,13 +58,23 @@ public class LoadReportScenarioDetails extends GenericCommand {
     private LoadReportElementWithLinks loadReportElementWithLinks;
 
     private List<List<String>> result;
+    
+    private boolean resultInjectedFromCache = false;
+    
+    private String typeId;
+    
+    private Integer rootElmt;
 
     public LoadReportScenarioDetails(String typeId, Integer rootElement) {
         loadReportElementWithLinks = new LoadReportElementWithLinks(typeId, rootElement);
+        this.typeId = typeId;
+        this.rootElmt = rootElement;
     }
 
     public LoadReportScenarioDetails(String typeId, String rootElement) {
         loadReportElementWithLinks = new LoadReportElementWithLinks(typeId, rootElement);
+        this.typeId = typeId;
+        this.rootElmt = new Integer(Integer.parseInt(rootElement));
     }
 
     /* (non-Javadoc)
@@ -72,20 +82,21 @@ public class LoadReportScenarioDetails extends GenericCommand {
      */
     @Override
     public void execute() {
-        try {
-            loadReportElementWithLinks = getCommandService().executeCommand(loadReportElementWithLinks);
-            result = loadReportElementWithLinks.getResult();
-            List<CnALink> links = loadReportElementWithLinks.getLinkList();
-            int i=0;
-            for (CnALink cnALink : links) {
-                addCols(cnALink, result.get(i));
-                i++;
+        if(!resultInjectedFromCache){
+            try {
+                loadReportElementWithLinks = getCommandService().executeCommand(loadReportElementWithLinks);
+                result = loadReportElementWithLinks.getResult();
+                List<CnALink> links = loadReportElementWithLinks.getLinkList();
+                int i=0;
+                for (CnALink cnALink : links) {
+                    addCols(cnALink, result.get(i));
+                    i++;
+                }
+
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
             }
-            
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
-        }
-        
+        } 
     }
 
     /**
@@ -209,6 +220,35 @@ public class LoadReportScenarioDetails extends GenericCommand {
      */
     public List<List<String>> getResult() {
         return result;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(this.typeId);
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
     }
 
 }

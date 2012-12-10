@@ -28,6 +28,7 @@ import sernet.gs.service.PermissionException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CutCommand;
@@ -42,6 +43,8 @@ import sernet.verinice.service.commands.CutCommand;
 public class CutService extends PasteService implements IProgressTask {
 	
 	private final Logger log = Logger.getLogger(CutService.class);
+	
+	private List<ElementChange> elementChanges;
 	
 	   /**
      * Creates a new CopyService
@@ -90,7 +93,8 @@ public class CutService extends PasteService implements IProgressTask {
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
             progressObserver.setTaskName(Messages.getString("CutService.3"));
-            CnAElementFactory.getInstance().reloadModelFromDatabase();            
+            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            elementChanges = cc.getChanges();
 		} catch (PermissionException e) {
 			if (log.isDebugEnabled()) {
 				log.debug(e);
@@ -127,6 +131,10 @@ public class CutService extends PasteService implements IProgressTask {
 		}
 		return title;
 	}
+
+    public List<ElementChange> getElementChanges() {
+        return elementChanges;
+    }
 
 
 }

@@ -117,6 +117,10 @@ public class Messages extends NLS {
     public static String DocumentsReport_0;
     public static String DocumentsReport_1;
     public static String DocumentsReport_2;
+    public static String GrundschutzA7_0;
+    public static String GrundschutzA7_1;
+    public static String GrundschutzA7_2;
+    public static String GrundschutzA7_3;
     
     static {
         // initialize resource bundle

@@ -1,37 +1,16 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
-
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.common.CnALink;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * Load lsit of elements and their databse ids for further use in reports.
@@ -41,7 +20,7 @@ import sernet.verinice.model.common.HydratorUtil;
  * $LastChangedBy$
  *
  */
-public class LoadReportElementList extends GenericCommand {
+public class LoadReportElementList extends GenericCommand implements ICachedCommand{
 
     private transient Logger log = Logger.getLogger(LoadReportElementList.class);
     
@@ -56,42 +35,44 @@ public class LoadReportElementList extends GenericCommand {
     private Integer rootElement;
     private ArrayList<CnATreeElement> elements;
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadReportElementList(String typeId, Integer rootElement) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
 	}
 	
 	public void execute() {
-	    getLog().debug("LoadReportElements for root_object " + rootElement);
-	    
-	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
-	    try {
-            command = getCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
-        }
-	    CnATreeElement root = command.getElements().get(0);
+	    if(!resultInjectedFromCache){
+	        getLog().debug("LoadReportElements for root_object " + rootElement);
 
-	    //if typeId is that of the root object, just return it itself. else look for children:
-	    ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
-	    if (this.typeId.equals(root.getTypeId())) {
-	        this.elements = items;
-	        this.elements.add(root);
-	    }
-	    else {
-//	        getElements(typeId, items, root);
-//	        this.elements = items;
+	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
 	        try {
-	            LoadReportElements elementLoader = new LoadReportElements(typeId, root.getDbId(), true);
-	            elementLoader = ServiceFactory.lookupCommandService().executeCommand(elementLoader);
-	            this.elements.addAll(elementLoader.getElements());
+	            command = getCommandService().executeCommand(command);
 	        } catch (CommandException e) {
-	            getLog().error("Error while retrieving elements", e);
+	            throw new RuntimeCommandException(e);
 	        }
+	        CnATreeElement root = command.getElements().get(0);
+
+	        //if typeId is that of the root object, just return it itself. else look for children:
+	        ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
+	        if (this.typeId.equals(root.getTypeId())) {
+	            this.elements = items;
+	            this.elements.add(root);
+	        }
+	        else {
+	            try {
+	                LoadReportElements elementLoader = new LoadReportElements(typeId, root.getDbId(), true);
+	                elementLoader = getCommandService().executeCommand(elementLoader);
+	                this.elements.addAll(elementLoader.getElements());
+	            } catch (CommandException e) {
+	                getLog().error("Error while retrieving elements", e);
+	            }
+	        }
+
+	        // load lazy fields:
+	        getResult();
 	    }
-	    
-	    // load lazy fields:
-	    getResult();
 	}
 	
 	public static final String[] COLUMNS = new String[] {"elmt_id", "elmt_name"};
@@ -122,7 +103,37 @@ public class LoadReportElementList extends GenericCommand {
         }
         
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(typeId);
+        cacheID.append(String.valueOf(rootElement));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.elements = (ArrayList<CnATreeElement>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.elements;
+    }
 	
-
-
 }

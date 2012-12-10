@@ -10,22 +10,24 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Organization;
 
 @SuppressWarnings("serial")
-public class LoadReportAllControls extends GenericCommand {
+public class LoadReportAllControls extends GenericCommand implements ICachedCommand {
 
 	private int rootElementId;
 	
 	private Set<Control> result;
 	
 	private transient Logger logger;
+	
+    private boolean resultInjectedFromCache = false;
 	
 	public LoadReportAllControls(Integer root){
 		rootElementId = root;
@@ -45,19 +47,21 @@ public class LoadReportAllControls extends GenericCommand {
 	
 	@Override
 	public void execute() {
-		LoadCnAElementById command = new LoadCnAElementById(Organization.TYPE_ID, rootElementId);
-		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-			if(command.getFound() == null){
-				command = new LoadCnAElementById(ITVerbund.TYPE_ID, rootElementId);
-				command = ServiceFactory.lookupCommandService().executeCommand(command);
-			}
-			if(command.getFound() != null){
-				result = getControlChildren(command.getFound());
-			}
-		} catch (Exception e) {
-			logger.error("Error while executing command", e);
-		}
+	    if(!resultInjectedFromCache){
+	        LoadCnAElementById command = new LoadCnAElementById(Organization.TYPE_ID, rootElementId);
+	        try {
+	            command = getCommandService().executeCommand(command);
+	            if(command.getFound() == null){
+	                command = new LoadCnAElementById(ITVerbund.TYPE_ID, rootElementId);
+	                command = getCommandService().executeCommand(command);
+	            }
+	            if(command.getFound() != null){
+	                result = getControlChildren(command.getFound());
+	            }
+	        } catch (Exception e) {
+	            logger.error("Error while executing command", e);
+	        }
+	    }
 	}
 	
 	public List<Control> getResult(){
@@ -86,7 +90,7 @@ public class LoadReportAllControls extends GenericCommand {
         LoadChildrenForExpansion command;
         command = new LoadChildrenForExpansion(el);
         try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             CnATreeElement newElement = command.getElementWithChildren();
             newElement.setChildrenLoaded(true);
             return newElement;
@@ -95,5 +99,44 @@ public class LoadReportAllControls extends GenericCommand {
         }
         return null;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElementId));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (HashSet<Control>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+    
+    public Logger getLog(){
+        if(logger == null){
+            logger = Logger.getLogger(LoadReportAllControls.class);
+        }
+        return logger;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
+    }
+
 
 }

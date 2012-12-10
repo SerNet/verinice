@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnATreeElement;
@@ -35,7 +35,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 /**
  * Loads all yellow & red risks to a given scenarioGroup
  */
-public class LoadReportNotGreenScenarios extends GenericCommand {
+public class LoadReportNotGreenScenarios extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadReportNotGreenScenarios.class);
     
@@ -49,6 +49,8 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
     
     private int[] numOfYellowFields;
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadReportNotGreenScenarios(Integer root, int[] yellowFields){
         this.rootElmt = root;
         this.numOfYellowFields = yellowFields;
@@ -60,50 +62,52 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
      */
     @Override
     public void execute() {
-        try{
-            HashMap<String, Integer> seenScenarios = new HashMap<String, Integer>(0);
-            RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
-            LoadReportElements scenarioLoader = new LoadReportElements(IncidentScenario.TYPE_ID, rootElmt, false);
-            scenarioLoader = ServiceFactory.lookupCommandService().executeCommand(scenarioLoader);
-            for(CnATreeElement e : scenarioLoader.getElements()){
-                if(e instanceof IncidentScenario){
-                    if(!seenScenarios.containsKey(e.getUuid())){
-                        LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
-                        assetLoader = ServiceFactory.lookupCommandService().executeCommand(assetLoader);
-                        int riskColour = 0;
-                        for(CnATreeElement a : assetLoader.getElements()){
-                            a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
-                            char[] riskTypes = new char[]{'c', 'i', 'a'};
-                            for(int i = 0; i < riskTypes.length; i++){
-                                int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i]);
-                                if(riskColour == 0){
-                                    riskColour = tc;
-                                } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
-                                    riskColour = tc;
+        if(!resultInjectedFromCache){
+            try{
+                HashMap<String, Integer> seenScenarios = new HashMap<String, Integer>(0);
+                RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+                LoadReportElements scenarioLoader = new LoadReportElements(IncidentScenario.TYPE_ID, rootElmt, false);
+                scenarioLoader = getCommandService().executeCommand(scenarioLoader);
+                for(CnATreeElement e : scenarioLoader.getElements()){
+                    if(e instanceof IncidentScenario){
+                        if(!seenScenarios.containsKey(e.getUuid())){
+                            LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
+                            assetLoader = getCommandService().executeCommand(assetLoader);
+                            int riskColour = 0;
+                            for(CnATreeElement a : assetLoader.getElements()){
+                                a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
+                                char[] riskTypes = new char[]{'c', 'i', 'a'};
+                                for(int i = 0; i < riskTypes.length; i++){
+                                    int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i]);
+                                    if(riskColour == 0){
+                                        riskColour = tc;
+                                    } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
+                                        riskColour = tc;
+                                    }
+                                    if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
+                                        break;
+                                    }
+
                                 }
                                 if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
                                     break;
                                 }
-
                             }
-                            if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
-                                break;
+                            if(riskColour != 0){
+                                ArrayList<String> result = new ArrayList<String>(0);
+                                result.add(e.getTitle());
+                                result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
+                                result.add(e.getDbId().toString());
+                                results.add(result);
+                                seenScenarios.put(e.getUuid(), 1);
                             }
-                        }
-                        if(riskColour != 0){
-                            ArrayList<String> result = new ArrayList<String>(0);
-                            result.add(e.getTitle());
-                            result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
-                            result.add(e.getDbId().toString());
-                            results.add(result);
-                            seenScenarios.put(e.getUuid(), 1);
                         }
                     }
                 }
+
+            } catch (CommandException e){
+                getLog().error("Error while executing command", e);
             }
-            
-        } catch (CommandException e){
-            getLog().error("Error while executing command", e);
         }
     }
     
@@ -116,6 +120,40 @@ public class LoadReportNotGreenScenarios extends GenericCommand {
 
     public List<ArrayList<String>> getResult() {
         return results;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        for(int i : numOfYellowFields){
+            cacheID.append(String.valueOf(i));
+        }
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.results = (ArrayList<ArrayList<String>>)result;
+        resultInjectedFromCache = true;
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.results;
     }
 
 }

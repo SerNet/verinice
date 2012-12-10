@@ -25,6 +25,7 @@ import java.util.Set;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Process;
@@ -32,7 +33,7 @@ import sernet.verinice.model.iso27k.Process;
 /**
  * 
  */
-public class LoadAssetTotalRiskFigures extends GenericCommand {
+public class LoadAssetTotalRiskFigures extends GenericCommand implements ICachedCommand{
     
     public static final String[] COLUMNS = new String[] { 
         "RISK_C",
@@ -48,6 +49,8 @@ public class LoadAssetTotalRiskFigures extends GenericCommand {
     private transient Set<Integer> seenAssets;
     private transient Set<Integer> seenScenarios;
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadAssetTotalRiskFigures(Integer rootElement){
         this.rootElmt = rootElement;
         result = new ArrayList<List<String>>(0);
@@ -58,34 +61,36 @@ public class LoadAssetTotalRiskFigures extends GenericCommand {
      */
     @Override
     public void execute() {
-        try{
-            seenScenarios = new HashSet<Integer>();
-            seenAssets = new HashSet<Integer>();
-            
-            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
-            command = getCommandService().executeCommand(command);
-            if (command.getElements() == null || command.getElements().size() == 0) {
-                result = new ArrayList<List<String>>(0);
-                return;
-            }
-            List<CnATreeElement> elements = command.getElements();
+        if(!resultInjectedFromCache){
+            try{
+                seenScenarios = new HashSet<Integer>();
+                seenAssets = new HashSet<Integer>();
 
-            for (CnATreeElement process : elements) {
-                // use of hashmap that prohibit double asset use allows to use true for doUpLinksAlso parameter
-                // otherwise this would produce wrong results in some reports
-                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, true);
-                cmnd2 = getCommandService().executeCommand(cmnd2);
-                List<CnATreeElement> assets = cmnd2.getElements();
-                for (CnATreeElement asset : assets) {
-                    if (  ! (seenAssets.contains(asset.getDbId())) )  {
-                        result.add(makeRow(asset));
-                        seenAssets.add(asset.getDbId());
+                LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt);
+                command = getCommandService().executeCommand(command);
+                if (command.getElements() == null || command.getElements().size() == 0) {
+                    result = new ArrayList<List<String>>(0);
+                    return;
+                }
+                List<CnATreeElement> elements = command.getElements();
+
+                for (CnATreeElement process : elements) {
+                    // use of hashmap that prohibit double asset use allows to use true for doUpLinksAlso parameter
+                    // otherwise this would produce wrong results in some reports
+                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, true);
+                    cmnd2 = getCommandService().executeCommand(cmnd2);
+                    List<CnATreeElement> assets = cmnd2.getElements();
+                    for (CnATreeElement asset : assets) {
+                        if (  ! (seenAssets.contains(asset.getDbId())) )  {
+                            result.add(makeRow(asset));
+                            seenAssets.add(asset.getDbId());
+                        }
                     }
                 }
-            }
 
-        } catch (CommandException e){
-            throw new RuntimeCommandException(e);
+            } catch (CommandException e){
+                throw new RuntimeCommandException(e);
+            }
         }
     }
     
@@ -113,5 +118,33 @@ public class LoadAssetTotalRiskFigures extends GenericCommand {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        this.resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
+    }
+    
 
 }

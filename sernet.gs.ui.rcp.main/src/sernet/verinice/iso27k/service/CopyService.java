@@ -20,28 +20,15 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CopyCommand;
-import sernet.verinice.service.commands.SaveElement;
 
 /**
  * A CopyService is a job, which
@@ -57,6 +44,8 @@ public class CopyService extends PasteService implements IProgressTask {
 	
     
 	private List<CnATreeElement> elements;
+	
+	private List<String> newElements;
 	
 	/**
      * Creates a new CopyService
@@ -104,6 +93,7 @@ public class CopyService extends PasteService implements IProgressTask {
 			numberOfElements = cc.getNumber();
 			progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
 			CnAElementFactory.getInstance().reloadModelFromDatabase();
+			newElements = cc.getNewElements();
 		} catch (Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -111,5 +101,9 @@ public class CopyService extends PasteService implements IProgressTask {
 			progressObserver.done();
 		}
 	}
+
+    public List<String> getNewElements() {
+        return newElements;
+    }
 	
 }

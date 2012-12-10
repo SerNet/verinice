@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
@@ -32,7 +32,7 @@ import sernet.verinice.service.commands.LoadAttachments;
 /**
  *
  */
-public class LoadReportISAAttachedImages extends GenericCommand {
+public class LoadReportISAAttachedImages extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAAttachedImages.class);
     
@@ -41,6 +41,8 @@ public class LoadReportISAAttachedImages extends GenericCommand {
     private List<byte[]> results;
     
     private boolean oddNumbers = false; // return only images with odd number
+    
+    private boolean resultInjectedFromCache = false;
     
     private static final String[] IMAGEMIMETYPES = new String[]{
         "jpg",
@@ -69,26 +71,27 @@ public class LoadReportISAAttachedImages extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<byte[]>(0);
-        LoadAttachments attachmentLoader = new LoadAttachments(rootElmt);
-        try {
-            attachmentLoader = ServiceFactory.lookupCommandService().executeCommand(attachmentLoader);
-            for(int i = 0; i < attachmentLoader.getAttachmentList().size(); i++){
-                // report uses two tables next to each other showing odd/even numbered images only
-                // done to restriction showing always two images in a row
-                if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
-                    Attachment attachment = (Attachment)attachmentLoader.getAttachmentList().get(i);
-                    if(isSupportedMIMEType(attachment.getMimeType())){
-                        LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
-                        fileLoader = ServiceFactory.lookupCommandService().executeCommand(fileLoader);
-                        results.add(fileLoader.getAttachmentFile().getFileData());
+        if(!resultInjectedFromCache){
+            results = new ArrayList<byte[]>(0);
+            LoadAttachments attachmentLoader = new LoadAttachments(rootElmt);
+            try {
+                attachmentLoader = getCommandService().executeCommand(attachmentLoader);
+                for(int i = 0; i < attachmentLoader.getAttachmentList().size(); i++){
+                    // report uses two tables next to each other showing odd/even numbered images only
+                    // done to restriction showing always two images in a row
+                    if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
+                        Attachment attachment = (Attachment)attachmentLoader.getAttachmentList().get(i);
+                        if(isSupportedMIMEType(attachment.getMimeType())){
+                            LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
+                            fileLoader = getCommandService().executeCommand(fileLoader);
+                            results.add(fileLoader.getAttachmentFile().getFileData());
+                        }
                     }
                 }
+            } catch (CommandException e) {
+                LOG.error("Error while loading attachments", e);
             }
-        } catch (CommandException e) {
-            LOG.error("Error while loading attachments", e);
         }
-        
     }
     
     public List<byte[]> getResult(){
@@ -123,6 +126,38 @@ public class LoadReportISAAttachedImages extends GenericCommand {
             }
         }
         return false;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        cacheID.append(String.valueOf(oddNumbers));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.results = (ArrayList<byte[]>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.results;
     }
 
 }

@@ -70,8 +70,8 @@ public class ReportService implements IReportService {
 		        new BasisSichCheckReport(),
 		        new ErgaenzendeSicherheitsanalyseReport(),
 		        new RisikoanalyseReport(),
+		        new ManagementRisikoBewertung(),
 		        new RealisierungsplanReport(),
-		        new ExistingRisksReport(),
 		        new ComprehensiveSamtReportType(),
 		        new AuditberichtReport()
 		    };

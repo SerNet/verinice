@@ -27,11 +27,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -43,7 +43,7 @@ import sernet.verinice.model.samt.SamtTopic;
  * (the so called "SamtGroup")
  */
 @SuppressWarnings("serial")
-public class FindSGCommand extends GenericCommand {
+public class FindSGCommand extends GenericCommand implements ICachedCommand{
 
     private transient Logger log = Logger.getLogger(FindSGCommand.class);
 
@@ -67,6 +67,8 @@ public class FindSGCommand extends GenericCommand {
     private Set<ControlGroup> outSortedCG;
     private Set<String> alreadySeenCG;
 
+    private boolean resultInjectedFromCache = false;
+
     public FindSGCommand(){
     	// BIRT JavaScript Constructor for use with class.newInstance()
     }
@@ -89,52 +91,52 @@ public class FindSGCommand extends GenericCommand {
      */
     @Override
     public void execute() {
-        IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
+        if(!resultInjectedFromCache){
+            IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
 
-        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId, true);
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            log.error("Error while executing command");
-        }
-        
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId, true);
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                log.error("Error while executing command");
+            }
 
-        List<CnATreeElement> controlGroupList = null;
 
-        if(command.getElements() != null && command.getElements().size() > 0){
-            controlGroupList = command.getElements();
-        }
-        
-        if (controlGroupList == null) {
-            controlGroupList = Collections.emptyList();
-        }
+            List<CnATreeElement> controlGroupList = null;
 
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("number of controlGroups " + FindSGCommand.nullSaveSize(controlGroupList));
-        }
+            if(command.getElements() != null && command.getElements().size() > 0){
+                controlGroupList = command.getElements();
+            }
 
-        // check if parent is Audit and children are SamtTopics
-        List<ControlGroup> resultList = new ArrayList<ControlGroup>();
-        for (CnATreeElement elmt : controlGroupList) {
-            if(elmt instanceof ControlGroup){
-                ControlGroup controlGroup = (ControlGroup)elmt;
-            
-//            if (isISO27kControlGroup(controlGroup) && isSamtTopicCollection(controlGroup.getChildren())) {
-                if (!(alreadySeenCG.contains(controlGroup.getUuid())) && 
-                        isISO27kControlGroup(controlGroup) && containsSamtTopicsOnly(controlGroup)
-                        ) {
-                    resultList.add(controlGroup);
+            if (controlGroupList == null) {
+                controlGroupList = Collections.emptyList();
+            }
+
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("number of controlGroups " + FindSGCommand.nullSaveSize(controlGroupList));
+            }
+
+            // check if parent is Audit and children are SamtTopics
+            List<ControlGroup> resultList = new ArrayList<ControlGroup>();
+            for (CnATreeElement elmt : controlGroupList) {
+                if(elmt instanceof ControlGroup){
+                    ControlGroup controlGroup = (ControlGroup)elmt;
+
+                    if (!(alreadySeenCG.contains(controlGroup.getUuid())) && 
+                            isISO27kControlGroup(controlGroup) && containsSamtTopicsOnly(controlGroup)
+                            ) {
+                        resultList.add(controlGroup);
+                    }
+                    alreadySeenCG.add(controlGroup.getUuid());
                 }
-                alreadySeenCG.add(controlGroup.getUuid());
+            }
+
+            if (resultList != null && !resultList.isEmpty()) {
+                selfAssessmentGroup = determineRootControlgroup(resultList);
+                if(selfAssessmentGroup != null)
+                    hydrate(selfAssessmentGroup);
             }
         }
-
-        if (resultList != null && !resultList.isEmpty()) {
-            selfAssessmentGroup = determineRootControlgroup(resultList);
-            if(selfAssessmentGroup != null)
-                hydrate(selfAssessmentGroup);
-        }
-
     }
     
     private ControlGroup determineRootControlgroup(List<ControlGroup> list){
@@ -252,6 +254,35 @@ public class FindSGCommand extends GenericCommand {
     public void setDBIDandHydrate(int dbId, boolean hydrate){
     	this.dbId = dbId;
     	this.hydrateParent = hydrate;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(hydrateParent);
+        cacheID.append(String.valueOf(dbId));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.selfAssessmentGroup = (ControlGroup)result;
+        this.resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return selfAssessmentGroup;
     }
 
 }

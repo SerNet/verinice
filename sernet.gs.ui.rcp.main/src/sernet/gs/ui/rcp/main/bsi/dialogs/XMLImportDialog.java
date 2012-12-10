@@ -38,7 +38,9 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -552,8 +554,26 @@ public class XMLImportDialog extends Dialog {
         }
 
         Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
-        Set<CnATreeElement> changedElement = command.getElementSet();
+        final Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);
+        if(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+            WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
+                @Override
+                public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                    IStatus status = Status.OK_STATUS;
+                    try {                        
+                        monitor.beginTask(NLS.bind(Messages.XMLImportDialog_5, new Object[] {dataFile.getName()}), IProgressMonitor.UNKNOWN);
+                        createValidations(changedElement);
+                    } catch (Exception e){
+                        LOG.error("Exception while executing createValidationsJob", e);
+                    } finally {
+                        monitor.done();
+                    }
+                    return status;
+                }
+            };
+            JobScheduler.scheduleJob(validationCreationJob, iSchedulingRule); 
+        }
     }
 
     /**
@@ -621,6 +641,16 @@ public class XMLImportDialog extends Dialog {
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
             }
+        }
+    }
+
+    private void createValidations(Set<CnATreeElement> elmts){
+        try{
+            for(CnATreeElement elmt : elmts){
+                ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
+            }
+        } catch (CommandException e){
+            LOG.error("Error while executing validation creation command", e);
         }
     }
 }

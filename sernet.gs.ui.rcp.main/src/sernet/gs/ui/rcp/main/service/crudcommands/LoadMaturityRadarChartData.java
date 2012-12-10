@@ -29,15 +29,15 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.CSRMassnahmenSummaryHome;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.iso27k.ControlGroup;
 
 /**
  *
  */
-public class LoadMaturityRadarChartData extends GenericCommand {
+public class LoadMaturityRadarChartData extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadMaturityRadarChartData.class);
     
@@ -58,6 +58,8 @@ public class LoadMaturityRadarChartData extends GenericCommand {
     private List<List<String>> result;
     
     private ControlGroup samtRootGroup;
+    
+    private boolean resultInjectedFromCache = false;
 
     public LoadMaturityRadarChartData(Integer root){
         this.rootElmt = root;
@@ -80,17 +82,16 @@ public class LoadMaturityRadarChartData extends GenericCommand {
      */
     @Override
     public void execute() {
-        result = new ArrayList<List<String>>(0);
-        samtRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
-        try{
-//            FindSGCommand command = new FindSGCommand(true, rootElmt);
-//            command = ServiceFactory.lookupCommandService().executeCommand(command);
-//            samtRootGroup = command.getSelfAssessmentGroup();
-            ArrayList<ControlGroup> list = new ArrayList<ControlGroup>();
-            list.add(samtRootGroup);
-            result = getMaturityValues(list);
-        } catch (Exception e){
-            getLog().error("Error while filling maturityChart dataset", e);
+        if(!resultInjectedFromCache){
+            result = new ArrayList<List<String>>(0);
+            samtRootGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
+            try{
+                ArrayList<ControlGroup> list = new ArrayList<ControlGroup>();
+                list.add(samtRootGroup);
+                result = getMaturityValues(list);
+            } catch (Exception e){
+                getLog().error("Error while filling maturityChart dataset", e);
+            }
         }
     }
     
@@ -147,5 +148,49 @@ public class LoadMaturityRadarChartData extends GenericCommand {
     
     public int getSgDBId(){
         return samtRootGroup.getDbId();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        if(sgdbid != null){
+            cacheID.append(String.valueOf(sgdbid));
+        } else {
+            cacheID.append("null");
+        }
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Object[]){
+            Object[] array = (Object[])result;
+            this.result = (ArrayList<List<String>>)array[0];
+            this.samtRootGroup = (ControlGroup)array[1];
+            resultInjectedFromCache = true;
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            }
+        }
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        Object[] result = new Object[2];
+        result[0] = this.result;
+        result[1] = samtRootGroup;
+        return result;
     }
 }

@@ -43,8 +43,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -1033,102 +1033,214 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">mnums_verantwortlichinit</property>
                     <text-property name="displayName">mnums_verantwortlichinit</text-property>
+                    <text-property name="heading">mnums_verantwortlichinit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_beschreibung</property>
+                    <text-property name="displayName">mnums_beschreibung</text-property>
+                    <text-property name="heading">mnums_beschreibung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_verantwortlichums</property>
                     <text-property name="displayName">mnums_verantwortlichums</text-property>
+                    <text-property name="heading">mnums_verantwortlichums</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_id</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">mnums_id</text-property>
+                    <text-property name="heading">mnums_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_dokument</property>
                     <text-property name="displayName">mnums_dokument</text-property>
+                    <text-property name="heading">mnums_dokument</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_lebenszyklus</property>
                     <text-property name="displayName">mnums_lebenszyklus</text-property>
+                    <text-property name="heading">mnums_lebenszyklus</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_url</property>
                     <text-property name="displayName">mnums_url</text-property>
+                    <text-property name="heading">mnums_url</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_siegel</property>
                     <text-property name="displayName">mnums_siegel</text-property>
+                    <text-property name="heading">mnums_siegel</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_name</property>
                     <text-property name="displayName">mnums_name</text-property>
+                    <text-property name="heading">mnums_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_stand</property>
                     <text-property name="displayName">mnums_stand</text-property>
+                    <text-property name="heading">mnums_stand</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_auditor</property>
+                    <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                    <text-property name="heading">mnums_gsaudit_auditor</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_befragt</property>
+                    <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                    <text-property name="heading">mnums_gsaudit_befragt</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_methode</property>
+                    <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                    <text-property name="heading">mnums_gsaudit_methode</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_fragen</property>
+                    <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                    <text-property name="heading">mnums_gsaudit_fragen</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_beobachtung</property>
+                    <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                    <text-property name="heading">mnums_gsaudit_beobachtung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_bericht</property>
+                    <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                    <text-property name="heading">mnums_gsaudit_bericht</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_auditam</property>
+                    <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                    <text-property name="heading">mnums_gsaudit_auditam</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_status</property>
+                    <text-property name="displayName">mnums_gsaudit_status</text-property>
+                    <text-property name="heading">mnums_gsaudit_status</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_abweichung</property>
+                    <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                    <text-property name="heading">mnums_gsaudit_abweichung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_frist</property>
+                    <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                    <text-property name="heading">mnums_gsaudit_frist</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_nachberfolgt</property>
+                    <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                    <text-property name="heading">mnums_gsaudit_nachberfolgt</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_nachb</property>
+                    <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                    <text-property name="heading">mnums_gsaudit_nachb</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_votum</property>
+                    <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                    <text-property name="heading">mnums_gsaudit_votum</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_umsetzung</property>
                     <text-property name="displayName">mnums_umsetzung</text-property>
+                    <text-property name="heading">mnums_umsetzung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_erlaeuterung</property>
                     <text-property name="displayName">mnums_erlaeuterung</text-property>
+                    <text-property name="heading">mnums_erlaeuterung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_umsetzungbis</property>
                     <text-property name="displayName">mnums_umsetzungbis</text-property>
+                    <text-property name="heading">mnums_umsetzungbis</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_umsetzungdurch_link</property>
                     <text-property name="displayName">mnums_umsetzungdurch_link</text-property>
+                    <text-property name="heading">mnums_umsetzungdurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_initdurch_link</property>
                     <text-property name="displayName">mnums_initdurch_link</text-property>
+                    <text-property name="heading">mnums_initdurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_ptfix</property>
                     <text-property name="displayName">mnums_kosten_ptfix</text-property>
+                    <text-property name="heading">mnums_kosten_ptfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_ptvar</property>
                     <text-property name="displayName">mnums_kosten_ptvar</text-property>
+                    <text-property name="heading">mnums_kosten_ptvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_ptperiod</property>
                     <text-property name="displayName">mnums_kosten_ptperiod</text-property>
+                    <text-property name="heading">mnums_kosten_ptperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_sachfix</property>
                     <text-property name="displayName">mnums_kosten_sachfix</text-property>
+                    <text-property name="heading">mnums_kosten_sachfix</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_sachvar</property>
                     <text-property name="displayName">mnums_kosten_sachvar</text-property>
+                    <text-property name="heading">mnums_kosten_sachvar</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_kosten_sachperiod</property>
                     <text-property name="displayName">mnums_kosten_sachperiod</text-property>
+                    <text-property name="heading">mnums_kosten_sachperiod</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_letzterevisiondurch_link</property>
                     <text-property name="displayName">mnums_letzterevisiondurch_link</text-property>
+                    <text-property name="heading">mnums_letzterevisiondurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_letzterevisionam</property>
                     <text-property name="displayName">mnums_letzterevisionam</text-property>
+                    <text-property name="heading">mnums_letzterevisionam</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_bemerkungen</property>
                     <text-property name="displayName">mnums_bemerkungen</text-property>
+                    <text-property name="heading">mnums_bemerkungen</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_naechsterevisiondurch_link</property>
                     <text-property name="displayName">mnums_naechsterevisiondurch_link</text-property>
+                    <text-property name="heading">mnums_naechsterevisiondurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_naechsterevisionam</property>
                     <text-property name="displayName">mnums_naechsterevisionam</text-property>
+                    <text-property name="heading">mnums_naechsterevisionam</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">ne</property>
+                    <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                    <simple-property-list name="value1">
+                        <value>"Ja"</value>
+                    </simple-property-list>
+                </structure>
+                <structure>
+                    <property name="operator">ne</property>
+                    <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                    <simple-property-list name="value1">
+                        <value>"Entbehrlich"</value>
+                    </simple-property-list>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1153,121 +1265,191 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">mnums_verantwortlichums</property>
+                        <property name="name">mnums_beschreibung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">mnums_id</property>
+                        <property name="name">mnums_verantwortlichums</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">mnums_dokument</property>
+                        <property name="name">mnums_id</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">mnums_lebenszyklus</property>
+                        <property name="name">mnums_dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">mnums_url</property>
+                        <property name="name">mnums_lebenszyklus</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">mnums_siegel</property>
+                        <property name="name">mnums_url</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">mnums_name</property>
+                        <property name="name">mnums_siegel</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">mnums_stand</property>
+                        <property name="name">mnums_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">mnums_umsetzung</property>
+                        <property name="name">mnums_stand</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">mnums_erlaeuterung</property>
+                        <property name="name">mnums_gsaudit_auditor</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">mnums_umsetzungbis</property>
+                        <property name="name">mnums_gsaudit_befragt</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">mnums_umsetzungdurch_link</property>
+                        <property name="name">mnums_gsaudit_methode</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">mnums_initdurch_link</property>
+                        <property name="name">mnums_gsaudit_fragen</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">mnums_kosten_ptfix</property>
+                        <property name="name">mnums_gsaudit_beobachtung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">mnums_kosten_ptvar</property>
+                        <property name="name">mnums_gsaudit_bericht</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">mnums_kosten_ptperiod</property>
+                        <property name="name">mnums_gsaudit_auditam</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">mnums_kosten_sachfix</property>
+                        <property name="name">mnums_gsaudit_status</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">mnums_kosten_sachvar</property>
+                        <property name="name">mnums_gsaudit_abweichung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">mnums_kosten_sachperiod</property>
+                        <property name="name">mnums_gsaudit_frist</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">mnums_letzterevisiondurch_link</property>
+                        <property name="name">mnums_gsaudit_nachberfolgt</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">mnums_letzterevisionam</property>
+                        <property name="name">mnums_gsaudit_nachb</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
-                        <property name="name">mnums_bemerkungen</property>
+                        <property name="name">mnums_gsaudit_votum</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">mnums_naechsterevisiondurch_link</property>
+                        <property name="name">mnums_umsetzung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
+                        <property name="name">mnums_erlaeuterung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">mnums_umsetzungbis</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">mnums_umsetzungdurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">mnums_initdurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">mnums_kosten_ptfix</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">mnums_kosten_ptvar</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">mnums_kosten_ptperiod</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">mnums_kosten_sachfix</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">33</property>
+                        <property name="name">mnums_kosten_sachvar</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">mnums_kosten_sachperiod</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">mnums_letzterevisiondurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">mnums_letzterevisionam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">mnums_bemerkungen</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">mnums_naechsterevisiondurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
                         <property name="name">mnums_naechsterevisionam</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -1284,167 +1466,265 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">mnums_beschreibung</property>
+                    <property name="nativeName">mnums_beschreibung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">mnums_verantwortlichums</property>
                     <property name="nativeName">mnums_verantwortlichums</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">mnums_id</property>
                     <property name="nativeName">mnums_id</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">mnums_dokument</property>
                     <property name="nativeName">mnums_dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">mnums_lebenszyklus</property>
                     <property name="nativeName">mnums_lebenszyklus</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">mnums_url</property>
                     <property name="nativeName">mnums_url</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">mnums_siegel</property>
                     <property name="nativeName">mnums_siegel</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">mnums_name</property>
                     <property name="nativeName">mnums_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">mnums_stand</property>
                     <property name="nativeName">mnums_stand</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
+                    <property name="name">mnums_gsaudit_auditor</property>
+                    <property name="nativeName">mnums_gsaudit_auditor</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">mnums_gsaudit_befragt</property>
+                    <property name="nativeName">mnums_gsaudit_befragt</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">mnums_gsaudit_methode</property>
+                    <property name="nativeName">mnums_gsaudit_methode</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">mnums_gsaudit_fragen</property>
+                    <property name="nativeName">mnums_gsaudit_fragen</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">mnums_gsaudit_beobachtung</property>
+                    <property name="nativeName">mnums_gsaudit_beobachtung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">mnums_gsaudit_bericht</property>
+                    <property name="nativeName">mnums_gsaudit_bericht</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">mnums_gsaudit_auditam</property>
+                    <property name="nativeName">mnums_gsaudit_auditam</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">mnums_gsaudit_status</property>
+                    <property name="nativeName">mnums_gsaudit_status</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">mnums_gsaudit_abweichung</property>
+                    <property name="nativeName">mnums_gsaudit_abweichung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">mnums_gsaudit_frist</property>
+                    <property name="nativeName">mnums_gsaudit_frist</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">mnums_gsaudit_nachberfolgt</property>
+                    <property name="nativeName">mnums_gsaudit_nachberfolgt</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">mnums_gsaudit_nachb</property>
+                    <property name="nativeName">mnums_gsaudit_nachb</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">mnums_gsaudit_votum</property>
+                    <property name="nativeName">mnums_gsaudit_votum</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
                     <property name="name">mnums_umsetzung</property>
                     <property name="nativeName">mnums_umsetzung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">25</property>
                     <property name="name">mnums_erlaeuterung</property>
                     <property name="nativeName">mnums_erlaeuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">26</property>
                     <property name="name">mnums_umsetzungbis</property>
                     <property name="nativeName">mnums_umsetzungbis</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">27</property>
                     <property name="name">mnums_umsetzungdurch_link</property>
                     <property name="nativeName">mnums_umsetzungdurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">28</property>
                     <property name="name">mnums_initdurch_link</property>
                     <property name="nativeName">mnums_initdurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">29</property>
                     <property name="name">mnums_kosten_ptfix</property>
                     <property name="nativeName">mnums_kosten_ptfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">30</property>
                     <property name="name">mnums_kosten_ptvar</property>
                     <property name="nativeName">mnums_kosten_ptvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">31</property>
                     <property name="name">mnums_kosten_ptperiod</property>
                     <property name="nativeName">mnums_kosten_ptperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">32</property>
                     <property name="name">mnums_kosten_sachfix</property>
                     <property name="nativeName">mnums_kosten_sachfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">33</property>
                     <property name="name">mnums_kosten_sachvar</property>
                     <property name="nativeName">mnums_kosten_sachvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">34</property>
                     <property name="name">mnums_kosten_sachperiod</property>
                     <property name="nativeName">mnums_kosten_sachperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">35</property>
                     <property name="name">mnums_letzterevisiondurch_link</property>
                     <property name="nativeName">mnums_letzterevisiondurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">36</property>
                     <property name="name">mnums_letzterevisionam</property>
                     <property name="nativeName">mnums_letzterevisionam</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">37</property>
                     <property name="name">mnums_bemerkungen</property>
                     <property name="nativeName">mnums_bemerkungen</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">38</property>
                     <property name="name">mnums_naechsterevisiondurch_link</property>
                     <property name="nativeName">mnums_naechsterevisiondurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">39</property>
                     <property name="name">mnums_naechsterevisionam</property>
                     <property name="nativeName">mnums_naechsterevisionam</property>
                     <property name="dataType">javaObject</property>
@@ -1470,27 +1750,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -2020,7 +2304,7 @@ columns(cols);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
-            <text-property name="text">Nicht umgesetzte Grundschutzmaßnahmen</text-property>
+            <text-property name="text">Nicht &amp; teilweise umgesetzte Grundschutzmaßnahmen</text-property>
         </label>
         <table id="1573">
             <property name="marginTop">20pt</property>

@@ -33,19 +33,19 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
  */
-public class LoadISAReportChapterList extends GenericCommand {
+public class LoadISAReportChapterList extends GenericCommand implements ICachedCommand{
 
     private static transient Logger LOG = Logger.getLogger(LoadISAReportChapterList.class);
     
@@ -61,6 +61,8 @@ public class LoadISAReportChapterList extends GenericCommand {
     private Integer rootElmt;
     
     private List<List<String>> result;
+    
+    private boolean resultInjectedFromCache = false;
 
     public LoadISAReportChapterList(Integer root){
         result = new ArrayList<List<String>>(0);
@@ -73,8 +75,10 @@ public class LoadISAReportChapterList extends GenericCommand {
      */
     @Override
     public void execute() {
-        for(ControlGroup g : getControlGroups(rootElmt)){
-            result.add(createValueEntry(g));
+        if(!resultInjectedFromCache){
+            for(ControlGroup g : getControlGroups(rootElmt)){
+                result.add(createValueEntry(g));
+            }
         }
     }
     
@@ -83,7 +87,7 @@ public class LoadISAReportChapterList extends GenericCommand {
         Set<ControlGroup> alreadySeen = new HashSet<ControlGroup>(0);
         try {
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root, true);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             List<CnATreeElement> groups = command.getElements();
             if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
                 groups.clear();
@@ -154,7 +158,7 @@ public class LoadISAReportChapterList extends GenericCommand {
         LoadChildrenForExpansion command;
         command = new LoadChildrenForExpansion(el);
         try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             CnATreeElement newElement = command.getElementWithChildren();
             newElement.setChildrenLoaded(true);
             getCache().put(new Element(el.getUuid(), newElement));
@@ -186,4 +190,37 @@ public class LoadISAReportChapterList extends GenericCommand {
         return result;
     }
 
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return result;
+    }
 }

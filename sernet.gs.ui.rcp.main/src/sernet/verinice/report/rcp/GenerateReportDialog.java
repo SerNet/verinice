@@ -2,6 +2,7 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -36,6 +37,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -514,6 +516,19 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	    if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
 	        MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
 	        return;
+	    }
+	    List<Integer> rootElements = new ArrayList<Integer>(0);
+	    rootElements.add(getRootElement());
+	    if(getRootElements() != null)rootElements.addAll(Arrays.asList(getRootElements()));
+	    IValidationService vService = ServiceFactory.lookupValidationService();
+	    for(Integer scopeId : rootElements){
+	        if(vService.getValidations(scopeId, (Integer)null).size() > 0){
+	            if(!MessageDialog.openQuestion(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_21)){
+	                return;
+	            } else {
+	                break;
+	            }
+	        }
 	    }
 
 	    String f = textFile.getText();

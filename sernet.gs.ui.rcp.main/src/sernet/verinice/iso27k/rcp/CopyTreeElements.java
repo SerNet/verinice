@@ -49,6 +49,8 @@ public class CopyTreeElements implements IProgressRunnable {
 
 	private List<CnATreeElement> elements;
 	
+	private List<String> newElements;
+	
 
 	@SuppressWarnings("unchecked")
 	public CopyTreeElements(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
@@ -64,6 +66,7 @@ public class CopyTreeElements implements IProgressRunnable {
 		progressObserver = new RcpProgressObserver(monitor);
 		service = new CopyService(progressObserver,this.selectedGroup, elements);
 		service.run();
+		newElements = ((CopyService)service).getNewElements();
 	}
 
 	/**
@@ -85,6 +88,11 @@ public class CopyTreeElements implements IProgressRunnable {
     public void openInformation() {
         // TODO Auto-generated method stub
         
+    }
+
+
+    public List<String> getNewElements() {
+        return newElements;
     }
 
 }

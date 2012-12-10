@@ -1,42 +1,20 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
@@ -47,7 +25,7 @@ import sernet.verinice.model.iso27k.Process;
  * 
  * 
  */
-public class LoadReportCountRisksBySeverity extends GenericCommand {
+public class LoadReportCountRisksBySeverity extends GenericCommand implements ICachedCommand{
 
     public static final String[] COLUMNS = new String[] { 
         "COUNT_RISK_COLOR",
@@ -69,6 +47,8 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
     private int numYellowFields;
     
     private String ciaRelevantProperty;
+    
+    private boolean resultInjectedFromCache = false;
 
     public LoadReportCountRisksBySeverity(Integer rootElement, char riskType, int numberOfYellowLevels) {
         this.rootElmt = rootElement;
@@ -81,56 +61,58 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
 
     @SuppressWarnings("restriction")
     public void execute() {
-        try {
-            // determine max and tolerable risk values. initialize matrices to save value counts:
-            Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
+        if(!resultInjectedFromCache){
+            try {
+                // determine max and tolerable risk values. initialize matrices to save value counts:
+                Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
 
-            HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+                HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 
-            switch (this.riskType) {
-            case 'c':
-                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
-                ciaRelevantProperty = "scenario_value_method_confidentiality";
-                break;
-            case 'i':
-                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
-                ciaRelevantProperty = "scenario_value_method_integrity";
-                break;
-            case 'a':
-                tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
-                ciaRelevantProperty = "scenario_value_method_availability";
-                break;
-            }
+                switch (this.riskType) {
+                case 'c':
+                    tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_C);
+                    ciaRelevantProperty = "scenario_value_method_confidentiality";
+                    break;
+                case 'i':
+                    tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_I);
+                    ciaRelevantProperty = "scenario_value_method_integrity";
+                    break;
+                case 'a':
+                    tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
+                    ciaRelevantProperty = "scenario_value_method_availability";
+                    break;
+                }
 
-            // load risk values from elements (following links to process, asset, scenario)
-            
-            LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
-            command = getCommandService().executeCommand(command);
-            if (command.getElements() == null || command.getElements().size() == 0) {
-                return;
-            }
-            List<CnATreeElement> elements = command.getElements();
+                // load risk values from elements (following links to process, asset, scenario)
 
-            for (CnATreeElement process : elements) {
-                LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
-                cmnd2 = getCommandService().executeCommand(cmnd2);
-                List<CnATreeElement> assets = cmnd2.getElements();
-                for (CnATreeElement asset : assets) {
-                    LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
-                    cmnd3 = getCommandService().executeCommand(cmnd3);
-                    List<CnATreeElement> scenarios = cmnd3.getElements();
-                    for (CnATreeElement scenario : scenarios) {
-                        if(scenario.getEntity().getProperties(ciaRelevantProperty).getProperty(0).getPropertyValue().equals("1")){
-                            countRisk(scenario, asset);
+                LoadReportElements command = new LoadReportElements(Process.TYPE_ID, rootElmt, true);
+                command = getCommandService().executeCommand(command);
+                if (command.getElements() == null || command.getElements().size() == 0) {
+                    return;
+                }
+                List<CnATreeElement> elements = command.getElements();
+
+                for (CnATreeElement process : elements) {
+                    LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
+                    ICommandService cms = getCommandService();
+                    cmnd2 = getCommandService().executeCommand(cmnd2);
+                    List<CnATreeElement> assets = cmnd2.getElements();
+                    for (CnATreeElement asset : assets) {
+                        LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
+                        cmnd3 = getCommandService().executeCommand(cmnd3);
+                        List<CnATreeElement> scenarios = cmnd3.getElements();
+                        for (CnATreeElement scenario : scenarios) {
+                            if(scenario.getEntity().getProperties(ciaRelevantProperty).getProperty(0).getPropertyValue().equals("1")){
+                                countRisk(scenario, asset);
+                            }
                         }
                     }
                 }
+
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
             }
-
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
         }
-
     }
 
     /**
@@ -191,6 +173,40 @@ public class LoadReportCountRisksBySeverity extends GenericCommand {
         return result;
     }
 
-   
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        cacheID.append(String.valueOf(riskType));
+        cacheID.append(String.valueOf(numYellowFields));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Integer[]){
+            Integer[] array = (Integer[])result;
+            countRYG[0] = array[0];
+            countRYG[1] = array[1];
+            countRYG[2] = array[2];
+            resultInjectedFromCache = true;
+        }
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return countRYG;
+    }
   
 }

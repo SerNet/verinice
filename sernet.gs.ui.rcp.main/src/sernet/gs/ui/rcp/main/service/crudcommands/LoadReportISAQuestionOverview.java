@@ -33,6 +33,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -42,7 +43,7 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISAQuestionOverview extends GenericCommand {
+public class LoadReportISAQuestionOverview extends GenericCommand implements ICachedCommand {
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionOverview.class);
     private static final String PROP_REL_SAMTTOPIC_PERSONISO_RESP = "rel_samttopic_person-iso_resp";
@@ -51,6 +52,9 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
     private static final int OVERVIEW_PROPERTY_TARGET = 0;
+    
+    private boolean resultInjectedFromCache = false;
+
     
     public static final String[] COLUMNS = new String[] { 
         "TITLE",
@@ -73,56 +77,58 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
      */
     @Override
     public void execute() {
-        result = new ArrayList<List<String>>(0);
-        try {
-            for(ControlGroup cg : getControlGroups(rootElmt)){
-                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                for(CnATreeElement c : command.getElements()){
-                    if(c instanceof SamtTopic){
-                        ArrayList<String> list = new ArrayList<String>(0);
-                        SamtTopic t = (SamtTopic)c;
-                        String[] splittedTitle = splitTopicTitle(t.getTitle());
-                        String maturity = String.valueOf(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
-                        String riskValue = String.valueOf(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
-                        StringBuilder sb = new StringBuilder();
-                        for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
-                            if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){
-                                PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
-                                sb.append(e.getSurname());
-                                sb.append(", ");
-                                sb.append(e.getName());
-                                sb.append("\n"); // newline, to enlist more than one person
+        if(!resultInjectedFromCache){
+            result = new ArrayList<List<String>>(0);
+            try {
+                for(ControlGroup cg : getControlGroups(rootElmt)){
+                    LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    for(CnATreeElement c : command.getElements()){
+                        if(c instanceof SamtTopic){
+                            ArrayList<String> list = new ArrayList<String>(0);
+                            SamtTopic t = (SamtTopic)c;
+                            String[] splittedTitle = splitTopicTitle(t.getTitle());
+                            String maturity = String.valueOf(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
+                            String riskValue = String.valueOf(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
+                            StringBuilder sb = new StringBuilder();
+                            for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
+                                if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){
+                                    PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
+                                    sb.append(e.getSurname());
+                                    sb.append(", ");
+                                    sb.append(e.getName());
+                                    sb.append("\n"); // newline, to enlist more than one person
+                                }
                             }
-                        }
-                        String persons = sb.toString();
-                        String dueDate = t.getEntity().getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
-                        if(dueDate == null){
-                            dueDate = DUMMY_VALUE;
-                        }
-                        if(persons == null ){
-                            persons = DUMMY_VALUE;
-                        }
-                        if(riskValue == null){
-                            riskValue = DUMMY_VALUE;
-                        }
-                        if(maturity == null){
-                            maturity = DUMMY_VALUE;
-                        }
-                        list.add(splittedTitle[0]);
-                        list.add(splittedTitle[1]);
-                        list.add(maturity);
-                        list.add(riskValue);
-                        list.add(persons);
-                        list.add(dueDate);
-                        
-                        result.add(list);
-                    }
-                }
+                            String persons = sb.toString();
+                            String dueDate = t.getEntity().getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
+                            if(dueDate == null){
+                                dueDate = DUMMY_VALUE;
+                            }
+                            if(persons == null ){
+                                persons = DUMMY_VALUE;
+                            }
+                            if(riskValue == null){
+                                riskValue = DUMMY_VALUE;
+                            }
+                            if(maturity == null){
+                                maturity = DUMMY_VALUE;
+                            }
+                            list.add(splittedTitle[0]);
+                            list.add(splittedTitle[1]);
+                            list.add(maturity);
+                            list.add(riskValue);
+                            list.add(persons);
+                            list.add(dueDate);
 
+                            result.add(list);
+                        }
+                    }
+
+                }
+            } catch (CommandException e) {
+                LOG.error("Error while computing details for SamtTopic", e);
             }
-        } catch (CommandException e) {
-            LOG.error("Error while computing details for SamtTopic", e);
         }
         
     }
@@ -221,5 +227,37 @@ public class LoadReportISAQuestionOverview extends GenericCommand {
         }
         return true;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.result;
+    }
+
 
 }

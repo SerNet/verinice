@@ -12,6 +12,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -22,7 +23,7 @@ import sernet.verinice.service.commands.CnATypeMapper;
  * Loads an element with all links from / to it.
  * also includes the dbId of the linked element.
  */
-public class LoadReportElementWithLinks extends GenericCommand {
+public class LoadReportElementWithLinks extends GenericCommand implements ICachedCommand{
 
     public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbId"};
 
@@ -32,6 +33,8 @@ public class LoadReportElementWithLinks extends GenericCommand {
     private List<CnALink> linkList;
 
     private transient CnATypeMapper cnATypeMapper;
+    
+    private boolean resultInjectedFromCache = false;
     
     public LoadReportElementWithLinks(String typeId, Integer rootElement) {
 	    this.typeId = typeId;
@@ -48,22 +51,24 @@ public class LoadReportElementWithLinks extends GenericCommand {
     }
 	
 	public void execute() {
-	    cnATypeMapper = new CnATypeMapper();
-	    linkList = new ArrayList<CnALink>();
-	    
-	    LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
-	    try {
-            command = getCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            throw new RuntimeCommandException(e);
-        }
-        if (command.getElements() == null || command.getElements().size()==0) {
-            result = new ArrayList<List<String>>(0);
-            return;
-        }
-	    CnATreeElement root = command.getElements().get(0);
-	    
-	    loadLinks(root);
+	    if(!resultInjectedFromCache){
+	        cnATypeMapper = new CnATypeMapper();
+	        linkList = new ArrayList<CnALink>();
+
+	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
+	        try {
+	            command = getCommandService().executeCommand(command);
+	        } catch (CommandException e) {
+	            throw new RuntimeCommandException(e);
+	        }
+	        if (command.getElements() == null || command.getElements().size()==0) {
+	            result = new ArrayList<List<String>>(0);
+	            return;
+	        }
+	        CnATreeElement root = command.getElements().get(0);
+
+	        loadLinks(root);
+	    }
 	    
 	}
 
@@ -179,14 +184,41 @@ public class LoadReportElementWithLinks extends GenericCommand {
     public List<CnALink> getLinkList() {
         return linkList;
     }
-    
-    
-    
 
-   
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(typeId);
+        cacheID.append(String.valueOf(rootElement));
+        return cacheID.toString();
+    }
 
-  
-	
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        if(result instanceof Object[]){
+            Object[] array = (Object[])result;
+            this.result = (ArrayList<List<String>>)array[0];
+            this.linkList = (ArrayList<CnALink>)array[1];
+            resultInjectedFromCache = true;
+        }
+    }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        Object[] result = new Object[2];
+        result[0] = this.result;
+        result[1] = this.linkList;
+        return result;
+    }
 
 }

@@ -26,9 +26,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -36,13 +36,15 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARisk extends GenericCommand {
+public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportISARisk.class);
 
     private static final String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
     
     private static final String PROP_ISATOPIC_RISK = "samt_topic_audit_ra";
+    
+    private boolean resultInjectedFromCache = false;
     
     public static final String[] COLUMNS = new String[] { 
         "COUNT_RISK_NO",
@@ -84,91 +86,91 @@ public class LoadReportISARisk extends GenericCommand {
      */
     @Override
     public void execute() {
-        
-//        Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
-        LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt, true);
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            LOG.error("Error while loading controlgroups", e);
-        }
-        
-        Set<ControlGroup> groups = new HashSet<ControlGroup>();
-        for(CnATreeElement elmt : command.getElements()){
-            if(elmt instanceof ControlGroup){
-                ControlGroup g = (ControlGroup)elmt;
-                if(!Boolean.parseBoolean(g.getEntity().getSimpleValue(PROP_CG_ISISAELMNT))){
-                    groups.add(g);
+        if(!resultInjectedFromCache){
+            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt, true);
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                LOG.error("Error while loading controlgroups", e);
+            }
+
+            Set<ControlGroup> groups = new HashSet<ControlGroup>();
+            for(CnATreeElement elmt : command.getElements()){
+                if(elmt instanceof ControlGroup){
+                    ControlGroup g = (ControlGroup)elmt;
+                    if(!Boolean.parseBoolean(g.getEntity().getSimpleValue(PROP_CG_ISISAELMNT))){
+                        groups.add(g);
+                    }
                 }
             }
-        }
-        // ensuring that every samtTopic is counted only one
-        // because of (sub-)root-Controlgroups are enlisted here also, SamtTopics could be iterated more than once here
-        HashSet<String> alreadySeenCG = new HashSet<String>();
-        HashSet<String> alreadySeenST = new HashSet<String>();
-        for(ControlGroup g : groups){
-            if(!alreadySeenCG.contains(g.getUuid())){
-                command = new LoadReportElements(SamtTopic.TYPE_ID, g.getDbId(), true);
-                try {
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    for(CnATreeElement c : command.getElements()){
-                        if(c instanceof SamtTopic){
-                            SamtTopic t  = (SamtTopic)c;
-                            if(!alreadySeenST.contains(t.getUuid())){
-                                int riskValue = Integer.parseInt(t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
-                                switch(riskValue){
+            // ensuring that every samtTopic is counted only one
+            // because of (sub-)root-Controlgroups are enlisted here also, SamtTopics could be iterated more than once here
+            HashSet<String> alreadySeenCG = new HashSet<String>();
+            HashSet<String> alreadySeenST = new HashSet<String>();
+            for(ControlGroup g : groups){
+                if(!alreadySeenCG.contains(g.getUuid())){
+                    command = new LoadReportElements(SamtTopic.TYPE_ID, g.getDbId(), true);
+                    try {
+                        command = getCommandService().executeCommand(command);
+                        for(CnATreeElement c : command.getElements()){
+                            if(c instanceof SamtTopic){
+                                SamtTopic t  = (SamtTopic)c;
+                                if(!alreadySeenST.contains(t.getUuid())){
+                                    int riskValue = Integer.parseInt(t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
+                                    switch(riskValue){
                                     case -1: risk_0++; risk_sum++;
                                     break;
-    
+
                                     case 0: risk_1++; risk_sum++;
                                     break;
-    
+
                                     case 1: risk_2++; risk_sum++;
                                     break;
-    
+
                                     case 2: risk_3++; risk_sum++;
                                     break;
-    
+
                                     case 3: risk_4++; risk_sum++;
                                     break;
-    
+
                                     default:
                                         break;
+                                    }
+                                    alreadySeenST.add(t.getUuid());
                                 }
-                                alreadySeenST.add(t.getUuid());
                             }
                         }
+                    } catch (CommandException e) {
+                        LOG.error("Error while loading samtTopics", e);
                     }
-                } catch (CommandException e) {
-                    LOG.error("Error while loading samtTopics", e);
                 }
+                alreadySeenCG.add(g.getUuid());
             }
-            alreadySeenCG.add(g.getUuid());
+            if(risk_sum > 0){
+                p0 = computePercentage(risk_0);
+                p1 = computePercentage(risk_1);
+                p2 = computePercentage(risk_2);
+                p3 = computePercentage(risk_3);
+                p4 = computePercentage(risk_4);
+                pSum = new Double(p0) + new Double(p1) + new Double(p2) + new Double(p3) + new Double(p4);
+            }
+            List<String> asList = Arrays.asList(Integer.toString(risk_0), 
+                    Integer.toString(risk_1), 
+                    Integer.toString(risk_2),
+                    Integer.toString(risk_3),
+                    Integer.toString(risk_4),
+                    Integer.toString(risk_sum),
+                    adjustPercentageString(p0),
+                    adjustPercentageString(p1),
+                    adjustPercentageString(p2),
+                    adjustPercentageString(p3),
+                    adjustPercentageString(p4),
+                    adjustPercentageString(pSum));
+            ArrayList<String> aList = new ArrayList<String>();
+            aList.addAll(asList);
+            result = new ArrayList<List<String>>();
+            result.add(aList);
         }
-        if(risk_sum > 0){
-            p0 = computePercentage(risk_0);
-            p1 = computePercentage(risk_1);
-            p2 = computePercentage(risk_2);
-            p3 = computePercentage(risk_3);
-            p4 = computePercentage(risk_4);
-            pSum = new Double(p0) + new Double(p1) + new Double(p2) + new Double(p3) + new Double(p4);
-        }
-        List<String> asList = Arrays.asList(Integer.toString(risk_0), 
-                Integer.toString(risk_1), 
-                Integer.toString(risk_2),
-                Integer.toString(risk_3),
-                Integer.toString(risk_4),
-                Integer.toString(risk_sum),
-                adjustPercentageString(p0),
-                adjustPercentageString(p1),
-                adjustPercentageString(p2),
-                adjustPercentageString(p3),
-                adjustPercentageString(p4),
-                adjustPercentageString(pSum));
-        ArrayList<String> aList = new ArrayList<String>();
-        aList.addAll(asList);
-        result = new ArrayList<List<String>>();
-        result.add(aList);
     }
     
     private double computePercentage(Integer riskValue){
@@ -199,7 +201,7 @@ public class LoadReportISARisk extends GenericCommand {
         LoadChildrenForExpansion command;
         command = new LoadChildrenForExpansion(el);
         try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             CnATreeElement newElement = command.getElementWithChildren();
             newElement.setChildrenLoaded(true);
             return newElement;
@@ -226,7 +228,35 @@ public class LoadReportISARisk extends GenericCommand {
         p4 = 0.0;
         pSum = 0.0;
     }
-    
-    
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return result;
+    }
 }

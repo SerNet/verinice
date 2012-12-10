@@ -36,6 +36,9 @@ public interface IValidationService {
      */
     public void createValidationForSingleElement(CnATreeElement elmt);
     
+    public void createValidationByUuid(String uuid) throws CommandException;
+    
+    
     /**
      * validates a whole scope own thread, supplies feedback to user via monitor
      * @param scope
@@ -44,6 +47,15 @@ public interface IValidationService {
      */
     public void createValidationsForScope(Integer scope) throws CommandException;
     
+    /**
+     * creates validations for a cnatreeElement and all of its children (recursivly)
+     * @param elmt
+     * @throws CommandException
+     */
+    public void createValidationsForSubTree(CnATreeElement elmt);
+    
+    public void createValidationsForSubTreeByUuid(String uuid) throws CommandException;
+
     /**
      * Returns all validations for given scope
      * @param cnaDbId
@@ -92,6 +104,8 @@ public interface IValidationService {
     public CnAValidation deleteValidation(CnAValidation validation);
     
     public void deleteValidations(Integer scopeId, Integer elmtDbId);
+    
+    public void deleteValidationsOfSubtree(CnATreeElement elmt);
     
     /**
      * Returns all validations for a specified {@link PropertType} of a given {@link CnATreeElement} 

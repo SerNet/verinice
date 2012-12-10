@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -33,11 +34,13 @@ import sernet.verinice.model.iso27k.Organization;
  * $LastChangedBy$
  *
  */
-public class LoadReportParentOrgForObject extends GenericCommand {
+public class LoadReportParentOrgForObject extends GenericCommand implements ICachedCommand{
 
     private CnATreeElement child;
     private CnATreeElement org;
 
+    private boolean resultInjectedFromCache = false;
+    
     /**
      * @param audit
      */
@@ -50,10 +53,12 @@ public class LoadReportParentOrgForObject extends GenericCommand {
      */
     @Override
     public void execute() {
-        if (child.getTypeId().equals(Organization.TYPE_ID))
-            org = child;
-        else {
-            org = findOrg(child);
+        if(!resultInjectedFromCache){
+            if (child.getTypeId().equals(Organization.TYPE_ID))
+                org = child;
+            else {
+                org = findOrg(child);
+            }
         }
     }
     
@@ -83,9 +88,34 @@ public class LoadReportParentOrgForObject extends GenericCommand {
         result.add(org);
         return result;
     }
-    
-    
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(child.getUuid());
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.org = (CnATreeElement)result;
+        resultInjectedFromCache = true;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return this.org;
+    }
 }
 
 

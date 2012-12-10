@@ -23,16 +23,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
  *
  */
-public class LoadReportISAChapterAverageMaturity extends GenericCommand {
+public class LoadReportISAChapterAverageMaturity extends GenericCommand implements ICachedCommand {
     
     private static transient Logger LOG = Logger.getLogger(LoadReportISAChapterAverageMaturity.class);
     private static final String PROP_ISATOPIC_MATURITY = "samt_topic_maturity";
@@ -41,6 +41,8 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand {
     private Integer rootElmnt;
     
     private List<List<String>> result;
+    
+    private boolean resultInjectedFromCache = false;
     
     public LoadReportISAChapterAverageMaturity(Integer root) {
         this.rootElmnt = root;
@@ -55,29 +57,31 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand {
      */
     @Override
     public void execute() {
-        int topicCount = 0;
-        int maturityCount = 0;
-        result = new ArrayList<List<String>>(0);
-        ArrayList<String> list = new ArrayList<String>(0);
-        DecimalFormat df = new DecimalFormat("0.00");
-        try {
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<CnATreeElement> elements = command.getElements();
-            for(CnATreeElement e : elements){
-                if(e instanceof SamtTopic){
-                    SamtTopic topic = (SamtTopic)e;
-                    topicCount++;
-                    maturityCount += Integer.parseInt(topic.getEntity().getSimpleValue(PROP_ISATOPIC_MATURITY));
+        if(!resultInjectedFromCache){
+            int topicCount = 0;
+            int maturityCount = 0;
+            result = new ArrayList<List<String>>(0);
+            ArrayList<String> list = new ArrayList<String>(0);
+            DecimalFormat df = new DecimalFormat("0.00");
+            try {
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt);
+                command = getCommandService().executeCommand(command);
+                List<CnATreeElement> elements = command.getElements();
+                for(CnATreeElement e : elements){
+                    if(e instanceof SamtTopic){
+                        SamtTopic topic = (SamtTopic)e;
+                        topicCount++;
+                        maturityCount += Integer.parseInt(topic.getEntity().getSimpleValue(PROP_ISATOPIC_MATURITY));
+                    }
                 }
+
+                double d = new Double(maturityCount) / new Double(topicCount);
+                String s = df.format(d);
+                list.add(s);
+                result.add(list);
+            } catch (CommandException e) {
+                LOG.error("Error while determing samt topics", e);
             }
-            
-            double d = new Double(maturityCount) / new Double(topicCount);
-            String s = df.format(d);
-            list.add(s);
-            result.add(list);
-        } catch (CommandException e) {
-            LOG.error("Error while determing samt topics", e);
         }
     }
     
@@ -85,4 +89,36 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand {
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmnt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return result;
+    }
+
+    
 }

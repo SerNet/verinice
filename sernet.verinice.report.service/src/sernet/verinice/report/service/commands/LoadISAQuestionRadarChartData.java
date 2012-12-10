@@ -23,10 +23,10 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
@@ -36,7 +36,7 @@ import sernet.verinice.report.service.impl.TocHelper2;
 /**
  *
  */
-public class LoadISAQuestionRadarChartData extends GenericCommand {
+public class LoadISAQuestionRadarChartData extends GenericCommand implements ICachedCommand{
     
     private static transient Logger LOG = Logger.getLogger(LoadISAQuestionRadarChartData.class);
     private static final int THRESHOLD_VALUE = 3;
@@ -52,6 +52,8 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
     
     private List<List<String>> result;
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadISAQuestionRadarChartData(Integer root){
         this.rootElmnt = root;
         result = new ArrayList<List<String>>(0);
@@ -66,25 +68,26 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
      */
     @Override
     public void execute() {
-        try {
-            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt, true);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<CnATreeElement> elements = command.getElements();
-            for(CnATreeElement e : elements){
-                if(e instanceof SamtTopic){
-                    SamtTopic topic = (SamtTopic)e;
-                    ArrayList<String> list = new ArrayList<String>(0);
-                    list.add(adjustTitle(topic.getTitle()));
-                    list.add(String.valueOf(getMaturityByWeight(topic)));
-                    list.add(String.valueOf(THRESHOLD_VALUE));
-                    list.trimToSize();
-                    result.add(list);
+        if(!resultInjectedFromCache){
+            try {
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, rootElmnt, true);
+                command = getCommandService().executeCommand(command);
+                List<CnATreeElement> elements = command.getElements();
+                for(CnATreeElement e : elements){
+                    if(e instanceof SamtTopic){
+                        SamtTopic topic = (SamtTopic)e;
+                        ArrayList<String> list = new ArrayList<String>(0);
+                        list.add(adjustTitle(topic.getTitle()));
+                        list.add(String.valueOf(getMaturityByWeight(topic)));
+                        list.add(String.valueOf(THRESHOLD_VALUE));
+                        list.trimToSize();
+                        result.add(list);
+                    }
                 }
+            } catch (CommandException e) {
+                LOG.error("Error while determing samt topics", e);
             }
-        } catch (CommandException e) {
-            LOG.error("Error while determing samt topics", e);
-        }
-        
+        } 
     }
     
     public List<List<String>> getResult(){
@@ -157,6 +160,37 @@ public class LoadISAQuestionRadarChartData extends GenericCommand {
         }
         
         return title;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmnt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.result = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return result;
     }
     
 }

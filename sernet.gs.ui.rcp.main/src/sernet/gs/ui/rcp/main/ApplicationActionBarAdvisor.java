@@ -503,6 +503,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(openNoteAction);
         myToolbar.add(openFileAction);
         myToolbar.add(openRelationViewAction);
+        myToolbar.add(openValidationViewAction);
     }
 
     /**

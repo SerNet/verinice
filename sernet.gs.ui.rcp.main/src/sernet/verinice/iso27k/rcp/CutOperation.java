@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
+import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.iso27k.service.CutService;
 import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.model.common.CnATreeElement;
@@ -49,6 +50,8 @@ public class CutOperation implements IRunnableWithProgress {
 
 	private List<CnATreeElement> elements;
 	
+	private List<ElementChange> changes;
+	
 
 	@SuppressWarnings("unchecked")
 	public CutOperation(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
@@ -64,6 +67,7 @@ public class CutOperation implements IRunnableWithProgress {
 		progressObserver = new RcpProgressObserver(monitor);
 		service = new CutService(progressObserver,this.selectedGroup, elements);
 		service.run();
+		changes = service.getElementChanges();
 	}
 
 	/**
@@ -76,5 +80,10 @@ public class CutOperation implements IRunnableWithProgress {
 		}
 		return n;
 	}
+
+
+    public List<ElementChange> getChanges() {
+        return changes;
+    }
 
 }

@@ -284,6 +284,7 @@ This variant:
     <bean id="validationService" class="sernet.verinice.service.ValidationService">
     	<property name="commandService" ref="commandService" />
     	<property name="cnaValidationDAO" ref="cnaValidationDAO" />
+    	<property name="cnaTreeElementDAO" ref="cnaTreeElementDao"></property>
     	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
 

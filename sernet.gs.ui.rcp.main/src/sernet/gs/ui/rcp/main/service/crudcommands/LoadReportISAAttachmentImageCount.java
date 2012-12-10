@@ -22,22 +22,24 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.service.commands.LoadAttachments;
 
 /**
  *
  */
-public class LoadReportISAAttachmentImageCount extends GenericCommand {
+public class LoadReportISAAttachmentImageCount extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAAttachmentImageCount.class);
     
     private Integer rootElmt;
     
     private List<String> results;
+    
+    private boolean resultInjectedFromCache = false;
     
     public static final String[] COLUMNS = new String[] { 
         "imageNr"
@@ -61,19 +63,21 @@ public class LoadReportISAAttachmentImageCount extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<String>(0);
-        LoadAttachments attachmentLoader = new LoadAttachments(rootElmt);
-        int count = 0;
-        try {
-            attachmentLoader = ServiceFactory.lookupCommandService().executeCommand(attachmentLoader);
-            for(Attachment attachment : attachmentLoader.getAttachmentList()){
+        if(!resultInjectedFromCache){
+            results = new ArrayList<String>(0);
+            LoadAttachments attachmentLoader = new LoadAttachments(rootElmt);
+            int count = 0;
+            try {
+                attachmentLoader = getCommandService().executeCommand(attachmentLoader);
+                for(Attachment attachment : attachmentLoader.getAttachmentList()){
                     if(isSupportedMIMEType(attachment.getMimeType())){
                         results.add(String.valueOf(count));
                         count++;
                     }
+                }
+            } catch (CommandException e){
+                LOG.error("Error while executing command", e);
             }
-        } catch (CommandException e){
-            LOG.error("Error while executing command", e);
         }
     }
     
@@ -91,6 +95,37 @@ public class LoadReportISAAttachmentImageCount extends GenericCommand {
     }
     
     public List<String> getResult(){
+        return results;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(rootElmt));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        this.results = (ArrayList<String>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
         return results;
     }
 

@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -36,7 +36,7 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISARoomsDetails extends GenericCommand {
+public class LoadReportISARoomsDetails extends GenericCommand implements ICachedCommand{
 
     private static final Logger LOG = Logger.getLogger(LoadReportISARoomsDetails.class);
     
@@ -55,6 +55,8 @@ public class LoadReportISARoomsDetails extends GenericCommand {
                                             "RISK"
     };
     
+    private boolean resultInjectedFromCache = false;
+    
     public LoadReportISARoomsDetails(Integer roomID){
         this.roomID = roomID;
     }
@@ -64,27 +66,28 @@ public class LoadReportISARoomsDetails extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<List<String>>();
-        ControlGroup roomGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(roomID);
-        LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID, true);
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<CnATreeElement> stList = command.getElements();
-            Collections.sort(stList, new NumericStringComparator());
-            for(CnATreeElement e : stList){
-                List<String> result = new ArrayList<String>();
-                SamtTopic topic = (SamtTopic)e;
-                result.add(getControlID(topic.getTitle()));
-                result.add(getControlTitleWithoutID(topic.getTitle()));
-                result.add(String.valueOf(topic.getMaturity()));
-                result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
-                result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_RISK_PROP)));
-                results.add(result);
+        if(!resultInjectedFromCache){
+            results = new ArrayList<List<String>>();
+            ControlGroup roomGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(roomID);
+            LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID, true);
+            try {
+                command = getCommandService().executeCommand(command);
+                List<CnATreeElement> stList = command.getElements();
+                Collections.sort(stList, new NumericStringComparator());
+                for(CnATreeElement e : stList){
+                    List<String> result = new ArrayList<String>();
+                    SamtTopic topic = (SamtTopic)e;
+                    result.add(getControlID(topic.getTitle()));
+                    result.add(getControlTitleWithoutID(topic.getTitle()));
+                    result.add(String.valueOf(topic.getMaturity()));
+                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
+                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_RISK_PROP)));
+                    results.add(result);
+                }
+            } catch (CommandException e) {
+                LOG.error("Error while computing roomDetails", e);
             }
-        } catch (CommandException e) {
-            LOG.error("Error while computing roomDetails", e);
         }
-        
     }
     
     private String getControlID(String title){
@@ -110,4 +113,34 @@ public class LoadReportISARoomsDetails extends GenericCommand {
         return results;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
+     */
+    @Override
+    public String getCacheID() {
+        StringBuilder cacheID = new StringBuilder();
+        cacheID.append(this.getClass().getSimpleName());
+        cacheID.append(String.valueOf(roomID));
+        return cacheID.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+     */
+    @Override
+    public void injectCacheResult(Object result) {
+        results = (ArrayList<List<String>>)result;
+        resultInjectedFromCache = true;
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
+     */
+    @Override
+    public Object getCacheableResult() {
+        return results;
+    }
 }
