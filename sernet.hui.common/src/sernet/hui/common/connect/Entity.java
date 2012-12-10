@@ -172,7 +172,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    Date date = null;
 	    try {
 	        date = new Date(Long.valueOf(getValue(propertyType)));
-	    } catch (Throwable t) {
+	    } catch (Exception t) {
             log.error("Error while returning date for property: " + propertyType, t);
         }
 	    return date;
@@ -503,7 +503,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	/* (non-Javadoc)
 	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#select(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
 	 */
-	public void select(IMLPropertyType type, IMLPropertyOption opt) {
+	@Override
+    public void select(IMLPropertyType type, IMLPropertyOption opt) {
 		createNewProperty((PropertyType)type, opt.getId());
 		if (isDependency(opt))
 			fireDependencyChanged(type, opt);
@@ -549,7 +550,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	/* (non-Javadoc)
 	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#unselect(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
 	 */
-	public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
+	@Override
+    public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
 		remove((PropertyType)type, opt.getId());
 		if (isDependency(opt))
 			fireDependencyChanged(type, opt);
@@ -578,6 +580,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }

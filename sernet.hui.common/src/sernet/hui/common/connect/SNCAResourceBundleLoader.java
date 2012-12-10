@@ -62,6 +62,7 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
     }
 
     // Only "properties" files are used (e.g., autoparts.properties)
+    @Override
     public List<String> getFormats(String baseName) {
         return Collections.singletonList(SNCAMessages.BUNDLE_EXTENSION);
     }
@@ -77,6 +78,7 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
      * @param   reload if reload the resource
      * @see java.util.ResourceBundle.Control#newBundle(java.lang.String, java.util.Locale, java.lang.String, java.lang.ClassLoader, boolean)
      */
+    @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format,
               ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException,
               IOException {
@@ -117,8 +119,12 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
             bis = new BufferedInputStream(stream);
             bundle = new StreamResourceBundle(bis);
             bis.close();
-        }finally{
-            if (bis != null) try { bis.close (); } catch (Throwable ignore) {}
+        } finally {
+            if (bis != null)
+                try {
+                    bis.close();
+                } catch (Exception ignore) {
+                }
         }
         return bundle;
     }
