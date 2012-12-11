@@ -68,14 +68,15 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
         this.comment = comment;
     }
 
+    @Override
     public void execute() {
         if (getLog().isDebugEnabled()) {
             getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
         }
         try {
-            IBaseDao<CnALink, Serializable> linkDao = (IBaseDao<CnALink, Serializable>) getDaoFactory().getDAO(CnALink.class);
-            IBaseDao<U, Serializable> dependantDao = (IBaseDao<U, Serializable>) getDaoFactory().getDAO(dependant.getTypeId());
-            IBaseDao<V, Serializable> dependencyDao = (IBaseDao<V, Serializable>) getDaoFactory().getDAO(dependency.getTypeId());
+            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+            IBaseDao<U, Serializable> dependantDao = getDaoFactory().getDAO(dependant.getTypeId());
+            IBaseDao<V, Serializable> dependencyDao = getDaoFactory().getDAO(dependency.getTypeId());
 
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
             ri.setLinksUp(true);
@@ -90,7 +91,7 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while creating link.", e);
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             getLog().error("Error while creating link", e);
             throw new RuntimeException("Error while creating link", e);
         }

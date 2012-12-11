@@ -150,6 +150,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @throws CommandException
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
+    @Override
     public void execute() {
         try {
             if (getLogrt().isDebugEnabled()) {
@@ -256,7 +257,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (elementInDB == null && parameter.isInsert()) {                          
             try {
                 // create new object in db...
-                elementInDB =createElement(dao, parent, clazz);
+                elementInDB =createElement(parent, clazz);
                  
                 // ...and set its sourceId and extId:
                 if(!parameter.isIntegrate()) {
@@ -365,13 +366,13 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private <T> IBaseDao<T, Serializable>  getDao(Class clazz) {
         IBaseDao<T, Serializable> dao = daoMap.get(clazz);
         if(dao==null) {
-            dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
+            dao = getDaoFactory().getDAO(clazz);
             daoMap.put(clazz, dao);
         }
         return dao;
     }
     
-    private CnATreeElement createElement(IBaseDao<CnATreeElement, Serializable> dao, CnATreeElement parent, Class clazz) throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
         // get constructor with parent-parameter and create new object:
         if(clazz.equals(Organization.class)) {
@@ -578,19 +579,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         return null;
     }
-
-    /**
-     * Query element (by externalID) from DB, which has been previously
-     * synchronized from the given sourceID.
-     * 
-     * @param sourceId
-     * @param externalId
-     * @return the CnATreeElement from the query or null, if nothing was found
-     * @throws RuntimeException if more than one element is found
-     */
-    private CnATreeElement findDbElement(String sourceId, String externalId ) {
-        return findDbElement(sourceId, externalId, false, false);
-    }
     
     /**
      * Query element (by externalID) from DB, which has been previously
@@ -650,8 +638,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             try {
                 cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
+                getLog().error("Error while accessinf container.", e);
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-                throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.");
+                throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.", e);
             }
             container = cmdLoadContainer.getHolder();
             if(container==null) {
@@ -677,10 +666,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
-            getLog().error(message,e);
-            errorList.add(message);
-            throw new RuntimeCommandException(message,e );
+            handleCreateContainerException(e);
         }
         BSIModel model = cmdLoadModel.getModel();
         ImportBsiGroup holder = null;
@@ -688,11 +674,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             holder = new ImportBsiGroup(model);
             addPermissions(holder);
             getDao(ImportBsiGroup.class).saveOrUpdate(holder);
-        } catch (Exception e1) {
-            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
-            getLog().error(message,e1);
-            errorList.add(message);
-            throw new RuntimeCommandException(message,e1 );
+        } catch (Exception e) {
+            handleCreateContainerException(e);
         }
         return holder;
     }
@@ -702,10 +685,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
-            getLog().error(message,e);
-            errorList.add(message);
-            throw new RuntimeCommandException(message,e );
+            handleCreateContainerException(e);
         }
         ISO27KModel model = cmdLoadModel.getModel();
         ImportIsoGroup holder = null;
@@ -714,12 +694,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             addPermissions(holder);
             getDao(ImportIsoGroup.class).saveOrUpdate(holder);
         } catch (Exception e1) {
-            String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
-            getLog().error(message, e1);
-            errorList.add(message);
-            throw new RuntimeCommandException(message,e1 );
+            handleCreateContainerException(e1);
         }
         return holder;
+    }
+    
+    private void handleCreateContainerException(Exception e) {
+        String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
+        getLog().error(message,e);
+        errorList.add(message);
+        throw new RuntimeCommandException(message,e );
     }
     
     protected void addElement(CnATreeElement element) {
@@ -766,6 +750,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 	/**
      * @return the authService
      */
+    @Override
     public IAuthService getAuthService() {
         return authService;
     }
@@ -773,6 +758,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     /**
      * @param authService the authService to set
      */
+    @Override
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }

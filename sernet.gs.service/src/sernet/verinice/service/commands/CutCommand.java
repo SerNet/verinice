@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -59,11 +60,11 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         return log;
     }
     
-    String uuidGroup;
+    private String uuidGroup;
     
-    CnATreeElement selectedGroup;
+    private CnATreeElement selectedGroup;
     
-    List<String> uuidList;
+    private List<String> uuidList;
     
     private int number = 0;
     
@@ -143,8 +144,7 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
                 if(selectedGroup.getScopeId() != null){
                     UpdateScopeId updateScopeId = new UpdateScopeId(element.getDbId(), selectedGroup.getScopeId());
                     updateScopeId = getCommandService().executeCommand(updateScopeId);
-                } else {
-                    if(!(selectedGroup instanceof Organization) && !(selectedGroup instanceof ITVerbund))
+                } else if(!(selectedGroup instanceof Organization) && !(selectedGroup instanceof ITVerbund)) {
                         getLog().warn("cut&paste target has no scopeID");
                 }
             }
@@ -169,14 +169,14 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while copying element", e);
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             getLog().error("Error while copying element", e);
             throw new RuntimeException("Error while copying element", e);
         }
         
     }
     
-    private CnATreeElement move(CnATreeElement group, CnATreeElement element) throws Exception {
+    private CnATreeElement move(CnATreeElement group, CnATreeElement element) throws CommandException  {
         CnATreeElement parentOld = element.getParent();
         parentOld.removeChild(element);
         
@@ -184,7 +184,6 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
         command.setLogChanges(false);
         command = getCommandService().executeCommand(command);
-        parentOld = (CnATreeElement) command.getElement();
         ElementChange delete = new ElementChange(element, ChangeLogEntry.TYPE_DELETE);
         elementChanges.add(delete);
         
@@ -311,6 +310,7 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         return dao;
     }
     
+    @Override
     public void clear() {
         // changedElements are used on server side only !
         if(elementChanges!=null) {

@@ -26,14 +26,11 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Control;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -93,14 +90,14 @@ public class LoadUsername extends GenericCommand {
                     }
                 }      
                 if(uuidAssignee!=null) {
-                    IBaseDao<Configuration, Serializable> dao = (IBaseDao<Configuration, Serializable>) getDaoFactory().getDAO(Configuration.class);
+                    IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
                     List<String> result = dao.findByQuery(HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
                     if(result!=null && !result.isEmpty()) {
                         username = result.get(0);                      
                     }
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             getLog().error("Error while loading username for control uuid: " + uuid, t);
         }
     }

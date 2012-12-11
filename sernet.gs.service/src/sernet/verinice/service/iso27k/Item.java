@@ -57,11 +57,16 @@ public class Item implements IItem {
 	private String numberString;
 
 	// controls can be simple "yes/no" type or numeric maturity levels:
-	private String maturity; 			// imported maturity value from file
-	private String weight1;				// weight value for this control
-	private String weight2;				// possible second weight value
-	private String threshold1;			// first threshold, i.e. minimum maturity for "yellow" range
-	private String threshold2;			// second threshold, i.e. mi nimum maturity for "green" range
+	// imported maturity value from file
+	private String maturity;
+	// weight value for this control
+	private String weight1;
+	// possible second weight value
+	private String weight2;
+	// first threshold, i.e. minimum maturity for "yellow" range
+	private String threshold1;
+	// second threshold, i.e. mi nimum maturity for "green" range
+	private String threshold2;
 	
 	private int typeId = CONTROL;
 
@@ -126,14 +131,14 @@ public class Item implements IItem {
 				Item child = (Item) getItemMap().get(firstNumber-1);
 				if(child==null) {
 					// item is missing, create dummy item
-					String name = item.getNumberString();
+					String itemName = item.getNumberString();
 					for (int i = 0; i < numberTokens.countTokens(); i++) {
-						if(name.lastIndexOf(".")!=-1) {
-							name = name.substring(0,name.lastIndexOf("."));
+						if(itemName.lastIndexOf('.')!=-1) {
+							itemName = itemName.substring(0,itemName.lastIndexOf('.'));
 						}
 					}
-					child = new Item(name);
-					child.setNumberString(name);
+					child = new Item(itemName);
+					child.setNumberString(itemName);
 					getItemMap().put(firstNumber-1, child);
 				}
 				if (getLog().isDebugEnabled()) {
@@ -150,7 +155,8 @@ public class Item implements IItem {
 		}	
 	}
 	
-	public String getMaturity() {
+	@Override
+    public String getMaturity() {
 		return maturity;
 	}
 
@@ -158,7 +164,8 @@ public class Item implements IItem {
 		this.maturity = maturity;
 	}
 
-	public String getWeight1() {
+	@Override
+    public String getWeight1() {
 		return weight1;
 	}
 
@@ -166,7 +173,8 @@ public class Item implements IItem {
 		this.weight1 = weight1;
 	}
 
-	public String getWeight2() {
+	@Override
+    public String getWeight2() {
 		return weight2;
 	}
 
@@ -174,7 +182,8 @@ public class Item implements IItem {
 		this.weight2 = weight2;
 	}
 
-	public String getThreshold1() {
+	@Override
+    public String getThreshold1() {
 		return threshold1;
 	}
 
@@ -182,7 +191,8 @@ public class Item implements IItem {
 		this.threshold1 = threshold1;
 	}
 
-	public String getThreshold2() {
+	@Override
+    public String getThreshold2() {
 		return threshold2;
 	}
 
@@ -197,21 +207,24 @@ public class Item implements IItem {
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IItem#getName()
 	 */
-	public String getName() {
+	@Override
+    public String getName() {
 		return name;
 	}
 	
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IItem#getDescription()
 	 */
-	public String getDescription() {
+	@Override
+    public String getDescription() {
 		return description;
 	}
 	
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IItem#setDescription(java.lang.String)
 	 */
-	public void setDescription(String description) {
+	@Override
+    public void setDescription(String description) {
 		this.description = description;
 	}
 	
@@ -219,33 +232,35 @@ public class Item implements IItem {
 		this.numberString = numberString;
 	}
 
-	public String getNumberString() {
+	@Override
+    public String getNumberString() {
 		return numberString;
 	}
 
-	public int getTypeId() {
+	@Override
+    public int getTypeId() {
 		return typeId;
 	}
 
-	public void setTypeId(int typeId) {
+	@Override
+    public void setTypeId(int typeId) {
 		this.typeId = typeId;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IFolder#addFolder(sernet.verinice.iso27k.service.IFolder)
 	 */
-	public void addItem(IItem item) {
+	@Override
+    public void addItem(IItem item) {
 		int i = 0;
-		while(itemMap.get(i)!=null) {
-			// nothing
-		}
 		itemMap.put(i, item);
 	}
 	
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IFolder#getFolders()
 	 */
-	public Collection<IItem> getItems() {
+	@Override
+    public Collection<IItem> getItems() {
 		return itemMap.values();
 	}
 
@@ -301,7 +316,8 @@ public class Item implements IItem {
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IItem#isMaturityLevelSupport()
 	 */
-	public boolean isMaturityLevelSupport() {
+	@Override
+    public boolean isMaturityLevelSupport() {
 		return this.maturityLevelSupport;
 	}
 	

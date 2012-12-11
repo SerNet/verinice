@@ -44,11 +44,11 @@ public class CheckWritingPermission extends GenericCommand {
         return log;
     }
    
-    String uuid;
+    private String uuid;
     
-    String username; 
+    private String username; 
     
-    boolean isWriteAllowed;
+    private boolean isWriteAllowed;
     
     public CheckWritingPermission(String uuid, String username) {
         super();
@@ -62,7 +62,7 @@ public class CheckWritingPermission extends GenericCommand {
     @Override
     public void execute() {
         try {         
-            IBaseDao<CnATreeElement, Serializable> daoElement = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
+            IBaseDao<CnATreeElement, Serializable> daoElement = getDaoFactory().getDAO(CnATreeElement.class);
             CnATreeElement element = null;
             try {
                 LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,new RetrieveInfo());
@@ -81,7 +81,7 @@ public class CheckWritingPermission extends GenericCommand {
                 }
                 setWriteAllowed(false);                          
             }             
-        } catch (Throwable t) {
+        } catch (Exception t) {
             getLog().error("Error while checking writing permission for element uuid: " + uuid, t);
         }
     }

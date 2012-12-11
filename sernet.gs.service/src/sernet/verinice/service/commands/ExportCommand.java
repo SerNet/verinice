@@ -52,7 +52,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
@@ -101,7 +100,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return log;
     }
     
-    private static final Integer lock = new Integer(0);
+    private static final Integer LOCK = Integer.valueOf(0);
    
     public static final String PROP_MAX_NUMBER_OF_THREADS = "maxNumberOfThreads";
     public static final int DEFAULT_NUMBER_OF_THREADS = 3;
@@ -159,7 +158,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 	/* (non-Javadoc)
 	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
-	public void execute() {
+	@Override
+    public void execute() {
 	    try {
 	        createFields();
     	    xmlData = export();
@@ -259,7 +259,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 @Override
                 public void notifyOfThreadComplete(Thread thread) {
                     ExportThread exportThread = (ExportThread) thread;
-                    synchronized(lock) {
+                    synchronized(LOCK) {
                         if(exportThread.getSyncObject()!=null) {
                             transaction.getTarget().getChildren().add(exportThread.getSyncObject());
                         }
@@ -325,7 +325,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     
 
     /**
-     * @param timeout
+     * @param timeout in seconds
      */
     private void awaitTermination(int timeout) {
         taskExecutor.shutdown();
@@ -483,9 +483,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		return result; 
 	}
 	
-	protected void finalize() throws Throwable {
+	@Override
+    protected void finalize() throws Throwable {
 	    CacheManager.getInstance().shutdown();
-	    manager=null;
+	    super.finalize();
 	};
 	
 	private Cache getCache() { 	

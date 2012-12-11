@@ -71,7 +71,8 @@ public class LoadTreeItem extends GenericCommand {
 		this.parameter = parameter;
 	}
 
-	public void execute() {
+	@Override
+    public void execute() {
 	    IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 	    // one select with joins specified in RetrieveInfo
         element = dao.findByUuid(uuid,ri);
@@ -80,12 +81,14 @@ public class LoadTreeItem extends GenericCommand {
         hasChildrenMap = new Hashtable<String, Boolean>();
         Set<CnATreeElement> children = element.getChildren();
         hasChildrenMap.put(element.getUuid(), (children!=null && children.size()>0));
-        for (CnATreeElement child : children) {
-            Set<CnATreeElement> grandchildren = child.getChildren();
-            // calling grandchildren.size() is starting the hibernate initialization of set grandchildren
-            // if grandchildren is set to false in RetrieveInfo
-            hasChildrenMap.put(child.getUuid(), (grandchildren!=null && grandchildren.size()>0));
-        }  
+        if(children!=null) {
+            for (CnATreeElement child : children) {
+                Set<CnATreeElement> grandchildren = child.getChildren();
+                // calling grandchildren.size() is starting the hibernate initialization of set grandchildren
+                // if grandchildren is set to false in RetrieveInfo
+                hasChildrenMap.put(child.getUuid(), (grandchildren!=null && grandchildren.size()>0));
+            }
+        }
 	}
 	
 	/**
