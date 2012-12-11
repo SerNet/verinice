@@ -285,6 +285,7 @@ public class ValidationService implements IValidationService {
     
     @Override
     public CnAValidation deleteValidation(CnAValidation validation){
+        Integer scopeId = validation.getScopeId();
         getCnaValidationDAO().delete(validation);
         return validation;
     }
@@ -321,13 +322,18 @@ public class ValidationService implements IValidationService {
     }
     
     @Override
-    public void createValidationsForSubTree(CnATreeElement elmt){
+    public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException{
         if(Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
             elmt.setChildrenLoaded(true);
         }
         createValidationForSingleElement(elmt);
         for(CnATreeElement child : elmt.getChildren()){
+            if(child.getScopeId() == null){
+                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<CnATreeElement>(child.getUuid());
+                childReloader = getCommandService().executeCommand(childReloader);
+                child = childReloader.getElement();
+            }
             createValidationsForSubTree(child);
         }
     }

@@ -649,6 +649,9 @@ public class XMLImportDialog extends Dialog {
             for(CnATreeElement elmt : elmts){
                 ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
             }
+            if(elmts != null && elmts.size() > 0){
+                CnAElementFactory.getModel(((CnATreeElement)elmts.toArray()[0])).validationAdded(((CnATreeElement)elmts.toArray()[0]).getScopeId());
+            }
         } catch (CommandException e){
             LOG.error("Error while executing validation creation command", e);
         }

@@ -40,6 +40,7 @@ import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.service.PermissionException;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.CopyBausteine;
@@ -56,6 +57,7 @@ import sernet.verinice.iso27k.rcp.CutOperation;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -159,6 +161,7 @@ public class PasteHandler extends AbstractHandler {
                         Messages.getString("PasteHandler.0"), //$NON-NLS-1$
                         PreferenceConstants.INFO_ELEMENTS_COPIED);
 				if(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+				    newCopyElements = ((CopyTreeElements)operation).getNewElements();
 				    if(newCopyElements != null){
 				        final List<String> validationList = newCopyElements;
 				        WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.getString("PasteHandler.5")) {
@@ -166,20 +169,27 @@ public class PasteHandler extends AbstractHandler {
 				            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				                Activator.inheritVeriniceContextState();
 				                IStatus status = Status.OK_STATUS;
-				                try {                        
-				                    if(!(isRootElement(target)) || (validationList.size() == 1 && isSubTreeElement(validationList.get(0))) ){
+				                CnATreeElement tmpTarget = target;
+				                try {                
+				                    tmpTarget = Retriever.retrieveElement(tmpTarget, new RetrieveInfo().setProperties(true));
+				                    if(!(isRootElement(tmpTarget)) || (validationList.size() == 1 && isSubTreeElement(validationList.get(0))) ){
 				                        String jobDescription = (validationList.size() == 1 && isSubTreeElement(validationList.get(0)) 
-				                                ? (loadElementByUuid(validationList.get(0))).getTitle() : (target instanceof CnATreeElement ? 
-				                                        ((CnATreeElement)target).getTitle() : Messages.getString("PasteHandler.12")));
+				                                ? (loadElementByUuid(validationList.get(0))).getTitle() : (tmpTarget instanceof CnATreeElement ? 
+				                                        ((CnATreeElement)tmpTarget).getTitle() : Messages.getString("PasteHandler.12")));
 				                        monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {jobDescription}), IProgressMonitor.UNKNOWN);
-				                        String uuid = ((!isRootElement(target) ? target.getUuid() : 
+				                        String uuid = ((!isRootElement(tmpTarget) ? tmpTarget.getUuid() : 
 				                            (validationList.get(0))));
 				                        ServiceFactory.lookupValidationService().createValidationsForSubTreeByUuid(uuid);
+				                        CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
 				                    } else {
 				                        for(String uuid : validationList){
 				                                monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {loadElementByUuid(uuid).getTitle()}), IProgressMonitor.UNKNOWN);
 				                                ServiceFactory.lookupValidationService().createValidationByUuid(uuid);
+				                                CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
 				                            }
+				                        if(validationList != null && validationList.size() > 0){
+				                            CnAElementFactory.getModel(loadElementByUuid(validationList.get(0))).validationAdded(loadElementByUuid(validationList.get(0)).getScopeId());
+				                        }
 				                    }
 				                } catch (Exception e){
 				                    LOG.error("Exception while executing createValidationsJob", e);
@@ -225,10 +235,14 @@ public class PasteHandler extends AbstractHandler {
                                     CnATreeElement elmt = ((!isRootElement(target) ? (CnATreeElement)target : 
                                         (CnATreeElement)changes.get(0).getElement()));
                                     ServiceFactory.lookupValidationService().createValidationsForSubTreeByUuid(elmt.getUuid());
+                                    CnAElementFactory.getModel(elmt).validationAdded(elmt.getScopeId());
 		                        } else {
 		                            for(ElementChange ec : changes){
 		                                monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {ec.getElement().getTitle()}), IProgressMonitor.UNKNOWN);
 		                                ServiceFactory.lookupValidationService().createValidationByUuid(ec.getElement().getUuid());
+		                            }
+		                            if(changes != null && changes.size() > 0){
+		                                CnAElementFactory.getModel(changes.get(0).getElement()).validationAdded(changes.get(0).getElement().getScopeId());
 		                            }
 		                        }
 		                    } catch (Exception e){
@@ -255,7 +269,6 @@ public class PasteHandler extends AbstractHandler {
         if(copyList!=null && !copyList.isEmpty()) {
             if(copyList.get(0) instanceof CnATreeElement) { 
                 operation = new CopyTreeElements(target,copyList);  
-                newCopyElements = ((CopyTreeElements)operation).getNewElements();
             }
             if(copyList.get(0) instanceof Baustein) {
                 operation = new CopyBausteine(target,copyList);
@@ -282,7 +295,7 @@ public class PasteHandler extends AbstractHandler {
     }
     
     private CnATreeElement loadElementByUuid(String uuid){
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid);
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true));
         try {
             elementLoader = ServiceFactory.lookupCommandService().executeCommand(elementLoader);
         } catch (CommandException e) {

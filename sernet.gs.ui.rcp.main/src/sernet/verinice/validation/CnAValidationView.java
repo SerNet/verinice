@@ -348,7 +348,6 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
      * 
      */
     protected void removeModelListeners() {
-        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
     }

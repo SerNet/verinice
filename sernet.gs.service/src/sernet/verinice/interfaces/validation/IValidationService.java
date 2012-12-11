@@ -52,7 +52,7 @@ public interface IValidationService {
      * @param elmt
      * @throws CommandException
      */
-    public void createValidationsForSubTree(CnATreeElement elmt);
+    public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException;
     
     public void createValidationsForSubTreeByUuid(String uuid) throws CommandException;
 

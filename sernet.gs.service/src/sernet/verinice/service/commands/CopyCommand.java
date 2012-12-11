@@ -117,12 +117,16 @@ public class CopyCommand extends GenericCommand {
     @Override
     public void execute() {
         try { 
+            newElements = new ArrayList<String>(0);
             number = 0;
             copyElements = createInsertList(uuidList);
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
             Map<String, String> sourceDestMap = new Hashtable<String, String>();
-            for (CnATreeElement element : copyElements) {             
-                newElements.add(copy(selectedGroup, element, sourceDestMap).getUuid());         
+            for (CnATreeElement element : copyElements) {     
+                CnATreeElement newElement = copy(selectedGroup, element, sourceDestMap);
+                if(newElement != null && newElement.getUuid() != null){
+                    newElements.add(newElement.getUuid());         
+                }
             }
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
                 List<String> copyElementUuidList = new ArrayList<String>(copyElements.size());

@@ -35,7 +35,6 @@ import sernet.gs.service.PermissionException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.ElementChange;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IPostProcessor;
@@ -332,7 +331,11 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
      */
     @Override
     public List<ElementChange> getChanges() {
-        return new ArrayList<ElementChange>(elementChanges);
+        ArrayList<ElementChange> changes = new ArrayList<ElementChange>(0);
+        if(elementChanges != null && elementChanges.size() > 0){
+            changes.addAll(elementChanges);
+        }
+        return changes;
     }
 
     /* (non-Javadoc)
