@@ -5026,6 +5026,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty id="gsm_ism_scenario_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false" />
             <huiproperty id="gsm_ism_scenario_cve" name="GSM CVE" tags="Greenbone_GSM" editable="false" />
             <huiproperty id="gsm_ism_scenario_level" name="GSM Lvl." tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_ism_scenario_cvss" name="GSM CVSS" tags="Greenbone_GSM" editable="false" />
         </huipropertygroup>
         
     </huientity>
@@ -5158,6 +5159,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty id="gsm_ism_vulnerability_description" name="GSM Desc." tags="Greenbone_GSM" inputtype="text" editable="false"/>
             <huiproperty id="gsm_ism_vulnerability_cve" name="GSM CVE" tags="Greenbone_GSM" editable="false"/>
             <huiproperty id="gsm_ism_vulnerability_level" name="GSM Lvl." tags="Greenbone_GSM" editable="false" />
+            <huiproperty id="gsm_ism_vulnerability_cvss" name="GSM CVSS" tags="Greenbone_GSM" editable="false" />
         </huipropertygroup>
        
     </huientity>
