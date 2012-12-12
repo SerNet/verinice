@@ -107,6 +107,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public MassnahmenUmsetzung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
 	}
 
 	public MassnahmenUmsetzung() {

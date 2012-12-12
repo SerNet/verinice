@@ -29,6 +29,7 @@ public class Verarbeitungsangaben extends CnATreeElement
 	public Verarbeitungsangaben(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected Verarbeitungsangaben() {

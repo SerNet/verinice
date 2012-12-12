@@ -63,6 +63,8 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	 */
 	public Asset() {
 		super();
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	public Asset(CnATreeElement parent) {

@@ -19,12 +19,23 @@ package sernet.verinice.model.bsi;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
 public class Gebaeude extends CnATreeElement
 implements IBSIStrukturElement {
+    
+    private transient Logger log = Logger.getLogger(Gebaeude.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Gebaeude.class);
+        }
+        return log;
+    }
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "gebaeude"; //$NON-NLS-1$
 	
@@ -51,6 +62,7 @@ implements IBSIStrukturElement {
 	public Gebaeude(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }

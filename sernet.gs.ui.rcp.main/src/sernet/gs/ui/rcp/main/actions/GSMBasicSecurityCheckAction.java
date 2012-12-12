@@ -28,15 +28,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import org.eclipse.osgi.util.NLS;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -109,8 +106,6 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
   
     public void dorun() {
         Activator.inheritVeriniceContextState();
-
-
         final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
@@ -124,7 +119,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
                         if (o instanceof Server){
                             Server serverelement = (Server) o;
                             monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, IProgressMonitor.UNKNOWN);
-                            loadModulForServer(serverelement);
+                            konsolidiereModule(serverelement);
                             monitor.done();
                         }
                     }
@@ -137,8 +132,8 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         }
     } 
 
-    
-    private void loadModulForServer(Server serverelement){
+
+    private void konsolidiereModule(Server serverelement){
         final List<Server> selectedServers = new ArrayList<Server>();
         final List<BausteinUmsetzung> bausteine = new ArrayList<BausteinUmsetzung>();
         BausteinUmsetzung source = null;
@@ -170,7 +165,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             // reload state from server:
             for (CnATreeElement element : command.getChangedElements()) {
-                CnAElementFactory.getLoadedModel().databaseChildChanged(element); //die Bausteine werden nach der Übernahme nicht angezeigt
+                CnAElementFactory.getLoadedModel().databaseChildChanged(element); 
                 }
          } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);

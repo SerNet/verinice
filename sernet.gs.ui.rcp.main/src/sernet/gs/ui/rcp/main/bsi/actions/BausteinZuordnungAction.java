@@ -117,12 +117,19 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                     for (IBSIStrukturElement target : selectedElements) {
                         if (target instanceof CnATreeElement) {
                             CnATreeElement targetElement = (CnATreeElement) target;
+                            if (!targetElement.containsBausteinUmsetzung(baustein.getId())) {
+                                try {                              
                             CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
-                        }
+                                }catch (Exception e) {
+                                    LOG.error("Error by saving.", e);
+                                    throw new RuntimeException(e);
+                                } 
+                            }
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        }catch (Exception e) {
             ExceptionUtil.log(e, Messages.BausteinZuordnungAction_4);
         }
     }

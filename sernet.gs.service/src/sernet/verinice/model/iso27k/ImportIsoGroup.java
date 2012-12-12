@@ -20,6 +20,7 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 import java.util.Collections;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
@@ -50,6 +51,8 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,
 	
 	public ImportIsoGroup(CnATreeElement model) {
 		super(model);
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 
 	protected ImportIsoGroup() {

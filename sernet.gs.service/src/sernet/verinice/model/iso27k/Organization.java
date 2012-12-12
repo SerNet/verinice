@@ -56,6 +56,8 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	 */
 	public Organization() {
 		super();
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	public Organization(CnATreeElement parent) {
@@ -65,6 +67,7 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	public Organization(CnATreeElement parent, boolean createChildren) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
         if(createChildren) {

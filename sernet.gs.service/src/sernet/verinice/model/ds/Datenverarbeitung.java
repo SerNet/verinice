@@ -25,6 +25,8 @@ public class Datenverarbeitung extends CnATreeElement
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "datenverarbeitung";
 	
+	
+	
 	/**
 	 * Create new BSIElement.
 	 * @param parent
@@ -32,6 +34,7 @@ public class Datenverarbeitung extends CnATreeElement
 	public Datenverarbeitung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+		getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected Datenverarbeitung() {

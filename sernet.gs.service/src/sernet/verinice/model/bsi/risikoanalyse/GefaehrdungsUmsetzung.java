@@ -74,8 +74,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
 
     public GefaehrdungsUmsetzung(CnATreeElement parent) {
         super(parent);
-
         setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 
     }
 

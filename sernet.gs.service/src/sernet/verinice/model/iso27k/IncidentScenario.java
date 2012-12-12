@@ -42,6 +42,8 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	 */
 	public IncidentScenario() {
 		super();
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	public IncidentScenario(CnATreeElement parent) {

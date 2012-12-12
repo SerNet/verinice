@@ -33,6 +33,7 @@ public class StellungnahmeDSB extends CnATreeElement
 	public StellungnahmeDSB(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected StellungnahmeDSB() {

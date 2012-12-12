@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -26,6 +27,8 @@ public class ClientsKategorie extends CnATreeElement
 
 	public ClientsKategorie(CnATreeElement parent) {
 		super(parent);
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected ClientsKategorie() {

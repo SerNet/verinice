@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi.risikoanalyse;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -27,6 +28,8 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 	
 	public FinishedRiskAnalysis(CnATreeElement cnaElement) {
 		super(cnaElement);
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected FinishedRiskAnalysis() {

@@ -50,6 +50,7 @@ public class Raum extends CnATreeElement
 	public Raum(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }

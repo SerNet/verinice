@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
@@ -33,6 +35,15 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class Person extends CnATreeElement
 implements IBSIStrukturElement {
+    
+    private transient Logger log = Logger.getLogger(Person.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Person.class);
+        }
+        return log;
+    }
 	
 	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
 	public static final String P_NAME = "nachname"; //$NON-NLS-1$

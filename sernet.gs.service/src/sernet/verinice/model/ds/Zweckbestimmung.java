@@ -33,6 +33,7 @@ public class Zweckbestimmung extends CnATreeElement
 	public Zweckbestimmung(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected Zweckbestimmung() {

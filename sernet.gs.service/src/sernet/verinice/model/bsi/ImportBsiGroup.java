@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import sernet.gs.model.Baustein;
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -31,6 +32,8 @@ public class ImportBsiGroup extends CnATreeElement implements IBSIStrukturElemen
 
 	public ImportBsiGroup(CnATreeElement model) {
 		super(model);
+		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 
 	protected ImportBsiGroup() {

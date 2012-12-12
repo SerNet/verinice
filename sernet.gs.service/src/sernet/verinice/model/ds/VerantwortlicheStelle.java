@@ -33,6 +33,7 @@ public class VerantwortlicheStelle extends CnATreeElement
 	public VerantwortlicheStelle(CnATreeElement parent) {
 		super(parent);
 		setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected VerantwortlicheStelle() {
