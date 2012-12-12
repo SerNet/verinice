@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -26,9 +25,7 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	public RaeumeKategorie(CnATreeElement model) {
 		super(model);
-		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-	}
+		}
 	
 	protected RaeumeKategorie() {
 		

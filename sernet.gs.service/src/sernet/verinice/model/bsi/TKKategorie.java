@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -26,8 +25,6 @@ public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	
 	public TKKategorie(CnATreeElement model) {
 		super(model);
-		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	

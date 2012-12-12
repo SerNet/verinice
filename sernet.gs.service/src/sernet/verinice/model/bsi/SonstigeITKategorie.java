@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class SonstigeITKategorie extends CnATreeElement 
@@ -26,8 +25,6 @@ public class SonstigeITKategorie extends CnATreeElement
 
 	public SonstigeITKategorie(CnATreeElement parent) {
 		super(parent);
-		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
 	}
 	
 	protected SonstigeITKategorie() {

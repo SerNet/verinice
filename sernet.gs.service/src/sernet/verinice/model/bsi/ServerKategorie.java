@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -26,9 +25,7 @@ public class ServerKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	public ServerKategorie(CnATreeElement model) {
 		super(model);
-		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-	}
+		}
 	
 	public ServerKategorie() {
 		

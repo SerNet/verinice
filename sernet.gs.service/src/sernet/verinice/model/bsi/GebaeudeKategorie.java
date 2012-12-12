@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 
@@ -25,9 +24,7 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 	public static final String TYPE_ID = "gebaeudekategorie"; //$NON-NLS-1$
 	
 	public GebaeudeKategorie(CnATreeElement parent) {
-		super(parent);
-		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());		
+		super(parent);	
 	}
 	
 	protected GebaeudeKategorie() {
