@@ -52,104 +52,117 @@ import sernet.verinice.model.ds.IDatenschutzElement;
 
 public class CnAImageProvider {
 
-	public static Image getImage(TodoViewItem elmt) {
-		return getImage(elmt.getUmsetzung());
-	}
-	
-	public static Image getImage(CnATreeElement elmt) {
-		if (elmt instanceof MassnahmenUmsetzung) {
-			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) elmt;
-			mn = (MassnahmenUmsetzung) Retriever.checkRetrieveElement(mn);
-			String state = mn.getUmsetzung();			
-			return getImage(state);
-		}
-		
-		if (elmt instanceof GefaehrdungsUmsetzung)
-			return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
-		
-		if (elmt instanceof BausteinUmsetzung)
-			return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
-		
-		if (elmt instanceof Anwendung	|| elmt instanceof AnwendungenKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.ANWENDUNG);
+    public static Image getImage(TodoViewItem elmt) {
+        return getImage(elmt.getUmsetzung());
+    }
 
-		if (elmt instanceof Gebaeude || elmt instanceof GebaeudeKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.GEBAEUDE);
+    public static Image getImage(CnATreeElement elmt) {
+        if (elmt instanceof MassnahmenUmsetzung) {
+            MassnahmenUmsetzung mn = (MassnahmenUmsetzung) elmt;
+            mn = (MassnahmenUmsetzung) Retriever.checkRetrieveElement(mn);
+            String state = mn.getUmsetzung();
+            return getImage(state);
+        }
 
-		if (elmt instanceof Person	|| elmt instanceof PersonenKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.PERSON);
-		
-		if (elmt instanceof Client || elmt instanceof ClientsKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.CLIENT);
+        if (elmt instanceof GefaehrdungsUmsetzung) {
+            return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
+        }
 
-		if (elmt instanceof SonstIT || elmt instanceof SonstigeITKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.SONSTIT);
+        if (elmt instanceof BausteinUmsetzung) {
+            return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
+        }
 
-		if (elmt instanceof Server || elmt instanceof ServerKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.SERVER);
+        if (elmt instanceof Anwendung || elmt instanceof AnwendungenKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.ANWENDUNG);
+        }
 
-		if (elmt instanceof TelefonKomponente || elmt instanceof TKKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.TELEFON);
+        if (elmt instanceof Gebaeude || elmt instanceof GebaeudeKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.GEBAEUDE);
+        }
 
-		if (elmt instanceof NetzKomponente || elmt instanceof NKKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.NETWORK);
-		
-		if (elmt instanceof Raum || elmt instanceof RaeumeKategorie)
-			return ImageCache.getInstance().getImage(ImageCache.RAUM);
+        if (elmt instanceof Person || elmt instanceof PersonenKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.PERSON);
+        }
 
-		if (elmt instanceof ITVerbund || elmt instanceof CnAPlaceholder)
-			return ImageCache.getInstance().getImage(ImageCache.EXPLORER);
-		
-		if (elmt instanceof IDatenschutzElement)
-			return ImageCache.getInstance().getImage(ImageCache.SHIELD);
-		
-		if (elmt instanceof FinishedRiskAnalysis)
-			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
-		
-		if (elmt instanceof ImportBsiGroup)
+        if (elmt instanceof Client || elmt instanceof ClientsKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.CLIENT);
+        }
+
+        if (elmt instanceof SonstIT || elmt instanceof SonstigeITKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.SONSTIT);
+        }
+
+        if (elmt instanceof Server || elmt instanceof ServerKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.SERVER);
+        }
+
+        if (elmt instanceof TelefonKomponente || elmt instanceof TKKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.TELEFON);
+        }
+
+        if (elmt instanceof NetzKomponente || elmt instanceof NKKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.NETWORK);
+        }
+
+        if (elmt instanceof Raum || elmt instanceof RaeumeKategorie) {
+            return ImageCache.getInstance().getImage(ImageCache.RAUM);
+        }
+
+        if (elmt instanceof ITVerbund || elmt instanceof CnAPlaceholder) {
+            return ImageCache.getInstance().getImage(ImageCache.EXPLORER);
+        }
+
+        if (elmt instanceof IDatenschutzElement) {
+            return ImageCache.getInstance().getImage(ImageCache.SHIELD);
+        }
+
+        if (elmt instanceof FinishedRiskAnalysis) {
+            return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+        }
+
+        if (elmt instanceof ImportBsiGroup) {
             return ImageCache.getInstance().getImage(ImageCache.ISO27K_IMPORT);
-		
-		return ImageCache.getInstance().getImage(
-				ImageCache.UNKNOWN);
-		
-	}
-	
-	private static Image getImage(String state) {
-			
-			if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN))
-				return ImageCache.getInstance().getImage(
-					ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
-		
-			if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_JA))
-				return ImageCache.getInstance().getImage(
-						ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-			
-			if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE))
-				return ImageCache.getInstance().getImage(
-						ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-			
-			if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH))
-				return ImageCache.getInstance().getImage(
-						ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-		//else:
-		return ImageCache.getInstance().getImage(
-					ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
-	}
-	
-	public static Image getImage(FinishedRiskAnalysis elmt) {
-		if (elmt instanceof FinishedRiskAnalysis)
-			return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
-		return ImageCache.getInstance().getImage(
-				ImageCache.UNKNOWN);
-		
-	}
-	
-	public static Image getCustomImage(CnATreeElement element) {
+        }
+
+        return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+
+    }
+
+    private static Image getImage(String state) {
+
+        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN)) {
+            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        }
+
+        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_JA)) {
+            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+        }
+
+        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE)) {
+            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+        }
+
+        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH)) {
+            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+        }
+        // else:
+        return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+    }
+
+    public static Image getImage(FinishedRiskAnalysis elmt) {
+        if (elmt instanceof FinishedRiskAnalysis) {
+            return ImageCache.getInstance().getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);
+        }
+        return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+
+    }
+
+    public static Image getCustomImage(CnATreeElement element) {
         Image image = null;
-        if(element.getIconPath()!=null) {
+        if (element.getIconPath() != null) {
             image = ImageCache.getInstance().getCustomImage(element.getIconPath());
         }
         return image;
     }
-	
+
 }

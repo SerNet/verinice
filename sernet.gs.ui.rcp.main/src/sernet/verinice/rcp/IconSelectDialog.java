@@ -76,11 +76,11 @@ public class IconSelectDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(IconSelectDialog.class);
     
-    public static final String ICON_DIRECTORY = "tree-icons/";
+    public static final String ICON_DIRECTORY = "tree-icons";
     
     private static final FileFilter ICON_FILE_FILTER = new IconFileFilter();
 
-    private static final int SIZE_Y = 338;
+    private static final int SIZE_Y = 370;
     private static final int SIZE_X = 485;
     private static final int NUMBER_OF_COLUMNS = 10;
     private static final int ICON_SPACING = 10;
@@ -164,6 +164,7 @@ public class IconSelectDialog extends Dialog {
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         dirCombo.setLayoutData(gd);
         dirCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 dirComboModel.setSelectedIndex(dirCombo.getSelectionIndex());
                 directory = dirComboModel.getSelectedObject();
@@ -229,11 +230,12 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void createTable(Composite parent) {
-        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
+        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
         viewer.setContentProvider(new ArrayContentProvider());
 
         TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
         ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
+            @Override
             protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
                 return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
             }
@@ -248,6 +250,7 @@ public class IconSelectDialog extends Dialog {
         table.setLayoutData(gd);
 
         table.addListener(SWT.MeasureItem, new Listener() {
+            @Override
             public void handleEvent(Event event) {
                 // height cannot be per row so simply set
                 event.height = getThumbnailSize() + ICON_SPACING;
@@ -301,6 +304,9 @@ public class IconSelectDialog extends Dialog {
         String relative = path;
         if (path.contains(ICON_DIRECTORY)) {
             relative = path.substring(path.indexOf(ICON_DIRECTORY));
+        }
+        if(relative.contains("\\")) {
+            relative = relative.replace('\\', '/');
         }
         return relative;
     }

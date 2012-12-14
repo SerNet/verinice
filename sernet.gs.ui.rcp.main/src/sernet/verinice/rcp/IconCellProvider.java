@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
@@ -31,6 +32,8 @@ import sernet.gs.ui.rcp.main.ImageCache;
  */
 public class IconCellProvider extends ImageCellProvider {
 
+    private static final Logger LOG = Logger.getLogger(IconCellProvider.class);
+    
     int column;
     
     /**
@@ -53,6 +56,9 @@ public class IconCellProvider extends ImageCellProvider {
             IconDescriptor[] iconDescriptors = (IconDescriptor[]) element;
             if(iconDescriptors[column]!=null) {
                 image = getImage((iconDescriptors[column]).getImageDescriptor());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Image: " + iconDescriptors[column].getPath());
+                }
             }
         }
         return image;
@@ -65,7 +71,7 @@ public class IconCellProvider extends ImageCellProvider {
         Image image = id.createImage(false);
         if (image == null) {
             image = getImage(ImageCache.UNKNOWN);
-        }
+        } 
 
         return image;
     }

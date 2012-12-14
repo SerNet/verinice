@@ -17,17 +17,18 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-
 import org.osgi.framework.Bundle;
 
 import sernet.verinice.model.bsi.Anwendung;
@@ -82,6 +83,8 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class ImageCache {
 
+    private static final Logger LOG = Logger.getLogger(ImageCache.class);
+    
     // FIXME ak exception accessing read only element as normal user
     // FIXME ak secureDAO not used on all elements, ie bausteinumsetzung
     // FIXME ak exception sving element, entity exists in session with separate instance...
@@ -402,15 +405,18 @@ public class ImageCache {
 	}
     
     public Image getCustomImage(String url) {
-        ImageDescriptor descriptor = ImageDescriptor.createFromURL(
-                FileLocator.find(bundle,
-                new Path(url),
-                null));
+        ImageDescriptor descriptor = null;
+        if(new File(url).isAbsolute()) {
+            descriptor = ImageDescriptor.createFromFile(null,url);
+        } else {
+            descriptor = ImageDescriptor.createFromURL(FileLocator.find(bundle,new Path(url),null));
+        }
         if(descriptor.equals(ImageDescriptor.getMissingImageDescriptor())) {
+            LOG.warn("Image not found: " + url);
             descriptor = ImageDescriptor.createFromURL(
                     FileLocator.find(bundle,
-                    new Path(getIconPath(UNKNOWN)),
-                    null));
+                            new Path(getIconPath(UNKNOWN)),
+                            null));
         }
         return getImage(descriptor);
     }
@@ -420,16 +426,8 @@ public class ImageCache {
 	            FileLocator.find(bundle,
 	            new Path(getIconPath(url)),
 	            null));
-	    if(descriptor.equals(ImageDescriptor.getMissingImageDescriptor())) {
-	        descriptor = ImageDescriptor.createFromURL(
-	                FileLocator.find(bundle,
-	                new Path(getIconPath(UNKNOWN)),
-	                null));
-	    }
         return getImage(descriptor);
     }
-
-
 
     private String getIconPath(String url) {
         return new StringBuilder(ICON_DIRECTORY).append(url).toString();
@@ -441,14 +439,28 @@ public class ImageCache {
 			return null;
 		Image image = imageMap.get(id);
 		if (image == null) {
-			image = id.createImage(false);
-			if(image==null) {
-			    image = getImage(ImageCache.UNKNOWN);
-			}
-			imageMap.put(id, image);
+			image = createImage(id);
 		}
 		return image;
 	}
+
+    private Image createImage(ImageDescriptor id) {
+        Image image;
+        try {
+            image = id.createImage(false);
+            if(image==null) {
+                image = getImage(ImageCache.UNKNOWN);
+            }
+        } catch(java.lang.Exception e) {
+            LOG.error("Error while creating image: " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e);
+            }
+            image = getImage(ImageCache.UNKNOWN);
+        }
+        imageMap.put(id, image);
+        return image;
+    }
 	
 	public void dispose() {
 		for (Image image : imageMap.values()) {

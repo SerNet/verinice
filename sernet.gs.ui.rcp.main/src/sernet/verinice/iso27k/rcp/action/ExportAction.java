@@ -191,6 +191,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 		        filePath = addExtension(filePath, EXTENSION_CERTIFICATE_ENCRPTION);
             }
 		    WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
+                @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
@@ -355,6 +356,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }

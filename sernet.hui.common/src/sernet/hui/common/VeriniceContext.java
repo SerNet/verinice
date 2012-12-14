@@ -164,9 +164,11 @@ public class VeriniceContext {
 			// local variable was not properly initialized.
 			// If this happens in the verinice client code you need to call
 			// Activator.inheritVeriniceContext() on the thread first.
-			String msg = "Requested object '" + id + "' was not available. The context was not properly configured for this thread yet.";
-			log.error(msg);
-			throw new IllegalStateException(msg);
+			
+		    String msg = "Requested object '" + id + "' was not available. The context was not properly configured for this thread yet.";
+		    IllegalStateException e = new IllegalStateException(msg);
+		    log.error(msg, e);
+			throw e;
 		}
 		
 		return o;
