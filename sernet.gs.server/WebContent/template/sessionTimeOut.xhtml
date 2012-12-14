@@ -7,37 +7,39 @@
 
 <ui:composition>
    <h:form prependId="false">
-      <p:idleMonitor
-         timeout="#{session.maxInactiveInterval * 1000 - 120000}"
-         onidle="startIdleMonitor()" 
-         onactive="timeoutDialog.hide()" />
-
-      <p:dialog id="timeoutSession"
-         header="#{msg['session.expire']}"
-         widgetVar="timeoutDialog" 
-         showEffect="fade" hideEffect="fade"
-         modal="true" 
-         width="400" 
-         height="110" 
-         closable="false"
-         draggable="false" 
-         resizable="false" 
-         appendToBody="true"
-         onHide="stopCount()" 
-         onShow="doTimer()">
-         <br />
-         <p>
-            <span class="ui-icon ui-icon-alert" style="float: left; margin: 8px 8px 0;"/>
-            <p:panel>
-               #{msg['logoff.soon.1']}
-               <span id="dialog-countdown" style="font-weight: bold"></span>
-               #{msg['logoff.soon.2']}
-            </p:panel>
-         </p>
-         <br />
-         <p style="font-weight: bold;">#{msg['move.cursor']}</p>
-      </p:dialog>
-      <p:remoteCommand name="keepAlive" actionListener="#{auth.keepSessionAlive}" />
+      <p:outputPanel id="timeoutPanel" rendered="#{auth.logoutPossible}">
+         <p:idleMonitor
+            timeout="#{session.maxInactiveInterval * 1000 - 120000}"
+            onidle="startIdleMonitor()" 
+            onactive="timeoutDialog.hide()" />
+   
+         <p:dialog id="timeoutSession"
+            header="#{msg['session.expire']}"
+            widgetVar="timeoutDialog" 
+            showEffect="fade" hideEffect="fade"
+            modal="true" 
+            width="400" 
+            height="110" 
+            closable="false"
+            draggable="false" 
+            resizable="false" 
+            appendToBody="true"
+            onHide="stopCount()" 
+            onShow="doTimer()">
+            <br />
+            <p>
+               <span class="ui-icon ui-icon-alert" style="float: left; margin: 8px 8px 0;"/>
+               <p:panel>
+                  #{msg['logoff.soon.1']}
+                  <span id="dialog-countdown" style="font-weight: bold"></span>
+                  #{msg['logoff.soon.2']}
+               </p:panel>
+            </p>
+            <br />
+            <p style="font-weight: bold;">#{msg['move.cursor']}</p>
+         </p:dialog>
+         <p:remoteCommand name="keepAlive" actionListener="#{auth.keepSessionAlive}" />
+      </p:outputPanel>
    </h:form>
    <script type="text/javascript">
       var TIME = 120; // in seconds
