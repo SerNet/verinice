@@ -26,13 +26,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.CnaStructureHelper;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 @SuppressWarnings("serial")
 public class LoadChildrenForExpansion extends GenericCommand {
@@ -41,8 +35,6 @@ public class LoadChildrenForExpansion extends GenericCommand {
 
 	private CnATreeElement parent;
 	private Integer dbId;
-	
-	private Set<Class<?>> filteredClasses;
 
     private String typeId;
 
@@ -55,10 +47,10 @@ public class LoadChildrenForExpansion extends GenericCommand {
 		dbId = parent.getDbId();
 		typeId = parent.getTypeId();
 		this.parent = null;
-		this.filteredClasses = filteredClasses;
 	}
 	
-	public void execute() {
+	@Override
+    public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		
 		RetrieveInfo ri = new RetrieveInfo();

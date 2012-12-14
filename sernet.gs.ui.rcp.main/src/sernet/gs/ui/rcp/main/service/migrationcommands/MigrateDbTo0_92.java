@@ -56,8 +56,11 @@ import sernet.verinice.service.commands.SaveElement;
  */
 public class MigrateDbTo0_92 extends DbMigration {
 
+    private static final Logger LOG = Logger.getLogger(MigrateDbTo0_92.class);
+    
 	// list of old values to be translated to new linked field:
-	private String[] personFieldsOld = new String[] {
+	@SuppressWarnings("deprecation")
+    private String[] personFieldsOld = new String[] {
 			BausteinUmsetzung.P_ERFASSTDURCH_OLD,
 			BausteinUmsetzung.P_GESPRAECHSPARTNER_OLD,
 			MassnahmenUmsetzung.P_NAECHSTEREVISIONDURCH_OLD,
@@ -79,32 +82,25 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	private String[] personFieldsNew = new String[personFieldsOld.length];
 
-
 	private List<Person> personen;
 
-	
 	public void run() throws Exception {
-		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.92.");
+	    LOG.debug("Updating DB model to V 0.92.");
 		createNewFieldsArray();
 		LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		personen = command.getElements();
 		
-	
-		//progress.beginTask("Aktualisiere DB auf V 0.92... Bitte warten...", IProgress.UNKNOWN_WORK);
-		Logger.getLogger(this.getClass()).debug("Aktualisiere DB auf V 0.92... Bitte warten...");
-		
-		
+		LOG.debug("Aktualisiere DB auf V 0.92... Bitte warten...");
+			
 		LoadBSIModelComplete command2 = new LoadBSIModelComplete(false); /* skip massnahmen */
 		command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(false);
 
-		//progress.beginTask("Migriere verknüpfte Personen...", allElements.size());
-		Logger.getLogger(this.getClass()).debug("Migriere verknüpfte Personen...");
+		LOG.debug("Migriere verknüpfte Personen...");
 		List<CnATreeElement> changedElements = migratePersonFields(allElements);
 		
-		//progress.beginTask("Speichere alle veränderten Objekte. Bitte warten...", IProgress.UNKNOWN_WORK);
-		Logger.getLogger(this.getClass()).debug("Speichere alle veränderten Objekte. Bitte warten...");
+		LOG.debug("Speichere alle veränderten Objekte. Bitte warten...");
 
 		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements, ChangeLogEntry.STATION_ID);
 		command3 = getCommandService().executeCommand(command3);
@@ -113,17 +109,11 @@ public class MigrateDbTo0_92 extends DbMigration {
 		model.setDbVersion(getVersion());
 		SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
 		command4 = getCommandService().executeCommand(command4);
-		//progress.done();
 	}
-	
-	
-
 
 	private List<CnATreeElement> migratePersonFields(List<CnATreeElement> allElements) {
 		List<CnATreeElement> changeElements = new ArrayList<CnATreeElement>();
 		for (CnATreeElement element : allElements) {
-//			progress.worked(1);
-			// migrate element:
 			Entity entity = element.getEntity();
 			if (entity == null)
 				continue;
@@ -171,10 +161,8 @@ public class MigrateDbTo0_92 extends DbMigration {
 		return 0.92D;
 	}
 
-
-
-
-	public void execute() {
+	@Override
+    public void execute() {
 		try {
 			run();
 		} catch (Exception e) {

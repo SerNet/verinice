@@ -54,7 +54,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  */
 public class CnAWorkspace {
 
-	private static final Logger log = Logger.getLogger(CnAWorkspace.class);
+	private static final Logger LOG = Logger.getLogger(CnAWorkspace.class);
 
 	private static final String OFFICEDIR = "office"; //$NON-NLS-1$
 
@@ -63,9 +63,9 @@ public class CnAWorkspace {
 	private static String workDir;
 
 	// copy binary data using 100K buffer:
-	static final int BUFF_SIZE = 100000;
+	private static final int BUFF_SIZE = 100000;
 
-	static final byte[] buffer = new byte[BUFF_SIZE];
+	private static final byte[] BUFFER = new byte[BUFF_SIZE];
 
 	/**
 	 * Version number to check against version file. When changing this, also
@@ -77,14 +77,11 @@ public class CnAWorkspace {
 
 	protected static final String TEMPIMPORTDB = "tempGstoolImportDb"; //$NON-NLS-1$
 
-	private static final String POLICY_FILE = "updatePolicyURL"; //$NON-NLS-1$
-
     private static CnAWorkspace instance;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		private boolean modechangeWarning = true;
-
-		public void propertyChange(PropertyChangeEvent event) {
+		@Override
+        public void propertyChange(PropertyChangeEvent event) {
 			if ((event.getProperty().equals(PreferenceConstants.GS_DB_URL) || event.getProperty().equals(PreferenceConstants.GS_DB_USER) || event.getProperty().equals(PreferenceConstants.GS_DB_PASS))) {
 
 				Preferences prefs = Activator.getDefault().getPluginPreferences();
@@ -135,29 +132,37 @@ public class CnAWorkspace {
 			File confFile = new File(confDir, "configuration.version"); //$NON-NLS-1$
 			if (confFile.exists()) {
 				Properties props = new Properties();
-				FileInputStream fis;
+				FileInputStream fis = null;
 				try {
 					fis = new FileInputStream(confFile);
 					props.load(fis);
 
 					if (props.get("version").equals(CONFIG_CURRENT_VERSION)) { //$NON-NLS-1$
-						log.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath()); //$NON-NLS-1$
+						LOG.debug("Arbeitsverzeichnis bereits vorhanden, wird nicht neu erzeugt: " + confDir.getAbsolutePath()); //$NON-NLS-1$
 						return;
 					}
 				} catch (Exception e) {
-					log.debug(e);
+					LOG.debug(e);
+				} finally {
+				    if(fis!=null) {
+				        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            LOG.error("Error while closing FileInputStream", e);
+                        }
+				    }
 				}
 			}
 
 		}
 
-		CnAWorkspace instance = new CnAWorkspace();
+		CnAWorkspace workspace = new CnAWorkspace();
 		try {
-			instance.createConfDir();
-			instance.createConfDirFiles();
-			instance.createHtmlDir();
-			instance.createOfficeDir();
-			instance.createDatabaseConfig();
+			workspace.createConfDir();
+			workspace.createConfDirFiles();
+			workspace.createHtmlDir();
+			workspace.createOfficeDir();
+			workspace.createDatabaseConfig();
 		} catch (Exception e) {
 			ExceptionUtil.log(e, NLS.bind(Messages.CnAWorkspace_4, confDir.getAbsolutePath()));
 		}
@@ -169,20 +174,6 @@ public class CnAWorkspace {
 		String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
 		workDir = (new File(path)).getAbsolutePath();
 		confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
-	}
-
-	/**
-	 * @param dir
-	 * @param string
-	 */
-	private void removeFile(String dir, String name) {
-		File fileToDelete = new File(dir + File.separator + name);
-		boolean success = fileToDelete.delete();
-		if (success) {
-			log.debug(name + " was successfully deleted."); //$NON-NLS-1$
-		} else {
-			log.debug(name + " was NOT deleted."); //$NON-NLS-1$
-		}
 	}
 
 	public String getWorkdir() {
@@ -200,20 +191,20 @@ public class CnAWorkspace {
 		return workDir + File.separator + "conf"; //$NON-NLS-1$
 	}
 	
-	private void createConfDirFiles() throws NullPointerException, IOException {
+	private void createConfDirFiles() throws IOException {
         createTextFile("conf" + File.separator + "reports.properties_skeleton", 
                        workDir, 
                        "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-	public void createConfDir() throws NullPointerException, IOException {
+	public void createConfDir() throws IOException {
 		URL url = Platform.getInstanceLocation().getURL();
-		File confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
-		confDir.mkdirs();
+		File dir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
+		dir.mkdirs();
 	}
 
-	private void createOfficeDir() throws NullPointerException, IOException {
+	private void createOfficeDir() throws IOException {
 		URL url = Platform.getInstanceLocation().getURL();
 		File officeDir = new File(url.getPath() + File.separator + OFFICEDIR);
 		officeDir.mkdirs();
@@ -224,14 +215,15 @@ public class CnAWorkspace {
 
 	}
 
-	private void createHtmlDir() throws NullPointerException, IOException {
+	private void createHtmlDir() throws IOException {
 		URL url = Platform.getInstanceLocation().getURL();
-		File htmlDir = new File(url.getPath() + File.separator + "html"); //$NON-NLS-1$
+		String html = "html";
+		File htmlDir = new File(url.getPath() + File.separator + html); //$NON-NLS-1$
 		htmlDir.mkdirs();
 
-		createTextFile("html" + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
-		createTextFile("html" + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
-		createBinaryFile("browserdefault.png", workDir + File.separator + "html"); //$NON-NLS-1$ //$NON-NLS-2$
+		createTextFile(html + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+		createTextFile(html + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+		createBinaryFile("browserdefault.png", workDir + File.separator + html); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -251,12 +243,12 @@ public class CnAWorkspace {
 		try {
 			out = new FileOutputStream(toDir + File.separator + infile);
 			while (true) {
-				synchronized (buffer) {
-					int amountRead = in.read(buffer);
+				synchronized (BUFFER) {
+					int amountRead = in.read(BUFFER);
 					if (amountRead == -1) {
 						break;
 					}
-					out.write(buffer, 0, amountRead);
+					out.write(BUFFER, 0, amountRead);
 				}
 			}
 		} finally {
@@ -269,7 +261,7 @@ public class CnAWorkspace {
 		}
 	}
 
-	public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws NullPointerException, IOException {
+	public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws IOException {
 		HashMap<String, String> settings = new HashMap<String, String>(5);
 		settings.put("url", url.replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		settings.put("user", user); //$NON-NLS-1$
@@ -296,12 +288,12 @@ public class CnAWorkspace {
 		        settings);  
 	}
 
-	public void createGstoolImportDatabaseConfig() throws NullPointerException, IOException {
+	public void createGstoolImportDatabaseConfig() throws IOException {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));
 	}
 
-	private void createTextFile(String infile, String toDir) throws NullPointerException, IOException {
+	private void createTextFile(String infile, String toDir) throws IOException {
 		createTextFile(infile, toDir, infile, null);
 	}
 
@@ -394,7 +386,7 @@ public class CnAWorkspace {
 		}
 	}
 
-	public synchronized void createDatabaseConfig() throws NullPointerException, IOException, IllegalStateException {
+	public synchronized void createDatabaseConfig() throws IOException, IllegalStateException {
 
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 

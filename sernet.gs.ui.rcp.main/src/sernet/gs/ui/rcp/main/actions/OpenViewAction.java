@@ -18,21 +18,14 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.iso27k.rcp.JobScheduler;
 
 public class OpenViewAction extends RightsEnabledAction {
 

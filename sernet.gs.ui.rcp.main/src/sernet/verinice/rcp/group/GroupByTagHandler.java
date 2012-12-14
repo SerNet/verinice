@@ -101,7 +101,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
                 return null;
             }
             
-            GroupByTagDialog dialog = openGroupByTagDialog(event);
+            GroupByTagDialog dialog = openGroupByTagDialog();
             if( dialog.open() == Dialog.OK ) {
                 Set<String> tags = dialog.getTagsSelected();
                 if(tags!=null && !tags.isEmpty()) {
@@ -137,7 +137,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
         progressService.busyCursorWhile(operation);
     }
 
-    private GroupByTagDialog openGroupByTagDialog(ExecutionEvent event) {      
+    private GroupByTagDialog openGroupByTagDialog() {      
         return new GroupByTagDialog(Display.getCurrent().getActiveShell(), group, allTags);             
     }
     
@@ -180,7 +180,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
     
     class LoadTagsOperation implements IRunnableWithProgress {
 
-        Set<String> tagSet;
+        private Set<String> tagSet;
         
         /* (non-Javadoc)
          * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -209,10 +209,10 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
         
     }
     
-    class GroupByTagsOperation implements IRunnableWithProgress {
+    static class GroupByTagsOperation implements IRunnableWithProgress {
 
-        CnATreeElement group;
-        Set<String> tags;
+        private CnATreeElement group;
+        private Set<String> tags;
         
 
         public GroupByTagsOperation(CnATreeElement group, Set<String> tags) {
@@ -230,8 +230,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
             Activator.inheritVeriniceContextState();
             GroupByTags command = new GroupByTags(group.getUuid(), tags);
             try {
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                //CnAElementFactory.getModel(group).childChanged(group);
+                ServiceFactory.lookupCommandService().executeCommand(command);
                 CnAElementFactory.getInstance().reloadModelFromDatabase();
             } catch (CommandException ex) {
                 LOG.error("Error while grouping by tags", ex); //$NON-NLS-1$

@@ -85,7 +85,8 @@ public class PasteHandler extends AbstractHandler {
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			Object selection = HandlerUtil.getCurrentSelection(event);
 			IViewPart part = (IViewPart) HandlerUtil.getActivePart(event);
@@ -112,7 +113,7 @@ public class PasteHandler extends AbstractHandler {
 				LOG.debug(e);
 			}
 			handlePermissionException(e);
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			if(t.getCause()!=null && t.getCause() instanceof PermissionException) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug(t);
@@ -175,7 +176,7 @@ public class PasteHandler extends AbstractHandler {
 				                    if(!(isRootElement(tmpTarget)) || (validationList.size() == 1 && isSubTreeElement(validationList.get(0))) ){
 				                        String jobDescription = (validationList.size() == 1 && isSubTreeElement(validationList.get(0)) 
 				                                ? (loadElementByUuid(validationList.get(0))).getTitle() : (tmpTarget instanceof CnATreeElement ? 
-				                                        ((CnATreeElement)tmpTarget).getTitle() : Messages.getString("PasteHandler.12")));
+				                                        tmpTarget.getTitle() : Messages.getString("PasteHandler.12")));
 				                        monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {jobDescription}), IProgressMonitor.UNKNOWN);
 				                        String uuid = ((!isRootElement(tmpTarget) ? tmpTarget.getUuid() : 
 				                            (validationList.get(0))));
@@ -228,8 +229,8 @@ public class PasteHandler extends AbstractHandler {
 		                    IStatus status = Status.OK_STATUS;
 		                    try {                
                                 String jobDescription = (changes.size() == 1 && isSubTreeElement(changes.get(0).getElement()) 
-                                        ? ((ElementChange)changes.get(0)).getElement().getTitle() : (target instanceof CnATreeElement ? 
-                                                ((CnATreeElement)target).getTitle() : Messages.getString("PasteHandler.12")));
+                                        ? changes.get(0).getElement().getTitle() : (target instanceof CnATreeElement ? 
+                                                target.getTitle() : Messages.getString("PasteHandler.12")));
                                 if(!(isRootElement(target)) || (changes.size() == 1 && isSubTreeElement(changes.get(0).getElement())) ){
                                     monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {jobDescription}), IProgressMonitor.UNKNOWN);
                                     CnATreeElement elmt = ((!isRootElement(target) ? (CnATreeElement)target : 

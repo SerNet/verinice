@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -38,8 +36,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -55,7 +51,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityElement;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.auth.Action;
 
 /**
  * Wizard page of wizard {@link IndividualProcessWizard}.
@@ -136,15 +131,11 @@ public class PropertyPage extends WizardPage {
         
         tableSelected = createTreeTable(leftComposite,Messages.PropertyPage_3);
         tableSelected.setLabelProvider(new PropertyTypeLabelProvider());
-        //tableSelected.setComparator(new PropertyTypeComparator());
-        //tableSelected.setContentProvider(new ArrayContentProvider()); 
         tableSelected.setContentProvider(selectedContentProvider); 
         tableSelected.refresh(true);
        
         table = createTreeTable(rightComposite,Messages.PropertyPage_4);
         table.setLabelProvider(new PropertyTypeLabelProvider());
-        //table.setComparator(new PropertyTypeComparator());
-        //table.setContentProvider(new ArrayContentProvider()); 
         table.setContentProvider(contentProvider);    
         table.refresh(true);
         
@@ -191,9 +182,7 @@ public class PropertyPage extends WizardPage {
      */
     private void addSelection() {
         IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-        List selectionList = selection.toList();      
-        //selectedItems.addAll(selectionList);
-        //unselectedItems.removeAll(selectionList);
+        List selectionList = selection.toList();
         for (Object item : selectionList) {
             if(item instanceof PropertyType) {
                 PropertyType propertyType = (PropertyType) item;
@@ -220,8 +209,6 @@ public class PropertyPage extends WizardPage {
     private void removeSelection() {
         IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
         List selectionList = selection.toList();
-        //selectedItems.removeAll(selectionList);
-        //unselectedItems.addAll(selectionList);
         for (Object item : selectionList) {
             if(item instanceof PropertyType) {
                 PropertyType propertyType = (PropertyType) item;
@@ -274,6 +261,7 @@ public class PropertyPage extends WizardPage {
                 });
 
         addButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 addSelection();
                 removeAllButton.setEnabled(true);
@@ -291,12 +279,14 @@ public class PropertyPage extends WizardPage {
         });
 
         tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
+                    @Override
                     public void selectionChanged(SelectionChangedEvent event) {
                         removeButton.setEnabled(!event.getSelection().isEmpty());
                     }
                 });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -305,6 +295,7 @@ public class PropertyPage extends WizardPage {
         });
 
         tableSelected.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -316,9 +307,8 @@ public class PropertyPage extends WizardPage {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
-            public void widgetSelected(SelectionEvent e) { 
-                //selectedItems.addAll(unselectedItems);
-                //unselectedItems.clear();
+            @Override
+            public void widgetSelected(SelectionEvent e) {
                 selectedProperties.addAll(unselectedProperties);
                 unselectedProperties.clear();
                 selectedContentProvider.setVisibleTyps(selectedProperties);
@@ -334,9 +324,8 @@ public class PropertyPage extends WizardPage {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             public void widgetSelected(SelectionEvent e) {
-                //unselectedItems.addAll(selectedItems);
-                //selectedItems.clear();
                 unselectedProperties.addAll(selectedProperties);
                 selectedProperties.clear();
                 selectedContentProvider.setVisibleTyps(selectedProperties);

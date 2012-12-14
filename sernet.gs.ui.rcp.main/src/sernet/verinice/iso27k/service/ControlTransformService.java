@@ -58,8 +58,6 @@ public class ControlTransformService {
 	
 	private int numberProcessed;
 	
-	private Object data;
-	
 	public int getNumberOfControls() {
 		return numberOfControls;
 	}
@@ -99,10 +97,10 @@ public class ControlTransformService {
     public void run()  {
 		try {	
 			this.numberOfControls = 0;
-			List<IItem> itemList = createInsertList(getItemList());
+			List<IItem> insertList = createInsertList(getItemList());
 			progressObserver.beginTask(Messages.getString("ControlTransformService.1", numberOfControls), numberOfControls); //$NON-NLS-1$		
 			numberProcessed = 0;
-			for (IItem item : itemList) {				
+			for (IItem item : insertList) {				
 				insertItem(progressObserver, selectedGroup, item);
 			}	
 			
@@ -137,13 +135,13 @@ public class ControlTransformService {
 		if(item.getItems()!=null && item.getItems().size()>0) {
 			// create a group
 		    if (log.isDebugEnabled()) {
-                log.debug("Creating control group,  UUID: " + element.getUuid() + ", title: " + element.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Creating control group..."); //$NON-NLS-1$ 
             }
 			element = GenericItemTransformer.transformToGroup(item);			
 		} else {		   		  		 
 			// create a control
 		    if (log.isDebugEnabled()) {
-                log.debug("Creating control,  UUID: " + element.getUuid() + ", title: " + element.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$     
+                log.debug("Creating control...");    //$NON-NLS-1$ 
             }
 			element = GenericItemTransformer.transform(item);							
 		}
@@ -228,12 +226,9 @@ public class ControlTransformService {
 	}
 
 
-	private List getItemList() {
+	@SuppressWarnings("rawtypes")
+    private List getItemList() {
         return itemList;
-    }
-
-    private void setItemList(List itemList) {
-        this.itemList = itemList;
     }
     
     public IAuthService getAuthService() {

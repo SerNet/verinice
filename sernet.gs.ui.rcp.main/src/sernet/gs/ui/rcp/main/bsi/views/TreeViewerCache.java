@@ -46,6 +46,7 @@ import sernet.verinice.rcp.tree.ElementCache;
  * $LastChangedBy$
  *
  */
+@Deprecated
 @SuppressWarnings("restriction")
 public class TreeViewerCache {
 
@@ -60,7 +61,7 @@ public class TreeViewerCache {
 	}
 	
 	public void addObject(Object o) {
-	    if(o!=null && o instanceof CnATreeElement) {
+	    if(o instanceof CnATreeElement) {
 	        addObject((CnATreeElement)o);
 	    } else {
             LOG.warn("Object is null or not an CnATreeElement. Will not add this to cache.");
@@ -78,7 +79,7 @@ public class TreeViewerCache {
             } else {
                 LOG.warn("Object is null. Will not add this to cache.");
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while adding object",t);
         }
 	}
@@ -108,7 +109,7 @@ public class TreeViewerCache {
     	        }   
 	        }
     	    return value;
-    	} catch(Throwable t) {
+    	} catch(Exception t) {
             LOG.error("Error while getting object",t);
             return null;
         }
@@ -117,7 +118,7 @@ public class TreeViewerCache {
 	public void clear(CnATreeElement oldElement) {
 	    try {
 	        getCache().remove(oldElement.getUuid());
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while adding object",t);
         }	
 	}
@@ -134,13 +135,14 @@ public class TreeViewerCache {
     			   Element element =  getCache().get(key);
     				if (element.getObjectValue() instanceof CnATreeElement) {
     					CnATreeElement cnaElmt = (CnATreeElement) element.getObjectValue();
-    					if (cnaElmt.getDbId().equals(id))
+    					if (cnaElmt.getDbId().equals(id)) {
     						return cnaElmt;
+    					}
     				}
     			}
     			return null;
     		}
-    	} catch(Throwable t) {
+    	} catch(Exception t) {
             LOG.error("Error while getting object",t);
             return null;
         }

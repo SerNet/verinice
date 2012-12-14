@@ -48,7 +48,7 @@ import sernet.verinice.service.commands.SaveElement;
  */
 public class MigrateDbTo0_93 extends DbMigration {
 
-
+    private static final Logger LOG = Logger.getLogger(MigrateDbTo0_93.class);
 	
 	private Map<String, Massnahme> massnahmen = new HashMap<String, Massnahme>();
 	
@@ -56,33 +56,27 @@ public class MigrateDbTo0_93 extends DbMigration {
 	
 
 	public void run() throws Exception {
-		Logger.getLogger(this.getClass()).debug("Updating DB model to V 0.93.");
+	    LOG.debug("Updating DB model to V 0.93.");
 		
 		LoadBSIModelComplete command2 = new LoadBSIModelComplete(true); /* include massnahmen */
 		command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
 		List<CnATreeElement> allElements = command2.getModel().getAllElementsFlatList(true);
 
-//		progress.beginTask("Migriere Datenbank auf Version 0.93", allElements.size());
 		for (CnATreeElement cnATreeElement : allElements) {
-//			progress.worked(1);
 			if (cnATreeElement instanceof MassnahmenUmsetzung) {
 				MassnahmenUmsetzung mnums = (MassnahmenUmsetzung)cnATreeElement;
 				Massnahme vorlagenMassnahme = findMassnahme(mnums);
 				if (vorlagenMassnahme == null) {
-					Logger.getLogger(this.getClass())
-						.debug("Keine Vorlage gefunden für Massnahme " + cnATreeElement.getTitle());
+				    LOG.debug("Keine Vorlage gefunden für Massnahme " + cnATreeElement.getTitle());
 					continue;
-				}
-				
+				}				
 				mnums.setVerantwortlicheRollenUmsetzung(vorlagenMassnahme.getVerantwortlichUmsetzung());
 				mnums.setVerantwortlicheRollenInitiierung(vorlagenMassnahme.getVerantwortlichInitiierung());
-//				progress.setTaskName("Ergänze Rollen für " + mnums.getTitel());
 				changedElements.add(mnums);
 			}
 		}
 		
-//		progress.beginTask("Speichere alle veränderten Objekte. Bitte warten...", IProgress.UNKNOWN_WORK);
-		Logger.getLogger(this.getClass()).debug("Speichere alle veränderten Objekte. Bitte warten...");
+		LOG.debug("Speichere alle veränderten Objekte. Bitte warten...");
 
 		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements, ChangeLogEntry.STATION_ID);
 		command3 = getCommandService().executeCommand(command3);
@@ -91,10 +85,6 @@ public class MigrateDbTo0_93 extends DbMigration {
 		model.setDbVersion(getVersion());
 		SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
 		command4 = getCommandService().executeCommand(command4);
-		
-//		progress.done();
-		
-		
 	}
 
 	private Massnahme findMassnahme(MassnahmenUmsetzung mnUms) throws GSServiceException {
@@ -108,8 +98,7 @@ public class MigrateDbTo0_93 extends DbMigration {
 					}
 				}
 			}
-		}
-		
+		}		
 		return massnahmen.get(mnUms.getUrl());
 	}
 
@@ -118,16 +107,13 @@ public class MigrateDbTo0_93 extends DbMigration {
 		return 0.93D;
 	}
 
-	public void execute() {
+	@Override
+    public void execute() {
 		try {
 			run();
 		} catch (Exception e) {
 			throw new RuntimeCommandException(e);
 		}
 	}
-
-
-	
-	
 
 }

@@ -162,9 +162,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
         
     }
 
-   
-
-    
     public String getPassword2() {
         return password2;
     }

@@ -23,9 +23,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -105,9 +103,6 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
                             if(dueDate == null){
                                 dueDate = DUMMY_VALUE;
                             }
-                            if(persons == null ){
-                                persons = DUMMY_VALUE;
-                            }
                             if(riskValue == null){
                                 riskValue = DUMMY_VALUE;
                             }
@@ -136,8 +131,8 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
     private String[] splitTopicTitle(String title){
         String[] result = new String[2];
         if(title.contains(" ")){
-            String partOne = title.substring(0, title.indexOf(" "));
-            String partTwo = title.substring(title.indexOf(" "));
+            String partOne = title.substring(0, title.indexOf(' '));
+            String partTwo = title.substring(title.indexOf(' '));
             if(!Float.isNaN(Float.parseFloat(partOne))){
                 result[0] = partOne;
                 result[1] = partTwo;
@@ -148,25 +143,6 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
             result[1] = result[0];
         }
         return result;
-    }
-    
-    /**
-     * just for generating test data
-     * @param max
-     * @return
-     */
-    private int getRandomInt(int max){
-        Random random = new Random();
-        return random.nextInt(max); 
-    }
-    
-    /**
-     * just for generating test data
-     * @param length
-     * @return
-     */
-    private String getRandomString(int length){
-        return UUID.randomUUID().toString().substring(0, length);
     }
     
     public List<List<String>> getResult(){

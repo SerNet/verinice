@@ -61,7 +61,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -180,6 +179,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 public void closed(BSIModel model) {
                     // nothing to do
                 }
+                @Override
                 public void loaded(BSIModel model) {
                     initData();
                 }
@@ -222,6 +222,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         });
         
         Display.getDefault().syncExec(new Runnable(){
+            @Override
             public void run() {
                 getInfoPanel().setText("");                          
             }
@@ -337,6 +338,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
 
         doubleClickAction = new Action() {
+            @Override
             public void run() {
                 if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof TaskInformation) {
                     try {
@@ -349,13 +351,14 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                         } else {
                             MessageDialog.openError(getSite().getShell(), "Error", "Object not found.");
                         }
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         LOG.error("Error while opening control.", t); //$NON-NLS-1$
                     }
                 }
             }
         };
         myTasksAction = new Action(Messages.ButtonUserTasks, SWT.TOGGLE) {
+            @Override
             public void run() {
                 onlyMyTasks = !onlyMyTasks;
                 myTasksAction.setChecked(onlyMyTasks);
@@ -369,11 +372,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         taskFilterAction = new TaskFilterAction(getSite().getShell(), getViewer(), myTasksAction);
         
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
+            @Override
             public void run() {
                 try {
                     cancelTask();
                     this.setChecked(false);
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     LOG.error("Error while canceling task.", e); //$NON-NLS-1$
                     showError(Messages.TaskView_6, Messages.TaskView_7);
                 }
@@ -405,22 +409,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         taskFilterAction.setOnlyMyTaskEnabled(enabled);
     }
 
-    @Deprecated
-    private boolean isAdminUser(String username) {
-        if (username.equals(ServiceFactory.lookupAuthService().getAdminUsername())) {
-            return true;
-        }
-        for (String role : ServiceFactory.lookupAuthService().getRoles()) {
-            if (role.equals(ApplicationRoles.ROLE_ADMIN)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void addActions() {
         addToolBarActions();
         getViewer().addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
@@ -462,7 +454,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 if (isTaskSelected()) {
                     try {
                         taskSelected();
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         LOG.error("Error while configuring task actions.", t); //$NON-NLS-1$
                     }
                 } else {
@@ -546,6 +538,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         }
         Display.getDefault().syncExec(new Runnable() {
+            @Override
             public void run() {
                 getViewer().setInput(newList);
             }
@@ -579,6 +572,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     protected void showError(final String title, final String message) {
         Display.getDefault().syncExec(new Runnable(){
+            @Override
             public void run() {
                 MessageDialog.openError(TaskView.this.getSite().getShell(), title, message);
             }
@@ -587,6 +581,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     protected void showInformation(final String title, final String message) {
         Display.getDefault().syncExec(new Runnable(){
+            @Override
             public void run() {
                 MessageDialog.openInformation(TaskView.this.getSite().getShell(), title, message);
             }
@@ -598,26 +593,24 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
         final int number = selection.size();
-        if (number > 0) {
-            if (MessageDialog.openConfirm(parent.getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, selection.size()))) {
-                progressService.run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        Activator.inheritVeriniceContextState();
-                        for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-                            Object sel = iterator.next();
-                            if (sel instanceof TaskInformation) {
-                                TaskInformation task = (TaskInformation) sel;
-                                ServiceFactory.lookupTaskService().cancelTask(task.getId());
-                                TaskView.this.contentProvider.removeTask(task);
-                            }
+        if (number > 0
+            && MessageDialog.openConfirm(parent.getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, selection.size()))) {
+            progressService.run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+                    for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
+                        Object sel = iterator.next();
+                        if (sel instanceof TaskInformation) {
+                            TaskInformation task = (TaskInformation) sel;
+                            ServiceFactory.lookupTaskService().cancelTask(task.getId());
+                            TaskView.this.contentProvider.removeTask(task);
                         }
                     }
-                });
-                getInfoPanel().setText("");
-                showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));               
-            }
-
+                }
+            });
+            getInfoPanel().setText("");
+            showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));               
         }
     }
     

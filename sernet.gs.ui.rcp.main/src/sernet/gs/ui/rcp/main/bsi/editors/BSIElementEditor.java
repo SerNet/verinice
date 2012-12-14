@@ -102,14 +102,17 @@ public class BSIElementEditor extends EditorPart {
 
     private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
+        @Override
         public void dependencyChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
             // not relevant
         }
 
+        @Override
         public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
             modelChanged();
         }
 
+        @Override
         public void propertyChanged(PropertyChangedEvent evt) {
             modelChanged();
         }
@@ -118,6 +121,7 @@ public class BSIElementEditor extends EditorPart {
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (isModelModified) {
 
@@ -157,7 +161,7 @@ public class BSIElementEditor extends EditorPart {
                 }
             }
 
-            IEditorReference[] closeArray = (IEditorReference[]) closeOthers.toArray(new IEditorReference[closeOthers.size()]);
+            IEditorReference[] closeArray = closeOthers.toArray(new IEditorReference[closeOthers.size()]);
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true);
             
             monitor.done();
@@ -207,8 +211,9 @@ public class BSIElementEditor extends EditorPart {
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        if (!(input instanceof BSIElementEditorInput))
+        if (!(input instanceof BSIElementEditorInput)) {
             throw new PartInitException("invalid input"); //$NON-NLS-1$
+        }
         setSite(site);
         setInput(input);
         setPartName(input.getName());
@@ -216,7 +221,6 @@ public class BSIElementEditor extends EditorPart {
 
     private void initContent() {
         try {
-
             cnAElement = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
             editorBehaviorList.clear();
 
@@ -297,8 +301,9 @@ public class BSIElementEditor extends EditorPart {
      * @return
      */
     private static String[] split(String tags) {
-        if (tags == null)
+        if (tags == null) {
             return new String[] {};
+        }
 
         tags = tags.replaceAll("\\s+", "");
         return tags.split(",");
@@ -365,13 +370,6 @@ public class BSIElementEditor extends EditorPart {
         if (isWriteAllowed == null) {
             isWriteAllowed = createIsWriteAllowed();
         }
-
-        // // in samt perspective, edit only samttopics:
-        // if (isSamtPerspective()) {
-        // if (!cnAElement.getTypeId().equals(SamtTopic.TYPE_ID)) {
-        // return false;
-        // }
-        // }
         return isWriteAllowed;
     }
 
@@ -400,12 +398,7 @@ public class BSIElementEditor extends EditorPart {
         
         initContent();
         setIcon();
-
-        // // register model change listener:
-        // changeListener = new EditorModelChangelistener();
-        // CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
-        // CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
-
+        
         // if opened the first time, save initialized entity:
         if (isDirty())
             save(false);
@@ -449,9 +442,6 @@ public class BSIElementEditor extends EditorPart {
         cnAElement.getEntity().removeListener(modelListener);
         EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 
-        // CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
-        // CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
-
         super.dispose();
     }
 
@@ -473,10 +463,12 @@ public class BSIElementEditor extends EditorPart {
      * 
      */
     private final class RefreshJobRule implements ISchedulingRule {
+        @Override
         public boolean contains(ISchedulingRule rule) {
             return rule.getClass() == RefreshJobRule.class;
         }
 
+        @Override
         public boolean isConflicting(ISchedulingRule rule) {
             return rule.getClass() == RefreshJobRule.class;
         }

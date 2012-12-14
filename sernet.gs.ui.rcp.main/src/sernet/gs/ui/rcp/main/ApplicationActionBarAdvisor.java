@@ -185,6 +185,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         removeExtraneousActions();
     }
 
+    @Override
     protected void makeActions(final IWorkbenchWindow window) {
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
@@ -280,7 +281,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(importGSNotesAction);
 
         showPreferencesAction = new ShowPreferencesAction();
-        // showPreferencesAction = ActionFactory.PREFERENCES.create(window);
         register(showPreferencesAction);
 
         bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
@@ -385,12 +385,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IContributionItem createFileMenu(IWorkbenchWindow window) {
         MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23, IWorkbenchActionConstants.M_FILE);
 
-        // MenuManager neuMenu = new MenuManager("Neu...");
-        // IContributionItem wizardList =
-        // ContributionItemFactory.NEW_WIZARD_SHORTLIST.
-        // create(window);
-        // neuMenu.add(wizardList);
-
         // fileMenu.add(neuMenu);
         fileMenu.add(saveAction);
         fileMenu.add(closeAction);
@@ -417,8 +411,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
 
         MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
-        // IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST
-        // .create(window);
 
         viewsMenu.add(openBSIViewAction);
         viewsMenu.add(openBSIModelViewAction);

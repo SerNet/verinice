@@ -18,19 +18,13 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MbBaust;
@@ -38,28 +32,21 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
-import sernet.gs.scraper.GSScraper;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.CreateLink;
-import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 
 /**
  * Create BausteinUmsetzung objects during import for given target object and
@@ -85,10 +72,10 @@ public class ImportCreateBausteine extends GenericCommand {
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private boolean importUmsetzung;
     private boolean kosten;
-    private HashMap<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
-    private HashMap<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
+    private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
+    private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
     private List<MbZeiteinheitenTxt> zeiten;
-    private HashMap<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
+    private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private List<Baustein> bausteine;
     private String sourceId;
     private IBSIConfig bsiConfig;
@@ -123,6 +110,7 @@ public class ImportCreateBausteine extends GenericCommand {
         this.sourceId = sourceId;
     }
 
+    @Override
     public void execute() {
         try {
             if (getLog().isDebugEnabled()) {
@@ -142,23 +130,28 @@ public class ImportCreateBausteine extends GenericCommand {
                 model.setBSIConfig(bsiConfig);
                 this.bausteine = model.loadBausteine(new IProgress() {
 
+                    @Override
                     public void beginTask(String name, int totalWork) {
                     }
 
+                    @Override
                     public void done() {
                     }
 
+                    @Override
                     public void setTaskName(String string) {
                     }
 
+                    @Override
                     public void subTask(String string) {
                     }
 
+                    @Override
                     public void worked(int work) {
                     }
                 });
             }
-            
+
             Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
             for (MbBaust mbBaust : keySet) {
                 createBaustein(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));
@@ -208,8 +201,9 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private Baustein findBausteinForId(String id) {
         for (Baustein baustein : bausteine) {
-            if (baustein.getId().equals(id))
+            if (baustein.getId().equals(id)) {
                 return baustein;
+            }
         }
         return null;
     }
@@ -227,19 +221,22 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         // remember baustein for later:
-        if (alleBausteineToBausteinUmsetzungMap == null)
+        if (alleBausteineToBausteinUmsetzungMap == null) {
             alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
+        }
 
-        if (alleBausteineToZoBstMap == null)
+        if (alleBausteineToZoBstMap == null) {
             alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
+        }
 
         alleBausteineToBausteinUmsetzungMap.put(vorlage.baustein, bausteinUmsetzung);
         alleBausteineToZoBstMap.put(vorlage.baustein, vorlage.zoBst);
     }
 
     private String parseDate(Date date) {
-        if (date != null)
+        if (date != null) {
             return Long.toString(date.getTime());
+        }
         return "";
     }
 
@@ -250,7 +247,6 @@ public class ImportCreateBausteine extends GenericCommand {
                 return;
             }
         }
-
     }
 
     private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung, List<BausteineMassnahmenResult> list) {
@@ -258,14 +254,14 @@ public class ImportCreateBausteine extends GenericCommand {
         for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
             BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
             if (vorlage != null) {
-
                 if (importUmsetzung) {
                     // copy umsetzung:
                     Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
-                    if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH)
+                    if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH) {
                         massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
-                    else
+                    } else {
                         setUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
+                    }
                 }
 
                 // copy fields:
@@ -279,8 +275,9 @@ public class ImportCreateBausteine extends GenericCommand {
                 if (importUmsetzung) {
                     if (list.iterator().hasNext()) {
                         BausteineMassnahmenResult result = list.iterator().next();
-                        if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH)
+                        if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH) {
                             massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+                        }
                     }
                 }
             }
@@ -300,21 +297,21 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         // remember massnahme for later:
-        if (alleMassnahmen == null)
+        if (alleMassnahmen == null) {
             alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
+        }
         alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
-
     }
 
-    public HashMap<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {
+    public Map<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {
         return alleBausteineToBausteinUmsetzungMap;
     }
 
-    public HashMap<MbBaust, ModZobjBst> getAlleBausteineToZoBstMap() {
+    public Map<MbBaust, ModZobjBst> getAlleBausteineToZoBstMap() {
         return alleBausteineToZoBstMap;
     }
 
-    public HashMap<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
+    public Map<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
         return alleMassnahmen;
     }
 

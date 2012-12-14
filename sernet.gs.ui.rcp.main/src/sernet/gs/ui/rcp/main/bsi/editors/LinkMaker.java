@@ -18,20 +18,13 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
-import org.eclipse.osgi.util.NLS;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -42,16 +35,14 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -72,16 +63,13 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27KModelListener;
 
 /**
  * A SWT composite that allow the user to create links (relations) to other
@@ -111,7 +99,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private Button buttonUnlink;
     private SelectionListener linkAction;
     private String[] names;
-    SortedMap<String, String> namesAndIds;
+    private SortedMap<String, String> namesAndIds;
     private EntityTypeFilter elementTypeFilter;
     private SelectionListener unlinkAction;
     private LinkRemover linkRemover;
@@ -205,20 +193,14 @@ public class LinkMaker extends Composite implements IRelationTable {
         createFilter();
     }
 
-    /**
-     * 
-     */
     private void createFilter() {
         elementTypeFilter = new EntityTypeFilter(this.viewer);
-
         combo.addSelectionListener(new SelectionListener() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 oldSelection = combo.getSelectionIndex();
                 setFilter(combo.getSelectionIndex());
             }
-
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
@@ -244,23 +226,19 @@ public class LinkMaker extends Composite implements IRelationTable {
         buttonLink.setEnabled(writeable && checkRights());
     }
 
-    /**
-	 * 
-	 */
     private void hookButtonListeners() {
         this.buttonLink.addSelectionListener(linkAction);
         this.buttonUnlink.addSelectionListener(unlinkAction);
     }
 
-    /**
-	 * 
-	 */
     private void createButtonListeners() {
         linkAction = new SelectionListener() {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // create new link to object
                 Object[] array = namesAndIds.entrySet().toArray();
@@ -280,10 +258,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         };
 
         unlinkAction = new SelectionListener() {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // delete link:
 
@@ -292,8 +272,9 @@ public class LinkMaker extends Composite implements IRelationTable {
 
                 List selection = ((IStructuredSelection) viewer.getSelection()).toList();
                 boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.LinkMaker_5, NLS.bind(Messages.LinkMaker_6, selection.size()));
-                if (!confirm)
+                if (!confirm) {
                     return;
+                }
                 
                 CnALink link = null;                     
                 for (Object object : selection) {
@@ -301,9 +282,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                     try {
                         CnAElementHome.getInstance().remove(link);
                         //viewer.remove(link);
-                        inputElmt.removeLinkDown(link);
-
-                        
+                        inputElmt.removeLinkDown(link);                        
                     } catch (Exception e1) {
                         LOG.error("Error while removing link",e1);
                         ExceptionUtil.log(e1, Messages.LinkMaker_7);
@@ -343,16 +322,18 @@ public class LinkMaker extends Composite implements IRelationTable {
 	 */
     private void createDoubleClickAction() {
         doubleClickAction = new Action() {
+            @Override
             public void run() {
                 ISelection selection = viewer.getSelection();
                 Object obj = ((IStructuredSelection) selection).getFirstElement();
                 CnALink link = (CnALink) obj;
 
                 // open the object on the other side of the link:
-                if (CnALink.isDownwardLink(getInputElmt(), link))
+                if (CnALink.isDownwardLink(getInputElmt(), link)) {
                     EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
-                else
+                } else {
                     EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+                }
             }
         };
 
@@ -360,6 +341,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
@@ -389,7 +371,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         Set<String> names = namesAndIds.keySet();
         this.names = new String[names.size()];
-        this.names = (String[]) names.toArray(new String[names.size()]);
+        this.names = names.toArray(new String[names.size()]);
     }
 
     /**
@@ -411,6 +393,7 @@ public class LinkMaker extends Composite implements IRelationTable {
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
      */
+    @Override
     public CnATreeElement getInputElmt() {
         return inputElmt;
     }
@@ -420,6 +403,7 @@ public class LinkMaker extends Composite implements IRelationTable {
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reload()
      */
+    @Override
     public void reload(CnALink oldLink, CnALink newLink) {
         if(newLink != null){
             newLink.setDependant(oldLink.getDependant());
@@ -442,12 +426,14 @@ public class LinkMaker extends Composite implements IRelationTable {
      * sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs
      * .ui.rcp.main.common.model.CnATreeElement)
      */
+    @Override
     public void setInputElmt(CnATreeElement inputElmt) {
         if (inputElmt == null || this.inputElmt == inputElmt)
             return;
 
-        if (oldSelection==-1)
+        if (oldSelection==-1) {
             oldSelection = combo.getSelectionIndex();
+        }
         this.inputElmt = inputElmt;
         fillPossibleLinkLists();
         initNamesForCombo();
@@ -464,26 +450,24 @@ public class LinkMaker extends Composite implements IRelationTable {
      * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
      */
+    @Override
     public void reloadAll() {
         reloadLinks();
     }
 
-    /**
-	 * 
-	 */
     private void reloadLinks() {
-
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
-
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 viewer.setInput(new PlaceHolder(Messages.LinkMaker_9));
             }
         });
 
         WorkspaceJob job = new WorkspaceJob(Messages.LinkMaker_10) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
@@ -495,12 +479,14 @@ public class LinkMaker extends Composite implements IRelationTable {
                     final CnATreeElement linkElmt = command.getElmt();
                     
                     Display.getDefault().asyncExec(new Runnable() {
+                        @Override
                         public void run() {
                             viewer.setInput(linkElmt);
                         }
                     });
                 } catch (Exception e) {
                     Display.getDefault().asyncExec(new Runnable() {
+                        @Override
                         public void run() {
                             viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
                         }

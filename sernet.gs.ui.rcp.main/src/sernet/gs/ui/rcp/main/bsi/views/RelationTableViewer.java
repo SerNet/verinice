@@ -17,24 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.HuiRelation;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -54,8 +42,6 @@ public class RelationTableViewer extends TableViewer {
     private TableViewerColumn col7;
     private TableViewerColumn col8;
    
-   
-    
 	/**
 	 * @param parent
 	 * @param i
@@ -77,21 +63,6 @@ public class RelationTableViewer extends TableViewer {
 		viewerCol2.getColumn().setText(Messages.RelationTableViewer_1);
 		viewerCol2.getColumn().setWidth(150);
 		
-//		viewerCol2.setLabelProvider(new ColumnLabelProvider() {
-//			public String getText(Object obj) {
-//				if (!(obj instanceof CnALink))
-//					return ""; //$NON-NLS-1$
-//				
-//				CnALink link = (CnALink) obj;
-//				HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
-//
-//				// if we can't find a real name for the relation, we just display "depends on" or "necessary for":
-//					if (CnALink.isDownwardLink(view.getInputElmt(), link))
-//						return (relation != null) ? relation.getName() : Messages.RelationTableViewer_3;
-//					else
-//						return (relation != null) ? relation.getReversename() : Messages.RelationTableViewer_4;
-//			}
-//		});
 		viewerCol2.setEditingSupport(new RelationTypeEditingSupport(view, this));
 
 		// element type icon:
@@ -114,17 +85,14 @@ public class RelationTableViewer extends TableViewer {
 		    col6 = new TableViewerColumn(this, SWT.LEFT);
 		    col6.getColumn().setText("C"); //$NON-NLS-1$
 		    col6.getColumn().setWidth(25);
-//		    col6.setLabelProvider(new RiskLabelProver('C'));
 		    
 		    col7 = new TableViewerColumn(this, SWT.LEFT);
 		    col7.getColumn().setText("I"); //$NON-NLS-1$
 		    col7.getColumn().setWidth(25);
-//		    col7.setLabelProvider(new RiskLabelProver('I'));
 		    
 		    col8 = new TableViewerColumn(this, SWT.LEFT);
 		    col8.getColumn().setText("A"); //$NON-NLS-1$
 		    col8.getColumn().setWidth(25);
-//		    col8.setLabelProvider(new RiskLabelProver('A'));
 		}
 		
 		

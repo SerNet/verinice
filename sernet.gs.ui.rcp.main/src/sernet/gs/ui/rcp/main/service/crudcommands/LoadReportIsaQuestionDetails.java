@@ -26,11 +26,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.ArrayAnnotationValue;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
@@ -48,9 +46,6 @@ import sernet.verinice.model.samt.SamtTopic;
 public class LoadReportIsaQuestionDetails extends GenericCommand {
     
     private static final Logger LOG = Logger.getLogger(LoadReportIsaQuestionDetails.class);
-    private static final String PROP_REL_SAMTTOPIC_PERSONISO_RESP = "rel_samttopic_person-iso_resp";
-    private static final String PROP_SAMT_MATURITY = "samt_topic_maturity";
-    private static final String DUMMY_VALUE = "value indeterminable";
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";
     private static final String PROP_CONTROLGROUP_ISELEMENT = "controlgroup_is_NoIso_group";
     private static final String VALUE_CONTROLGROUP_ISELEMENT = "0";
