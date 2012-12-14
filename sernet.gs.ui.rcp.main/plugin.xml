@@ -1134,6 +1134,11 @@
             id="sernet.gs.ui.rcp.main.preferences.cryptopreferencepage"
             name="%page.name.8">
       </page>
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.MessageDialogWithTogglePreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.messagedialogwithtogglepreferencepage"
+            name="%page.name.9">
+      </page>           
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

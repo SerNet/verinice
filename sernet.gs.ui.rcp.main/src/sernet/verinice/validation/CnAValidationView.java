@@ -143,7 +143,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     
     private void makeActions() {
 
-        refreshAction = new Action(Messages.ValidationView_8, SWT.PUSH){
+        refreshAction = new Action(Messages.ValidationView_8, SWT.NONE){
             public void run(){
                 loadValidations();
             }

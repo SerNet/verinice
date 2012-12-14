@@ -184,14 +184,14 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiView = new HitroUIView(this,contentComp, fieldsComposite);
 	}
 	
-	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly, List<String> validationList) throws DBException {
-		huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList);
+	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly, List<String> validationList, boolean useValidationGuiHints) throws DBException {
+		huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList, useValidationGuiHints);
 	}
 	
-	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly, List<String> validationList) throws DBException {
+	public void createView(Entity entity, boolean editable, boolean useRules, String tags, boolean taggedOnly, List<String> validationList,  boolean useValidationGuiHints) throws DBException {
 	    tags = tags.replaceAll("\\s+", "");
         String[] individualTags = tags.split(",");
-        huiView.createView(entity, editable, useRules, individualTags, taggedOnly, validationList);
+        huiView.createView(entity, editable, useRules, individualTags, taggedOnly, validationList, useValidationGuiHints);
     }
 	
 	public void addSelectionListener(String id, SelectionListener listener) {

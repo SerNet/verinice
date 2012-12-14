@@ -24,6 +24,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,6 +68,9 @@ public class DateSelectionControl implements IHuiControl {
 	
 	private boolean showValidationHint;
 
+	private boolean useValidationGUIHints;
+
+	
 	public Control getControl() {
 		return dateTime;
 	}
@@ -76,13 +81,15 @@ public class DateSelectionControl implements IHuiControl {
 	 * @param composite
 	 */
 	public DateSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit, boolean rules, boolean showValidationHint) {
+			Composite parent, boolean edit, boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
 		this.entity = dyndoc;
 		this.fieldType = type;
 		this.composite = parent;
 		this.editable = edit;
 		this.useRule = rules;
 		this.showValidationHint = showValidationHint;
+		this.useValidationGUIHints = useValidationGuiHints;
+
 	}
 	
 	public static boolean isWindows(){
@@ -130,8 +137,13 @@ public class DateSelectionControl implements IHuiControl {
 		label36LData.grabExcessVerticalSpace = false;
 		label.setLayoutData(label36LData);
 		String labelText = fieldType.getName();
-		if(showValidationHint){
-		    labelText = Messages.getString("LabelValidationHint") + labelText;
+		if(showValidationHint && useValidationGUIHints){
+		    //		    labelText = Messages.getString("LabelValidationHint") + labelText;
+		    FontData fontData = label.getFont().getFontData()[0];
+		    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+		            SWT.BOLD));
+		    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
+		    label.setFont(font);
 		}
 		label.setText(labelText);
 

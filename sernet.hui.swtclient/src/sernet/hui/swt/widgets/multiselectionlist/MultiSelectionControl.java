@@ -29,6 +29,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -64,6 +66,7 @@ public class MultiSelectionControl implements IHuiControl {
 	private boolean referencesEntities;
 	private boolean crudButtons;
 	private boolean showValidationHint;
+	private boolean useValidationGUIHints;
 	
 	public Control getControl() {
 		return text;
@@ -76,7 +79,7 @@ public class MultiSelectionControl implements IHuiControl {
 	 * @param crudButtons 
 	 * @param composite
 	 */
-	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference, boolean crudButtons, boolean showValidationHint) {
+	public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit, boolean reference, boolean crudButtons, boolean showValidationHint, boolean useValidationGuiHints) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
@@ -84,6 +87,7 @@ public class MultiSelectionControl implements IHuiControl {
 		this.referencesEntities = reference;
 		this.crudButtons = crudButtons;
 		this.showValidationHint = showValidationHint;
+		this.useValidationGUIHints = useValidationGUIHints;
 	}
 	
 	/**
@@ -92,8 +96,12 @@ public class MultiSelectionControl implements IHuiControl {
 	public void create() {
 		Label label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
-		if(showValidationHint){
-		    labelText = sernet.hui.swt.widgets.Messages.getString("LabelValidationHint") + labelText;
+		if(showValidationHint && useValidationGUIHints){
+		    FontData fontData = label.getFont().getFontData()[0];
+		    Font font = new Font(parent.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+		            SWT.BOLD));
+		    label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
+		    label.setFont(font);
 		}
 		label.setText(type.getName());
 		
@@ -269,8 +277,10 @@ public class MultiSelectionControl implements IHuiControl {
 			return true;
 		}
 		
-		text.setForeground(Colors.BLACK);
-		text.setBackground(Colors.YELLOW);
+		if(useValidationGUIHints){
+		    text.setForeground(Colors.BLACK);
+		    text.setBackground(Colors.YELLOW);
+		}
 		return false;
 	
 	}

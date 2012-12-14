@@ -86,7 +86,7 @@ public class BulkEditDialog extends Dialog {
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
                 
                 // no validation here, so empty list is passed
-                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0));
+                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {

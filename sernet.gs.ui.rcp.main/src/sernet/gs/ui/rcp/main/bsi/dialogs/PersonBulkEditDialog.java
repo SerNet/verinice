@@ -140,7 +140,7 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
                 boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
                 
                 // no validation in bulk edit, so empty list passed
-                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0));
+                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
                
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
                 

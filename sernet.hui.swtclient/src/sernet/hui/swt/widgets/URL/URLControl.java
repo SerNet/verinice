@@ -24,6 +24,8 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
@@ -51,23 +53,29 @@ public class URLControl implements IHuiControl {
 	private Link link;
 	private Property savedProp;
 	private boolean showValidationHint;
+	private boolean useValidationGUIHints;
 	
 	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
 	public URLControl(Entity entity, PropertyType type, Composite parent,
-			boolean editable, boolean showValidationHint) {
+			boolean editable, boolean showValidationHint, boolean useValidationGuiHints) {
 		this.entity = entity;
 		this.type = type;
 		this.parent = parent;
 		this.editable = editable;
 		this.showValidationHint = showValidationHint;
+        this.useValidationGUIHints = useValidationGuiHints;
 	}
 
 	public void create() {
 		Label label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
-		if(showValidationHint){
-		    labelText = sernet.hui.swt.widgets.Messages.getString("LabelValidationHint") + labelText;
+		if(showValidationHint && useValidationGUIHints){
+		    FontData fontData = label.getFont().getFontData()[0];
+		    Font font = new Font(parent.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+		            SWT.BOLD));
+		    label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
+		    label.setFont(font);
 		}
 		label.setText(type.getName());
 		

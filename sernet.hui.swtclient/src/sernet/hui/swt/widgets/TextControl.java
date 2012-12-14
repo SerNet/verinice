@@ -21,6 +21,8 @@ import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -54,6 +56,7 @@ public class TextControl implements IHuiControl {
 	private Color fgColor;
 	private boolean useRule;
 	private boolean showValidationHint;
+	private boolean useValidationGUIHints;
 	
 	// This limit is set in Property.hbm.xml / PropertyList.hbm.xml:
     private static final int HIBERNATE_MAPPED_STRING_LIMIT = 400000;
@@ -62,7 +65,7 @@ public class TextControl implements IHuiControl {
 		return text;
 	}
 
-	public TextControl(Entity ent, PropertyType type, Composite parent, boolean edit, int lines, boolean rules, boolean showValidationHint) {
+	public TextControl(Entity ent, PropertyType type, Composite parent, boolean edit, int lines, boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
 		this.entity = ent;
 		this.fieldType = type;
 		this.composite = parent;
@@ -70,6 +73,7 @@ public class TextControl implements IHuiControl {
 		this.lines = lines;
 		this.useRule = rules;
 		this.showValidationHint = showValidationHint;
+		this.useValidationGUIHints = useValidationGuiHints;
 	}
 
 	/**
@@ -79,8 +83,12 @@ public class TextControl implements IHuiControl {
 	public void create() {
 		Label label = new Label(composite, SWT.NULL);
 		String labelText = fieldType.getName();
-		if(showValidationHint){
-		    labelText = Messages.getString("LabelValidationHint") + labelText; 
+		if(showValidationHint && useValidationGUIHints){ 
+		    FontData fontData = label.getFont().getFontData()[0];
+		    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+		            SWT.BOLD));
+		    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
+		    label.setFont(font);
 		}
 		label.setText(labelText);
 		
@@ -129,8 +137,10 @@ public class TextControl implements IHuiControl {
 			return true;
 		}
 
-		text.setForeground(Colors.BLACK);
-		text.setBackground(Colors.YELLOW);
+		if(useValidationGUIHints){
+		    text.setForeground(Colors.BLACK);
+		    text.setBackground(Colors.YELLOW);
+		}
 		return false;
 	}
 

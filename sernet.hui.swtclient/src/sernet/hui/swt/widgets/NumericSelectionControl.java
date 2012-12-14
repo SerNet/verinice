@@ -25,6 +25,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -73,7 +75,8 @@ public class NumericSelectionControl implements IHuiControl {
     private Object defaultValue;
     
     private boolean showValidationHint;
-
+    
+    private boolean useValidationGUIHints;
 
 	public Control getControl() {
             return combo;
@@ -90,7 +93,7 @@ public class NumericSelectionControl implements IHuiControl {
 	 * @param composite
 	 */
 	public NumericSelectionControl(Entity dyndoc, PropertyType type,
-			Composite parent, boolean edit, boolean showValidationHint) {
+			Composite parent, boolean edit, boolean showValidationHint, boolean useValidationGuiHints) {
 		this.entity = dyndoc;
 		this.fieldType = type;
 		this.composite = parent;
@@ -98,6 +101,8 @@ public class NumericSelectionControl implements IHuiControl {
 		this.min = type.getMinValue();
 		this.max = type.getMaxValue();
 		this.showValidationHint = showValidationHint;
+		this.useValidationGUIHints = useValidationGuiHints;
+
 	}
 
 	/**
@@ -108,8 +113,12 @@ public class NumericSelectionControl implements IHuiControl {
 		try {
 			Label label = new Label(composite, SWT.NULL);
 			String labelText = fieldType.getName();
-			if(showValidationHint){
-			    labelText = Messages.getString("LabelValidationHint") + labelText;
+			if(showValidationHint && useValidationGUIHints){
+			    FontData fontData = label.getFont().getFontData()[0];
+			    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+			            SWT.BOLD));
+			    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
+			    label.setFont(font);
 			}
 			label.setText(labelText);
 
@@ -206,9 +215,11 @@ public class NumericSelectionControl implements IHuiControl {
 //			combo.setBackground(bgColor);
 			return true;
 		}
-
-//		combo.setForeground(Colors.BLACK);
-//		combo.setBackground(Colors.YELLOW);
+		
+//		if(useValidationGUIHints){
+//		    combo.setForeground(Colors.BLACK);
+//		    combo.setBackground(Colors.YELLOW);
+//		}
 		return false;
 	}
 

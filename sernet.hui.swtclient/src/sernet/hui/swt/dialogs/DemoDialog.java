@@ -70,7 +70,7 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 //				Entity entity = new Entity("mnums");
 				Entity entity = new Entity("mnums");
 				// no validation here, so empty list is passed
-				huiComposite.createView(entity, true, true, new String[] {}, false, new ArrayList<String>(0));
+				huiComposite.createView(entity, true, true, new String[] {}, false, new ArrayList<String>(0), false);
 
 				PropertyType propertyType = htf.getPropertyType("mnums", "mnums_umsetzung");
 				entity.setSimpleValue(propertyType, "mnums_umsetzung_teilweise");

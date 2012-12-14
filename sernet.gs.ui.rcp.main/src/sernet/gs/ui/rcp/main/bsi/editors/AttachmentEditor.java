@@ -33,7 +33,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityChangedListener;
@@ -114,7 +116,7 @@ public class AttachmentEditor extends EditorPart {
             attachment = (Attachment) command.getAddition();
             huiComposite.dispose();
             huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
-            huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()));
+            huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
             parent.layout();
             // file-data is immutable, just save new file-data
             if (isNew) {
@@ -170,7 +172,7 @@ public class AttachmentEditor extends EditorPart {
         huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
         try {
             // no validation here, so empty list passed
-            huiComposite.createView(attachment.getEntity(), true, true, new String[] {}, false, new ArrayList<String>(0));
+            huiComposite.createView(attachment.getEntity(), true, true, new String[] {}, false, new ArrayList<String>(0), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
         } catch (DBException e) {
             LOG.error("Error while creating editor", e); //$NON-NLS-1$
         }

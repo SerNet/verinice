@@ -27,8 +27,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.iso27k.rcp.ISMView;
 
 /**
  * Main preference page for CnA Tool Settings.
@@ -42,18 +40,13 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor derbyWarning;
     private BooleanFieldEditor linkToEditor;
 	private BooleanFieldEditor inputHelperHints;
-	private BooleanFieldEditor infoDialogTransformCatalogItems;
-	private BooleanFieldEditor infoDialogCopy;
-	private BooleanFieldEditor infoDialogCut;
-    private BooleanFieldEditor infoDialogProcess;
-	private BooleanFieldEditor infoDialogLdapImport;
-	private BooleanFieldEditor switchPerspectiveIsmView;
-	private BooleanFieldEditor switchPerspectiveCatalogView;
+
 	private BooleanFieldEditor showAlienDecorator;
-	private BooleanFieldEditor infoDialogStatusDerivation;
+
 	private BooleanFieldEditor showDBIDDecorator;
 	private BooleanFieldEditor useAutomaticValidation;
 	private BooleanFieldEditor showValidationReportWarning;
+	private BooleanFieldEditor useValidationGuiHints;
 	
 	private ComboFieldEditor encodingFieldEditor;
 	private static final String[][] encodingComboValues = new String[][]{
@@ -100,42 +93,14 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inputHelperHints);
 
-		infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(infoDialogTransformCatalogItems);
-
-		infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(infoDialogCopy);
-
-		infoDialogCut = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(infoDialogCut);
-		
-		infoDialogProcess = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESSES_STARTED, Messages.getString("GeneralSettingsPage.InfoProcess"), //$NON-NLS-1$
-                getFieldEditorParent());
-        addField(infoDialogProcess);
-        
-        infoDialogLdapImport = new BooleanFieldEditor(PreferenceConstants.INFO_IMPORT_LDAP, Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(infoDialogLdapImport);
-
-		infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent()); //$NON-NLS-1$
-		addField(infoDialogStatusDerivation);
-
-		switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(switchPerspectiveIsmView);
-
-		switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
-				getFieldEditorParent());
-		addField(switchPerspectiveCatalogView);
-
 		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showAlienDecorator);
 		
 		showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
+		
+		useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
+		addField(useValidationGuiHints);
 		
 		useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
 		addField(useAutomaticValidation);
