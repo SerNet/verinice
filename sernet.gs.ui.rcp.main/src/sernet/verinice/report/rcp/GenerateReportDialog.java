@@ -10,7 +10,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -31,8 +33,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.verinice.interfaces.report.IOutputFormat;
@@ -512,41 +516,50 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
 
     @Override
-	protected void okPressed() {
-	    if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
-	        MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
-	        return;
-	    }
-	    List<Integer> rootElements = new ArrayList<Integer>(0);
-	    rootElements.add(getRootElement());
-	    if(getRootElements() != null)rootElements.addAll(Arrays.asList(getRootElements()));
-	    IValidationService vService = ServiceFactory.lookupValidationService();
-	    for(Integer scopeId : rootElements){
-	        if(vService.getValidations(scopeId, (Integer)null).size() > 0){
-	            if(!MessageDialog.openQuestion(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_21)){
-	                return;
-	            } else {
-	                break;
-	            }
-	        }
-	    }
+    protected void okPressed() {
+        if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
+            MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
+            return;
+        }
+        List<Integer> rootElements = new ArrayList<Integer>(0);
+        rootElements.add(getRootElement());
+        if(getRootElements() != null)rootElements.addAll(Arrays.asList(getRootElements()));
+        IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+        boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
+        IValidationService vService = ServiceFactory.lookupValidationService();
+        boolean validationsExistant = false;
+        for(Integer scopeId : rootElements){
+            if(vService.getValidations(scopeId, (Integer)null).size() > 0){
+                validationsExistant = true;
+                break;
+            }
+        }
 
-	    String f = textFile.getText();
-		chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-		chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
-		
-		chosenReportType.setReportFile(textReportTemplateFile.getText());
-		
-		// This just appends the chosen report's extension if the existing
-		// suffix does not match. Could be enhanced.
-		if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
-			f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
-		}
+        if(!dontShow && validationsExistant){
+            MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(getParentShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_21, Messages.GenerateReportDialog_23, dontShow, preferenceStore, PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
+            preferenceStore.setValue(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, dialog.getToggleState());
 
-		outputFile = new File(f);
-		resetScopeCombo();
-		super.okPressed();
-	}
+            if(!(dialog.getReturnCode()==IDialogConstants.OK_ID || dialog.getReturnCode()==IDialogConstants.YES_ID)){
+                return;
+            }
+        }
+
+        String f = textFile.getText();
+        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+        chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+
+        chosenReportType.setReportFile(textReportTemplateFile.getText());
+
+        // This just appends the chosen report's extension if the existing
+        // suffix does not match. Could be enhanced.
+        if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
+            f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
+        }
+
+        outputFile = new File(f);
+        resetScopeCombo();
+        super.okPressed();
+    }
     
     @Override
     protected void cancelPressed(){

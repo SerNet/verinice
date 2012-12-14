@@ -56,6 +56,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     
     private int[] numOfYellowFields;
     
+    private String scenarioProbType;
+    
     public static final String[] COLUMNS = new String[] { 
         "GROUPTITLE",
         "RISKCOLOUR",
@@ -64,10 +66,11 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     
     private boolean resultInjectedFromCache = false;
 
-    public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields){
+    public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields, String probType){
         this.rootElmt = root;
         results = new ArrayList<ArrayList<String>>(0);
         this.numOfYellowFields = numOfYellowFields;
+        this.scenarioProbType = probType;
     }
     
     
@@ -97,6 +100,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
                     List<CnATreeElement> assets = cmnd2.getElements();
                     // iterate assets linked to process
                     for (CnATreeElement asset : assets) {
+                        
                         LoadReportLinkedElements cmnd3 = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
                         cmnd3 = getCommandService().executeCommand(cmnd3);
                         List<CnATreeElement> scenarios = cmnd3.getElements();
@@ -225,7 +229,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
             yellowNum = numOfYellowFields[2];
             break;
         }
-        if(raService.getRiskColor(asset, scenario, riskType, yellowNum) == riskColour){
+        if(raService.getRiskColor(asset, scenario, riskType, yellowNum, scenarioProbType) == riskColour){
             return true;
         }
         return false;

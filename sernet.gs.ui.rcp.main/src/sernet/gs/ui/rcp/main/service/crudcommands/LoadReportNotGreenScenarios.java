@@ -51,10 +51,13 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
     
     private boolean resultInjectedFromCache = false;
     
-    public LoadReportNotGreenScenarios(Integer root, int[] yellowFields){
+    private String probabilityType;
+    
+    public LoadReportNotGreenScenarios(Integer root, int[] yellowFields, String probType){
         this.rootElmt = root;
         this.numOfYellowFields = yellowFields;
         results = new ArrayList<ArrayList<String>>(0);
+        this.probabilityType = probType;
     }
 
     /* (non-Javadoc)
@@ -78,8 +81,8 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
                                 a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
                                 char[] riskTypes = new char[]{'c', 'i', 'a'};
                                 for(int i = 0; i < riskTypes.length; i++){
-                                    int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i]);
-                                    if(riskColour == 0){
+                                    int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i], probabilityType);
+                                    if(riskColour == 0){ // case of first iteration
                                         riskColour = tc;
                                     } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
                                         riskColour = tc;

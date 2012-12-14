@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -119,6 +118,18 @@ public class Retriever {
         }
         return element;
     }
+
+    public static CnATreeElement checkRetrieveLinks(CnATreeElement element, boolean upLinks){
+        if(!areLinksInitizialized(element, upLinks) && element != null){
+            if(LOG.isInfoEnabled()){
+                LOG.info("Loading links of element: " + element.getDbId());
+            }
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setLinksDown(true).setLinksUp(true);
+            element = retrieveElement(element, ri);
+        }
+        return element;
+    }
     
     public static boolean isParentInitialized(CnATreeElement element) {
         return Hibernate.isInitialized(element) 
@@ -212,5 +223,18 @@ public class Retriever {
 	private static ICommandService createCommandServive() {
 		return ServiceFactory.lookupCommandService();
 	}
+	
+	public static boolean areLinksInitizialized(CnATreeElement element, boolean upLinks){
+	    boolean elementIni = Hibernate.isInitialized(element);
+	    boolean links = false;
+	    if(elementIni){
+	        links = Hibernate.isInitialized(element.getLinksDown());
+	        if(upLinks){
+	            links = links && Hibernate.isInitialized(element.getLinksUp());
+	        }
+	    }
+	    return elementIni && (element == null || links);
+	}
+	
 	
 }

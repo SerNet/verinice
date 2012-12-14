@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -41,9 +40,9 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
     
     private int[] numOfYellowFields;
     
-    private HashMap<String, Object> localCommandCache;
-    
     private boolean resultInjectedFromCache = false;
+    
+    private String scenarioProbabilityType;
     
     public static final String[] COLUMNS = new String[] { 
         "GROUPTITLE",
@@ -52,10 +51,11 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
         "SCENARIOCOUNT"
         };
     
-    public LoadReportScenarioGroupColourCount(Integer root, int[] yellowFields){
+    public LoadReportScenarioGroupColourCount(Integer root, int[] yellowFields, String probType){
         this.rootElmt = root;
         results = new ArrayList<ArrayList<String>>(0);
         this.numOfYellowFields = yellowFields;
+        this.scenarioProbabilityType = probType;
     }
 
     /* (non-Javadoc)
@@ -65,7 +65,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
     public void execute() {
         if(!resultInjectedFromCache){
             try{
-                LoadReportRedYellowScenarioGroups groupLoader = new LoadReportRedYellowScenarioGroups(rootElmt, numOfYellowFields);
+                LoadReportRedYellowScenarioGroups groupLoader = new LoadReportRedYellowScenarioGroups(rootElmt, numOfYellowFields, this.scenarioProbabilityType);
                 groupLoader = getCommandService().executeCommand(groupLoader);
                 for(List<String> list : groupLoader.getResults()){
                     int overallCount = 0;
@@ -77,7 +77,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
                         int yellowCount = 0;
                         ArrayList<String> result = new ArrayList<String>(0);
                         result.add(list.get(0));
-                        LoadReportNotGreenScenarios scenarioColourLoader = new LoadReportNotGreenScenarios(groupdbid, numOfYellowFields);
+                        LoadReportNotGreenScenarios scenarioColourLoader = new LoadReportNotGreenScenarios(groupdbid, numOfYellowFields, this.scenarioProbabilityType);
                         scenarioColourLoader = getCommandService().executeCommand(scenarioColourLoader);
                         for(List<String> scenarioResult : scenarioColourLoader.getResult()){
                             if(scenarioResult.get(1).equals("red")){
@@ -123,6 +123,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
         for(int i : numOfYellowFields){
             cacheID.append(String.valueOf(i));
         }
+        cacheID.append(this.scenarioProbabilityType);
         return cacheID.toString();
     }
 

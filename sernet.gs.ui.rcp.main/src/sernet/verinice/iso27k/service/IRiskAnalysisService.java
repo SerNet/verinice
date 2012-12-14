@@ -108,7 +108,7 @@ public interface IRiskAnalysisService {
      */
     public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
     
-    int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields);
+    int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType);
 
 }
 

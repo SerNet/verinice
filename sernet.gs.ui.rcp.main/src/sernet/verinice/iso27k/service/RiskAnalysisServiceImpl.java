@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 import sernet.verinice.interfaces.CommandException;
@@ -212,6 +213,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
     public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA)  {
         if (riskType == RISK_PRE_CONTROLS)
             return null; // do nothing
+
+        asset = Retriever.checkRetrieveLinks(asset, true);
         
         Map<CnATreeElement, CnALink> linkedElements = CnALink.getLinkedElements(asset, Control.TYPE_ID);
         
@@ -219,6 +222,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         switch (riskType) {
         case RISK_WITH_IMPLEMENTED_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
+                control = Retriever.checkRetrieveElement(control);
                 if (Control.isImplemented(control.getEntity())) {
                     impactC -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
                     impactI -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
@@ -247,15 +251,33 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      * computes if a given risk (given by asset & scenario) is red, yellow or green
      */
     @Override
-    public int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields){
+    public int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType){
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
         
-        int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+        int probability = scenario.getNumericProperty(probType);
+        int riskControlState = 0;
+        if (probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)){
+            riskControlState = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
+        } else if(probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS)){
+            riskControlState = IRiskAnalysisService.RISK_WITH_ALL_CONTROLS;
+        } else {
+            riskControlState = IRiskAnalysisService.RISK_PRE_CONTROLS;
+        }
         
+        int impactC = valueAdapter.getVertraulichkeit();
+        int impactI = valueAdapter.getIntegritaet();
+        int impactA = valueAdapter.getVerfuegbarkeit();
+        Integer[] reducedImpact = applyControlsToImpact(riskControlState, asset, impactC, impactI, impactA);
+        if (reducedImpact != null) {
+                impactC = reducedImpact[0];
+                impactI = reducedImpact[1];
+                impactA = reducedImpact[2];
+        }
+
         // prob. / impact:
-        int riskC = probability + valueAdapter.getVertraulichkeit();
-        int riskI = probability + valueAdapter.getIntegritaet();
-        int riskA = probability + valueAdapter.getVerfuegbarkeit();
+        int riskC = probability + impactC;
+        int riskI = probability + impactI;
+        int riskA = probability + impactA;
         
         int riskColour = 0;
         // risk values:
@@ -277,7 +299,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         LoadPolymorphicCnAElementById rootLoader = new LoadPolymorphicCnAElementById(new Integer[]{elmt.getScopeId()});
         try {
             elmt = ServiceFactory.lookupCommandService().executeCommand(rootLoader).getElements().get(0);
-            elmt = (CnATreeElement)rootLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(elmt);
+            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setProperties(true));
         } catch (CommandException e) {
             LOG.error("Error while executing command");
         }
@@ -301,6 +323,19 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             return IRiskAnalysisService.RISK_COLOR_GREEN;
         } else {
             return IRiskAnalysisService.RISK_COLOR_YELLOW;
+        }
+    }
+    
+    public String getColorString(int colorValue){
+        switch(colorValue){
+            case IRiskAnalysisService.RISK_COLOR_GREEN:
+                return "green";
+            case IRiskAnalysisService.RISK_COLOR_YELLOW:
+                return "yellow";
+            case IRiskAnalysisService.RISK_COLOR_RED:
+                return "red";
+            default: 
+                return "noColourDefined";
         }
     }
 
