@@ -45,7 +45,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
     public IndividualService() {
         super();
         // this is not the main process service:
-        wasInitCalled = true;
+        setWasInitCalled(true);
     }
 
     /* (non-Javadoc)

@@ -40,7 +40,7 @@ public class IsaQm extends ProzessExecution {
         String comment = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
-            if(element!=null && element instanceof Control) {
+            if(element instanceof Control) {
                 comment = ((Control)element).getFeedbackNote();
                 if(comment!=null && comment.trim().isEmpty()) {
                     comment = null;
@@ -49,7 +49,7 @@ public class IsaQm extends ProzessExecution {
                     LOG.debug("Feedback note of control: " + element.getUuid() + ": " + comment); //$NON-NLS-1$
                 }
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while loading comment.", t); //$NON-NLS-1$
         }
         return comment;

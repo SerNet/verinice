@@ -84,6 +84,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.verinice.model.iso27k.Control)
      */
+    @Override
     public void handleSamtTopic(SamtTopic topic) {
         IsaProcessContext context = new IsaProcessContext();
         context.setSamtTopic(topic);
@@ -93,6 +94,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.verinice.model.iso27k.Control)
      */
+    @Override
     public void handleControl(Control control) {
         try {
             String uuidControl = control.getUuid();
@@ -126,6 +128,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
      */
+    @Override
     public List<ExecutionImpl> findControlExecution(final String uuidControl) {
         DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
         String processDefinitionId = findProcessDefinitionId(IControlExecutionProcess.KEY);
@@ -142,6 +145,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
      */
+    @Override
     public List<ExecutionImpl> findIsaExecution(final String uuid) {
         return findExecutionForElement(IIsaExecutionProcess.KEY,uuid);       
     }
@@ -223,7 +227,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         } catch (RuntimeException re) {
             LOG.error("RuntimeException while handling isa topic", re);
             throw re;
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while handling isa topic", t);
             throw new RuntimeException(t);
         }

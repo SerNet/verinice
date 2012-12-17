@@ -54,20 +54,22 @@ public class TaskBean {
     private static final Logger LOG = Logger.getLogger(TaskBean.class);
     
     public static final String BOUNDLE_NAME = "sernet.verinice.web.TaskMessages"; //$NON-NLS-1$
+    
+    public static final int MAX_TITLE_LENGTH = 100;
 
     private EditBean editBean;
     
-    List<CnATreeElement> auditList;
+    private List<CnATreeElement> auditList;
     
-    CnATreeElement selectedAudit;
+    private CnATreeElement selectedAudit;
     
-    String selectedAuditName;
+    private String selectedAuditName;
     
-    Map<String, CnATreeElement> nameAuditMap;
+    private Map<String, CnATreeElement> nameAuditMap;
     
-    List<ITask> taskList;
+    private List<ITask> taskList;
     
-    ITask selectedTask;
+    private ITask selectedTask;
     
     private String outcomeId;
     
@@ -93,8 +95,8 @@ public class TaskBean {
         Collections.sort(taskList);
         for (ITask task : taskList) {
             String controlTitle = task.getControlTitle();
-            if(controlTitle.length()>100) {
-                task.setControlTitle(controlTitle.substring(0, 99) + "...");
+            if(controlTitle.length()>MAX_TITLE_LENGTH) {
+                task.setControlTitle(controlTitle.substring(0, MAX_TITLE_LENGTH-1) + "...");
             }
         }
         if (LOG.isDebugEnabled()) {
@@ -131,8 +133,8 @@ public class TaskBean {
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
             String title = getSelectedTask().getControlTitle();
-            if(title.length()>100) {
-                title = title.substring(0, 99) + "...";
+            if(title.length()>MAX_TITLE_LENGTH) {
+                title = title.substring(0, MAX_TITLE_LENGTH-1) + "...";
             }
             getEditBean().setTitle(title);
             getEditBean().setTypeId(getSelectedTask().getElementType());
@@ -146,7 +148,7 @@ public class TaskBean {
             getLinkBean().setSelectedLink(null);
             getLinkBean().setSelectedLinkTargetName(null);
             getLinkBean().setSelectedLinkType(null);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while opening task", t); //$NON-NLS-1$
         }
     }
@@ -157,7 +159,6 @@ public class TaskBean {
     }
     
     public void openNext() {
-    	int i = 0;
     	boolean isNext = false;
     	for (Iterator<ITask> iterator = getTaskList().iterator(); iterator.hasNext();) {
     		ITask task = iterator.next();
@@ -168,7 +169,6 @@ public class TaskBean {
     		        break;
     		    }
     		}
-    		i++;
 		}
     	if(isNext) {
     	    doOpenTask();
@@ -222,9 +222,9 @@ public class TaskBean {
     }
     
     private Map<String, CnATreeElement> createNameAuditMap() {    
-        List<CnATreeElement> auditList = getAuditList();
-        nameAuditMap = new Hashtable<String, CnATreeElement>(auditList.size());
-        for (CnATreeElement audit : auditList) {
+        List<CnATreeElement> audits = getAuditList();
+        nameAuditMap = new Hashtable<String, CnATreeElement>(audits.size());
+        for (CnATreeElement audit : audits) {
             if(audit!=null) {
                 String name = getUniqueName(audit.getTitle(),0);
                 nameAuditMap.put(name,audit);

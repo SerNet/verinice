@@ -58,7 +58,6 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsService;
-import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.ConfigurationType;
@@ -138,9 +137,9 @@ public class XmlRightsService implements IRightsService {
     
     private IAuthService authService;
     
-    private HashMap<String, Profile> profileMap;
+    private Map<String, Profile> profileMap;
     
-    private static List<IRightsChangeListener> changeListener;
+    private static List<IRightsChangeListener> changeListener = new LinkedList<IRightsChangeListener>();
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -182,7 +181,7 @@ public class XmlRightsService implements IRightsService {
                 marshaller.marshal(auth, sw);
                 log.debug(sw.toString());
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.error("Error while logging auth", e);
         }
     }
@@ -337,7 +336,7 @@ public class XmlRightsService implements IRightsService {
         try {
             File backup = new File(getBackupFileName());
             FileUtils.copyFile(getAuthConfiguration().getFile(), backup); 
-        } catch( Throwable t ) {
+        } catch( Exception t ) {
             log.error("Error while creating backup of authorization configuration.", t);
         }
     }
@@ -350,7 +349,7 @@ public class XmlRightsService implements IRightsService {
             File backup = new File(getBackupFileName());
             File conf = getAuthConfiguration().getFile();
             FileUtils.copyFile(backup, conf); 
-        } catch( Throwable t ) {
+        } catch( Exception t ) {
             log.error("Error while restoring authorization configuration.", t);
         }
     }
@@ -390,7 +389,7 @@ public class XmlRightsService implements IRightsService {
      */
     private List<String> getRoleList(String username) {
         // select all groups of the user
-        String HQL = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+        String hql = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
                 "inner join conf.entity as entity " + //$NON-NLS-1$
                 "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
                 "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -401,8 +400,7 @@ public class XmlRightsService implements IRightsService {
                 "and props.propertyValue like ? " + //$NON-NLS-1$
                 "and roleprops.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_ROLES};        
-        List<String> roleList = getConfigurationDao().findByQuery(HQL,params);
-        return roleList;
+        return getConfigurationDao().findByQuery(hql,params);
     }
     
     /* (non-Javadoc)
@@ -410,10 +408,10 @@ public class XmlRightsService implements IRightsService {
      */
     @Override
     public List<String> getUsernames() {
-        String HQL = "select props.propertyValue from Property as props " + //$NON-NLS-1$
+        String hql = "select props.propertyValue from Property as props " + //$NON-NLS-1$
                 "where props.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME};  
-        List<String> usernameList = getPropertyDao().findByQuery(HQL,params);
+        List<String> usernameList = getPropertyDao().findByQuery(hql,params);
         usernameList.add(getAuthService().getAdminUsername());
         return usernameList;
     }
@@ -423,10 +421,10 @@ public class XmlRightsService implements IRightsService {
      */
     @Override
     public List<String> getGroupnames() {
-        String HQL = "select props.propertyValue from Property as props " + //$NON-NLS-1$
+        String hql = "select props.propertyValue from Property as props " + //$NON-NLS-1$
                 "where props.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_ROLES};  
-        List<String> groupnameList = getPropertyDao().findByQuery(HQL,params);
+        List<String> groupnameList = getPropertyDao().findByQuery(hql,params);
         return groupnameList;
     }
     
@@ -459,12 +457,12 @@ public class XmlRightsService implements IRightsService {
     private void loadUserAndGroupNames(String username) {
         Integer scopeId = getConfigurationService().getScopeId(username);
         
-        String HQL = "from CnATreeElement c " + //$NON-NLS-1$           
+        String hql = "from CnATreeElement c " + //$NON-NLS-1$           
                 "where c.scopeId = ? " + //$NON-NLS-1$
                 "and (c.objectType = ? or c.objectType = ?)"; //$NON-NLS-1$
         Object[] params = new Object[]{scopeId,PersonIso.TYPE_ID,Person.TYPE_ID};  
-        List<CnATreeElement> elementList = getPropertyDao().findByQuery(HQL,params);
-        Object[] idList = new Object[elementList.size()];;
+        List<CnATreeElement> elementList = getPropertyDao().findByQuery(hql,params);
+        Object[] idList = new Object[elementList.size()];
         int i=0;
         for (CnATreeElement person : elementList) {
             idList[i]=person.getDbId();
@@ -477,7 +475,7 @@ public class XmlRightsService implements IRightsService {
         crit.setFetchMode("person", FetchMode.JOIN); //$NON-NLS-1$
         crit.add(Restrictions.in("person.id", idList)); //$NON-NLS-1$
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        //params = new Object[]{idList};  
+        
         List<Configuration> confList = getPropertyDao().findByCriteria(crit);     
         Set<String> usernameList = new HashSet<String>(confList.size());
         Set<String> groupnameList = new HashSet<String>(confList.size());
@@ -664,7 +662,7 @@ public class XmlRightsService implements IRightsService {
         this.authService = authService;
     }
     
-    private HashMap<String, Profile> getProfileMap() {
+    private Map<String, Profile> getProfileMap() {
         if(profileMap == null){
             Profiles profiles = getProfiles();   
             profileMap = new HashMap<String, Profile>();
@@ -709,7 +707,7 @@ public class XmlRightsService implements IRightsService {
      * @return All actions which are referenced by a user profile of an auth configuration
      */
     private Map<String, Action> loadAllReferencedActions(Auth auth) {
-        HashMap<String, Action> actionMap = new HashMap<String, Action>();
+        Map<String, Action> actionMap = new HashMap<String, Action>();
        
         actionMap = new HashMap<String, Action>();
         for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {  
@@ -731,10 +729,7 @@ public class XmlRightsService implements IRightsService {
         return actionMap;
     }
     
-    private static List<IRightsChangeListener> getChangeListener() {
-        if(XmlRightsService.changeListener==null) {
-            XmlRightsService.changeListener = new LinkedList<IRightsChangeListener>();
-        }
+    private static List<IRightsChangeListener> getChangeListener() {    
         return XmlRightsService.changeListener;
     }
     

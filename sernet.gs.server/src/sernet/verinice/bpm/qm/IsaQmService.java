@@ -20,11 +20,9 @@
 package sernet.verinice.bpm.qm;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
@@ -57,12 +55,13 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
     public IsaQmService() {
         super();
         // this is not the main process service:
-        wasInitCalled = true;
+        setWasInitCalled(true);
     }
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(java.lang.String, java.lang.Object, java.lang.String)
      */
+    @Override
     public IProcessStartInformation startProcessesForElement(String uuid, Object feedback, String priority) {
         return startProcessesForElement(uuid, null, feedback, priority);
     }
@@ -126,9 +125,11 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
         this.defaultAssignee = defaultAssignee;
     }
 
+    @Override
     public IBaseDao<CnATreeElement, Integer> getElementDao() {
         return elementDao;
     }
+    @Override
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
     }

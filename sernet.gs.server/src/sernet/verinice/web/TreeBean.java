@@ -127,26 +127,26 @@ public class TreeBean implements IElementListener {
     }
 
     private void createHandlers() {
-        List<IActionHandler> handlers = new LinkedList<IActionHandler>();
+        List<IActionHandler> handlerList = new LinkedList<IActionHandler>();
         if(getAuthBean().getAddGroup()) {
             IActionHandler handler = HandlerFactory.getGroupHandler(getElement());
             if(handler!=null) {
-                handlers.add(handler);
+                handlerList.add(handler);
             }
         }
         if(getAuthBean().getAddElement() && !(getElement() instanceof Organization)) {
-            handlers.addAll(HandlerFactory.getElementHandler(getElement()));
+            handlerList.addAll(HandlerFactory.getElementHandler(getElement()));
         }
         if(getAuthBean().getAddGroup() && getElement() instanceof Organization) {
-            handlers.addAll(HandlerFactory.getElementHandler(getElement()));
+            handlerList.addAll(HandlerFactory.getElementHandler(getElement()));
         }
         if(getAuthBean().getAddOrg() && getElement() instanceof ISO27KModel) {
-            handlers.add(HandlerFactory.getOrgHandler(getElement()));
+            handlerList.add(HandlerFactory.getOrgHandler(getElement()));
         }
-        for (IActionHandler handler : handlers) {
+        for (IActionHandler handler : handlerList) {
             handler.addElementListeners(this);
         }
-        setHandlers(handlers);
+        setHandlers(handlerList);
     }
 
     private boolean isGroup() {
@@ -185,8 +185,8 @@ public class TreeBean implements IElementListener {
             path.set(path.indexOf(element), element);
             createMenuModel();
             String title = element.getTitle();
-            if(title.length()>100) {
-                title = title.substring(0, 99) + "...";
+            if(title.length()>TaskBean.MAX_TITLE_LENGTH) {
+                title = title.substring(0, TaskBean.MAX_TITLE_LENGTH-1) + "...";
             }
             getEditBean().setTitle(title);
         }       
@@ -212,9 +212,9 @@ public class TreeBean implements IElementListener {
         
         Integer breadcrumbSize = calculateBreadcrumbSize();
         for (int i = breadcrumbSize; i < path.size(); i++) {
-            CnATreeElement element = path.get(i);
+            CnATreeElement pathElement = path.get(i);
             MenuItem item = MenuItemFactory.createNavigationMenuItem();
-            item.setValue(element.getTitle());
+            item.setValue(pathElement.getTitle());
             item.getAttributes().put("pathId", i );
             menuModel.addMenuItem(item);
         }
@@ -252,8 +252,8 @@ public class TreeBean implements IElementListener {
                 getEditBean().setSaveButtonHidden(true);
                 getEditBean().setUuid(getElement().getUuid());
                 String title = getElement().getTitle();
-                if(title.length()>100) {
-                    title = title.substring(0, 99) + "...";
+                if(title.length()>TaskBean.MAX_TITLE_LENGTH) {
+                    title = title.substring(0, TaskBean.MAX_TITLE_LENGTH-1) + "...";
                 }
                 getEditBean().setTitle(title);
                 getEditBean().setTypeId(getElement().getTypeId());
@@ -268,7 +268,7 @@ public class TreeBean implements IElementListener {
                 getEditBean().clear();
                 getLinkBean().clear();
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while opening element", t); //$NON-NLS-1$
             Util.addError("elementTable", Util.getMessage("tree.open.failed")); //$NON-NLS-1$
         } 
@@ -292,7 +292,7 @@ public class TreeBean implements IElementListener {
         } catch( Exception e) {
             LOG.error("Error while deleting element.");
             Throwable t = e.getCause();
-            if(t!=null && t instanceof SecurityException) {
+            if(t instanceof SecurityException) {
                 Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
             } else {
                 Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));

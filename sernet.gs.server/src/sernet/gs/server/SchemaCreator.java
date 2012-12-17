@@ -68,7 +68,8 @@ public class SchemaCreator implements InitializingBean {
 	 *  
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	public void afterPropertiesSet() throws Exception {
+	@Override
+    public void afterPropertiesSet() throws Exception {
 		log.debug("afterPropertiesSet");
 		
 		double dbVersion = determineDbVersion();
@@ -115,22 +116,31 @@ public class SchemaCreator implements InitializingBean {
 	private void updateDbVersion(String sqlFile) throws IOException {
 		InputStream stream = getClass().getClassLoader().getResourceAsStream(sqlFile);
 
-		InputStreamReader read = new InputStreamReader(stream, "iso-8859-1"); //$NON-NLS-1$
-		BufferedReader buffRead = new BufferedReader(read);
-		String query;
-
-		while ((query = buffRead.readLine()) != null) {
-			if (query.matches("^$") || query.matches("^--"))
-				continue;
-			// remove ; for Derby
-			if(query.endsWith(";")) {
-				query = query.substring(0, query.length()-1);
-			}
-			if (log.isDebugEnabled()) {
-			    log.debug("Executing query: " + query);
-			}
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			jdbcTemplate.execute(query);
+		InputStreamReader read = null;
+		BufferedReader buffRead = null;
+		
+		try {
+    		read = new InputStreamReader(stream, "iso-8859-1"); //$NON-NLS-1$
+    		buffRead = new BufferedReader(read);
+    		String query;
+    
+    		while ((query = buffRead.readLine()) != null) {
+    			if (query.matches("^$") || query.matches("^--"))
+    				continue;
+    			// remove ; for Derby
+    			if(query.endsWith(";")) {
+    				query = query.substring(0, query.length()-1);
+    			}
+    			if (log.isDebugEnabled()) {
+    			    log.debug("Executing query: " + query);
+    			}
+    			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    			jdbcTemplate.execute(query);
+    		}
+		} finally {
+		    if(read!=null) {
+		        read.close();
+		    }
 		}
 	}
 	// FIXME akoderman remove / add remaining constraints 

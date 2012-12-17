@@ -45,19 +45,19 @@ public class AssetNavigationBean {
 
 	private static final Logger LOG = Logger.getLogger(AssetNavigationBean.class);
 	
-	final static int SOURCE_VERBUND = 1;
+	public static final int SOURCE_VERBUND = 1;
 	
-	final static int SOURCE_ELEMENT = 2;
+	public static final int SOURCE_ELEMENT = 2;
 	
-	List<ItVerbundWrapper> itVerbundList;
+	private List<ItVerbundWrapper> itVerbundList;
 	
-	ITVerbund selectedItVerbund;
+	private ITVerbund selectedItVerbund;
 	
-	Converter itVerbundConverter = new ItVerbundConverter(this);
+	private Converter itVerbundConverter = new ItVerbundConverter(this);
 	
-	String selectedItVerbundTitel;
+	private String selectedItVerbundTitel;
 	
-	Integer selectedElementId;
+	private Integer selectedElementId;
 	
 	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(10);
 	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(10);
@@ -75,7 +75,6 @@ public class AssetNavigationBean {
 	}
 
 	public void loadItVerbundList() {
-		//ServerInitializer.inheritVeriniceContextState();
 		ICommandService service = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 		LoadCnAElementByType<ITVerbund> command = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
 		try {

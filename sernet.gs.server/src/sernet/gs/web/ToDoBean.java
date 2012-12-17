@@ -18,10 +18,8 @@
 package sernet.gs.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -62,42 +60,42 @@ public class ToDoBean {
 	
 	public static final String BOUNDLE_NAME = "sernet.gs.web.Messages";
 	
-	AssetNavigationBean assetNavigation;
+	private AssetNavigationBean assetNavigation;
 	
-	List<TodoViewItem> todoList = new ArrayList<TodoViewItem>();
+	private List<TodoViewItem> todoList = new ArrayList<TodoViewItem>();
 	
-	TodoViewItem selectedItem;
+	private TodoViewItem selectedItem;
 	
-	MassnahmenUmsetzung massnahmeUmsetzung;
+	private MassnahmenUmsetzung massnahmeUmsetzung;
 	
-	Converter umsetzungConverter = new UmsetzungConverter();
+	private Converter umsetzungConverter = new UmsetzungConverter();
 	
-	List<KeyValue> executionList;
+	private List<KeyValue> executionList;
 	
-	boolean showDescription = false;
+	private boolean showDescription = false;
 	
 	private Set<String> roles = null;
 	
 	private ICommandService commandService;
 	
 	// Grundschutz
-	boolean executionNo = false;
-	boolean executionYes = false;
-	boolean executionPartly = false;
-	boolean executionDispensable = false;					    
-	boolean executionUntreated = true;
+	private boolean executionNo = false;
+	private boolean executionYes = false;
+	private boolean executionPartly = false;
+	private boolean executionDispensable = false;					    
+	private boolean executionUntreated = true;
 	
 	// ISO 27001
-	boolean executionPerformed = true;
-	boolean executionManaged = true;
-	boolean executionEstablished = true;
-	boolean executionPredictable = true;
-	boolean executionOptimizing = true;
+	private boolean executionPerformed = true;
+	private boolean executionManaged = true;
+	private boolean executionEstablished = true;
+	private boolean executionPredictable = true;
+	private boolean executionOptimizing = true;
 	
-	boolean sealA = true;
-	boolean sealB = true;
-	boolean sealC = true;
-	boolean sealZ = true;
+	private boolean sealA = true;
+	private boolean sealB = true;
+	private boolean sealC = true;
+	private boolean sealZ = true;
 		
 	public ToDoBean() {
 		super();

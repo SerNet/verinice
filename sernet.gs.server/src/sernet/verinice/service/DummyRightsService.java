@@ -92,9 +92,9 @@ public class DummyRightsService implements IRightsService{
         roleList.add(username);   
         List<Userprofile> userprofileList = new ArrayList<Userprofile>(1);
         List<Userprofile> allUserprofileList = getConfiguration().getUserprofiles().getUserprofile();
-        for (Userprofile userprofile : allUserprofileList) {
-            if(roleList.contains(userprofile.getLogin())) {
-                userprofileList.add(userprofile);
+        for (Userprofile aUserprofile : allUserprofileList) {
+            if(roleList.contains(aUserprofile.getLogin())) {
+                userprofileList.add(aUserprofile);
             }
         }
         return userprofileList;

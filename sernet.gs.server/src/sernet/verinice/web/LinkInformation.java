@@ -25,19 +25,19 @@ import sernet.verinice.interfaces.iso27k.ILink;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
+ * 
  */
-public class LinkInformation implements ILink,Comparable<LinkInformation>,Serializable {
+public class LinkInformation implements ILink, Comparable<LinkInformation>, Serializable {
 
-    String targetName, type, targetUuid;
+    private String targetName, type, targetUuid;
 
     private Integer dependantId;
     private Integer dependencyId;
     private String typeId;
-    
-    private String id;
-    
 
+    private String id;
+
+    @Override
     public String getId() {
         return id;
     }
@@ -46,6 +46,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.id = id;
     }
 
+    @Override
     public String getTargetName() {
         return targetName;
     }
@@ -54,6 +55,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.targetName = target;
     }
 
+    @Override
     public String getType() {
         return type;
     }
@@ -62,6 +64,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.type = type;
     }
 
+    @Override
     public String getTargetUuid() {
         return targetUuid;
     }
@@ -70,6 +73,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.targetUuid = targetUuid;
     }
 
+    @Override
     public Integer getDependantId() {
         return dependantId;
     }
@@ -78,6 +82,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.dependantId = dependantId;
     }
 
+    @Override
     public Integer getDependencyId() {
         return dependencyId;
     }
@@ -86,6 +91,7 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.dependencyId = dependencyId;
     }
 
+    @Override
     public String getTypeId() {
         return typeId;
     }
@@ -94,24 +100,26 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
         this.typeId = typeId;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
     public int compareTo(LinkInformation o) {
-        final int THIS_IS_LESS = -1;
-        final int EQUAL = 0;
-        final int THIS_IS_GREATER = 1;
-        int result = THIS_IS_LESS;
-        if(o!=null) {
-            if(o.getType()!=null) {
-                if(this.getType()!=null) {
+        final int this_is_less = -1;
+        final int equal = 0;
+        final int this_is_greater = 1;
+        int result = this_is_less;
+        if (o != null) {
+            if (o.getType() != null) {
+                if (this.getType() != null) {
                     result = this.getType().compareTo(o.getType());
                 } else {
-                    result = THIS_IS_GREATER;
-                }           
-            } else if(this.getType()==null){
-                result = EQUAL;
+                    result = this_is_greater;
+                }
+            } else if (this.getType() == null) {
+                result = equal;
             }
         }
         return result;
@@ -129,31 +137,38 @@ public class LinkInformation implements ILink,Comparable<LinkInformation>,Serial
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         LinkInformation other = (LinkInformation) obj;
         if (dependantId == null) {
-            if (other.dependantId != null)
+            if (other.dependantId != null) {
                 return false;
-        } else if (!dependantId.equals(other.dependantId))
+            }
+        } else if (!dependantId.equals(other.dependantId)) {
             return false;
+        }
         if (dependencyId == null) {
-            if (other.dependencyId != null)
+            if (other.dependencyId != null) {
                 return false;
-        } else if (!dependencyId.equals(other.dependencyId))
+            }
+        } else if (!dependencyId.equals(other.dependencyId)) {
             return false;
+        }
         if (typeId == null) {
-            if (other.typeId != null)
+            if (other.typeId != null) {
                 return false;
-        } else if (!typeId.equals(other.typeId))
+            }
+        } else if (!typeId.equals(other.typeId)) {
             return false;
+        }
         return true;
     }
-    
-   
-   
+
 }

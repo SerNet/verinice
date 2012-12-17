@@ -174,13 +174,13 @@ public class LinkBean {
                     command = getCommandService().executeCommand(command);
                     setLinkTargetList(command.getElementList());
                     setLinkTargetNameList(new ArrayList<String>(linkTargetList.size()));
-                    for (CnATreeElement element : linkTargetList) {
-                        linkTargetNameList.add(element.getTitle());
+                    for (CnATreeElement linkTarget : linkTargetList) {
+                        linkTargetNameList.add(linkTarget.getTitle());
                     }
                     Collections.sort(linkTargetNameList);
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while loading link targets, targetTypeId: " + targetTypeId, t);
             ExceptionHandler.handle(t);
         }
@@ -199,9 +199,9 @@ public class LinkBean {
         try {
             if(getSelectedLinkType()!=null && getSelectedLinkTargetName()!=null) {
                 CnATreeElement target = null;
-                for (CnATreeElement element : getLinkTargetList()) {
-                    if(element.getTitle().equals(getSelectedLinkTargetName())) {
-                        target = element;
+                for (CnATreeElement linkTarget : getLinkTargetList()) {
+                    if(linkTarget.getTitle().equals(getSelectedLinkTargetName())) {
+                        target = linkTarget;
                         break;
                     }                  
                 }
@@ -233,7 +233,7 @@ public class LinkBean {
                     }
                 }
             }
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while creating link, typeId: " + typeId, t);
             ExceptionHandler.handle(t);
         }
@@ -260,7 +260,7 @@ public class LinkBean {
     public void setShowDeleteLink(String s) {
     }
     
-    public String getShowDeleteLink() {;
+    public String getShowDeleteLink() {
         return null;
     }
     

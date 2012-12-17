@@ -30,22 +30,18 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.ProcessServiceVerinice;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
-import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
  *
@@ -67,7 +63,7 @@ public class IsaControlFlowService extends ProcessServiceVerinice implements IIs
     public IsaControlFlowService() {
         super();
         // this is not the main process service:
-        wasInitCalled = true;
+        setWasInitCalled(true);
     }
 
     /* (non-Javadoc)
@@ -224,10 +220,12 @@ public class IsaControlFlowService extends ProcessServiceVerinice implements IIs
         this.auditDao = auditGroupDao;
     }
 
+    @Override
     public IBaseDao<CnATreeElement, Integer> getElementDao() {
         return elementDao;
     }
 
+    @Override
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
     }

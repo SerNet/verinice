@@ -41,8 +41,6 @@ import org.jbpm.pvm.internal.xml.Parse;
 
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
-import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
-import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 
 /**
@@ -55,11 +53,11 @@ import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
  */
 public class ProcessServiceGeneric implements IProcessServiceGeneric {
 
-    private final static Logger LOG = Logger.getLogger(ProcessServiceGeneric.class);
+    private static final Logger LOG = Logger.getLogger(ProcessServiceGeneric.class);
     
     private ProcessEngine processEngine;
     private Set<String> processDefinitions;
-    protected boolean wasInitCalled = false;
+    private boolean wasInitCalled = false;
 
     private IDao<ExecutionImpl, Long> jbpmExecutionDao;
 
@@ -93,16 +91,16 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Loading process definition from resource: " + resource + "...");
                     }                 
-                    List<ProcessDefinitionImpl> processDefinitions = parseProcessDefinitions(resource);          
+                    List<ProcessDefinitionImpl> definitions = parseProcessDefinitions(resource);          
                             
-                    if(processDefinitions!=null && processDefinitions.size()>1) {
+                    if(definitions!=null && definitions.size()>1) {
                         throwException("Process definition from resource: " + resource + " contains more than one process");
                     }
                     String processId = null;
                     RepositoryService aRepositoryService = null;
                     boolean doDeploy = false;
-                    if(processDefinitions!=null && !processDefinitions.isEmpty()) {
-                        for (ProcessDefinitionImpl definition : processDefinitions) {
+                    if(definitions!=null && !definitions.isEmpty()) {
+                        for (ProcessDefinitionImpl definition : definitions) {
                             String key = definition.getKey(); 
                             if(key==null) {
                                 throwException("Process definition from resource: " + resource + " contains no key.");                
@@ -142,7 +140,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
             } catch(RuntimeException re) {
                 LOG.error("RuntimeException while initializing", re);
                 throw re;
-            } catch(Throwable t) {
+            } catch(Exception t) {
                 LOG.error("Error while initializing", t);
                 throw new RuntimeException("Error while initializing", t);
             }
@@ -155,6 +153,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
      */
+    @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
         ProcessInstance processInstance = null;
         if(variables==null) {
@@ -170,6 +169,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
      */
+    @Override
     public String findProcessDefinitionId(String processDefinitionKey) {
         String id = null;
         List<ProcessDefinition> processDefinitionList = getRepositoryService()
@@ -198,6 +198,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
      */
+    @Override
     public void deleteProcess(String id) {
         getExecutionService().deleteProcessInstance(id);
     }
@@ -226,8 +227,19 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
         }
         parse.setInputStream(stream);
         parse.execute();
-        List<ProcessDefinitionImpl> processDefinitions = (List<ProcessDefinitionImpl>) parse.getDocumentObject();
-        return processDefinitions;
+        return (List<ProcessDefinitionImpl>) parse.getDocumentObject();
+    }
+    
+    protected boolean isWasInitCalled() {
+        synchronized (this) {
+            return wasInitCalled;
+        }
+    }
+
+    protected void setWasInitCalled(boolean wasInitCalled) {
+        synchronized (this) {
+            this.wasInitCalled = wasInitCalled;
+        }
     }
 
     public ExecutionService getExecutionService() {
@@ -239,7 +251,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     }
 
     public ProcessEngine getProcessEngine() {
-        if(!wasInitCalled) {
+        if(!isWasInitCalled()) {
             init(); 
         }
         return processEngine;

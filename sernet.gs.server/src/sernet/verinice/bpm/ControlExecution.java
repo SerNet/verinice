@@ -61,7 +61,7 @@ public class ControlExecution {
             LoadUsername command = new LoadUsername(uuidControl,Control.REL_CONTROL_PERSON_ISO);
             command = getCommandService().executeCommand(command);
             username = command.getUsername();
-        } catch(Throwable t) {
+        } catch(Exception t) {
             log.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
@@ -86,7 +86,7 @@ public class ControlExecution {
             command = getCommandService().executeCommand(command);
             Control control = command.getElement();
             implementation = control.getImplementation();
-        } catch(Throwable t) {
+        } catch(Exception t) {
             log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {

@@ -24,19 +24,13 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.ProzessExecution;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.CreateElement;
 
 /**
  *
@@ -54,7 +48,7 @@ public class IsaControlFlow extends ProzessExecution {
         Date duedate = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
-            if(element!=null && element instanceof Control) {
+            if(element instanceof Control) {
                 duedate = ((Control) element).getDueDate();
                 Date now = Calendar.getInstance().getTime();
                 if(duedate.before(now)) {
@@ -65,7 +59,7 @@ public class IsaControlFlow extends ProzessExecution {
                     LOG.debug("Duedete of control: " + element.getUuid() + " set to " + duedate); //$NON-NLS-1$
                 }
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while loading duedate.", t); //$NON-NLS-1$
         }
         return duedate;
@@ -76,13 +70,13 @@ public class IsaControlFlow extends ProzessExecution {
         String implementation = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
-            if(element!=null && element instanceof Control) {
+            if(element instanceof Control) {
                 implementation = ((Control) element).getImplementation();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Implementation of control: " + element.getUuid() + " set to " + implementation); //$NON-NLS-1$
                 }
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         return implementation;
@@ -93,7 +87,7 @@ public class IsaControlFlow extends ProzessExecution {
         String comment = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
-            if(element!=null && element instanceof Control) {
+            if(element instanceof Control) {
                 comment = ((Control)element).getImplementationExplanation();
                 if(comment!=null && comment.trim().isEmpty()) {
                     comment = null;
@@ -102,7 +96,7 @@ public class IsaControlFlow extends ProzessExecution {
                     LOG.debug("Comment of control: " + element.getUuid() + ": " + comment); //$NON-NLS-1$
                 }
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while loading comment.", t); //$NON-NLS-1$
         }
         return comment;
@@ -113,7 +107,7 @@ public class IsaControlFlow extends ProzessExecution {
         Date date = null;
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
-            if(element!=null && element instanceof Audit) {
+            if(element instanceof Audit) {
                 /* For debug only:
                 Calendar nowPlus2Min = Calendar.getInstance();
                 nowPlus2Min.add(Calendar.MINUTE, 2);
@@ -130,7 +124,7 @@ public class IsaControlFlow extends ProzessExecution {
                     LOG.debug("Audit date of audit: " + element.getUuid() + " set to " + date); //$NON-NLS-1$
                 }
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while loading duedate.", t); //$NON-NLS-1$
         }
         return date;

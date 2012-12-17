@@ -233,21 +233,19 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	 */
 	private static class MessageHelper
 	{
-		String replyTo, from, to;
+	    private String replyTo, from, to;
+				
+	    private List<String> events = new ArrayList<String>();
 		
-		
-		
-		List<String> events = new ArrayList<String>();
-		
-		Map<CnATreeElement, List<String>> globalExpirationEvents = new HashMap<CnATreeElement, List<String>>();
+	    private Map<CnATreeElement, List<String>> globalExpirationEvents = new HashMap<CnATreeElement, List<String>>();
 
-		Map<CnATreeElement, List<String>> measureModificationEvents = new HashMap<CnATreeElement, List<String>>();
+	    private Map<CnATreeElement, List<String>> measureModificationEvents = new HashMap<CnATreeElement, List<String>>();
 		
-		Map<CnATreeElement, List<String>> measureAssignmentEvents = new HashMap<CnATreeElement, List<String>>();
+	    private Map<CnATreeElement, List<String>> measureAssignmentEvents = new HashMap<CnATreeElement, List<String>>();
 		
-		MimeMessage mm;
+	    private MimeMessage mm;
 		
-		DateFormat dateFormat;
+	    private DateFormat dateFormat;
 
         private String linkTo;
 		
@@ -278,8 +276,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			sb.append(" ("); //$NON-NLS-1$
 			Calendar c = Calendar.getInstance();
 			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
-			if (d != null)
+			if (d != null) {
 				c.setTime(d);
+			}
 			
 			sb.append(dateFormat.format(c.getTime()));
 			sb.append(")"); //$NON-NLS-1$
@@ -355,7 +354,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			StringBuffer sb = new StringBuffer();
 			sb.append(MailMessages.MailJob_7);
 			sb.append(MailMessages.MailJob_18);
-			sb.append(linkTo + "\n\n"); //$NON-NLS-1$
+			sb.append(linkTo).append("\n\n"); //$NON-NLS-1$
 			
 			for (String evt : events)
 			{
@@ -365,15 +364,17 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			for (Map.Entry<CnATreeElement, List<String>> e : globalExpirationEvents.entrySet())
 			{
 				sb.append(NLS.bind(MailMessages.MailJob_8, e.getKey().getTitle()));
-				for (String s : e.getValue())
+				for (String s : e.getValue()) {
 					sb.append(s);
+				}
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : measureModificationEvents.entrySet())
 			{
 				sb.append(NLS.bind(MailMessages.MailJob_9, e.getKey().getTitle()));
-				for (String s : e.getValue())
+				for (String s : e.getValue()) {
 					sb.append(s);
+				}
 			}
 			
 			for (Map.Entry<CnATreeElement, List<String>> e : measureAssignmentEvents.entrySet())

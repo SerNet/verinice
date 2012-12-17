@@ -61,7 +61,7 @@ public class IsaExecution extends ProzessExecution {
             CheckWritingPermission command = new CheckWritingPermission(uuid,username);
             command = getCommandService().executeCommand(command);
             isWriteAllowed = command.isWriteAllowed();         
-        } catch(Throwable t) {
+        } catch(Exception t) {
             log.error("Error while loading write permission.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
@@ -88,7 +88,7 @@ public class IsaExecution extends ProzessExecution {
             if(topic!=null) {
                 implementation = Integer.valueOf(topic.getMaturity()).toString();
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             log.error("Error while loading implementation.", t); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {

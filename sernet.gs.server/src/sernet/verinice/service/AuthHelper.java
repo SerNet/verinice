@@ -91,7 +91,7 @@ public abstract class AuthHelper {
         Profiles[] profiles = new Profiles[documents.length];
         Userprofiles[] userprofiles = new Userprofiles[documents.length];
         Auth result = new Auth();
-        if(documents!=null && profiles.length>0) {
+        if(profiles.length>0) {
             result.setVersion(documents[0].getVersion());
             result.setType(documents[0].getType());
             for (int i = 0; i < documents.length; i++) {
