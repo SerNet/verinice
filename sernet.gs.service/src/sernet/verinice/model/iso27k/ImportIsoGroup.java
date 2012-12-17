@@ -52,7 +52,6 @@ public class ImportIsoGroup extends Group<Organization> implements IISO27kGroup,
 	public ImportIsoGroup(CnATreeElement model) {
 		super(model);
 		setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
 	}
 
 	protected ImportIsoGroup() {
