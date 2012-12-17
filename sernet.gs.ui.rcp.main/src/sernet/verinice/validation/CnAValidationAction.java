@@ -33,6 +33,8 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -48,8 +50,28 @@ public class CnAValidationAction extends ActionDelegate implements RightEnabledU
     
     private List<Object> rootObjects;
     
-
+    private boolean serverIsRunning = true;
+    
     private IValidationService validationService;
+    
+    @Override
+    public void init(final IAction action) {
+        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
+            serverIsRunning = false;
+            IInternalServerStartListener listener = new IInternalServerStartListener() {
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if (e.isStarted()) {
+                        serverIsRunning = true;
+                        action.setEnabled(checkRights());
+                    }
+                }
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            action.setEnabled(checkRights());
+        }
+    }
 
     @Override
     public void run(IAction action) {
@@ -111,6 +133,9 @@ public class CnAValidationAction extends ActionDelegate implements RightEnabledU
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
+        if (serverIsRunning) {
+            action.setEnabled(checkRights());
+        }
         if(selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
             rootObjects = treeSelection.toList();

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.validation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -628,7 +630,38 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     }
     
     public void setCurrentCnaElement(CnATreeElement currentCnaElement) {
-        this.currentCnaElement = currentCnaElement;
+        if(currentCnaElement != null){
+            this.currentCnaElement = currentCnaElement;
+            if(isLinkingActive()){
+                StructuredSelection selection = (StructuredSelection)viewer.getSelection();
+                CnAValidation selectedValidation = null;
+                if(selection != null){
+                    selectedValidation = (CnAValidation)selection.getFirstElement();
+                }
+                Object input = viewer.getInput();
+                CnAValidation validationToSelect = null;
+                if(input != null && input instanceof ArrayList){
+                    ArrayList inputList = (ArrayList)input;
+                    for(Object o : inputList){
+                        if(o instanceof CnAValidation){
+                            CnAValidation validation = (CnAValidation)o;
+                            if(validation.getElmtDbId().equals(this.currentCnaElement.getDbId())){
+                                validationToSelect = validation;
+                                break;
+                            }
+                        }
+                    }
+                }
+                boolean changeSelectedElement = false;
+                
+                if((selectedValidation != null && !selectedValidation.getElmtDbId().equals(this.currentCnaElement.getDbId())) || selectedValidation == null){
+                    changeSelectedElement = true;
+                } 
+                if(validationToSelect != null && changeSelectedElement){
+                    viewer.setSelection(new StructuredSelection(validationToSelect), true);
+                }
+            }
+        }
     }
     
     public void reloadAll(){
