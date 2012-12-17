@@ -2657,6 +2657,11 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         id="verarbeitungsangaben"
         name="Verarbeitungsangaben">
+        <huiproperty id="va_art" name="Art des Verfahrens" inputtype="singleoption">
+            <option id="va_art_ersterhebung" name="Ersterhebung"/>
+            <option id="va_art_neuesverfahren" name="Neues Verfahren"/>
+            <option id="va_art_aenderung" name="Änderung eines Verfahrens"/>
+        </huiproperty>
 	    <huiproperty
 			id="va_beschreibung"
 			name="Wie werden personenbezogene Daten verarbeitet?"
@@ -2665,6 +2670,15 @@ the value between <param></param> will be used directly if no string is found fo
 			id="va_status"
 			name="Statusangaben zur Verarbeitung"
             inputtype="text"/>
+        <huiproperty
+            id="va_zweck"
+            name="Zweckbestimmung (§4 e Nr. 4)"
+            inputtype="text"/>
+        <huiproperty
+            id="va_hwsw"
+            name="Eingesetzte Hardware / Software"
+            inputtype="text"/>
+                
     </huientity>
 
     <huientity
@@ -2819,22 +2833,18 @@ the value between <param></param> will be used directly if no string is found fo
             inputtype="singleoption"
         >
         <option
-            id="pg_empfaenger_1"
-            name="Extern"
-            />
-        <option
             id="pg_empfaenger_2"
             name="Intern"
             />
         <option
-            id="pg_empfaenger_3"
-            name="Behörde"
+            id="pg_empfaenger_1"
+            name="Extern"
             />
         </huiproperty>
         
 	    <huiproperty
 			id="pg_ausserhalbeu"
-			name="Ausserhalb EU"
+			name="Drittstaaten"
             inputtype="singleoption"
         >
         <option
@@ -2919,8 +2929,22 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             id="dv_herkunft"
             name="Herkunft"
-            inputtype="multioption"
+            inputtype="singleoption"
         >
+        <option
+            id="dv_herkunft_a"
+            name="Direkterhebung"
+        />
+        <option
+            id="dv_herkunft_4"
+            name="Ext. Stelle"
+        />
+        <option
+            id="dv_herkunft_b"
+            name="Sonstige"
+        />
+        
+        <!-- 2012-12-13 ak@sernet.de The following options have been removed due to QM review: 
         <option
             id="dv_herkunft_1"
             name="Formular"
@@ -2934,13 +2958,11 @@ the value between <param></param> will be used directly if no string is found fo
             name="Lst.-Karte"
         />
         <option
-            id="dv_herkunft_4"
-            name="Ext. Stelle"
-        />
-        <option
             id="dv_herkunft_5"
             name="Software"
         />
+        -->
+        
         </huiproperty>
         <huiproperty
             id="dv_herkunft_sonst"
@@ -3062,20 +3084,6 @@ the value between <param></param> will be used directly if no string is found fo
         />
         </huiproperty>
         
-        <huiproperty
-			id="stellungnahmedsb_freigabe"
-			name="Freigabe ohne Prüfung?"
-            inputtype="singleoption"
-        >
-        <option
-            id="stellungnahmedsb_freigabe_1"
-            name="Ja"
-        />
-        <option
-            id="stellungnahmedsb_freigabe_2"
-            name="Nein"
-        />
-        </huiproperty>
         
         <huiproperty
 			id="stellungnahmedsb_vorpruefung"
@@ -3107,7 +3115,7 @@ the value between <param></param> will be used directly if no string is found fo
         />
         <option
             id="stellungnahmedsb_pruefungfreigabe_3"
-            name="Nicht zutreffend"
+            name="Keine Freigabe"
         />
         </huiproperty>
         
@@ -5278,7 +5286,7 @@ the value between <param></param> will be used directly if no string is found fo
     </huientity>
     
     <huientity
-        name="Interview"
+        name="Audit Action"
         id="interview" >
         <huiproperty
             name="Title"
@@ -5315,7 +5323,14 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
 	    	id="interview_audit_action_description" name="Audit Action Description" inputtype="text" tags="VDA_ISA_Audit"
 	 	   textrows="4"
-	 	   required="true"/>        			
+	 	   required="true"/>    
+        
+        <huiproperty
+            id="interview_date" name="Date" inputtype="date" />   
+        
+        <huiproperty
+            id="interview_place" name="Place" />   
+            			
 	
     	<huirelation to="finding" id="rel_interview_finding_notice"
     		name="revealed" reversename="noticed in" tooltip="" />
@@ -5687,7 +5702,480 @@ the value between <param></param> will be used directly if no string is found fo
 					inputtype="text"
 					id="process_value_comment" />
 		</huipropertygroup>
-		
+        
+        
+        
+        <huipropertygroup tags="Privacy" id="process_va_group" name="Verfahrensangaben"> 
+        
+        <huiproperty tags="Privacy" id="process_va_art" name="Art des Verfahrens" inputtype="singleoption">
+            <option  id="process_va_art_ersterhebung" name="Ersterhebung"/>
+            <option  id="process_va_art_neuesverfahren" name="Neues Verfahren"/>
+            <option  id="process_va_art_aenderung" name="Änderung eines Verfahrens"/>
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_va_beschreibung"
+            name="Wie werden personenbezogene Daten verarbeitet?"
+            inputtype="text"/>
+        <huiproperty
+            tags="Privacy" id="process_va_status"
+            name="Statusangaben zur Verarbeitung"
+            inputtype="text"/>
+        <huiproperty
+            tags="Privacy" id="process_va_zweck"
+            name="Zweckbestimmung (§4 e Nr. 4)"
+            inputtype="text"/>
+        <huiproperty
+            tags="Privacy" id="process_va_hwsw"
+            name="Eingesetzte Hardware / Software"
+            inputtype="text"/>
+     
+     </huipropertygroup>           
+    
+
+<huipropertygroup tags="Privacy"  id="process_zb_group" name="Zweckbestimmung">
+
+        <huiproperty
+            tags="Privacy" id="process_zb_zweck"
+            name="Zweck der Verarbeitung"
+            inputtype="multioption">
+            <option
+                 id="process_zb_zweck_1"
+                name="Vertragsabwicklung"
+            />
+            <option
+                 id="process_zb_zweck_2"
+                name="Vertragsanbahnung"
+            />
+            <option
+                 id="process_zb_zweck_3"
+                name="Marketing"
+            />
+            <option
+                 id="process_zb_zweck_4"
+                name="Gesetzesvorgabe"
+            />
+            <option
+                id="process_zb_zweck_5"
+                name="Kundenbetreuung"
+            />
+            <option
+                id="process_zb_zweck_6"
+                name="Marktforschung"
+            />
+            <option
+                 id="process_zb_zweck_7"
+                name="Interner Zweck"
+            />
+        </huiproperty>
+        
+        <huiproperty
+            tags="Privacy" id="process_zb_sonst"
+            name="Sonstiger Zweck"
+        />
+        
+        <huiproperty
+            tags="Privacy" id="process_zb_erlaeuterung"
+            name="Erläuterung"
+        />
+</huipropertygroup>
+
+
+           <huirelation to="person-iso" id="rel_process_person_zugriffsberechtigt" 
+               name="zugriffsberechtigt"  reversename="zugriffsberechtigt auf" />
+               
+           <huirelation to="person-iso" id="rel_process_person_betroffen" 
+           name="betroffen"  reversename="Daten verarbeitet in" />
+           
+           <huirelation to="person-iso" id="rel_process_person_fachlverantw" 
+           name="fachlich verantwortlich"  reversename="fachlich verantwortlich für" />
+           
+           <huirelation to="person-iso" id="rel_process_person_zustabt" 
+           name="verantwortliche Stelle"  reversename="verantwortliche Stelle für" />
+           
+           <huirelation to="control" id="rel_process_control_Zutrittskontrolle" 
+           name="Maßnahme zur Zutrittskontrolle"  reversename="Zutrittskontrolle für" />
+           
+           <huirelation to="control" id="rel_process_control_Zugangskontrolle" 
+           name="Maßnahme zur Zugangskontrolle"  reversename="Zugangskontrolle für" />
+           
+           <huirelation to="control" id="rel_process_control_Zugriffskontrolle" 
+           name="Maßnahme zur Zugriffskontrolle"  reversename="Zugriffskontrolle für" />
+           
+           <huirelation to="control" id="rel_process_control_Weitergabekontrolle" 
+           name="Maßnahme zur Weitergabekontrolle"  reversename="Weitergabekontrolle für" />
+           
+          <huirelation to="control" id="rel_process_control_Eingabekontrolle" 
+           name="Maßnahme zur Eingabekontrolle"  reversename="Eingabekontrolle für" />
+          
+           <huirelation to="control" id="rel_process_control_Auftragskontrolle" 
+           name="Maßnahme zur Auftragskontrolle"  reversename="Auftragskontrolle für" />
+          
+           <huirelation to="control" id="rel_process_control_Verfügbarkeitskontrolle" 
+           name="Maßnahme zur Verfügbarkeitskontrolle"  reversename="Verfügbarkeitskontrolle für" />
+           
+              <huirelation to="control" id="rel_process_control_Trennungskontrolle" 
+           name="Maßnahme zur Trennungskontrolle"  reversename="Trennungskontrolle für" />
+               
+            
+               
+        <huipropertygroup
+            tags="Privacy" id="process_pg_group_betroffene"
+            name="Personen"
+        >
+        
+        <huiproperty
+            tags="Privacy" id="process_pg_betroffene"
+            name="Betroffene"
+            inputtype="multioption"
+        >
+        <option
+             id="process_pg_betroffene_1"
+            name="Kunden"
+        />
+        <option
+             id="process_pg_betroffene_2"
+            name="Auftraggeber"
+        />
+        <option
+             id="process_pg_betroffene_3"
+            name="Interessenten"
+        />
+        <option
+             id="process_pg_betroffene_4"
+            name="Mandanten"
+        />
+        <option
+             id="process_pg_betroffene_5"
+            name="Arbeitgeber"
+        />
+        <option
+             id="process_pg_betroffene_6"
+            name="Mitarbeiter"
+        />
+        <option
+             id="process_pg_betroffene_7"
+            name="Bewerber"
+        />
+        <option
+             id="process_pg_betroffene_8"
+            name="Aktionäre"
+        />
+        <option
+             id="process_pg_betroffene_9"
+            name="Partner"
+        />
+        <option
+             id="process_pg_betroffene_10"
+            name="Lieferanten"
+        />
+        <option
+             id="process_pg_betroffene_11"
+            name="Externe Berater"
+        />
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_pg_sonstbetr"
+            name="Sonstige Betroffene"
+        />
+        
+        xxx
+        
+        <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="singleoption" >
+            <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
+            <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
+        </huiproperty>
+        
+        <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="multioption"
+         xxx references="process_bg_benachrichtigung_nichterfolgt">
+            <option id="process_bg_benachrichtigung_erfolgt" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            <option id="process_bg_benachrichtigung_" name=""/>
+            xxx
+      
+        </huiproperty>
+        
+        </huipropertygroup>
+        
+        <huipropertygroup
+            tags="Privacy" id="process_pg_group_empfaenger"
+            name="Empfänger"
+        >
+        <huiproperty
+            tags="Privacy" id="process_pg_empfaenger"
+            name="Empfänger"
+            inputtype="singleoption"
+        >
+        <option
+             id="process_pg_empfaenger_2"
+            name="Intern"
+            />
+        <option
+            id="process_pg_empfaenger_1"
+            name="Extern"
+            />
+        </huiproperty>
+        
+        <huiproperty
+            tags="Privacy" id="process_pg_ausserhalbeu"
+            name="Drittstaaten"
+            inputtype="singleoption"
+        >
+        <option
+            id="process_pg_ausserhalbeu_1"
+            name="Ja"
+        />
+        <option
+            id="process_pg_ausserhalbeu_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+            id="process_pg_sonstempf"
+            name="Sonstiger Empfänger"
+        />
+        <huiproperty
+            tags="Privacy" id="process_pg_anmerkungempfaenger"
+            name="Erläuterung"
+            inputtype="text"
+        />
+
+        </huipropertygroup>
+    
+    
+        <huipropertygroup
+            tags="Privacy" id="process_dv_group_kategorie"
+            name="Kategorie"
+        >
+        <huiproperty
+            tags="Privacy" id="process_dv_kategorie"
+            name="Sensitive Daten"
+            inputtype="multioption"
+        >
+        <option
+            id="process_dv_kategorie_1"
+            name="Daten zur Gesundheit"
+        />
+        <option
+            id="process_dv_kategorie_2"
+            name="Daten zum Sexualleben"
+        />
+        <option
+            id="process_dv_kategorie_3"
+            name="Daten über rassische und ethnische Herkunft"
+        />
+        <option
+            id="process_dv_kategorie_4"
+            name="Daten zu politischen Meinungen"
+        />
+        <option
+            id="process_dv_kategorie_5"
+            name="Daten zu religiösen oder philosophischen Überzeugungen"
+        />
+        <option
+            id="process_dv_kategorie_6"
+            name="Daten zur Gewerkschaftszugehörigkeit"
+        />
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_dv_kategorie_sonst"
+            name="Sonstige Daten"
+        />
+        </huipropertygroup>
+        
+        <huipropertygroup
+            tags="Privacy" id="process_dv_group_herkunft"
+            name="Herkunft"
+        >
+        <huiproperty
+            tags="Privacy" id="process_dv_herkunft"
+            name="Herkunft"
+            inputtype="singleoption"
+        >
+        <option
+            id="process_dv_herkunft_a"
+            name="Direkterhebung"
+        />
+        <option
+             id="process_dv_herkunft_4"
+            name="Ext. Stelle"
+        />
+        <option
+             id="process_dv_herkunft_b"
+            name="Sonstige"
+        />
+      
+        
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_dv_herkunft_sonst"
+            name="Sonstige Herkunft"
+        />
+        </huipropertygroup>
+        
+        <huipropertygroup
+            tags="Privacy" id="process_dv_group_rechtsgrundlage"
+            name="Rechtsgrundlage"
+        >
+        <huiproperty
+            tags="Privacy" id="process_dv_rechtsgrundlage"
+            name="Rechtsgrundlage"
+            inputtype="multioption"
+        >
+        <option
+            id="process_dv_rechtsgrundlage_1"
+            name="Gesetz"
+        />
+        <option
+             id="process_dv_rechtsgrundlage_2"
+            name="Vertrag"
+        />
+        <option
+             id="process_dv_rechtsgrundlage_3"
+            name="Tarifvertrag"
+        />
+        <option
+             id="process_dv_rechtsgrundlage_4"
+            name="Betriebsvereinbarung"
+        />
+        <option
+             id="process_dv_rechtsgrundlage_5"
+            name="Einwilligung"
+        />
+        <option
+             id="process_dv_rechtsgrundlage_6"
+            name="Keine"
+        />
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_dv_rechtsgrundlage_sonst"
+            name="Sonstige Grundlage"
+        />
+        <huiproperty
+            tags="Privacy" id="process_dv_rechtsgrundlage_erl"
+            name="Erläuterung"
+            inputtype="text"
+        />
+        </huipropertygroup>
+        
+        <huipropertygroup
+            tags="Privacy" id="process_dv_group_loesch"
+            name="Löschfristen"
+        >
+        <huiproperty
+            tags="Privacy" id="process_dv_loeschfrist"
+            name="Löschfrist"
+            inputtype="multioption"
+        >
+        <option
+             id="process_dv_loeschfrist_1"
+            name="&lt; 1 Woche"
+        />
+        <option
+             id="process_dv_loeschfrist_2"
+            name="&lt; 1 Monat"
+        />
+        <option
+            id="process_dv_loeschfrist_3"
+            name="&lt; 6 Monate"
+        />
+        <option
+            id="process_dv_loeschfrist_4"
+            name="&lt; 1 Jahr"
+        />
+        <option
+             id="process_dv_loeschfrist_5"
+            name="&lt; 10 Jahre"
+        />
+        <option
+            id="process_dv_loeschfrist_6"
+            name="Keine"
+        />
+        </huiproperty>
+        <huiproperty
+            tags="Privacy" id="process_dv_loeschfrist_sonst"
+            name="Sonstige Frist"
+        />
+        <huiproperty
+            tags="Privacy" id="process_dv_loeschfrist_erl"
+            name="Erläuterung"
+            inputtype="text"
+        />
+        <huiproperty
+            tags="Privacy" id="process_dv_loeschfrist_verfahren"
+            name="Art der Löschung"
+        />
+        </huipropertygroup>
+    
+        <huipropertygroup tags="Privacy"  id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
+        
+        <huiproperty
+            tags="Privacy" id="process_stellungnahmedsb_pbdaten"
+            name="Personenbezogene Daten?"
+            inputtype="singleoption"
+        >
+        <option
+            id="process_stellungnahmedsb_pbdaten_1"
+            name="Ja"
+        />
+        <option
+            id="process_stellungnahmedsb_pbdaten_2"
+            name="Nein"
+        />
+        
+        </huiproperty>
+        
+        <huiproperty
+            tags="Privacy" id="process_stellungnahmedsb_vorpruefung"
+            name="Vorabkontrolle erforderlich?"
+            inputtype="singleoption"
+        >
+        <option
+           id="process_stellungnahmedsb_vorpruefung_1"
+            name="Ja"
+        />
+        <option
+             id="process_stellungnahmedsb_vorpruefung_2"
+            name="Nein"
+        />
+        </huiproperty>
+        
+        <huiproperty
+            tags="Privacy" id="process_stellungnahmedsb_pruefungfreigabe"
+            name="Freigabe nach Prüfung?"
+            inputtype="singleoption"
+        >
+        <option
+            id="process_stellungnahmedsb_pruefungfreigabe_1"
+            name="Ohne Auflagen"
+        />
+        <option
+            id="process_stellungnahmedsb_pruefungfreigabe_2"
+            name="Mit Auflagen"
+        />
+        <option
+             id="process_stellungnahmedsb_pruefungfreigabe_3"
+            name="Keine Freigabe"
+        />
+        </huiproperty>
+        
+        <huiproperty
+            tags="Privacy" id="process_stellungnahmedsb_auflagen"
+            name="Auflagen"
+            inputtype="text"
+        />
+
+        <huiproperty
+            tags="Privacy" id="process_stellungnahmedsb_hinweise"
+            name="Hinweise"
+        />
+        
+    </huipropertygroup>
+        
     </huientity>
     
     <huientity
