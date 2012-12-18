@@ -79,6 +79,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	private static final byte INPUT_NUMERICOPTION = 7;
 
 	private static final byte INPUT_BOOLEANOPTION = 8;
+	
+	private static final byte INPUT_CNALINK_REFERENCE = 9;
+	
+	
 
 	private List<IValidationRule> validators = new ArrayList<IValidationRule>();
 
@@ -99,6 +103,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 
 	private String referencedEntityTypeId;
 
+	private String referencedCnaLinkType;
+
 	private IReferenceResolver referenceResolver;
 
 	private IUrlResolver urlResolver;
@@ -116,6 +122,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
     private String tags;
 
     private int textrows;
+
 
 	/**
      * @param numericDefault the numericDefault to set
@@ -325,6 +332,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	public boolean isReference() {
 		return inputtype == INPUT_REFERENCE;
 	}
+	
+	public boolean isCnaLinkReference() {
+        return inputtype == INPUT_CNALINK_REFERENCE;
+    }
 
 	public boolean isText() {
 		return inputtype == INPUT_TEXT;
@@ -355,7 +366,9 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 			inputtype = INPUT_NUMERICOPTION;
 		} else if (attribute.equals("booleanoption")) {
             inputtype = INPUT_BOOLEANOPTION;
-        }
+        } else if (attribute.equals("cnalink-reference")) {
+            inputtype = INPUT_CNALINK_REFERENCE;
+        } 
 	}
 	
 	public String getInputName() {
@@ -406,9 +419,24 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	public void setReferencedEntityType(String attribute) {
 		this.referencedEntityTypeId = attribute;
 	}
+	
+	public void setReferencedCnaLinkType(String attribute) {
+        this.referencedCnaLinkType = attribute;
+    }
+	
+	
 
 	public String getReferencedEntityTypeId() {
 		return referencedEntityTypeId;
+	}
+	
+	/**
+	 * Return the linkType Parameter from SNCA.xml's reference tag.
+	 * This is always a reference to a relation ID  i.e. "rel_document_person"
+	 * @return
+	 */
+	public String getReferencedCnaLinkType() {
+	    return this.referencedCnaLinkType;
 	}
 
 	public List<IMLPropertyOption> getReferencedEntities() {

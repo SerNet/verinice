@@ -31,6 +31,8 @@ import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
+
+// FIXME replace this command with LoadCnAElementByEntityTypeId (adding scopeID to the query in this command) to speed up loading
 /**
  * Load all elements of given type in same scope as a given element.
  * 

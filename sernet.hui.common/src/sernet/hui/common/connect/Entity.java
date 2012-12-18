@@ -42,18 +42,18 @@ import sernet.snutils.Tester;
  * This class defines an entity to be used as a DA-object in applications.
  * 
  * This is a practical implementation of a dynamic object model, but without
- * dynamic entities. The reasoning behind this is that the defined entities (i.e
- * "customer") usually do not change much for a given application, but their
- * properties will ("tel. no.", "mobile no.", "home no."...).
+ * dynamic entities. The reasoning behind this is that the defined entities 
+ * (i.e "customer") usually do not change much for a given 
+ * application, but their properties will ("tel. no.", "mobile no.", "home no."...).
  * 
- * Relations between entities are also modeled as properties, which allows for
- * arbitrary relations between entities.
+ * Relations between entities are also modeled as properties, which allows
+ * for arbitrary relations between entities.
  * 
  * @author koderman[at]sernet[dot]de
- * 
+ *
  */
-public class Entity implements ISelectOptionHandler, ITypedElement, Serializable {
-
+public class Entity implements ISelectOptionHandler, ITypedElement, Serializable  {
+	
     private transient Logger log = Logger.getLogger(Entity.class);
 
     public Logger getLog() {
@@ -62,60 +62,61 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return log;
     }
-
+    
     public static final String TITLE = "ENTITY_";
-
-    // map of "propertyTypeId : List of Properties"
-    private Map<String, PropertyList> typedPropertyLists = new HashMap<String, PropertyList>();
-
+    
+	// map of "propertyTypeId : List of Properties"
+    private Map<String, PropertyList> typedPropertyLists 
+    	= new HashMap<String, PropertyList>();
+    
     private transient ArrayList<IEntityChangedListener> changeListeners;
+    	
+    
+	private String entityType;
 
-    private String entityType;
-
-    private Integer dbId;
-
-    private String uuid;
+	private Integer dbId;
+	
+	private String uuid;
 
     public static final String TYPE_ID = "huientity";
+	
+	public Integer getDbId() {
+		return dbId;
+	}
+	
+	public void setDbId(Integer dbId) {
+		this.dbId = dbId;
+	}
 
-    public Integer getDbId() {
-        return dbId;
-    }
+	public String getEntityType() {
+		return entityType;
+	}
+	
+	public void addChangeListener(IEntityChangedListener changeListener) {
+		getChangelisteners().add(changeListener);
+	}
+	
+	private synchronized ArrayList<IEntityChangedListener> getChangelisteners() {
+		if (this.changeListeners == null)
+			changeListeners = new ArrayList<IEntityChangedListener>();
+		return changeListeners;
+	}
 
-    public void setDbId(Integer dbId) {
-        this.dbId = dbId;
-    }
-
-    public String getEntityType() {
-        return entityType;
-    }
-
-    public void addChangeListener(IEntityChangedListener changeListener) {
-        getChangelisteners().add(changeListener);
-    }
-
-    private synchronized ArrayList<IEntityChangedListener> getChangelisteners() {
-        if (this.changeListeners == null) {
-            changeListeners = new ArrayList<IEntityChangedListener>();
-        }
-        return changeListeners;
-    }
-
-    public void removeListener(IEntityChangedListener listener) {
-        getChangelisteners().remove(listener);
-    }
-
-    protected Entity() {
-        uuid = UUID.randomUUID().toString();
-    }
-
+	public void removeListener(IEntityChangedListener listener) {
+		getChangelisteners().remove(listener);
+	}
+	
+	protected Entity() {
+		uuid = UUID.randomUUID().toString();
+	}
+	
     public Entity(String entType) {
-        this();
+    	this();
         this.entityType = entType;
     }
-
+    
     /**
-     * @param huiTypeFactory
+     * @param huiTypeFactory 
      * 
      */
     public void initDefaultValues(HUITypeFactory huiTypeFactory) {
@@ -124,111 +125,124 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, type);
             if (propertyType.isNumericSelect() || propertyType.isBooleanSelect()) {
                 setNumericValue(propertyType, propertyType.getNumericDefault());
-            } else if ((propertyType.isText() || propertyType.isDate() || propertyType.isLine())
-                       && (propertyType.getDefaultRule() != null)) {
-                    setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());              
+            }
+            else if (propertyType.isText() || propertyType.isDate() || propertyType.isLine()) {
+                if (propertyType.getDefaultRule() != null) {
+                    setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
+                }
             }
         }
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+    	return uuid.hashCode();
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return (this == obj || (obj instanceof Entity && this.uuid.equals(((Entity) obj).getUuid())));
-    }
-
+    
+	@Override
+	public boolean equals(Object obj) {
+		return (this == obj
+				|| (obj instanceof Entity
+					&& this.uuid.equals(((Entity)obj).getUuid())
+					)
+				);
+	}
+    
+    
     public Map<String, PropertyList> getTypedPropertyLists() {
-        return typedPropertyLists;
-    }
+		return typedPropertyLists;
+	}
 
-    public void setTypedPropertyLists(Map<String, PropertyList> typedPropertyLists) {
-        this.typedPropertyLists = typedPropertyLists;
-    }
+	public void setTypedPropertyLists(Map<String, PropertyList> typedPropertyLists) {
+		this.typedPropertyLists = typedPropertyLists;
+	}
 
-    /**
-     * @return Returns all set properties of the given type.
-     */
-    public PropertyList getProperties(String propertyType) {
-        PropertyList result = typedPropertyLists.get(propertyType);
-        if (result == null) {
-            result = new PropertyList();
-        }
-        return result;
-    }
-
-    public Date getDate(String propertyType) {
-        Date date = null;
-        try {
-            date = new Date(Long.valueOf(getValue(propertyType)));
-        } catch (Exception t) {
+	/**
+	 * @return Returns all set properties of the given type.
+	 */
+	public PropertyList getProperties(String propertyType) {
+	    PropertyList result = typedPropertyLists.get(propertyType);
+	    if(result==null) {
+	        result = new PropertyList();
+	    }
+		return result;
+	}
+	
+	public Date getDate(String propertyType) {
+	    Date date = null;
+	    try {
+	        date = new Date(Long.valueOf(getValue(propertyType)));
+	    } catch (Throwable t) {
             log.error("Error while returning date for property: " + propertyType, t);
         }
-        return date;
-    }
+	    return date;
+	}
+	
+	/**
+	 * Convenience method to return a Sring representation of the
+	 * given propertyType
+	 * 
+	 * @param propertyType
+	 * @return
+	 */
+	public String getSimpleValue(String propertyType) {
+		PropertyList propertyList = typedPropertyLists.get(propertyType);
+		if (propertyList == null || propertyList.getProperties().size() == 0)
+			return "";
 
-    /**
-     * Convenience method to return a Sring representation of the given
-     * propertyType
-     * 
-     * @param propertyType
-     * @return
-     */
-    public String getSimpleValue(String propertyType) {
-        PropertyList propertyList = typedPropertyLists.get(propertyType);
-        if (propertyList == null || propertyList.getProperties().size() == 0) {
-            return "";
-        }
-
-        PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
-        StringBuffer result = new StringBuffer();
-
-        if (type.isReference()) {
-            List<IMLPropertyOption> referencedEntities = type.getReferencedEntities(propertyList.getProperties());
-            for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
-                Property reference = (Property) iter.next();
-                for (IMLPropertyOption resolvedReference : referencedEntities) {
-                    if (resolvedReference.getId().equals(reference.getPropertyValue())) {
-                        result.append(resolvedReference.getName());
-                    }
-                }
-            }
-            return result.toString();
-        }
-
-        for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
-            Property prop = (Property) iter.next();
-
-            if (type.isSingleSelect() || type.isMultiselect()) {
-                PropertyOption option = type.getOption(prop.getPropertyValue());
-                result.append(option != null ? option.getName() : "");
-            }
-
-            else if (type.isDate()) {
-                try {
-                    result.append(FormInputParser.dateToString(new java.sql.Date(Long.parseLong(prop.getPropertyValue()))));
-                } catch (NumberFormatException e) {
-                    // skip value
-                } catch (AssertException e) {
-                    // skip value
-                }
-            } else if (prop.getPropertyValue() != null) {
-                result.append(prop.getPropertyValue());
-            }
-
-            if (iter.hasNext()) {
-                result.append(", ");
-            }
-        }
-        return result.toString();
-    }
-
-    /**
-     * Convenience method to return a Sring representation of the given
-     * propertyType
+		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
+		StringBuffer result = new StringBuffer();
+		
+		List<IMLPropertyOption> referencedEntities = new ArrayList<IMLPropertyOption>();
+		if (type.isReference()) {
+			referencedEntities = type.getReferencedEntities(propertyList.getProperties()); 
+			for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+				Property reference = (Property) iter.next();
+				for (IMLPropertyOption resolvedReference : referencedEntities) {
+					if (resolvedReference.getId().equals(reference.getPropertyValue()))
+						result.append(resolvedReference.getName());
+				}
+			}
+			return result.toString();
+		} else if (type.isCnaLinkReference()) {
+		    String titles = type.getReferenceResolver().getTitlesOfLinkedObjects(type.getReferencedCnaLinkType(), this.uuid);
+		    return titles;
+		}
+		
+		// else just use the property value:
+		
+		for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+			Property prop = (Property) iter.next();
+			
+			if (type.isSingleSelect()
+					|| type.isMultiselect()) {
+					PropertyOption option = type.getOption(prop.getPropertyValue());
+					result.append(option != null ? option.getName() : "");
+			}
+			
+			else if (type.isDate()) {
+				try {
+					result.append(FormInputParser.dateToString(new java.sql.Date(
+							Long.parseLong(prop.getPropertyValue()))));
+				} catch (NumberFormatException e) {
+					// skip value
+				} catch (AssertException e) {
+					// skip value
+				}
+			}
+			else if(prop.getPropertyValue()!=null ) {
+				result.append(prop.getPropertyValue());
+			}
+			
+			if (iter.hasNext())
+				result.append(", ");
+		}
+		return result.toString();
+	}
+	
+	/**
+     * Convenience method to return a Sring representation of the
+     * given propertyType
      * 
      * @param propertyType
      * @return
@@ -239,228 +253,217 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         if (propertyList != null && propertyList.getProperties().size() > 0) {
             StringBuffer sb = new StringBuffer();
             for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter.hasNext();) {
-                Property prop = iter.next();
-                if (prop.getPropertyValue() != null) {
+                Property prop = iter.next();       
+                if(prop.getPropertyValue()!=null ) {
                     sb.append(prop.getPropertyValue());
-                }
-                if (iter.hasNext()) {
+                }         
+                if (iter.hasNext())
                     sb.append(", ");
-                }
             }
             result = sb.toString();
         }
         return result;
     }
-
-    public void setSimpleValue(PropertyType type, String value) {
-        PropertyList list = typedPropertyLists.get(type.getId());
-        if (list == null || list.getProperties().size() == 0) {
-            createNewProperty(type, value);
-        } else {
-            list.getProperty(0).setPropertyValue(value);
-        }
-    }
-
-    public void setNumericValue(PropertyType type, int value) {
-        setSimpleValue(type, Integer.toString(value));
-    }
-
-    /**
-     * Sets the value for a given property.
-     * 
-     * <p>
-     * Since internally a property value is a multi-value this interface allows
-     * setting these values in one row.
-     * </p>
-     * 
-     * <p>
-     * Note: Using this method is preferred over modifying a
-     * {@link PropertyList} object itself.
-     * </p>
-     * 
-     * <p>
-     * Note: The actual values that are imported have to be
-     * <em>untranslated</em> IOW should directly represent the strings used in
-     * the SNCA.xml
-     * </p>
-     * 
-     * @param huiTypeFactory
-     * @param propertyTypeId
-     * @param foreignProperties
-     */
-    public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId, List<String> foreignProperties) {
-        PropertyList pl = typedPropertyLists.get(propertyTypeId);
-        if (pl == null) {
+	
+	public void setSimpleValue(PropertyType type, String value) {
+		PropertyList list = typedPropertyLists.get(type.getId());
+		if (list == null || list.getProperties().size() == 0) {
+			createNewProperty(type, value);
+		}
+		else {
+				list.getProperty(0).setPropertyValue(value);
+		}
+	}
+	
+	public void setNumericValue(PropertyType type, int value) {
+	    setSimpleValue(type, Integer.toString(value));
+	}
+	
+	/**
+	 * Sets the value for a given property.
+	 * 
+	 * <p>Since internally a property value is a multi-value this interface allows setting
+	 * these values in one row.</p>
+	 * 
+	 * <p>Note: Using this method is preferred over modifying a {@link PropertyList} object itself.</p>
+	 * 
+	 * <p>Note: The actual values that are imported have to be <em>untranslated</em> IOW should directly
+	 * represent the strings used in the SNCA.xml</p>
+	 * @param huiTypeFactory
+	 * @param propertyTypeId
+	 * @param foreignProperties
+	 */
+	public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId, List<String> foreignProperties) {
+		PropertyList pl = typedPropertyLists.get(propertyTypeId);
+        if(pl==null) {
             pl = new PropertyList();
-            typedPropertyLists.put(propertyTypeId, pl);
+            typedPropertyLists.put(propertyTypeId,pl);
         }
-
-        // It would be possible to create a new list and make the PropertyList
-        // object
-        // use that but that causes problems with hibernate. As such the
-        // existing list
-        // is taken and cleared before use.
-        List<Property> properties = pl.getProperties();
-        if (properties == null) {
-            properties = new LinkedList<Property>();
-            pl.setProperties(properties);
-        } else {
-            properties.clear();
-        }
-
-        for (String value : foreignProperties) {
-            PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
-            Property p = new Property();
-
-            if (propertyType == null) {
-                getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId + ", entity type: " + this.entityType);
-            }
-
-            if (propertyType != null && propertyType.isSingleSelect() && value != null) {
-                List<IMLPropertyOption> optionList = propertyType.getOptions();
-                boolean found = false;
-                for (IMLPropertyOption option : optionList) {
-                    if (value.equals(option.getName())) {
-                        value = option.getId();
-                        found = true;
-                    } else if (value.equals(option.getId())) {
-                        found = true;
-                    }
+		
+		// It would be possible to create a new list and make the PropertyList object
+		// use that but that causes problems with hibernate. As such the existing list
+		// is taken and cleared before use.
+		List<Property> properties = pl.getProperties();
+		if(properties==null) {
+		    properties = new LinkedList<Property>();
+		    pl.setProperties(properties);
+		} else {
+		    properties.clear();
+		}
+		
+		
+		
+		for (String value : foreignProperties)
+		{
+		    PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
+		    Property p = new Property();
+		    
+		    if (propertyType == null) {
+		        getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId + ", entity type: " + this.entityType);
+		    }
+		    
+		    if(propertyType!=null && propertyType.isSingleSelect() && value!=null) {
+		        List<IMLPropertyOption> optionList = propertyType.getOptions();
+		        boolean found = false;
+		        for (IMLPropertyOption option : optionList) {
+		            if(value.equals(option.getName())) {
+		                value = option.getId();
+		                found = true;
+		            } else if(value.equals(option.getId())) {
+		                found = true;
+		            }
                 }
-                if (!found) {
-                    getLog().warn("No value found for option property: " + propertyTypeId + " of entity: " + this.entityType + ". Importing unmapped value: " + value);
-                }
-            }
-            p.setPropertyType(propertyTypeId);
-            p.setPropertyValue(value);
-            p.setParent(this);
-            properties.add(p);
-        }
-    }
-
-    /**
-     * Retrieves the raw, untranslated individual data values and stores them in
-     * a given list.
-     * 
-     * <p>
-     * The return values denotes the amount of values exported and can be used
-     * to find out whether any work was done.
-     * </p>
-     * 
-     * @param propertyType
-     * @param foreignProperties
-     * 
-     * @return The amount of individual values exported.
-     */
-    public int exportProperties(String propertyType, List<String> foreignProperties) {
-        int amount = 0;
-        for (Property prop : getProperties(propertyType).getProperties()) {
-            foreignProperties.add(prop.getPropertyValue());
-            amount++;
-        }
-
-        return amount;
-    }
-
-    /**
+		        if(!found) {
+		            getLog().warn("No value found for option property: " + propertyTypeId + " of entity: " + this.entityType + ". Importing unmapped value: " + value);
+		        }
+		    } 		
+			p.setPropertyType(propertyTypeId);
+			p.setPropertyValue(value);
+			p.setParent(this);
+			properties.add(p);
+		}
+	}
+	
+	/**
+	 * Retrieves the raw, untranslated individual data values and stores them in a given
+	 * list.
+	 * 
+	 * <p>The return values denotes the amount of values exported and can be used to find
+	 * out whether any work was done.</p>
+	 *  
+	 * @param propertyType
+	 * @param foreignProperties
+	 * 
+	 * @return The amount of individual values exported.
+	 */
+	public int exportProperties(String propertyType, List<String> foreignProperties) {
+		int amount = 0;
+		for (Property prop : getProperties(propertyType).getProperties())
+		{
+			foreignProperties.add(prop.getPropertyValue());
+			amount++;
+		}
+		
+		return amount;
+	}
+	
+	 /**
      * Copy all property values from given entity to this one
      * 
-     * @param source
-     *            An Entity
+     * @param source An Entity
      */
     public void copyEntity(Entity source) {
         List<String> emptyList = Collections.emptyList();
         copyEntity(source, emptyList);
     }
-
+	
     /**
-     * Copy all property values from given entity to this one. Properties with
-     * type from propertyTypeBlacklist will be ignored.
+     * Copy all property values from given entity to this one. 
+     * Properties with type from propertyTypeBlacklist will be ignored.
      * 
-     * @param source
-     *            An Entity
+     * @param source An Entity
      */
     public void copyEntity(Entity source, List<String> propertyTypeBlacklist) {
         Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
-        for (String propType : sourceProperties.keySet()) {
+        for(String propType : sourceProperties.keySet()) {
             PropertyList sourceList = sourceProperties.get(propType);
             PropertyList newPropList = new PropertyList(sourceList.getProperties().size());
-            for (Property sourceProp : sourceList.getProperties()) {
-                if (checkProperty(sourceProp, propertyTypeBlacklist)) {
+            for(Property sourceProp : sourceList.getProperties()) {
+                if(checkProperty(sourceProp, propertyTypeBlacklist)) {
                     newPropList.add(sourceProp.copy(this));
                     if (getLog().isDebugEnabled()) {
                         getLog().debug("Prop " + propType + " set to value: " + sourceProp.getPropertyValue());
                     }
                 }
             }
-            if (!newPropList.getProperties().isEmpty()) {
+            if(!newPropList.getProperties().isEmpty()) {
                 typedPropertyLists.put(propType, newPropList);
             }
         }
     }
-
+    
     private boolean checkProperty(Property property, List<String> propertyTypeBlacklist) {
         return !property.isEmpty() && !propertyTypeBlacklist.contains(property.getPropertyType());
     }
-
-    public boolean isSelected(String propertyType, String optionId) {
-        boolean result = false;
-        PropertyList propertyList = typedPropertyLists.get(propertyType);
-        if (propertyList != null) {
-            List<Property> entries = typedPropertyLists.get(propertyType).getProperties();
-            if (entries != null) {
-                for (Property prop : entries) {
-                    if (prop.getPropertyValue() != null && prop.getPropertyValue().equals(optionId)) {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Check if given option is selected for any of the properties.
-     * 
-     * @param optionId
-     * @return
-     */
-    public boolean isSelected(String optionId) {
-        for (Iterator iter = typedPropertyLists.keySet().iterator(); iter.hasNext();) {
-            String propTypeId = (String) iter.next();
-            if (isSelected(propTypeId, optionId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+	
+	public boolean isSelected(String propertyType, String optionId) {
+	    boolean result = false;
+	    PropertyList propertyList = typedPropertyLists.get(propertyType);
+	    if(propertyList!=null) {
+    		List<Property> entries = typedPropertyLists.get(propertyType).getProperties();
+    		if (entries != null) {
+        		for (Property prop : entries) {
+        			if (prop.getPropertyValue() != null && prop.getPropertyValue().equals(optionId)) {
+        			    result = true;
+        			    break;
+        			}
+        		}
+    		}
+	    }
+		return result;
+	}
+	
+	/**
+	 * Check if given option is selected for any of the properties.
+	 * 
+	 * @param optionId
+	 * @return
+	 */
+	public boolean isSelected(String optionId) {
+		for (Iterator iter = typedPropertyLists.keySet().iterator(); iter.hasNext();) {
+			String propTypeId = (String) iter.next();
+			if (isSelected(propTypeId, optionId))
+				return true;
+		}
+		return false;
+	}
+	
     /**
      * @param entry
-     * @throws DBException
+     * @throws DBException 
      */
-    public Property createNewProperty(PropertyType type, String newValue) {
-        if (type == null) {
-            throw new RuntimeException("Missing property type, check XML definition.");
-        }
-
-        Property entry = PropertyFactory.create(type, newValue, this);
-        addProperty(entry);
+    public Property createNewProperty(PropertyType type, String newValue)  {
+    	if (type == null)
+    		throw new RuntimeException("Missing property type, check XML definition.");
+    	
+    	Property entry = PropertyFactory.create(type, newValue, this);
+    	addProperty(entry);
         return entry;
     }
-
+    
     public void remove(PropertyType type, String value) {
-        PropertyList list = typedPropertyLists.get(type.getId());
-        List<Property> setProperties = list.getProperties();
-        for (Iterator iter = setProperties.iterator(); iter.hasNext();) {
-            Property prop = (Property) iter.next();
-            if (prop.getPropertyValue().equals(value)) {
-                iter.remove();
-            }
-        }
+    	PropertyList list = typedPropertyLists.get(type.getId());
+    	List<Property> setProperties = list.getProperties();
+    	for (Iterator iter = setProperties.iterator(); iter.hasNext();) {
+			Property prop = (Property) iter.next();
+			if (prop.getPropertyValue().equals(value)) {
+				iter.remove();
+			}
+		}
     }
-
+    
+   
+    
     /**
      * Checks if all properties are of the same type.
      * 
@@ -470,129 +473,116 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * @throws AssertException
      */
     private void checkSameType(String type, List properties) throws PropertyTypeException {
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            Property prop = (Property) iter.next();
-            if (!prop.getPropertyTypeID().equals(type)) {
-                throw new PropertyTypeException("Falsche Typenzuordnung in dynamischer Dokumentation.");
-            }
-        }
+    	for (Iterator iter = properties.iterator(); iter.hasNext();) {
+			Property prop = (Property) iter.next();
+			if (!prop.getPropertyTypeID().equals(type))
+				throw new PropertyTypeException("Falsche Typenzuordnung in dynamischer Dokumentation.");
+		}
     }
-
+    
     /**
-     * Add a new property to the list of already present properties for its
-     * type.
+     * Add a new property to the list of already present properties for its type.
      * 
      * @param prop
-     * @throws AssertException
+     * @throws AssertException 
      * @throws AssertException
      */
     private void addProperty(Property prop) {
-        try {
-            Tester.assertTrue("Eigenschaft nicht mehr definiert für Wert: '" + prop.getPropertyValue() + "'.", prop.getPropertyTypeID() != null);
-            PropertyList typeList = this.typedPropertyLists.get(prop.getPropertyTypeID());
-            if (typeList != null) {
-                typeList.add(prop);
-            } else {
-                typeList = new PropertyList(1);
-                typeList.add(prop);
-                typedPropertyLists.put(prop.getPropertyTypeID(), typeList);
-            }
-        } catch (AssertException e) {
-            Logger.getLogger(Entity.class).error(e);
-        }
+		try {
+			Tester.assertTrue("Eigenschaft nicht mehr definiert für Wert: '" 
+					+ prop.getPropertyValue() + "'.",
+					prop.getPropertyTypeID() != null);
+			PropertyList typeList = this.typedPropertyLists.get(prop.getPropertyTypeID());
+			if (typeList != null)
+				typeList.add(prop);
+			else {
+				typeList = new PropertyList(1);
+				typeList.add(prop);
+				typedPropertyLists.put(prop.getPropertyTypeID(), typeList);
+			}
+		} catch (AssertException e) {
+			Logger.getLogger(Entity.class).error(e);
+		}
     }
+    
+	/* (non-Javadoc)
+	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#select(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
+	 */
+	public void select(IMLPropertyType type, IMLPropertyOption opt) {
+		createNewProperty((PropertyType)type, opt.getId());
+		if (isDependency(opt))
+			fireDependencyChanged(type, opt);
+		else 
+			fireSelectionChanged(type, opt);
+		
+	}
+	
+	/**
+	 * @param type
+	 * @param opt
+	 */
+	private void fireDependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
+			listener.dependencyChanged(type, opt);
+		}
+	}
+	
+	/**
+	 * @param type
+	 * @param opt
+	 */
+	private void fireSelectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
+			listener.selectionChanged(type, opt);
+		}
+	}
+	
+	void firePropertyChanged(Property prop, Object source) {
+		for (IEntityChangedListener listener : getChangelisteners()) {
+			listener.propertyChanged(new PropertyChangedEvent(this, prop, source));
+		}
+	}
+	
+	/**
+	 * Checks if the given option is listed as a dependency for any other property.
+	 */
+	public boolean isDependency(IMLPropertyOption opt) {
+		return HUITypeFactory.getInstance().isDependency(opt);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#select(sernet.snkdb
-     * .guiswt.multiselectionlist.MLOptionList, java.lang.String)
-     */
-    @Override
-    public void select(IMLPropertyType type, IMLPropertyOption opt) {
-        createNewProperty((PropertyType) type, opt.getId());
-        if (isDependency(opt)) {
-            fireDependencyChanged(type, opt);
-        } else {
-            fireSelectionChanged(type, opt);
-        }
 
-    }
+	/* (non-Javadoc)
+	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#unselect(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
+	 */
+	public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
+		remove((PropertyType)type, opt.getId());
+		if (isDependency(opt))
+			fireDependencyChanged(type, opt);
+		else 
+			fireSelectionChanged(type, opt);
+	}
 
-    /**
-     * @param type
-     * @param opt
-     */
-    private void fireDependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
-        for (IEntityChangedListener listener : getChangelisteners()) {
-            listener.dependencyChanged(type, opt);
-        }
-    }
+	
 
-    /**
-     * @param type
-     * @param opt
-     */
-    private void fireSelectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
-        for (IEntityChangedListener listener : getChangelisteners()) {
-            listener.selectionChanged(type, opt);
-        }
-    }
+	public void setEntityType(String entityType) {
+		this.entityType = entityType;
+	}
 
-    void firePropertyChanged(Property prop, Object source) {
-        for (IEntityChangedListener listener : getChangelisteners()) {
-            listener.propertyChanged(new PropertyChangedEvent(this, prop, source));
-        }
-    }
+	public String getUuid() {
+		return uuid;
+	}
 
-    /**
-     * Checks if the given option is listed as a dependency for any other
-     * property.
-     */
-    public boolean isDependency(IMLPropertyOption opt) {
-        return HUITypeFactory.getInstance().isDependency(opt);
-    }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	public String getId() {
+	    return TITLE + getDbId();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#unselect(sernet
-     * .snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
-     */
-    @Override
-    public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
-        remove((PropertyType) type, opt.getId());
-        if (isDependency(opt)) {
-            fireDependencyChanged(type, opt);
-        } else {
-            fireSelectionChanged(type, opt);
-        }
-    }
-
-    public void setEntityType(String entityType) {
-        this.entityType = entityType;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getId() {
-        return TITLE + getDbId();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
-    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
@@ -603,48 +593,49 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public int getInt(String propertyType) {
         PropertyList propertyList = typedPropertyLists.get(propertyType);
-        if (propertyList == null || propertyList.getProperties().size() == 0) {
+        if (propertyList == null || propertyList.getProperties().size() == 0)
             return Property.UNDEF;
-        }
 
-        PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
+        PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
+                propertyType);
         for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
             Property prop = (Property) iter.next();
             if (type.isNumericSelect()) {
-                return prop.getNumericPropertyValue();
+                return prop.getNumericPropertyValue(); 
             }
         }
         return Property.UNDEF;
-
+        
     }
 
     /**
-     * Returns the value (not the translated title) of an single select option
-     * property.
+     * Returns the value (not the translated title)
+     * of an single select option property.
      * 
-     * If property with id is not single select option property a warning is
-     * logged and null is returned.
+     * If property with id is not single select option property
+     * a warning is logged and null is returned.
      * 
-     * @param id
-     *            the id of the property
-     * @return value (not the translated title) of an single select option
-     *         property
+     * @param 
+     *      id the id of the property
+     * @return 
+     *      value (not the translated title) of an single select option property
      */
-    public String getOptionValue(String id) {
+    public String getOptionValue(String id) {   
         String value = null;
         PropertyList propertyList = typedPropertyLists.get(id);
-        if (propertyList != null && propertyList.getProperties().size() == 1) {
+        if (propertyList != null && propertyList.getProperties().size()==1) {
             PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, id);
             if (type.isSingleSelect()) {
-                Property prop = propertyList.getProperties().get(0);
-                value = prop.getPropertyValue();
+                    Property prop = propertyList.getProperties().get(0);
+                    value = prop.getPropertyValue();
             } else {
-                getLog().warn("Property " + id + " is not of type " + PropertyType.INPUT_SINGLEOPTION + ". Can not determine option value. Entity id is: " + getDbId());
+                getLog().warn("Property " + id + " is not of type " + PropertyType.INPUT_SINGLEOPTION + ". Can not determine option value. Entity id is: " + this.getDbId());
             }
-        } else if (propertyList != null && propertyList.getProperties().size() > 1) {
-            getLog().warn("Property list " + id + " contains more than entry. Can not determine option value. Entity id is: " + getDbId());
+        } else if(propertyList != null && propertyList.getProperties().size()>1) {
+            getLog().warn("Property list " + id + " contains more than entry. Can not determine option value. Entity id is: " + this.getDbId());
         }
         return value;
     }
 
+   
 }

@@ -356,6 +356,7 @@ public class HUITypeFactory {
         propObj.setReportable(prop.getAttribute("report").equals("true"));
         propObj.setTextRows(prop.getAttribute("textrows"));
         propObj.setReferencedEntityType(readReferencedEntityId(prop));
+        propObj.setReferencedCnaLinkType(readReferencedCnaLinkType(prop));
         // read options for property
         propObj.setPredefinedValues(this.getOptionsForPropertyType(id));
         propObj.setDependencies(readDependencies(prop));
@@ -385,6 +386,19 @@ public class HUITypeFactory {
 
         return propObj;
     }
+
+    /**
+     * @return
+     */
+    private String readReferencedCnaLinkType(Element prop) {
+        NodeList list = prop.getElementsByTagName("references");
+        for (int i = 0; i < list.getLength(); ++i) {
+            Element referencesElmt = (Element) list.item(i);
+            return referencesElmt.getAttribute("linkType");
+        }
+        return "";
+    }
+
 
     /**
      * @param attribute

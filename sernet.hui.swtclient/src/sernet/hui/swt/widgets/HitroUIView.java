@@ -92,7 +92,7 @@ public class HitroUIView implements IEntityChangedListener   {
     private String[] filterTags;
 
     private boolean taggedOnly = false;
-    
+
     private List<String> validationList;
     
     private boolean useValidationGuiHints = false;
@@ -223,7 +223,7 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * @param tags use tags to filter view?
 	 * @param taggedPropertiesOnly 
 	 * true: show only properties with matching tag (filter out all without tag or with different tags)
-	 * false: show properties without tags and those with matching tag (filter out all with different tag)
+	 * false: show properties without tags and those with matching tag (filter out all with different tag) 
 	 * @param validationMap contains validation results for {@link PropertyType}s  
 	 * @throws DBException
 	 */
@@ -297,9 +297,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		else if (type.isSingleSelect())
 			createSingleOptionField(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
 		else if (type.isReference())
-			createMultiOptionField(type, editableField, parent, type.isFocus(), true, type.isCrudButtons(), showValidationHint, useValidationGuiHints);
+			createMultiOptionField(type, editableField, parent, type.isFocus(), true, type.isCrudButtons(), false, showValidationHint, useValidationGuiHints);
 		else if (type.isMultiselect())
-			createMultiOptionField(type, editableField, parent, type.isFocus(), false, false, showValidationHint, useValidationGuiHints);
+			createMultiOptionField(type, editableField, parent, type.isFocus(), false, false, false, showValidationHint, useValidationGuiHints);
 		else if (type.isDate())
 			createDateField(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
 		else if (type.isText())
@@ -308,6 +308,8 @@ public class HitroUIView implements IEntityChangedListener   {
 		    createBooleanSelect(type, editableField, parent, type.isFocus());
 		else if (type.isNumericSelect())
 		    createNumericSelect(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
+		else if (type.isCnaLinkReference())
+            createMultiOptionField(type, editableField, parent, type.isFocus(), false, type.isCrudButtons(), true, showValidationHint, useValidationGuiHints);
 	}
 
 	/**
@@ -428,9 +430,9 @@ public class HitroUIView implements IEntityChangedListener   {
 	 * @throws AssertException
 	 */
 	private void createMultiOptionField(PropertyType type, boolean editable, Composite parent,
-			boolean focus, boolean reference, boolean crudButtons, boolean showValidationHint, boolean useValidationGuiHints) {
+			boolean focus, boolean reference, boolean crudButtons, boolean cnalinkreference, boolean showValidationHint, boolean useValidationGuiHints) {
 		MultiSelectionControl mlControl = new MultiSelectionControl(entity, type,
-				parent, editable, reference, crudButtons, showValidationHint, useValidationGuiHints);
+				parent, editable, reference, crudButtons, cnalinkreference, showValidationHint, useValidationGuiHints);
 		mlControl.create();
 		if (focus)
 			focusField = mlControl;
@@ -548,5 +550,7 @@ public class HitroUIView implements IEntityChangedListener   {
         }
         return control;
     }
+
+    
 
 }

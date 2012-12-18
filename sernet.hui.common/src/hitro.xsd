@@ -106,6 +106,7 @@ be displayed when one of the given options has been previously selected.
 <xs:complexType name="referencestype">
 	<!-- Which entities should be listed to create references? -->
 	<xs:attribute name="entitytype" type="xs:IDREF" />
+    <xs:attribute name="linkType" type="xs:IDREF" use="optional" />
 	
 </xs:complexType>
 	    	
@@ -243,6 +244,7 @@ be displayed when one of the given options has been previously selected.
 		<xs:enumeration value="multioption"/>
 		<xs:enumeration value="text"/>
 		<xs:enumeration value="reference"/>
+        <xs:enumeration value="cnalink-reference"/>
 		<xs:enumeration value="date"/>
 		<xs:enumeration value="numericoption"/>
 		<xs:enumeration value="booleanoption"/>

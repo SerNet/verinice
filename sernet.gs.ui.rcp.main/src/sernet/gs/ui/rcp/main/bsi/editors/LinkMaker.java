@@ -80,10 +80,6 @@ import sernet.verinice.model.common.CnATreeElement;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-// TODO akoderman this view should also allow the user to create new elements
-// and link them to the current element with one button
-// i.e. for server select "Add&Link" to create a new person and link it as
-// "owner" immediately.
 public class LinkMaker extends Composite implements IRelationTable {
 
     private static final Logger LOG = Logger.getLogger(LinkMaker.class);

@@ -45,7 +45,8 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 	private PropertyType propertyType;
 	private boolean referencesEntities;
 
-	public MultiSelectionDialog(Shell parent, int style, Entity ent, PropertyType type, boolean referencesEntities) {
+	public MultiSelectionDialog(Shell parent, int style, Entity ent, PropertyType type, 
+	        boolean referencesEntities) {
 		super(parent, style);
 		this.entity = ent;
 		this.propertyType = type;

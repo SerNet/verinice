@@ -42,7 +42,7 @@ import sernet.verinice.rcp.ElementSelectionComponent;
  */
 public class CnATreeElementSelectionDialog extends Dialog {
 
-    private String entityType;
+    private String entityType; 
 
     private CnATreeElement inputElmt;
     
@@ -62,6 +62,14 @@ public class CnATreeElementSelectionDialog extends Dialog {
         
     }
     
+    /**
+     * @param referencedEntityType
+     * @param inputElmt2
+     */
+    public CnATreeElementSelectionDialog(String referencedEntityType, CnATreeElement inputElmt2) {
+        this(Display.getCurrent().getActiveShell(), referencedEntityType, inputElmt2);
+    }
+
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
