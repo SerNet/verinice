@@ -86,7 +86,9 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 
 	        Queue<ControlGroup> sortedResults = sortResults(root_object);
 	        for (ControlGroup g : sortedResults) {
-	            result.add(g);
+	            if(!result.contains(g.getParent())){
+	                result.add(g.getParent());
+	            }
 	        }
 	    }
 	}

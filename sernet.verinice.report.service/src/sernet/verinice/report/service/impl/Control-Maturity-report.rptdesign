@@ -7,6 +7,12 @@
         <value>reports</value>
     </simple-property-list>
     <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">2152</property>
+        </structure>
+    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -1244,6 +1250,344 @@ columns(cols);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="radarChartData" id="2152">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">cg_name</property>
+                    <text-property name="displayName">cg_name</text-property>
+                    <text-property name="heading">cg_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdRed</property>
+                    <text-property name="displayName">thresholdRed</text-property>
+                    <text-property name="heading">thresholdRed</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdYellow</property>
+                    <text-property name="displayName">thresholdYellow</text-property>
+                    <text-property name="heading">thresholdYellow</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdGreen</property>
+                    <text-property name="displayName">thresholdGreen</text-property>
+                    <text-property name="heading">thresholdGreen</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">maturity</property>
+                    <text-property name="displayName">maturity</text-property>
+                    <text-property name="heading">maturity</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">cg_id</property>
+                    <property name="nativeName">cg_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="constant">-1</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">cg_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">thresholdRed</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">thresholdYellow</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">thresholdGreen</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">maturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">cg_name</property>
+                    <property name="nativeName">cg_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">thresholdRed</property>
+                    <property name="nativeName">thresholdRed</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">thresholdYellow</property>
+                    <property name="nativeName">thresholdYellow</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">thresholdGreen</property>
+                    <property name="nativeName">thresholdGreen</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">maturity</property>
+                    <property name="nativeName">maturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import java.util.ArrayList;
+import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.hui.common.VeriniceContext;
+import java.lang.Double;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.iso27k.Control;
+
+double getThreshold(ControlGroup cg, int thresholdType){
+	result = 0.0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof Control){
+			threshold = 0.0;
+			control = (Control)child;
+			if(thresholdType == 1){
+				threshold = Double.valueOf(control.getThreshold1());
+			}
+			if(thresholdType == 2){
+				threshold = Double.valueOf(control.getThreshold2());
+			}
+			if(threshold > result){
+				result = threshold;
+			}
+		}
+	}
+	return result;
+}
+
+double getMaxMaturityValue(sernet.verinice.model.iso27k.ControlGroup cg){
+	result = 0.0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof IControl){
+			maturity = getMaxMaturityValue((IControl)child);
+			if(maturity > result){
+				result = maturity;
+			}
+		}
+		if(child instanceof ControlGroup){
+			maturity = getMaxMaturityValue((ControlGroup)child);
+			if(maturity > result){
+				result = maturity;
+			}
+		}
+	}
+
+	return result;
+}
+
+double getMaxMaturityValue(IControl control){
+	htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+	propertyType = htf.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
+	return Double.valueOf(propertyType.getMaxValue());
+}
+
+double getMaturityByWeight(sernet.verinice.model.iso27k.ControlGroup cg){
+	result = 0;
+	if(getWeights(cg) != 0){
+		result = getWeightedMaturity(cg) / getWeights(cg);
+	}
+	return result;
+}
+
+int getWeights(ControlGroup cg){
+	int weight = 0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof IControl){
+			control = (IControl)child;
+			controlReloader =  new LoadElementByUuid(control.getUuid(), new RetrieveInfo().setProperties(true));
+			control = helper.execute(controlReloader).getElement();
+			weight = weight + control.getWeight2();
+		}
+		if(child instanceof ControlGroup){
+			control = (ControlGroup) child;
+			w2 = getWeights(control);
+			weight = weight + w2;
+		}
+	}
+	return weight;
+}
+
+int getWeightedMaturity(ControlGroup cg) {
+	maturity = 0;
+        for (CnATreeElement child : cg.getChildren()) {
+            if (child instanceof IControl) {
+                control = (IControl) child;
+                maturity += getWeightedMaturity(control);
+            }
+            if (child instanceof ControlGroup) {
+                control = (ControlGroup) child;
+                maturity += getWeightedMaturity(control);
+            }
+        }
+        return maturity;
+}
+
+int getWeightedMaturity(IControl contr) {
+	controlReloader =  new LoadElementByUuid(contr.getUuid(), new RetrieveInfo().setProperties(true));
+	contr = helper.execute(controlReloader).getElement();
+        value = contr.getMaturity() * contr.getWeight2();
+        return value;
+}
+
+objects="controlgroup";
+
+cgid = _inpv.get("cg_id");
+
+controlGroupLoader = new LoadPolymorphicCnAElementById(new Integer[]{cgid});
+cgList = helper.execute(controlGroupLoader).getElements();
+cg = null;
+if(cgList.size() > 0){
+	cg = cgList.get(0);
+}
+results = new ArrayList(0);
+if(cg != null){
+	elementReloader = new LoadElementByUuid(cg.getUuid(), new RetrieveInfo().setProperties(true).setChildren(true).setChildrenProperties(true));
+	cg = helper.execute(elementReloader).getElement();
+}
+if(cg != null){
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof ControlGroup){
+			row = new ArrayList(0);
+			childGroup = (ControlGroup)child;
+			childReloader = new LoadElementByUuid(childGroup.getUuid(), new RetrieveInfo().setProperties(true).setChildren(true).setChildrenProperties(true));
+			childGroup = helper.execute(childReloader).getElement();
+			row.add(childGroup.getTitle());
+			row.add(String.valueOf(getThreshold(childGroup, 1)));
+			row.add(String.valueOf(getThreshold(childGroup, 2)));
+			row.add(String.valueOf(getMaxMaturityValue(childGroup)));
+			row.add(String.valueOf(getMaturityByWeight(childGroup)));
+			results.add(row);
+		}
+	}
+}
+return results;
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>cg_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>controlgroup_name</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>controlgroup_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>controlgroup_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>dbid</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>dbid</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>dbid</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols = new String[]{"cg_name", "thresholdRed", "thresholdYellow", "thresholdGreen", "maturity"};
+inParameters(new String[] { "cg_id" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -1447,87 +1791,1215 @@ columns(cols);</value>
                                     <data id="1072">
                                         <property name="resultSetColumn">controlgroup_name</property>
                                     </data>
-                                    <data id="2151">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "dbID-Value", this.value );]]></method>
-                                        <property name="resultSetColumn">dbid</property>
-                                    </data>
-                                    <data id="2146">
-                                        <property name="dataSet">rootValue</property>
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr" type="javascript">true</expression>
-                                            </structure>
-                                        </list-property>
-                                        <list-property name="boundDataColumns">
-                                            <structure>
-                                                <property name="name">root</property>
-                                                <text-property name="displayName">root</text-property>
-                                                <expression name="expression" type="javascript">dataSetRow["root"]</expression>
-                                                <property name="dataType">javaObject</property>
-                                            </structure>
-                                        </list-property>
-                                        <method name="onRender"><![CDATA[// import necessary package for bundle import
-importPackage(Packages.org.eclipse.core.runtime);  
-// get root value
-var root = this.value;
-var dbId = reportContext.getPersistentGlobalVariable( "dbID-Value");
-
-// import bundles
-var rcpMainBundle = Packages.org.eclipse.core.runtime.Platform.getBundle("sernet.gs.ui.rcp.main");
-var odaBundle = Packages.org.eclipse.core.runtime.Platform.getBundle("sernet.verinice.oda.driver");
-
-//var commandClass = rcpMainBundle.loadClass("sernet.gs.ui.rcp.main.service.crudcommands.LoadReportControlGroups");
-var commandClass = rcpMainBundle.loadClass("sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById");
-var chartClass = rcpMainBundle.loadClass("sernet.gs.ui.rcp.main.bsi.views.chart.MaturityWithOutISASpiderChart");
-var helperClass = odaBundle.loadClass("sernet.verinice.oda.driver.impl.ReportJavaScriptHelper");
-var commandInstance = commandClass.newInstance();
-var helperInstance = helperClass.newInstance(); 
-var chartInstance = chartClass.newInstance();
-
-commandInstance.setId(dbId);
-commandInstance.setTypeId("controlgroup");
-
-commandInstance = helperInstance.execute(commandInstance);
-var found = commandInstance.getFound();
-var chart = chartInstance.createChart(found);
-var result = helperInstance.createImageResult(chart.createBufferedImage(550, 300));
-
-reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
-]]></method>
-                                        <property name="resultSetColumn">root</property>
-                                    </data>
                                 </cell>
                                 <cell id="1079">
-                                    <image name="maturityChartImage" id="1099">
-                                        <property name="height">300px</property>
-                                        <property name="width">550px</property>
-                                        <property name="dataSet">maturityChartImage</property>
+                                    <extended-item extensionName="Chart" id="2149">
+                                        <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithoutAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/RadarChartModelType">
+  <Version>2.5.1</Version>
+  <Type>Radar Chart</Type>
+  <SubType>Spider Radar Chart</SubType>
+  <Block>
+    <Children xsi:type="layout:TitleBlock">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>false</Visible>
+      <Label>
+        <Caption>
+          <Value>Radar Chart Title</Value>
+          <Font>
+            <Size>16.0</Size>
+            <Bold>true</Bold>
+            <Alignment>
+              <horizontalAlignment>Center</horizontalAlignment>
+              <verticalAlignment>Center</verticalAlignment>
+            </Alignment>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>true</Visible>
+      </Label>
+    </Children>
+    <Children xsi:type="layout:Plot">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>true</Visible>
+      <HorizontalSpacing>5</HorizontalSpacing>
+      <VerticalSpacing>5</VerticalSpacing>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>0.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>0.0</Right>
+        </Insets>
+      </ClientArea>
+    </Children>
+    <Children xsi:type="layout:Legend">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>false</Visible>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>2.0</Top>
+          <Left>2.0</Left>
+          <Bottom>2.0</Bottom>
+          <Right>2.0</Right>
+        </Insets>
+      </ClientArea>
+      <Text>
+        <Value></Value>
+        <Font>
+          <Alignment/>
+        </Font>
+      </Text>
+      <Orientation>Vertical</Orientation>
+      <Direction>Top_Bottom</Direction>
+      <Separator>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </Separator>
+      <Position>Right</Position>
+      <ItemType>Series</ItemType>
+      <Title>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Title>
+      <TitlePosition>Above</TitlePosition>
+    </Children>
+    <Bounds>
+      <Left>0.0</Left>
+      <Top>0.0</Top>
+      <Width>212.0</Width>
+      <Height>130.0</Height>
+    </Bounds>
+    <Insets>
+      <Top>3.0</Top>
+      <Left>3.0</Left>
+      <Bottom>3.0</Bottom>
+      <Right>3.0</Right>
+    </Insets>
+    <Row>-1</Row>
+    <Column>-1</Column>
+    <Rowspan>-1</Rowspan>
+    <Columnspan>-1</Columnspan>
+    <Outline>
+      <Style>Solid</Style>
+      <Thickness>1</Thickness>
+      <Color>
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Color>
+      <Visible>false</Visible>
+    </Outline>
+    <Visible>true</Visible>
+  </Block>
+  <Dimension>Two_Dimensional</Dimension>
+  <Script>// this script ensures that the count of the radar lines equals the maximum of the dataset (if larger than 3.0)
+
+importPackage(Packages.sernet.verinice.report.service.impl);
+importPackage(Packages.java.lang);
+var numberofpoints;
+var valueList;
+var maxValue = 0.0;
+var numberofpositivpoints = 0;
+//called before scripts below
+function afterDataSetFilled( series, dataSet, icsc )
+{
+
+var list = dataSet.getValues();
+numberofpoints = list.length;
+valueList = list;
+	
+for(var i = 0; i &lt; numberofpoints; i++){
+	try{
+		value = Double.parseDouble(list[i]);
+		if(maxValue &lt; list[i]){
+			maxValue = Double.parseDouble(list[i]);
+		}
+	} catch (err) {
+		//TocHelper2.log(&quot;Error: &quot; + err);
+	}
+}
+
+}
+
+function beforeGeneration( chart, icsc )
+{
+	importPackage( Packages.org.eclipse.birt.chart.model.type.impl );
+	importPackage( Packages.org.eclipse.birt.chart.model.attribute );
+	importPackage( Packages.org.eclipse.birt.chart.model.component.impl);
+	importPackage( Packages.org.eclipse.birt.chart.examples.radar.model.type.impl);
+	importPackage( Packages.org.eclipse.birt.chart.examples.radar.model.type);
+	importPackage( Packages.org.eclipse.birt.chart.model.impl );
+	importPackage( Packages.java.math );	
+	if( chart.getClass() == ChartWithoutAxesImpl ){
+		seriesDef = chart.getSeriesDefinitions().get(0);
+		catRunSeries = seriesDef.getRunTimeSeries();
+		valSeriesDef = seriesDef.getSeriesDefinitions().get(0);
+		var series = valSeriesDef.getSeries().get(0);
+		if( maxValue > 3.0){
+			series.setPlotSteps(BigInteger.valueOf(new Double(maxValue).longValue()));
+			series.setWebLabelMin( 0 );
+			series.setWebLabelMax(new Double(maxValue).intValue());
+			series.setRadarAutoScale( false);
+		} else {
+			series.setPlotSteps(BigInteger.valueOf(new Double(4.0).longValue()));
+			series.setWebLabelMin( 0 );
+			series.setWebLabelMax(4);
+			series.setRadarAutoScale( false);
+		}
+
+	}
+
+}</Script>
+  <Units>Points</Units>
+  <SeriesThickness>10.0</SeriesThickness>
+  <GridColumnCount>0</GridColumnCount>
+  <ExtendedProperties>
+    <Name>enable.area.alt</Name>
+    <Value>false</Value>
+  </ExtendedProperties>
+  <SampleData>
+    <BaseSampleData>
+      <DataSetRepresentation>'A','B','C','D','E'</DataSetRepresentation>
+    </BaseSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>6,4,12,8,10</DataSetRepresentation>
+      <SeriesDefinitionIndex>0</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>12.0,8.0,24.0,16.0,20.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>1</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>18.0,12.0,36.0,24.0,30.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>2</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>24.0,16.0,48.0,32.0,40.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>3</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+  </SampleData>
+  <Interactivity>
+    <Enable>true</Enable>
+    <LegendBehavior>None</LegendBehavior>
+  </Interactivity>
+  <EmptyMessage>
+    <Caption>
+      <Value>This chart contains no data.</Value>
+      <Font>
+        <Alignment>
+          <horizontalAlignment>Center</horizontalAlignment>
+          <verticalAlignment>Center</verticalAlignment>
+        </Alignment>
+      </Font>
+    </Caption>
+    <Background xsi:type="attribute:ColorDefinition">
+      <Transparency>64</Transparency>
+      <Red>127</Red>
+      <Green>127</Green>
+      <Blue>127</Blue>
+    </Background>
+    <Outline>
+      <Color>
+        <Transparency>128</Transparency>
+        <Red>127</Red>
+        <Green>127</Green>
+        <Blue>127</Blue>
+      </Color>
+      <Visible>true</Visible>
+    </Outline>
+    <Insets>
+      <Top>10.0</Top>
+      <Left>10.0</Left>
+      <Bottom>10.0</Bottom>
+      <Right>10.0</Right>
+    </Insets>
+    <Visible>false</Visible>
+  </EmptyMessage>
+  <SeriesDefinitions>
+    <Query>
+      <Definition></Definition>
+    </Query>
+    <SeriesPalette>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>102</Red>
+        <Green>204</Green>
+        <Blue>0</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>255</Red>
+        <Green>255</Green>
+        <Blue>0</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>255</Red>
+        <Green>71</Green>
+        <Blue>71</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Entries>
+    </SeriesPalette>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdGreen&quot;]</Definition>
+          <Grouping>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDGREEN</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>false</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <ShowWebLabels>false</ShowWebLabels>
+        <ShowCatLabels>true</ShowCatLabels>
+        <RadarAutoScale>false</RadarAutoScale>
+        <WebLabelMax>10.0</WebLabelMax>
+        <WebLabelMin>0.0</WebLabelMin>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Size>5.0</Size>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+        <PlotSteps>10</PlotSteps>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdYellow&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDYELLOW</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>false</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdRed&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDRED</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>true</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;maturity&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>MATURITYDATA</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>true</Translucent>
+        <Marker>
+          <Type>Circle</Type>
+          <Size>2</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>true</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>2</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>true</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <Series>
+      <Visible>true</Visible>
+      <Label>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Label>
+      <DataDefinition>
+        <Definition>row[&quot;cg_name&quot;]</Definition>
+      </DataDefinition>
+      <SeriesIdentifier></SeriesIdentifier>
+      <DataPoint>
+        <Components>
+          <Type>Orthogonal_Value</Type>
+        </Components>
+        <Separator>, </Separator>
+      </DataPoint>
+      <LabelPosition>Outside</LabelPosition>
+      <Stacked>false</Stacked>
+    </Series>
+    <Grouping>
+      <Enabled>true</Enabled>
+      <GroupType>Text</GroupType>
+      <AggregateExpression>Sum</AggregateExpression>
+    </Grouping>
+  </SeriesDefinitions>
+</model:ChartWithoutAxes>
+]]></xml-property>
+                                        <property name="outputFormat">SVG</property>
+                                        <property name="inheritColumns">false</property>
+                                        <property name="dataSet">radarChartData</property>
+                                        <property name="height">3.84375in</property>
+                                        <property name="width">5.770833333333333in</property>
                                         <list-property name="paramBindings">
                                             <structure>
-                                                <property name="paramName">elmt_id</property>
+                                                <property name="paramName">cg_id</property>
                                                 <simple-property-list name="expression">
-                                                    <value type="javascript">row["dbid"]</value>
+                                                    <value>row["dbid"]</value>
                                                 </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <list-property name="boundDataColumns">
                                             <structure>
-                                                <property name="name">image</property>
-                                                <text-property name="displayName">image</text-property>
-                                                <expression name="expression" type="javascript">dataSetRow["image"]</expression>
+                                                <property name="name">cg_name</property>
+                                                <expression name="expression">dataSetRow["cg_name"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdRed</property>
+                                                <expression name="expression">dataSetRow["thresholdRed"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdYellow</property>
+                                                <expression name="expression">dataSetRow["thresholdYellow"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdGreen</property>
+                                                <expression name="expression">dataSetRow["thresholdGreen"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">maturity</property>
+                                                <expression name="expression">dataSetRow["maturity"]</expression>
                                                 <property name="dataType">javaObject</property>
                                             </structure>
                                         </list-property>
-                                        <property name="source">expr</property>
-                                        <expression name="valueExpr">reportContext.getPersistentGlobalVariable( "imageResultBytes")</expression>
-                                    </image>
+                                    </extended-item>
                                 </cell>
                             </row>
                         </detail>
