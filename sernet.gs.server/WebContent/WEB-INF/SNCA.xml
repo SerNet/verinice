@@ -5878,7 +5878,7 @@ the value between <param></param> will be used directly if no string is found fo
             name="Sonstige Betroffene"
         />
         
-        xxx
+         <!-- xxx ??? insert benachrichtigung betroffener -->
         
         <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="singleoption" >
             <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
@@ -5886,7 +5886,7 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         
         <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="multioption"
-         xxx references="process_bg_benachrichtigung_nichterfolgt">
+         references="process_bg_benachrichtigung_nichterfolgt">
             <option id="process_bg_benachrichtigung_erfolgt" name=""/>
             <option id="process_bg_benachrichtigung_" name=""/>
             <option id="process_bg_benachrichtigung_" name=""/>
@@ -5894,7 +5894,7 @@ the value between <param></param> will be used directly if no string is found fo
             <option id="process_bg_benachrichtigung_" name=""/>
             <option id="process_bg_benachrichtigung_" name=""/>
             <option id="process_bg_benachrichtigung_" name=""/>
-            xxx
+            
       
         </huiproperty>
         
