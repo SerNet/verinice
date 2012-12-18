@@ -99,7 +99,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                         setEnabled(checkRights());
                     }
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -127,22 +126,23 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                         Object o = iter.next();
                         if (o instanceof Server) {
                             Server server = (Server)o;
+                            monitor.beginTask(Messages.GSMBausteinZuordnungAction_4, IProgressMonitor.UNKNOWN);
                             loadModulForServer(server);
+                            monitor.done();
                         }
                     }
                 }
             });
-        } catch (Exception e) {
-            LOG.error("Error while assigning modules",e);
-            ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);
-        }
-
+        }  catch (Exception e) {
+                ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_3);  
+        } 
     }
 
     /**
      * @param serverelement
      */
     private void loadModulForServer(Server serverelement) {
+        try{
         String[] bausteine = getSplitBausteine(serverelement);
         if (bausteine.length == 0 || bausteine == null) {
             showInfoMessage();
@@ -154,7 +154,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
 
             if (baustein == null) {
-                LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
+                LOG.error("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
             } else {
               
                 // assign baustein to every selected target object:
@@ -168,6 +168,10 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                 }
             }
         }
+        }catch (Exception e) {
+            LOG.error("Error while assigning modules",e);
+            ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_6);
+        }
     }
     
     private void showInfoMessage(){
@@ -180,8 +184,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     });
     }
-
-
+   
     private void loadtemplates() {
         gsmtypproperties = new Properties();
         subtypproperties = new Properties();
@@ -194,7 +197,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             LOG.error(e);
         }
     }
-
+    
     private ArrayList<String> tagList(Server server) {
         ArrayList<String> gsmtaglist = new ArrayList<String>();
         String property = "";
@@ -211,7 +214,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                     String gsmproperty = entry.getValue().toString();
                     if (name.equals(gsmkey)) {
                         property = gsmproperty;
-                        // gsmtaglist.add(name);
                     }
                 }
                 gsmtaglist.add(property);
@@ -277,5 +279,4 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         setEnabled(false);
 
     }
-
 }

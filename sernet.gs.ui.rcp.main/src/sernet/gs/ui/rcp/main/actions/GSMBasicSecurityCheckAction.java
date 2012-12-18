@@ -31,9 +31,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -67,7 +69,8 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     private static final Logger LOG = Logger.getLogger(GSMBasicSecurityCheckAction.class);
     private final IWorkbenchWindow window;
     private String gsmresult = "GSM Result";
-   
+    private boolean serverIsRunning = true;
+    
     public GSMBasicSecurityCheckAction(IWorkbenchWindow window, String label) {
         this.window = window;
         setText(label);
@@ -77,14 +80,15 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         setToolTipText(Messages.GSMBasicSecurityCheckAction_1);
         setRightID(ActionRightIDs.KONSOLIDATOR);
         if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
+            serverIsRunning = false;
             IInternalServerStartListener listener = new IInternalServerStartListener() {
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if (e.isStarted()) {
+                        serverIsRunning = true;
                         setEnabled(checkRights());
                     }
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -96,6 +100,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
 
         try{
             dorun();
+            CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
         catch(Exception e){
             LOG.error("Error while security check.", e);
@@ -118,15 +123,18 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
                         Object o = serverIter.next();
                         if (o instanceof Server){
                             Server serverelement = (Server) o;
-                            monitor.beginTask(Messages.GSMBasicSecurityCheckAction_7, IProgressMonitor.UNKNOWN);
+                            monitor.beginTask(Messages.GSMBasicSecurityCheckAction_2, IProgressMonitor.UNKNOWN);
                             konsolidiereModule(serverelement);
-                            monitor.done();
                         }
                     }
+                    monitor.done();
                 }
             });
         }
-        catch (Exception e) {
+        catch (InterruptedException e) {
+            ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_5);
+        }
+        catch(Exception e){
             LOG.error("Error while security check", e);
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_6);
         }
@@ -141,64 +149,76 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         RetrieveInfo ris = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
         serverelement = (Server) Retriever.retrieveElement(serverelement,ris);
         selectedServers.add(serverelement);
-        for (CnATreeElement bausteineLst : serverelement.getChildren()){
-            baustein = (BausteinUmsetzung) bausteineLst;
-            bausteine.add(baustein);
-            String gsmname = baustein.getTitle().trim();
-            if(gsmname.equals(gsmresult)){
-                source = baustein;
+        try{
+            for (CnATreeElement bausteineLst : serverelement.getChildren()){
+                baustein = (BausteinUmsetzung) bausteineLst;
+                bausteine.add(baustein);
+                String gsmname = baustein.getTitle().trim();
+                if(gsmname.equals(gsmresult)){
+                    source = baustein;
+                }
             }
-        }
-        if (source.getParentId().equals(baustein.getParentId()) && source!=null){
-            konsolidiereMassnahmen(bausteine, source);
+            if(source!=null){
+                konsolidiereMassnahmen(bausteine, source);
+            }   
+        }catch(Exception e){
+            LOG.error("Error while security check", e);
+            ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_6);
         }
     }
-                 /**
-                 * @param bausteine
-                 * @param source
-                 */
-
+           
+    
+    /**
+    * @param bausteine
+    * @param source
+    */
     private void konsolidiereMassnahmen(final List<BausteinUmsetzung> bausteine, BausteinUmsetzung source) {
         try {
-            // change targets on server:
             GSMKonsolidatorCommand command = new GSMKonsolidatorCommand(bausteine, source);
+            if(source==null){
+                showInfoMessage();
+            }
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-            // reload state from server:
-            for (CnATreeElement element : command.getChangedElements()) {
-                CnAElementFactory.getLoadedModel().databaseChildChanged(element); 
-                }
          } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
         }
     }
-         
+    
+    private void showInfoMessage(){
+       Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                // code der in der GUI laufen soll 
+                MessageDialog.openInformation(window.getShell(), "Info", Messages.GSMBasicSecurityCheckAction_7);
+            }
+        });
+        }    
     
       /**
-     * Action is enabled when only GSM-Result-Modul selected.
+     * Action is enabled when Server selected.
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
+        if (serverIsRunning) {
+            setEnabled(checkRights());  
         if (input instanceof IStructuredSelection) {
-            IStructuredSelection selection = (IStructuredSelection) input;
-                     
+            IStructuredSelection selection = (IStructuredSelection) input;   
             for (Iterator servers = selection.iterator(); servers.hasNext();) {
-                Object serverelement = servers.next();
-                if (serverelement instanceof Server){
-                    setEnabled(true);
-                    return;
-                }
-                else {
+                Object serverelement = servers.next(); 
+                if (!(serverelement instanceof Server)) {
                     setEnabled(false);
                     return;
                 }
             }
+            if (checkRights()) {
+                setEnabled(true);
+            }
+            return;
         }
+        // no structured selection:
+        setEnabled(false);
     }
-                
-    private void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
     }
-
 }
