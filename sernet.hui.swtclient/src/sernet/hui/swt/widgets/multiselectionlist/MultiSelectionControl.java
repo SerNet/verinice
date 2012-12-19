@@ -92,7 +92,7 @@ public class MultiSelectionControl implements IHuiControl {
 		this.crudButtons = crudButtons;
 		this.cnalinkreference = cnalinkreference;
 		this.showValidationHint = showValidationHint;
-		this.useValidationGUIHints = useValidationGUIHints;
+		this.useValidationGUIHints = useValidationGuiHints;
 	}
 	
 	/**

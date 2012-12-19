@@ -97,6 +97,7 @@ public class SingleSelectionControl implements IHuiControl {
 		this.composite = parent;
 		this.editable = edit;
 		this.showValidationHint = showValidationHint;
+		this.useValidationGUIHints = useValidationGuiHints;
 	}
 
 	/**
