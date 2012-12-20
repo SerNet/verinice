@@ -85,12 +85,12 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	        return;
 	    }
 	    try {
-	        if(rootObjects == null || rootObjects.size() == 0){
+	        if(rootObjects == null || rootObjects.size() == 0 || !isContextMenuCall()){
 	            dialog = new GenerateReportDialog(shell);
 	        }
 	        else if(rootObjects.size() == 1 && isContextMenuCall()){
                 dialog = new GenerateReportDialog(shell, rootObjects.get(0));
-            } else {
+            } else if(rootObjects != null && rootObjects.size() > 1 && isContextMenuCall()){
                 dialog = new GenerateReportDialog(shell, rootObjects, IReportType.USE_CASE_ID_GENERAL_REPORT);
             }
             dialog.setContextMenuCall(isContextMenuCall());
