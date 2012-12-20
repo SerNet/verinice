@@ -58,6 +58,8 @@ public class TextControl implements IHuiControl {
 	private boolean showValidationHint;
 	private boolean useValidationGUIHints;
 	
+	private Label label;
+	
 	// This limit is set in Property.hbm.xml / PropertyList.hbm.xml:
     private static final int HIBERNATE_MAPPED_STRING_LIMIT = 400000;
 
@@ -81,14 +83,10 @@ public class TextControl implements IHuiControl {
 	 * 
 	 */
 	public void create() {
-		Label label = new Label(composite, SWT.NULL);
+		label = new Label(composite, SWT.NULL);
 		String labelText = fieldType.getName();
 		if(showValidationHint && useValidationGUIHints){ 
-		    FontData fontData = label.getFont().getFontData()[0];
-		    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-		            SWT.BOLD));
-		    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
-		    label.setFont(font);
+		    refontLabel(true);
 		}
 		label.setText(labelText);
 		
@@ -123,6 +121,22 @@ public class TextControl implements IHuiControl {
 		composite.layout();
 	}
 
+    private void refontLabel(boolean dye) {
+        FontData fontData = label.getFont().getFontData()[0];
+        Font font;
+        int color;
+        if(dye){
+            font= new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+                    SWT.BOLD));
+            color = SWT.COLOR_RED;
+        } else {
+            font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            color = SWT.COLOR_BLACK;
+        }
+        label.setForeground(composite.getDisplay().getSystemColor(color));
+        label.setFont(font);
+    }
+
 	public boolean validate() {
         boolean valid = true;
         for(Entry<String, Boolean> entry : fieldType.validate(text.getText(), null).entrySet()){
@@ -134,12 +148,14 @@ public class TextControl implements IHuiControl {
 		if (valid) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
+			refontLabel(false);
 			return true;
 		}
 
 		if(useValidationGUIHints){
 		    text.setForeground(Colors.BLACK);
 		    text.setBackground(Colors.YELLOW);
+		    refontLabel(true);
 		}
 		return false;
 	}
@@ -211,4 +227,6 @@ public class TextControl implements IHuiControl {
 			}
 		}
 	}
+	
+	
 }

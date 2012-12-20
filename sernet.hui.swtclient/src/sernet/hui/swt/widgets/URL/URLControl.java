@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets.URL;
 
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +55,7 @@ public class URLControl implements IHuiControl {
 	private Property savedProp;
 	private boolean showValidationHint;
 	private boolean useValidationGUIHints;
+	private Label label;
 	
 	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
@@ -68,14 +70,10 @@ public class URLControl implements IHuiControl {
 	}
 
 	public void create() {
-		Label label = new Label(parent, SWT.NULL);
+		label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
 		if(showValidationHint && useValidationGUIHints){
-		    FontData fontData = label.getFont().getFontData()[0];
-		    Font font = new Font(parent.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-		            SWT.BOLD));
-		    label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
-		    label.setFont(font);
+		   refontLabel(true);
 		}
 		label.setText(type.getName());
 		
@@ -199,8 +197,39 @@ public class URLControl implements IHuiControl {
 	}
 
 	public boolean validate() {
-		// link is validated in edit dialog
-		return true;
+        boolean valid = true;
+        for(Entry<String, Boolean> entry : type.validate(
+                link.getText(), null).entrySet()){
+            if(!entry.getValue().booleanValue()){
+                valid = false;
+                break;
+            }
+        }
+        if (valid) {
+            refontLabel(false);
+            return true;
+        }
+
+        if(useValidationGUIHints){
+            refontLabel(true);
+        }
+        return false;
 	}
+	
+    private void refontLabel(boolean dye) {
+        FontData fontData = label.getFont().getFontData()[0];
+        Font font;
+        int color;
+        if(dye){
+            font= new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+                    SWT.BOLD));
+            color = SWT.COLOR_RED;
+        } else {
+            font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            color = SWT.COLOR_BLACK;
+        }
+        label.setForeground(label.getParent().getDisplay().getSystemColor(color));
+        label.setFont(font);
+    }
 
 }

@@ -85,7 +85,7 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
                     }
                 }
             } catch (CommandException e) {
-                log.error("Error while executing command", e);
+                getLog().error("Error while executing command", e);
             }
         }
     }
@@ -120,6 +120,13 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
     @Override
     public Object getCacheableResult() {
         return results;
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(this.getClass());
+        }
+        return log;
     }
 
 

@@ -40,6 +40,8 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
 
     private static final Logger LOG = Logger.getLogger(LoadReportISARoomsDetails.class);
     
+    private static final String CHAPTER_PREFIX_PATTERN = ".*(\\d+)\\.?(\\d+)?";
+    
     private List<List<String>> results;
     
     private Integer roomID;
@@ -91,20 +93,20 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
     }
     
     private String getControlID(String title){
-        if(title.contains(" ")){
-            String id = title.substring(0, title.indexOf(" "));
-            Pattern subChapt = Pattern.compile("^\\d+.\\d+.*");
-            Matcher matcher = subChapt.matcher(id);
-            if(matcher.matches()){
-                return id;
-            }
+        Pattern pattern = Pattern.compile(CHAPTER_PREFIX_PATTERN);
+        Matcher matcher = pattern.matcher(title);
+        if(matcher.find()){
+            return matcher.group();
         }
         return "";
     }
     
     private String getControlTitleWithoutID(String title){
-        if(title.contains(" ")){
-            return title.substring(title.indexOf(" ")).trim();
+        Pattern pattern = Pattern.compile(CHAPTER_PREFIX_PATTERN);
+        Matcher matcher = pattern.matcher(title);
+        if(matcher.find()){
+            String group = matcher.group();
+            return title.substring(title.indexOf(group) + group.length()).trim();
         }
         return title;
     }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -184,7 +183,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                 if(isGSKategorieAndCanContain((IBSIStrukturKategorie)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
                     getElements(typeFilter, items, child);
             } else if(child instanceof IBSIStrukturElement){
-                if(isGSElementAndCanContaint((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
+                if(isGSElementAndCanContain((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
                     getElements(typeFilter, items, child);
             } 
         }
@@ -224,7 +223,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
         return elements;
     }
     
-    private boolean isGSElementAndCanContaint(IBSIStrukturElement element, String typeId){
+    private boolean isGSElementAndCanContain(IBSIStrukturElement element, String typeId){
         Class[] gsClasses = new Class[]{
                 FinishedRiskAnalysis.class,
                 BausteinUmsetzung.class,

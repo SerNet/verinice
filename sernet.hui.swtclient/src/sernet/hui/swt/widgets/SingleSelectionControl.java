@@ -75,6 +75,7 @@ public class SingleSelectionControl implements IHuiControl {
 	
 	private boolean useValidationGUIHints;
 
+	private Label label;
 
 	public Control getControl() {
 		return combo;
@@ -106,14 +107,10 @@ public class SingleSelectionControl implements IHuiControl {
 	 */
 	public void create() {
 		try {
-			Label label = new Label(composite, SWT.NULL);
+			label = new Label(composite, SWT.NULL);
 			String labelText = fieldType.getName();
 			if(showValidationHint && useValidationGUIHints){
-			    FontData fontData = label.getFont().getFontData()[0];
-			    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-			            SWT.BOLD));
-			    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
-			    label.setFont(font);
+			    refontLabel(true);
 			}
 			label.setText(labelText);
 
@@ -195,13 +192,15 @@ public class SingleSelectionControl implements IHuiControl {
 		if (valid) {
 //			combo.setForeground(fgColor);
 //			combo.setBackground(bgColor);
+		    refontLabel(false);
 			return true;
 		}
 
-//		if(useValidationGUIHints){
+		if(useValidationGUIHints){
 //		    combo.setForeground(Colors.BLACK);
 //		    combo.setBackground(Colors.YELLOW);
-//		}
+		    refontLabel(true);
+		}
 		return false;
 	}
 
@@ -227,5 +226,21 @@ public class SingleSelectionControl implements IHuiControl {
 
 		}
 	}
+	
+    private void refontLabel(boolean dye) {
+        FontData fontData = label.getFont().getFontData()[0];
+        Font font;
+        int color;
+        if(dye){
+            font= new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+                    SWT.BOLD));
+            color = SWT.COLOR_RED;
+        } else {
+            font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            color = SWT.COLOR_BLACK;
+        }
+        label.setForeground(composite.getDisplay().getSystemColor(color));
+        label.setFont(font);
+    }
 
 }

@@ -41,6 +41,8 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
     private BooleanFieldEditor infoDialogStatusDerivation;
     private BooleanFieldEditor switchPerspectiveIsmView;
     private BooleanFieldEditor switchPerspectiveCatalogView;
+    private BooleanFieldEditor showValidationReportWarning;
+
     
     public MessageDialogWithTogglePreferencePage(){
         super(GRID);
@@ -90,6 +92,9 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
         switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveCatalogView);
+        
+        showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent());
+        addField(showValidationReportWarning);
     }
     
     @Override

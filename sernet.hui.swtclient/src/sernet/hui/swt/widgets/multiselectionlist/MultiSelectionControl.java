@@ -69,6 +69,7 @@ public class MultiSelectionControl implements IHuiControl {
     private boolean showValidationHint;
 	private boolean useValidationGUIHints;
 	
+	private Label label;
 	
 	public Control getControl() {
 		return text;
@@ -102,11 +103,7 @@ public class MultiSelectionControl implements IHuiControl {
 		Label label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
 		if(showValidationHint && useValidationGUIHints){
-		    FontData fontData = label.getFont().getFontData()[0];
-		    Font font = new Font(parent.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-		            SWT.BOLD));
-		    label.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_RED));
-		    label.setFont(font);
+		    refontLabel(true);
 		}
 		label.setText(type.getName());
 		
@@ -308,19 +305,37 @@ public class MultiSelectionControl implements IHuiControl {
 		if (valid) {
 			text.setForeground(fgColor);
 			text.setBackground(bgColor);
+			refontLabel(false);
 			return true;
 		}
 		
 		if(useValidationGUIHints){
 			text.setForeground(Colors.BLACK);
 			text.setBackground(Colors.YELLOW);
+			refontLabel(true);
 		}
 		return false;
 	
 	}
 	
 	public void update() {
-		// TODO Auto-generated method stub
+	    validate();
 	}
+	
+    private void refontLabel(boolean dye) {
+        FontData fontData = label.getFont().getFontData()[0];
+        Font font;
+        int color;
+        if(dye){
+            font= new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+                    SWT.BOLD));
+            color = SWT.COLOR_RED;
+        } else {
+            font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            color = SWT.COLOR_BLACK;
+        }
+        label.setForeground(label.getParent().getDisplay().getSystemColor(color));
+        label.setFont(font);
+    }
 
 }

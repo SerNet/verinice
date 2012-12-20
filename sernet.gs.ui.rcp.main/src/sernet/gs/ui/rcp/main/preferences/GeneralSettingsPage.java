@@ -45,7 +45,6 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 
 	private BooleanFieldEditor showDBIDDecorator;
 	private BooleanFieldEditor useAutomaticValidation;
-	private BooleanFieldEditor showValidationReportWarning;
 	private BooleanFieldEditor useValidationGuiHints;
 	
 	private ComboFieldEditor encodingFieldEditor;
@@ -104,9 +103,6 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
 		useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
 		addField(useAutomaticValidation);
-		
-		showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent());
-		addField(showValidationReportWarning);
 		
 		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$

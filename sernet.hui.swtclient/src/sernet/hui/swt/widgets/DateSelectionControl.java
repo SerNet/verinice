@@ -19,6 +19,7 @@ package sernet.hui.swt.widgets;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -138,12 +139,7 @@ public class DateSelectionControl implements IHuiControl {
 		label.setLayoutData(label36LData);
 		String labelText = fieldType.getName();
 		if(showValidationHint && useValidationGUIHints){
-		    //		    labelText = Messages.getString("LabelValidationHint") + labelText;
-		    FontData fontData = label.getFont().getFontData()[0];
-		    Font font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-		            SWT.BOLD));
-		    label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
-		    label.setFont(font);
+		    refontLabel(true);
 		}
 		label.setText(labelText);
 
@@ -181,6 +177,22 @@ public class DateSelectionControl implements IHuiControl {
 		setDisplayedTime(millis);
 		dateTime.setToolTipText(fieldType.getTooltiptext());
 	}
+
+    private void refontLabel(boolean dye) {
+        FontData fontData = label.getFont().getFontData()[0];
+        Font font;
+        int color;
+        if(dye){
+            font= new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+                    SWT.BOLD));
+            color = SWT.COLOR_RED;
+        } else {
+            font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            color = SWT.COLOR_BLACK;
+        }
+        label.setForeground(composite.getDisplay().getSystemColor(color));
+        label.setFont(font);
+    }
 
 	protected boolean isSameDay(String propertyValue, long dateInMillis2) {
 		try {
@@ -221,11 +233,30 @@ public class DateSelectionControl implements IHuiControl {
 	}
 
 	public void update() {
-		// not implemented
+	      validate();
 	}
 
 	public boolean validate() {
-		return true;
+        boolean valid = true;
+        for(Entry<String, Boolean> entry : fieldType.validate(
+                String.valueOf(String.valueOf(dateTime.getDay()) +
+                "." + String.valueOf(dateTime.getMonth() + 1) +
+                "." + String.valueOf(dateTime.getYear())),
+                null).entrySet()){
+            if(!entry.getValue().booleanValue()){
+                valid = false;
+                break;
+            }
+        }
+        if (valid) {
+            refontLabel(false);
+            return true;
+        }
+
+        if(useValidationGUIHints){
+            refontLabel(true);
+        }
+        return false;
 	}
 
 }

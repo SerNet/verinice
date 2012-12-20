@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -129,18 +131,16 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
     }
     
     private String[] splitTopicTitle(String title){
+        String patternString = ".*(\\d+)\\.?(\\d+)?";
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(title);
         String[] result = new String[2];
-        if(title.contains(" ")){
-            String partOne = title.substring(0, title.indexOf(' '));
-            String partTwo = title.substring(title.indexOf(' '));
-            if(!Float.isNaN(Float.parseFloat(partOne))){
-                result[0] = partOne;
-                result[1] = partTwo;
-            }
-        }
-        if(result[0] == null){
-            result[0] = DUMMY_VALUE;
-            result[1] = result[0];
+        if(matcher.find()){
+            result[0] = matcher.group();
+            result[1] = title.substring(title.indexOf(result[0]) + result[0].length()).trim();
+        } else {
+            result[0] = "";
+            result[1] = title;
         }
         return result;
     }
@@ -234,6 +234,5 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
     public Object getCacheableResult() {
         return this.result;
     }
-
 
 }

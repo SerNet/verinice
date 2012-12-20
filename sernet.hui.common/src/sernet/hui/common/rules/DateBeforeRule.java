@@ -19,6 +19,7 @@ package sernet.hui.common.rules;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -44,10 +45,21 @@ public class DateBeforeRule implements IValidationRule {
      */
     @Override
     public boolean validate(String userInput, String[] params) {
+        Long millis = null;
+        try{
+            millis = Long.parseLong(userInput);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(millis);
+            userInput = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + 
+                    "." + String.valueOf(calendar.get(Calendar.MONTH) + 1) +
+                    "." + String.valueOf(calendar.get(Calendar.YEAR));
+        
+        } catch (NumberFormatException e){
+            // do nothing, userInput is not a long
+        }
         if(formatter != null && userInput != null){
             try {
-//                Date userDate = formatter.parse(userInput);
-                Date userDate = new Date(Long.parseLong(userInput));
+                Date userDate = formatter.parse(userInput);
                 return userDate.before(compareDate);
             } catch (Exception e) {
                 LOG.error("user given date unparseable", e);
