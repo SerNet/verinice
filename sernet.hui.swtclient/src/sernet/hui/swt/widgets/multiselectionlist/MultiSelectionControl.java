@@ -100,11 +100,9 @@ public class MultiSelectionControl implements IHuiControl {
 	 * 
 	 */
 	public void create() {
-		Label label = new Label(parent, SWT.NULL);
+		label = new Label(parent, SWT.NULL);
 		String labelText = type.getName();
-		if(showValidationHint && useValidationGUIHints){
-		    refontLabel(true);
-		}
+
 		label.setText(type.getName());
 		
 		Composite container = new Composite(parent, SWT.NULL);
@@ -161,6 +159,9 @@ public class MultiSelectionControl implements IHuiControl {
 		
 		
 		writeToTextField();
+		if(showValidationHint && useValidationGUIHints){
+		    refontLabel(true);
+		}
 	}
 
 	public void writeToTextField() {
@@ -321,21 +322,21 @@ public class MultiSelectionControl implements IHuiControl {
 	public void update() {
 	    validate();
 	}
-	
-    private void refontLabel(boolean dye) {
-        FontData fontData = label.getFont().getFontData()[0];
-        Font font;
-        int color;
-        if(dye){
-            font= new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-                    SWT.BOLD));
-            color = SWT.COLOR_RED;
-        } else {
-            font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_BLACK;
-        }
-        label.setForeground(label.getParent().getDisplay().getSystemColor(color));
-        label.setFont(font);
-    }
+
+	private void refontLabel(boolean dye) {
+	    FontData fontData = label.getFont().getFontData()[0];
+	    Font font;
+	    int color;
+	    if(dye){
+	        font= new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
+	                SWT.BOLD));
+	        color = SWT.COLOR_RED;
+	    } else {
+	        font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+	        color = SWT.COLOR_BLACK;
+	    }
+	    label.setForeground(label.getParent().getDisplay().getSystemColor(color));
+	    label.setFont(font);
+	}
 
 }
