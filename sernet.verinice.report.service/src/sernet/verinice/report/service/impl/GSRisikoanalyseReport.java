@@ -27,9 +27,9 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 
-public class RisikoanalyseReport implements IReportType {
+public class GSRisikoanalyseReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(RisikoanalyseReport.class);
+	private static final Logger LOG = Logger.getLogger(GSRisikoanalyseReport.class);
 	
     private static final String REPORT_DESIGN = "Risikoanalyse.rptdesign"; //$NON-NLS-1$
 
@@ -52,7 +52,7 @@ public class RisikoanalyseReport implements IReportType {
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 		
-		URL reportDesign = RisikoanalyseReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
+		URL reportDesign = GSRisikoanalyseReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{

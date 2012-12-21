@@ -4,7 +4,7 @@
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">Standard ISA-Report</text-property>
     <simple-property-list name="includeResource">
-        <value>reports</value>
+        <value>samt-report-compliance</value>
     </simple-property-list>
     <property name="units">in</property>
     <list-property name="propertyBindings">
@@ -22,13 +22,15 @@
             <text-property name="helpText">Manually set root object for this report.</text-property>
             <text-property name="promptText">Root object for this report, provided by verinice in production setup.</text-property>
             <property name="valueType">static</property>
-            <property name="isRequired">false</property>
+            <property name="isRequired">true</property>
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
                 <value type="constant">-1</value>
             </simple-property-list>
+            <list-property name="selectionList"/>
             <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -216,374 +218,6 @@ return helper.execute(
                     <name>setupQueryText</name>
                     <value>columns(new String[] { "totalSecurityFigure" });
 inParameters(new String[] { "root_object" });</value>
-                </ex-property>
-            </list-property>
-        </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="samtTopics" id="63">
-            <list-property name="computedColumns">
-                <structure>
-                    <property name="name">maturitytext</property>
-                    <expression name="expression">if (row["samt_topic_maturity"] == -2) {"-"}
-else if (row["samt_topic_maturity"] == -1) {"NA"}
-else {row["samt_topic_maturity"]}</expression>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">samt_topic_audit_devi</property>
-                    <text-property name="displayName">samt_topic_audit_devi</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_isaauditnote</property>
-                    <text-property name="displayName">samt_topic_isaauditnote</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_audit_findings</property>
-                    <text-property name="displayName">samt_topic_audit_findings</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_tag</property>
-                    <text-property name="displayName">samt_topic_tag</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_ownweight</property>
-                    <text-property name="displayName">samt_topic_ownweight</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_internalnote</property>
-                    <text-property name="displayName">samt_topic_internalnote</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_audit_compluntil</property>
-                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_weight</property>
-                    <text-property name="displayName">samt_topic_weight</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_externalnote</property>
-                    <text-property name="displayName">samt_topic_externalnote</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topicimplemented</property>
-                    <text-property name="displayName">samt_topicimplemented</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_maturity</property>
-                    <text-property name="displayName">samt_topic_maturity</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_audit_ra</property>
-                    <text-property name="displayName">samt_topic_audit_ra</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_name</property>
-                    <text-property name="displayName">samt_topic_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_min1</property>
-                    <text-property name="displayName">samt_topic_min1</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_abbr</property>
-                    <text-property name="displayName">samt_topic_abbr</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_min2</property>
-                    <text-property name="displayName">samt_topic_min2</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_desc</property>
-                    <text-property name="displayName">samt_topic_desc</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">root_object</property>
-                    <property name="paramName">root_object</property>
-                    <property name="nativeName">root_object</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">1</property>
-                    <expression name="defaultValue">'dummy default value'</expression>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">samt_topic_audit_devi</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">samt_topic_isaauditnote</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">samt_topic_audit_findings</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">samt_topic_tag</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">samt_topic_ownweight</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">samt_topic_internalnote</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">samt_topic_audit_compluntil</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">samt_topic_weight</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">samt_topic_externalnote</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">samt_topicimplemented</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">samt_topic_maturity</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">samt_topic_audit_ra</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">samt_topic_name</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">samt_topic_min1</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">samt_topic_abbr</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">samt_topic_min2</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">samt_topic_desc</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">maturitytext</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">samt_topic_audit_devi</property>
-                    <property name="nativeName">samt_topic_audit_devi</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">samt_topic_isaauditnote</property>
-                    <property name="nativeName">samt_topic_isaauditnote</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">samt_topic_audit_findings</property>
-                    <property name="nativeName">samt_topic_audit_findings</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">samt_topic_tag</property>
-                    <property name="nativeName">samt_topic_tag</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">samt_topic_ownweight</property>
-                    <property name="nativeName">samt_topic_ownweight</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">samt_topic_internalnote</property>
-                    <property name="nativeName">samt_topic_internalnote</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">samt_topic_audit_compluntil</property>
-                    <property name="nativeName">samt_topic_audit_compluntil</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">samt_topic_weight</property>
-                    <property name="nativeName">samt_topic_weight</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">samt_topic_externalnote</property>
-                    <property name="nativeName">samt_topic_externalnote</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">samt_topicimplemented</property>
-                    <property name="nativeName">samt_topicimplemented</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">samt_topic_maturity</property>
-                    <property name="nativeName">samt_topic_maturity</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">samt_topic_audit_ra</property>
-                    <property name="nativeName">samt_topic_audit_ra</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">samt_topic_name</property>
-                    <property name="nativeName">samt_topic_name</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">samt_topic_min1</property>
-                    <property name="nativeName">samt_topic_min1</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">samt_topic_abbr</property>
-                    <property name="nativeName">samt_topic_abbr</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">samt_topic_min2</property>
-                    <property name="nativeName">samt_topic_min2</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">samt_topic_desc</property>
-                    <property name="nativeName">samt_topic_desc</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
-// set top level element for report:
-root = helper.getRoot();
-// try to get manual parameter if set:
-myroot = _inpv.get("root_object");
-if (myroot != null &amp;&amp; myroot != -1) {
-	root = myroot;
-}
-
-sag = helper.execute(
-	new sernet.verinice.samt.service.FindSamtGroup(true, root)
-	).getSelfAssessmentGroup();
-
-
-cols = helper.getAllPropertyTypes("samt_topic");
-c2 = new LoadReportElements("samt_topic", sag.getDbId());
-elements = helper.execute(c2).getElements();
-return helper.map(
-	elements,
-	cols
-);]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
-</model:DesignValues>]]></xml-property>
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>setupQueryText</name>
-                    <value>import sernet.hui.common.*;
-
-cols = helper.getAllPropertyTypes("samt_topic");
-inParameters(new String[] { "root_object" });
-columns(cols);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
@@ -4533,6 +4167,872 @@ inParameters(new String[] { "root"});</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="sg1" id="2301">
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">maturitytext</property>
+                    <expression name="expression">if (row["samt_topic_maturity"] == -2) {"-"}else if (row["samt_topic_maturity"] == -1) {"NA"}else {row["samt_topic_maturity"]}</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">samt_topic_audit_devi</property>
+                    <text-property name="displayName">samt_topic_audit_devi</text-property>
+                    <text-property name="heading">samt_topic_audit_devi</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_controlnote</property>
+                    <text-property name="displayName">samt_topic_controlnote</text-property>
+                    <text-property name="heading">samt_topic_controlnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_isaauditnote</property>
+                    <text-property name="displayName">samt_topic_isaauditnote</text-property>
+                    <text-property name="heading">samt_topic_isaauditnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_audit_findings</property>
+                    <text-property name="displayName">samt_topic_audit_findings</text-property>
+                    <text-property name="heading">samt_topic_audit_findings</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_tag</property>
+                    <text-property name="displayName">samt_topic_tag</text-property>
+                    <text-property name="heading">samt_topic_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_ownweight</property>
+                    <text-property name="displayName">samt_topic_ownweight</text-property>
+                    <text-property name="heading">samt_topic_ownweight</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_desc</property>
+                    <text-property name="displayName">samt_topic_desc</text-property>
+                    <text-property name="heading">samt_topic_desc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_internalnote</property>
+                    <text-property name="displayName">samt_topic_internalnote</text-property>
+                    <text-property name="heading">samt_topic_internalnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_audit_compluntil</property>
+                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
+                    <text-property name="heading">samt_topic_audit_compluntil</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_weight</property>
+                    <text-property name="displayName">samt_topic_weight</text-property>
+                    <text-property name="heading">samt_topic_weight</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_externalnote</property>
+                    <text-property name="displayName">samt_topic_externalnote</text-property>
+                    <text-property name="heading">samt_topic_externalnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topicimplemented</property>
+                    <text-property name="displayName">samt_topicimplemented</text-property>
+                    <text-property name="heading">samt_topicimplemented</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_maturity</property>
+                    <text-property name="displayName">samt_topic_maturity</text-property>
+                    <text-property name="heading">samt_topic_maturity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_audit_ra</property>
+                    <text-property name="displayName">samt_topic_audit_ra</text-property>
+                    <text-property name="heading">samt_topic_audit_ra</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_user_classification</property>
+                    <text-property name="displayName">samt_user_classification</text-property>
+                    <text-property name="heading">samt_user_classification</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_name</property>
+                    <text-property name="displayName">samt_topic_name</text-property>
+                    <text-property name="heading">samt_topic_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_classification_comment</property>
+                    <text-property name="displayName">samt_topic_classification_comment</text-property>
+                    <text-property name="heading">samt_topic_classification_comment</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_min1</property>
+                    <text-property name="displayName">samt_topic_min1</text-property>
+                    <text-property name="heading">samt_topic_min1</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_abbr</property>
+                    <text-property name="displayName">samt_topic_abbr</text-property>
+                    <text-property name="heading">samt_topic_abbr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_min2</property>
+                    <text-property name="displayName">samt_topic_min2</text-property>
+                    <text-property name="heading">samt_topic_min2</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="constant">dummy default value</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">samt_topic_audit_devi</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">samt_topic_controlnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">samt_topic_isaauditnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">samt_topic_audit_findings</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">samt_topic_tag</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">samt_topic_ownweight</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">samt_topic_desc</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">samt_topic_internalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">samt_topic_audit_compluntil</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">samt_topic_weight</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">samt_topic_externalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">samt_topicimplemented</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">samt_topic_maturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">samt_topic_audit_ra</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">samt_user_classification</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">samt_topic_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">samt_topic_classification_comment</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">samt_topic_min1</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">samt_topic_abbr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">samt_topic_min2</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">maturitytext</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">samt_topic_audit_devi</property>
+                    <property name="nativeName">samt_topic_audit_devi</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">samt_topic_controlnote</property>
+                    <property name="nativeName">samt_topic_controlnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">samt_topic_isaauditnote</property>
+                    <property name="nativeName">samt_topic_isaauditnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">samt_topic_audit_findings</property>
+                    <property name="nativeName">samt_topic_audit_findings</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">samt_topic_tag</property>
+                    <property name="nativeName">samt_topic_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">samt_topic_ownweight</property>
+                    <property name="nativeName">samt_topic_ownweight</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">samt_topic_desc</property>
+                    <property name="nativeName">samt_topic_desc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">samt_topic_internalnote</property>
+                    <property name="nativeName">samt_topic_internalnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">samt_topic_audit_compluntil</property>
+                    <property name="nativeName">samt_topic_audit_compluntil</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">samt_topic_weight</property>
+                    <property name="nativeName">samt_topic_weight</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">samt_topic_externalnote</property>
+                    <property name="nativeName">samt_topic_externalnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">samt_topicimplemented</property>
+                    <property name="nativeName">samt_topicimplemented</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">samt_topic_maturity</property>
+                    <property name="nativeName">samt_topic_maturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">samt_topic_audit_ra</property>
+                    <property name="nativeName">samt_topic_audit_ra</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">samt_user_classification</property>
+                    <property name="nativeName">samt_user_classification</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">samt_topic_name</property>
+                    <property name="nativeName">samt_topic_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">samt_topic_classification_comment</property>
+                    <property name="nativeName">samt_topic_classification_comment</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">samt_topic_min1</property>
+                    <property name="nativeName">samt_topic_min1</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">samt_topic_abbr</property>
+                    <property name="nativeName">samt_topic_abbr</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">samt_topic_min2</property>
+                    <property name="nativeName">samt_topic_min2</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+sag = helper.execute(
+	new FindSGCommand(true, root)
+	).getSelfAssessmentGroup();
+
+
+cols = helper.getAllPropertyTypes("samt_topic");
+c2 = new LoadReportElements("samt_topic", sag.getDbId());
+elements = helper.execute(c2).getElements();
+return helper.map(
+	elements,
+	cols
+);]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_audit_devi</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_audit_devi</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_audit_devi</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_controlnote</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_controlnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_controlnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_isaauditnote</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_isaauditnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_isaauditnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_audit_findings</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_audit_findings</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_audit_findings</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_tag</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_tag</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_tag</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_ownweight</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_ownweight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_ownweight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_desc</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_desc</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_desc</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_internalnote</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_internalnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_internalnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_audit_compluntil</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_audit_compluntil</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_audit_compluntil</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_weight</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_weight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_weight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_externalnote</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_externalnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_externalnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topicimplemented</design:name>
+              <design:position>12</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topicimplemented</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topicimplemented</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_maturity</design:name>
+              <design:position>13</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_maturity</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_maturity</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_audit_ra</design:name>
+              <design:position>14</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_audit_ra</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_audit_ra</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_user_classification</design:name>
+              <design:position>15</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_user_classification</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_user_classification</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_name</design:name>
+              <design:position>16</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_classification_comment</design:name>
+              <design:position>17</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_classification_comment</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_classification_comment</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_min1</design:name>
+              <design:position>18</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_min1</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_min1</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_abbr</design:name>
+              <design:position>19</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_abbr</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_abbr</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>samt_topic_min2</design:name>
+              <design:position>20</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>samt_topic_min2</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>samt_topic_min2</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols = helper.getAllPropertyTypes("samt_topic");
+inParameters(new String[] { "root_object" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -4570,6 +5070,19 @@ inParameters(new String[] { "root"});</value>
         <style name="table-header" id="156">
             <property name="backgroundColor">#BDBDBD</property>
             <property name="fontWeight">bold</property>
+        </style>
+        <style name="bg_green" id="1847">
+            <property name="backgroundColor">#66CC00</property>
+        </style>
+        <style name="bg_red" id="1845">
+            <property name="backgroundColor">#FF4747</property>
+        </style>
+        <style name="bg_yellow" id="1846">
+            <property name="backgroundColor">#FFE47A</property>
+        </style>
+        <style name="bg_black" id="2161">
+            <property name="backgroundColor">#000000</property>
+            <property name="color">#FFFFFF</property>
         </style>
     </styles>
     <page-setup>
@@ -4644,6 +5157,7 @@ inParameters(new String[] { "root"});</value>
     </page-setup>
     <body>
         <grid id="796">
+            <property name="width">100%</property>
             <column id="797"/>
             <column id="798"/>
             <row id="799">
@@ -4674,20 +5188,15 @@ inParameters(new String[] { "root"});</value>
             </row>
         </grid>
         <grid id="7">
+            <property name="marginBottom">5pt</property>
             <property name="pageBreakAfter">auto</property>
             <property name="height">4.072916666666667in</property>
-            <property name="width">7.710743801652892in</property>
+            <property name="width">100%</property>
             <column id="8">
-                <property name="width">1.5520833333333333in</property>
+                <property name="width">20%</property>
             </column>
             <column id="9">
-                <property name="width">1.8484848484848484in</property>
-            </column>
-            <column id="41">
-                <property name="width">1.9898989898989898in</property>
-            </column>
-            <column id="35">
-                <property name="width">2.322314049586777in</property>
+                <property name="width">80%</property>
             </column>
             <row id="10">
                 <cell id="11">
@@ -4715,7 +5224,7 @@ inParameters(new String[] { "root"});</value>
                     </text>
                 </cell>
                 <cell id="12">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4774,7 +5283,7 @@ inParameters(new String[] { "root"});</value>
                     </text>
                 </cell>
                 <cell id="15">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4830,7 +5339,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="165">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4885,7 +5394,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="170">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4940,7 +5449,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="175">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4995,7 +5504,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="180">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5050,7 +5559,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="189">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5105,7 +5614,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="194">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5160,7 +5669,7 @@ inParameters(new String[] { "root"});</value>
                     </label>
                 </cell>
                 <cell id="199">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5178,29 +5687,66 @@ inParameters(new String[] { "root"});</value>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
-                    <data id="783">
-                        <property name="dataSet">org</property>
+                    <data id="2162">
+                        <property name="dataSet">audits</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">org_created</property>
-                                <text-property name="displayName">org_created</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["org_created"]</expression>
+                                <property name="name">audit_enddate</property>
+                                <text-property name="displayName">audit_enddate</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["audit_enddate"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">org_created</property>
+                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "auditEndDate", this.value );]]></method>
+                        <property name="resultSetColumn">audit_enddate</property>
                     </data>
+                    <data id="2163">
+                        <property name="dataSet">audits</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">audit_startdate</property>
+                                <text-property name="displayName">audit_startdate</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["audit_startdate"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "auditStartDate", this.value );]]></method>
+                        <property name="resultSetColumn">audit_startdate</property>
+                    </data>
+                    <text-data id="2164">
+                        <method name="onRender"><![CDATA[var startDate = reportContext.getPersistentGlobalVariable( "auditStartDate");
+var endDate = reportContext.getPersistentGlobalVariable( "auditEndDate");
+var result = startDate;
+if(endDate != null &amp;&amp; endDate != ""){
+	result = result + " - " + endDate;
+}
+this.text = result;]]></method>
+                        <property name="contentType">html</property>
+                    </text-data>
                 </cell>
             </row>
         </grid>
         <grid id="205">
-            <property name="pageBreakAfter">always</property>
-            <property name="width">7.710743801652892in</property>
+            <property name="marginBottom">5pt</property>
+            <property name="pageBreakAfter">avoid</property>
+            <property name="width">100%</property>
             <column id="206">
-                <property name="width">1.5537190082644627in</property>
+                <property name="width">20%</property>
             </column>
             <column id="207">
-                <property name="width">6.1570247933884295in</property>
+                <property name="width">80%</property>
             </column>
             <row id="208">
                 <cell id="209">
@@ -5216,6 +5762,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <label id="226">
                         <text-property name="text" key="isa14">Contact:</text-property>
                     </label>
@@ -5233,6 +5783,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="784">
                         <property name="dataSet">org</property>
                         <list-property name="boundDataColumns">
@@ -5261,6 +5815,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <label id="227">
                         <text-property name="text" key="isa15">Contact Phone:</text-property>
                     </label>
@@ -5278,6 +5836,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="785">
                         <property name="dataSet">org</property>
                         <list-property name="boundDataColumns">
@@ -5306,6 +5868,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <label id="228">
                         <text-property name="text" key="isa16">Contact Email:</text-property>
                     </label>
@@ -5323,6 +5889,10 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="786">
                         <property name="dataSet">org</property>
                         <list-property name="boundDataColumns">
@@ -5351,7 +5921,9 @@ inParameters(new String[] { "root"});</value>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">thin</property>
-            <property name="width">7.708333333333333in</property>
+            <property name="marginBottom">10pt</property>
+            <property name="pageBreakAfter">auto</property>
+            <property name="width">100%</property>
             <property name="dataSet">audits</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5406,10 +5978,10 @@ inParameters(new String[] { "root"});</value>
                 </structure>
             </list-property>
             <column id="948">
-                <property name="width">1.5537190082644627in</property>
+                <property name="width">20%</property>
             </column>
             <column id="949">
-                <property name="width">6.1570247933884295in</property>
+                <property name="width">80%</property>
             </column>
             <row id="950">
                 <property name="borderBottomColor">#000000</property>
@@ -5419,12 +5991,20 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="962">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Creator]]></text-property>
+                        <text-property name="content" key="isa17"><![CDATA[Creator]]></text-property>
                     </text>
                 </cell>
                 <cell id="952">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="966">
                         <property name="resultSetColumn">audit_isa_creat</property>
                     </data>
@@ -5438,15 +6018,27 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="963">
+                        <property name="paddingTop">1pt</property>
+                        <property name="paddingLeft">1pt</property>
+                        <property name="paddingBottom">1pt</property>
+                        <property name="paddingRight">1pt</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Creater Phone]]></text-property>
+                        <text-property name="content" key="isa18"><![CDATA[Creater Phone]]></text-property>
                     </text>
                 </cell>
                 <cell id="955">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <data id="967">
                         <property name="resultSetColumn">audit_isa_creatphone</property>
                     </data>
@@ -5457,12 +6049,19 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
                     <text id="964">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Creator EMail]]></text-property>
+                        <text-property name="content" key="isa19"><![CDATA[Creator EMail]]></text-property>
                     </text>
                 </cell>
                 <cell id="958">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
                     <data id="968">
                         <property name="resultSetColumn">audit_isa_creatmail</property>
                     </data>
@@ -5473,6 +6072,15 @@ inParameters(new String[] { "root"});</value>
             <property name="marginTop">20pt</property>
             <property name="height">3.8229166666666665in</property>
             <property name="width">100%</property>
+            <property name="dataSet">totalSecurityFigure</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">totalSecurityFigure</property>
+                    <text-property name="displayName">totalSecurityFigure</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <column id="928">
                 <property name="width">1.3958333333333333in</property>
             </column>
@@ -5488,6 +6096,7 @@ inParameters(new String[] { "root"});</value>
             <row id="16">
                 <property name="verticalAlign">middle</property>
                 <cell id="17">
+                    <property name="backgroundColor">#BDBDBD</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -5523,50 +6132,51 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <property name="paddingTop">2pt</property>
-                    <property name="paddingLeft">2pt</property>
-                    <property name="paddingBottom">2pt</property>
-                    <property name="paddingRight">2pt</property>
+                    <property name="paddingTop">0pt</property>
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingBottom">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <property name="verticalAlign">middle</property>
+                    <list-property name="highlightRules">
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">0.7</expression>
+                            <property name="style">bg_red</property>
+                        </structure>
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0.7</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">0.9</expression>
+                            <property name="style">bg_yellow</property>
+                        </structure>
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0.9</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">1.0</expression>
+                            <property name="style">bg_green</property>
+                        </structure>
+                    </list-property>
                     <data id="95">
                         <property name="fontWeight">bold</property>
+                        <property name="paddingTop">0pt</property>
+                        <property name="paddingLeft">0pt</property>
+                        <property name="paddingBottom">0pt</property>
+                        <property name="paddingRight">0pt</property>
                         <structure name="numberFormat">
                             <property name="category">Percent</property>
                             <property name="pattern">Percent</property>
                         </structure>
                         <property name="textAlign">center</property>
-                        <list-property name="highlightRules">
-                            <structure>
-                                <property name="operator">between</property>
-                                <property name="fontSize">10pt</property>
-                                <property name="color">#FF5D5D</property>
-                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">0</value>
-                                </simple-property-list>
-                                <expression name="value2" type="javascript">0.7</expression>
-                            </structure>
-                            <structure>
-                                <property name="operator">between</property>
-                                <property name="fontSize">10pt</property>
-                                <property name="color">#FFCA53</property>
-                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">0.7</value>
-                                </simple-property-list>
-                                <expression name="value2" type="javascript">0.9</expression>
-                            </structure>
-                            <structure>
-                                <property name="operator">between</property>
-                                <property name="fontSize">10pt</property>
-                                <property name="color">#48E247</property>
-                                <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">0.9</value>
-                                </simple-property-list>
-                                <expression name="value2" type="javascript">1</expression>
-                            </structure>
-                        </list-property>
                         <property name="dataSet">totalSecurityFigure</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -5586,9 +6196,6 @@ inParameters(new String[] { "root"});</value>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
                     <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
@@ -5596,19 +6203,11 @@ inParameters(new String[] { "root"});</value>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
-                    <text id="26">
-                        <property name="fontWeight">bold</property>
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Maximally Attainable:]]></text-property>
-                    </text>
                 </cell>
                 <cell id="32">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
@@ -5619,12 +6218,6 @@ inParameters(new String[] { "root"});</value>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
-                    <label id="157">
-                        <property name="fontWeight">bold</property>
-                        <property name="color">#00D400</property>
-                        <property name="textAlign">center</property>
-                        <text-property name="text">100%</text-property>
-                    </label>
                 </cell>
             </row>
             <row id="19">
@@ -6051,21 +6644,21 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
     <SeriesPalette>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
-        <Red>0</Red>
-        <Green>255</Green>
+        <Red>102</Red>
+        <Green>204</Green>
         <Blue>0</Blue>
       </Entries>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
         <Red>255</Red>
-        <Green>255</Green>
-        <Blue>0</Blue>
+        <Green>228</Green>
+        <Blue>122</Blue>
       </Entries>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
         <Red>255</Red>
-        <Green>0</Green>
-        <Blue>0</Blue>
+        <Green>71</Green>
+        <Blue>71</Blue>
       </Entries>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
@@ -6081,21 +6674,21 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
       <SeriesPalette>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>255</Green>
+          <Red>102</Red>
+          <Green>204</Green>
           <Blue>0</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>255</Green>
-          <Blue>0</Blue>
+          <Green>228</Green>
+          <Blue>122</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
+          <Green>71</Green>
+          <Blue>71</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
@@ -6256,14 +6849,14 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>255</Green>
-          <Blue>0</Blue>
+          <Green>228</Green>
+          <Blue>122</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
+          <Green>71</Green>
+          <Blue>71</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
@@ -6273,8 +6866,8 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>255</Green>
+          <Red>102</Red>
+          <Green>204</Green>
           <Blue>0</Blue>
         </Entries>
       </SeriesPalette>
@@ -6427,8 +7020,8 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
+          <Green>71</Green>
+          <Blue>71</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
@@ -6438,15 +7031,15 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>255</Green>
+          <Red>102</Red>
+          <Green>204</Green>
           <Blue>0</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>255</Green>
-          <Blue>0</Blue>
+          <Green>228</Green>
+          <Blue>122</Blue>
         </Entries>
       </SeriesPalette>
       <Series xsi:type="type:RadarSeries">
@@ -6603,21 +7196,21 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>0</Green>
+          <Red>102</Red>
+          <Green>204</Green>
           <Blue>0</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
           <Red>255</Red>
-          <Green>128</Green>
-          <Blue>0</Blue>
+          <Green>228</Green>
+          <Blue>122</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>255</Green>
-          <Blue>0</Blue>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
@@ -6869,68 +7462,133 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">avoid</property>
+            <property name="pageBreakBefore">always</property>
             <property name="pageBreakInside">avoid</property>
-            <text-property name="text">Details</text-property>
+            <text-property name="text" key="isa20">Details</text-property>
         </label>
         <table id="891">
             <property name="pageBreakBefore">avoid</property>
             <property name="pageBreakInside">auto</property>
-            <property name="width">7.65625in</property>
-            <property name="dataSet">samtTopics</property>
+            <property name="width">7.739583333333333in</property>
+            <property name="dataSet">sg1</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">samt_topic_externalnote</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_externalnote"]</expression>
+                    <property name="name">samt_topic_audit_devi</property>
+                    <text-property name="displayName">samt_topic_audit_devi</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_devi"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_maturity</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_maturity"]</expression>
+                    <property name="name">samt_topic_controlnote</property>
+                    <text-property name="displayName">samt_topic_controlnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_controlnote"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_ownweight</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_ownweight"]</expression>
+                    <property name="name">samt_topic_isaauditnote</property>
+                    <text-property name="displayName">samt_topic_isaauditnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_isaauditnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_findings</property>
+                    <text-property name="displayName">samt_topic_audit_findings</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_findings"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_tag</property>
+                    <text-property name="displayName">samt_topic_tag</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_tag"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_internalnote</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_internalnote"]</expression>
+                    <property name="name">samt_topic_ownweight</property>
+                    <text-property name="displayName">samt_topic_ownweight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_ownweight"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_desc</property>
+                    <text-property name="displayName">samt_topic_desc</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_desc"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_name</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_name"]</expression>
+                    <property name="name">samt_topic_internalnote</property>
+                    <text-property name="displayName">samt_topic_internalnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_internalnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_compluntil</property>
+                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_compluntil"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_weight</property>
+                    <text-property name="displayName">samt_topic_weight</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_weight"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">samt_topic_externalnote</property>
+                    <text-property name="displayName">samt_topic_externalnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_externalnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topicimplemented</property>
+                    <text-property name="displayName">samt_topicimplemented</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topicimplemented"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_maturity</property>
+                    <text-property name="displayName">samt_topic_maturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_maturity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_ra</property>
+                    <text-property name="displayName">samt_topic_audit_ra</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_ra"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_user_classification</property>
+                    <text-property name="displayName">samt_user_classification</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_user_classification"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_name</property>
+                    <text-property name="displayName">samt_topic_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_name"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_classification_comment</property>
+                    <text-property name="displayName">samt_topic_classification_comment</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_classification_comment"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">samt_topic_min1</property>
+                    <text-property name="displayName">samt_topic_min1</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_min1"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_abbr</property>
+                    <text-property name="displayName">samt_topic_abbr</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_abbr"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_min2</property>
+                    <text-property name="displayName">samt_topic_min2</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_min2"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
@@ -6943,23 +7601,20 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
             </list-property>
             <property name="pageBreakInterval">0</property>
             <column id="904">
-                <property name="width">2.8229166666666665in</property>
+                <property name="width">2.322in</property>
             </column>
             <column id="905">
-                <property name="width">0.9270833333333334in</property>
-            </column>
-            <column id="906">
-                <property name="width">0.71875in</property>
-            </column>
-            <column id="922">
-                <property name="width">0.875in</property>
+                <property name="width">1.1458333333333333in</property>
             </column>
             <column id="918">
-                <property name="width">2.3125in</property>
+                <property name="width">1.8541666666666667in</property>
+            </column>
+            <column id="2158">
+                <property name="width">2.422in</property>
             </column>
             <header>
                 <row id="892">
-                    <property name="height">0.2708333333333333in</property>
+                    <property name="height">0.2916666666666667in</property>
                     <cell id="893">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -6973,6 +7628,7 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="907">
                             <text-property name="text" key="isa21"></text-property>
                         </label>
@@ -6990,42 +7646,9 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="913">
                             <text-property name="text" key="isa22"></text-property>
-                        </label>
-                    </cell>
-                    <cell id="895">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="923">
-                            <text-property name="text">Weight</text-property>
-                        </label>
-                    </cell>
-                    <cell id="919">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="925">
-                            <text-property name="text">Threshold</text-property>
                         </label>
                     </cell>
                     <cell id="915">
@@ -7041,8 +7664,27 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
                         <label id="911">
                             <text-property name="text" key="isa23"></text-property>
+                        </label>
+                    </cell>
+                    <cell id="2156">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
+                        <label id="2159">
+                            <text-property name="text" key="isa24">Maßnahmen</text-property>
                         </label>
                     </cell>
                 </row>
@@ -7063,8 +7705,18 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <data id="908">
+                            <property name="marginBottom">10pt</property>
                             <property name="resultSetColumn">samt_topic_name</property>
                         </data>
+                        <text-data id="2151">
+                            <method name="onRender"><![CDATA[importPackage(Packages.java.lang);
+importPackage( Packages.sernet.verinice.report.service.impl );	
+
+var text = new String(row["samt_topic_desc"]);
+text = text.substring(text.indexOf("<h1>") + 4, text.indexOf("</h1>") + 5);
+this.text = text;]]></method>
+                            <property name="contentType">html</property>
+                        </text-data>
                     </cell>
                     <cell id="898">
                         <property name="borderBottomColor">#000000</property>
@@ -7079,42 +7731,68 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
+                        <list-property name="highlightRules">
+                            <structure>
+                                <property name="operator">eq</property>
+                                <property name="backgroundColor">#BDBDBD</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"NA"</value>
+                                </simple-property-list>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"0"</value>
+                                </simple-property-list>
+                                <property name="style">bg_red</property>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"1"</value>
+                                </simple-property-list>
+                                <property name="style">bg_red</property>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"2"</value>
+                                </simple-property-list>
+                                <property name="style">bg_yellow</property>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"3"</value>
+                                </simple-property-list>
+                                <property name="style">bg_green</property>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"4"</value>
+                                </simple-property-list>
+                                <property name="style">bg_green</property>
+                            </structure>
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">"5"</value>
+                                </simple-property-list>
+                                <property name="style">bg_green</property>
+                            </structure>
+                        </list-property>
                         <data id="914">
+                            <property name="textAlign">center</property>
                             <property name="resultSetColumn">maturitytext</property>
-                        </data>
-                    </cell>
-                    <cell id="899">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="924">
-                            <property name="resultSetColumn">samt_topic_ownweight</property>
-                        </data>
-                    </cell>
-                    <cell id="920">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <data id="926">
-                            <property name="resultSetColumn">samt_topic_min2</property>
                         </data>
                     </cell>
                     <cell id="916">
@@ -7132,6 +7810,23 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                         <property name="borderTopWidth">thin</property>
                         <data id="912">
                             <property name="resultSetColumn">samt_topic_externalnote</property>
+                        </data>
+                    </cell>
+                    <cell id="2157">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="2160">
+                            <property name="resultSetColumn">samt_topic_controlnote</property>
                         </data>
                     </cell>
                 </row>

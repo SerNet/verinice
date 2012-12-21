@@ -108,7 +108,7 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
                 }
             }
         } catch (CommandException e) {
-            LOG.error("Error while determing controlgroups");
+            getLog().error("Error while determing controlgroups");
         }
         retList.trimToSize();
         Collections.sort(retList, new Comparator<ControlGroup>() {
@@ -164,7 +164,7 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
             getCache().put(new Element(el.getUuid(), newElement));
             return newElement;
         } catch (CommandException e) {
-            LOG.error("error while loading children of CnaTreeElment", e);
+            getLog().error("error while loading children of CnaTreeElment", e);
         }
         return null;
     }
@@ -210,8 +210,8 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -222,5 +222,12 @@ public class LoadISAReportChapterList extends GenericCommand implements ICachedC
     @Override
     public Object getCacheableResult() {
         return result;
+    }
+    
+    private Logger getLog(){
+        if(LOG == null){
+            LOG = Logger.getLogger(this.getClass());
+        }
+        return LOG;
     }
 }

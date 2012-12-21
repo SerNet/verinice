@@ -1795,6 +1795,15 @@ columns(cols);</value>
             <property name="backgroundColor">#BDBDBD</property>
             <property name="fontWeight">bold</property>
         </style>
+        <style name="bg_green" id="2096">
+            <property name="backgroundColor">#66CC00</property>
+        </style>
+        <style name="bg_red" id="2097">
+            <property name="backgroundColor">#FF4747</property>
+        </style>
+        <style name="bg_yellow" id="2098">
+            <property name="backgroundColor">#FFE47A</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -3169,27 +3178,27 @@ columns(cols);</value>
                                                         <list-property name="highlightRules">
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#008000</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">"Ja"</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_green</property>
                                                             </structure>
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#FF0000</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">"Nein"</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_red</property>
                                                             </structure>
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#FFFF00</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_umsetzung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">"Teilweise"</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_yellow</property>
                                                             </structure>
                                                             <structure>
                                                                 <property name="operator">eq</property>
@@ -3273,27 +3282,27 @@ columns(cols);</value>
                                                         <list-property name="highlightRules">
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#ADD8E6</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_gsaudit_abweichung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">1</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_green</property>
                                                             </structure>
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#FFFF00</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_gsaudit_abweichung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">2</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_yellow</property>
                                                             </structure>
                                                             <structure>
                                                                 <property name="operator">eq</property>
-                                                                <property name="backgroundColor">#FF0000</property>
                                                                 <expression name="testExpr" type="javascript">row["mnums_gsaudit_abweichung"]</expression>
                                                                 <simple-property-list name="value1">
                                                                     <value type="javascript">3</value>
                                                                 </simple-property-list>
+                                                                <property name="style">bg_red</property>
                                                             </structure>
                                                         </list-property>
                                                         <list-property name="mapRules">

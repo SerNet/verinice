@@ -26,7 +26,7 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
-
+@Deprecated
 public class RiskByAssetReport implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(RiskByAssetReport.class);

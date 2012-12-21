@@ -85,7 +85,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	        return;
 	    }
 	    try {
-	        if(rootObjects == null || rootObjects.size() == 0 || !isContextMenuCall()){
+	        if(!isContextMenuCall() || rootObjects == null || rootObjects.size() == 0){
 	            dialog = new GenerateReportDialog(shell);
 	        }
 	        else if(rootObjects.size() == 1 && isContextMenuCall()){

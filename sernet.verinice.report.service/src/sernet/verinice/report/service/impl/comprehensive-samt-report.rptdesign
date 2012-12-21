@@ -4399,6 +4399,15 @@ columns(cols);</value>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">1pt</property>
         </style>
+        <style name="bg_green" id="2096">
+            <property name="backgroundColor">#66CC00</property>
+        </style>
+        <style name="bg_red" id="2097">
+            <property name="backgroundColor">#FF4747</property>
+        </style>
+        <style name="bg_yellow" id="2098">
+            <property name="backgroundColor">#FFE47A</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="firstPage" id="2">
@@ -5558,7 +5567,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     </text>
                                 </cell>
                                 <cell id="961">
-                                    <property name="backgroundColor">lime</property>
+                                    <property name="style">bg_green</property>
                                     <property name="borderBottomColor">#000000</property>
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
@@ -5598,7 +5607,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     </text>
                                 </cell>
                                 <cell id="966">
-                                    <property name="backgroundColor">yellow</property>
+                                    <property name="style">bg_yellow</property>
                                     <property name="borderBottomColor">#000000</property>
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
@@ -5638,7 +5647,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     </text>
                                 </cell>
                                 <cell id="971">
-                                    <property name="backgroundColor">#FF2828</property>
+                                    <property name="style">bg_red</property>
                                     <property name="borderBottomColor">#000000</property>
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
@@ -5773,7 +5782,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     </text>
                                 </cell>
                                 <cell id="902">
-                                    <property name="backgroundColor">#FFFF00</property>
+                                    <property name="style">bg_yellow</property>
                                     <property name="borderBottomColor">#000000</property>
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
@@ -5853,7 +5862,7 @@ standards &amp; processes do exist and can be adapted, 4 = Metrics are making th
                                     </text>
                                 </cell>
                                 <cell id="924">
-                                    <property name="backgroundColor">#FF2828</property>
+                                    <property name="style">bg_red</property>
                                     <property name="borderBottomColor">#000000</property>
                                     <property name="borderBottomStyle">solid</property>
                                     <property name="borderBottomWidth">thin</property>
@@ -8076,27 +8085,27 @@ Level]]></text-property>
                                                                                             <list-property name="highlightRules">
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#00FF00</property>
                                                                                                     <expression name="testExpr" type="javascript">row["deviation"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">-1</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_green</property>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#FFFF00</property>
                                                                                                     <expression name="testExpr" type="javascript">row["deviation"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">0</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_yellow</property>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#FF0000</property>
                                                                                                     <expression name="testExpr" type="javascript">row["deviation"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">1</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_red</property>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="mapRules">
@@ -8178,27 +8187,27 @@ Level]]></text-property>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#FFFF00</property>
                                                                                                     <expression name="testExpr" type="javascript">row["risk"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">0</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_green</property>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#FFA500</property>
                                                                                                     <expression name="testExpr" type="javascript">row["risk"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">1</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_yellow</property>
                                                                                                 </structure>
                                                                                                 <structure>
                                                                                                     <property name="operator">eq</property>
-                                                                                                    <property name="backgroundColor">#FF0000</property>
                                                                                                     <expression name="testExpr" type="javascript">row["risk"]</expression>
                                                                                                     <simple-property-list name="value1">
                                                                                                         <value type="javascript">2</value>
                                                                                                     </simple-property-list>
+                                                                                                    <property name="style">bg_red</property>
                                                                                                 </structure>
                                                                                             </list-property>
                                                                                             <list-property name="mapRules">

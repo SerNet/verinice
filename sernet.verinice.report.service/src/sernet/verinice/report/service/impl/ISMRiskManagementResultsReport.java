@@ -30,18 +30,18 @@ import sernet.verinice.interfaces.report.IReportType;
 /**
  *
  */
-public class ManagementRisikoBewertung implements IReportType {
+public class ISMRiskManagementResultsReport implements IReportType {
     
-    private static final Logger LOG = Logger.getLogger(ManagementRisikoBewertung.class);
+    private static final Logger LOG = Logger.getLogger(ISMRiskManagementResultsReport.class);
     
-    private static final String REPORT_DESIGN = "GrundschutzA7.rptdesign"; //$NON-NLS-1$
+    private static final String REPORT_DESIGN = "ismRiskManagementResults.rptdesign"; //$NON-NLS-1$
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.report.IReportType#getId()
      */
     @Override
     public String getId() {
-        return Messages.GrundschutzA7_2;
+        return "ismRiskAnalysis";
     }
 
     /* (non-Javadoc)
@@ -49,7 +49,7 @@ public class ManagementRisikoBewertung implements IReportType {
      */
     @Override
     public String getLabel() {
-        return Messages.GrundschutzA7_1;
+        return Messages.ISMRiskManagementResults_2;
     }
 
     /* (non-Javadoc)
@@ -57,7 +57,7 @@ public class ManagementRisikoBewertung implements IReportType {
      */
     @Override
     public String getDescription() {
-        return Messages.GrundschutzA7_0;
+        return Messages.ISMRiskManagementResults_1;
     }
 
     /* (non-Javadoc)
@@ -75,7 +75,7 @@ public class ManagementRisikoBewertung implements IReportType {
     public void createReport(IReportOptions reportOptions) {
         BIRTReportService brs = new BIRTReportService();
         
-        URL reportDesign = ManagementRisikoBewertung.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
+        URL reportDesign = ISMRiskManagementResultsReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
         
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {
@@ -94,7 +94,7 @@ public class ManagementRisikoBewertung implements IReportType {
      */
     @Override
     public String getReportFile() {
-        return Messages.GrundschutzA7_3;
+        return Messages.ISMRiskManagementResults_0;
     }
 
     /* (non-Javadoc)

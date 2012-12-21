@@ -1906,6 +1906,12 @@ columns(cols);</value>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">1pt</property>
         </style>
+        <style name="bg_red" id="1273">
+            <property name="backgroundColor">#FF4747</property>
+        </style>
+        <style name="bg_green" id="1274">
+            <property name="backgroundColor">#66CC00</property>
+        </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
@@ -2380,19 +2386,19 @@ columns(cols);</value>
                         <list-property name="highlightRules">
                             <structure>
                                 <property name="operator">eq</property>
-                                <property name="backgroundColor">#008000</property>
                                 <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
                                 <simple-property-list name="value1">
                                     <value type="javascript">"Ja"</value>
                                 </simple-property-list>
+                                <property name="style">bg_green</property>
                             </structure>
                             <structure>
                                 <property name="operator">eq</property>
-                                <property name="backgroundColor">#FF0000</property>
                                 <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
                                 <simple-property-list name="value1">
                                     <value type="javascript">"Nein"</value>
                                 </simple-property-list>
+                                <property name="style">bg_red</property>
                             </structure>
                             <structure>
                                 <property name="operator">eq</property>

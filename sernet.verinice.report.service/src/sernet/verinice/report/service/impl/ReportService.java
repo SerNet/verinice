@@ -44,8 +44,7 @@ public class ReportService implements IReportService {
 		        new SamtReportType(), 
 		        new SamtComplianceReport(),
 		        
-		        new RiskByAssetReport(), // 27001 reports
-		        new RiskTreatmentReport(),
+		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports
 		        
 		        new ControlMaturityReport(),
 		        new StatementOfApplicabilityReport(),
@@ -69,7 +68,7 @@ public class ReportService implements IReportService {
 		        new ModellierungReport(),
 		        new BasisSichCheckReport(),
 		        new ErgaenzendeSicherheitsanalyseReport(),
-		        new RisikoanalyseReport(),
+		        new GSRisikoanalyseReport(),
 		        new ManagementRisikoBewertung(),
 		        new RealisierungsplanReport(),
 		        new ComprehensiveSamtReportType(),
