@@ -5878,28 +5878,32 @@ the value between <param></param> will be used directly if no string is found fo
             name="Sonstige Betroffene"
         />
         
-         <!-- xxx ??? insert benachrichtigung betroffener 
-        
-        <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="singleoption" >
+        <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener §33 BDSG" tags="Privacy" inputtype="singleoption" >
             <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
             <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
         </huiproperty>
         
-        <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy" inputtype="multioption"
-         references="process_bg_benachrichtigung_nichterfolgt">
-            <option id="process_bg_benachrichtigung_erfolgt" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            <option id="process_bg_benachrichtigung_" name=""/>
-            
-      
+        <huiproperty id="process_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
+            <depends option="process_bg_benachrichtigung_nichterfolgt" />
+            <option id="process_bg_benachrichtigung_begruendung_1"  name="§33 (2) 1. Kenntnis auf andere Weise" />
+            <option id="process_bg_benachrichtigung_begruendung_2"  name="§33 (2) 2. Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
+            <option id="process_bg_benachrichtigung_begruendung_3"  name="§33 (2) 2. ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
+            <option id="process_bg_benachrichtigung_begruendung_4"  name="§33 (2) 2. ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
+            <option id="process_bg_benachrichtigung_begruendung_5"  name="§33 (2) 3. rechtliche Geheimhaltungspflicht" />
+            <option id="process_bg_benachrichtigung_begruendung_6"  name="§33 (2) 4. Speicherung durch Gesetz vorgesehen" />
+            <option id="process_bg_benachrichtigung_begruendung_7"  name="§33 (2) 5. wissenschaftliche Forschung / unverh. Aufwand" />
+            <option id="process_bg_benachrichtigung_begruendung_8"  name="§33 (2) 6. Gefährdung öff. Sicherheit oder Ordnung" />
+            <option id="process_bg_benachrichtigung_begruendung_9"  name="§33 (2) 7. a) eig. Zwecke / aus allg. zugänglichen Quellen" />
+            <option id="process_bg_benachrichtigung_begruendung_10" name="§33 (2) 7. b) eig. Zwecke / Gefährdung der Geschäftszwecke" />
+            <option id="process_bg_benachrichtigung_begruendung_11" name="§33 (2) 8. a) nur zur Übermittlung / allg. zugäng. Quellen" />
+            <option id="process_bg_benachrichtigung_begruendung_12" name="§33 (2) 8. b) nur zur Übermittlung / listenmäßig od. zusg. Daten" />
+            <option id="process_bg_benachrichtigung_begruendung_13" name="§33 (2) 9. allg. zug. Quellen / Markt- und Meinungsforschung" />
         </huiproperty>
-        -->
-        
         </huipropertygroup>
+        
+        <!-- xxx??? vergleiche verinice-masken process mit hauptblatt und anlage, ergänzen bei org / process wie nötig, danach erstes beispiel mit relationen und
+         report-vorlage
+        -->
         
         <huipropertygroup
             tags="Privacy" id="process_pg_group_empfaenger"
