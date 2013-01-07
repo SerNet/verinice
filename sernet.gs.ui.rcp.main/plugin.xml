@@ -763,10 +763,10 @@
                enablesFor="*"
                icon="icons/icons.gif"
                id="sernet.verinice.rcp.IconSelectAction.action"
-               label="Change icon..."
+               label="%action.label.37"
                menubarPath="special"
                style="push"
-               tooltip="Change icon of object">
+               tooltip="%action.tooltip.37">
          </action>
       </objectContribution> 
       <objectContribution
@@ -927,6 +927,12 @@
       		adaptable="false"
       		id="sernet.verinice.validation.CnAValidationAction"
       		objectClass="sernet.verinice.model.common.CnATreeElement">
+      		<visibility>
+		    		<or>
+		   	     		<objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
+		         		<objectClass name="sernet.verinice.model.iso27k.Organization"/>
+		      		</or>
+		   	</visibility>
       		<action
                class="sernet.verinice.validation.CnAValidationAction"
                enablesFor="+"
@@ -936,14 +942,8 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.36">
-            	<enablement>
-					<or>
-		   	     		<objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
-		   	     		<objectClass name="sernet.verinice.model.iso27k.Organization"/>
-		      		</or>
-		   		</enablement>
 			</action>
-		</objectContribution>    
+		</objectContribution>  
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
