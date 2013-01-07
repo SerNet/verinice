@@ -4270,8 +4270,7 @@ the value between <param></param> will be used directly if no string is found fo
         		id="controlgroup_isroom_dateofinspection"
         		inputtype="date"
          		tags="VDA_ISA_Audit">
-				<defaultRule class="Today">
-                </defaultRule>
+				<defaultRule class="Today"/>
         	</huiproperty>       		
         	<huiproperty
         		name="categorisation"
@@ -4544,8 +4543,7 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Last revision"
 				tags="Revision"
 				inputtype="date">
-                <defaultRule class="Today">
-                </defaultRule>
+                <defaultRule class="Today"/>
             </huiproperty>
             <huiproperty 
      			name="Notes" 
@@ -4654,7 +4652,10 @@ the value between <param></param> will be used directly if no string is found fo
             defaultValue="-2" 
             tags="VDA-ISA,VDA_ISA_Audit"
             focus="true"
-            required="true">
+            >
+            	<validationRule class="RegExRule">
+            		<param id="regEx">(-1)|[0-5]</param>
+            	</validationRule>
                 <option id="control_isa_maturity_null"  value="-2" />
                 <option id="control_isa_maturity_na"  value="-1" />
                 <option id="control_isa_maturity_0"  value="0" />
@@ -4691,9 +4692,11 @@ the value between <param></param> will be used directly if no string is found fo
                  inputtype="numericoption" 
                min="-1" 
                max="2" 
-               defaultValue="-1" 
-               required="true"
+               defaultValue="-1"
             >
+            <validationRule class="RegExRule">
+            	<param id="regEx">(-1)|[0-2]</param>
+            </validationRule>
                 <option id="control_isa_audit_ra_na"  value="-1" />
                 <option id="control_isa_audit_ra_0"  value="0" />
                 <option id="control_isa_audit_ra_1"  value="1" />
@@ -5326,7 +5329,9 @@ the value between <param></param> will be used directly if no string is found fo
 	 	   required="true"/>    
         
         <huiproperty
-            id="interview_date" name="Date" inputtype="date" />   
+            id="interview_date" name="Date" inputtype="date" >
+            	<defaultRule class="Today" />
+        </huiproperty>   
         
         <huiproperty
             id="interview_place" name="Place" />   
@@ -6329,8 +6334,10 @@ the value between <param></param> will be used directly if no string is found fo
             max="5" 
             defaultValue="-2" 
             tags="VDA-ISA,VDA_ISA_Audit,Web"
-            focus="true"
-            required="true">
+            focus="true">
+                <validationRule class="RegExRule">
+                	<param id="regEx">(-1)|[0-5]</param>
+                </validationRule>
                 <option id="samt_topic_maturity_null"  value="-2" />
                 <option id="samt_topic_maturity_na"  value="-1" />
                 <option id="samt_topic_maturity_0"  value="0" />

@@ -219,7 +219,7 @@ public class ValidationService implements IValidationService {
     private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt){
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
         List<Property> savedProperties = elmt.getEntity().getProperties(type.getId()).getProperties();
-        // iterate(validate) all existnat properties 
+        // iterate(validate) all existant properties 
         for(Property savedProp : savedProperties){
             hintsOfFailedValidations.addAll(processValidationMap(type.validate(savedProp.getPropertyValue(), null), elmt, type));
         }

@@ -175,7 +175,7 @@ public class SingleSelectionControl implements IHuiControl {
 		}
 		return -1;
 	}
-
+	
 	public void setFocus() {
 		this.combo.setFocus();
 	}
@@ -183,7 +183,8 @@ public class SingleSelectionControl implements IHuiControl {
 	public boolean validate() {
 		//FIXME bg colour not working in 3.4M4:
 	       boolean valid = true;
-	        for(Entry<String, Boolean> entry : fieldType.validate(combo.getText(), null).entrySet()){
+	       String propValue = savedProp != null ? savedProp.getPropertyValue() : null;
+	        for(Entry<String, Boolean> entry : fieldType.validate(propValue, null).entrySet()){
 	            if(!entry.getValue().booleanValue()){
 	                valid = false;
 	                break;
@@ -237,7 +238,7 @@ public class SingleSelectionControl implements IHuiControl {
             color = SWT.COLOR_RED;
         } else {
             font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_BLACK;
+            color = SWT.COLOR_WIDGET_FOREGROUND;
         }
         label.setForeground(composite.getDisplay().getSystemColor(color));
         label.setFont(font);

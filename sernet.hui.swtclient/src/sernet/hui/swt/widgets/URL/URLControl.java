@@ -226,7 +226,7 @@ public class URLControl implements IHuiControl {
             color = SWT.COLOR_RED;
         } else {
             font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_BLACK;
+            color = SWT.COLOR_WIDGET_FOREGROUND;
         }
         label.setForeground(label.getParent().getDisplay().getSystemColor(color));
         label.setFont(font);

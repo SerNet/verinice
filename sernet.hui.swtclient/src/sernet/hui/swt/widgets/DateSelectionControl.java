@@ -188,7 +188,7 @@ public class DateSelectionControl implements IHuiControl {
             color = SWT.COLOR_RED;
         } else {
             font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_BLACK;
+            color = SWT.COLOR_WIDGET_FOREGROUND;
         }
         label.setForeground(composite.getDisplay().getSystemColor(color));
         label.setFont(font);
