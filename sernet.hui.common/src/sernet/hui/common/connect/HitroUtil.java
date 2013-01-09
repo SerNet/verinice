@@ -27,7 +27,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.DBException;
 
 /**
@@ -190,27 +189,29 @@ public class HitroUtil {
 		    return typeFactory;
 		}
 		
-		public EntityType getEntityType(String id) {
+		@Override
+        public EntityType getEntityType(String id) {
 			return getTypeFactory().getEntityType(id);
 		}
 		
-		public Collection<EntityType> getAllEntityTypes() {
+		@Override
+        public Collection<EntityType> getAllEntityTypes() {
 			return getTypeFactory().getAllEntityTypes();
 		}
 		
-		public List<PropertyType> getURLPropertyTypes() {
+		@Override
+        public List<PropertyType> getURLPropertyTypes() {
 			return getTypeFactory().getURLPropertyTypes();
 		}
 
-		public PropertyType getPropertyType(String entityTypeID, String id) {
+		@Override
+        public PropertyType getPropertyType(String entityTypeID, String id) {
 			return getTypeFactory().getPropertyType(entityTypeID, id);
 		}
 
-		public boolean isDependency(IMLPropertyOption opt) {
-			return getTypeFactory().isDependency(opt);
-		}
 		
-		public HuiRelation getRelation(String typeId) {
+		@Override
+        public HuiRelation getRelation(String typeId) {
 			return getTypeFactory().getRelation(typeId);
 		}
 		

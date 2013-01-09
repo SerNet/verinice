@@ -302,6 +302,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="raum_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="raum_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="raum_vertraulichkeit_normal"
 					name="Normal" />
@@ -317,6 +318,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="raum_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="raum_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="raum_verfuegbarkeit_normal"
 					name="Normal" />
@@ -331,6 +333,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="raum_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="raum_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="raum_integritaet_normal"
 					name="Normal" />
@@ -504,6 +507,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="server_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="server_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="server_vertraulichkeit_normal"
 					name="Normal" />
@@ -518,6 +522,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="server_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="server_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="server_verfuegbarkeit_normal"
 					name="Normal" />
@@ -532,6 +537,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="server_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="server_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="server_integritaet_normal"
 					name="Normal" />
@@ -692,6 +698,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="tkkomponente_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="tkkomponente_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="tkkomponente_vertraulichkeit_normal"
 					name="Normal" />
@@ -707,6 +714,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="tkkomponente_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="tkkomponente_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="tkkomponente_verfuegbarkeit_normal"
 					name="Normal" />
@@ -722,6 +730,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="tkkomponente_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="tkkomponente_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="tkkomponente_integritaet_normal"
 					name="Normal" />
@@ -1210,6 +1219,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="client_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="client_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="client_vertraulichkeit_normal"
 					name="Normal" />
@@ -1225,6 +1235,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="client_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="client_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="client_verfuegbarkeit_normal"
 					name="Normal" />
@@ -1240,6 +1251,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="client_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="client_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="client_integritaet_normal"
 					name="Normal" />
@@ -1423,6 +1435,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="sonstit_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="sonstit_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />              
 				<option
 					id="sonstit_vertraulichkeit_normal"
 					name="Normal" />
@@ -1438,6 +1451,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="sonstit_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="sonstit_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="sonstit_verfuegbarkeit_normal"
 					name="Normal" />
@@ -1453,6 +1467,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="sonstit_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="sonstit_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="sonstit_integritaet_normal"
 					name="Normal" />
@@ -1828,6 +1843,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="gebaeude_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="gebaeude_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="gebaeude_vertraulichkeit_normal"
 					name="Normal" />
@@ -1842,6 +1858,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="gebaeude_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="gebaeude_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="gebaeude_verfuegbarkeit_normal"
 					name="Normal" />
@@ -1856,6 +1873,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="gebaeude_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="gebaeude_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="gebaeude_integritaet_normal"
 					name="Normal" />
@@ -2517,6 +2535,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="anwendung_vertraulichkeit"
 				name="Vertraulichkeit"
 				inputtype="singleoption">
+                <depends option="anwendung_vertraulichkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="anwendung_vertraulichkeit_normal"
 					name="Normal" />
@@ -2532,6 +2551,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="anwendung_verfuegbarkeit"
 				name="Verfügbarkeit"
 				inputtype="singleoption">
+                <depends option="anwendung_verfuegbarkeit_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="anwendung_verfuegbarkeit_normal"
 					name="Normal" />
@@ -2547,6 +2567,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="anwendung_integritaet"
 				name="Integrität"
 				inputtype="singleoption">
+                <depends option="anwendung_integritaet_begruendung" value="Maximumprinzip" inverse="true" />
 				<option
 					id="anwendung_integritaet_normal"
 					name="Normal" />
@@ -3363,9 +3384,9 @@ the value between <param></param> will be used directly if no string is found fo
         
     <!-- TODO externalize strings -->
 		<huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
-            <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" ></huiproperty>
-            <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" ></huiproperty>
-            <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" ></huiproperty>
+            <huiproperty id="asset_bcm_mtpd" name="MTPD (h)" tags="BCM" />
+            <huiproperty id="asset_bcm_rpo" name="RPO (h)" tags="BCM" />
+            <huiproperty id="asset_bcm_rto" name="RTO (h)" tags="BCM" />
           
             <huiproperty id="asset_bcm_time1" name="Impact after 8h" tags="BCM" inputtype="numericoption" min="0" max="3">
                 <option
@@ -3527,6 +3548,7 @@ the value between <param></param> will be used directly if no string is found fo
 					name="Confidentiality"
                      tags="Risk"
 					inputtype="numericoption" min="0" max="3">
+                    <depends option="asset_value_method_confidentiality" value="0"/>
 					<option
 						id="asset_value_confidentiality_normal"
 						name="0 Public" 
@@ -3550,6 +3572,7 @@ the value between <param></param> will be used directly if no string is found fo
                      tags="Risk"
 					name="Integrity"
 					inputtype="numericoption"  min="0" max="2" >
+                    <depends option="asset_value_method_integrity" value="0"/>
 					<option
 						id="asset_value_integrity_normal"
 						name="0 None" value="0"  />
@@ -3566,6 +3589,7 @@ the value between <param></param> will be used directly if no string is found fo
                      tags="Risk"
 					name="Availability"
 					inputtype="numericoption"  min="0" max="4" >
+                    <depends option="asset_value_method_availability" value="0"/>
 					<option
 						id="asset_value_availability_normal"
 						name="0 Basic" value="0" />
@@ -4256,37 +4280,36 @@ the value between <param></param> will be used directly if no string is found fo
         	name="isISOGroup"
         	id="controlgroup_is_NoIso_group"
         	inputtype="booleanoption" defaultValue="0"
-        	tags="VDA_ISA_Audit"
-        	/>
+        	tags="VDA_ISA_Audit" />
         <huipropertygroup id="controlgroup_isroom_group" name="IT-Room-Check" tags="VDA_ISA_Audit" >
         	<huiproperty
         		name="isRoom"
         		id="controlgroup_is_room"
         		inputtype="booleanoption" defaultValue="0"
-        		tags="VDA_ISA_Audit"
-        		/>
+        		tags="VDA_ISA_Audit" />
         	<huiproperty
         		name="dateofinspection"
         		id="controlgroup_isroom_dateofinspection"
         		inputtype="date"
-         		tags="VDA_ISA_Audit">
-				<defaultRule class="Today"/>
+         		tags="VDA_ISA_Audit">             
+                <depends option="controlgroup_is_room" value="1"/>
+				<defaultRule class="Today" />
         	</huiproperty>       		
         	<huiproperty
         		name="categorisation"
           		id="controlgroup_isroom_categorisation"
         		inputtype="singleoption"
-         		tags="VDA_ISA_Audit"
-        		>
+         		tags="VDA_ISA_Audit" >
+                <depends option="controlgroup_is_room" value="1"/>
         		<option name="dataCentre" id="controlgroup_isroom_categorisation_datacentre" />
         	</huiproperty>
         	<huiproperty
         		name="gotConcept"
         		id="controlgroup_is_room_gotConcept"
         		inputtype="booleanoption" defaultValue="0"
-        		tags="VDA_ISA_Audit"
-        		/>
-   		
+        		tags="VDA_ISA_Audit" >
+                <depends option="controlgroup_is_room" value="1"/>
+            </huiproperty>           
         </huipropertygroup>        	
     </huientity>
 
@@ -4389,7 +4412,8 @@ the value between <param></param> will be used directly if no string is found fo
                    max="1" 
                    defaultValue="-1" 
                    tags="SoA"
-                >
+                >        
+                <depends option="control_selected" value="1"/>           
                 <option id="control_reason_for_selection_1"  name="LR: legal requirements" />
                 <option id="control_reason_for_selection_2"  name="CO: contractual obligations" />
                 <option id="control_reason_for_selection_3"  name="BR: business requirement" />
@@ -4543,7 +4567,8 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Last revision"
 				tags="Revision"
 				inputtype="date">
-                <defaultRule class="Today"/>
+                <defaultRule class="Today">
+                </defaultRule>
             </huiproperty>
             <huiproperty 
      			name="Notes" 
@@ -4651,8 +4676,7 @@ the value between <param></param> will be used directly if no string is found fo
             max="5" 
             defaultValue="-2" 
             tags="VDA-ISA,VDA_ISA_Audit"
-            focus="true"
-            >
+            focus="true" >
             	<validationRule class="RegExRule">
             		<param id="regEx">(-1)|[0-5]</param>
             	</validationRule>
@@ -4692,8 +4716,7 @@ the value between <param></param> will be used directly if no string is found fo
                  inputtype="numericoption" 
                min="-1" 
                max="2" 
-               defaultValue="-1"
-            >
+               defaultValue="-1" >
             <validationRule class="RegExRule">
             	<param id="regEx">(-1)|[0-2]</param>
             </validationRule>
@@ -4970,6 +4993,7 @@ the value between <param></param> will be used directly if no string is found fo
                 name="Threat Likelihood" id="incscen_threat_likelihood"
                 inputtype="numericoption" min="0" max="5" defaultValue="2" 
                 tags="Risk">
+                <depends option="incscen_likelihoodmethod" value="0"/>
                 <option id="incscen_threat_likelihood_0" name="Rare" value="0"/>
                 <option id="incscen_threat_likelihood_1" name="Annually" value="1"/>
                 <option id="incscen_threat_likelihood_2" name="Monthly" value="2"/>
@@ -4981,6 +5005,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty name="Vulnerability exploitation" id="incscen_vuln_level" inputtype="numericoption"
                 min="0" max="3" defaultValue="1" 
                 tags="Risk">
+                <depends option="incscen_likelihoodmethod" value="0"/>
                 <option id="incscen_vuln_level_0" name="0: Very low" value="0"/>
                 <option id="incscen_vuln_level_1" name="1: Low" value="1"/>
                 <option id="incscen_vuln_level_2" name="2: High" value="2"/>
@@ -5648,6 +5673,7 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_confidentiality"
 					name="Confidentiality"
 					inputtype="numericoption" min="0" max="3">
+                    <depends option="process_value_method_confidentiality" value="0"/>
 					<option
 						id="process_value_confidentiality_normal"
 						name="0 Public" 
@@ -5670,6 +5696,7 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_integrity"
 					name="Integrity"
 					inputtype="numericoption"  min="0" max="2" >
+                    <depends option="process_value_method_integrity" value="0"/>
 					<option
 						id="process_value_integrity_normal"
 						name="0 None" value="0"  />
@@ -5685,6 +5712,7 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_availability"
 					name="Availability"
 					inputtype="numericoption"  min="0" max="4" >
+                    <depends option="process_value_method_availability" value="0"/>
 					<option
 						id="process_value_availability_normal"
 						name="0 Basic" value="0" />
@@ -6263,7 +6291,7 @@ the value between <param></param> will be used directly if no string is found fo
         	id="attachment_publish"
         	name="Publish"
         	inputtype="singleoption">
-        	<depends option="attachment_approval_yes" />
+        	<depends option="attachment_approval" value="attachment_approval_yes" />
         	<option id="document_publish_yes" name="Yes"/>
         	<option id="document_publish_no"  name="No"/>
         </huiproperty>

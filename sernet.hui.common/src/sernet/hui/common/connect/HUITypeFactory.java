@@ -146,14 +146,17 @@ public class HUITypeFactory {
         try {
             log.debug("Getting XML property definition from " + xmlFile);
             parser.setErrorHandler(new ErrorHandler() {
+                @Override
                 public void error(SAXParseException exception) throws SAXException {
                     throw new RuntimeException(exception);
                 }
 
+                @Override
                 public void fatalError(SAXParseException exception) throws SAXException {
                     throw new RuntimeException(exception);
                 }
 
+                @Override
                 public void warning(SAXParseException exception) throws SAXException {
                     Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
                 }
@@ -208,59 +211,6 @@ public class HUITypeFactory {
             }
         }
         return result;
-    }
-
-    /**
-     * Check if file has changed (or was never read). Timestamp for local files,
-     * for remote files the server will only deliver the file if it has changed,
-     * because we set the modified-since property on the request.
-     * 
-     * @param xmlFile
-     *            the URI of the xml file
-     */
-    private static boolean fileChanged(String xmlFile) {
-        if (xmlFile.matches("^http.*")) {
-            try {
-                URL xml = new URL(xmlFile);
-                HttpURLConnection.setFollowRedirects(true);
-                HttpURLConnection connection = (HttpURLConnection) xml.openConnection();
-                if (lastModified != null) {
-                    connection.addRequestProperty("If-Modified-Since", lastModified);
-                }
-                connection.connect();
-
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-                    connection.disconnect();
-                    log.debug("Remote PropertyType file not modified.");
-                    return false;
-                }
-                lastModified = connection.getHeaderField("Last-Modified");
-                connection.disconnect();
-                log.debug("CHANGED: Remote PropertyType file modified.");
-                return true;
-            } catch (MalformedURLException e) {
-                log.error(e);
-                log.error(e);
-            } catch (ProtocolException e) {
-                log.error(e);
-            } catch (UnsupportedEncodingException e) {
-                log.error(e);
-            } catch (IOException e) {
-                log.error(e);
-            }
-        } else {
-            // check local :
-            File xml = new File(xmlFile);
-            Date fileNow = new Date(xml.lastModified());
-            if (fileDate == null || fileNow.after(fileDate)) {
-                log.debug("CHANGED: Local PropertyType file was modified.");
-                fileDate = fileNow;
-                return true;
-            }
-            log.debug("Local PropertyType file was not modified.");
-            return false;
-        }
-        return true;
     }
 
     private void readChildElements(EntityType entityType, PropertyGroup propGroup) {
@@ -448,8 +398,8 @@ public class HUITypeFactory {
      * @param prop
      * @return
      */
-    private HashSet<String> readDependencies(Element prop) {
-        HashSet<String> depends = new HashSet<String>();
+    private Set<DependsType> readDependencies(Element prop) {
+        Set<DependsType> depends = new HashSet<DependsType>();
         NodeList nodes = prop.getChildNodes();
         allChildren: for (int i = 0; i < nodes.getLength(); ++i) {
             if (!(nodes.item(i) instanceof Element)) {
@@ -457,10 +407,12 @@ public class HUITypeFactory {
             }
             Element child = (Element) nodes.item(i);
             if (child.getTagName().equals("depends")) {
-                depends.add(child.getAttribute("option"));
+                String option = child.getAttribute("option");
+                String value = child.getAttribute("value");
+                boolean inverse = Boolean.TRUE.toString().equals(child.getAttribute("inverse"));
+                depends.add(new DependsType(option, value, inverse));
             }
         }
-        this.allDependecies.addAll(depends);
         return depends;
     }
     

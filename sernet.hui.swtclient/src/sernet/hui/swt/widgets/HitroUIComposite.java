@@ -93,11 +93,13 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiTwistie.setLayoutData(huiTwistieLD);
 
 		huiTwistie.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanged(ExpansionEvent arg0) {
+			@Override
+            public void expansionStateChanged(ExpansionEvent arg0) {
 				huiView.resizeContainer();
 			}
 
-			public void expansionStateChanging(ExpansionEvent arg0) {
+			@Override
+            public void expansionStateChanging(ExpansionEvent arg0) {
 				// nothing
 			}
 		});
@@ -156,11 +158,13 @@ public class HitroUIComposite extends ScrolledComposite {
 		huiTwistie.setLayoutData(huiTwistieLD);
 
 		huiTwistie.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanged(ExpansionEvent arg0) {
+			@Override
+            public void expansionStateChanged(ExpansionEvent arg0) {
 				huiView.resizeContainer();
 			}
 
-			public void expansionStateChanging(ExpansionEvent arg0) {
+			@Override
+            public void expansionStateChanging(ExpansionEvent arg0) {
 				// nothing
 			}
 		});
@@ -183,6 +187,13 @@ public class HitroUIComposite extends ScrolledComposite {
 
 		huiView = new HitroUIView(this,contentComp, fieldsComposite);
 	}
+	
+    /**
+     * @param inheritanceBehavior
+     */
+    public void initBehaviour(IEditorBehavior behavior) {
+        huiView.initBehaviour(behavior);        
+    }
 	
 	public void createView(Entity entity, boolean editable, boolean useRules, String[] tags, boolean taggedOnly, List<String> validationList, boolean useValidationGuiHints) throws DBException {
 		huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList, useValidationGuiHints);
@@ -213,9 +224,6 @@ public class HitroUIComposite extends ScrolledComposite {
 	public void closeView() {
 		huiView.closeView();
 	}
-
-   
-
-    
+  
 
 }

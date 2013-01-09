@@ -19,27 +19,29 @@ package sernet.hui.common.connect;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class PropertyGroup implements IEntityElement {
 	private String id;
 	private String name;
 	private List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
-	private HashSet<String> dependencies = new HashSet<String>();
+	private Set<DependsType> dependencies = new HashSet<DependsType>();
     private String tags;
 	
 	public void addPropertyType(PropertyType prop) {
 		propertyTypes.add(prop);
 	}
 	
-	public String getId() {
+	@Override
+    public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getName() {
+	@Override
+    public String getName() {
 		return name;
 	}
 	public void setName(String name) {
@@ -48,7 +50,7 @@ public class PropertyGroup implements IEntityElement {
 	public List<PropertyType> getPropertyTypes() {
 		return propertyTypes;
 	}
-	public void setPropertyTypes(List propertyTypes) {
+	public void setPropertyTypes(List<PropertyType>  propertyTypes) {
 		this.propertyTypes = propertyTypes;
 	}
 	
@@ -60,21 +62,7 @@ public class PropertyGroup implements IEntityElement {
 		return null;
 	}
 
-	public boolean dependenciesFulfilled(Entity hui) {
-		// no deps defined:
-		if (dependencies.size() < 1)
-			return true;
-
-		// if deps defined, at least one of them must be there:
-		for (Iterator iter = dependencies.iterator(); iter.hasNext();) {
-			String dep = (String) iter.next();
-			if (hui.isSelected(dep))
-				return true;
-		}
-		return false;
-	}
-
-	public void setDependencies(HashSet<String> set) {
+	public void setDependencies(Set<DependsType> set) {
 		this.dependencies = set;
 	}
 

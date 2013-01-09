@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,31 +17,40 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.editors;
+package sernet.hui.swt.widgets;
+
+import org.eclipse.swt.widgets.Control;
 
 /**
- * Adds and removes a special behavior to {@link BSIElementEditor}.
- * 
- * See {@link InheritanceBehavior} for an exemplary implementation.
+ * Base class for all behaviors implementations.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IEditorBehavior {
+public abstract class DependsBehavior implements IEditorBehavior {
+
+    protected Control control;
+    protected String valueDependsOn;
+    protected boolean inverse;
+    protected IEditorBehavior next;
+
+    public void setControl(Control control) {
+        this.control = control;
+    }
+
+    public void setValueDependsOn(String valueDependsOn) {
+        this.valueDependsOn = valueDependsOn;
+    }
+
+    public void setInverse(boolean inverse) {
+        this.inverse = inverse;
+    }
+
+    public IEditorBehavior getNext() {
+        return next;
+    }
+
+    public void setNext(IEditorBehavior next) {
+        this.next = next;
+    }
     
-    /**
-     * Initializing the behavior
-     */
-    void init();
-    
-    /**
-     * Adds the behavior to the editor fields 
-     * e.g. by adding listeners to some fields
-     */
-    void addBehavior();
-    
-    /**
-     * Removes the same behavior added in addBehavior()
-     * e.g. by removing some listeners
-     */
-    void removeBehavior();
 }

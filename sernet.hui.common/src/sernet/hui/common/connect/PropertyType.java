@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -56,7 +57,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		return crudButtons;
 	}
 
-	private HashSet dependencies = new HashSet();
+	private Set<DependsType> dependencies = new HashSet<DependsType>();
 
 	private String inputName;
 	
@@ -167,7 +168,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	/**
 	 * @return Returns the id.
 	 */
-	public String getId() {
+	@Override
+    public String getId() {
 		return id;
 	}
 
@@ -182,7 +184,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	/**
 	 * @return Returns the name.
 	 */
-	public String getName() {
+	@Override
+    public String getName() {
 		return name;
 	}
 
@@ -199,7 +202,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 * 
 	 * @return Returns the predefinedValues.
 	 */
-	public ArrayList<IMLPropertyOption> getOptions() {
+	@Override
+    public ArrayList<IMLPropertyOption> getOptions() {
 		return options;
 	}
 
@@ -257,46 +261,17 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	}
 
 	/**
-	 * Check if necessary dependencies are fulfilled to display this type List
-	 * of dependencies is OR, one of them is sufficient to display the property
-	 * type.
-	 * 
-	 * @return
-	 */
-	public boolean dependenciesFulfilled(Entity entity) {
-		// no deps defined:
-		if (dependencies.size() < 1) {
-			return true;
-		}
-
-		// if deps defined, at least one of them must be there:
-		for (Iterator iter = dependencies.iterator(); iter.hasNext();) {
-			String dep = (String) iter.next();
-			if (entity.isSelected(dep)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if this property depends on the given option.
-	 * 
-	 * @param optionId
-	 * @return
-	 */
-	public boolean isDependency(String optionId) {
-		return dependencies.contains(optionId);
-	}
-
-	/**
 	 * Set the option that this property depends on. It is only valid when one
 	 * of the options given as dependencies is selected in another property.
 	 * 
 	 * @param set
 	 */
-	public void setDependencies(HashSet set) {
+	public void setDependencies(Set<DependsType> set) {
 		this.dependencies = set;
+	}
+	
+	public Set<DependsType> getDependencies() {
+	    return this.dependencies;
 	}
 
 	/*
@@ -305,7 +280,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 * @see
 	 * sernet.snkdb.guiswt.multiselectionlist.MLPropertyType#isMultiselect()
 	 */
-	public boolean isMultiselect() {
+	@Override
+    public boolean isMultiselect() {
 		return inputtype == INPUT_MULTIOPTION;
 	}
 

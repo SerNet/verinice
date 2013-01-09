@@ -17,11 +17,13 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -45,11 +47,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityChangedListener;
 import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
@@ -71,12 +76,20 @@ import sernet.snutils.ExceptionHandlerFactory;
  */
 public class HitroUIView implements IEntityChangedListener   {
 
+    private static final Logger LOG = Logger.getLogger(HitroUIView.class);
+    
 	private Composite huiComposite;
 
 	private Entity entity;
 
 	// map of typeid : widget
 	private Map<String, IHuiControl> fields = new HashMap<String, IHuiControl>();
+	
+	/**
+     * IEditorBehavior instances implementing special "behavior" of this
+     *       editor See method addBehavior.
+     */
+    private List<IEditorBehavior> editorBehaviorList = new ArrayList<IEditorBehavior>(1);
 
 	private Composite formComp;
 
@@ -153,7 +166,8 @@ public class HitroUIView implements IEntityChangedListener   {
 		
 		final FocusAdapter focusAdapter = new FocusAdapter() {
 			Shell tip = null;
-			public void focusGained(FocusEvent arg0) {
+			@Override
+            public void focusGained(FocusEvent arg0) {
 				if (!showHint)
 					return; // do not show activation hint
 				
@@ -187,7 +201,8 @@ public class HitroUIView implements IEntityChangedListener   {
 		
 		control.addFocusListener(focusAdapter);
 		control.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent arg0) {
+			@Override
+            public void widgetDisposed(DisposeEvent arg0) {
 				control.removeFocusListener(focusAdapter);
 			}
 		});
@@ -241,10 +256,11 @@ public class HitroUIView implements IEntityChangedListener   {
 		this.entity = entity;
 		entity.addChangeListener(this);
 		clearComposite();
-		HUITypeFactory fact = HUITypeFactory.getInstance();
+		HUITypeFactory typeFactory = HUITypeFactory.getInstance();
 
+		EntityType entityType = typeFactory.getEntityType(entity.getEntityType());
 		// create all form fields:
-		List allElements = fact.getEntityType(entity.getEntityType()).getElements();
+		List allElements = entityType.getElements();
 		for (Iterator iter = allElements.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			if (obj instanceof PropertyType) {
@@ -255,16 +271,14 @@ public class HitroUIView implements IEntityChangedListener   {
 				createGroup(group, huiComposite);
 			}
 		}
+        addBehavior(entityType);
 		huiComposite.layout();
 		huiComposite.setVisible(true);
 		resizeContainer();
 		setInitialFocus();
 	}
 
-	private void createGroup(PropertyGroup group, Composite parent) {
-		if (!(group.dependenciesFulfilled(entity)))
-			return;
-		
+	private void createGroup(PropertyGroup group, Composite parent) {	
 		if (hideBecauseOfTags(group.getTags()))
 		    return;
 		
@@ -278,12 +292,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		
 	}
 
-	private void createField(PropertyType type, Composite parent, boolean showValidationHint, boolean useValidationGuiHints) {
-		
-		// do not show fields if dependencies are not fulfilled:
-		if (!type.dependenciesFulfilled(entity))
-			return;
-		
+	private void createField(PropertyType type, Composite parent, boolean showValidationHint, boolean useValidationGuiHints) {		
 		// only allow edit if both view and field settings are true:
 		boolean editableField = editable && type.isEditable();
 		
@@ -311,6 +320,52 @@ public class HitroUIView implements IEntityChangedListener   {
 		else if (type.isCnaLinkReference())
             createMultiOptionField(type, editableField, parent, type.isFocus(), false, type.isCrudButtons(), true, showValidationHint, useValidationGuiHints);
 	}
+	
+	private void addBehavior(EntityType entityType) {
+        for (PropertyType type : entityType.getAllPropertyTypes()) {
+            addBehavior(entityType,type);
+        } 
+    }
+    
+    private void addBehavior(EntityType entityType, PropertyType type) {
+        IHuiControl control = fields.get(type.getId());
+        DependsBehavior mainBehavior = null;
+        DependsBehavior currentBehavior = null;
+        for (DependsType depends : type.getDependencies()) {
+            IHuiControl controlDependsOn = fields.get(depends.getPropertyId());
+            PropertyType typeDependsOn = entityType.getPropertyType(depends.getPropertyId());
+            if(controlDependsOn==null || controlDependsOn.getControl()==null) {
+                LOG.error("Depends on control not find, id: " + depends.getPropertyId());
+                continue;
+            }      
+            DependsBehavior behavior = BehaviorFactory.createBehaviorForControl(controlDependsOn.getControl());
+            behavior.setControl(control.getControl());
+            behavior.setInverse(depends.isInverse());
+            behavior.setValueDependsOn(depends.getPropertyValue());
+            if(typeDependsOn.isSingleSelect() || typeDependsOn.isNumericSelect()) {
+                PropertyOption option = typeDependsOn.getOption(depends.getPropertyValue());
+                if(option!=null) {
+                    behavior.setValueDependsOn(option.getName());
+                }
+            }
+            if(currentBehavior==null) {             
+                currentBehavior = behavior;
+                mainBehavior = behavior;
+            } else {
+                currentBehavior.setNext(behavior);
+                currentBehavior = behavior;
+            }            
+        }
+        if(mainBehavior!=null) {
+            initBehaviour(mainBehavior);
+        }       
+    }
+    
+    public void initBehaviour(IEditorBehavior behavior) {
+        editorBehaviorList.add(behavior);
+        behavior.addBehavior();
+        behavior.init();
+    }
 
 	/**
      * @param propertyTags
@@ -503,7 +558,8 @@ public class HitroUIView implements IEntityChangedListener   {
 	/* (non-Javadoc)
 	 * @see sernet.snkdb.connect.docproperties.IDynDocChangedListener#selectionChanged(sernet.snkdb.guiswt.multiselectionlist.MLPropertyType, sernet.snkdb.guiswt.multiselectionlist.MLPropertyOption)
 	 */
-	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
+	@Override
+    public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt) {
 		Object object = fields.get(type.getId());
 		MultiSelectionControl control;
 		if (object instanceof MultiSelectionControl) {
@@ -514,7 +570,8 @@ public class HitroUIView implements IEntityChangedListener   {
 		// FIXME this really should be handeled by ML field itself
 	}
 
-	public void propertyChanged(PropertyChangedEvent event) {
+	@Override
+    public void propertyChanged(PropertyChangedEvent event) {
 		IHuiControl control = fields.get(event.getProperty().getPropertyTypeID());
 		if (control != null)
 			control.update();

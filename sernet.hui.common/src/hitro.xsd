@@ -95,9 +95,17 @@ be displayed when one of the given options has been previously selected.
 	<xs:attribute name="tags" type="xs:string"/> <!-- Tags can be used to filter properties in the view, enter comma separated. -->
     <xs:attribute name="columns" type="xs:int" default="1" />
 </xs:complexType>
-    
+
+<!-- 
+    Complex type to define dependency to other properties of an entity.
+ -->    
 <xs:complexType name="dependstype">
-	<xs:attribute name="option" type="xs:IDREF" />
+    <!-- id of a property to depend on -->
+	<xs:attribute name="option" type="xs:IDREF" use="required" />
+    <!-- value of the property, if this value is set property is enabled -->
+    <xs:attribute name="value" type="xs:string" />
+    <!-- if true dependency evaluation is inverted-->
+    <xs:attribute name="inverse" type="xs:boolean" default="false"/>
 </xs:complexType>
 
 <!-- 

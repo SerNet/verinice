@@ -508,23 +508,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	/* (non-Javadoc)
 	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#select(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
 	 */
-	public void select(IMLPropertyType type, IMLPropertyOption opt) {
+	@Override
+    public void select(IMLPropertyType type, IMLPropertyOption opt) {
 		createNewProperty((PropertyType)type, opt.getId());
-		if (isDependency(opt))
-			fireDependencyChanged(type, opt);
-		else 
-			fireSelectionChanged(type, opt);
+		fireSelectionChanged(type, opt);
 		
-	}
-	
-	/**
-	 * @param type
-	 * @param opt
-	 */
-	private void fireDependencyChanged(IMLPropertyType type, IMLPropertyOption opt) {
-		for (IEntityChangedListener listener : getChangelisteners()) {
-			listener.dependencyChanged(type, opt);
-		}
 	}
 	
 	/**
@@ -542,24 +530,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 			listener.propertyChanged(new PropertyChangedEvent(this, prop, source));
 		}
 	}
-	
-	/**
-	 * Checks if the given option is listed as a dependency for any other property.
-	 */
-	public boolean isDependency(IMLPropertyOption opt) {
-		return HUITypeFactory.getInstance().isDependency(opt);
-	}
 
 
 	/* (non-Javadoc)
 	 * @see sernet.snkdb.guiswt.multiselectionlist.MLEventHandler#unselect(sernet.snkdb.guiswt.multiselectionlist.MLOptionList, java.lang.String)
 	 */
-	public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
+	@Override
+    public void unselect(IMLPropertyType type, IMLPropertyOption opt) {
 		remove((PropertyType)type, opt.getId());
-		if (isDependency(opt))
-			fireDependencyChanged(type, opt);
-		else 
-			fireSelectionChanged(type, opt);
+		fireSelectionChanged(type, opt);
 	}
 
 	
@@ -583,6 +562,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
