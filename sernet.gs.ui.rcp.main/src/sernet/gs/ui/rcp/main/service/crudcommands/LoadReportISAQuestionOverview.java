@@ -159,7 +159,7 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
             if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
                 ControlGroup rootGroup = (ControlGroup)groups.get(0);
                 groups.clear();
-                command.getElements(ControlGroup.TYPE_ID, groups, rootGroup);
+                groups.addAll(command.getElements(ControlGroup.TYPE_ID, rootGroup));
             }
             for(CnATreeElement e : groups){
                 if(e instanceof ControlGroup){

@@ -92,7 +92,7 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                 LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootControlGroup.getDbId(), true);
                 cgFinder = getCommandService().executeCommand(cgFinder);
                 List<CnATreeElement> cList = new ArrayList<CnATreeElement>();
-                cgFinder.getElements(ControlGroup.TYPE_ID, cList, rootControlGroup);
+                cList.addAll(cgFinder.getElements(ControlGroup.TYPE_ID, rootControlGroup));
                 for(CnATreeElement c : cList){
                     if(c instanceof ControlGroup){
                         ControlGroup group = (ControlGroup)c;

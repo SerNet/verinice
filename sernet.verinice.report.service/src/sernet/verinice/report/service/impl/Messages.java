@@ -124,6 +124,9 @@ public class Messages extends NLS {
     public static String ISMRiskManagementResults_0;
     public static String ISMRiskManagementResults_1;
     public static String ISMRiskManagementResults_2;
+    public static String GraphUmstzngStatus_0;
+    public static String GraphUmstzngStatus_1;
+    public static String GraphUmstzngStatus_2;
     
     
     static {

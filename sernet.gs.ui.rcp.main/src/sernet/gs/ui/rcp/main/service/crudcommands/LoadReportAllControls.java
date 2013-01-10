@@ -1,6 +1,7 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -28,6 +29,8 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	private transient Logger logger;
 	
     private boolean resultInjectedFromCache = false;
+    
+    private ArrayList<Control> listResult = null;
 	
 	public LoadReportAllControls(Integer root){
 		rootElementId = root;
@@ -47,6 +50,8 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	
 	@Override
 	public void execute() {
+	    result = new HashSet<Control>(0);
+	    listResult = new ArrayList<Control>(0);
 	    if(!resultInjectedFromCache){
 	        LoadCnAElementById command = new LoadCnAElementById(Organization.TYPE_ID, rootElementId);
 	        try {
@@ -58,6 +63,20 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	            if(command.getFound() != null){
 	                result = getControlChildren(command.getFound());
 	            }
+	            
+	            for(Control c : result){
+	                if(!c.isChildrenLoaded()){
+	                    c = (Control)loadChildren(c);
+	                }
+	                listResult.add(c);
+	            }
+	            Collections.sort(listResult, new Comparator<CnATreeElement>() {
+	                @Override
+	                public int compare(CnATreeElement o1, CnATreeElement o2) {
+	                    NumericStringComparator comparator = new NumericStringComparator();
+	                    return comparator.compare(o1.getTitle(), o2.getTitle());
+	                }
+	            });
 	        } catch (Exception e) {
 	            logger.error("Error while executing command", e);
 	        }
@@ -65,21 +84,11 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	}
 	
 	public List<Control> getResult(){
-		ArrayList<Control> listResult = new ArrayList<Control>();
-		for(Control c : result){
-			if(!c.isChildrenLoaded()){
-				c = (Control)loadChildren(c);
-			}
-			listResult.add(c);
-		}
-	    Collections.sort(listResult, new Comparator<CnATreeElement>() {
-            @Override
-            public int compare(CnATreeElement o1, CnATreeElement o2) {
-                NumericStringComparator comparator = new NumericStringComparator();
-                return comparator.compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-		return listResult;
+	    if(!resultInjectedFromCache){
+	        return listResult;
+	    } else {
+	        return Arrays.asList(result.toArray(new Control[result.size()]));
+	    }
 	}
 	
     private CnATreeElement loadChildren(CnATreeElement el) {
@@ -135,7 +144,7 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
      */
     @Override
     public Object getCacheableResult() {
-        return this.result;
+        return result;
     }
 
 

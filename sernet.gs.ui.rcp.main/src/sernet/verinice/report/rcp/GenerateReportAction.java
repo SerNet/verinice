@@ -106,6 +106,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
                     public Integer getRootElement() {return rootElmt; }
                     public Integer[] getRootElements(){return rootElmts;}
                     public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
+                    public Boolean useReportCache(){return dialog.getUseReportCache();}
     			};
     			if(dialog.getRootElement() != null){
     				ro.setRootElement(dialog.getRootElement());

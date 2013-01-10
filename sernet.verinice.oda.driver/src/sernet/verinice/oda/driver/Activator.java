@@ -54,6 +54,8 @@ public class Activator extends AbstractUIPlugin {
 	
 	private ServiceTracker commandServiceTracker;
 	
+	private boolean useReportCache = true;
+	
 	/**
 	 * The constructor
 	 */
@@ -124,8 +126,15 @@ public class Activator extends AbstractUIPlugin {
 	
 	public ICommandService getCommandService()
 	{
-	    ICommandService commandService = (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
-	    return commandService;
+	    if(useReportCache){
+	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
+	    } else {
+	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+	    }
+	}
+	
+	public void setUseReportCache(boolean useReportCache){
+	    this.useReportCache = useReportCache;
 	}
 
 }

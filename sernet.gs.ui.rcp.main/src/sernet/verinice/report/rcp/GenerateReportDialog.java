@@ -95,7 +95,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	private String useCase;
 	
 	public boolean isContextMenuCall;
-    
+	
+	private Button useCacheButton;
+	
+	private boolean useCache = true;
+	
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 700;
     private static final int SIZE_Y = 430;
@@ -385,6 +389,40 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	      }
 	    });
 		
+        Group groupCache = new Group(composite, SWT.NULL);
+        groupCache.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        layout = new GridLayout();
+        layout.numColumns = 2;
+        groupCache.setLayout(layout);
+        
+        GridData gridLabelCache = new GridData();
+        gridLabelFile.horizontalAlignment = SWT.LEFT;
+        gridLabelFile.verticalAlignment = SWT.CENTER;
+        gridLabelFile.grabExcessHorizontalSpace = true;
+        gridLabelFile.minimumWidth = 140;
+        
+        useCacheButton = new Button(groupCache, SWT.CHECK);
+        useCacheButton.setText(Messages.GenerateReportDialog_25);
+		useCacheButton.setSelection(true);
+	    GridData  useCacheButtonGridData = new GridData();
+	    useCacheButtonGridData.horizontalSpan = 2;
+	    useCacheButtonGridData.grabExcessHorizontalSpace = true;
+	    useCacheButtonGridData.horizontalAlignment = GridData.FILL;
+	    useCacheButtonGridData.verticalAlignment = SWT.RIGHT;
+	    useCacheButton.setLayoutData(useCacheButtonGridData);
+	    useCacheButton.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                useCache = ((Button)e.getSource()).getSelection();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+	    
 		openFileButton.setEnabled(FILENAME_MANUAL);
 		
 		comboReportType.select(0);
@@ -672,5 +710,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         this.isContextMenuCall = isContextMenuCall;
     }
     
+    public boolean getUseReportCache(){
+        return useCache;
+    }
 	
 }

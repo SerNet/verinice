@@ -85,7 +85,7 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
             List<CnATreeElement> groups = command.getElements();
             if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
                 groups.clear();
-                command.getElements(ControlGroup.TYPE_ID, groups, groups.get(0));
+                groups.addAll(command.getElements(ControlGroup.TYPE_ID, groups.get(0)));
             }
             //get all relevant controlgroups
             for(CnATreeElement e : groups){

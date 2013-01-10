@@ -71,6 +71,7 @@ public class ReportService implements IReportService {
 		        new GSRisikoanalyseReport(),
 		        new ManagementRisikoBewertung(),
 		        new RealisierungsplanReport(),
+		        new GraphischerUmsetzungsstatusReport(),
 		        new ComprehensiveSamtReportType(),
 		        new AuditberichtReport()
 		    };

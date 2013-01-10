@@ -81,5 +81,9 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	public String getLogFile(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE);
 	}
+	
+	public void setUseReportCache(boolean useReportCache){
+	    Activator.getDefault().setUseReportCache(useReportCache);
+	}
 
 }

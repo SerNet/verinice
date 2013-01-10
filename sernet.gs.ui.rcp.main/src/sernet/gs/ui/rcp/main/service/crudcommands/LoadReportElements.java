@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -68,7 +69,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 
 	private String typeId;
     private Integer rootElement;
-    private ArrayList<CnATreeElement> elements;
+    private List<CnATreeElement> elements;
     
     private String[] specialGSClasses = new String[]{
             FinishedRiskAnalysis.TYPE_ID,
@@ -96,6 +97,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
    
     
 	public void execute() {
+	    elements = new ArrayList<CnATreeElement>(0);
 	    if(!resultInjectedFromCache){
 	        getLog().debug("LoadReportElements for root_object " + rootElement);
 
@@ -120,8 +122,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 	                this.elements.add(root);
 	            }
 	            else {
-	                getElements(typeId, items, root);
-	                this.elements = items;
+	                elements = getElements(typeId, root);
 	            }
 
 
@@ -162,32 +163,33 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
         return elements;
     }
 
-    public void getElements(String typeFilter, List<CnATreeElement> items, CnATreeElement parent) {
+    public List<CnATreeElement> getElements(String typeFilter, CnATreeElement parent) {
+        ArrayList<CnATreeElement> children = new ArrayList<CnATreeElement>(0);
         for (CnATreeElement child : parent.getChildren()) {
             if (typeFilter != null && typeFilter.length()>0) {
                 if (child.getTypeId().equals(typeFilter)) {
-                    items.add(child);
+                    children.add(child);
                     child.getParent().getTitle();
                 } 
             } else {
-                items.add(child);
+                children.add(child);
                 child.getParent().getTitle();
             }
             if(child instanceof IISO27kGroup){ // ism element that can contain children
                 IISO27kGroup g = (IISO27kGroup)child;
                 if(Arrays.asList(g.getChildTypes()).contains(typeFilter) || g.getTypeId().equals(typeFilter) || g instanceof AuditGroup || g instanceof Audit){
-                    getElements(typeFilter, items, child);
+                    children.addAll(getElements(typeFilter, child));
                 }
             // gs elements that can contain children
             } else if(child instanceof IBSIStrukturKategorie){ 
                 if(isGSKategorieAndCanContain((IBSIStrukturKategorie)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
-                    getElements(typeFilter, items, child);
+                    children.addAll(getElements(typeFilter, child));
             } else if(child instanceof IBSIStrukturElement){
                 if(isGSElementAndCanContain((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
-                    getElements(typeFilter, items, child);
+                    children.addAll(getElements(typeFilter, child));
             } 
         }
-
+        return children;
     }
 
     /* (non-Javadoc)
