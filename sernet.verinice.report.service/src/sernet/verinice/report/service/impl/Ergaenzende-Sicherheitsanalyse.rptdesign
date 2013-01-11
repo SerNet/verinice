@@ -6279,12 +6279,12 @@ columns(cols);</value>
                     </cell>
                     <cell id="1154">
                         <label id="1347">
-                            <text-property name="text">netzkomponente_kritikalitaet</text-property>
+                            <text-property name="text">Kritikalität</text-property>
                         </label>
                     </cell>
                     <cell id="1155">
                         <label id="1349">
-                            <text-property name="text">netzkomponente_extnetz</text-property>
+                            <text-property name="text">Extern. Netz</text-property>
                         </label>
                     </cell>
                 </row>
