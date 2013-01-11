@@ -13789,6 +13789,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="height">12.489583333333334in</property>
             <column id="2734"/>
             <row id="2735">
+                <property name="height">100%</property>
                 <property name="pageBreakAfter">auto</property>
                 <cell id="2736">
                     <property name="textAlign">center</property>
@@ -13892,7 +13893,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 </cell>
             </row>
             <row id="3135">
-                <property name="height">2.4270833333333335in</property>
+                <property name="height">100%</property>
                 <property name="pageBreakAfter">always</property>
                 <cell id="3136">
                     <property name="textAlign">center</property>
@@ -13988,7 +13989,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 </cell>
             </row>
             <row id="2737">
-                <property name="height">4.520833333333333in</property>
+                <property name="height">100%</property>
                 <property name="pageBreakAfter">auto</property>
                 <property name="pageBreakBefore">always</property>
                 <cell id="2738">
@@ -14868,7 +14869,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 </cell>
             </row>
             <row id="3152">
-                <property name="height">4.520833333333333in</property>
+                <property name="height">100%</property>
                 <property name="pageBreakAfter">always</property>
                 <property name="pageBreakBefore">always</property>
                 <cell id="3153">
