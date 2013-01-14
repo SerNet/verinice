@@ -2,12 +2,6 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <property name="units">in</property>
-    <list-property name="propertyBindings">
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">8</property>
-        </structure>
-    </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -23,6 +17,7 @@
             <simple-property-list name="defaultValue">
                 <value type="constant">-1</value>
             </simple-property-list>
+            <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
             <structure name="format">
@@ -44,140 +39,249 @@
                     <text-property name="displayName">asset_abbr</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">asset_document</property>
+                    <text-property name="displayName">asset_document</text-property>
+                    <text-property name="heading">asset_document</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">asset_name</property>
                     <text-property name="displayName">asset_name</text-property>
+                    <text-property name="heading">asset_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_type</property>
                     <text-property name="displayName">asset_type</text-property>
+                    <text-property name="heading">asset_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_tag</property>
                     <text-property name="displayName">asset_tag</text-property>
+                    <text-property name="heading">asset_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_description</property>
                     <text-property name="displayName">asset_description</text-property>
+                    <text-property name="heading">asset_description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_mtpd</property>
                     <text-property name="displayName">asset_bcm_mtpd</text-property>
+                    <text-property name="heading">asset_bcm_mtpd</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_rpo</property>
                     <text-property name="displayName">asset_bcm_rpo</text-property>
+                    <text-property name="heading">asset_bcm_rpo</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_rto</property>
                     <text-property name="displayName">asset_bcm_rto</text-property>
+                    <text-property name="heading">asset_bcm_rto</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time1</property>
                     <text-property name="displayName">asset_bcm_time1</text-property>
+                    <text-property name="heading">asset_bcm_time1</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_tim24</property>
                     <text-property name="displayName">asset_bcm_tim24</text-property>
+                    <text-property name="heading">asset_bcm_tim24</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time48</property>
                     <text-property name="displayName">asset_bcm_time48</text-property>
+                    <text-property name="heading">asset_bcm_time48</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time96</property>
                     <text-property name="displayName">asset_bcm_time96</text-property>
+                    <text-property name="heading">asset_bcm_time96</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time168</property>
                     <text-property name="displayName">asset_bcm_time168</text-property>
+                    <text-property name="heading">asset_bcm_time168</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_time720</property>
                     <text-property name="displayName">asset_bcm_time720</text-property>
+                    <text-property name="heading">asset_bcm_time720</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_bcm_timegt720</property>
                     <text-property name="displayName">asset_bcm_timegt720</text-property>
+                    <text-property name="heading">asset_bcm_timegt720</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_confidentiality</property>
                     <text-property name="displayName">asset_value_method_confidentiality</text-property>
+                    <text-property name="heading">asset_value_method_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_integrity</property>
                     <text-property name="displayName">asset_value_method_integrity</text-property>
+                    <text-property name="heading">asset_value_method_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_method_availability</property>
                     <text-property name="displayName">asset_value_method_availability</text-property>
+                    <text-property name="heading">asset_value_method_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_confidentiality</property>
                     <text-property name="displayName">asset_value_confidentiality</text-property>
+                    <text-property name="heading">asset_value_confidentiality</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_integrity</property>
                     <text-property name="displayName">asset_value_integrity</text-property>
+                    <text-property name="heading">asset_value_integrity</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_availability</property>
                     <text-property name="displayName">asset_value_availability</text-property>
+                    <text-property name="heading">asset_value_availability</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_replacementcost</property>
                     <text-property name="displayName">asset_replacementcost</text-property>
+                    <text-property name="heading">asset_replacementcost</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_replcost_currency</property>
                     <text-property name="displayName">asset_replcost_currency</text-property>
+                    <text-property name="heading">asset_replcost_currency</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_value_comment</property>
                     <text-property name="displayName">asset_value_comment</text-property>
+                    <text-property name="heading">asset_value_comment</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_asset_tag</property>
+                    <text-property name="displayName">gsm_asset_tag</text-property>
+                    <text-property name="heading">gsm_asset_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_asset_description</property>
+                    <text-property name="displayName">gsm_asset_description</text-property>
+                    <text-property name="heading">gsm_asset_description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_hostname</property>
+                    <text-property name="displayName">gsm_hostname</text-property>
+                    <text-property name="heading">gsm_hostname</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_installed_apps</property>
+                    <text-property name="displayName">gsm_installed_apps</text-property>
+                    <text-property name="heading">gsm_installed_apps</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_traceroute</property>
+                    <text-property name="displayName">gsm_traceroute</text-property>
+                    <text-property name="heading">gsm_traceroute</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_memory</property>
+                    <text-property name="displayName">gsm_memory</text-property>
+                    <text-property name="heading">gsm_memory</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_cpuinfo</property>
+                    <text-property name="displayName">gsm_cpuinfo</text-property>
+                    <text-property name="heading">gsm_cpuinfo</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_os</property>
+                    <text-property name="displayName">gsm_os</text-property>
+                    <text-property name="heading">gsm_os</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_os_cpe</property>
+                    <text-property name="displayName">gsm_os_cpe</text-property>
+                    <text-property name="heading">gsm_os_cpe</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ip_address</property>
+                    <text-property name="displayName">gsm_ip_address</text-property>
+                    <text-property name="heading">gsm_ip_address</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_mac_address</property>
+                    <text-property name="displayName">gsm_mac_address</text-property>
+                    <text-property name="heading">gsm_mac_address</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_open_ports</property>
+                    <text-property name="displayName">gsm_open_ports</text-property>
+                    <text-property name="heading">gsm_open_ports</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_scan_started</property>
+                    <text-property name="displayName">gsm_scan_started</text-property>
+                    <text-property name="heading">gsm_scan_started</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_scan_ended</property>
+                    <text-property name="displayName">gsm_scan_ended</text-property>
+                    <text-property name="heading">gsm_scan_ended</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_c</property>
                     <text-property name="displayName">asset_riskvalue_c</text-property>
+                    <text-property name="heading">asset_riskvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_c</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_c</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_c</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_c</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_i</property>
                     <text-property name="displayName">asset_riskvalue_i</text-property>
+                    <text-property name="heading">asset_riskvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_i</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_i</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_i</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_i</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskvalue_a</property>
                     <text-property name="displayName">asset_riskvalue_a</text-property>
+                    <text-property name="heading">asset_riskvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwcontrolvalue_a</property>
                     <text-property name="displayName">asset_riskwcontrolvalue_a</text-property>
+                    <text-property name="heading">asset_riskwcontrolvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_riskwplancontrolvalue_a</property>
                     <text-property name="displayName">asset_riskwplancontrolvalue_a</text-property>
+                    <text-property name="heading">asset_riskwplancontrolvalue_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_risktreat</property>
                     <text-property name="displayName">asset_risktreat</text-property>
+                    <text-property name="heading">asset_risktreat</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">asset_risktreatexpl</property>
                     <text-property name="displayName">asset_risktreatexpl</text-property>
+                    <text-property name="heading">asset_risktreatexpl</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -203,171 +307,246 @@
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">asset_name</property>
+                        <property name="name">asset_document</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">asset_type</property>
+                        <property name="name">asset_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">asset_tag</property>
+                        <property name="name">asset_type</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">asset_description</property>
+                        <property name="name">asset_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">asset_bcm_mtpd</property>
+                        <property name="name">asset_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">asset_bcm_rpo</property>
+                        <property name="name">asset_bcm_mtpd</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">asset_bcm_rto</property>
+                        <property name="name">asset_bcm_rpo</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">asset_bcm_time1</property>
+                        <property name="name">asset_bcm_rto</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">asset_bcm_tim24</property>
+                        <property name="name">asset_bcm_time1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">asset_bcm_time48</property>
+                        <property name="name">asset_bcm_tim24</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">asset_bcm_time96</property>
+                        <property name="name">asset_bcm_time48</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">asset_bcm_time168</property>
+                        <property name="name">asset_bcm_time96</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">asset_bcm_time720</property>
+                        <property name="name">asset_bcm_time168</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">asset_bcm_timegt720</property>
+                        <property name="name">asset_bcm_time720</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">asset_value_method_confidentiality</property>
+                        <property name="name">asset_bcm_timegt720</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">asset_value_method_integrity</property>
+                        <property name="name">asset_value_method_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">asset_value_method_availability</property>
+                        <property name="name">asset_value_method_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">asset_value_confidentiality</property>
+                        <property name="name">asset_value_method_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">asset_value_integrity</property>
+                        <property name="name">asset_value_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">asset_value_availability</property>
+                        <property name="name">asset_value_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">asset_replacementcost</property>
+                        <property name="name">asset_value_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
-                        <property name="name">asset_replcost_currency</property>
+                        <property name="name">asset_replacementcost</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">asset_value_comment</property>
+                        <property name="name">asset_replcost_currency</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
-                        <property name="name">asset_riskvalue_c</property>
+                        <property name="name">asset_value_comment</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">asset_riskwcontrolvalue_c</property>
+                        <property name="name">gsm_asset_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">asset_riskwplancontrolvalue_c</property>
+                        <property name="name">gsm_asset_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">asset_riskvalue_i</property>
+                        <property name="name">gsm_hostname</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">asset_riskwcontrolvalue_i</property>
+                        <property name="name">gsm_installed_apps</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">asset_riskwplancontrolvalue_i</property>
+                        <property name="name">gsm_traceroute</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
-                        <property name="name">asset_riskvalue_a</property>
+                        <property name="name">gsm_memory</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">32</property>
-                        <property name="name">asset_riskwcontrolvalue_a</property>
+                        <property name="name">gsm_cpuinfo</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
-                        <property name="name">asset_riskwplancontrolvalue_a</property>
+                        <property name="name">gsm_os</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">34</property>
-                        <property name="name">asset_risktreat</property>
+                        <property name="name">gsm_os_cpe</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">35</property>
+                        <property name="name">gsm_ip_address</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">gsm_mac_address</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">gsm_open_ports</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">gsm_scan_started</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">gsm_scan_ended</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">asset_riskvalue_c</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">41</property>
+                        <property name="name">asset_riskwcontrolvalue_c</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">42</property>
+                        <property name="name">asset_riskwplancontrolvalue_c</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">asset_riskvalue_i</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">asset_riskwcontrolvalue_i</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">asset_riskwplancontrolvalue_i</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">asset_riskvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">asset_riskwcontrolvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">asset_riskwplancontrolvalue_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
+                        <property name="name">asset_risktreat</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
                         <property name="name">asset_risktreatexpl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -384,237 +563,342 @@
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">asset_document</property>
+                    <property name="nativeName">asset_document</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">asset_name</property>
                     <property name="nativeName">asset_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">asset_type</property>
                     <property name="nativeName">asset_type</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">asset_tag</property>
                     <property name="nativeName">asset_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">asset_description</property>
                     <property name="nativeName">asset_description</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">asset_bcm_mtpd</property>
                     <property name="nativeName">asset_bcm_mtpd</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">asset_bcm_rpo</property>
                     <property name="nativeName">asset_bcm_rpo</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">asset_bcm_rto</property>
                     <property name="nativeName">asset_bcm_rto</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">asset_bcm_time1</property>
                     <property name="nativeName">asset_bcm_time1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">asset_bcm_tim24</property>
                     <property name="nativeName">asset_bcm_tim24</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">asset_bcm_time48</property>
                     <property name="nativeName">asset_bcm_time48</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">13</property>
                     <property name="name">asset_bcm_time96</property>
                     <property name="nativeName">asset_bcm_time96</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">asset_bcm_time168</property>
                     <property name="nativeName">asset_bcm_time168</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">asset_bcm_time720</property>
                     <property name="nativeName">asset_bcm_time720</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">asset_bcm_timegt720</property>
                     <property name="nativeName">asset_bcm_timegt720</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">asset_value_method_confidentiality</property>
                     <property name="nativeName">asset_value_method_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">asset_value_method_integrity</property>
                     <property name="nativeName">asset_value_method_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">asset_value_method_availability</property>
                     <property name="nativeName">asset_value_method_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">asset_value_confidentiality</property>
                     <property name="nativeName">asset_value_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">21</property>
                     <property name="name">asset_value_integrity</property>
                     <property name="nativeName">asset_value_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">22</property>
                     <property name="name">asset_value_availability</property>
                     <property name="nativeName">asset_value_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">asset_replacementcost</property>
                     <property name="nativeName">asset_replacementcost</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">asset_replcost_currency</property>
                     <property name="nativeName">asset_replcost_currency</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">asset_value_comment</property>
                     <property name="nativeName">asset_value_comment</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
+                    <property name="name">gsm_asset_tag</property>
+                    <property name="nativeName">gsm_asset_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">gsm_asset_description</property>
+                    <property name="nativeName">gsm_asset_description</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">gsm_hostname</property>
+                    <property name="nativeName">gsm_hostname</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">gsm_installed_apps</property>
+                    <property name="nativeName">gsm_installed_apps</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">gsm_traceroute</property>
+                    <property name="nativeName">gsm_traceroute</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">gsm_memory</property>
+                    <property name="nativeName">gsm_memory</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">gsm_cpuinfo</property>
+                    <property name="nativeName">gsm_cpuinfo</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">gsm_os</property>
+                    <property name="nativeName">gsm_os</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">gsm_os_cpe</property>
+                    <property name="nativeName">gsm_os_cpe</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">gsm_ip_address</property>
+                    <property name="nativeName">gsm_ip_address</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">gsm_mac_address</property>
+                    <property name="nativeName">gsm_mac_address</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">gsm_open_ports</property>
+                    <property name="nativeName">gsm_open_ports</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">38</property>
+                    <property name="name">gsm_scan_started</property>
+                    <property name="nativeName">gsm_scan_started</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">39</property>
+                    <property name="name">gsm_scan_ended</property>
+                    <property name="nativeName">gsm_scan_ended</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">40</property>
                     <property name="name">asset_riskvalue_c</property>
                     <property name="nativeName">asset_riskvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">41</property>
                     <property name="name">asset_riskwcontrolvalue_c</property>
                     <property name="nativeName">asset_riskwcontrolvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">42</property>
                     <property name="name">asset_riskwplancontrolvalue_c</property>
                     <property name="nativeName">asset_riskwplancontrolvalue_c</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">43</property>
                     <property name="name">asset_riskvalue_i</property>
                     <property name="nativeName">asset_riskvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">44</property>
                     <property name="name">asset_riskwcontrolvalue_i</property>
                     <property name="nativeName">asset_riskwcontrolvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">45</property>
                     <property name="name">asset_riskwplancontrolvalue_i</property>
                     <property name="nativeName">asset_riskwplancontrolvalue_i</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">46</property>
                     <property name="name">asset_riskvalue_a</property>
                     <property name="nativeName">asset_riskvalue_a</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">47</property>
                     <property name="name">asset_riskwcontrolvalue_a</property>
                     <property name="nativeName">asset_riskwcontrolvalue_a</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">48</property>
                     <property name="name">asset_riskwplancontrolvalue_a</property>
                     <property name="nativeName">asset_riskwplancontrolvalue_a</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">49</property>
                     <property name="name">asset_risktreat</property>
                     <property name="nativeName">asset_risktreat</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">50</property>
                     <property name="name">asset_risktreatexpl</property>
                     <property name="nativeName">asset_risktreatexpl</property>
                     <property name="dataType">javaObject</property>
@@ -643,34 +927,40 @@ return helper.map(
 );]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_abbr</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>asset_abbr</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -688,8 +978,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_name</design:name>
-            <design:position>2</design:position>
+            <design:identifier>
+              <design:name>asset_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -707,8 +999,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_type</design:name>
-            <design:position>3</design:position>
+            <design:identifier>
+              <design:name>asset_type</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -726,8 +1020,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_tag</design:name>
-            <design:position>4</design:position>
+            <design:identifier>
+              <design:name>asset_tag</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -745,8 +1041,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_description</design:name>
-            <design:position>5</design:position>
+            <design:identifier>
+              <design:name>asset_description</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -764,8 +1062,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_mtpd</design:name>
-            <design:position>6</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_mtpd</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -783,8 +1083,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_rpo</design:name>
-            <design:position>7</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_rpo</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -802,8 +1104,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_rto</design:name>
-            <design:position>8</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_rto</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -821,8 +1125,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_time1</design:name>
-            <design:position>9</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_time1</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -840,8 +1146,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_tim24</design:name>
-            <design:position>10</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_tim24</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -859,8 +1167,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_time48</design:name>
-            <design:position>11</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_time48</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -878,8 +1188,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_time96</design:name>
-            <design:position>12</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_time96</design:name>
+              <design:position>12</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -897,8 +1209,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_time168</design:name>
-            <design:position>13</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_time168</design:name>
+              <design:position>13</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -916,8 +1230,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_time720</design:name>
-            <design:position>14</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_time720</design:name>
+              <design:position>14</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -935,8 +1251,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_bcm_timegt720</design:name>
-            <design:position>15</design:position>
+            <design:identifier>
+              <design:name>asset_bcm_timegt720</design:name>
+              <design:position>15</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -954,8 +1272,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_method_confidentiality</design:name>
-            <design:position>16</design:position>
+            <design:identifier>
+              <design:name>asset_value_method_confidentiality</design:name>
+              <design:position>16</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -973,8 +1293,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_method_integrity</design:name>
-            <design:position>17</design:position>
+            <design:identifier>
+              <design:name>asset_value_method_integrity</design:name>
+              <design:position>17</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -992,8 +1314,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_method_availability</design:name>
-            <design:position>18</design:position>
+            <design:identifier>
+              <design:name>asset_value_method_availability</design:name>
+              <design:position>18</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1011,8 +1335,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_confidentiality</design:name>
-            <design:position>19</design:position>
+            <design:identifier>
+              <design:name>asset_value_confidentiality</design:name>
+              <design:position>19</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1030,8 +1356,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_integrity</design:name>
-            <design:position>20</design:position>
+            <design:identifier>
+              <design:name>asset_value_integrity</design:name>
+              <design:position>20</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1049,8 +1377,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_availability</design:name>
-            <design:position>21</design:position>
+            <design:identifier>
+              <design:name>asset_value_availability</design:name>
+              <design:position>21</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1068,8 +1398,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_replacementcost</design:name>
-            <design:position>22</design:position>
+            <design:identifier>
+              <design:name>asset_replacementcost</design:name>
+              <design:position>22</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1087,8 +1419,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_replcost_currency</design:name>
-            <design:position>23</design:position>
+            <design:identifier>
+              <design:name>asset_replcost_currency</design:name>
+              <design:position>23</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1106,8 +1440,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_value_comment</design:name>
-            <design:position>24</design:position>
+            <design:identifier>
+              <design:name>asset_value_comment</design:name>
+              <design:position>24</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1125,8 +1461,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskvalue_c</design:name>
-            <design:position>25</design:position>
+            <design:identifier>
+              <design:name>asset_riskvalue_c</design:name>
+              <design:position>25</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1144,8 +1482,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwcontrolvalue_c</design:name>
-            <design:position>26</design:position>
+            <design:identifier>
+              <design:name>asset_riskwcontrolvalue_c</design:name>
+              <design:position>26</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1163,8 +1503,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwplancontrolvalue_c</design:name>
-            <design:position>27</design:position>
+            <design:identifier>
+              <design:name>asset_riskwplancontrolvalue_c</design:name>
+              <design:position>27</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1182,8 +1524,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskvalue_i</design:name>
-            <design:position>28</design:position>
+            <design:identifier>
+              <design:name>asset_riskvalue_i</design:name>
+              <design:position>28</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1201,8 +1545,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwcontrolvalue_i</design:name>
-            <design:position>29</design:position>
+            <design:identifier>
+              <design:name>asset_riskwcontrolvalue_i</design:name>
+              <design:position>29</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1220,8 +1566,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwplancontrolvalue_i</design:name>
-            <design:position>30</design:position>
+            <design:identifier>
+              <design:name>asset_riskwplancontrolvalue_i</design:name>
+              <design:position>30</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1239,8 +1587,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskvalue_a</design:name>
-            <design:position>31</design:position>
+            <design:identifier>
+              <design:name>asset_riskvalue_a</design:name>
+              <design:position>31</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1258,8 +1608,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwcontrolvalue_a</design:name>
-            <design:position>32</design:position>
+            <design:identifier>
+              <design:name>asset_riskwcontrolvalue_a</design:name>
+              <design:position>32</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1277,8 +1629,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_riskwplancontrolvalue_a</design:name>
-            <design:position>33</design:position>
+            <design:identifier>
+              <design:name>asset_riskwplancontrolvalue_a</design:name>
+              <design:position>33</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1296,8 +1650,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_risktreat</design:name>
-            <design:position>34</design:position>
+            <design:identifier>
+              <design:name>asset_risktreat</design:name>
+              <design:position>34</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1315,8 +1671,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>asset_risktreatexpl</design:name>
-            <design:position>35</design:position>
+            <design:identifier>
+              <design:name>asset_risktreatexpl</design:name>
+              <design:position>35</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1504,6 +1862,12 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">asset_document</property>
+                    <text-property name="displayName">asset_document</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["asset_document"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">asset_name</property>
                     <text-property name="displayName">asset_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["asset_name"]</expression>
@@ -1639,6 +2003,90 @@ columns(cols);</value>
                     <property name="name">asset_value_comment</property>
                     <text-property name="displayName">asset_value_comment</text-property>
                     <expression name="expression" type="javascript">dataSetRow["asset_value_comment"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_asset_tag</property>
+                    <text-property name="displayName">gsm_asset_tag</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_asset_tag"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_asset_description</property>
+                    <text-property name="displayName">gsm_asset_description</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_asset_description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_hostname</property>
+                    <text-property name="displayName">gsm_hostname</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_hostname"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_installed_apps</property>
+                    <text-property name="displayName">gsm_installed_apps</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_installed_apps"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_traceroute</property>
+                    <text-property name="displayName">gsm_traceroute</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_traceroute"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_memory</property>
+                    <text-property name="displayName">gsm_memory</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_memory"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_cpuinfo</property>
+                    <text-property name="displayName">gsm_cpuinfo</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_cpuinfo"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_os</property>
+                    <text-property name="displayName">gsm_os</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_os"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_os_cpe</property>
+                    <text-property name="displayName">gsm_os_cpe</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_os_cpe"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_ip_address</property>
+                    <text-property name="displayName">gsm_ip_address</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_ip_address"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_mac_address</property>
+                    <text-property name="displayName">gsm_mac_address</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_mac_address"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_open_ports</property>
+                    <text-property name="displayName">gsm_open_ports</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_open_ports"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_scan_started</property>
+                    <text-property name="displayName">gsm_scan_started</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_scan_started"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">gsm_scan_ended</property>
+                    <text-property name="displayName">gsm_scan_ended</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["gsm_scan_ended"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>

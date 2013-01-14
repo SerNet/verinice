@@ -1591,7 +1591,7 @@ columns(new String[] { "scopeName" });</value>
             </column>
             <header>
                 <row id="2236">
-                    <property name="height">0.5cm</property>
+                    <property name="height">100%</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <cell id="2237">
