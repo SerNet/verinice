@@ -97,8 +97,6 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     TableSorter tableSorter = new TableSorter();
     private ICommandService commandService;
     
-    private Action toggleLinkAction;
-    
     private Action doubleClickAction;
     
     private Action refreshAction;
@@ -153,44 +151,6 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
         
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
 
-        toggleLinkAction = new Action(Messages.ValidationView_1, SWT.TOGGLE) {
-            public void run() {
-                isLinkingActive = !isLinkingActive;
-                toggleLinkAction.setChecked(isLinkingActive());
-                if (CnAElementFactory.isModelLoaded()) {
-                    loadValidations();
-                } else if (modelLoadListener == null) {
-                    // model is not loaded yet: add a listener to load data when
-                    // it's loaded
-                    modelLoadListener = new IModelLoadListener() {
-
-                        public void closed(BSIModel model) {
-                            removeModelListeners();
-                            Display.getDefault().asyncExec(new Runnable() {
-                                public void run() {
-                                    viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
-                                }
-                            });                        }
-
-                        public void loaded(BSIModel model) {
-                            addBSIModelListeners();
-                            startInitDataJob();
-                        }
-
-                        @Override
-                        public void loaded(ISO27KModel model) {
-                            addISO27KModelListeners();
-                            startInitDataJob();
-                        }
-
-                    };
-                    CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-                }
-            }
-        };
-        toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-        toggleLinkAction.setChecked(isLinkingActive());
-        
         doubleClickAction = new Action(){
             public void run() {
                 if (viewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) viewer.getSelection()).getFirstElement() instanceof CnAValidation) {
@@ -471,7 +431,6 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(this.refreshAction);
-        manager.add(this.toggleLinkAction);
     }
     
     public ICommandService getCommandService() {
