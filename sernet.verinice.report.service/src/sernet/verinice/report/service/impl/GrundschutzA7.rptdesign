@@ -13,10 +13,6 @@
             <property name="name">queryText</property>
             <property name="id">1607</property>
         </structure>
-        <structure>
-            <property name="name">queryText</property>
-            <property name="id">1624</property>
-        </structure>
     </list-property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -814,46 +810,63 @@ columns(new String[] {"kuerzel", "name", "dbid"});</value>
                 <structure>
                     <property name="columnName">bstumsetzung_stand</property>
                     <text-property name="displayName">bstumsetzung_stand</text-property>
+                    <text-property name="heading">bstumsetzung_stand</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erfasstam</property>
                     <text-property name="displayName">bstumsetzung_erfasstam</text-property>
+                    <text-property name="heading">bstumsetzung_erfasstam</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_url</property>
                     <text-property name="displayName">bstumsetzung_url</text-property>
+                    <text-property name="heading">bstumsetzung_url</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_name</property>
                     <text-property name="displayName">bstumsetzung_name</text-property>
+                    <text-property name="heading">bstumsetzung_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">eigene_bstumsetzung_beschreibung</property>
+                    <text-property name="displayName">eigene_bstumsetzung_beschreibung</text-property>
+                    <text-property name="heading">eigene_bstumsetzung_beschreibung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_dokument</property>
                     <text-property name="displayName">bstumsetzung_dokument</text-property>
+                    <text-property name="heading">bstumsetzung_dokument</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erfasstdurch_link</property>
                     <text-property name="displayName">bstumsetzung_erfasstdurch_link</text-property>
+                    <text-property name="heading">bstumsetzung_erfasstdurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erlaeuterung</property>
                     <text-property name="displayName">bstumsetzung_erlaeuterung</text-property>
+                    <text-property name="heading">bstumsetzung_erlaeuterung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_encoding</property>
                     <text-property name="displayName">bstumsetzung_encoding</text-property>
+                    <text-property name="heading">bstumsetzung_encoding</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_gespraechspartner_link</property>
                     <text-property name="displayName">bstumsetzung_gespraechspartner_link</text-property>
+                    <text-property name="heading">bstumsetzung_gespraechspartner_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_nr</property>
                     <text-property name="displayName">bstumsetzung_nr</text-property>
+                    <text-property name="heading">bstumsetzung_nr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -894,36 +907,41 @@ columns(new String[] {"kuerzel", "name", "dbid"});</value>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">bstumsetzung_dokument</property>
+                        <property name="name">eigene_bstumsetzung_beschreibung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">bstumsetzung_erfasstdurch_link</property>
+                        <property name="name">bstumsetzung_dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">bstumsetzung_erlaeuterung</property>
+                        <property name="name">bstumsetzung_erfasstdurch_link</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">bstumsetzung_encoding</property>
+                        <property name="name">bstumsetzung_erlaeuterung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">bstumsetzung_gespraechspartner_link</property>
+                        <property name="name">bstumsetzung_encoding</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">bstumsetzung_nr</property>
+                        <property name="name">bstumsetzung_gespraechspartner_link</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
+                        <property name="name">bstumsetzung_nr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
                         <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -961,48 +979,55 @@ columns(new String[] {"kuerzel", "name", "dbid"});</value>
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">eigene_bstumsetzung_beschreibung</property>
+                    <property name="nativeName">eigene_bstumsetzung_beschreibung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">bstumsetzung_dokument</property>
                     <property name="nativeName">bstumsetzung_dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">bstumsetzung_erfasstdurch_link</property>
                     <property name="nativeName">bstumsetzung_erfasstdurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">bstumsetzung_erlaeuterung</property>
                     <property name="nativeName">bstumsetzung_erlaeuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">bstumsetzung_encoding</property>
                     <property name="nativeName">bstumsetzung_encoding</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">bstumsetzung_gespraechspartner_link</property>
                     <property name="nativeName">bstumsetzung_gespraechspartner_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">bstumsetzung_nr</property>
                     <property name="nativeName">bstumsetzung_nr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">dbid</property>
                     <property name="nativeName">dbid</property>
                     <property name="dataType">javaObject</property>
@@ -1011,6 +1036,13 @@ columns(new String[] {"kuerzel", "name", "dbid"});</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import java.lang.String;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnALink;
+import java.util.Map.Entry;
+import java.util.HashSet;
+import java.util.ArrayList;
+import sernet.verinice.iso27k.service.Retriever;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1022,9 +1054,47 @@ if (myroot != null &amp;&amp; myroot != -1) {
 
 elmt = "bstumsetzung";
 
+elements = new ArrayList(0);
+
+typeIds = new String[]{"anwendung",
+						  "server",
+						   "client",
+						   "tkkomponente",
+						   "sonstit", 
+						   "raum",
+						   "gebaeude",
+						   "netzkomponente"
+						  };
+for(int i = 0; i < typeIds.length; i++){
+	typeId = typeIds[i];
+	elementLoader = new LoadReportElements(typeId, root);
+	typedElements = helper.execute(elementLoader).getElements();
+	for(CnATreeElement typedElement : typedElements){
+		typedElement = Retriever.checkRetrieveLinks(typedElement, true);
+		seenBstUmstzngn = new HashSet();
+		linkLoader = new LoadReportLinkedElements(elmt, typedElement.getDbId(), false, true);
+		linkLoader = helper.execute(linkLoader);
+		typedElement = Retriever.checkRetrieveElement(typedElement);
+		linkedElementsList = linkLoader.getElements();
+
+		for(CnATreeElement bstUmstzng : linkedElementsList){
+			bstUmstzng = Retriever.checkRetrieveElement(bstUmstzng);
+			if(!seenBstUmstzngn.contains(bstUmstzng.getUuid())){
+				elements.add(bstUmstzng);
+				typedElement = Retriever.checkRetrieveElement(typedElement);
+				seenBstUmstzngn.add(bstUmstzng.getUuid());
+			}
+		}
+	}
+}
+
+
+childLoader = new LoadReportElements(elmt, root);
+elements.addAll(helper.execute(childLoader).getElements());
+
+
 cols = helper.getAllPropertyTypes(elmt);
-c2 = new LoadReportElements(elmt, root);
-elements = helper.execute(c2).getElements();
+
 return helper.map(
 	elements,
 	cols,
@@ -1033,27 +1103,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -4535,6 +4609,7 @@ bestehende Risiken</text-property>
         </label>
         <table id="1573">
             <property name="marginTop">0pt</property>
+            <property name="pageBreakBefore">avoid</property>
             <property name="pageBreakInside">auto</property>
             <property name="width">100%</property>
             <property name="dataSet">bausteine1</property>
