@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -57,16 +58,17 @@ public class RelationDescriptionEditingSupport extends EditingSupport {
     }
 
     protected CellEditor getCellEditor(Object element) {
-        if (!(element instanceof CnALink))
+        if (!(element instanceof CnALink)){
             return null;
-
+        }
         textEditor = new TextCellEditor(viewer.getTable());
         return textEditor;
     }
 
     protected Object getValue(Object element) {
-        if (!(element instanceof CnALink))
+        if (!(element instanceof CnALink)){
             return null;
+        }
         CnALink link = (CnALink) element;
         String comment = link.getComment();
         Logger.getLogger(this.getClass()).debug("description " + comment);

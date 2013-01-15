@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -43,15 +42,17 @@ public class RelationByNameSorter extends ViewerSorter {
 
 		public boolean isSorterProperty(Object arg0, String arg1) {
 		    for (String prop : sorterProperties) {
-                if (arg1.equals(prop))
+                if (arg1.equals(prop)){
                     return true;
+                }
             }
 		    return false;
 		}
 		
 		public int compare(Viewer viewer, Object o1, Object o2) {
-			if (o1 == null || o2 == null)
+			if (o1 == null || o2 == null){
 				return 0;
+			}
 			CnALink link1 = (CnALink) o1;
 			CnALink link2 = (CnALink) o2;
 			
@@ -64,15 +65,17 @@ public class RelationByNameSorter extends ViewerSorter {
 			if (link1UpId.equals(link2UpId)) {
 			    // compare if we have a different category on the other side and sort by category first:
 			    int compare = link1DownId.compareTo(link2DownId);
-			    if (compare != 0)
+			    if (compare != 0){
 			        return compare;
+			    }
 			}
 
 			// the same but for reversed sides (since we don't know if were displaying the upward / downward direction:
 			if (link1DownId.equals(link2DownId)) {
 			    int compare = link1UpId.compareTo(link2UpId);
-			    if (compare != 0)
+			    if (compare != 0){
 			        return compare;
+			    }
 			}
 
 			// categories are the same, so we sort by name within the category:

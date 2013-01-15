@@ -27,10 +27,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -39,7 +36,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.bsi.views.GenericMassnahmenView.SortSelectionAdapter;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -196,8 +192,9 @@ public class AuditView extends GenericMassnahmenView {
 				return ""; //$NON-NLS-1$
 			case 1: // date
 				Date date = mn.getNaechsteRevision();
-				if (date == null)
+				if (date == null){
 					return Messages.TodoView_3;
+				}
 				return dateFormat.format(date);
 			case 2: // bearbeiter
 				return mn.getRevisionDurch();

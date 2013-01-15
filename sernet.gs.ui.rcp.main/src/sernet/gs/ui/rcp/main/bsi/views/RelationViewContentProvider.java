@@ -50,8 +50,9 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	}
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		if (newInput instanceof PlaceHolder)
+		if (newInput instanceof PlaceHolder){
 			return;
+		}
 		CnATreeElement inputElmt = (CnATreeElement) newInput;
 		view.setInputElmt(inputElmt);
 		viewer.refresh();

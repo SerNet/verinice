@@ -63,7 +63,6 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -1037,12 +1036,12 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		}
 
 		protected int sortByDate(Date date1, Date date2) {
-	        if (date1 == null)
+	        if (date1 == null){
 	            return 1;
-	        
-	        if (date2 == null)
+	        }
+	        if (date2 == null){
 	            return -1;
-	        
+	        }
 			int comp = date1.compareTo(date2);
 			return comp;
 	        

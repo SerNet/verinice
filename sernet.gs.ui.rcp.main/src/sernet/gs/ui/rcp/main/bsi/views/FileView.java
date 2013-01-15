@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -49,7 +48,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -72,7 +70,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
-import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -97,7 +94,6 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.rcp.ImageCellProvider;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 
@@ -501,9 +497,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0) {
                     File file = new File(selected);
-                    if (file.isDirectory())
+                    if (file.isDirectory()){
                         return;
-
+                    }
                     Attachment attachment = new Attachment();
                     attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
                     attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
@@ -530,9 +526,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
                 boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
 
-                if (!confirm)
+                if (!confirm){
                     return;
-
+                }
                 Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
                 while (iterator.hasNext()) {
                     Attachment sel = (Attachment) iterator.next();
@@ -703,8 +699,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     public static Display getDisplay() {
         Display display = Display.getCurrent();
         //may be null if outside the UI thread
-        if (display == null)
+        if (display == null){
            display = Display.getDefault();
+        }
         return display;       
      }
     
@@ -810,8 +807,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 case 0:
                     String mimeType1 = a1.getMimeType();
                     String mimeType2 = a2.getMimeType();
-                    if (mimeType1 == null || mimeType2 == null)
+                    if (mimeType1 == null || mimeType2 == null){
                         return 0;
+                    }
                     String image1 = mimeImageMap.get(mimeType1);
                     String image2 = mimeImageMap.get(mimeType2);
                     if (image1 != null && image2 != null) {
@@ -824,8 +822,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 case 2:
                     mimeType1 = a1.getMimeType();
                     mimeType2 = a2.getMimeType();
-                    if (mimeType1 == null || mimeType2 == null)
+                    if (mimeType1 == null || mimeType2 == null){
                         return 0;
+                    }
                     rc = mimeType1.compareTo(mimeType2);
                     break;
                 case 3:

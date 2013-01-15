@@ -332,8 +332,9 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof Baustein)
 				return ((Baustein) parent).getMassnahmen().size() > 0;
-			else if (parent instanceof BSIKatalogInvisibleRoot)
+			else if (parent instanceof BSIKatalogInvisibleRoot){
 				return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
+			}
 			return false;
 		}
 
@@ -345,9 +346,9 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 		public Image getImage(Object obj) {
 
-			if (obj instanceof Baustein)
+			if (obj instanceof Baustein){
 				return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
-
+			}
 			if (obj instanceof Massnahme) {
 				Massnahme mn = (Massnahme) obj;
 				char stufe = mn.getSiegelstufe();
@@ -365,9 +366,9 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 				}
 			}
 
-			if (obj instanceof Gefaehrdung)
+			if (obj instanceof Gefaehrdung){
 				return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
-
+			}
 			return ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 
 		}

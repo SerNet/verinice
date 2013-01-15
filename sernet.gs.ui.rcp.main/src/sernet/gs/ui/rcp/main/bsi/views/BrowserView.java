@@ -128,12 +128,12 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
 
 	protected void pageSelectionChanged(IWorkbenchPart part,
 			ISelection selection) {
-		if (part == this)
+		if (part == this){
 			return;
-
-		if (!(selection instanceof IStructuredSelection))
+		}
+		if (!(selection instanceof IStructuredSelection)){
 			return;
-
+		}
 		Object element = ((IStructuredSelection) selection).getFirstElement();
 		elementSelected(element);
 	}

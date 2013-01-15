@@ -84,8 +84,9 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	}
 
 	public void dispose() {
-		if (CnAElementFactory.getLoadedModel() != null)
+		if (CnAElementFactory.getLoadedModel() != null){
 			CnAElementFactory.getLoadedModel().removeBSIModelListener(this);
+		}
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput,

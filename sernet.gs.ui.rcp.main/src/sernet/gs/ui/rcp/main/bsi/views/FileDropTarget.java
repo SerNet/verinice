@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.io.File;
 import java.util.Calendar;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
@@ -83,9 +82,9 @@ public class FileDropTarget extends DropTargetAdapter {
 	 */
 	private void createFile(String selected) {
 		File file = new File(selected);
-		if (file.isDirectory())
+		if (file.isDirectory()){
 			return;
-		
+		}
 		Attachment attachment = new Attachment();
 		attachment.setCnATreeElementId(view.getCurrentCnaElement().getDbId());
 		attachment.setCnAElementTitel(view.getCurrentCnaElement().getTitle());

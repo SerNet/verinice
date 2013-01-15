@@ -53,7 +53,6 @@ import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
@@ -148,14 +147,15 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (part == this)
+        if (part == this){
             return;
-
-        if (!(selection instanceof IStructuredSelection))
+        }
+        if (!(selection instanceof IStructuredSelection)){
             return;
-
-        if (((IStructuredSelection) selection).size() != 1)
+        }
+        if (((IStructuredSelection) selection).size() != 1){
             return;
+        }
         try {
             Object element = ((IStructuredSelection) selection).getFirstElement();
             elementSelected(element);

@@ -54,9 +54,9 @@ public class RelationTypeEditingSupport extends EditingSupport {
 	}
 
 	protected boolean canEdit(Object element) {
-		if (!(element instanceof CnALink))
+		if (!(element instanceof CnALink)){
 			return false;
-
+		}
 		CnALink link = (CnALink) element;
 		String currentName = CnALink.getRelationName(view.getInputElmt(),
 				link);
@@ -69,8 +69,9 @@ public class RelationTypeEditingSupport extends EditingSupport {
 	}
 
 	protected CellEditor getCellEditor(Object element) {
-		if (!(element instanceof CnALink))
+		if (!(element instanceof CnALink)){
 			return null;
+		}
 		CnALink link = (CnALink) element;
 
 		String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
@@ -104,8 +105,9 @@ public class RelationTypeEditingSupport extends EditingSupport {
 	}
 
 	protected Object getValue(Object element) {
-		if (!(element instanceof CnALink))
+		if (!(element instanceof CnALink)){
 			return null;
+		}
 		CnALink link = (CnALink) element;
 		String currentName = CnALink.getRelationName(view.getInputElmt(),
 				link);
@@ -119,17 +121,18 @@ public class RelationTypeEditingSupport extends EditingSupport {
 	private int getIndex(String currentName, String[] currentLinkTypeNames) {
 		int i = 0;
 		for (String name : currentLinkTypeNames) {
-			if (name.equals(currentName))
+			if (name.equals(currentName)){
 				return i;
+			}
 			++i;
 		}
 		return -1;
 	}
 
 	protected void setValue(Object element, Object value) {
-		if (!(element instanceof CnALink))
+		if (!(element instanceof CnALink)){
 			return;
-
+		}
 		CnALink link = (CnALink) element;
 		int index = (Integer) value;
 
@@ -165,8 +168,9 @@ public class RelationTypeEditingSupport extends EditingSupport {
 			String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation
 					.getName()
 					: huiRelation.getReversename();
-			if (name.equals(linkTypeName))
+			if (name.equals(linkTypeName)){
 				return id;
+			}
 		}
 		return "";
 

@@ -47,9 +47,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void add(final Object parent, final Object child) {
-		if (viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed()){
 			return;
-		
+		}
 		if (Display.getCurrent() != null) {
 			viewer.add(parent, child);
 		}
@@ -65,9 +65,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void refresh(final Object child) {
-		if (viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed()){
 			return;
-		
+		}
 		if (Display.getCurrent() != null) {
 			viewer.refresh(child);
 		}
@@ -82,9 +82,9 @@ public class ThreadSafeViewerUpdate {
 	}
 	
 	public void remove(final Object child) {
-		if (viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed()){
 			return;
-		
+		}
 		if (Display.getCurrent() != null) {
 			viewer.remove(child);
 		}
@@ -106,35 +106,38 @@ public class ThreadSafeViewerUpdate {
 		else {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (viewer != null)
+					if (viewer != null){
 						viewer.refresh();
+					}
 				}
 			});
 		}
 	}
 	
 	public void reveal(final Object child) {
-		if (viewer.getControl().isDisposed())
+		if (viewer.getControl().isDisposed()){
 			return;
-		
+		}
 		if (Display.getCurrent() != null) {
-			if (!(child instanceof MassnahmenUmsetzung))
+			if (!(child instanceof MassnahmenUmsetzung)){
 				viewer.reveal(child);
+			}
 			return;
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				if (!(child instanceof MassnahmenUmsetzung))
+				if (!(child instanceof MassnahmenUmsetzung)){
 					viewer.reveal(child);
+				}
 			}
 		});
 	}
 
 	public void setInput(final Object newModel) {
 		//dmurygin, 2010-09-16:
-	    if (viewer.getControl().isDisposed())
+	    if (viewer.getControl().isDisposed()){
 			return;
-	    	    
+	    }
 	    final Object newInput = getNewInput(newModel);
 	    
 		if (Display.getCurrent() != null) {

@@ -311,15 +311,15 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	
 	protected void pageSelectionChanged(IWorkbenchPart part,
 			ISelection selection) {
-		if (part == this)
+		if (part == this){
 			return;
-
-		if (!(selection instanceof IStructuredSelection))
+		}
+		if (!(selection instanceof IStructuredSelection)){
 			return;
-
-		if (((IStructuredSelection) selection).size() != 1)
+		}
+		if (((IStructuredSelection) selection).size() != 1){
 			return;
-
+		}
 		Object element = ((IStructuredSelection) selection).getFirstElement();
 		if (element instanceof CnATreeElement) {
 			setNewInput((CnATreeElement)element);
@@ -360,9 +360,9 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				if (obj == null)
+				if (obj == null){
 					return;
-				
+				}
 				CnALink link = (CnALink) obj;
 				if (CnALink.isDownwardLink(inputElmt, link))
 					setNewInput(link.getDependency());
@@ -422,10 +422,12 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 		
 		boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
 		boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
-		if (removedLinkUp)
+		if (removedLinkUp){
 			inputElmt.addLinkUp(newLink);
-		if (removedLinkDown)
+		}
+		if (removedLinkDown){
 			inputElmt.addLinkDown(newLink);
+		}
 		viewer.refresh();
 		
 	}

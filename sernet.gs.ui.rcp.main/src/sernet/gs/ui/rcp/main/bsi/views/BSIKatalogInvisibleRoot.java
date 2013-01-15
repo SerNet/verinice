@@ -91,8 +91,9 @@ public class BSIKatalogInvisibleRoot {
 
 	public void addListener(ISelectionListener listener) {
 		synchronized (listeners) {
-			if (!listeners.contains(listener))
+			if (!listeners.contains(listener)){
 				listeners.add(listener);
+			}
 		}
 	}
 
@@ -111,8 +112,9 @@ public class BSIKatalogInvisibleRoot {
 	}
 
 	public List<Baustein> getBausteine() {
-		if (bausteine.size() < 1)
+		if (bausteine.size() < 1){
 			bausteine.add(new NullBaustein());
+		}
 		return bausteine;
 	}
 
@@ -137,15 +139,17 @@ public class BSIKatalogInvisibleRoot {
 	}
 
 	public static BSIKatalogInvisibleRoot getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new BSIKatalogInvisibleRoot();
+		}
 		return instance;
 	}
 
 	public Baustein getBaustein(String id) {
 		for (Baustein baustein : bausteine) {
-			if (baustein.getId().equals(id))
+			if (baustein.getId().equals(id)){
 				return baustein;
+			}
 		}
 		return null;
 	}
@@ -158,8 +162,9 @@ public class BSIKatalogInvisibleRoot {
 			int kapitelValue = whole * 1000 + radix;
 
 			for (Baustein baustein : bausteine) {
-				if (baustein.getKapitelValue() == kapitelValue)
+				if (baustein.getKapitelValue() == kapitelValue){
 					return baustein;
+				}
 			}
 		}
 		return null;

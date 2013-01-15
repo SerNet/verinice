@@ -17,12 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -32,7 +28,6 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -49,14 +44,17 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	private String getRisk(CnALink link, char risk) {
 	    switch (risk) {
         case 'C':
-            if (link.getRiskConfidentiality() != null)
+            if (link.getRiskConfidentiality() != null){
                 return link.getRiskConfidentiality().toString();
+            }
         case 'I':
-            if (link.getRiskIntegrity() != null)
+            if (link.getRiskIntegrity() != null){
                 return link.getRiskIntegrity().toString();
+            }
         case 'A':
-            if (link.getRiskAvailability() != null)
+            if (link.getRiskAvailability() != null){
                 return link.getRiskAvailability().toString();
+            }
         }
 	    return "";
 	}
@@ -70,8 +68,9 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 
 	public String getColumnText(Object obj, int index) {
 		if (obj instanceof PlaceHolder) {
-			if (index != 1)
+			if (index != 1){
 				return ""; //$NON-NLS-1$
+			}
 			PlaceHolder pl = (PlaceHolder) obj;
 			return pl.getTitle();
 		}
@@ -107,9 +106,9 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	}
 
 	public Image getColumnImage(Object obj, int index) {
-		if (obj instanceof PlaceHolder)
+		if (obj instanceof PlaceHolder){
 			return null;
-
+		}
 		CnALink link = (CnALink) obj;
 		switch (index) {
 		case 0:

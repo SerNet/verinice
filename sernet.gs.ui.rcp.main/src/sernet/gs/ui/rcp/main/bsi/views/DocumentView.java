@@ -45,9 +45,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindURLs;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 public class DocumentView extends ViewPart {
 	
@@ -61,8 +61,9 @@ public class DocumentView extends ViewPart {
 		public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					if (viewer.getContentProvider() != null)
+					if (viewer.getContentProvider() != null){
 						setInput();
+					}
 				}
 			});
 		}
@@ -121,8 +122,9 @@ public class DocumentView extends ViewPart {
 		column.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof DocumentLink)
+				if (element instanceof DocumentLink){
 					return ((DocumentLink)element).getName();
+				}
 				return ""; //$NON-NLS-1$
 			}
 		});
@@ -132,8 +134,9 @@ public class DocumentView extends ViewPart {
 		column2.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof DocumentLink)
+				if (element instanceof DocumentLink){
 					return ((DocumentLink)element).getHref();
+				}
 				return ""; //$NON-NLS-1$
 			}
 		});

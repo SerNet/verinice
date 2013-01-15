@@ -255,9 +255,9 @@ public class DSModelView extends ViewPart {
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		BSIModel newModel = command.getModel();
 
-		if (model != null)
+		if (model != null){
 			model.removeBSIModelListener(viewUpdater);
-		
+		}
 		this.model = newModel;
 		model.addBSIModelListener(this.viewUpdater);
 
@@ -288,8 +288,9 @@ public class DSModelView extends ViewPart {
 						|| element instanceof AnwendungenKategorie
 						|| element instanceof Anwendung
 						|| element instanceof IDatenschutzElement
-						|| element instanceof CnAPlaceholder)
+						|| element instanceof CnAPlaceholder){
 					return true;
+				}
 				return false;
 			}
 		});

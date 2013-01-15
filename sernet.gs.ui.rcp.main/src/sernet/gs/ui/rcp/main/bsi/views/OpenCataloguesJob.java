@@ -75,8 +75,9 @@ public class OpenCataloguesJob extends WorkspaceJob {
 		
 		// Using a new configuration object makes it throw
 		// already loaded data.
-		if (newConfig != null)
+		if (newConfig != null){
 			model.setBSIConfig(newConfig);
+		}
 	}
 
 	public IStatus runInWorkspace(IProgressMonitor monitor)

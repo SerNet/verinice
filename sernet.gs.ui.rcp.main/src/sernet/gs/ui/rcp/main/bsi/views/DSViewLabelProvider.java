@@ -35,9 +35,9 @@ public class DSViewLabelProvider extends BSIModelViewLabelProvider implements
 			String title = super.getText(obj);
 			return Messages.DSViewLabelProvider_0 + title;
 		}
-		else if (obj instanceof AnwendungenKategorie)
+		else if (obj instanceof AnwendungenKategorie){
 			return Messages.DSViewLabelProvider_1;
-		
+		}
 		// else return object title:
 		return super.getText(obj);
 	}

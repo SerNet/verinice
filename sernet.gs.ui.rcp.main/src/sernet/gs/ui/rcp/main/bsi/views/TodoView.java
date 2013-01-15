@@ -184,8 +184,9 @@ public class TodoView extends GenericMassnahmenView {
                 return ""; //$NON-NLS-1$
             case 1: // date
                 Date date = mn.getUmsetzungBis();
-                if (date == null)
+                if (date == null){
                     return Messages.TodoView_3;
+                }
                 return dateFormat.format(date);
             case 2: // bearbeiter
                 return mn.getUmsetzungDurch();

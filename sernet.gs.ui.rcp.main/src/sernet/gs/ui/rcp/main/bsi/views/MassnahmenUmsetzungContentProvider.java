@@ -80,13 +80,15 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		public void childAdded(CnATreeElement category, CnATreeElement child) {
 			if (child instanceof BausteinUmsetzung && isOfInterest(child))
 				reloadMeasures();
-			else if (child instanceof ITVerbund)
+			else if (child instanceof ITVerbund){
 				todoView.compoundAdded((ITVerbund) child);
+			}
 		}
 		
 		public void linkChanged(CnALink old, CnALink link, Object source) {
-			if (link.getDependency() instanceof Person)
+			if (link.getDependency() instanceof Person){
 				updateViewer(REFRESH, null);
+			}
 		}
 		
 		public void linkAdded(CnALink link) {
@@ -157,8 +159,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		}
 		
 		public void databaseChildAdded(CnATreeElement child) {
-			if (child instanceof BausteinUmsetzung && isOfInterest(child))
+			if (child instanceof BausteinUmsetzung && isOfInterest(child)){
 				reloadMeasures();
+			}
 		}
 
 		public void databaseChildChanged(CnATreeElement child) {
@@ -217,9 +220,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 
 	@SuppressWarnings("unchecked")
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof PlaceHolder)
+		if (inputElement instanceof PlaceHolder){
 			return new Object[] {inputElement};
-		
+		}
 		List<TodoViewItem> mns = (List<TodoViewItem>) inputElement;
 		return mns.toArray(new Object[mns.size()]);
 		
@@ -298,9 +301,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		ITVerbund expectedCompound = todoView.getCurrentCompound();
 		
 		// No compound selected -> nothing is of interest.
-		if (expectedCompound == null)
+		if (expectedCompound == null){
 			return false;
-		
+		}
 		// Otherwise climb the tree.
 		CnATreeElement parent = child.getParent();
 		while (! (parent instanceof ITVerbund))
@@ -329,8 +332,9 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		
 		for (Class<?> c : classes)
 		{
-			if (c.isAssignableFrom(child.getClass()))
+			if (c.isAssignableFrom(child.getClass())){
 				return true;
+			}
 		}
 		
 		return false;
