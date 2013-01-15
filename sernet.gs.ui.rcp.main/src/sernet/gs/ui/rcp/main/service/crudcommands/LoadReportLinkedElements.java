@@ -194,7 +194,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
      */
     @Deprecated
     private List<CnALink> getLinks(CnATreeElement root, String relationId, boolean doUpLinks){
-        Integer dbId = root.getDbId();
         String qualifier = "";
         if(doUpLinks){
             qualifier = "dependency";

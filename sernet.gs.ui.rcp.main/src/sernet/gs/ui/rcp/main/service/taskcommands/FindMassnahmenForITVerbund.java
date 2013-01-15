@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,13 +34,11 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.lob.SerializableClob;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.util.StopWatch.TaskInfo;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
@@ -144,7 +141,8 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 			if (getLog().isDebugEnabled()) {
 			    getLog().debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
 			}
-			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
+//			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
+			List<MassnahmenUmsetzung> list = null;
 			IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
 			list = dao.findByCallback(new FindMassnahmenForITVerbundCallback(itverbundDbId,loadBlockNumber,filter,sortBy));
 			

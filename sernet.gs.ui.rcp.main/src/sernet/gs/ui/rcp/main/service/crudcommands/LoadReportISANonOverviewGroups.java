@@ -65,7 +65,6 @@ public class LoadReportISANonOverviewGroups extends GenericCommand {
     @Override
     public void execute() {
         results = new ArrayList<List<String>>(0);
-        ArrayList<String> list = new ArrayList<String>(0);
         try{
             ControlGroup samtGroup = null;
             if(sgdbid != null){

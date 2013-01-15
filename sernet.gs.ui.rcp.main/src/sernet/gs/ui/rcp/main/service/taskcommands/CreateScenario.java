@@ -20,15 +20,12 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.hibernate.proxy.HibernateProxyHelper;
-
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Organization;
@@ -104,10 +101,10 @@ public class CreateScenario extends GenericCommand {
             incidentScenario.setTitel(sb.toString());
             
             CreateLink<CnALink, IncidentScenario, Threat> cmd2 = new CreateLink<CnALink, IncidentScenario,Threat >(incidentScenario, threat, THREAT_RELATION_ID );
-            cmd2 = getCommandService().executeCommand(cmd2);
+            getCommandService().executeCommand(cmd2);
 
             CreateLink<CnALink, IncidentScenario, Vulnerability> cmd3 = new CreateLink<CnALink, IncidentScenario,Vulnerability >(incidentScenario, vulnerability, VULN_RELATION_ID);
-            cmd3 = getCommandService().executeCommand(cmd3);
+            getCommandService().executeCommand(cmd3);
 
             this.incScen = incidentScenario;
         } catch (CommandException e) {

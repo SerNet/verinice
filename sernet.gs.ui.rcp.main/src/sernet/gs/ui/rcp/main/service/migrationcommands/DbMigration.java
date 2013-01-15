@@ -37,7 +37,7 @@ public abstract class DbMigration extends GenericCommand {
 			BSIModel model = command2.getModel();
 			model.setDbVersion(getVersion());
 			SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
-			command4 = getCommandService().executeCommand(command4);
+			getCommandService().executeCommand(command4);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
 		}

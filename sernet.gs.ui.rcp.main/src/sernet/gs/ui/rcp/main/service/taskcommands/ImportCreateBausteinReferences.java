@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MbBaust;
-import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
@@ -42,7 +41,6 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
@@ -162,7 +160,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
                 Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
                 if (!possibleRelations.isEmpty()) {
                     CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
-                    cmd2 = getCommandService().executeCommand(cmd2);
+                    getCommandService().executeCommand(cmd2);
                 }
             }
         }

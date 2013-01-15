@@ -30,7 +30,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -70,7 +69,6 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
     public void execute() {
         if(!resultInjectedFromCache){
             results = new ArrayList<List<String>>();
-            ControlGroup roomGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(roomID);
             LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, roomID, true);
             try {
                 command = getCommandService().executeCommand(command);

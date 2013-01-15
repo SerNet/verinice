@@ -92,8 +92,6 @@ public class FindSGCommand extends GenericCommand implements ICachedCommand{
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
-
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId, true);
             try {
                 command = getCommandService().executeCommand(command);

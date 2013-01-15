@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
@@ -65,8 +63,6 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
             try {
                 // determine max and tolerable risk values. initialize matrices to save value counts:
                 Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
-
-                HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 
                 switch (this.riskType) {
                 case 'c':

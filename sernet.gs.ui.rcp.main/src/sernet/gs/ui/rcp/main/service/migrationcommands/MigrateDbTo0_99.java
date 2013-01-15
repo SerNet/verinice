@@ -58,7 +58,7 @@ public class MigrateDbTo0_99 extends DbMigration {
         }
 	    UpdateScopeId updateScopeId = new UpdateScopeId();
 	    try {
-	        updateScopeId = getCommandService().executeCommand(updateScopeId);
+	        getCommandService().executeCommand(updateScopeId);
         } catch (CommandException e) {
             getLog().error("Error while updating scope id.", e);
             throw new RuntimeCommandException(e);
@@ -66,7 +66,7 @@ public class MigrateDbTo0_99 extends DbMigration {
 	    
 	    AddDefaultGroups addDefaultGroups = new AddDefaultGroups();
         try {
-            addDefaultGroups = getCommandService().executeCommand(addDefaultGroups);
+            getCommandService().executeCommand(addDefaultGroups);
         } catch (CommandException e) {
             getLog().error("Error while adding default groups.", e);
             throw new RuntimeCommandException(e);

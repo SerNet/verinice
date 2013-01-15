@@ -30,8 +30,6 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 public class FastLoadCnAElementsByIds extends GenericCommand {
 
@@ -55,8 +53,6 @@ public class FastLoadCnAElementsByIds extends GenericCommand {
 						"from Entity e " +
 						"where e.dbId in (:dbids)")
 						.setParameterList("dbids", dbIDs);
-				String queryString = query.getQueryString();
-				
 				query.setReadOnly(true);
 				List result = query.list();
 				return result;

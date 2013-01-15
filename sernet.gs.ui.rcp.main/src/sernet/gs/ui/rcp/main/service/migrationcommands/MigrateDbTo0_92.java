@@ -103,12 +103,12 @@ public class MigrateDbTo0_92 extends DbMigration {
 		LOG.debug("Speichere alle veränderten Objekte. Bitte warten...");
 
 		UpdateMultipleElements command3 = new UpdateMultipleElements(changedElements, ChangeLogEntry.STATION_ID);
-		command3 = getCommandService().executeCommand(command3);
+		getCommandService().executeCommand(command3);
 		
 		BSIModel model = command2.getModel();
 		model.setDbVersion(getVersion());
 		SaveElement<BSIModel> command4 = new SaveElement<BSIModel>(model);
-		command4 = getCommandService().executeCommand(command4);
+		getCommandService().executeCommand(command4);
 	}
 
 	private List<CnATreeElement> migratePersonFields(List<CnATreeElement> allElements) {

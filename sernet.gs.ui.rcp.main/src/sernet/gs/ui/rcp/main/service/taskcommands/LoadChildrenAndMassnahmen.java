@@ -121,7 +121,8 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 	public void execute() {
 		try {
 			long start = System.currentTimeMillis();
-			List<CnATreeElement> list = new ArrayList<CnATreeElement>();
+//			List<CnATreeElement> list = new ArrayList<CnATreeElement>();
+			List<CnATreeElement> list = null;
 			IBaseDao<ITVerbund, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
 			DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
 			crit.add(Restrictions.eq("dbId", id));

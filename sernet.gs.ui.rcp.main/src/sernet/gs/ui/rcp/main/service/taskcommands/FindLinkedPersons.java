@@ -87,7 +87,6 @@ public class FindLinkedPersons extends GenericCommand {
 						"from Entity e " +
 						"where e.dbId in (:dbids)")
 						.setParameterList("dbids", dbIds);
-				String queryString = query.getQueryString();
 				query.setReadOnly(true);
 				List result = query.list();
 				return result;

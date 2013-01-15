@@ -19,7 +19,6 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,7 +62,6 @@ public abstract class FindMassnahmenAbstract extends GenericCommand {
 	protected void fillList(List<MassnahmenUmsetzung> alleMassnahmen) throws CommandException {
 		int count = 0;
 		Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
-		Set<MassnahmenUmsetzung> unresolvedMeasures = new HashSet<MassnahmenUmsetzung>();
 
 		for (MassnahmenUmsetzung mn : alleMassnahmen) {
 			// log.debug("Processing Massnahme: " + count);

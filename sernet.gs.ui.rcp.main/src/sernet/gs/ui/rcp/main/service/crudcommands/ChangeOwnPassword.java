@@ -75,7 +75,6 @@ public class ChangeOwnPassword extends ChangeLoggingCommand implements IAuthAwar
             
             String hash = hashPassword(getAuthService().getUsername());
             Property passProperty = configuration.getEntity().getProperties(Configuration.PROP_PASSWORD).getProperty(0);
-            Property userProperty = configuration.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0);
             passProperty.setPropertyValue(hash, false);
             
             getDaoFactory().getDAO(Configuration.class).merge(configuration);

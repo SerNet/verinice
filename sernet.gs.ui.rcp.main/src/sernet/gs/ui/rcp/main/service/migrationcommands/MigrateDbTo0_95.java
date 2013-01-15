@@ -52,7 +52,7 @@ public class MigrateDbTo0_95 extends DbMigration {
 		UpdateMultipleElements<BausteinVorschlag> command 
 			= new UpdateMultipleElements<BausteinVorschlag>(list, ChangeLogEntry.STATION_ID);
 		try {
-			command = getCommandService().executeCommand(command);
+			getCommandService().executeCommand(command);
 			super.updateVersion();
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
