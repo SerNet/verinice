@@ -18,14 +18,9 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.actions.Messages;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -112,11 +107,7 @@ public class PrepareObjectWithAccountDataForDeletion extends GenericCommand {
                             freePersonElement(child, child.getTypeId());
                         }
                     }
-                    if(child.getTypeId().equals(AuditGroup.TYPE_ID)){
-                        iterateThroughGroup(child);
-                    } else {
-                        iterateThroughGroup(child);
-                    }
+                    iterateThroughGroup(child);
                 }
             }
         }

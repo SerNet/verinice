@@ -74,7 +74,7 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
     public LoadReportScenarioDetails(String typeId, String rootElement) {
         loadReportElementWithLinks = new LoadReportElementWithLinks(typeId, rootElement);
         this.typeId = typeId;
-        this.rootElmt = new Integer(Integer.parseInt(rootElement));
+        this.rootElmt = Integer.valueOf(Integer.parseInt(rootElement));
     }
 
     /* (non-Javadoc)

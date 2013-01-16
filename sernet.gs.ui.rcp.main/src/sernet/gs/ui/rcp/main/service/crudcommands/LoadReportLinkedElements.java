@@ -111,7 +111,7 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
         // FIXME externalize strings in SNCA.xml!
         String identifier = root.getTypeId() + "->" + typeId;
         if(!linkTypeIdMap.containsKey(identifier)){
-            linkTypeIdMap.put(identifier, new Integer(1));
+            linkTypeIdMap.put(identifier, Integer.valueOf(1));
         } else {
             linkTypeIdMap.put(identifier, linkTypeIdMap.get(identifier) + 1);
         }

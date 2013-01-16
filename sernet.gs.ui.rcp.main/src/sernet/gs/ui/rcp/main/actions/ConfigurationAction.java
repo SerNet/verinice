@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -41,7 +40,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.PasswordException;
 import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
@@ -130,7 +128,7 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 			}
 		}
 
-		final AccountDialog dialog = new AccountDialog(window.getShell(), entType, true, Messages.ConfigurationAction_4, configuration.getEntity());
+		final AccountDialog dialog = new AccountDialog(window.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
 		if (dialog.open() != Window.OK) {
 			return;
 		}

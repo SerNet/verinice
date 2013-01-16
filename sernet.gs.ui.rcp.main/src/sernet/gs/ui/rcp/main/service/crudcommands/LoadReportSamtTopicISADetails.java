@@ -69,12 +69,13 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
             try {
                 result = new ArrayList<List<String>>(0);
                 ControlGroup cg = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(rootElmt);
+                CnATreeElement elmt = cg;
                 if(cg == null){
                     RetrieveCnATreeElement command = new RetrieveCnATreeElement("cnatreeelement", rootElmt);
                     command = getCommandService().executeCommand(command);
-                    CnATreeElement elmt = command.getElement();
+                    elmt = command.getElement();
                 }
-                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, cg.getDbId(), true);
+                LoadReportElements command = new LoadReportElements(SamtTopic.TYPE_ID, elmt.getDbId(), true);
                 command = getCommandService().executeCommand(command);
                 for(CnATreeElement c : command.getElements()){
                     ArrayList<String> list = new ArrayList<String>(0);

@@ -109,7 +109,7 @@ public class LoadReportISAAttachedImages extends GenericCommand implements ICach
     }
     
     public void setRootElmt(int root){
-        this.rootElmt = new Integer(root);
+        this.rootElmt = Integer.valueOf(root);
     }
     
     public byte[] getResult(int resultNr){

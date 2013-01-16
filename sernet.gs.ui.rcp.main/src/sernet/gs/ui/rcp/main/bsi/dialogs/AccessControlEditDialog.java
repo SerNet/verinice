@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -67,7 +66,7 @@ import sernet.verinice.model.common.Permission;
  */
 public class AccessControlEditDialog extends TitleAreaDialog {
 
-	private static final Logger log = Logger.getLogger(AccessControlEditDialog.class);
+	private static final Logger LOG = Logger.getLogger(AccessControlEditDialog.class);
 
 	private static final String INFORMATION_ADD_MODE = Messages.AccessControlEditDialog_7;
 
@@ -87,10 +86,16 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
 	private Button buttonInherit;
 	
-	Button[] radioButtonMode = new Button[2];
+	private Button[] radioButtonMode = new Button[2];
 	
-	Button buttonRemove;
+	private Button buttonRemove;
+	
+	private static final int MARGIN_WIDTH_DEFAULT = 10;
+	
+	private static final int MARGIN_HEIGHT_DEFAULT = 10;
 
+	private static final int COLSPAN_DEFAULT = 5;
+	
 	@SuppressWarnings("unchecked")
 	public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
 		super(parent);
@@ -120,54 +125,40 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
 		final Composite composite = (Composite) super.createDialogArea(parent);
 		GridLayout layoutRoot = (GridLayout) composite.getLayout();
-		layoutRoot.marginWidth = 10;
-		layoutRoot.marginHeight = 10;
-		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
-		gd.grabExcessHorizontalSpace = true;
-		gd.grabExcessVerticalSpace = true;
-		gd.horizontalAlignment = GridData.FILL;
-		gd.verticalAlignment = GridData.FILL;
+		layoutRoot.marginWidth = MARGIN_WIDTH_DEFAULT;
+		layoutRoot.marginHeight = MARGIN_HEIGHT_DEFAULT;
+		GridData gd = generateGridData(Integer.valueOf(GridData.GRAB_HORIZONTAL), Boolean.TRUE, Boolean.TRUE, Integer.valueOf(GridData.FILL), Integer.valueOf(GridData.FILL), null);
 		composite.setLayoutData(gd);
 
 		final Composite containerSettings = new Composite(composite, SWT.NONE);
-		GridLayout layoutSettings = new GridLayout(2, false);
-		layoutSettings.marginWidth = 10;
-		layoutSettings.marginHeight = 10;
+		GridLayout layoutSettings = generateGridLayout(2, false, MARGIN_WIDTH_DEFAULT, MARGIN_HEIGHT_DEFAULT);
 		containerSettings.setLayout(layoutSettings);
-		GridData gridData = new GridData();
-		gridData.horizontalSpan = 5;
+		GridData gridData = generateGridData(null, null, null, null, null, Integer.valueOf(COLSPAN_DEFAULT));
 		containerSettings.setLayoutData(gridData);	
 
-		radioButtonMode[0] = new Button(containerSettings, SWT.RADIO);
-		radioButtonMode[0].setSelection(true);
-		radioButtonMode[0].setText(Messages.AccessControlEditDialog_9);
-		radioButtonMode[0].addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				showInformation();
-			}
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		radioButtonMode[1] = new Button(containerSettings, SWT.RADIO);
-		radioButtonMode[1].setText(Messages.AccessControlEditDialog_10);
+		SelectionListener radio0Listener = new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showInformation();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        };
+		
+		radioButtonMode[0] = generateButton(containerSettings, Integer.valueOf(SWT.RADIO), Messages.AccessControlEditDialog_9, Boolean.TRUE, radio0Listener);
+		radioButtonMode[1] = generateButton(containerSettings, Integer.valueOf(SWT.RADIO), Messages.AccessControlEditDialog_10, null, null);
 
 		showInformation();
 
-		buttonInherit = new Button(containerSettings, SWT.CHECK );
-		buttonInherit.setText(Messages.AccessControlEditDialog_11);
-		buttonInherit.setSelection(false);
-		gridData = new GridData();
-		gridData.horizontalSpan = 2;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
+		buttonInherit = generateButton(containerSettings, Integer.valueOf(SWT.CHECK), Messages.AccessControlEditDialog_11, Boolean.FALSE, null);
+		gridData = generateGridData(null, Boolean.TRUE, null, Integer.valueOf(GridData.FILL), null, null);
 		buttonInherit.setLayoutData(gridData);
 		
 		final Composite containerRoles = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout(5, false);
-		layout.marginWidth = 10;
-		layout.marginHeight = 10;
+		GridLayout layout = generateGridLayout(COLSPAN_DEFAULT, false, MARGIN_WIDTH_DEFAULT, MARGIN_HEIGHT_DEFAULT);
 		containerRoles.setLayout(layout);
 		containerRoles.setLayoutData(gd);
 		
@@ -175,50 +166,71 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		labelRole.setText(Messages.AccessControlEditDialog_12);
 		comboRole = new Combo(containerRoles, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboRole.setItems(getRoles());
-		buttonRead = new Button(containerRoles, SWT.CHECK );
-		buttonRead.setText(Messages.AccessControlEditDialog_13);
-		buttonRead.setSelection(false);
-		buttonWrite = new Button(containerRoles, SWT.CHECK );
-		buttonWrite.setText(Messages.AccessControlEditDialog_14);
-		buttonWrite.setSelection(false);
-		Button buttonAdd = new Button(containerRoles, SWT.PUSH );
-		buttonAdd.setText(Messages.AccessControlEditDialog_15);
-		gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.horizontalAlignment = SWT.RIGHT;
-		buttonAdd.setLayoutData(gridData);
-		buttonAdd.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addPermission();
-			}
+		buttonRead = generateButton(containerRoles, Integer.valueOf(SWT.CHECK), Messages.AccessControlEditDialog_13, Boolean.FALSE, null);
+		buttonWrite = generateButton(containerRoles, Integer.valueOf(SWT.CHECK), Messages.AccessControlEditDialog_14, Boolean.FALSE, null);
+		SelectionListener addListener = new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                addPermission();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        };
+        Button buttonAdd = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_15, null, addListener);
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
+		gridData = generateGridData(null, Boolean.TRUE, null, Integer.valueOf(SWT.RIGHT), null, null);
+		buttonAdd.setLayoutData(gridData);
 
 		createViewer(containerRoles);
 		
-		buttonRemove = new Button(containerRoles, SWT.PUSH );
-		buttonRemove.setText(Messages.AccessControlEditDialog_16);
-		buttonRemove.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removePermission();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		gridData = new GridData();
-		gridData.horizontalSpan = 5;
-		gridData.horizontalAlignment = SWT.RIGHT;
+		SelectionListener removeListener = new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                removePermission();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        };
+		
+		buttonRemove = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_16, null, removeListener);
+		gridData = generateGridData(null, null, null, SWT.RIGHT, null, Integer.valueOf(COLSPAN_DEFAULT));
 		buttonRemove.setLayoutData(gridData);
 
 		return containerRoles;
+	}
+	
+	private GridLayout generateGridLayout(int columns, boolean makeColumnsEqualWidth, int marginWidth, int marginHeight){
+	    GridLayout layout = new GridLayout(columns, makeColumnsEqualWidth);
+	    layout.marginWidth = marginWidth;
+	    layout.marginHeight = marginHeight;
+	    return layout;
+	}
+	
+	private GridData generateGridData(Integer style, Boolean grabExcessHorizontalSpace, Boolean grabExcessVerticalSpace, 
+	        Integer horizontalAlignment, Integer verticalAlignment, Integer horizontalSpan){
+	    GridData data = (style != null) ? new GridData(style.intValue()) : new GridData();
+	    data.grabExcessHorizontalSpace = (grabExcessHorizontalSpace != null) ? grabExcessHorizontalSpace.booleanValue() : data.grabExcessHorizontalSpace;
+	    data.grabExcessVerticalSpace = (grabExcessVerticalSpace != null) ? grabExcessVerticalSpace.booleanValue() : data.grabExcessVerticalSpace;
+	    data.horizontalAlignment = (horizontalAlignment != null) ? horizontalAlignment.intValue() : data.horizontalAlignment;
+	    data.verticalAlignment = (verticalAlignment != null) ? verticalAlignment.intValue() : data.verticalAlignment;
+	    data.horizontalSpan = (horizontalSpan != null) ? horizontalSpan.intValue() : data.horizontalSpan;
+	    return data;
+	}
+	
+	private Button generateButton(Composite composite, Integer style, String text, Boolean selection, SelectionListener listener){
+	    Button button = new Button(composite, style);
+	    button.setText((text != null) ? text : button.getText());
+	    button.setSelection((selection != null) ? selection.booleanValue() : button.getSelection());
+	    if(listener != null){
+	        button.addSelectionListener(listener);
+	    }
+	    return button;
 	}
 
 	protected void showInformation() {
@@ -239,8 +251,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			this.permissionSet.add(Permission.createPermission(element, comboRole.getText(), buttonRead.getSelection(), buttonWrite.getSelection()));
 			try {
 				viewer.setInput(this.permissionSet.toArray());
-			} catch (Throwable t) {
-				log.error("Error while setting table data", t); //$NON-NLS-1$
+			} catch (Exception t) {
+				LOG.error("Error while setting table data", t); //$NON-NLS-1$
 			}
 		}
 	}
@@ -255,8 +267,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			}
 			try {
 				viewer.setInput(this.permissionSet.toArray());
-			} catch (Throwable t) {
-				log.error("Error while setting table data", t); //$NON-NLS-1$
+			} catch (Exception t) {
+				LOG.error("Error while setting table data", t); //$NON-NLS-1$
 			}
 		}
 	}
@@ -274,9 +286,11 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	}
 
 	private void createViewer(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+	    int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
+	    style = style | SWT.FULL_SELECTION | SWT.BORDER;
+		viewer = new TableViewer(parent, style);
 
-		createColumns(parent, viewer);
+		createColumns();
 		final Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -294,8 +308,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		// contentProvider
 		try {
 			viewer.setInput(permissionList.toArray());
-		} catch (Throwable t) {
-			log.error("Error while setting table data", t); //$NON-NLS-1$
+		} catch (Exception t) {
+			LOG.error("Error while setting table data", t); //$NON-NLS-1$
 		}
 
 		// Layout the viewer
@@ -316,15 +330,17 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			throw new RuntimeException(e);
 		}
 		// clone the permissions because of hashcode trouble in set with instances created by hibernate
-		return this.permissionSet = Permission.clonePermissionSet(firstElement, lp.getPermissions());
+		Set<Permission> pSet = Permission.clonePermissionSet(firstElement, lp.getPermissions());
+		this.permissionSet = pSet;
+		return pSet;
 	}
 
-	private void createColumns(final Composite parent, final TableViewer viewer) {
+	private void createColumns() {
 		String[] titles = { Messages.AccessControlEditDialog_20, Messages.AccessControlEditDialog_21, Messages.AccessControlEditDialog_22 };
 		int[] bounds = { 170, 50, 50 };
 
 		// First column: title of the role
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -333,7 +349,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		});
 
 		// 2. column: read
-		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col = createTableViewerColumn(titles[1], bounds[1]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -351,7 +367,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		});
 
 		// 3. column: write
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col = createTableViewerColumn(titles[2], bounds[2]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -369,7 +385,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		});
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
+	private TableViewerColumn createTableViewerColumn(String title, int bound) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
@@ -393,7 +409,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			try {
 				ServiceFactory.lookupCommandService().executeCommand(up);
 			} catch (CommandException e) {
-				log.error("Error while updating permissions", e); //$NON-NLS-1$
+				LOG.error("Error while updating permissions", e); //$NON-NLS-1$
 				throw new RuntimeException(e);
 			}
 		}

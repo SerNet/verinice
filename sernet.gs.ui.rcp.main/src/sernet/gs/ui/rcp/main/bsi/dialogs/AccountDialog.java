@@ -67,7 +67,7 @@ import sernet.verinice.service.commands.CheckUserName;
  */
 public class AccountDialog extends TitleAreaDialog {
     
-    private static transient Logger LOG = Logger.getLogger(AccountDialog.class);
+    private static transient Logger log = Logger.getLogger(AccountDialog.class);
     
     // usernames that should not be assigned by a user, use only lowercase here
     private static String[] reservedUsernames = new String[]{"admin"};
@@ -97,7 +97,7 @@ public class AccountDialog extends TitleAreaDialog {
         isScopeOnly = authService.isScopeOnly();
     }
 
-    public AccountDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
+    public AccountDialog(Shell shell, EntityType entType2, String title, Entity entity) {
         this(shell, entType2);
         useRules = true;
         this.title = title;
@@ -122,7 +122,6 @@ public class AccountDialog extends TitleAreaDialog {
         	setMessage(Messages.AccountDialog_0);
         	
             Composite container = (Composite) super.createDialogArea(parent);
-            GridLayout layoutRoot = (GridLayout) container.getLayout();
     		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
     		gd.grabExcessHorizontalSpace = true;
     		gd.grabExcessVerticalSpace = true;
@@ -159,7 +158,6 @@ public class AccountDialog extends TitleAreaDialog {
                 configureIsAdmin((Combo)huiComposite.getField(Configuration.PROP_ISADMIN));
                 
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
-                //return huiComposite;
             } catch (DBException e) {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
@@ -170,7 +168,7 @@ public class AccountDialog extends TitleAreaDialog {
             container.layout(); 
             return container;
         } catch (Exception e) {
-            LOG.error("Error while creating account dialog", e);
+            getLog().error("Error while creating account dialog", e);
             return null;
         }
         
@@ -199,7 +197,6 @@ public class AccountDialog extends TitleAreaDialog {
      */
     private SelectionListener getIsAdminSelectionListener(){
         return new SelectionListener() {
-            
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if(e.getSource() instanceof Combo){
@@ -213,7 +210,6 @@ public class AccountDialog extends TitleAreaDialog {
                     }
                 }
             }
-            
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
@@ -233,9 +229,7 @@ public class AccountDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Combo combo = null;
-                if(e.getSource() instanceof Combo){
-                    combo = (Combo)e.getSource();
-                }
+                combo = (e.getSource() instanceof Combo) ? (Combo)e.getSource() : null;
                 String scopeYes = HUITypeFactory.getInstance().getMessage(Configuration.PROP_SCOPE_YES);
                 String scopeNo = HUITypeFactory.getInstance().getMessage(Configuration.PROP_SCOPE_NO);
                 if(combo != null && combo.getItem(combo.getSelectionIndex()).equals(scopeYes)){
@@ -416,10 +410,6 @@ public class AccountDialog extends TitleAreaDialog {
 		}
 	}
 	
-	protected void cancelPressed(){
-	    super.cancelPressed();
-	}
-	
 	public String getPassword() {
 		return password;
 	}
@@ -436,11 +426,11 @@ public class AccountDialog extends TitleAreaDialog {
         return entity;
     }
 	
-	public Logger getLog(){
-	    if(LOG == null){
-	        LOG = Logger.getLogger(AccountDialog.class);
+	public static Logger getLog(){
+	    if(log == null){
+	        log = Logger.getLogger(AccountDialog.class);
 	    }
-	    return LOG;
+	    return log;
 	}
 	
 	private boolean validateInput(){
@@ -496,23 +486,7 @@ public class AccountDialog extends TitleAreaDialog {
 	    }
         if((initialUserName != null && !initialUserName.equals(enteredName)) ||
                 (initialUserName == null && !enteredName.isEmpty())){
-            CheckUserName command = new CheckUserName(enteredName);
-            try {
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                boolean userNameExists = command.getResult();
-                if(userNameExists){
-                    toggleValidationError(textName, Messages.AccountDialog_7, Messages.AccountDialog_7);
-                    return false;
-                } else if(noPasswordEntered){
-                    toggleValidationError(textName, Messages.AccountDialog_10, Messages.AccountDialog_10);
-                    return false;
-                } else {
-                    textName.setToolTipText("");
-                    return true;
-                }
-            } catch (CommandException e1) {
-                LOG.error("Error while checking username", e1);
-            }
+            return checkUserNameOnServer(enteredName, noPasswordEntered);
         } else if (enteredName.equals(initialUserName)){
             return true;
         } else if(initialUserName == null && noPasswordEntered){
@@ -520,10 +494,31 @@ public class AccountDialog extends TitleAreaDialog {
         }
         return retVal;
 	}
+
+    private boolean checkUserNameOnServer(String enteredName, final boolean noPasswordEntered) {
+        CheckUserName command = new CheckUserName(enteredName);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            boolean userNameExists = command.getResult();
+            if(userNameExists){
+                toggleValidationError(textName, Messages.AccountDialog_7, Messages.AccountDialog_7);
+                return false;
+            } else if(noPasswordEntered){
+                toggleValidationError(textName, Messages.AccountDialog_10, Messages.AccountDialog_10);
+                return false;
+            } else {
+                textName.setToolTipText("");
+                return true;
+            }
+        } catch (CommandException e1) {
+            getLog().error("Error while checking username", e1);
+        }
+        return false;
+    }
 	
 	private boolean isReservedUsername(String username){
 	    for(String s : reservedUsernames){
-	        if(username.toLowerCase().equals(s)){
+	        if(username.equalsIgnoreCase(s)){
 	            return true;
 	        }
 	    }

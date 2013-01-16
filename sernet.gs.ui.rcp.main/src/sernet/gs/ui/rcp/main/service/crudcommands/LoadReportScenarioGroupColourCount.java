@@ -54,7 +54,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
     public LoadReportScenarioGroupColourCount(Integer root, int[] yellowFields, String probType){
         this.rootElmt = root;
         results = new ArrayList<ArrayList<String>>(0);
-        this.numOfYellowFields = yellowFields;
+        this.numOfYellowFields = yellowFields.clone();
         this.scenarioProbabilityType = probType;
     }
 
@@ -70,7 +70,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
                 for(List<String> list : groupLoader.getResults()){
                     int overallCount = 0;
                     int groupdbid = Integer.parseInt(list.get(2));
-                    LoadPolymorphicCnAElementById elmtLoader = new LoadPolymorphicCnAElementById(new Integer[]{new Integer(groupdbid)});
+                    LoadPolymorphicCnAElementById elmtLoader = new LoadPolymorphicCnAElementById(new Integer[]{Integer.valueOf(groupdbid)});
                     CnATreeElement elmt = getCommandService().executeCommand(elmtLoader).getElements().get(0);
                     if(elmt.getParent().getDbId().intValue() != elmt.getScopeId().intValue()){
                         int redCount = 0;

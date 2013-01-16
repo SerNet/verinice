@@ -49,7 +49,7 @@ public class LoadReportISAChapterAverageMaturity extends GenericCommand implemen
     }
     
     public LoadReportISAChapterAverageMaturity(String root){
-        this.rootElmnt = new Integer(Integer.parseInt(root));
+        this.rootElmnt = Integer.valueOf(Integer.parseInt(root));
     }
 
     /* (non-Javadoc)

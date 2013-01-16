@@ -31,6 +31,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
 /**
  *
  */
+@Deprecated
 public class LoadReportISANonOverviewGroups extends GenericCommand {
 
     private Integer rootElmt;

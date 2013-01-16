@@ -68,7 +68,9 @@ public class AutoBausteinDialog extends Dialog {
 
     public AutoBausteinDialog(Shell shell) {
         super(shell);
-        setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        int style = SWT.CLOSE | SWT.TITLE | SWT.BORDER;
+        style = style | SWT.APPLICATION_MODAL | SWT.RESIZE;
+        setShellStyle(style);
     }
 
     protected void createListGroup(Composite parent) {
@@ -210,7 +212,7 @@ public class AutoBausteinDialog extends Dialog {
                         BausteinVorschlag selection = (BausteinVorschlag) sel.getFirstElement();
                         RemoveGenericElement<BausteinVorschlag> command = new RemoveGenericElement<BausteinVorschlag>(selection);
                         try {
-                            command = ServiceFactory.lookupCommandService().executeCommand(command);
+                            ServiceFactory.lookupCommandService().executeCommand(command);
                             selectedSubtype = null;
                             elements.remove(selection);
                             viewer.remove(selection);
@@ -233,8 +235,7 @@ public class AutoBausteinDialog extends Dialog {
             SaveElement<BausteinVorschlag> command = new SaveElement<BausteinVorschlag>(vorschlag);
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                vorschlag = command.getElement();
-                return vorschlag;
+                return command.getElement();
             } catch (CommandException e1) {
                 ExceptionUtil.log(e1, Messages.AutoBausteinDialog_11);
             }

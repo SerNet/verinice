@@ -23,7 +23,6 @@ import java.util.List;
 
 import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -41,7 +40,7 @@ public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggi
 	}
 
 	public UpdateMultipleElements(List<T> elements, String stationId, int changeType) {
-		this.elements = elements;
+		this.elements = (elements != null) ? elements : new ArrayList<T>(0);
 		this.stationId = stationId;
 		this.changeType = changeType;
 	}

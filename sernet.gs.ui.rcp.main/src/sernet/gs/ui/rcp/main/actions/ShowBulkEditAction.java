@@ -201,7 +201,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         if(entType != null && !(entType.getId().equals(Person.TYPE_ID) || entType.getId().equals(PersonIso.TYPE_ID))){
             dialog = new BulkEditDialog(window.getShell(), entType);
         } else {
-            dialog = new PersonBulkEditDialog(window.getShell(), true, Messages.ShowBulkEditAction_14);
+            dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
         }
         if (dialog.open() != Window.OK) {
             return;

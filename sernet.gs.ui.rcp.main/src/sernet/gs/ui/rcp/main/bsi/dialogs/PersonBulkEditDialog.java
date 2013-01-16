@@ -44,7 +44,6 @@ import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.DBException;
@@ -59,8 +58,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     
     private static final Logger LOG = Logger.getLogger(PersonBulkEditDialog.class);
     
-    private EntityType entType;
-    private boolean b = false;
     private String title;
     private boolean isScopeOnly;
     private boolean useRules = true;
@@ -84,9 +81,8 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
      * @param title
      * @param entity
      */
-    public PersonBulkEditDialog(Shell shell, boolean b, String title) {
+    public PersonBulkEditDialog(Shell shell, String title) {
         this(shell);
-        this.b = b;
         this.title = title;
     }
 
@@ -111,7 +107,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
             setMessage(Messages.AccountDialog_0);
             
             Composite container = (Composite) super.createDialogArea(parent);
-            GridLayout layoutRoot = (GridLayout) container.getLayout();
             GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
             gd.grabExcessHorizontalSpace = true;
             gd.grabExcessVerticalSpace = true;
@@ -145,7 +140,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
                 
                 InputHelperFactory.setInputHelpers(HUITypeFactory.getInstance().getEntityType(entity.getEntityType()), huiComposite);
-                //return huiComposite;
             } catch (DBException e) {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
