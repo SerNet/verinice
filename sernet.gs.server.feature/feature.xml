@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="sernet.gs.server.feature"
+      label="verinice server Feature"
+      version="1.1.1.qualifier"
+      provider-name="sernet.de">
+
+   <description url="http://verinice.org">
+      Integrated server components for verinice - the Open Source ISMS tool.
+   </description>
+
+   <copyright url="http://verinice.org">
+      Copyright 1997 - 2012 SerNet GmbH and others.
+   </copyright>
+
+   <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
+      GNU LESSER GENERAL PUBLIC LICENSE
+               Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+  This version of the GNU Lesser General Public License incorporates
+the terms and conditions of version 3 of the GNU General Public
+License, supplemented by the additional permissions listed below.
+
+  0. Additional Definitions.
+
+  As used herein, &quot;this License&quot; refers to version 3 of the GNU Lesser
+General Public License, and the &quot;GNU GPL&quot; refers to version 3 of the GNU
+General Public License.
+
+  &quot;The Library&quot; refers to a covered work governed by this License,
+other than an Application or a Combined Work as defined below.
+
+  An &quot;Application&quot; is any work that makes use of an interface provided
+by the Library, but which is not otherwise based on the Library.
+Defining a subclass of a class defined by the Library is deemed a mode
+of using an interface provided by the Library.
+
+  A &quot;Combined Work&quot; is a work produced by combining or linking an
+Application with the Library.  The particular version of the Library
+with which the Combined Work was made is also called the &quot;Linked
+Version&quot;.
+
+  The &quot;Minimal Corresponding Source&quot; for a Combined Work means the
+Corresponding Source for the Combined Work, excluding any source code
+for portions of the Combined Work that, considered in isolation, are
+based on the Application, and not on the Linked Version.
+
+  The &quot;Corresponding Application Code&quot; for a Combined Work means the
+object code and/or source code for the Application, including any data
+and utility programs needed for reproducing the Combined Work from the
+Application, but excluding the System Libraries of the Combined Work.
+
+  1. Exception to Section 3 of the GNU GPL.
+
+  You may convey a covered work under sections 3 and 4 of this License
+without being bound by section 3 of the GNU GPL.
+
+  2. Conveying Modified Versions.
+
+  If you modify a copy of the Library, and, in your modifications, a
+facility refers to a function or data to be supplied by an Application
+that uses the facility (other than as an argument passed when the
+facility is invoked), then you may convey a copy of the modified
+version:
+
+   a) under this License, provided that you make a good faith effort to
+   ensure that, in the event an Application does not supply the
+   function or data, the facility still operates, and performs
+   whatever part of its purpose remains meaningful, or
+
+   b) under the GNU GPL, with none of the additional permissions of
+   this License applicable to that copy.
+
+  3. Object Code Incorporating Material from Library Header Files.
+
+  The object code form of an Application may incorporate material from
+a header file that is part of the Library.  You may convey such object
+code under terms of your choice, provided that, if the incorporated
+material is not limited to numerical parameters, data structure
+layouts and accessors, or small macros, inline functions and templates
+(ten or fewer lines in length), you do both of the following:
+
+   a) Give prominent notice with each copy of the object code that the
+   Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Accompany the object code with a copy of the GNU GPL and this license
+   document.
+
+  4. Combined Works.
+
+  You may convey a Combined Work under terms of your choice that,
+taken together, effectively do not restrict modification of the
+portions of the Library contained in the Combined Work and reverse
+engineering for debugging such modifications, if you also do each of
+the following:
+
+   a) Give prominent notice with each copy of the Combined Work that
+   the Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Accompany the Combined Work with a copy of the GNU GPL and this license
+   document.
+
+   c) For a Combined Work that displays copyright notices during
+   execution, include the copyright notice for the Library among
+   these notices, as well as a reference directing the user to the
+   copies of the GNU GPL and this license document.
+
+   d) Do one of the following:
+
+       0) Convey the Minimal Corresponding Source under the terms of this
+       License, and the Corresponding Application Code in a form
+       suitable for, and under terms that permit, the user to
+       recombine or relink the Application with a modified version of
+       the Linked Version to produce a modified Combined Work, in the
+       manner specified by section 6 of the GNU GPL for conveying
+       Corresponding Source.
+
+       1) Use a suitable shared library mechanism for linking with the
+       Library.  A suitable mechanism is one that (a) uses at run time
+       a copy of the Library already present on the user&apos;s computer
+       system, and (b) will operate properly with a modified version
+       of the Library that is interface-compatible with the Linked
+       Version.
+
+   e) Provide Installation Information, but only if you would otherwise
+   be required to provide such information under section 6 of the
+   GNU GPL, and only to the extent that such information is
+   necessary to install and execute a modified version of the
+   Combined Work produced by recombining or relinking the
+   Application with a modified version of the Linked Version. (If
+   you use option 4d0, the Installation Information must accompany
+   the Minimal Corresponding Source and Corresponding Application
+   Code. If you use option 4d1, you must provide the Installation
+   Information in the manner specified by section 6 of the GNU GPL
+   for conveying Corresponding Source.)
+
+  5. Combined Libraries.
+
+  You may place library facilities that are a work based on the
+Library side by side in a single library together with other library
+facilities that are not Applications and are not covered by this
+License, and convey such a combined library under terms of your
+choice, if you do both of the following:
+
+   a) Accompany the combined library with a copy of the same work based
+   on the Library, uncombined with any other library facilities,
+   conveyed under the terms of this License.
+
+   b) Give prominent notice with the combined library that part of it
+   is a work based on the Library, and explaining where to find the
+   accompanying uncombined form of the same work.
+
+  6. Revised Versions of the GNU Lesser General Public License.
+
+  The Free Software Foundation may publish revised and/or new versions
+of the GNU Lesser General Public License from time to time. Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns.
+
+  Each version is given a distinguishing version number. If the
+Library as you received it specifies that a certain numbered version
+of the GNU Lesser General Public License &quot;or any later version&quot;
+applies to it, you have the option of following the terms and
+conditions either of that published version or of any later version
+published by the Free Software Foundation. If the Library as you
+received it does not specify a version number of the GNU Lesser
+General Public License, you may choose any version of the GNU Lesser
+General Public License ever published by the Free Software Foundation.
+
+  If the Library as you received it specifies that a proxy can decide
+whether future versions of the GNU Lesser General Public License shall
+apply, that proxy&apos;s public statement of acceptance of any version is
+permanent authorization for you to choose that version for the
+Library.
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="com.springsource.org.apache.log4j"/>
+      <import plugin="javax.servlet"/>
+      <import plugin="com.springsource.org.apache.commons.logging"/>
+      <import plugin="com.springsource.javax.xml.stream"/>
+      <import plugin="com.springsource.antlr"/>
+      <import plugin="com.springsource.javassist"/>
+      <import plugin="com.springsource.net.sf.cglib"/>
+      <import plugin="org.apache.commons.collections"/>
+      <import plugin="com.springsource.org.dom4j"/>
+      <import plugin="com.springsource.org.objectweb.asm"/>
+      <import plugin="com.springsource.org.objectweb.asm.attrs"/>
+      <import plugin="com.springsource.net.sf.ehcache"/>
+      <import plugin="com.springsource.javax.transaction"/>
+      <import plugin="com.springsource.org.mortbay.util"/>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="com.springsource.org.mortbay.jetty.server"/>
+      <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="org.springframework.core"/>
+      <import plugin="org.springframework.beans"/>
+      <import plugin="com.springsource.org.aspectj.weaver"/>
+      <import plugin="com.springsource.org.aopalliance"/>
+      <import plugin="org.springframework.aop"/>
+      <import plugin="org.springframework.transaction"/>
+      <import plugin="org.springframework.context"/>
+      <import plugin="org.springframework.jdbc"/>
+      <import plugin="com.springsource.org.quartz"/>
+      <import plugin="org.eclipse.equinox.common"/>
+      <import plugin="org.springframework.web"/>
+      <import plugin="com.springsource.org.hibernate"/>
+      <import plugin="org.springframework.osgi.io"/>
+      <import plugin="org.springframework.osgi.core"/>
+      <import plugin="org.apache.commons.httpclient"/>
+      <import plugin="org.springframework.context.support"/>
+      <import plugin="org.junit4"/>
+      <import plugin="org.springframework.security.core"/>
+      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="sernet.gs.ui.rcp.main"/>
+      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.app"/>
+      <import plugin="org.springframework.orm"/>
+      <import plugin="org.springframework.osgi.web"/>
+      <import plugin="org.springframework.web.servlet"/>
+      <import plugin="sernet.gs.service"/>
+      <import plugin="sernet.gs.reveng"/>
+      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.compare.core" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.expressions" version="3.4.100" match="compatible"/>
+      <import plugin="org.eclipse.jface.text" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.ui" version="3.5.0" match="compatible"/>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.ui" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="compatible"/>
+      <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.filebuffers" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.core.filesystem" version="1.2.0" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="com.springsource.antlr"
+         download-size="0"
+         install-size="0"
+         version="2.7.6"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.com.mchange.v2.c3p0"
+         download-size="0"
+         install-size="0"
+         version="0.9.1.2"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javassist"
+         download-size="0"
+         install-size="0"
+         version="3.3.0.ga"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.transaction"
+         download-size="0"
+         install-size="0"
+         version="1.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.xml.stream"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.net.sf.cglib"
+         download-size="0"
+         install-size="0"
+         version="2.1.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.aopalliance"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.io"
+         download-size="0"
+         install-size="0"
+         version="1.4.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.logging"
+         download-size="0"
+         install-size="0"
+         version="1.1.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.log4j"
+         download-size="0"
+         install-size="0"
+         version="1.2.15"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.aspectj.weaver"
+         download-size="0"
+         install-size="0"
+         version="1.6.5.RELEASE"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.dom4j"
+         download-size="0"
+         install-size="0"
+         version="1.6.1"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.mortbay.jetty.server"
+         download-size="0"
+         install-size="0"
+         version="6.1.9"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.mortbay.util"
+         download-size="0"
+         install-size="0"
+         version="6.1.9"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.objectweb.asm"
+         download-size="0"
+         install-size="0"
+         version="1.5.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.objectweb.asm.attrs"
+         download-size="0"
+         install-size="0"
+         version="1.5.3"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.quartz"
+         download-size="0"
+         install-size="0"
+         version="1.6.2"
+         unpack="false"/>
+
+   <plugin
+         id="javax.servlet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.collections"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v200803061811"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.httpclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene.analysis"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.ops4j.pax.web.pax-web-bundle"
+         download-size="0"
+         install-size="0"
+         version="0.6.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.aop"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.beans"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.context"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.context.support"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.core"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.jdbc"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.orm"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.core"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.extender"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.io"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.osgi.web"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.security.core"
+         download-size="0"
+         install-size="0"
+         version="2.0.5.RELEASE"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.transaction"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.web"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="org.springframework.web.servlet"
+         download-size="0"
+         install-size="0"
+         version="2.5.6.SEC01"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.ehcache.fragment"
+         download-size="0"
+         install-size="0"
+         version="1.1.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.server"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="4.3.1"/>
+
+   <plugin
+         id="com.springsource.net.sf.ehcache"
+         download-size="0"
+         install-size="0"
+         version="1.6.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.server"
+         download-size="4000"
+         install-size="8600"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.workbench.texteditor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.net"
+         download-size="0"
+         install-size="0"
+         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.editors"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.hui.common"
+         download-size="0"
+         install-size="0"
+         version="1.1.1.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.ui.rcp.main"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.gs.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.aspectj.runtime"
+         download-size="0"
+         install-size="0"
+         version="1.6.5.RELEASE"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.hibernate"
+         download-size="0"
+         install-size="0"
+         version="3.2.6.ga"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.verinice.oda.driver"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.verinice.samt.service"
+         download-size="0"
+         install-size="0"
+         version="0.1.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.datatools.connectivity.oda"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.datatools.connectivity.oda.profile"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.datatools.connectivity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.datatools.connectivity.oda.consumer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="gnumail"
+         download-size="0"
+         install-size="0"
+         version="1.1.2"/>
+
+   <plugin
+         id="sernet.gs.pax_web.fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.el"
+         download-size="0"
+         install-size="0"
+         version="2.1.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.apache.commons.lang"
+         download-size="0"
+         install-size="0"
+         version="2.4.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.verinice.report.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jsf-api_2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

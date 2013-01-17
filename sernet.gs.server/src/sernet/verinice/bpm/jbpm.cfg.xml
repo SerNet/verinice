@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jbpm-configuration>
+
+  <!-- <import resource="jbpm.default.cfg.xml" /> -->
+  <!-- Content:  -->
+  
+  <import resource="jbpm.default.scriptmanager.xml" />
+  <import resource="jbpm.mail.templates.xml" />
+
+  <process-engine-context>
+  
+    <repository-service />
+    <repository-cache />
+    <execution-service />
+    <history-service />
+    <management-service />
+    <identity-service />
+    <task-service />
+
+    <object class="org.jbpm.pvm.internal.id.DatabaseDbidGenerator">
+      <field name="commandService"><ref object="newTxRequiredCommandService" /></field>
+    </object>
+
+    <object class="org.jbpm.pvm.internal.id.DatabaseIdComposer" init="eager" />
+    
+    <object class="org.jbpm.pvm.internal.el.JbpmElFactoryImpl" />
+
+    <types resource="jbpm.variable.types.xml" />
+
+    <address-resolver />
+ 
+  </process-engine-context>
+
+  <transaction-context>
+    <repository-session />
+    <db-session />
+    
+    <message-session />
+    <timer-session />
+    
+    <history-sessions>
+      <object class="org.jbpm.pvm.internal.history.HistorySessionImpl" />
+    </history-sessions>
+    
+    <mail-session>
+      <mail-server>
+        <session-properties resource="jbpm.mail.properties" />
+      </mail-server>
+    </mail-session>
+
+  </transaction-context>
+  <!-- <import resource="jbpm.default.cfg.xml" /> -->
+  <!-- Content end  -->
+  
+  <import resource="jbpm.tx.spring.cfg.xml" />
+  <import resource="jbpm.businesscalendar.cfg.xml" />
+  <!--<import resource="jbpm.tx.hibernate.cfg.xml" />-->
+  <import resource="jbpm.jpdl.cfg.xml" />
+  <import resource="jbpm.bpmn.cfg.xml" />
+  <import resource="jbpm.identity.cfg.xml" />
+
+  <!-- Job executor is excluded for running the example test cases. -->
+  <!-- To enable timers and messages in production use, this should be included. -->
+  <import resource="jbpm.jobexecutor.cfg.xml" />
+
+</jbpm-configuration>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition>
+   <form action="j_verinice_security_check" method="post">
+      <table id="loginGrid">
+         <tbody>
+            <tr>
+               <td class="title"><h:outputText value="#{msg['login']}" /></td>
+            </tr>
+            <tr>
+               <td class="label"><h:outputText value="Username" /></td>
+            </tr>
+            <tr>
+               <td><h:inputText id="j_username" /></td>
+            </tr>
+            <tr>
+               <td class="label"><h:outputText value="Password" /></td>
+            </tr>
+            <tr>
+               <td><h:inputSecret id="j_password" /></td>
+            </tr>
+            <tr>
+               <td class="error"><h:outputText value="#{error}" rendered="#{error!=null}"/></td>
+            </tr>
+            <tr>
+               <td>
+                  <button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                     <span class="ui-button-text">Login</span>
+                  </button>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </form>
+</ui:composition>
+</html>

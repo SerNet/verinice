@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <!-- Database configuration template for verinice when using derby DB. -->
+    <!-- Database access credentials are to be found in the 'veriniceserver-plain.properties' property file. -->
+    <!-- @author 2009-01-08 ak@sernet.de -->
+
+    <session-factory>
+        <!-- CAUTION: No user configuration is usually needed beyond this point: . -->
+
+        <!-- Improve performance for collection inserts -->
+        <property name="hibernate.jdbc.batch_size">50</property>
+        <property name="hibernate.order_inserts">true</property>
+        <property name="hibernate.order_updates">true</property>
+
+        <!-- JDBC connection pool -->
+        <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+
+        <!-- Enable session context management -->
+        <property name="current_session_context_class">org.springframework.orm.hibernate3.SpringSessionContext</property>
+
+        <!-- Disable the second-level cache -->
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.use_sql_comments">false</property>
+
+        <!-- Should database schema be automatically updated when needed -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- Optimized mappings for derby DB -->
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Entity_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyList_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Property_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme_derby.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Permission.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Addition.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/AttachmentFile.hbm.xml" />
+        <mapping resource="sernet/gs/ui/rcp/hibernate/CnAValidation.hbm.xml"/>
+
+        <!-- Workaround for Hibernate bug HHH-2146 Will be fixed in hibernate release 3.3.2, until then we use this: -->
+        <event type="delete">
+            <listener class="sernet.gs.ui.rcp.main.connect.HibernateBugFixDeleteEventListener" />
+        </event>
+
+    </session-factory>
+
+</hibernate-configuration>
+

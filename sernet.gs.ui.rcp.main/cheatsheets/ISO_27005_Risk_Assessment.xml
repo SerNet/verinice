@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet
+      title="Risk Management according to ISO 27005">
+	<intro>
+		<description>
+			This tutorial will show you how to accomplish a risk assessment based on the international standards ISO 27005 with verinice. Let&apos;s get started.
+		</description>
+	</intro>
+ <item
+       title="Change to the ISM perspective">
+    <description>
+       First, you have to switch to the ISM perspective. If you have not done so already, choose this perspective by selecting it from the menu: View -&gt; Show Perspective -&gt; ISM Perspective
+    </description>
+ </item>
+ <item
+       title="Create a new scope">
+    <description>
+       Create a new scope by clicking the &quot;add new scope&quot; icon in the ISM view. It looks like an empty sheet with a yellow star in the top right corner.<br/><br/>
+Double click on the scope. Change its name to &quot;My Organization&quot;.  Set the &quot;risk acceptance levels&quot; to &quot;3&quot; for confidentiality, integrity and availability.
+ Save your changes by clicking on &quot;File -&gt; Save&quot; or by pressing Ctrl - S.
+<br/><br/>
+Scroll down and read throug the definitions of business impact, threat and vulnerability levels. You will have to change these to fit your actual organization later.
+    </description>
+ </item>
+ <item
+       title="Create a new asset">
+    <description>
+       Expand the scope. Right-click on the &quot;asset&quot; category. Choose &quot;Add new asset&quot;.  Enter &quot;Mail server&quot; as title and change the type of the asset to &quot;physical&quot;.  Save by pressing Ctrl - S.
+    </description>
+ </item>
+ <item
+       title="Create a new process">
+    <description>
+       Right-click on &quot;Processes&quot;. Choose &quot;Add process&quot;. Enter &quot;Marketing&quot; as title and set the Business impact to &quot;Confidentiality: Public&quot;, &quot;Integrity: Normal&quot;, &quot;Availablity: High&quot;. Save by pressing Ctrl - S.
+<br/><br/>
+Link your asset to the process: one way to do this is located in the process editor: open the &quot;Relations to&quot; checkbox and choose &quot;Asset&quot;. Click &quot;Add...&quot;.  Select your asset and click &quot;OK&quot;. The caption will read &quot;depends on&quot; meaning the process &quot;Marketing&quot; depends on a funcioning &quot;Mail Server&quot; to work.
+    </description>
+ </item>
+ <item
+       title="Create a new vulnerability">
+    <description>
+       Right-click on the vulnerability category. Choose &quot;Add vulnerability&quot;.  Enter &quot;Remote exploit&quot; as title and set the ease of exploitation to &quot;possible&quot;. Save by pressing Ctrl - S.
+    </description>
+ </item>
+ <item
+       title="Create a new threat">
+    <description>
+       Right-click on the &quot;threat&quot; category. Choose &quot;Add threat&quot;. Enter &quot;External attacker&quot; as title and set the likelihood to &quot;daily&quot;. Save by pressing Ctrl - S.
+    </description>
+ </item>
+ <item
+       title="Create a new scenario">
+    <description>
+       So far, you have created separate objects, you have not yet connected them with each other to represent an actual risk scenario. Let&apos;s do that now: connect the threat you have just created with the vulnerability to create a new scenario: use your mouse to drag and drop the threat over to the scenario in the ISM view.
+<br/><br/>
+When verinice asks you if you want to create a new scenario, click &quot;yes&quot;. The new object should appear under &quot;Scenarios&quot;. If it doesn&apos;t, press Ctrl - F5 to refresh your view.
+    </description>
+ </item>
+ <item
+       title="Connect scenario and asset">
+    <description>
+       Now we have to connect our scenario with our mail server to show that something could go wrong with it. Either drag-and-drop the scenario over to the asset or open the mail server and use the &quot;Relations to&quot; dropdown to connect it with your scenario.
+    </description>
+ </item>
+ <item
+       title="Running the risk calculation">
+    <description>
+       This is important: threat levels and risk values are only updated when you choose &quot;Run risk analysis&quot; from the &quot;Edit&quot; menu. This action is also available on the button bar for faster access. Click on the button now!
+    </description>
+ </item>
+ <item
+       title="Check risk values">
+    <description>
+       Double-click on the asset, it will have inherited the business impact from the &quot;Marketing&quot; process. In the &quot;Relations to&quot; list, you will now see numbers next to the scenario. This means, that the scenario adds to the total risk for this asset. Risk is calculated separately for confidentiality, integrity and availability (CIA).
+    </description>
+ </item>
+ <item
+       title="Create a second scenario (shortcut)">
+    <description>
+       You do not have to create an actual threat / vulnerability object for each scenario that you want to take care of in verinice. You can also just right-click on &quot;scenarios&quot; and choose &quot;Add scenario&quot;. You can enter values for threat and likelihood of this scenario right here. You should disable the checkbox &quot;Deduce from threat and vuln.&quot; to prevent your settings from being overriden on risk calculation.
+<br/><br/>
+If you buy verinice.PRO, you will get an extensive catalog of common scenarios
+based on the threats and vulnerabilities that are contained in the annex of ISO
+27005.
+    </description>
+ </item>
+ <item
+       title="Fine tuning the risk analysis">
+    <description>
+       By default, a scenario is assumed to affect all three impact categories: confidentiality, integrity and availability. You can fine-tune this by disabling some of the checkboxes in the scenario editor, i.e. a flood affects availability, but maybe not confidentiality.
+    </description>
+ </item>
+ <item
+       title="Create a risk assessment report">
+    <description>
+       Click on &quot;File -&gt; Generate report&quot;. Select the &quot;Risk Assessment Report&quot;.  Choose your scope as the top level element. Select &quot;PDF&quot; as output type and select a directory and a filename to save the report to. Click OK. You can open the generated report with any PDF viewer.
+    </description>
+ </item>
+ <item
+       title="Risk Treament">
+    <description>
+       Now we have to do something about the identified risks. Create a new control by right-clicking on &quot;Controls -&gt; Add Control&quot;. Enter &quot;Patch Management&quot; as title, set &quot;implemented&quot; to &quot;yes&quot;. Scroll down to &quot;control strength&quot; and &quot;probability of scenario&quot; to &quot;reduces 1 level&quot;. Save by pressing Ctrl - S.
+    </description>
+ </item>
+ <item
+       title="Applying controls">
+    <description>
+       Connect the control to the scenario, either by drag-and-drop or by using the &quot;Relations to&quot; dropdown to select your scenario. The caption should read &quot;reduces likelihood of&quot; to show that this control reduces the likelihood of your scenario becoming reality.
+<br/><br/>
+Controls can be applied to a scenario or to single assets. The control will thereby reduce the impact of a risk towards individual assets or for all assets that are affected by a scenario.
+<br/><br/>
+If you double-click on the scenario in the list, you will see all relations from the scenarios side. For instance, the link to the control should read &quot;likelihood reduced by patch management&quot;. The control will be displayed as a green checkmark to show that is already implemented.
+    </description>
+ </item>
+ <item
+       title="Creating the risk treatment report">
+    <description>
+       Choose &quot;File -&gt; Generate Report&quot;. This tinme, select the &quot;Risk Treatment Report&quot;. This report will show how all risks are reduced by your controls to acceptable levels.
+    </description>
+ </item>
+ <item
+       title="Thank you">
+    <description>
+       Thank you for considering verinice for your information risk assessment. If you have any further questions or need professional support, we are here to help!  Contact information is available on our website at http://verinice.org
+    </description>
+ </item>
+</cheatsheet>

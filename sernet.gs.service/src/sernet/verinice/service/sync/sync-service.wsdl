@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="sync-service" targetNamespace="http://www.sernet.de/sync/sync-service" xmlns:ss="http://www.sernet.de/sync/sync-service"
+    xmlns:sync="http://www.sernet.de/sync/sync" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://www.sernet.de/sync/sync-service">
+            <xsd:import namespace="http://www.sernet.de/sync/sync" schemaLocation="sync.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="syncRequest">
+        <wsdl:part name="request" element="sync:syncRequest" />
+    </wsdl:message>
+    <wsdl:message name="syncResponse">
+        <wsdl:part name="response" element="sync:syncResponse" />
+    </wsdl:message>
+
+    <wsdl:portType name="sync-service">
+        <wsdl:operation name="sync">
+            <wsdl:input message="ss:syncRequest" />
+            <wsdl:output message="ss:syncResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="sync-serviceSOAP" type="ss:sync-service">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="sync">
+            <soap:operation soapAction="http://www.sernet.de/sync/sync" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="sync-service">
+        <wsdl:port name="sync-service" binding="ss:sync-serviceSOAP">
+            <soap:address location="http://localhost:8080/sync-service" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

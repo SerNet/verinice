@@ -1,0 +1,277 @@
+/* Shared styles for lightbox & slimbox*/
+#prevLink, #nextLink {
+	display:block;
+	position:absolute;
+	top:0;
+	width:35%;
+	height:100%;
+	background:transparent url(../img/blank.gif) no-repeat; /* Trick IE into showing hover */
+}
+
+#prevLink {
+	left:0;
+	float:left;
+}
+
+#nextLink {
+	right:0;
+	float:right;
+}
+
+#prevLink:hover {
+	/* Edit here for a different image!*/
+	background:transparent url(../img/prev.gif) no-repeat 0% 15%;
+}
+
+#nextLink:hover {
+	/* Edit here for a different image!*/
+	background:transparent url(../img/next.gif) no-repeat 100% 15%;
+}
+
+#playLink,#pauseLink,#saveLink,#closeLink {
+	display:block;
+	float:right;
+	/* Set these two to the actual dimensions of your images! If they differ in size you have to set them seperately!*/
+	width:26px;
+	height:26px;
+	/* End*/
+	margin-left:1.0em;
+}
+
+#playLink {
+	/* Edit here for a different image! Add width & height here if needed*/
+	background:transparent url(../img/play.gif) no-repeat center;
+}
+
+#pauseLink {
+	/* Edit here for a different image! Add width & height here if needed*/
+	background:transparent url(../img/pause.gif) no-repeat center;
+}
+
+#saveLink {
+	/* Edit here for a different image! Add width & height here if needed*/
+	background:transparent url(../img/save.gif) no-repeat center;
+}
+
+#closeLink {
+	/* Edit here for a different image! Add width & height here if needed*/
+	background:transparent url(../img/close.gif) no-repeat center;
+	/*clear:right;
+	float:right;*/
+}
+
+
+
+/* Slimbox-only*/
+#sbOverlay {
+	position:fixed;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	background-color:#000;
+	cursor:pointer;
+	z-index:90;
+}
+
+#sbCenter, #sbBottomContainer {
+	position:absolute;
+	left:50%;
+	overflow:hidden;
+	background-color:#fff;
+	z-index:100;
+}
+
+#sbCenter a, #sbBottomContainer a {
+	text-decoration:none;
+	border:none;
+	outline:none;
+}
+
+.sbLoading {
+	background:#fff url(../img/loading.gif) no-repeat center;
+}
+
+#sbImage {
+	position:absolute;
+	left:0;
+	top:0;
+	border:10px solid #fff;
+	background-repeat:no-repeat;
+}
+
+#sbBottom {
+	font-family:tahoma, arial, sans-serif;
+	font-size:11px;
+	color:#666;
+	line-height:1.4em;
+	text-align:left;
+	padding:0 10px 10px 10px;
+}
+
+#sbCaption {
+	width:66%;
+	font-weight:bold;
+	margin-bottom:0.1em;
+}
+
+#sbNumber {
+	width:66%;
+	margin-bottom:0.1em;
+}
+
+#sbPresent {
+	width:66%;
+	margin-bottom:0.1em;
+}
+
+#sbPresent a {
+	position:relative;
+	float:left;
+	color:#777;
+	border-right:0.3em solid #fff;
+	border-bottom:0.1em solid #fff;
+	border-left:0.4em solid #fff;
+	margin-right:0.2em;
+}
+
+#sbPresent a.act {
+	/*font-weight:bold;*/
+	color:#fff;
+	background:#777;
+	border-color:#777;
+}
+
+
+
+/* Lightbox-only*/
+#overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:#000;
+	z-index:90;
+}
+
+#lbLightbox {
+	position:absolute;
+	left:0;
+	width:100%;
+	z-index:100;
+	text-align:center;
+	line-height:0;
+}
+
+#lbLightbox #closeLink {
+	margin-bottom:10px;
+}
+
+#lbLightbox a {
+	text-decoration:none;
+	border:none;
+	outline:none;
+}
+
+#lbLightbox img {
+	width:auto;
+	height:auto;
+	border:none;
+}
+
+#lbOuterImageContainer {
+	position:relative;
+	background-color:#fff;
+	width:250px;
+	height:250px;
+	margin:0 auto;
+}
+
+#lbImageContainer {
+	padding:10px;
+}
+
+#lbLoading {
+	position:absolute;
+	z-index:110;
+	top:40%;
+	left:0%;
+	height:25%;
+	width:100%;
+	text-align:center;
+	line-height:0;
+	background:#fff url(../img/loading.gif) no-repeat center;
+}
+
+#lbHoverNav {
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	z-index:10;
+}
+
+#lbImageContainer>#lbHoverNav {
+	left:0;
+}
+
+#lbImageDataContainer {
+	font-family:tahoma, arial, sans-serif;
+	font-size:11px;
+	background-color:#fff;
+	margin:0 auto;
+	line-height:1.4em;
+	overflow:auto;
+	width:100%;
+}
+
+#lbImageData {
+	padding:0 10px;
+	color:#666;
+}
+
+#lbImageDetails {
+	width:66%;
+	float:left;
+	text-align:left;
+	padding-bottom:10px;
+}
+
+#lbCaption {
+	display:block;
+	font-weight:bold;
+	margin-bottom:0.1em;
+}
+
+#lbNumberDisplay {
+	display:block;
+	margin-bottom:0.1em;
+}
+
+#lbPresent {
+	display:block;
+	margin-bottom:0.1em;
+}
+
+#lbPresent a {
+	position:relative;
+	float:left;
+	color:#777;
+	border-right:0.3em solid #fff;
+	border-bottom:0.1em solid #fff;
+	border-left:0.4em solid #fff;
+	margin-right:0.2em;
+}
+
+#lbPresent a:hover {
+	color:#000;
+}
+
+#lbPresent a.act {
+	/*font-weight:bold;*/
+	color:#fff;
+	background:#777;
+	border-color:#777;
+}

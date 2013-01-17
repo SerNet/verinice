@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="Getting started with information security assessments">
+    <intro>
+        <description>
+            <b>Welcome to verinice information security assessments!</b>
+            <br/>
+            <br/>
+            This tutorial will help you to conduct your first information security assessment!
+        </description>
+    </intro>
+
+    <item title="Switch to the security assessment perspective">
+        <description>
+            <br/><br/>
+First you have to create a new security assessment. You should be in the security assessment perspective. 
+If not, you can go there by choosing from the menu:
+            <b>View -> Show Perspective... -> Security Assessment Perspective</b>.
+            
+            You will find the security assessment view on left side of the Window.
+        </description>
+    </item>
+
+    <item title="Create a new security assessment">
+        <description>
+        Click the <b>NEW</b> button in the security assessment view or choose from
+        the menu: <b>File -> Add new security assessment</b>
+        <br/><br/>
+        The new security assessment will appear in the view. Double-click on it
+        to bring up the editor view. Change the name from "[My Company]" to your actual company's name.
+        <br/><br/>
+        Save by clicking on <b>File -> Save</b> or by pressing the keys <b>Ctrl-S</b>.
+        </description>
+    </item>
+    
+    <item title="Open the first category">
+        <description>
+        Expand the security assessment 
+        by clicking the small arrow to the left of the node's icon. Expand "Controls" and then the first category by clicking the small arrow on the left.
+        <br/><br/>
+        You should be able to see a
+        number of categories from "Security Policy" to "Access Control". These
+        categories contain questions that will help you to evaluate your current
+        information security level for the most important topics.
+        
+        </description>
+    </item>
+    
+    <item title="Answering questions">
+    <description>
+        Double-click on the first question to open the editor.
+        Simultaneously, the Object Browser will show you the question and a selection of maturity levels.
+        <br/><br/>
+        Read the descriptions to decide which maturity level you have reached in your organization. You may have to consult 
+        other employees or do some internal research to answer the question correctly. 
+        <br/>
+        Choose the correct maturity level in the editor below the browser view. You can also add a public comment. This comment
+        will be included in a database export. You can also add a private comment just for yourself. The private comment 
+        will always stay in your local database.
+        <br/><br/>
+        Save your changes by pressing <b>Ctrl-S</b> or by choosing <b>File -> Save</b>.
+        </description>
+    </item>
+    
+    <item title="Generate a report">
+      <description>
+        Continue in the same way with the next question. As you go along, you will notice
+        that the chart in the bottom left corner of the screen begins to reflect your answers.
+        <br/><br/>
+        When you are done answering all questions, you may want to generate a report for management or another party, which you can then send them by e-mail 
+        or other means.
+        You can do so by choosing
+        <b>File -&gt; Generate Report...</b>.
+        <br/><br/>
+        Choose the &quot;Information Security Assessment Report&quot; and a enter a filename under which the report will be saved, then click OK.
+         </description>
+    </item>
+    
+    <item title="Export results">
+      <description>
+        When you are done answering all questions, you can export your results to send them to another party.
+        You can do so by clicking the <b>Export</b> button in the security assessment view or by choosing from the menu <b>File -&gt; Security Assessment -&gt; Export to file</b>.
+        <br/><br/>
+        You have to choose a filename under which the report will be saved. The exported file is always encrypted, so you also
+        have to choose a password or a certificate for encryption. Once you&apos;re done, press OK. 
+      </description>
+    </item>
+    
+    <item title="Finished">
+      <description>
+    Congratulations on conducting your first security assessment of your information security status. If you wish to 
+    go further and are thinking about actually establishing an information security management system (ISMS) in your
+    company, you can go back to the welcome screen by choosing <b>Help -> Welcome</b>.
+    <br/><br/>
+    This time, select the option "Establish an ISMS". You will be directed to the ISM Perspective with another tutorial to guide you. 
+     </description>
+    <onCompletion>
+        This concludes this tutorial. Don't forget to go to <b>http://verinice.org</b> for more information and news!
+    </onCompletion>
+    </item>
+</cheatsheet>
