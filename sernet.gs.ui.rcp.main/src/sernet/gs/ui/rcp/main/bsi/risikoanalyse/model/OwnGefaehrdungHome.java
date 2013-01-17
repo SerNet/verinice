@@ -43,12 +43,12 @@ public class OwnGefaehrdungHome {
 	
 	public void save(OwnGefaehrdung gef) throws Exception {
 		SaveElement command = new SaveElement(gef);
-		command = commandService.executeCommand(command);
+		commandService.executeCommand(command);
 	}
 	
 	public void remove(OwnGefaehrdung gef) throws Exception {
 		RemoveGenericElement<OwnGefaehrdung> command = new RemoveGenericElement<OwnGefaehrdung>(gef);
-		command = commandService.executeCommand(command);
+		commandService.executeCommand(command);
 	}
 	
 	public List<OwnGefaehrdung> loadAll() throws Exception {

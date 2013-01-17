@@ -38,7 +38,7 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
     public void init(IWorkbenchWindow window) {
         try {
             shell = window.getShell();
-        } catch( Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
     }
@@ -82,7 +82,7 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
                  });
                 
             }
-        } catch( Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while generation report", t); //$NON-NLS-1$
         }
     }

@@ -18,31 +18,19 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.PasswordDialog;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.ChangeOwnPassword;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Action to allow users to change their own password if stored in the verinice DB.
@@ -96,7 +84,7 @@ public class ChangeOwnPasswordAction extends Action  {
         if (passwordDialog.open() == Window.OK) {
             ChangeOwnPassword command = new ChangeOwnPassword(passwordDialog.getPassword());
             try {
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                ServiceFactory.lookupCommandService().executeCommand(command);
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.ChangeOwnPasswordAction_3);
             }

@@ -104,7 +104,7 @@ public final class ConfigurationLogger {
      * The title and the version are the first line 
      * from the about text shown in the help menu.
      */
-    public static void logStart() {
+    public static synchronized void logStart() {
         IProduct product = Platform.getProduct();
         String aboutText = product.getProperty("aboutText");
         String application = "verinice";
@@ -120,7 +120,7 @@ public final class ConfigurationLogger {
     /**
      * Logs are stop message
      */
-    public static void logStop() {
+    public static synchronized void logStop() {
         LOG.info("Application stopped, " + DF.format(System.currentTimeMillis()));
     }
     

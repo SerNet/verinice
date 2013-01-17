@@ -138,7 +138,6 @@ public class EstimateGefaehrdungPage extends WizardPage {
             public void checkStateChanged(CheckStateChangedEvent event) {
                 RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
                 GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
-                List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = wizard.getAllGefaehrdungsUmsetzungen();
 
                 if (event.getChecked()) {
                     /* checkbox set */

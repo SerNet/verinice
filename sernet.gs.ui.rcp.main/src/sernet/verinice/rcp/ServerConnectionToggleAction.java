@@ -122,7 +122,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
                     try {
                         monitor.beginTask(Messages.ServerConnectionToggleAction_4, IProgressMonitor.UNKNOWN);
                         export();                      
-                    } catch (Throwable e) {
+                    } catch (Exception e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", Messages.ServerConnectionToggleAction_6,e);  //$NON-NLS-1$
                     } finally {

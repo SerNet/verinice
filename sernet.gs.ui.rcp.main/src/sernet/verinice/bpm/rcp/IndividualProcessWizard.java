@@ -133,7 +133,6 @@ public class IndividualProcessWizard extends Wizard {
     public IndividualServiceParameter getParameter() {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setTypeId(getElementType());
-        String loginName = getAssigneeLoginName();
         if(DatePage.ASSIGNEE_SELECTION_RELATION.equals(datePage.getAssigneeSelectionMode())) {           
             parameter.setAssigneeRelationId(getAssigneeRelationId());
             parameter.setAssigneeRelationName(getAssigneeRelationName());

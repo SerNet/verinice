@@ -32,7 +32,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -130,7 +129,7 @@ public class StartIsaControlFlowProcess implements IObjectActionDelegate, RightE
                 } else if (numberOfProcess == 0){
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.StartIsaProcess_0, Messages.StartIsaProcess_6);
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
                 ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
             }   

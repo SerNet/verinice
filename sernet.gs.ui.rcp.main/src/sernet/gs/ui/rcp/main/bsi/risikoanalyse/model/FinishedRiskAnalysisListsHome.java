@@ -40,7 +40,7 @@ public class FinishedRiskAnalysisListsHome {
 	
 	public void saveNew(FinishedRiskAnalysisLists list) throws Exception {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 
 	public FinishedRiskAnalysisLists update(FinishedRiskAnalysisLists list) throws Exception {
@@ -51,7 +51,7 @@ public class FinishedRiskAnalysisListsHome {
 	
 	public void remove(FinishedRiskAnalysisLists list) throws Exception {
 		RemoveGenericElement<FinishedRiskAnalysisLists> command = new RemoveGenericElement<FinishedRiskAnalysisLists>(list);
-		command = ServiceFactory.lookupCommandService().executeCommand(command);
+		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 	
 	public FinishedRiskAnalysisLists loadById(int id) throws CommandException {

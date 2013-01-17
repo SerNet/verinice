@@ -39,7 +39,6 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AssociateGefaehrdungsUmsetzung;
@@ -251,13 +250,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      */
     private void loadAllMassnahmen() {
         List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
-
-        NullModel nullModel = new NullModel() {
-            @Override
-            public boolean canContain(Object obj) {
-                return true;
-            }
-        };
 
         MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
         alleBausteine: for (Baustein baustein : bausteine) {

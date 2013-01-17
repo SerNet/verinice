@@ -40,11 +40,11 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -98,7 +98,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
                 } else {
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.StartIsaProcess_0, Messages.StartIsaProcess_7);
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
                 ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
             }   

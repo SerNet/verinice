@@ -225,7 +225,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 			}
 			try {
 				refreshTable();
-			} catch (Throwable t) {
+			} catch (Exception t) {
 				log.error("Error while setting table data", t); //$NON-NLS-1$
 			}
 		}
@@ -252,7 +252,7 @@ public class LdapImportDialog extends TitleAreaDialog {
             personSet.clear();
             refreshTable();
             MessageDialog.openInformation(getShell(), Messages.LdapImportDialog_6, Messages.LdapImportDialog_7);
-        } catch (Throwable t) {
+        } catch (Exception t) {
 			log.error("Error while setting table data", t); //$NON-NLS-1$
 			personSet.clear();
 			refreshTable();

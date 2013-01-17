@@ -47,7 +47,7 @@ public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggi
 	
 	public void execute() {
 		ArrayList<T> mergedElements = new ArrayList<T>(elements.size());
-		if (elements != null && elements.size()>0) {
+		if (elements.size()>0) {
 			IBaseDao<T, Serializable> dao = (IBaseDao<T, Serializable>) getDaoFactory()
 				.getDAO(elements.get(0).getTypeId());
 			for (T element : elements) {

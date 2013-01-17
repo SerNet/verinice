@@ -61,7 +61,7 @@ public class AssignHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
             ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-            if (selection != null & selection instanceof IStructuredSelection) {
+            if (selection != null && selection instanceof IStructuredSelection) {
                 Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
                 
                 CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, PersonIso.TYPE_ID, null);

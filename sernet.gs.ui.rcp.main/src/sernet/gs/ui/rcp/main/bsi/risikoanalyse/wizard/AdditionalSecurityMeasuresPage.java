@@ -524,7 +524,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		try {
 			GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) massnahme.getParent();
 
-			if (massnahme != null && massnahme instanceof RisikoMassnahmenUmsetzung && parent != null && parent instanceof GefaehrdungsUmsetzung) {
+			if (massnahme instanceof RisikoMassnahmenUmsetzung && parent != null && parent instanceof GefaehrdungsUmsetzung) {
 
 				RemoveMassnahmeFromGefaherdung command = new RemoveMassnahmeFromGefaherdung(parent, massnahme);
 				command = ServiceFactory.lookupCommandService().executeCommand(command);

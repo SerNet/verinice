@@ -54,7 +54,7 @@ public class RisikoMassnahmeHome {
 	
 	public void remove(RisikoMassnahme mn) throws Exception {
 		RemoveGenericElement command = new RemoveGenericElement(mn);
-		command = commandService.executeCommand(command);
+		commandService.executeCommand(command);
 	}
 	
 	public List<RisikoMassnahme> loadAll() throws Exception {

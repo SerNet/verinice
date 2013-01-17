@@ -347,7 +347,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
          */
         private ExpandJob(Object [] elements) {
             super("Expanding");
-            this.elements = elements;
+            this.elements = elements.clone();
         }
 
         @Override

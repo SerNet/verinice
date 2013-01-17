@@ -178,7 +178,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
             if(source==null){
                 showInfoMessage();
             }
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ServiceFactory.lookupCommandService().executeCommand(command);
          } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.GSMBasicSecurityCheckAction_4);
         }

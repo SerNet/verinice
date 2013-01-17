@@ -65,7 +65,7 @@ public abstract class StartupImporter {
 
     public static final String SERVER_TRANSPORT_BASENAME = "client-server-transport"; //$NON-NLS-1$
 
-    private static IModelLoadListener modelLoadListener;
+    private static volatile IModelLoadListener modelLoadListener;
 
     public static void importVna() {
         if (!isRestart()) {
@@ -153,7 +153,7 @@ public abstract class StartupImporter {
             byte[] fileData = FileUtils.readFileToByteArray(archive);
             Activator.inheritVeriniceContextState();
             SyncCommand command = new SyncCommand(new SyncParameter(true, true, false, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV), fileData);
-            command = getCommandService().executeCommand(command);
+            getCommandService().executeCommand(command);
         } catch (Exception e) {
             LOG.error("Error while importing.", e); //$NON-NLS-1$
         } finally {

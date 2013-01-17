@@ -35,7 +35,7 @@ public class TagFilter implements IParameter {
 
     public void setPattern(String[] newPattern) {
         if (newPattern != null && newPattern.length > 0) {
-            pattern = newPattern;          
+            pattern = newPattern.clone();          
         } else {
             // deactivate
             pattern = null;      

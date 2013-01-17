@@ -52,10 +52,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
-import sernet.verinice.interfaces.IAuthService;
 
 /**
  * Workbench Window advisor.
@@ -98,7 +98,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
             apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
             apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, 360);
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while configuring window.", t);
         }
     }
@@ -203,7 +203,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         Vector<String> openViews = new Vector<String>();
         String rightID = "";
         IViewReference chosenRef = null;
-        RightsServiceClient rService = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
             IViewPart part = ref.getView(true);

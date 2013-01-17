@@ -35,8 +35,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -192,7 +190,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                     Messages.bind(Messages.StartIndividualProcess_0, numberOfProcess),
                     Messages.StartIsaProcess_3,
                     PreferenceConstants.INFO_PROCESSES_STARTED);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
             ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
         }

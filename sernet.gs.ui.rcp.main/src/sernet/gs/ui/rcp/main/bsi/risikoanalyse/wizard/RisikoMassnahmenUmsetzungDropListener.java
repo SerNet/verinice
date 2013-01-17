@@ -92,7 +92,6 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 
                 if (child != null 
                         && child instanceof RisikoMassnahmenUmsetzung 
-                        && parent != null 
                         && parent instanceof GefaehrdungsUmsetzung 
                         && !(children.contains(child))) {
 

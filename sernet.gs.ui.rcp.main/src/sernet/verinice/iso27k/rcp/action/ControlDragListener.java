@@ -95,7 +95,7 @@ public class ControlDragListener implements DragSourceListener {
 	                LOG.error("Something went wrong here");
 	            }
 	        }
-	    }catch (Throwable t){
+	    }catch (Exception t){
 	        LOG.error("error", t);
 	    }
 	}

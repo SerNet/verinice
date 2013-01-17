@@ -77,7 +77,7 @@ public class CnAWorkspace {
 
 	protected static final String TEMPIMPORTDB = "tempGstoolImportDb"; //$NON-NLS-1$
 
-    private static CnAWorkspace instance;
+    private static volatile CnAWorkspace instance;
 
 	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
 		@Override

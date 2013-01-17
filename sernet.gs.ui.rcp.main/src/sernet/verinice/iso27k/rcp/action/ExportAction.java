@@ -51,7 +51,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.eclipse.ui.internal.ViewPluginAction;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -159,9 +158,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     @Override
     public void run(IAction action) {
 		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), null, selection);
-		if(action instanceof ViewPluginAction) {
-
-		}
 		if( dialog.open() == Dialog.OK )
 		{	     
 		    if(dialog.getEncryptOutput()) {
@@ -204,7 +200,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                         		x509CertificateFile,
                         		keyAlias,
                         		dialog.getFormat());                    
-                    } catch (Throwable e) {
+                    } catch (Exception e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
                     } finally {

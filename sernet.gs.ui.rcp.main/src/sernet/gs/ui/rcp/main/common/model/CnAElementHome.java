@@ -247,12 +247,12 @@ public class CnAElementHome {
         log.debug("Deleting " + element.getTitle()); //$NON-NLS-1$
         RemoveElement command = new RemoveElement(element);
         deleteValidations(element);
-        command = getCommandService().executeCommand(command);
+        getCommandService().executeCommand(command);
     }
 
     public void remove(CnALink element) throws Exception {
         RemoveLink command = new RemoveLink(element);
-        command = getCommandService().executeCommand(command);
+        getCommandService().executeCommand(command);
     }
 
     public CnATreeElement update(CnATreeElement element) throws Exception {

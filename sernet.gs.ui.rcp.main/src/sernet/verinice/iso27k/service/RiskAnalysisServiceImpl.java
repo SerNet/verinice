@@ -18,6 +18,7 @@
 package sernet.verinice.iso27k.service;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -128,7 +129,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
     @Override
     public void determineRisks(IncidentScenario scenario) {
         Map<CnATreeElement, CnALink> linksForAssets = CnALink.getLinkedElements(scenario, Asset.TYPE_ID);
-        for (CnATreeElement asset : linksForAssets.keySet()) {
+        for (Entry<CnATreeElement, CnALink> entry : linksForAssets.entrySet()){    
+            CnATreeElement asset = entry.getKey();
             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
 
             // reset risk values for link:

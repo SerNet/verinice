@@ -20,7 +20,6 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +40,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
@@ -187,9 +185,6 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 CnATreeElement cachedObject = cache.getCachedObject(element);
                 if (cachedObject != null) {
                     element = cachedObject;
-                }
-                if(!element.isChildrenLoaded()) {
-                    //element = Retriever.checkRetrieveChildren((CnATreeElement) parent);
                 }
                 Set<CnATreeElement> children = element.getChildren();
                 if(children!=null) {

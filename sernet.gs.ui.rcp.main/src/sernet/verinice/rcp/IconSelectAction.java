@@ -112,7 +112,7 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
         element.setIconPath(iconPath);
         Activator.inheritVeriniceContextState();
         UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(element, false, ChangeLogEntry.STATION_ID);
-        updateCommand = getCommandService().executeCommand(updateCommand);
+        getCommandService().executeCommand(updateCommand);
         // notify all views of change:
         CnAElementFactory.getModel(element).childChanged(element);
         return element;

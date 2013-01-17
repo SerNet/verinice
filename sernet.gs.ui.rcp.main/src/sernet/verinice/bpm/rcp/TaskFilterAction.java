@@ -27,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -91,7 +90,7 @@ public class TaskFilterAction extends Action {
                 public void run() {
                     try {
                         progressService.run(true, true, job);
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         LOG.error("Error while loading tasks.", t); //$NON-NLS-1$
                     }
                 }

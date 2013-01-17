@@ -103,7 +103,7 @@ public class CutService extends PasteService implements IProgressTask {
 		} catch (RuntimeException e) {
 			log.error("RuntimeException while copying element", e);
 			throw e;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			log.error("Error while copying element", e);
 			throw new RuntimeException("Error while copying element", e);
 		} finally {
@@ -126,7 +126,7 @@ public class CutService extends PasteService implements IProgressTask {
 		String title = "unknown";
 		try {
 			title = element.getTitle();
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			log.error("Error while reading title.", t);
 		}
 		return title;

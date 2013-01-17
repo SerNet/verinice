@@ -307,8 +307,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			attachmentFile.setDbId(attachment.getDbId());
 			attachmentFile.setFileData(csvFile.getFileContent());
 			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
-			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
-			attachmentFile = saveAttachmentFile.getElement();
+//			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
+			getCommandService().executeCommand(saveAttachmentFile);
+//			attachmentFile = saveAttachmentFile.getElement();
 			saveAttachmentFile.clear();
 		}
 		return attachment;
@@ -578,7 +579,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		try {
 			Attachment selected = comboModel.getSelectedObject();
 			DeleteNote command = new DeleteNote(selected);		
-			command = getCommandService().executeCommand(command);
+			getCommandService().executeCommand(command);
 			comboModel.removeSelected();
 			openCatalog();
 			comboCatalog.setItems(comboModel.getLabelArray());

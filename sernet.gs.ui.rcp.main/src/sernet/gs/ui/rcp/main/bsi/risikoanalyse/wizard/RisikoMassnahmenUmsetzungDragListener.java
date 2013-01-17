@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
@@ -127,7 +126,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
             if (LOG.isDebugEnabled()) {
                 LOG.debug("dragStart finished");
             }
-        } catch( Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error in dragStart", t);
         }
         

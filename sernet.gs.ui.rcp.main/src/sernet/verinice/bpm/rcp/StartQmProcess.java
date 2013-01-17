@@ -46,7 +46,6 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
-import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
@@ -114,7 +113,7 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
                     Messages.bind("{0} QM Processes started", numberOfProcess),
                     Messages.StartIsaProcess_3,
                     PreferenceConstants.INFO_PROCESSES_STARTED);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
             ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
         }

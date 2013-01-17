@@ -146,7 +146,7 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 		boolean valid = false;
 		
 		if(!checkRights()){
-		    return valid = false;
+		    return false;
 		}
 
 		List items = new ArrayList<Object>(0);

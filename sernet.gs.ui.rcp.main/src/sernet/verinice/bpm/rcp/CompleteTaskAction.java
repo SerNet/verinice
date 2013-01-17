@@ -86,7 +86,7 @@ final class CompleteTaskAction extends Action {
                         CompleteTaskAction.this.taskView.loadTasks();
                     }
                 });          
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
         }

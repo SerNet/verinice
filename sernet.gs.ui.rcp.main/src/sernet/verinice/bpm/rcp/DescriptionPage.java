@@ -202,9 +202,7 @@ public class DescriptionPage extends WizardPage {
 
     public void showComboValues() {
         templateCombo.setItems(templateComboModel.getLabelArray());
-        if(!templateComboModel.isEmpty()) {
-            
-        } else {
+        if(templateComboModel.isEmpty()) {
             templateCombo.setEnabled(false);
             deleteButton.setEnabled(false);
             overwriteTemplateCheckbox.setEnabled(false);

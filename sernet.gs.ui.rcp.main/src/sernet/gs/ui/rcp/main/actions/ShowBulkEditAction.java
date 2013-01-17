@@ -313,9 +313,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             IStructuredSelection selection = (IStructuredSelection) input;
 
             // check for listitems:
-            TodoViewItem item;
             if (selection.size() > 0 && selection.getFirstElement() instanceof TodoViewItem) {
-                item = ((TodoViewItem) selection.getFirstElement());
                 for (Iterator iter = selection.iterator(); iter.hasNext();) {
                     if (!(iter.next() instanceof TodoViewItem)) {
                         setEnabled(false);
@@ -341,7 +339,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
             if (elmt != null) {
                 String type = elmt.getEntity().getEntityType();
-                EntityType entType = HUITypeFactory.getInstance().getEntityType(type);
 
                 for (Iterator iter = selection.iterator(); iter.hasNext();) {
                     Object o = iter.next();

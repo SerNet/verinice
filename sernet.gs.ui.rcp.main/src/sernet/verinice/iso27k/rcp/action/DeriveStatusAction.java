@@ -36,7 +36,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -162,7 +161,7 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
                     }
                 });
                 InfoDialogWithShowToggle.openInformation(Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.4"), new Object[]{measureCount, samtCount}), Messages.getString("DeriveStatus.6"), PreferenceConstants.INFO_STATUS_DERIVED); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 final String message = Messages.getString("DeriveStatusAction.6"); //$NON-NLS-1$
                 LOG.error(message, e); //$NON-NLS-1$
                 MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatusAction.7"), message); //$NON-NLS-1$

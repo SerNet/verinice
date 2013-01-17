@@ -95,7 +95,7 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
                     Activator.inheritVeriniceContextState();
                     RunRiskAnalysisCommand command = new RunRiskAnalysisCommand();
                     try {
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, Messages.RunRiskAnalysisAction_1);
                     }
