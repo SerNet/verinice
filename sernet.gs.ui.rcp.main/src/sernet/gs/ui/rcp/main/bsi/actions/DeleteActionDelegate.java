@@ -201,7 +201,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         } catch (InterruptedException e) {
             LOG.error("Error while deleting element.", e);
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.error("Error while deleting element(s).", e);
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }

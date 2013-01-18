@@ -100,7 +100,7 @@ public class ElementCache {
             } else {
                 ElementChecker.logIfNull(cacheObject, "Will not add this to cache.");
             }
-        } catch(Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error while adding object",t);
         }
 	}

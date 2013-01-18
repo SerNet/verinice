@@ -58,8 +58,6 @@ public class RelationTypeEditingSupport extends EditingSupport {
 			return false;
 		}
 		CnALink link = (CnALink) element;
-		String currentName = CnALink.getRelationName(view.getInputElmt(),
-				link);
 		Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
 				.getTypeFactory().getPossibleRelations(
 						link.getDependant().getEntityType().getId(),

@@ -33,7 +33,7 @@ public class CnAElementByTitleComparator implements
 		if (o1 instanceof MassnahmenUmsetzung && o2 instanceof MassnahmenUmsetzung) {
 			int[] kap1 = ((MassnahmenUmsetzung) o1).getKapitelValue();
 			int[] kap2 = ((MassnahmenUmsetzung) o2).getKapitelValue();
-			return (new Integer(kap1[0] * 1000 + kap1[1])
+			return (Integer.valueOf(kap1[0] * 1000 + kap1[1])
 					.compareTo((kap2[0] * 1000 + kap2[1])));
 		}
 		return Collator.getInstance().compare(o1.getTitle(), o2.getTitle());

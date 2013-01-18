@@ -319,7 +319,7 @@ public class ImportTask {
         } else {
             command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap);
         }
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        ServiceFactory.lookupCommandService().executeCommand(command);
     }
 
     private void importSchutzbedarf() throws Exception {

@@ -23,13 +23,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.window.Window;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
@@ -39,7 +37,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityUuid;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
@@ -57,14 +54,10 @@ import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
 
 /**
@@ -385,7 +378,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         parentEntity.createNewProperty(type, newName);
 
                         SaveElement<Entity> command = new SaveElement<Entity>(parentEntity);
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
                     	LOG.error("Error while saving elements", e); //$NON-NLS-1$
                         throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$

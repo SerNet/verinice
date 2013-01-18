@@ -441,7 +441,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     protected void deleteFile(Attachment attachment) {
         DeleteNote command = new DeleteNote(attachment);
         try {
-            command = getCommandService().executeCommand(command);
+            getCommandService().executeCommand(command);
         } catch (CommandException e) {
             LOG.error("Error while saving attachment", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.FileView_13);

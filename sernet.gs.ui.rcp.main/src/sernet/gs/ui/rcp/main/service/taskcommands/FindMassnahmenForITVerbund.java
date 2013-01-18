@@ -203,8 +203,7 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
         public Object doInHibernate(Session session) throws HibernateException, SQLException {
             long start = System.currentTimeMillis();
             // select _ALL_ id
-            String sql = (filter.get(MassnahmenUmsetzung.P_UMSETZUNGBIS)!=null ? SQL : SQL);
-            SQLQuery sqlQuery = session.createSQLQuery(sql);
+            SQLQuery sqlQuery = session.createSQLQuery(SQL);
             sqlQuery.setInteger("id", itverbundDbId).setInteger("id2", itverbundDbId);
             List<TaskItem> idList = createIdList(sqlQuery.list());
             if(getLog().isDebugEnabled()) {

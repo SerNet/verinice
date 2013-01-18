@@ -111,7 +111,7 @@ public class CnAWorkspace {
 		return CnAWorkspace.getInstance().getWorkdir() + File.separator + TEMPIMPORTDB;
 	}
 
-	public static CnAWorkspace getInstance() {
+	public static synchronized CnAWorkspace getInstance() {
 		if (instance == null) {
 			instance = new CnAWorkspace();
 			Activator.getDefault().getPluginPreferences().addPropertyChangeListener(instance.prefChangeListener);

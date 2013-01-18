@@ -21,12 +21,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -51,8 +48,6 @@ public class RealisierungSummary extends GenericCommand {
 
 	@SuppressWarnings("unchecked")
 	public void execute() {
-		Map<String, Integer> result = new HashMap<String, Integer>();
-		
 		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 
 		// List of Object[] array:

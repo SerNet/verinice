@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.model;
 
 import org.apache.log4j.Logger;
 
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
-
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -59,7 +57,6 @@ public class CnAElementBuilder {
 	}
 
 	public CnATreeElement buildAndSave(ITVerbund itverbund, String typeId) throws Exception {
-		CnAElementFactory factory = CnAElementFactory.getInstance();
 	
 		if (Anwendung.TYPE_ID.equals(typeId)) {
 			CnATreeElement category = itverbund.getCategory(AnwendungenKategorie.TYPE_ID);

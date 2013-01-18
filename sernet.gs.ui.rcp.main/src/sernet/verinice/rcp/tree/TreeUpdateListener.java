@@ -340,7 +340,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
          */
         private ExpandJob(Object[] elements) {
             super("Expanding");
-            this.elements = elements;
+            this.elements = elements.clone();
         }
 
         @Override

@@ -236,7 +236,7 @@ public class ImportCSVWizard extends Wizard {
         for(CnATreeElement elmt : elmts){
             ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
         }
-        if(elmts != null && elmts.size() > 0){
+        if(elmts.size() > 0){
             CnAElementFactory.getModel(((CnATreeElement)elmts.toArray()[0])).validationAdded(((CnATreeElement)elmts.toArray()[0]).getScopeId()); 
         }
     }

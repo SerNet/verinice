@@ -34,7 +34,6 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.scraper.GSScraper;
-import sernet.gs.scraper.IGSPatterns;
 import sernet.gs.scraper.IGSSource;
 import sernet.gs.scraper.PatternBfDI2008;
 import sernet.gs.scraper.PatternGSHB2005_2006;
@@ -282,8 +281,8 @@ public class BSIMassnahmenModel {
 	}
 	
 	public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
-		try {
-			InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8 ); //$NON-NLS-1$
+	    try {
+	        InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8 ); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);
 			StringBuilder b = new StringBuilder();
 			String line;
@@ -318,6 +317,8 @@ public class BSIMassnahmenModel {
 					b.append(line);
 				}
 			}
+			buffRead.close();
+			read.close();
 			return b.toString();
 		} catch(Exception e) {
 			log.error(Messages.BSIMassnahmenModel_7, e);

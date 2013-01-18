@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +53,6 @@ public class TaskLoader {
      * and loads newly created tasks after last call.
      */
     public void load() {
-        List<ITask> taskList = Collections.emptyList();
         Date now = new Date(System.currentTimeMillis());
         if(lastChecked!=null) {
             // loadNewTasks() does not detects delete task

@@ -44,7 +44,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     public void init(IWorkbenchWindow window) {
         try {
             shell = window.getShell();
-        } catch( Throwable t) {
+        } catch(Exception t) {
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
     }
@@ -124,7 +124,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     			 });
     			
     		}
-	    } catch( Throwable t) {
+	    } catch(Exception t) {
 	        LOG.error("Error while generation report", t); //$NON-NLS-1$
 	    }
 	}

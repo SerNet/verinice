@@ -305,7 +305,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     protected void deleteNote(Note note) {
         DeleteNote command = new DeleteNote(note);
         try {
-            command = getCommandService().executeCommand(command);
+            getCommandService().executeCommand(command);
         } catch (CommandException e) {
             LOG.error("Error while saving note", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.NoteView_12);

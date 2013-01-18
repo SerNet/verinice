@@ -41,7 +41,7 @@ public class GefaehrdungenFilter extends ViewerFilter {
 	public void setPattern(boolean[] newPattern) {
 		boolean active = pattern != null;
 		if (newPattern != null && newPattern.length > 0) {
-			pattern = newPattern;
+			pattern = newPattern.clone();
 			if (active)
 				viewer.refresh();
 			else {

@@ -67,7 +67,7 @@ public class OracleLongStringType implements UserType {
             // worth printing b/c this means a failure occurred reading from
             // stream
             ex.printStackTrace();
-        } catch (Throwable t) {
+        } catch (Exception t) {
             // eat this exception b/c it is of no interest (i.e. stream is null
             // for null attribute value)
         }

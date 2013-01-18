@@ -83,7 +83,7 @@ public class BSIKatalogInvisibleRoot {
 		}
 	}
 
-	private static BSIKatalogInvisibleRoot instance;
+	private static volatile BSIKatalogInvisibleRoot instance;
 	List<Baustein> bausteine = new ArrayList<Baustein>();
 
 	private List<ISelectionListener> listeners = new ArrayList<ISelectionListener>(

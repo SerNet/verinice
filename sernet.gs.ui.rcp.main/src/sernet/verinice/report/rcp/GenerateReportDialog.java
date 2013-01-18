@@ -395,7 +395,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         layout.numColumns = 2;
         groupCache.setLayout(layout);
         
-        GridData gridLabelCache = new GridData();
         gridLabelFile.horizontalAlignment = SWT.LEFT;
         gridLabelFile.verticalAlignment = SWT.CENTER;
         gridLabelFile.grabExcessHorizontalSpace = true;

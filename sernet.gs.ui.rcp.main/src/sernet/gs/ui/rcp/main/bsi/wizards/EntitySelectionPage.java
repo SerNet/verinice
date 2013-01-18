@@ -186,8 +186,11 @@ public class EntitySelectionPage extends WizardPage{
 		    public void widgetDefaultSelected(SelectionEvent event) {
 		        int[] selectedItems = list.getSelectionIndices();
 		        String outString = ""; //$NON-NLS-1$
-		        for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
-		        	outString += selectedItems[loopIndex] + " "; //$NON-NLS-1$
+		        StringBuffer buffer = new StringBuffer();
+		        for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++){
+		        	buffer.append(selectedItems[loopIndex] + " "); //$NON-NLS-1$
+		        }
+		        outString = buffer.toString();
 		    }
 	    });
         
