@@ -115,6 +115,7 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
                     IStatus status = Status.OK_STATUS;
                     try {
                         monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
+                        Activator.inheritVeriniceContextState();
                         samtService.createSelfAssessment();
                         monitor.setTaskName(Messages.AddSelfAssessment_5);
                         if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
