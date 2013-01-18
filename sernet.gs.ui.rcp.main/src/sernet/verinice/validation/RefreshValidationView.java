@@ -46,7 +46,7 @@ public class RefreshValidationView {
                 }
             });
             
-        } catch (Throwable t) {
+        } catch (Exception t) {
             CnAValidationView.LOG.error("Error while setting table data", t); //$NON-NLS-1$
         }
     }

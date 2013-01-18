@@ -163,7 +163,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
                         } else {
                             MessageDialog.openError(getSite().getShell(), "Error", "Object not found.");
                         }
-                    } catch (Throwable t){
+                    } catch (Exception t){
                         LOG.error("Error while opening element.", t); //$NON-NLS-1$
                     }
                 }
