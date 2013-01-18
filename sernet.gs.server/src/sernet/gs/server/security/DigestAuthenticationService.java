@@ -159,5 +159,13 @@ public final class DigestAuthenticationService implements IAuthService {
         return (IRightsServerHandler) VeriniceContext.get(VeriniceContext.RIGHTS_SERVER_HANDLER);
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isHandlingPasswords()
+     */
+    @Override
+    public boolean isHandlingPasswords() {
+        return true;
+    }
+
 
 }

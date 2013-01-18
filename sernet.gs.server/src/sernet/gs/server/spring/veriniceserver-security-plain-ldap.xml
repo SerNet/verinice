@@ -42,6 +42,7 @@
         <property name="guestUser" value="${ldap.guestuser}" />
         <property name="adminUsername" value="${admin.username}" />
         <property name="configurationDao" ref="configurationDao" />
+        <property name="handlingPasswords" value="false" />   
         <security:intercept-methods>
             <security:protect method="sernet.gs.server.security.BasicAuthenticationService.getRoles" access="ROLE_USER,ROLE_WEB" />
             <security:protect method="sernet.gs.server.security.BasicAuthenticationService.hashPassword" access="ROLE_USER,ROLE_WEB" />
@@ -52,7 +53,7 @@
     <!-- The filter chain that all HTTP requests go through: -->
 	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
-			<security:filter-chain pattern="/auth/**" filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+			<security:filter-chain pattern="/auth/**" filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
             <security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
             <security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />       
             <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" /> 

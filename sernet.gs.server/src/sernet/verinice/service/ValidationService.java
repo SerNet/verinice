@@ -392,13 +392,15 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void deleteValidationsOfSubtree(CnATreeElement elmt) {
-        if(Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
+        if(!Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
-            elmt.setChildrenLoaded(true);
         }
-        deleteValidations(elmt.getScopeId(), elmt.getDbId());
-        for(CnATreeElement child : elmt.getChildren()){
-            deleteValidationsOfSubtree(child);
+        if(elmt != null){
+            elmt.setChildrenLoaded(true);
+            deleteValidations(elmt.getScopeId(), elmt.getDbId());
+            for(CnATreeElement child : elmt.getChildren()){
+                deleteValidationsOfSubtree(child);
+            }
         }
     }
 

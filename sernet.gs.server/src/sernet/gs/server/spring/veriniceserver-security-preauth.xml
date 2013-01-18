@@ -60,7 +60,8 @@
     <bean id="authService" class="sernet.gs.server.security.BasicAuthenticationService">      
         <property name="guestUser" value="${ldap.guestuser}" />       
         <property  name="adminUsername" value="${admin.username}" />
-        <property name="configurationDao" ref="configurationDao" />   
+        <property name="configurationDao" ref="configurationDao" /> 
+        <property name="handlingPasswords" value="false" />   
         <security:intercept-methods>
             <security:protect
                 method="sernet.gs.server.security.BasicAuthenticationService.getRoles"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="gsm-ism-execute" name="Greenbone ISM Execute Task" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>Workflow to manage individual tasks.</description>
+   
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
+   
+   <start name="start">
+   </start>
+   
+   <end name="end"/>
+
+</process>

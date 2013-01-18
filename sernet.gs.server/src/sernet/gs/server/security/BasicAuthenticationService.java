@@ -50,6 +50,7 @@ public class BasicAuthenticationService implements IAuthService {
     private String guestUser = "";
     private String adminUsername;
     private IBaseDao<Configuration, Serializable> configurationDao;
+    private boolean handlingPasswords;
 
     /**
      * @param guestUser the guestUser to set
@@ -169,6 +170,20 @@ public class BasicAuthenticationService implements IAuthService {
             value = resultList.get(0);
         }       
         return Configuration.PROP_SCOPE_YES.equals(value);
+    }
+
+    /**
+     * @return the handlingPasswords
+     */
+    public boolean isHandlingPasswords() {
+        return handlingPasswords;
+    }
+
+    /**
+     * @param handlingPasswords the handlingPasswords to set
+     */
+    public void setHandlingPasswords(boolean handlingPasswords) {
+        this.handlingPasswords = handlingPasswords;
     }
 
     /**
