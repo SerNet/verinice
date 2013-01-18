@@ -2675,9 +2675,11 @@ columns(cols);</value>
             </row>
         </grid>
         <grid id="1983">
+            <property name="width">100%</property>
             <column id="1984"/>
             <column id="1985"/>
             <row id="1986">
+                <property name="height">100%</property>
                 <cell id="1987">
                     <extended-item extensionName="Chart" id="1982">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -3788,7 +3790,7 @@ columns(cols);</value>
                         <property name="inheritColumns">false</property>
                         <property name="dataSet">all_mnums</property>
                         <property name="height">2.4583333333333335in</property>
-                        <property name="width">5.78125in</property>
+                        <property name="width">5.5in</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">mnums_verantwortlichinit</property>
@@ -5299,6 +5301,7 @@ A: Einstieg, B: Aufbau, C: Zertifizierung, Z: Zusätzlich, W: Wissen (rein infor
                 </cell>
             </row>
             <row id="1994">
+                <property name="height">100%</property>
                 <cell id="1995">
                     <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
