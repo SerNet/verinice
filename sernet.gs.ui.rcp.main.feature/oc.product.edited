@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
+<<<<<<< .working
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.5.9.94" useFeatures="true" includeLaunchers="true">
+=======
 <product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.6.1" useFeatures="true" includeLaunchers="true">
+>>>>>>> .merge-right.r3434
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
       <text>
+<<<<<<< .working
+         SerNet verinice 1.6.1 BETA - Codename &apos;Constructa&apos;
+=======
          SerNet verinice 1.6.1 - Codename &apos;Mundaka&apos;
+>>>>>>> .merge-right.r3434
 
 (c) SerNet Service Network GmbH and others
 1996-2012
