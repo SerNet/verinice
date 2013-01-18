@@ -200,6 +200,7 @@ public class CopyCommand extends GenericCommand {
     private CnATreeElement saveNew(CnATreeElement container, CnATreeElement element) throws Exception {
         String title = HitroUtil.getInstance().getTypeFactory().getMessage(element.getTypeId());   
         CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(container, (Class<CnATreeElement>) element.getClass(), title, true, false);
+        saveCommand.setInheritAuditPermissions(true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         CnATreeElement child = saveCommand.getNewElement();
         container.addChild(child);

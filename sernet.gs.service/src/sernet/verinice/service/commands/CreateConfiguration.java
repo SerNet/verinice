@@ -22,6 +22,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -41,7 +42,7 @@ public class CreateConfiguration extends GenericCommand {
             throw new RuntimeCommandException("Default Konfiguration wurde bereits gesetzt.");
             
         configuration.setPerson(person);
-        configuration.addRole(AddDefaultGroups.USER_DEFAULT_GROUP);
+        configuration.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);
         configuration.setAdminUser(false);
         configuration.setScopeOnly(true);
         configuration.setWebUser(true);

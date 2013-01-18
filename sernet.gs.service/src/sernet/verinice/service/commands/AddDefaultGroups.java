@@ -28,6 +28,7 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.gs.service.RetrieveInfo;
@@ -44,10 +45,6 @@ import sernet.verinice.interfaces.INoAccessControl;
 public class AddDefaultGroups extends GenericCommand implements INoAccessControl {
 
     private transient Logger log = Logger.getLogger(AddDefaultGroups.class);
-
-    public static final String USER_DEFAULT_GROUP = "user-default-group";
-
-    public static final String ADMIN_DEFAULT_GROUP = "admin-default-group";
     
     IBaseDao<Configuration, Serializable> configurationDao;
     
@@ -68,13 +65,13 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
         boolean addUserGroup = false;
         boolean addAdminGroup = false;
         try {
-            checkGroupName(USER_DEFAULT_GROUP);
+            checkGroupName(IRightsService.USERDEFAULTGROUPNAME);
             addUserGroup = true;
         } catch(GroupExistsException e) {
             getLog().warn(e.getMessage());
         }
         try {
-            checkGroupName(ADMIN_DEFAULT_GROUP);
+            checkGroupName(IRightsService.ADMINDEFAULTGROUPNAME);
             addAdminGroup = true;
         } catch(GroupExistsException e) {
             getLog().warn(e.getMessage());
@@ -83,10 +80,10 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
         for (Configuration conf : configurationList) {
             if(conf.isAdminUser()) {
                 if(addAdminGroup) {
-                    conf.getEntity().createNewProperty(getRolePropertyType(), ADMIN_DEFAULT_GROUP);
+                    conf.getEntity().createNewProperty(getRolePropertyType(), IRightsService.ADMINDEFAULTGROUPNAME);
                 }
             } else if(addUserGroup) {
-                conf.getEntity().createNewProperty(getRolePropertyType(), USER_DEFAULT_GROUP);
+                conf.getEntity().createNewProperty(getRolePropertyType(), IRightsService.USERDEFAULTGROUPNAME);
             }
         }
     }

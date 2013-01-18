@@ -33,11 +33,18 @@ public interface IAuthService {
 	public String getUsername();
 	
 	/**
-     * Get the name of the currently logged in user in the active context.
-     * @return
+     * @return true if a logout is possible with this service, false if not
      */
     public boolean isLogoutPossible();
 	
+    /**
+     * Returns true if this service is handling passwords.
+     * Returns false if passwords are checked by an external resource
+     * like ActiveDirectory.
+     * @return true if this service is handling passwords, false if not
+     */
+    public boolean isHandlingPasswords();
+    
 	/**
 	 * Encrypt the given cleartext password.
 	 * 

@@ -67,6 +67,8 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     private boolean skipReload;
     
     protected boolean createChildren;
+    
+    protected boolean inheritAuditPermissions = false;
 
     /**
      * @param container2
@@ -189,7 +191,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         // and has no permissions. Therefore we use the name of the currently
         // logged in user as a role which has read and write permissions for
         // the new ITVerbund.
-        if (child instanceof ITVerbund || child instanceof Organization || child instanceof Audit) {
+        if (child instanceof ITVerbund || child instanceof Organization || (child instanceof Audit && !isInheritAuditPermissions())) {
             addPermissions(child);           
         } else {
             RetrieveInfo ri = new RetrieveInfo();
@@ -260,6 +262,20 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     public void setAuthService(IAuthService service) {
         this.authService = service;
+    }
+
+    /**
+     * @return the inheritAuditPermissions
+     */
+    public boolean isInheritAuditPermissions() {
+        return inheritAuditPermissions;
+    }
+
+    /**
+     * @param inheritAuditPermissions the inheritAuditPermissions to set
+     */
+    public void setInheritAuditPermissions(boolean inheritAuditPermissions) {
+        this.inheritAuditPermissions = inheritAuditPermissions;
     }
 
     private Logger getLogger() {
