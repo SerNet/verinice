@@ -53,8 +53,10 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
@@ -216,7 +218,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                         selectedTitles.add(element.getTitle());
                         selectedTypeIds.add(element.getTypeId());
                     }
-                    if(selectedElement instanceof IBSIStrukturElement) {
+                    if(isGrundschutzElement(selectedElement)) {
                         personTypeId = Person.TYPE_ID;
                     } else {
                         personTypeId = PersonIso.TYPE_ID;
@@ -226,8 +228,17 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
             }
         } else {
             action.setEnabled(false);
-        }
-        
+        }       
+    }
+
+    /**
+     * @param selectedElement
+     * @return
+     */
+    private boolean isGrundschutzElement(Object selectedElement) {
+        return (selectedElement instanceof IBSIStrukturElement)
+                || (selectedElement instanceof BausteinUmsetzung)
+                || (selectedElement instanceof MassnahmenUmsetzung);
     }
     
     private boolean isActive() {

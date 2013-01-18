@@ -82,30 +82,26 @@ public class ImportCSVWizard extends Wizard {
 		return true;
 	}
 	
-	private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
-        if(changedElement!=null && changedElement.size()>9) {
-            // if more than 9 elements changed or added do a complete reload
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-        } else {
-        	if (importRootObjectSet != null && importRootObjectSet.size()>0) {     
-            	for (CnATreeElement importRootObject : importRootObjectSet) {        
-	                CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-	                CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
-	                if (changedElement != null) {
-	                    for (CnATreeElement cnATreeElement : changedElement) {
-	                        CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
-	                        CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
-	                    }
-	                }
-            	}
-            }    
+	private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {   
+    	if (importRootObjectSet != null && importRootObjectSet.size()>0) {     
+        	for (CnATreeElement importRootObject : importRootObjectSet) {        
+                CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
+                CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+                if (changedElement != null) {
+                    for (CnATreeElement cnATreeElement : changedElement) {
+                        CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
+                        CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
+                    }
+                }
+        	}
+        } else {    
             if (changedElement != null) {
                 for (CnATreeElement cnATreeElement : changedElement) {
                     CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
                 }
             }
-        }
+        }       
     }
 
 	@Override

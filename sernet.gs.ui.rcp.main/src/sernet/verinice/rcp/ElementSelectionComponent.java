@@ -44,6 +44,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -59,6 +60,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
+import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
@@ -175,8 +177,12 @@ public class ElementSelectionComponent {
                 if (cell.getElement() instanceof PlaceHolder)
                     return;
                 
-                String typeId = ((CnATreeElement)cell.getElement()).getTypeId();
-                cell.setImage(ImageCache.getInstance().getObjectTypeImage(typeId));
+                CnATreeElement element = (CnATreeElement)cell.getElement();
+                Image image = CnAImageProvider.getCustomImage(element);
+                if(image==null) {
+                    image = ImageCache.getInstance().getObjectTypeImage(element.getTypeId());
+                }
+                cell.setImage(image);
             }
         });
         

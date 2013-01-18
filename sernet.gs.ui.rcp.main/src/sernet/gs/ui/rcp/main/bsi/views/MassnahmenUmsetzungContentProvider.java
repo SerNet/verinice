@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
@@ -111,7 +112,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 						log.debug("MassnahmenUmsetzung is not of interest for view: " + child);
 						return;
 					}
-					
+					Activator.inheritVeriniceContextState();
 					FindMassnahmeById command = new FindMassnahmeById(child.getDbId());
 					command = ServiceFactory.lookupCommandService().executeCommand(command);
 					List<TodoViewItem> items = command.getAll();

@@ -38,6 +38,7 @@ import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -334,6 +335,7 @@ public class ImageCache {
 		BSI_ICON_MAP = new HashMap<String, String>();
 		
 		// fill type map for BSI icons:
+		BSI_ICON_MAP.put(ITVerbund.TYPE_ID, ImageCache.EXPLORER);
 		BSI_ICON_MAP.put(Anwendung.TYPE_ID, ImageCache.ANWENDUNG);
 		BSI_ICON_MAP.put(Gebaeude.TYPE_ID, ImageCache.GEBAEUDE);
 		BSI_ICON_MAP.put(Client.TYPE_ID, ImageCache.CLIENT);

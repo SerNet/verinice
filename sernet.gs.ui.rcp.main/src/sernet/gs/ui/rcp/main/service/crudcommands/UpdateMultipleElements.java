@@ -56,14 +56,6 @@ public class UpdateMultipleElements<T extends ITypedElement> extends ChangeLoggi
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
-	 */
-	@Override
-	public void clear() {
-		elements = null;
-	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
