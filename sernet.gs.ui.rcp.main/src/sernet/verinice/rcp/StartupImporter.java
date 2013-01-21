@@ -67,7 +67,7 @@ public abstract class StartupImporter {
 
     private static volatile IModelLoadListener modelLoadListener;
 
-    public static void importVna() {
+    public static synchronized void importVna() {
         if (!isRestart()) {
             deleteFiles();
             return;
@@ -76,7 +76,7 @@ public abstract class StartupImporter {
             startImportJob();
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
-            // laoded
+            // loaded
             modelLoadListener = new IModelLoadListener() {
                 @Override
                 public void closed(BSIModel model) {

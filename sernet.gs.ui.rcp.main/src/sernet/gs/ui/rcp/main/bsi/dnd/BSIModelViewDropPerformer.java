@@ -34,8 +34,12 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -43,8 +47,6 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * Handles drop events of objects to create links between them.
@@ -70,14 +72,15 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 		}
 		Object toDrop = DNDItems.getItems().get(0);
 		if(isActive()) {
-			if (toDrop != null && toDrop instanceof Baustein) {
+			if (toDrop instanceof Baustein) {
 				return dropBaustein((CnATreeElement) target, viewer);
 			} else if (toDrop != null && (toDrop instanceof IBSIStrukturElement || toDrop instanceof BausteinUmsetzung || toDrop instanceof IISO27kElement)) {
 				CnATreeElement element;
-				if (target instanceof LinkKategorie)
+				if (target instanceof LinkKategorie){
 					element = ((LinkKategorie) target).getParent();
-				else
+				} else {
 					element = (CnATreeElement) target;
+				}
 				LinkDropper dropper = new LinkDropper();
 				return dropper.dropLink(DNDItems.getItems(), element);
 			}
@@ -87,21 +90,22 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 	}
 
 	private boolean dropBaustein(final CnATreeElement target, Viewer viewer) {
-		if (!CnAElementHome.getInstance().isNewChildAllowed(target))
+		if (!CnAElementHome.getInstance().isNewChildAllowed(target)){
 			return false;
-		
+		}
 		final List<Baustein> toDrop = DNDItems.getItems();
 		Check: for (Baustein baustein : toDrop) {
 			int targetSchicht = 0;
-			if (target instanceof IBSIStrukturElement)
+			if (target instanceof IBSIStrukturElement){
 				targetSchicht = ((IBSIStrukturElement) target).getSchicht();
-
+			}
 			if (baustein.getSchicht() != targetSchicht) {
 				if (!SanityCheckDialog.checkLayer(viewer.getControl().getShell(), baustein.getSchicht(),
-						targetSchicht))
+						targetSchicht)){
 					return false;
-				else
+				} else {
 					break Check; // user say he knows what he's doing, stop
+				}
 				// checking.
 			}
 
@@ -133,7 +137,7 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 		return true;
 	}
 
-	private void createBausteinUmsetzung(List<Baustein> toDrop, CnATreeElement target) throws Exception {
+	private void createBausteinUmsetzung(List<Baustein> toDrop, CnATreeElement target) throws CommandException, CnATreeElementBuildException {
 		CnATreeElement saveNew = null;
 		for (Baustein baustein : toDrop) {
 			saveNew = CnAElementFactory.getInstance().saveNew(target,
@@ -150,22 +154,19 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			LOG.debug("validateDrop, target: " + target);
 		}
 	    
-	    if(!checkRights())
+	    if(!checkRights()){
 	        return false;
-	    
-		if (target == null)
-			return isActive=false;
-
-		if (!(target instanceof CnATreeElement || target instanceof LinkKategorie))
-			return isActive=false;
-
-		if (target instanceof IBSIStrukturKategorie)
-			return isActive=false;
+	    }
+		if(!dropValidationTargetCheck(target)){
+		    isActive = false;
+		    return isActive;
+		}
 
 		List items = DNDItems.getItems();
 
 		if(items==null || items.isEmpty()) {
-			return isActive=false;
+			isActive=false;
+			return isActive;
 		}
 		
 		// use bstUms as template for bstUmsTarget
@@ -174,51 +175,75 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
 				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
-					return isActive=true;  
+					isActive=true;
+				    return isActive;
 			}
 			if (target instanceof IBSIStrukturElement) {
-				return isActive=true;
+			    isActive=true;
+			    return isActive;
 			}
-			return isActive=false;
+			isActive=false;
+			return isActive;
 		}
 
 		// link drop:
 		if (items.get(0) instanceof IBSIStrukturElement || items.get(0) instanceof IISO27kElement) {
 			for (Object item : items) {
 				if (LOG.isDebugEnabled()) {
-					LOG.debug("validateDrop, draged item: " + item );
+					LOG.debug("validateDrop, dragged item: " + item );
 				}
-				if (target.equals(item))
-					return isActive=false;
-
-				if (!(item instanceof IBSIStrukturElement || item instanceof IISO27kElement))
-					return isActive=false;
-
-				if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie) {
-					if (((LinkKategorie) target).getParent().equals(item)) /* is same object */
-						return isActive=false;
+				if(!doItemAndTargetMatch(target, item)){
+				    isActive = false;
+				    return isActive;
 				}
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("validateDrop, validated!");
 			}
-			return isActive=true;
+			isActive=true;
+			return isActive;
 		}
 
 		// other drop type:
-		if (!(target instanceof CnATreeElement))
-			return isActive=false;
-
+		if (!(target instanceof CnATreeElement)){
+			isActive=false;
+		    return isActive;
+		}
 		for (Iterator iter = items.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
-			// Logger.getLogger(this.getClass()).debug("Drop item: " + obj);
 			CnATreeElement cont = (CnATreeElement) target;
-			if (!cont.canContain(obj))
-				return isActive=false;
+			if (!cont.canContain(obj)){
+				isActive=false;
+				return isActive;
+			}
 
 		}
-		return isActive=true;
+		isActive=true;
+		return isActive;
 	}
+
+    private boolean doItemAndTargetMatch(Object target, Object item) {
+        if (target.equals(item)){
+        	return false;
+        } else if (!(item instanceof IBSIStrukturElement || item instanceof IISO27kElement)){
+        	return false;
+        } else if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie) {
+        	if (((LinkKategorie) target).getParent().equals(item)){ /* is same object */
+        		return false;
+        	}
+        }
+        return true;
+    }
+
+    private boolean dropValidationTargetCheck(Object target) {
+        if (target == null){
+			return false;
+        } else if (!(target instanceof CnATreeElement || target instanceof LinkKategorie)){
+			return false;
+        } else if (target instanceof IBSIStrukturKategorie){
+			return false;
+        } else return true;
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()

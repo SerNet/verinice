@@ -26,7 +26,6 @@ import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * 
@@ -45,8 +44,6 @@ public class RunRiskAnalysisCommand extends GenericCommand {
     @Override
     public void execute() {
         IRiskAnalysisService ra = new RiskAnalysisServiceImpl();
-        
-        IBaseDao<Organization, Serializable> dao = getDaoFactory().getDAO(Organization.class);
         
         // update asset values (business impact, CIA):
         // done on every save, no need to do it here

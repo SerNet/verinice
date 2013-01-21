@@ -91,15 +91,15 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  */
 public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
 
-	private static final Logger log = Logger.getLogger(GenericMassnahmenView.class);
+	private static final Logger LOG = Logger.getLogger(GenericMassnahmenView.class);
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public int loadBlockNumber = 0;
 	
-	public boolean isDateSet = false;
+	private boolean isDateSet = false;
 	
-	protected List allMassnahmen;
+	private List allMassnahmen;
 	
 	/**
 	 * Implementation of {@link ContributionItem} which allows choosing one of
@@ -455,7 +455,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	protected TableColumn zielColumn;
 	private Action doubleClickAction;
     private Action selectionAction;
-	protected TableColumn bearbeiterColumn;
+    protected TableColumn bearbeiterColumn;
 
 	private Action filterAction;
 	public Action loadMoreAction;
@@ -670,7 +670,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	public final void reloadMeasures() {
 		ITVerbund compound = compoundChoser.getSelectedCompound();
 		if (compound == null) {
-			log.warn("No IT-Verbund was selected during reload."); //$NON-NLS-1$
+			LOG.warn("No IT-Verbund was selected during reload."); //$NON-NLS-1$
 		} else {
 			loadMeasures(compound);
 		}
@@ -753,7 +753,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 							compoundChoser.setEnabled(true);
 						}
 					});
-					log.error("Error while loading massnahmen", e);
+					LOG.error("Error while loading massnahmen", e);
 					ExceptionUtil.log(e, getTaskErrorLabel());
 				}
 				return Status.OK_STATUS;
@@ -878,8 +878,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	public final void compoundAdded(final ITVerbund compound) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-			    if (log.isDebugEnabled()) {
-			        log.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
+			    if (LOG.isDebugEnabled()) {
+			        LOG.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
 				compoundChoser.compoundAdded(compound);
 			}
@@ -889,8 +889,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	public final void compoundRemoved(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-			    if (log.isDebugEnabled()) {
-			        log.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
+			    if (LOG.isDebugEnabled()) {
+			        LOG.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
 				compoundChoser.compoundRemoved(compound);
 			}
@@ -900,8 +900,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	public final void compoundChanged(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-			    if (log.isDebugEnabled()) {
-			        log.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
+			    if (LOG.isDebugEnabled()) {
+			        LOG.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
 				compoundChoser.compoundChanged(compound);
 			}
@@ -920,9 +920,9 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 	
 	protected static class SortSelectionAdapter extends SelectionAdapter {
-		GenericMassnahmenView view;
-		TableColumn column;
-		int index;
+		private GenericMassnahmenView view;
+		private TableColumn column;
+		private int index;
 		
 		public SortSelectionAdapter(GenericMassnahmenView view, TableColumn column, int index) {
 			this.view = view;
@@ -976,14 +976,12 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		    try {
     			TodoViewItem mn1 = (TodoViewItem) o1;
     			TodoViewItem mn2 = (TodoViewItem) o2;			
-    			if(o1==null) {
-    				if(o2!=null) {
-    					rc = 1;
-    				}
-    			} else if(o2==null) {
-    				if(o1!=null) {
-    					rc = -1;
-    				}
+    			if(o1==null){
+    			    if(o2 != null ) {
+    			        rc = 1;
+    			    }
+    			} else if(o2==null){
+    			        rc = -1;
     			} else {
     				// e1 and e2 != null	
     				switch (propertyIndex) {
@@ -1014,7 +1012,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
     				rc = -rc;
     			}
 		    } catch(Exception e) {
-		        log.error("Error while sorting elements", e);
+		        LOG.error("Error while sorting elements", e);
 		    }
 			return rc;
 		}
@@ -1026,9 +1024,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 					rc = 1;
 				}
 			} else if(s2==null) {
-				if(s1!=null) {
 					rc = -1;
-				}
 			} else {
 				rc = s1.compareTo(s2);
 			}
@@ -1042,12 +1038,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	        if (date2 == null){
 	            return -1;
 	        }
-			int comp = date1.compareTo(date2);
-			return comp;
-	        
+			return date1.compareTo(date2);
 		}
-		
-
 	}
 
 }

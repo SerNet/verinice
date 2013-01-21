@@ -64,56 +64,60 @@ public class DbVersion extends GenericCommand  {
 	        if (getLog().isDebugEnabled()) {
                 getLog().debug("updateDBVersion, current version is: " + dbVersion );
             }
-			if (dbVersion < 0.91D) {
-				DbMigration migration = new MigrateDbTo0_91();
-				getCommandService().executeCommand(migration);
-			}
+			executeUpdateCommand(dbVersion);
+	}
 
-			 if (dbVersion < 0.92D) {
-				 DbMigration migration = new MigrateDbTo0_92();
-				 getCommandService().executeCommand(migration);
-			 }
-			 
-			 if (dbVersion < 0.93D) {
-				 DbMigration migration = new MigrateDbTo0_93();
-				 getCommandService().executeCommand(migration);
-			 }
-			 
-			 if (dbVersion < 0.94D) {
-				 DbMigration migration = new MigrateDbTo0_94();
-				 getCommandService().executeCommand(migration);
-			 }
-			 
-			 if (dbVersion < 0.95D) {
-				 DbMigration migration = new MigrateDbTo0_95();
-				 getCommandService().executeCommand(migration);
-			 }
+	private void executeUpdateCommand(double dbVersion) throws CommandException {
+	    if (dbVersion < 0.91D) {
+	        DbMigration migration = new MigrateDbTo0_91();
+	        getCommandService().executeCommand(migration);
+	    }
 
-			 if (dbVersion < 0.96D) {
-				 // schema update must have been done by SchemaCreator.java, before Hibernate session was started:
-			     getLog().debug("Database schema was not correctly updated to V 0.96.");
-				 throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
-			 }
-			 
-			 if (dbVersion < 0.97D) {
-				 DbMigration migration = new MigrateDbTo0_97();
-				 getCommandService().executeCommand(migration);
-			 }
-			 
-			 if (dbVersion < 0.98D) {
-                 DbMigration migration = new MigrateDbTo0_98();
-                 getCommandService().executeCommand(migration);
-             }
-			 
-			 if (dbVersion < 0.99D) {
-                 DbMigration migration = new MigrateDbTo0_99();
-                 getCommandService().executeCommand(migration);
-             }
+	    if (dbVersion < 0.92D) {
+	        DbMigration migration = new MigrateDbTo0_92();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.93D) {
+	        DbMigration migration = new MigrateDbTo0_93();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.94D) {
+	        DbMigration migration = new MigrateDbTo0_94();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.95D) {
+	        DbMigration migration = new MigrateDbTo0_95();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.96D) {
+	        // schema update must have been done by SchemaCreator.java, before Hibernate session was started:
+	        getLog().debug("Database schema was not correctly updated to V 0.96.");
+	        throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
+	    }
+
+	    if (dbVersion < 0.97D) {
+	        DbMigration migration = new MigrateDbTo0_97();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.98D) {
+	        DbMigration migration = new MigrateDbTo0_98();
+	        getCommandService().executeCommand(migration);
+	    }
+
+	    if (dbVersion < 0.99D) {
+	        DbMigration migration = new MigrateDbTo0_99();
+	        getCommandService().executeCommand(migration);
+	    }
 	}
 
 
 	public void execute() {
-		if (clientVersion != IVersionConstants.COMPATIBLE_CLIENT_VERSION ) {
+	    if(!(Math.abs(clientVersion - IVersionConstants.COMPATIBLE_CLIENT_VERSION) < 0.01)){
 			throw new RuntimeCommandException("Inkompatible Client Version. " +
 					"Server akzeptiert nur V " + IVersionConstants.COMPATIBLE_CLIENT_VERSION
 					+ ". Vorhandene Client Version: " + clientVersion);
@@ -135,9 +139,5 @@ public class DbVersion extends GenericCommand  {
 		    getLog().error("Exception while updating database.", e);
 			throw new RuntimeCommandException("Fehler beim Migrieren der Datenbank auf aktuelle Version.", e);
 		}
-		
 	}
-
-	
-
 }

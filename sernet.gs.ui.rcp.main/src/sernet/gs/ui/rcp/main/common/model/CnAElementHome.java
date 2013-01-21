@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +85,7 @@ import sernet.verinice.service.commands.UpdateElement;
  * 
  */
 
-public class CnAElementHome {
+public final class CnAElementHome {
 
     private final Logger log = Logger.getLogger(CnAElementHome.class);
 
@@ -95,8 +96,6 @@ public class CnAElementHome {
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
 
     private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    private static final String QUERY_FIND_CHANGES_SINCE = "from " + ChangeLogEntry.class.getName() + " as change " + "where change.changetime > ? " + "and not change.stationId = ? " + "order by changetime"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private ICommandService commandService;
     
@@ -128,7 +127,7 @@ public class CnAElementHome {
         return commandService != null;
     }
 
-    public void open(IProgress monitor) throws Exception {
+    public void open(IProgress monitor) throws MalformedURLException {
         open(CnAWorkspace.getInstance().getConfDir(), monitor);
     }
 
@@ -136,13 +135,13 @@ public class CnAElementHome {
         // do nothing
     }
 
-    public void open(String confDir, IProgress monitor) throws Exception {
+    public void open(String confDir, IProgress monitor) throws MalformedURLException {
         monitor.beginTask(Messages.getString("CnAElementHome.0"), IProgress.UNKNOWN_WORK); //$NON-NLS-1$
         ServiceFactory.openCommandService();
         commandService = ServiceFactory.lookupCommandService();
     }
 
-    public void open() throws Exception {
+    public void open() throws MalformedURLException {
         // causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
         // in web environment
         // TODO: this class should only be used on the RCP client!!!
@@ -160,7 +159,7 @@ public class CnAElementHome {
         commandService = null;
     }
 
-    public <T extends CnATreeElement> T save(T element) throws Exception {
+    public <T extends CnATreeElement> T save(T element) throws CommandException {
         if (log.isDebugEnabled()) {
             log.debug("Saving new element: " + element); //$NON-NLS-1$
         }
@@ -183,7 +182,7 @@ public class CnAElementHome {
      * @param clazz Class of the new instance
      * @return the new instance which is saved in the database
      */
-    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz) throws Exception {
+    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz) throws CommandException {
         return save(container, clazz, null);
     }
     
@@ -201,7 +200,7 @@ public class CnAElementHome {
      * @param typeId HUI-Type-Id or null
      * @return the new instance which is saved in the database
      */
-    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz, String typeId) throws Exception {
+    public <T extends CnATreeElement> T save(CnATreeElement container, Class<T> clazz, String typeId) throws CommandException {
         String title = null;
         if(typeId!=null) {
             // load the localized title via HUITypeFactory from message bundle
@@ -218,7 +217,7 @@ public class CnAElementHome {
         return saveCommand.getNewElement();
     }
 
-    public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws Exception {
+    public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws CommandException {
         log.debug("Creating new element in " + container); //$NON-NLS-1$
         CreateBaustein saveCommand = new CreateBaustein(container, baustein);
         saveCommand = getCommandService().executeCommand(saveCommand);
@@ -243,19 +242,19 @@ public class CnAElementHome {
         return command.getLink();
     }
 
-    public void remove(CnATreeElement element) throws Exception {
+    public void remove(CnATreeElement element) throws CommandException {
         log.debug("Deleting " + element.getTitle()); //$NON-NLS-1$
         RemoveElement command = new RemoveElement(element);
         deleteValidations(element);
         getCommandService().executeCommand(command);
     }
 
-    public void remove(CnALink element) throws Exception {
+    public void remove(CnALink element) throws CommandException {
         RemoveLink command = new RemoveLink(element);
         getCommandService().executeCommand(command);
     }
 
-    public CnATreeElement update(CnATreeElement element) throws Exception {
+    public CnATreeElement update(CnATreeElement element) throws CommandException {
         UpdateElement command = new UpdateElement(element, true, ChangeLogEntry.STATION_ID);
         command = getCommandService().executeCommand(command);
         return (CnATreeElement) command.getElement();
@@ -265,7 +264,7 @@ public class CnAElementHome {
      * @param cnAElement
      * @throws Exception 
      */
-    public CnATreeElement updateEntity(CnATreeElement element) throws Exception {
+    public CnATreeElement updateEntity(CnATreeElement element) throws CommandException {
         UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
@@ -313,15 +312,14 @@ public class CnAElementHome {
      *         hierarchy.
      * @throws Exception
      */
-    public BSIModel loadModel(IProgress nullMonitor) throws Exception {
+    public BSIModel loadModel(IProgress nullMonitor) throws CommandException {
         log.debug("Loading model instance"); //$NON-NLS-1$
 
         nullMonitor.setTaskName(Messages.getString("CnAElementHome.1")); //$NON-NLS-1$
 
         LoadBSIModelForTreeView command = new LoadBSIModelForTreeView();
         command = getCommandService().executeCommand(command);
-        BSIModel model = command.getModel();
-        return model;
+        return command.getModel();
     }
 
     /**
@@ -487,20 +485,7 @@ public class CnAElementHome {
                         if (dropTarget instanceof IISO27kElement && dragged instanceof IISO27kElement) {
 
                             // special case: threats and vulnerabilities can create a new scenario when dropped:
-                            if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
-                                Threat threat;
-                                Vulnerability vuln;
-                                threat = (Threat) dropTarget;
-                                vuln = (Vulnerability) dragged;
-                                createScenario(threat, vuln);
-                            } 
-                            else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
-                                Threat threat;
-                                Vulnerability vuln;
-                                vuln = (Vulnerability) dropTarget;
-                                threat = (Threat) dragged;
-                                createScenario(threat, vuln);
-                            }
+                            specialISO27kDndHandling(dropTarget, dragged);
                             String linkIdParam = linkId;
                             if(linkIdParam==null) {
                                 // use first relation type since param linkId is null
@@ -510,8 +495,9 @@ public class CnAElementHome {
                             // try to link from target to dragged elements first:                            
                             if (linkIdParam!=null) {
                                 boolean linkCreated = createTypedLink(newLinks, dropTarget, dragged, linkIdParam, LINK_NO_COMMENT);
-                                if (linkCreated)
+                                if (linkCreated){
                                     continue allDragged;
+                                }
                             }
                                                    
                             if(linkIdParam==null) {
@@ -520,34 +506,18 @@ public class CnAElementHome {
                             if ( linkIdParam!=null ) {
                                 // use first relation type (user can change it later):
                                 boolean linkCreated = createTypedLink(newLinks, dragged, dropTarget, linkIdParam, LINK_NO_COMMENT);
-                                if (linkCreated)
+                                if (linkCreated){
                                     continue allDragged;
+                                }
                             }
                         } // end for ISO 27k elements
                         
                         // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-                        if (dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung || dragged instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung || dragged instanceof MassnahmenUmsetzung) {
-                            CnATreeElement from = dropTarget;
-                            CnATreeElement to = dragged;
-                            String linkIdParam = linkId;
-                            if(linkIdParam==null) {
-                                linkIdParam = getFirstLinkdId(to, from);
-                            }
-                            if (linkIdParam==null) {
-                                // try again for reverse direction:
-                                from = dragged;
-                                to = dropTarget;
-                                linkIdParam = getFirstLinkdId(to, from);
-                            }
-                            if (linkIdParam==null) {
-                                //still nothing found, create untyped link:
-                                CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
-                                newLinks.add(link);
-                            }
-                            else {
-                                // create link with type:
-                                createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
-                            }
+                        boolean bsiHandlingNeeded = dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung;
+                        bsiHandlingNeeded = bsiHandlingNeeded || dragged instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung;
+                        bsiHandlingNeeded = bsiHandlingNeeded || dragged instanceof MassnahmenUmsetzung;
+                        if ( bsiHandlingNeeded ) {
+                            bsiElementLinkHandling(dropTarget, linkId, newLinks, dragged);
                         }
                     } catch (Exception e) {
                         log.debug("Saving link failed.", e); //$NON-NLS-1$
@@ -573,6 +543,47 @@ public class CnAElementHome {
                     }                 
                 }
                 DNDItems.clear();
+            }
+
+            private void bsiElementLinkHandling(final CnATreeElement dropTarget, final String linkId, List<CnALink> newLinks, CnATreeElement dragged) throws CommandException {
+                CnATreeElement from = dropTarget;
+                CnATreeElement to = dragged;
+                String linkIdParam = linkId;
+                if(linkIdParam==null) {
+                    linkIdParam = getFirstLinkdId(to, from);
+                }
+                if (linkIdParam==null) {
+                    // try again for reverse direction:
+                    from = dragged;
+                    to = dropTarget;
+                    linkIdParam = getFirstLinkdId(to, from);
+                }
+                if (linkIdParam==null) {
+                    //still nothing found, create untyped link:
+                    CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
+                    newLinks.add(link);
+                }
+                else {
+                    // create link with type:
+                    createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
+                }
+            }
+
+            private void specialISO27kDndHandling(final CnATreeElement dropTarget, CnATreeElement dragged) {
+                if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
+                    Threat threat;
+                    Vulnerability vuln;
+                    threat = (Threat) dropTarget;
+                    vuln = (Vulnerability) dragged;
+                    createScenario(threat, vuln);
+                } 
+                else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
+                    Threat threat;
+                    Vulnerability vuln;
+                    vuln = (Vulnerability) dropTarget;
+                    threat = (Threat) dragged;
+                    createScenario(threat, vuln);
+                }
             }
 
             /**
@@ -602,9 +613,9 @@ public class CnAElementHome {
         boolean confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(),
                 Messages.getString("CnAElementHome.5"), Messages.getString("CnAElementHome.6") + //$NON-NLS-1$ //$NON-NLS-2$
                         Messages.getString("CnAElementHome.7")); //$NON-NLS-1$
-        if (!confirm)
+        if (!confirm){
             return;
-        
+        }
         try {
             CreateScenario command = new CreateScenario(threat, vuln);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -632,11 +643,13 @@ public class CnAElementHome {
         // use first one (user can change it later):
         CnALink link = CnAElementHome.getInstance()
             .createLink(from, to, relationTypeid, comment );
-        if (link == null)
+        if (link == null){
             return false;
+        }
         newLinks.add(link);
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()){
             log.debug("Link created"); //$NON-NLS-1$
+        }
         return true;
     }
 

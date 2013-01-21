@@ -31,7 +31,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 
 public class EntitySelectionPage extends WizardPage{
-	private final static String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	private File csvFile;
 	private String entityName = ""; //$NON-NLS-1$
     private Text sourceIdText;

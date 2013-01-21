@@ -80,7 +80,6 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
     private Properties gsmtypproperties;
     private Properties subtypproperties;
-    final List<Server> selectedElements = new ArrayList<Server>();
 
     public GSMBausteinZuordnungAction(IWorkbenchWindow window) {
         this.window = window;
@@ -143,31 +142,31 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
      */
     private void loadModulForServer(Server serverelement) {
         try{
-        String[] bausteine = getSplitBausteine(serverelement);
-        if (bausteine.length == 0 || bausteine == null) {
-            showInfoMessage();
-       }
-        RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
-        serverelement = (Server) Retriever.retrieveElement(serverelement,ri);
-        for (String bst : bausteine) {
-           
-            Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
+            String[] bausteine = getSplitBausteine(serverelement);
+            if (bausteine == null || bausteine.length == 0 ) {
+                showInfoMessage();
+            }
+            RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
+            serverelement = (Server) Retriever.retrieveElement(serverelement,ri);
+            for (String bst : bausteine) {
 
-            if (baustein == null) {
-                LOG.error("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
-            } else {
-              
-                // assign baustein to every selected target object:
-                if (!serverelement.containsBausteinUmsetzung(baustein.getId())) {
-                    try {
-                        CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
-                    } catch (Exception e) {
-                        LOG.error("Error by saving.", e);
-                        throw new RuntimeException(e);
+                Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
+
+                if (baustein == null) {
+                    LOG.error("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
+                } else {
+
+                    // assign baustein to every selected target object:
+                    if (!serverelement.containsBausteinUmsetzung(baustein.getId())) {
+                        try {
+                            CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
+                        } catch (Exception e) {
+                            LOG.error("Error by saving.", e);
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
-        }
         }catch (Exception e) {
             LOG.error("Error while assigning modules",e);
             ExceptionUtil.log(e, Messages.GSMBausteinZuordnungAction_6);
@@ -198,7 +197,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     }
     
-    private ArrayList<String> tagList(Server server) {
+    private List<String> tagList(Server server) {
         ArrayList<String> gsmtaglist = new ArrayList<String>();
         String property = "";
         Collection<? extends String> tags = server.getTags();
@@ -225,8 +224,8 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         return gsmtaglist;
     }
 
-    private ArrayList<String> readBausteine(Server server) {
-        ArrayList<String> gsmlist = tagList(server);
+    private List<String> readBausteine(Server server) {
+        List<String> gsmlist = tagList(server);
         ArrayList<String> bausteinlist = new ArrayList<String>();
         Set<Entry<Object, Object>> subtypentrySet = subtypproperties.entrySet();
 
@@ -250,10 +249,9 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
     }
 
     private String[] getSplitBausteine(Server server) {
-        ArrayList<String> bausteinlist = readBausteine(server);
+        List<String> bausteinlist = readBausteine(server);
         Object[] objList = bausteinlist.toArray();
-        String[] strList = Arrays.copyOf(objList, objList.length, String[].class);
-        return strList;
+        return Arrays.copyOf(objList, objList.length, String[].class);
     }
 
     @Override

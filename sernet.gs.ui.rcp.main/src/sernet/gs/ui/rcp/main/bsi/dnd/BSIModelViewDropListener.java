@@ -44,9 +44,11 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.iso27k.rcp.action.Messages;
@@ -64,7 +66,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
 
     private TreeViewer viewer;
 
-    private Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
+    private final static Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
 
     private boolean isActive = false;
 
@@ -138,30 +140,41 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         if (LOG.isDebugEnabled()) {
             LOG.debug("validateDrop, target: " + ((CnATreeElement)target).getTitle());
         }
-        if(!checkRights())
+        if(!checkRights()){
             return false;
+        }
         if (target == null){
-            return isActive=false;
+            isActive=false;
+            return isActive;
         } else {
             this.target = target;
         }
-        if (!(target instanceof CnATreeElement))
-            return isActive=false;
-        if (target instanceof IBSIStrukturKategorie)
-            return isActive=false;
+        if (!(target instanceof CnATreeElement)){
+            isActive=false;
+            return isActive;
+        }
+        if (target instanceof IBSIStrukturKategorie){
+            isActive=false;
+            return isActive;
+        }
         if(target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))){
-            return isActive = false;
+            isActive = false;
+            return isActive;
         }
         else if(target instanceof IBSIStrukturElement && isSupportedData(transferType)){
-            return isActive = true;
+            isActive = true;
+            return isActive;
         }
         if(target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)){
-            return isActive = false;
+            isActive = false;
+            return isActive;
         }
         if(IGSModelElementTransfer.getInstance().isSupportedType(transferType)){
-            return isActive = false;
+            isActive = false;
+            return isActive;
         }
-        return isActive=true;
+        isActive = true;
+        return isActive;
     }
 
     /* (non-Javadoc)
@@ -195,20 +208,21 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     }
 
     private boolean dropBaustein(final CnATreeElement target, Viewer viewer,final Baustein[] bausteine) {
-        if (!CnAElementHome.getInstance().isNewChildAllowed(target))
+        if (!CnAElementHome.getInstance().isNewChildAllowed(target)){
             return false;
-
+        }
         Check: for (Baustein baustein : bausteine) {
             int targetSchicht = 0;
-            if (target instanceof IBSIStrukturElement)
+            if (target instanceof IBSIStrukturElement){
                 targetSchicht = ((IBSIStrukturElement) target).getSchicht();
-
+            }
             if (baustein.getSchicht() != targetSchicht) {
                 if (!SanityCheckDialog.checkLayer(viewer.getControl().getShell(), baustein.getSchicht(),
-                        targetSchicht))
+                        targetSchicht)){
                     return false;
-                else
+                } else {
                     break Check; // user say he knows what he's doing, stop
+                }
                 // checking.
             }
 
@@ -239,7 +253,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return true;
     }
 
-    private void createBausteinUmsetzung(Baustein[] toDrop, CnATreeElement target) throws Exception {
+    private void createBausteinUmsetzung(Baustein[] toDrop, CnATreeElement target) throws CnATreeElementBuildException, CommandException {
         CnATreeElement saveNew = null;
         for (Baustein baustein : toDrop) {
             saveNew = CnAElementFactory.getInstance().saveNew(target,
@@ -256,11 +270,12 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     }
     
     private boolean isSupportedData(TransferData transferType){
-        return (IGSModelElementTransfer.getInstance().isSupportedType(transferType)
+        boolean retVal = IGSModelElementTransfer.getInstance().isSupportedType(transferType)
                 || IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType)
-                || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType)
-                || ISO27kElementTransfer.getInstance().isSupportedType(transferType)
-                || ISO27kGroupTransfer.getInstance().isSupportedType(transferType));
+                || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType);
+        retVal = retVal || ISO27kElementTransfer.getInstance().isSupportedType(transferType)
+                || ISO27kGroupTransfer.getInstance().isSupportedType(transferType);
+        return retVal;
     }
 
     /* (non-Javadoc)

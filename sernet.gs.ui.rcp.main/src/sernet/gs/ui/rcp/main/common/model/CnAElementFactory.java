@@ -18,20 +18,17 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.SubtypenZielobjekte;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateAnwendung;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateITVerbund;
@@ -109,7 +106,6 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateElement;
-import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
@@ -132,7 +128,7 @@ import sernet.verinice.service.iso27k.LoadModel;
  * @author koderman[at]sernet[dot]de
  * 
  */
-public class CnAElementFactory {
+public final class CnAElementFactory {
 
 	private final Logger LOG = Logger.getLogger(CnAElementFactory.class);
 	
@@ -140,9 +136,9 @@ public class CnAElementFactory {
 	
 	private static List<IModelLoadListener> listeners = new CopyOnWriteArrayList<IModelLoadListener>();
 
-	private static CnAElementFactory instance;
+	private static volatile CnAElementFactory instance;
 
-	private HashMap<String, IElementBuilder> elementbuilders = new HashMap<String, IElementBuilder>();
+	private Map<String, IElementBuilder> elementbuilders = new HashMap<String, IElementBuilder>();
 
 	private CnAElementHome dbHome;
 
@@ -151,12 +147,16 @@ public class CnAElementFactory {
 	private static ISO27KModel isoModel;
 
 	private ICommandService commandService;
+	
+	private final static String WARNING_UNCHECKED = "unchecked";
+	private final static String WARNING_RAWTYPES = "rawtypes";
 
 	private interface IElementBuilder<T extends CnATreeElement, U> {
 		public T build(CnATreeElement container, BuildInput<U> input)
-				throws Exception;
+				throws CommandException;
 	}
 
+	@SuppressWarnings(WARNING_RAWTYPES)
 	private abstract class ElementBuilder implements IElementBuilder {
 		protected void init(CnATreeElement container, CnATreeElement child) {
 			container.addChild(child);
@@ -168,9 +168,9 @@ public class CnAElementFactory {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Adding model load listener.");
 		}
-		if (!listeners.contains(listener))
+		if (!listeners.contains(listener)){
 			listeners.add(listener);
-
+		}
 		// safety: always fire one event when a loaded model is present,
 		// because the model could have been loaded while the listener was in
 		// the process of registering
@@ -191,18 +191,19 @@ public class CnAElementFactory {
 	}
 
 	public void removeLoadListener(IModelLoadListener listener) {
-		if (listeners.contains(listener))
+		if (listeners.contains(listener)){
 			listeners.remove(listener);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(WARNING_RAWTYPES)
 	private CnAElementFactory() {
 		dbHome = CnAElementHome.getInstance();
 
 		// Datenschutz Elemente
 		elementbuilders.put(StellungnahmeDSB.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException{
 				StellungnahmeDSB child = dbHome.save(container,
 						StellungnahmeDSB.class, StellungnahmeDSB.TYPE_ID);
 				init(container, child);
@@ -212,7 +213,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Personengruppen.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Personengruppen child = dbHome.save(container,
 						Personengruppen.class, Personengruppen.TYPE_ID);
 				init(container, child);
@@ -222,7 +223,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Datenverarbeitung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Datenverarbeitung child = dbHome.save(container,
 						Datenverarbeitung.class, Datenverarbeitung.TYPE_ID);
 				init(container, child);
@@ -232,7 +233,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Verarbeitungsangaben.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Verarbeitungsangaben child = dbHome.save(container,
 						Verarbeitungsangaben.class,
 						Verarbeitungsangaben.TYPE_ID);
@@ -243,7 +244,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Zweckbestimmung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Zweckbestimmung child = dbHome.save(container,
 						Zweckbestimmung.class, Zweckbestimmung.TYPE_ID);
 				init(container, child);
@@ -254,7 +255,7 @@ public class CnAElementFactory {
 		elementbuilders.put(VerantwortlicheStelle.TYPE_ID,
 				new ElementBuilder() {
 					public CnATreeElement build(CnATreeElement container,
-							BuildInput input) throws Exception {
+							BuildInput input) throws CommandException {
 						VerantwortlicheStelle child = dbHome.save(container,
 								VerantwortlicheStelle.class,
 								VerantwortlicheStelle.TYPE_ID);
@@ -267,7 +268,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(NKKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				NKKategorie child = dbHome.save(container, NKKategorie.class,
 						NKKategorie.TYPE_ID);
 				init(container, child);
@@ -277,7 +278,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(SonstigeITKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				SonstigeITKategorie child = dbHome.save(container,
 						SonstigeITKategorie.class, SonstigeITKategorie.TYPE_ID);
 				init(container, child);
@@ -287,7 +288,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(PersonenKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				PersonenKategorie child = dbHome.save(container,
 						PersonenKategorie.class, PersonenKategorie.TYPE_ID);
 				init(container, child);
@@ -297,7 +298,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(AnwendungenKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				AnwendungenKategorie child = dbHome.save(container,
 						AnwendungenKategorie.class,
 						AnwendungenKategorie.TYPE_ID);
@@ -308,7 +309,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(GebaeudeKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				GebaeudeKategorie child = dbHome.save(container,
 						GebaeudeKategorie.class, GebaeudeKategorie.TYPE_ID);
 				init(container, child);
@@ -318,7 +319,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(RaeumeKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				RaeumeKategorie child = dbHome.save(container,
 						RaeumeKategorie.class, RaeumeKategorie.TYPE_ID);
 				init(container, child);
@@ -328,7 +329,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(TKKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				TKKategorie child = dbHome.save(container, TKKategorie.class,
 						TKKategorie.TYPE_ID);
 				init(container, child);
@@ -338,7 +339,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ServerKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ServerKategorie child = dbHome.save(container,
 						ServerKategorie.class, ServerKategorie.TYPE_ID);
 				init(container, child);
@@ -348,7 +349,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ClientsKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ClientsKategorie child = dbHome.save(container,
 						ClientsKategorie.class, ClientsKategorie.TYPE_ID);
 				init(container, child);
@@ -358,7 +359,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(MassnahmeKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				MassnahmeKategorie child = dbHome.save(container,
 						MassnahmeKategorie.class, MassnahmeKategorie.TYPE_ID);
 				init(container, child);
@@ -368,7 +369,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Gebaeude.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Gebaeude child = dbHome.save(container, Gebaeude.class,
 						Gebaeude.TYPE_ID);
 				init(container, child);
@@ -378,7 +379,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Client.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Client child = dbHome.save(container, Client.class,
 						Client.TYPE_ID);
 				init(container, child);
@@ -388,7 +389,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(SonstIT.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				SonstIT child = dbHome.save(container, SonstIT.class,
 						SonstIT.TYPE_ID);
 				init(container, child);
@@ -398,7 +399,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Server.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Server child = dbHome.save(container, Server.class,
 						Server.TYPE_ID);
 				init(container, child);
@@ -408,7 +409,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(TelefonKomponente.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				TelefonKomponente child = dbHome.save(container,
 						TelefonKomponente.class, TelefonKomponente.TYPE_ID);
 				init(container, child);
@@ -418,7 +419,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Raum.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Raum child = dbHome.save(container, Raum.class, Raum.TYPE_ID);
 				init(container, child);
 				return child;
@@ -427,7 +428,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(NetzKomponente.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				NetzKomponente child = dbHome.save(container,
 						NetzKomponente.class, NetzKomponente.TYPE_ID);
 				init(container, child);
@@ -437,7 +438,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Person.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Person child = dbHome.save(container, Person.class,
 						Person.TYPE_ID);
 				init(container, child);
@@ -447,7 +448,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Anwendung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 
 				LOG.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
 				CreateAnwendung saveCommand = new CreateAnwendung(container,
@@ -465,7 +466,7 @@ public class CnAElementFactory {
 		elementbuilders.put(BausteinUmsetzung.TYPE_ID,
 				new IElementBuilder<BausteinUmsetzung, Baustein>() {
 					public BausteinUmsetzung build(CnATreeElement container,
-							BuildInput<Baustein> input) throws Exception {
+							BuildInput<Baustein> input) throws CommandException {
 
 						if (input == null) {
 							BausteinUmsetzung child = dbHome.save(container,
@@ -484,7 +485,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(MassnahmenUmsetzung.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				MassnahmenUmsetzung child = dbHome.save(container,
 						MassnahmenUmsetzung.class, MassnahmenUmsetzung.TYPE_ID);
 				init(container, child);
@@ -494,7 +495,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input)
-					throws Exception {
+					throws CommandException {
 
 				LOG.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
 				boolean createChildren = true;
@@ -515,7 +516,7 @@ public class CnAElementFactory {
 		// ISO 27000 builders
 		elementbuilders.put(Organization.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Organization child = dbHome.save(container, Organization.class,
 						Organization.TYPE_ID);
 				init(container, child);
@@ -525,7 +526,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(AssetGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				AssetGroup child = dbHome.save(container, AssetGroup.class,
 						AssetGroup.TYPE_ID);
 				init(container, child);
@@ -534,7 +535,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Asset.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Asset child = dbHome
 						.save(container, Asset.class, Asset.TYPE_ID);
 				init(container, child);
@@ -544,7 +545,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(PersonGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				PersonGroup child = dbHome.save(container, PersonGroup.class,
 						PersonGroup.TYPE_ID);
 				init(container, child);
@@ -554,7 +555,7 @@ public class CnAElementFactory {
 		elementbuilders.put(sernet.verinice.model.iso27k.PersonIso.TYPE_ID,
 				new ElementBuilder() {
 					public CnATreeElement build(CnATreeElement container,
-							BuildInput input) throws Exception {
+							BuildInput input) throws CommandException {
 						sernet.verinice.model.iso27k.PersonIso child = dbHome
 								.save(container,
 										sernet.verinice.model.iso27k.PersonIso.class,
@@ -566,7 +567,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(AuditGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				AuditGroup child = dbHome.save(container, AuditGroup.class,
 						AuditGroup.TYPE_ID);
 				init(container, child);
@@ -575,7 +576,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Audit.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Audit child = dbHome
 						.save(container, Audit.class, Audit.TYPE_ID);
 				init(container, child);
@@ -585,7 +586,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ControlGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ControlGroup child = dbHome.save(container, ControlGroup.class,
 						ControlGroup.TYPE_ID);
 				init(container, child);
@@ -594,7 +595,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Control.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Control child = dbHome.save(container, Control.class,
 						Control.TYPE_ID);
 				init(container, child);
@@ -604,7 +605,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ExceptionGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ExceptionGroup child = dbHome.save(container,
 						ExceptionGroup.class, ExceptionGroup.TYPE_ID);
 				init(container, child);
@@ -614,7 +615,7 @@ public class CnAElementFactory {
 		elementbuilders.put(sernet.verinice.model.iso27k.Exception.TYPE_ID,
 				new ElementBuilder() {
 					public CnATreeElement build(CnATreeElement container,
-							BuildInput input) throws Exception {
+							BuildInput input) throws CommandException {
 						sernet.verinice.model.iso27k.Exception child = dbHome
 								.save(container,
 										sernet.verinice.model.iso27k.Exception.class,
@@ -626,7 +627,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(RequirementGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				RequirementGroup child = dbHome.save(container,
 						RequirementGroup.class, RequirementGroup.TYPE_ID);
 				init(container, child);
@@ -635,7 +636,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Requirement.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Requirement child = dbHome.save(container, Requirement.class,
 						Requirement.TYPE_ID);
 				init(container, child);
@@ -645,7 +646,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Incident.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Incident child = dbHome.save(container, Incident.class,
 						Incident.TYPE_ID);
 				init(container, child);
@@ -654,7 +655,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(IncidentGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				IncidentGroup child = dbHome.save(container,
 						IncidentGroup.class, IncidentGroup.TYPE_ID);
 				init(container, child);
@@ -664,7 +665,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(IncidentScenario.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				IncidentScenario child = dbHome.save(container,
 						IncidentScenario.class, IncidentScenario.TYPE_ID);
 				init(container, child);
@@ -674,7 +675,7 @@ public class CnAElementFactory {
 		elementbuilders.put(IncidentScenarioGroup.TYPE_ID,
 				new ElementBuilder() {
 					public CnATreeElement build(CnATreeElement container,
-							BuildInput input) throws Exception {
+							BuildInput input) throws CommandException {
 						IncidentScenarioGroup child = dbHome.save(container,
 								IncidentScenarioGroup.class,
 								IncidentScenarioGroup.TYPE_ID);
@@ -685,7 +686,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Response.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Response child = dbHome.save(container, Response.class,
 						Response.TYPE_ID);
 				init(container, child);
@@ -694,7 +695,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(ResponseGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ResponseGroup child = dbHome.save(container,
 						ResponseGroup.class, ResponseGroup.TYPE_ID);
 				init(container, child);
@@ -704,7 +705,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Threat.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Threat child = dbHome.save(container, Threat.class,
 						Threat.TYPE_ID);
 				init(container, child);
@@ -713,7 +714,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(ThreatGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ThreatGroup child = dbHome.save(container, ThreatGroup.class,
 						ThreatGroup.TYPE_ID);
 				init(container, child);
@@ -723,7 +724,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(Vulnerability.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Vulnerability child = dbHome.save(container,
 						Vulnerability.class, Vulnerability.TYPE_ID);
 				init(container, child);
@@ -732,7 +733,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(VulnerabilityGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				VulnerabilityGroup child = dbHome.save(container,
 						VulnerabilityGroup.class, VulnerabilityGroup.TYPE_ID);
 				init(container, child);
@@ -742,7 +743,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(DocumentGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				DocumentGroup child = dbHome.save(container,
 						DocumentGroup.class, DocumentGroup.TYPE_ID);
 				init(container, child);
@@ -751,7 +752,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Document.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Document child = dbHome.save(container, Document.class,
 						Document.TYPE_ID);
 				init(container, child);
@@ -761,7 +762,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(InterviewGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				InterviewGroup child = dbHome.save(container,
 						InterviewGroup.class, InterviewGroup.TYPE_ID);
 				init(container, child);
@@ -770,7 +771,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Interview.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Interview child = dbHome.save(container, Interview.class,
 						Interview.TYPE_ID);
 				init(container, child);
@@ -780,7 +781,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(FindingGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				FindingGroup child = dbHome.save(container, FindingGroup.class,
 						FindingGroup.TYPE_ID);
 				init(container, child);
@@ -789,7 +790,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Finding.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Finding child = dbHome.save(container, Finding.class,
 						Finding.TYPE_ID);
 				init(container, child);
@@ -799,7 +800,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(EvidenceGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				EvidenceGroup child = dbHome.save(container,
 						EvidenceGroup.class, EvidenceGroup.TYPE_ID);
 				init(container, child);
@@ -808,7 +809,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Evidence.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Evidence child = dbHome.save(container, Evidence.class,
 						Evidence.TYPE_ID);
 				init(container, child);
@@ -818,7 +819,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(ProcessGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				ProcessGroup child = dbHome.save(container, ProcessGroup.class,
 						ProcessGroup.TYPE_ID);
 				init(container, child);
@@ -827,7 +828,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Process.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Process child = dbHome.save(container, Process.class,
 						Process.TYPE_ID);
 				init(container, child);
@@ -837,7 +838,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(RecordGroup.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				RecordGroup child = dbHome.save(container, RecordGroup.class,
 						RecordGroup.TYPE_ID);
 				init(container, child);
@@ -846,7 +847,7 @@ public class CnAElementFactory {
 		});
 		elementbuilders.put(Record.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				Record child = dbHome.save(container, Record.class,
 						Record.TYPE_ID);
 				init(container, child);
@@ -858,7 +859,7 @@ public class CnAElementFactory {
 
 		elementbuilders.put(SamtTopic.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
-					BuildInput input) throws Exception {
+					BuildInput input) throws CommandException {
 				SamtTopic child = dbHome.save(container, SamtTopic.class,
 						SamtTopic.TYPE_ID);
 				init(container, child);
@@ -869,8 +870,9 @@ public class CnAElementFactory {
 	}
 
 	public static CnAElementFactory getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new CnAElementFactory();
+		}
 		return instance;
 	}
 
@@ -882,9 +884,8 @@ public class CnAElementFactory {
 	 * @return the newly added element
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public CnATreeElement saveNewOrganisation(CnATreeElement container,
-			boolean createChildren, boolean fireUpdates) throws Exception {
+			boolean createChildren, boolean fireUpdates) throws CommandException {
 		String title = HitroUtil.getInstance().getTypeFactory()
 				.getMessage(Organization.TYPE_ID);
 		CreateElement<Organization> saveCommand = new CreateElement<Organization>(
@@ -909,12 +910,12 @@ public class CnAElementFactory {
 	 * @return the newly added element
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ WARNING_RAWTYPES, WARNING_UNCHECKED })
 	public CnATreeElement saveNewAudit(CnATreeElement container,
-			boolean createChildren, boolean fireUpdates) throws Exception {
+			boolean createChildren, boolean fireUpdates) throws CommandException, CnATreeElementBuildException {
 		IElementBuilder builder = elementbuilders.get(Audit.TYPE_ID);
 		if (builder == null) {
-			throw new Exception(
+			throw new CnATreeElementBuildException(
 					Messages.getString("CnAElementFactory.0") + Audit.TYPE_ID); //$NON-NLS-1$
 		}
 		CnATreeElement child = builder.build(container, null);
@@ -949,15 +950,15 @@ public class CnAElementFactory {
 	 * @return the newly added element
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({WARNING_RAWTYPES, WARNING_UNCHECKED})
 	public CnATreeElement saveNew(CnATreeElement container,
 			String buildableTypeId, BuildInput input, boolean fireUpdates)
-			throws Exception {
+			throws CnATreeElementBuildException, CommandException {
 		IElementBuilder builder = elementbuilders.get(buildableTypeId);
 		if (builder == null) {
 			LOG.error(Messages.getString("CnAElementFactory.0")
 					+ buildableTypeId);
-			throw new Exception(
+			throw new CnATreeElementBuildException(
 					Messages.getString("CnAElementFactory.0") + buildableTypeId); //$NON-NLS-1$
 		}
 		CnATreeElement child = builder.build(container, input);
@@ -970,8 +971,9 @@ public class CnAElementFactory {
 		return child;
 	}
 
+	@SuppressWarnings(WARNING_RAWTYPES)
 	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input) throws Exception {
+			String buildableTypeId, BuildInput input) throws CommandException, CnATreeElementBuildException {
 		return saveNew(container, buildableTypeId, input, true);
 	}
 
@@ -990,8 +992,12 @@ public class CnAElementFactory {
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
-		loadedModel = null;
+		CnAElementFactory.dereferenceModel();
 	}
+
+    private static void dereferenceModel() {
+        loadedModel = null;
+    }
 
 	private void fireClosed() {
 		for (IModelLoadListener listener : listeners) {
@@ -1042,12 +1048,8 @@ public class CnAElementFactory {
 	 */
 	public static CnATreeElement getModel(CnATreeElement element) {
 		CnATreeElement model = null;
-		if (element instanceof ISO27KModel) {
+		if (element instanceof ISO27KModel || element instanceof IISO27kElement) {
 			model = CnAElementFactory.getInstance().getISO27kModel();
-		} else if (element instanceof IISO27kElement) {
-			model = CnAElementFactory.getInstance().getISO27kModel();
-		} else if (element instanceof BSIModel) {
-			model = CnAElementFactory.getLoadedModel();
 		} else {
 			model = CnAElementFactory.getLoadedModel();
 		}
@@ -1100,12 +1102,12 @@ public class CnAElementFactory {
 			if (isoModel != null) {
 				fireLoad(isoModel);
 			}
-		} catch (Exception e) {
+		} catch (CommandException e) {
 			LOG.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
 		}
 	}
 
-	public BSIModel loadOrCreateModel(IProgress monitor) throws Exception {
+	public BSIModel loadOrCreateModel(IProgress monitor) throws MalformedURLException, CommandException {
 		if (!dbHome.isOpen()) {
 			dbHome.open(monitor);
 		}
@@ -1130,7 +1132,7 @@ public class CnAElementFactory {
 
 		verbund.createNewCategories();
 
-		createBausteinVorschlaege(loadedModel);
+		createBausteinVorschlaege();
 
 		loadedModel = dbHome.save(loadedModel);
 
@@ -1138,13 +1140,13 @@ public class CnAElementFactory {
 		return loadedModel;
 	}
 
-	private void createBausteinVorschlaege(BSIModel newModel) {
+	private void createBausteinVorschlaege() {
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
 		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(
 				list, ChangeLogEntry.STATION_ID, ChangeLogEntry.TYPE_INSERT);
 		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(
+			ServiceFactory.lookupCommandService().executeCommand(
 					command);
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
@@ -1208,5 +1210,4 @@ public class CnAElementFactory {
 					.databaseChildRemoved(changeLogEntry);
 		}
 	}
-
 }
