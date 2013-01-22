@@ -65,12 +65,15 @@ public class NZielobjektRollenId implements java.io.Serializable {
 	}
 
 	public boolean equals(Object other) {
-		if ((this == other))
+		if ((this == other)){
 			return true;
-		if ((other == null))
+		}
+		if ((other == null)){
 			return false;
-		if (!(other instanceof NZielobjektRollenId))
+		}
+		if (!(other instanceof NZielobjektRollenId)){
 			return false;
+		}
 		NZielobjektRollenId castOther = (NZielobjektRollenId) other;
 
 		return ((this.getZobImpId() == castOther.getZobImpId()) || (this
@@ -94,13 +97,15 @@ public class NZielobjektRollenId implements java.io.Serializable {
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result
+		final int prime_factor = 37;
+		
+		result = prime_factor * result
 				+ (getZobImpId() == null ? 0 : this.getZobImpId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getZobId() == null ? 0 : this.getZobId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getRolImpId() == null ? 0 : this.getRolImpId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getRolId() == null ? 0 : this.getRolId().hashCode());
 		return result;
 	}

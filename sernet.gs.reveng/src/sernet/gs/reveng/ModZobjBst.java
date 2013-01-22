@@ -15,14 +15,14 @@ public class ModZobjBst implements java.io.Serializable {
 	// Fields
 
 	private ModZobjBstId id;
-	private NZielobjekt NZielobjektByFkZbZ;
+	private NZielobjekt nZielobjektByFkZbZ;
 	private ModZobjBst modZobjBst;
-	private MGsiegel MGsiegel;
-	private NZielobjekt NZielobjektByFkZbZ2;
+	private MGsiegel mGsiegel;
+	private NZielobjekt nZielobjektByFkZbZ2;
 	private NmbNotiz nmbNotiz;
 	private MbBaust mbBaust;
-	private MBstnStatus MBstnStatus;
-	private MUmsetzStat MUmsetzStat;
+	private MBstnStatus mBstnStatus;
+	private MUmsetzStat mUmsetzStat;
 	private Integer orgImpId;
 	private String begruendung;
 	private Date datum;
@@ -69,31 +69,31 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public ModZobjBst(ModZobjBstId id, NZielobjekt NZielobjektByFkZbZ,
-			ModZobjBst modZobjBst, MGsiegel MGsiegel,
-			NZielobjekt NZielobjektByFkZbZ2, NmbNotiz nmbNotiz,
+	public ModZobjBst(ModZobjBstId id, NZielobjekt nZielobjektByFkZbZ,
+			ModZobjBst modZobjBst, MGsiegel mGsiegel,
+			NZielobjekt nZielobjektByFkZbZ2, NmbNotiz nmbNotiz,
 			MbBaust mbBaust, Integer orgImpId, Integer usn, String guid,
 			Date timestamp, Short setDefault, Integer mmtId) {
 		this.id = id;
-		this.NZielobjektByFkZbZ = NZielobjektByFkZbZ;
+		this.nZielobjektByFkZbZ = nZielobjektByFkZbZ;
 		this.modZobjBst = modZobjBst;
-		this.MGsiegel = MGsiegel;
-		this.NZielobjektByFkZbZ2 = NZielobjektByFkZbZ2;
+		this.mGsiegel = mGsiegel;
+		this.nZielobjektByFkZbZ2 = nZielobjektByFkZbZ2;
 		this.nmbNotiz = nmbNotiz;
 		this.mbBaust = mbBaust;
 		this.orgImpId = orgImpId;
 		this.usn = usn;
 		this.guid = guid;
-		this.timestamp = timestamp;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
 		this.setDefault = setDefault;
 		this.mmtId = mmtId;
 	}
 
 	/** full constructor */
-	public ModZobjBst(ModZobjBstId id, NZielobjekt NZielobjektByFkZbZ,
-			ModZobjBst modZobjBst, MGsiegel MGsiegel,
-			NZielobjekt NZielobjektByFkZbZ2, NmbNotiz nmbNotiz,
-			MbBaust mbBaust, MBstnStatus MBstnStatus, MUmsetzStat MUmsetzStat,
+	public ModZobjBst(ModZobjBstId id, NZielobjekt nZielobjektByFkZbZ,
+			ModZobjBst modZobjBst, MGsiegel mGsiegel,
+			NZielobjekt nZielobjektByFkZbZ2, NmbNotiz nmbNotiz,
+			MbBaust mbBaust, MBstnStatus MBstnStatus, MUmsetzStat mUmsetzStat,
 			Integer orgImpId, String begruendung, Date datum, Short impNeu,
 			Integer usn, String guid, String guidOrg, Date timestamp,
 			Date loeschDatum, Short setDefault, String geloeschtDurch,
@@ -102,31 +102,31 @@ public class ModZobjBst implements java.io.Serializable {
 			String cmUsername, Integer cmImpId, Integer cmVerId1,
 			Short cmVerId2, Short cmStaId, Set modZobjBsts, Integer refzobid) {
 		this.id = id;
-		this.NZielobjektByFkZbZ = NZielobjektByFkZbZ;
+		this.nZielobjektByFkZbZ = nZielobjektByFkZbZ;
 		this.modZobjBst = modZobjBst;
-		this.MGsiegel = MGsiegel;
-		this.NZielobjektByFkZbZ2 = NZielobjektByFkZbZ2;
+		this.mGsiegel = mGsiegel;
+		this.nZielobjektByFkZbZ2 = nZielobjektByFkZbZ2;
 		this.nmbNotiz = nmbNotiz;
 		this.mbBaust = mbBaust;
-		this.MBstnStatus = MBstnStatus;
-		this.MUmsetzStat = MUmsetzStat;
+		this.mBstnStatus = MBstnStatus;
+		this.mUmsetzStat = mUmsetzStat;
 		this.orgImpId = orgImpId;
 		this.begruendung = begruendung;
-		this.datum = datum;
+		this.datum = (datum != null) ? (Date)datum.clone() : null;
 		this.impNeu = impNeu;
 		this.usn = usn;
 		this.guid = guid;
 		this.guidOrg = guidOrg;
-		this.timestamp = timestamp;
-		this.loeschDatum = loeschDatum;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
 		this.setDefault = setDefault;
 		this.geloeschtDurch = geloeschtDurch;
 		this.mmtId = mmtId;
 		this.erfasstDurch = erfasstDurch;
 		this.bearbeitetOrg = bearbeitetOrg;
-		this.changedOn = changedOn;
+		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
 		this.changedBy = changedBy;
-		this.cmTimestamp = cmTimestamp;
+		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -147,11 +147,11 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public NZielobjekt getNZielobjektByFkZbZ() {
-		return this.NZielobjektByFkZbZ;
+		return this.nZielobjektByFkZbZ;
 	}
 
-	public void setNZielobjektByFkZbZ(NZielobjekt NZielobjektByFkZbZ) {
-		this.NZielobjektByFkZbZ = NZielobjektByFkZbZ;
+	public void setNZielobjektByFkZbZ(NZielobjekt nZielobjektByFkZbZ) {
+		this.nZielobjektByFkZbZ = nZielobjektByFkZbZ;
 	}
 
 	public ModZobjBst getModZobjBst() {
@@ -163,19 +163,19 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public MGsiegel getMGsiegel() {
-		return this.MGsiegel;
+		return this.mGsiegel;
 	}
 
-	public void setMGsiegel(MGsiegel MGsiegel) {
-		this.MGsiegel = MGsiegel;
+	public void setMGsiegel(MGsiegel mGsiegel) {
+		this.mGsiegel = mGsiegel;
 	}
 
 	public NZielobjekt getNZielobjektByFkZbZ2() {
-		return this.NZielobjektByFkZbZ2;
+		return this.nZielobjektByFkZbZ2;
 	}
 
-	public void setNZielobjektByFkZbZ2(NZielobjekt NZielobjektByFkZbZ2) {
-		this.NZielobjektByFkZbZ2 = NZielobjektByFkZbZ2;
+	public void setNZielobjektByFkZbZ2(NZielobjekt nZielobjektByFkZbZ2) {
+		this.nZielobjektByFkZbZ2 = nZielobjektByFkZbZ2;
 	}
 
 	public NmbNotiz getNmbNotiz() {
@@ -195,19 +195,19 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public MBstnStatus getMBstnStatus() {
-		return this.MBstnStatus;
+		return this.mBstnStatus;
 	}
 
-	public void setMBstnStatus(MBstnStatus MBstnStatus) {
-		this.MBstnStatus = MBstnStatus;
+	public void setMBstnStatus(MBstnStatus mBstnStatus) {
+		this.mBstnStatus = mBstnStatus;
 	}
 
 	public MUmsetzStat getMUmsetzStat() {
-		return this.MUmsetzStat;
+		return this.mUmsetzStat;
 	}
 
-	public void setMUmsetzStat(MUmsetzStat MUmsetzStat) {
-		this.MUmsetzStat = MUmsetzStat;
+	public void setMUmsetzStat(MUmsetzStat mUmsetzStat) {
+		this.mUmsetzStat = mUmsetzStat;
 	}
 
 	public Integer getOrgImpId() {
@@ -227,11 +227,11 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public Date getDatum() {
-		return this.datum;
+		return (this.datum != null) ? (Date)this.datum.clone() : null;
 	}
 
 	public void setDatum(Date datum) {
-		this.datum = datum;
+		this.datum = (datum != null) ? (Date)datum.clone() : null;
 	}
 
 	public Short getImpNeu() {
@@ -267,19 +267,19 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return this.timestamp;
+		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
 	}
 
 	public Date getLoeschDatum() {
-		return this.loeschDatum;
+		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = loeschDatum;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
 	}
 
 	public Short getSetDefault() {
@@ -323,11 +323,11 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return this.changedOn;
+		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = changedOn;
+		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
 	}
 
 	public String getChangedBy() {
@@ -339,11 +339,11 @@ public class ModZobjBst implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return this.cmTimestamp;
+		return (this.timestamp != null) ? (Date)this.cmTimestamp.clone() : null;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = cmTimestamp;
+		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
 	}
 
 	public String getCmUsername() {

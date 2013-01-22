@@ -83,6 +83,11 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
  * 
  */
 public class SMIMEBasedEncryption {
+    
+    private final static String CRYPT_PROVIDER = "SunPKCS11-verinice";
+    private final static String CRYPT_TYPE = "PKCS11";
+    private final static String STD_ERR_MSG = "There was a problem during the en- or decryption process. See the stacktrace for details.";
+    private final static String IO_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
 
     /**
      * Encrypts the given byte data with the given X.509 certificate file.
@@ -118,23 +123,15 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile) throws IOException, CertificateException, EncryptionException {
 
-        byte[] encryptedMimeData = new byte[] {};
-
-        /*
-         * InputStream is =
-         * SMIMEBasedEncryption.class.getClassLoader().getResourceAsStream
-         * ("mailcap"); MailcapCommandMap mc = new MailcapCommandMap(is);
-         * CommandMap.setDefaultCommandMap(mc);
-         */
-        ;
+        byte[] encryptedMimeData;
 
         X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
 
         try {
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
-            generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate).setProvider("SunPKCS11-verinice"));
+            generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate).setProvider(CRYPT_PROVIDER));
             unencryptedByteData = Base64.encode(unencryptedByteData);
             MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
 
@@ -150,29 +147,30 @@ public class SMIMEBasedEncryption {
             encryptedMimeData = byteOutStream.toByteArray();
 
         } catch (GeneralSecurityException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(STD_ERR_MSG, e);
         } catch (SMIMEException smimee) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", smimee);
+            throw new EncryptionException(STD_ERR_MSG, smimee);
         } catch (MessagingException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(STD_ERR_MSG, e);
         } catch (IOException ioe) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
+            throw new EncryptionException(IO_ERR_MSG, ioe);
         } catch (CMSException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
 		} catch (IllegalArgumentException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
 		} catch (OperatorCreationException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
 		}
+        encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
         return encryptedMimeData;
     }
 
-    public static byte[] encrypt(byte[] unencryptedByteData, String keyAlias) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static byte[] encrypt(byte[] unencryptedByteData, String keyAlias) throws IOException, CertificateException, EncryptionException {
 
-        byte[] encryptedMimeData = new byte[] {};
+        byte[] encryptedMimeData;
 
         try {
-            KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+            KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
             ks.load(null, null);
             X509Certificate cert = (X509Certificate) ks.getCertificate(keyAlias);
             
@@ -192,26 +190,25 @@ public class SMIMEBasedEncryption {
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             encryptedMimeBodyPart.writeTo(byteOutStream);
             encryptedMimeData = byteOutStream.toByteArray();
-
+            
         } catch (GeneralSecurityException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(STD_ERR_MSG, e);
         } catch (SMIMEException smimee) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", smimee);
+            throw new EncryptionException(STD_ERR_MSG, smimee);
         } catch (MessagingException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(STD_ERR_MSG, e);
         } catch (IOException ioe) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", ioe);
+            throw new EncryptionException(IO_ERR_MSG, ioe);
         } catch (IllegalArgumentException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
-		/*} catch (OperatorCreationException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
-		*/} catch (CMSException e) {
-            throw new EncryptionException("There was a problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(STD_ERR_MSG, e);
+		} catch (CMSException e) {
+            throw new EncryptionException(STD_ERR_MSG, e);
 		}
+        encryptedMimeData = (encryptedMimeData == null) ? new byte[] {} : encryptedMimeData;
         return encryptedMimeData;
     }
     
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias) throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEEncryptedOutputStream(unencryptedDataStream, keyAlias);
     }
@@ -250,7 +247,7 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
         return decrypt(encryptedByteData, x509CertificateFile, privateKeyPemFile, null);
     }
 
@@ -289,7 +286,7 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword) throws IOException, CertificateException, EncryptionException {
 
         byte[] decryptedByteData = new byte[] {};
 
@@ -326,14 +323,14 @@ public class SMIMEBasedEncryption {
 
             if (recipientInfo != null) {
             	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
-            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setProvider(CRYPT_PROVIDER);
             	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
             	decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (MessagingException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
         } catch (CMSException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
         }
 
         decryptedByteData = Base64.decode(decryptedByteData);
@@ -367,7 +364,7 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile) throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEEncryptedOutputStream(unencryptedDataStream, x509CertificateFile);
     }
@@ -402,12 +399,12 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile) throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile);
     }
     
-    public static InputStream decrypt(InputStream encryptedDataStream, String keyAlias) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static InputStream decrypt(InputStream encryptedDataStream, String keyAlias) throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEDecryptedInputStream(encryptedDataStream, keyAlias);
     }
@@ -444,17 +441,17 @@ public class SMIMEBasedEncryption {
      * @throws EncryptionException
      *             if a problem occured during the encryption process
      */
-    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateException, EncryptionException {
 
         return new SMIMEDecryptedInputStream(encryptedDataStream, x509CertificateFile, privateKeyFile, privateKeyPassword);
     }
     
-    public static byte[] decrypt(byte[] encryptedByteData, String keyAlias) throws IOException, CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, String keyAlias) throws IOException, CertificateException, EncryptionException {
 
         byte[] decryptedByteData = new byte[] {};
 
         try {
-    		KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-verinice");
+    		KeyStore ks = KeyStore.getInstance(CRYPT_TYPE, CRYPT_PROVIDER);
     		ks.load(null, null);
     		Certificate cert = ks.getCertificate(keyAlias);
     		X509Certificate x509Certificate = (X509Certificate) cert;
@@ -472,16 +469,16 @@ public class SMIMEBasedEncryption {
 
             if (recipientInfo != null) {
             	JceKeyTransRecipient rec = new JceKeyTransEnvelopedRecipient(privateKey);
-            	rec.setProvider("SunPKCS11-verinice");
+            	rec.setProvider(CRYPT_PROVIDER);
             	rec.setContentProvider(BouncyCastleProvider.PROVIDER_NAME);
 				decryptedByteData = recipientInfo.getContent(rec);
             }
         } catch (MessagingException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
         } catch (CMSException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
         } catch (GeneralSecurityException e) {
-            throw new EncryptionException("There was an IO problem during the en- or decryption process. See the stacktrace for details.", e);
+            throw new EncryptionException(IO_ERR_MSG, e);
         }
 
         decryptedByteData = Base64.decode(decryptedByteData);

@@ -85,12 +85,15 @@ public class ModZobjBstMassId implements java.io.Serializable {
 	}
 
 	public boolean equals(Object other) {
-		if ((this == other))
+		if ((this == other)){
 			return true;
-		if ((other == null))
+		}
+		if ((other == null)){
 			return false;
-		if (!(other instanceof ModZobjBstMassId))
+		}
+		if (!(other instanceof ModZobjBstMassId)){
 			return false;
+		}
 		ModZobjBstMassId castOther = (ModZobjBstMassId) other;
 
 		return ((this.getZobImpId() == castOther.getZobImpId()) || (this
@@ -122,17 +125,19 @@ public class ModZobjBstMassId implements java.io.Serializable {
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result
+		final int prime_factor = 37;
+		
+		result = prime_factor * result
 				+ (getZobImpId() == null ? 0 : this.getZobImpId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getZobId() == null ? 0 : this.getZobId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getBauImpId() == null ? 0 : this.getBauImpId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getBauId() == null ? 0 : this.getBauId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getMasImpId() == null ? 0 : this.getMasImpId().hashCode());
-		result = 37 * result
+		result = prime_factor * result
 				+ (getMasId() == null ? 0 : this.getMasId().hashCode());
 		return result;
 	}

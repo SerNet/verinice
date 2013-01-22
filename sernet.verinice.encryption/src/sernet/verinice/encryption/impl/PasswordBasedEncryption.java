@@ -66,7 +66,7 @@ public abstract class PasswordBasedEncryption {
      */
     public static byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
 
-        byte[] decryptedData = new byte[] {};
+        byte[] decryptedData;
 
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
@@ -85,6 +85,7 @@ public abstract class PasswordBasedEncryption {
         } catch (GeneralSecurityException e) {
             throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
         }
+        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
         return decryptedData;
     }
 
@@ -102,7 +103,7 @@ public abstract class PasswordBasedEncryption {
      */
     public static byte[] decrypt(byte[] encryptedByteData, char[] password) throws EncryptionException {
 
-        byte[] decryptedData = new byte[] {};
+        byte[] decryptedData;
 
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
@@ -125,6 +126,7 @@ public abstract class PasswordBasedEncryption {
         } catch (GeneralSecurityException e) {
             throw new EncryptionException("There was a problem during the decryption process. See the stacktrace for details.", e);
         }
+        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
         return decryptedData;
     }
 

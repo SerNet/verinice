@@ -51,7 +51,7 @@ public class SysImport implements java.io.Serializable {
 	private Set sysImports = new HashSet(0);
 	private Set mbDringlichkeits = new HashSet(0);
 	private Set mbBausts = new HashSet(0);
-	private Set sysImports_1 = new HashSet(0);
+	private Set sysImports1 = new HashSet(0);
 	private Set mbSchichts = new HashSet(0);
 	private Set mbZielobjTyps = new HashSet(0);
 	private Set mbStatuses = new HashSet(0);
@@ -72,7 +72,7 @@ public class SysImport implements java.io.Serializable {
 		this.impId = impId;
 		this.impTyp = impTyp;
 		this.name = name;
-		this.impDatumAnlage = impDatumAnlage;
+		this.impDatumAnlage = (impDatumAnlage != null) ? (Date)impDatumAnlage.clone() : null;
 		this.impUsnBaseline = impUsnBaseline;
 		this.impUsnCurrent = impUsnCurrent;
 		this.impLoeschen = impLoeschen;
@@ -97,7 +97,7 @@ public class SysImport implements java.io.Serializable {
 			Integer cmVerId, Integer editImpId, Short cmLevel,
 			Short impNurMeta, Integer metaVers, Date impDatumImport,
 			Short impMapGuid, Short impMapNur, Set sysImports,
-			Set mbDringlichkeits, Set mbBausts, Set sysImports_1,
+			Set mbDringlichkeits, Set mbBausts, Set sysImports1,
 			Set mbSchichts, Set mbZielobjTyps, Set mbStatuses,
 			Set mbZielobjSubtyps) {
 		this.impId = impId;
@@ -108,13 +108,13 @@ public class SysImport implements java.io.Serializable {
 		this.impStatus = impStatus;
 		this.name = name;
 		this.beschreibung = beschreibung;
-		this.impDatumAnlage = impDatumAnlage;
+		this.impDatumAnlage = (impDatumAnlage != null) ? (Date)impDatumAnlage.clone() : null;
 		this.impExpTyp = impExpTyp;
 		this.impExpName = impExpName;
 		this.impExpBeschreibung = impExpBeschreibung;
 		this.impExpSignaturQuelle = impExpSignaturQuelle;
 		this.impExpSignaturZiel = impExpSignaturZiel;
-		this.impExpDatumFrist = impExpDatumFrist;
+		this.impExpDatumFrist = (impExpDatumFrist != null) ? (Date)impExpDatumFrist.clone() : null;
 		this.impUsnBaseline = impUsnBaseline;
 		this.impUsnCurrent = impUsnCurrent;
 		this.impLoeschen = impLoeschen;
@@ -122,8 +122,8 @@ public class SysImport implements java.io.Serializable {
 		this.impModell = impModell;
 		this.impMapuserdef = impMapuserdef;
 		this.guid = guid;
-		this.timestamp = timestamp;
-		this.loeschDatum = loeschDatum;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
 		this.geloeschtDurch = geloeschtDurch;
 		this.cmImpId = cmImpId;
 		this.cmVerId = cmVerId;
@@ -131,13 +131,13 @@ public class SysImport implements java.io.Serializable {
 		this.cmLevel = cmLevel;
 		this.impNurMeta = impNurMeta;
 		this.metaVers = metaVers;
-		this.impDatumImport = impDatumImport;
+		this.impDatumImport = (impDatumImport != null) ? (Date)impDatumImport.clone() : null;
 		this.impMapGuid = impMapGuid;
 		this.impMapNur = impMapNur;
 		this.sysImports = sysImports;
 		this.mbDringlichkeits = mbDringlichkeits;
 		this.mbBausts = mbBausts;
-		this.sysImports_1 = sysImports_1;
+		this.sysImports1 = sysImports1;
 		this.mbSchichts = mbSchichts;
 		this.mbZielobjTyps = mbZielobjTyps;
 		this.mbStatuses = mbStatuses;
@@ -211,11 +211,11 @@ public class SysImport implements java.io.Serializable {
 	}
 
 	public Date getImpDatumAnlage() {
-		return this.impDatumAnlage;
+		return (this.impDatumAnlage != null) ? (Date)this.impDatumAnlage.clone() : null;
 	}
 
 	public void setImpDatumAnlage(Date impDatumAnlage) {
-		this.impDatumAnlage = impDatumAnlage;
+		this.impDatumAnlage = (impDatumAnlage != null) ? (Date)impDatumAnlage.clone() : null;
 	}
 
 	public String getImpExpTyp() {
@@ -259,11 +259,11 @@ public class SysImport implements java.io.Serializable {
 	}
 
 	public Date getImpExpDatumFrist() {
-		return this.impExpDatumFrist;
+		return (this.impExpDatumFrist != null) ? (Date)this.impExpDatumFrist.clone() : null;
 	}
 
 	public void setImpExpDatumFrist(Date impExpDatumFrist) {
-		this.impExpDatumFrist = impExpDatumFrist;
+		this.impExpDatumFrist = (Date)impExpDatumFrist.clone();
 	}
 
 	public Integer getImpUsnBaseline() {
@@ -323,19 +323,19 @@ public class SysImport implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return this.timestamp;
+		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
 	}
 
 	public Date getLoeschDatum() {
-		return this.loeschDatum;
+		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = loeschDatum;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
 	}
 
 	public String getGeloeschtDurch() {
@@ -395,11 +395,11 @@ public class SysImport implements java.io.Serializable {
 	}
 
 	public Date getImpDatumImport() {
-		return this.impDatumImport;
+		return (this.impDatumImport != null) ? (Date)this.impDatumImport.clone() : null;
 	}
 
 	public void setImpDatumImport(Date impDatumImport) {
-		this.impDatumImport = impDatumImport;
+		this.impDatumImport = (impDatumImport != null) ? (Date)impDatumImport.clone() : null;
 	}
 
 	public Short getImpMapGuid() {
@@ -442,12 +442,12 @@ public class SysImport implements java.io.Serializable {
 		this.mbBausts = mbBausts;
 	}
 
-	public Set getSysImports_1() {
-		return this.sysImports_1;
+	public Set getSysImports1() {
+		return this.sysImports1;
 	}
 
-	public void setSysImports_1(Set sysImports_1) {
-		this.sysImports_1 = sysImports_1;
+	public void setSysImports1(Set sysImports1) {
+		this.sysImports1 = sysImports1;
 	}
 
 	public Set getMbSchichts() {

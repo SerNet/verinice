@@ -17,10 +17,10 @@ public class MbZielobjTyp implements java.io.Serializable {
 	private MbZielobjTypId id;
 	private MsCmState msCmState;
 	private SysImport sysImport;
-	private MMetastatus MMetastatus;
+	private MMetastatus mMetastatus;
 	private NmbNotiz nmbNotiz;
 	private MbZielobjTyp mbZielobjTypByFkZotZot;
-	private MMetatyp MMetatyp;
+	private MMetatyp mMetatyp;
 	private MbZielobjTyp mbZielobjTypByFkMbZielobjTypMbZielobjTyp;
 	private String link;
 	private Integer metaVers;
@@ -53,13 +53,13 @@ public class MbZielobjTyp implements java.io.Serializable {
 
 	/** minimal constructor */
 	public MbZielobjTyp(MbZielobjTypId id, SysImport sysImport,
-			MMetastatus MMetastatus, NmbNotiz nmbNotiz,
+			MMetastatus mMetastatus, NmbNotiz nmbNotiz,
 			MbZielobjTyp mbZielobjTypByFkZotZot,
 			MbZielobjTyp mbZielobjTypByFkMbZielobjTypMbZielobjTyp,
 			Integer metaVers, String guid, Integer usn) {
 		this.id = id;
 		this.sysImport = sysImport;
-		this.MMetastatus = MMetastatus;
+		this.mMetastatus = mMetastatus;
 		this.nmbNotiz = nmbNotiz;
 		this.mbZielobjTypByFkZotZot = mbZielobjTypByFkZotZot;
 		this.mbZielobjTypByFkMbZielobjTypMbZielobjTyp = mbZielobjTypByFkMbZielobjTypMbZielobjTyp;
@@ -70,8 +70,8 @@ public class MbZielobjTyp implements java.io.Serializable {
 
 	/** full constructor */
 	public MbZielobjTyp(MbZielobjTypId id, MsCmState msCmState,
-			SysImport sysImport, MMetastatus MMetastatus, NmbNotiz nmbNotiz,
-			MbZielobjTyp mbZielobjTypByFkZotZot, MMetatyp MMetatyp,
+			SysImport sysImport, MMetastatus mMetastatus, NmbNotiz nmbNotiz,
+			MbZielobjTyp mbZielobjTypByFkZotZot, MMetatyp mMetatyp,
 			MbZielobjTyp mbZielobjTypByFkMbZielobjTypMbZielobjTyp, String link,
 			Integer metaVers, Integer obsoletVers, String guid, Date timestamp,
 			Date loeschDatum, Integer usn, String erfasstDurch,
@@ -83,26 +83,26 @@ public class MbZielobjTyp implements java.io.Serializable {
 		this.id = id;
 		this.msCmState = msCmState;
 		this.sysImport = sysImport;
-		this.MMetastatus = MMetastatus;
+		this.mMetastatus = mMetastatus;
 		this.nmbNotiz = nmbNotiz;
 		this.mbZielobjTypByFkZotZot = mbZielobjTypByFkZotZot;
-		this.MMetatyp = MMetatyp;
+		this.mMetatyp = mMetatyp;
 		this.mbZielobjTypByFkMbZielobjTypMbZielobjTyp = mbZielobjTypByFkMbZielobjTypMbZielobjTyp;
 		this.link = link;
 		this.metaVers = metaVers;
 		this.obsoletVers = obsoletVers;
 		this.guid = guid;
-		this.timestamp = timestamp;
-		this.loeschDatum = loeschDatum;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
 		this.usn = usn;
 		this.erfasstDurch = erfasstDurch;
 		this.geloeschtDurch = geloeschtDurch;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.changedOn = changedOn;
+		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
 		this.changedBy = changedBy;
 		this.reihenfolge = reihenfolge;
-		this.cmTimestamp = cmTimestamp;
+		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -139,11 +139,11 @@ public class MbZielobjTyp implements java.io.Serializable {
 	}
 
 	public MMetastatus getMMetastatus() {
-		return this.MMetastatus;
+		return this.mMetastatus;
 	}
 
-	public void setMMetastatus(MMetastatus MMetastatus) {
-		this.MMetastatus = MMetastatus;
+	public void setMMetastatus(MMetastatus mMetastatus) {
+		this.mMetastatus = mMetastatus;
 	}
 
 	public NmbNotiz getNmbNotiz() {
@@ -163,11 +163,11 @@ public class MbZielobjTyp implements java.io.Serializable {
 	}
 
 	public MMetatyp getMMetatyp() {
-		return this.MMetatyp;
+		return this.mMetatyp;
 	}
 
-	public void setMMetatyp(MMetatyp MMetatyp) {
-		this.MMetatyp = MMetatyp;
+	public void setMMetatyp(MMetatyp mMetatyp) {
+		this.mMetatyp = mMetatyp;
 	}
 
 	public MbZielobjTyp getMbZielobjTypByFkMbZielobjTypMbZielobjTyp() {
@@ -212,19 +212,19 @@ public class MbZielobjTyp implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return this.timestamp;
+		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
 	}
 
 	public Date getLoeschDatum() {
-		return this.loeschDatum;
+		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = loeschDatum;
+		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null; 
 	}
 
 	public Integer getUsn() {
@@ -268,11 +268,11 @@ public class MbZielobjTyp implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return this.changedOn;
+		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = changedOn;
+		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
 	}
 
 	public String getChangedBy() {
@@ -292,11 +292,11 @@ public class MbZielobjTyp implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return this.cmTimestamp;
+		return (this.cmTimestamp != null) ? (Date)this.cmTimestamp.clone() : null;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = cmTimestamp;
+		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
 	}
 
 	public String getCmUsername() {
