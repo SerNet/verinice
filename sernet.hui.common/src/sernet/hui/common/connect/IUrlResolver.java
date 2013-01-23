@@ -21,6 +21,6 @@ import java.util.List;
 
 public interface IUrlResolver {
 
-	public List<HuiUrl> resolve();
+	List<HuiUrl> resolve();
 
 }

@@ -85,8 +85,9 @@ public abstract class FormInputParser {
 	
 	public static String dateToString(Date date) throws AssertException {
 		try {
-			if (date == null)
+			if (date == null){
 				return ""; //$NON-NLS-1$
+			}
 			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
 			return dateFormat.format(date);
 		}

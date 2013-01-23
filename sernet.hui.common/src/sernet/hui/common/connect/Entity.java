@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,7 @@ import sernet.snutils.Tester;
  * @author koderman[at]sernet[dot]de
  *
  */
+@SuppressWarnings("serial")
 public class Entity implements ISelectOptionHandler, ITypedElement, Serializable  {
 	
     private transient Logger log = Logger.getLogger(Entity.class);
@@ -69,7 +71,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     private Map<String, PropertyList> typedPropertyLists 
     	= new HashMap<String, PropertyList>();
     
-    private transient ArrayList<IEntityChangedListener> changeListeners;
+    private transient List<IEntityChangedListener> changeListeners;
     	
     
 	private String entityType;
@@ -96,9 +98,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		getChangelisteners().add(changeListener);
 	}
 	
-	private synchronized ArrayList<IEntityChangedListener> getChangelisteners() {
-		if (this.changeListeners == null)
+	private synchronized List<IEntityChangedListener> getChangelisteners() {
+		if (this.changeListeners == null){
 			changeListeners = new ArrayList<IEntityChangedListener>();
+		}
 		return changeListeners;
 	}
 
@@ -126,10 +129,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             if (propertyType.isNumericSelect() || propertyType.isBooleanSelect()) {
                 setNumericValue(propertyType, propertyType.getNumericDefault());
             }
-            else if (propertyType.isText() || propertyType.isDate() || propertyType.isLine()) {
-                if (propertyType.getDefaultRule() != null) {
-                    setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
-                }
+            else if ((propertyType.isText() || propertyType.isDate() || propertyType.isLine()) && propertyType.getDefaultRule() != null) {
+                setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
             }
         }
     }
@@ -172,7 +173,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    Date date = null;
 	    try {
 	        date = new Date(Long.valueOf(getValue(propertyType)));
-	    } catch (Throwable t) {
+	    } catch (NumberFormatException t) {
             log.error("Error while returning date for property: " + propertyType, t);
         }
 	    return date;
@@ -187,26 +188,26 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 */
 	public String getSimpleValue(String propertyType) {
 		PropertyList propertyList = typedPropertyLists.get(propertyType);
-		if (propertyList == null || propertyList.getProperties().size() == 0)
+		if (propertyList == null || propertyList.getProperties().size() == 0){
 			return "";
-
+		}
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
 		StringBuffer result = new StringBuffer();
 		
-		List<IMLPropertyOption> referencedEntities = new ArrayList<IMLPropertyOption>();
+		List<IMLPropertyOption> referencedEntities = null;
 		if (type.isReference()) {
 			referencedEntities = type.getReferencedEntities(propertyList.getProperties()); 
 			for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {
 				Property reference = (Property) iter.next();
 				for (IMLPropertyOption resolvedReference : referencedEntities) {
-					if (resolvedReference.getId().equals(reference.getPropertyValue()))
+					if (resolvedReference.getId().equals(reference.getPropertyValue())){
 						result.append(resolvedReference.getName());
+					}
 				}
 			}
 			return result.toString();
 		} else if (type.isCnaLinkReference()) {
-		    String titles = type.getReferenceResolver().getTitlesOfLinkedObjects(type.getReferencedCnaLinkType(), this.uuid);
-		    return titles;
+		    return type.getReferenceResolver().getTitlesOfLinkedObjects(type.getReferencedCnaLinkType(), this.uuid);
 		}
 		
 		// else just use the property value:
@@ -234,8 +235,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 				result.append(prop.getPropertyValue());
 			}
 			
-			if (iter.hasNext())
+			if (iter.hasNext()){
 				result.append(", ");
+			}
 		}
 		return result.toString();
 	}
@@ -257,8 +259,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 if(prop.getPropertyValue()!=null ) {
                     sb.append(prop.getPropertyValue());
                 }         
-                if (iter.hasNext())
+                if (iter.hasNext()){
                     sb.append(", ");
+                }
             }
             result = sb.toString();
         }
@@ -385,19 +388,19 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public void copyEntity(Entity source, List<String> propertyTypeBlacklist) {
         Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
-        for(String propType : sourceProperties.keySet()) {
-            PropertyList sourceList = sourceProperties.get(propType);
+        for(Entry<String, PropertyList> entry : sourceProperties.entrySet()){
+            PropertyList sourceList = entry.getValue();
             PropertyList newPropList = new PropertyList(sourceList.getProperties().size());
             for(Property sourceProp : sourceList.getProperties()) {
                 if(checkProperty(sourceProp, propertyTypeBlacklist)) {
                     newPropList.add(sourceProp.copy(this));
                     if (getLog().isDebugEnabled()) {
-                        getLog().debug("Prop " + propType + " set to value: " + sourceProp.getPropertyValue());
+                        getLog().debug("Prop " + entry.getKey() + " set to value: " + sourceProp.getPropertyValue());
                     }
                 }
             }
             if(!newPropList.getProperties().isEmpty()) {
-                typedPropertyLists.put(propType, newPropList);
+                typedPropertyLists.put(entry.getKey(), newPropList);
             }
         }
     }
@@ -432,8 +435,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	public boolean isSelected(String optionId) {
 		for (Iterator iter = typedPropertyLists.keySet().iterator(); iter.hasNext();) {
 			String propTypeId = (String) iter.next();
-			if (isSelected(propTypeId, optionId))
+			if (isSelected(propTypeId, optionId)){
 				return true;
+			}
 		}
 		return false;
 	}
@@ -443,9 +447,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * @throws DBException 
      */
     public Property createNewProperty(PropertyType type, String newValue)  {
-    	if (type == null)
+    	if (type == null){
     		throw new RuntimeException("Missing property type, check XML definition.");
-    	
+    	}
     	Property entry = PropertyFactory.create(type, newValue, this);
     	addProperty(entry);
         return entry;
@@ -462,24 +466,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		}
     }
     
-   
-    
-    /**
-     * Checks if all properties are of the same type.
-     * 
-     * @param type
-     * @param properties
-     * @throws PropertyTypeException
-     * @throws AssertException
-     */
-    private void checkSameType(String type, List properties) throws PropertyTypeException {
-    	for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			if (!prop.getPropertyTypeID().equals(type))
-				throw new PropertyTypeException("Falsche Typenzuordnung in dynamischer Dokumentation.");
-		}
-    }
-    
     /**
      * Add a new property to the list of already present properties for its type.
      * 
@@ -493,9 +479,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 					+ prop.getPropertyValue() + "'.",
 					prop.getPropertyTypeID() != null);
 			PropertyList typeList = this.typedPropertyLists.get(prop.getPropertyTypeID());
-			if (typeList != null)
+			if (typeList != null){
 				typeList.add(prop);
-			else {
+			} else {
 				typeList = new PropertyList(1);
 				typeList.add(prop);
 				typedPropertyLists.put(prop.getPropertyTypeID(), typeList);
@@ -573,9 +559,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public int getInt(String propertyType) {
         PropertyList propertyList = typedPropertyLists.get(propertyType);
-        if (propertyList == null || propertyList.getProperties().size() == 0)
+        if (propertyList == null || propertyList.getProperties().size() == 0){
             return Property.UNDEF;
-
+        }
         PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, 
                 propertyType);
         for (Iterator iter = propertyList.getProperties().iterator(); iter.hasNext();) {

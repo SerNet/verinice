@@ -28,8 +28,8 @@ public interface ICheckBoxHandler {
 	/**
 	 * Notify checkbox that corresponding option was deleted.
 	 */
-	public void optionDeleted();
+	void optionDeleted();
 	
-	public void optionAdded(IMLPropertyOption option);
+	void optionAdded(IMLPropertyOption option);
 
 }

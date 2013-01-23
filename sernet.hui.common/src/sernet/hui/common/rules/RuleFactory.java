@@ -23,17 +23,19 @@ public abstract class RuleFactory {
 
     private static final Logger LOG = Logger.getLogger(RuleFactory.class);
     
+    private static final String STD_ERR_MSG = "Klasse für angegebene Regel nicht gefunden: ";
+    
 	public static IFillRule getDefaultRule(String name) {
 		IFillRule rule;
 		try {
 			rule = (IFillRule) Class.forName("sernet.hui.common.rules."+name).newInstance(); //$NON-NLS-1$
 			return rule;
 		} catch (InstantiationException e) {
-		    LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+		    LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
 		} catch (IllegalAccessException e) {
-		    LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+		    LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
-		    LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+		    LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
 		}
 		return new NullRule();
 	}
@@ -44,11 +46,11 @@ public abstract class RuleFactory {
             rule = (IValidationRule) Class.forName("sernet.hui.common.rules."+name).newInstance(); //$NON-NLS-1$
             return rule;
         } catch (InstantiationException e) {
-            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+            LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
         } catch (IllegalAccessException e) {
-            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+            LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
         } catch (ClassNotFoundException e) {
-            LOG.error("Klasse für angegebene Regel nicht gefunden: " + name); //$NON-NLS-1$
+            LOG.error(STD_ERR_MSG + name); //$NON-NLS-1$
         }
         return null;	    
 	}

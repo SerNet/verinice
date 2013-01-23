@@ -22,14 +22,21 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class HuiUrl implements Serializable {
 	
-	public HuiUrl(String name, String url) {
+    private String name;
+    private String url;
+
+    public HuiUrl(String name, String url) {
 		super();
 		this.name = name;
 		this.url = url;
 	}
 	
-	public String name;
-	public String url;
+    public String getName() {
+        return name;
+    }
+    public String getUrl() {
+        return url;
+    }
 	
 	
 

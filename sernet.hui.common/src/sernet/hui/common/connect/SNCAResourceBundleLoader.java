@@ -23,7 +23,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,10 +44,10 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
     
 	private final Logger log = Logger.getLogger(SNCAResourceBundleLoader.class);
 	
-	public static String HTTP = "http";
-	public static String HTTPS = "https";
-	public static String JNDI = "jndi";
-	public static String BUNDLERESOURCE = "bundleresource";
+	private static final String HTTP = "http";
+	private static final String HTTPS = "https";
+	private static final String JNDI = "jndi";
+	private static final String BUNDLERESOURCE = "bundleresource";
 	public static final List<String> PROTOCOL_LIST;
 	
 	static {
@@ -120,16 +119,17 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
             bundle = new StreamResourceBundle(bis);
             bis.close();
         } finally {
-            if (bis != null)
+            if (bis != null){
                 try {
                     bis.close();
                 } catch (Exception ignore) {
                 }
+            }
         }
         return bundle;
     }
 
-	private InputStream createUrlStream(String resourceName) throws MalformedURLException, IOException {
+	private InputStream createUrlStream(String resourceName) throws IOException {
 		InputStream stream;
 		String fullResourceName = baseUrl + resourceName;
 		if (log.isDebugEnabled()) {
@@ -140,7 +140,7 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
 		return stream;
 	}
 
-	private InputStream createHttpStream(String resourceName, boolean reload) throws MalformedURLException, IOException {
+	private InputStream createHttpStream(String resourceName, boolean reload) throws IOException {
 		InputStream stream;
 		String separator = "?";
 		if(baseUrl.contains("?")) {
@@ -164,16 +164,13 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
 
 		// Instantiate the input stream
 		stream = httpProxy.getInputStream();
-		if (stream == null) {
-		  return null;
-		}
 		return stream;
 	}
 	
 	public static String getProtocol(String url) {
 		String protocol = null;
 		if(url!=null && url.contains(":")) {
-			protocol = url.substring(0, url.indexOf(":"));
+			protocol = url.substring(0, url.indexOf(':'));
 		}
 		return protocol;
 	}

@@ -18,13 +18,13 @@
 package sernet.hui.common.rules;
 
 public interface IFillRule {
-	public String getValue();
-	public void init(String[] params);
+	String getValue();
+	void init(String[] params);
 	
 	/**
 	 * @return 
 	 *     true if the rule supports multiple languages, false if not
 	 */
-	public boolean isMultiLanguage();
+	boolean isMultiLanguage();
 
 }

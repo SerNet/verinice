@@ -91,10 +91,11 @@ public class PropertyList implements Serializable, ITypedElement  {
 	}
 	
 	public Property getProperty(int idx)  {
-			if (properties != null && properties.size() > 0)
+			if (properties != null && properties.size() > 0){
 				return properties.get(idx);
-			else
+			} else {
 				return null;
+			}
 	}
 
 	public String getUuid() {

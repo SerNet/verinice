@@ -20,6 +20,7 @@ package sernet.hui.common.rules;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +30,7 @@ public class Today implements IFillRule {
 	
 	private int timeDifference = 0;
 	
-	private final HashMap<String, Integer>  calendarFields = new HashMap<String, Integer>(10);
+	private final Map<String, Integer>  calendarFields = new HashMap<String, Integer>(10);
 	
 	public String getValue() {
 		Calendar calendar = GregorianCalendar.getInstance();

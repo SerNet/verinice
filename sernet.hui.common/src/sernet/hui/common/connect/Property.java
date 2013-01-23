@@ -75,8 +75,9 @@ public class Property implements Serializable, ITypedElement {
 	
 	public void setPropertyValue(String propertyValue, boolean fireChange, Object source) {
 		this.propertyValue = propertyValue;
-		if (fireChange && parent != null)
+		if (fireChange && parent != null){
 			parent.firePropertyChanged(this, source);
+		}
 	}
 	
 	public void setPropertyValue(String propertyValue, boolean fireChange) {
@@ -143,28 +144,37 @@ public class Property implements Serializable, ITypedElement {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         Property other = (Property) obj;
         if (dbId == null) {
-            if (other.dbId != null)
+            if (other.dbId != null){
                 return false;
-        } else if (!dbId.equals(other.dbId))
+            }
+        } else if (!dbId.equals(other.dbId)){
             return false;
+        }
         if (propertyType == null) {
-            if (other.propertyType != null)
+            if (other.propertyType != null){
                 return false;
-        } else if (!propertyType.equals(other.propertyType))
+            }
+        } else if (!propertyType.equals(other.propertyType)){
             return false;
+        }
         if (propertyValue == null) {
-            if (other.propertyValue != null)
+            if (other.propertyValue != null){
                 return false;
-        } else if (!propertyValue.equals(other.propertyValue))
+            }
+        } else if (!propertyValue.equals(other.propertyValue)){
             return false;
+        }
         return true;
     }
 

@@ -17,16 +17,18 @@
  ******************************************************************************/
 package sernet.snutils;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author prack
  */
 public class ExceptionHandlerFactory {
-	
+    
 	private static IExceptionHandler defaultHandler = new IExceptionHandler()
 			{
 				public void handleException(Exception e) {
-					System.err.println(e.toString());
+				    Logger.getLogger(ExceptionHandlerFactory.class).error("Exception occured", e);
 				}
 			}; 
 	

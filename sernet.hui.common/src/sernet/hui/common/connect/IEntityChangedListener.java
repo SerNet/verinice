@@ -24,6 +24,6 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
  * @author prack
  */
 public interface IEntityChangedListener {
-	public void selectionChanged(IMLPropertyType type, IMLPropertyOption opt);
-	public void propertyChanged(PropertyChangedEvent event);
+	void selectionChanged(IMLPropertyType type, IMLPropertyOption opt);
+	void propertyChanged(PropertyChangedEvent event);
 }

@@ -20,6 +20,6 @@ package sernet.hui.common.connect;
 
 public interface IEntityResolverFactory {
 
-	public abstract void createResolvers(HUITypeFactory typeFactory);
+	abstract void createResolvers(HUITypeFactory typeFactory);
 
 }

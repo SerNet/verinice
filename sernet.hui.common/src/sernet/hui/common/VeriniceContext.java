@@ -69,48 +69,48 @@ import sernet.hui.common.connect.HUITypeFactory;
  * Spring IoC container).</p>
  * 
  */
-public class VeriniceContext {
+public final class VeriniceContext {
 
-	private static final Logger log = Logger.getLogger(VeriniceContext.class);
+	private static final Logger LOG = Logger.getLogger(VeriniceContext.class);
 	
 	public static final String SYNC_SERVICE = "syncService";
 
 	/** Key for accessing the <code>HUITypeFactory</code> instance. */
-	public static String HUI_TYPE_FACTORY = "huiTypeFactory";
+	public final static String HUI_TYPE_FACTORY = "huiTypeFactory";
 
-	public static String HITRO_UTIL = "hitroUtil";
+	public final static String HITRO_UTIL = "hitroUtil";
 
-	public static String GS_SCRAPER_UTIL = "gsScraperUtil";
+	public final static String GS_SCRAPER_UTIL = "gsScraperUtil";
 	
-	public static String COMMAND_SERVICE = "commandService";
+	public final static String COMMAND_SERVICE = "commandService";
 	
-	public static String WEB_SERVICE_CLIENT = "webServiceClient";
+	public final static String WEB_SERVICE_CLIENT = "webServiceClient";
 	
-	public static String AUTH_SERVICE = "authService";
+	public final static String AUTH_SERVICE = "authService";
 	
-	public static String TASK_SERVICE = "taskService";
+	public final static String TASK_SERVICE = "taskService";
 
-    public static String PROCESS_SERVICE_ISA = "processServiceIsa";
+    public final static String PROCESS_SERVICE_ISA = "processServiceIsa";
 
-    public static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
+    public final static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
 
-    public static String ISA_QM_SERVICE = "isaQmService";
+    public final static String ISA_QM_SERVICE = "isaQmService";
 
-    public static String INDIVIDUAL_SERVICE = "individualService";
+    public final static String INDIVIDUAL_SERVICE = "individualService";
     
-    public static String RIGHTS_SERVICE = "rightsService";
+    public final static String RIGHTS_SERVICE = "rightsService";
     
-    public static String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
+    public final static String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
     
-    public static String REMIND_SERVICE = "remindService";
+    public final static String REMIND_SERVICE = "remindService";
     
-    public static String JBPM_PROCESS_ENGINE = "processEngine";
+    public final static String JBPM_PROCESS_ENGINE = "processEngine";
     
-    public static String VALIDATION_SERVICE = "validationService";
+    public final static String VALIDATION_SERVICE = "validationService";
     
-    public static String COMMAND_CACHE_SERVICE = "commandCacheClient";
+    public final static String COMMAND_CACHE_SERVICE = "commandCacheClient";
     
-    private static String SERVER_URL = null;
+    private static String server_url = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
@@ -129,8 +129,9 @@ public class VeriniceContext {
 	 */
 	private static VeriniceContext instance() {
 		synchronized (VeriniceContext.class) {
-			if (instance == null)
+			if (instance == null){
 				instance = new VeriniceContext();
+			}
 		}
 
 		synchronized (instance) {
@@ -167,7 +168,7 @@ public class VeriniceContext {
 			
 		    String msg = "Requested object '" + id + "' was not available. The context was not properly configured for this thread yet.";
 		    IllegalStateException e = new IllegalStateException(msg);
-		    log.error(msg, e);
+		    LOG.error(msg, e);
 			throw e;
 		}
 		
@@ -196,7 +197,7 @@ public class VeriniceContext {
 		if (o == null)
 		{
 			String msg = "Object for id '" + id + "' must not be null!";
-			log.error(msg);
+			LOG.error(msg);
 			throw new IllegalArgumentException(msg);
 		}
 		
@@ -205,7 +206,7 @@ public class VeriniceContext {
 		if (map.put(id, o) != null)
 		{
 			String msg = "Requested object '" + id + "' was displaced. This is not allowed because it breaks the singleton contract.";
-			log.error(msg);
+			LOG.error(msg);
 			throw new IllegalStateException(msg);
 		}
 	}
@@ -222,7 +223,7 @@ public class VeriniceContext {
 		State s = new State();
 		s.setMap(instance().threadLocal.get());
 
-		log.debug("retrieving state in thread: "
+		LOG.debug("retrieving state in thread: "
 				+ Thread.currentThread().getName());
 
 		return s;
@@ -247,18 +248,15 @@ public class VeriniceContext {
 	 * @param s
 	 */
 	public static void setState(State s) {
-//		log.debug("putting state in thread: "
-//				+ Thread.currentThread().getName());
-
 		instance().threadLocal.set(s.getMap());
 	}
 	
 	public static String getServerUrl() {
-	    return SERVER_URL;
+	    return server_url;
 	}
 	
 	public static void setServerUrl(String serverUrl) {
-        SERVER_URL = serverUrl;
+        server_url = serverUrl;
     }
 
 	/** Abstraction of the state of a {@link VeriniceContext}.

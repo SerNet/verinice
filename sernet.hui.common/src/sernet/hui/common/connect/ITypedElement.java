@@ -27,7 +27,7 @@ package sernet.hui.common.connect;
  *
  */
 public interface ITypedElement {
-    public String getTypeId();
+    String getTypeId();
 }
 
 

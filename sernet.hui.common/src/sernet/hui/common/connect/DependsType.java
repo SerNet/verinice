@@ -96,23 +96,30 @@ public class DependsType implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         DependsType other = (DependsType) obj;
         if (propertyId == null) {
-            if (other.propertyId != null)
+            if (other.propertyId != null){
                 return false;
-        } else if (!propertyId.equals(other.propertyId))
+            }
+        } else if (!propertyId.equals(other.propertyId)){
             return false;
+        }
         if (propertyValue == null) {
-            if (other.propertyValue != null)
+            if (other.propertyValue != null){
                 return false;
-        } else if (!propertyValue.equals(other.propertyValue))
+            }
+        } else if (!propertyValue.equals(other.propertyValue)){
             return false;
+        }
         return true;
     }
     

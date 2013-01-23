@@ -56,8 +56,9 @@ public class PropertyGroup implements IEntityElement {
 	
 	public PropertyType getPropertyType(String id) {
 		for (PropertyType type : propertyTypes) {
-			if (type.getId().equals(id))
+			if (type.getId().equals(id)){
 				return type;
+			}
 		}
 		return null;
 	}

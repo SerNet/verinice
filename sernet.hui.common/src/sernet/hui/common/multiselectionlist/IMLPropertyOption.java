@@ -48,8 +48,8 @@ public interface IMLPropertyOption {
 	 * Callback Handler to allow the option to notify its checkbox when the display name changes or similar.
 	 * @param checkBoxHandler
 	 */
-	public void setCheckboxHandler(ICheckBoxHandler checkBoxHandler);
+	void setCheckboxHandler(ICheckBoxHandler checkBoxHandler);
 	
-	public ICheckBoxHandler getCheckboxHandler();
+	ICheckBoxHandler getCheckboxHandler();
 
 }

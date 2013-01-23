@@ -22,6 +22,6 @@ package sernet.snutils;
  */
 public interface IExceptionHandler {
 	
-	public void handleException(Exception e);
+	void handleException(Exception e);
 
 }

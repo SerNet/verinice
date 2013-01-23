@@ -92,9 +92,10 @@ public class SNCAMessages {
 
 	public void setBaseUrl(String baseUrl) {
 		if(baseUrl!=null && baseUrl.endsWith(HUITypeFactory.HUI_CONFIGURATION_FILE)) {
-			baseUrl = baseUrl.substring(0,baseUrl.indexOf(HUITypeFactory.HUI_CONFIGURATION_FILE));
+			this.baseUrl = baseUrl.substring(0,baseUrl.indexOf(HUITypeFactory.HUI_CONFIGURATION_FILE));
+		} else {
+		    this.baseUrl = baseUrl;
 		}
-		this.baseUrl = baseUrl;
 	}
 
 	public String getBaseUrl() {

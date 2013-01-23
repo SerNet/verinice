@@ -17,17 +17,12 @@
  ******************************************************************************/
 package sernet.hui.common.connect;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,9 +58,9 @@ import sernet.snutils.DBException;
  * 
  */
 public class HUITypeFactory {
-    private static final Logger log = Logger.getLogger(HUITypeFactory.class);
+    private static final Logger LOG = Logger.getLogger(HUITypeFactory.class);
 
-    public static String HUI_CONFIGURATION_FILE = "SNCA.xml";
+    public static final String HUI_CONFIGURATION_FILE = "SNCA.xml";
 
     private static Document doc;
     
@@ -75,12 +70,8 @@ public class HUITypeFactory {
 
     private Set<String> allDependecies = new HashSet<String>();
 
-    // last-modified fields for local file or HTTP:
-    private static Date fileDate;
-    private static String lastModified;
-
     // loads translated messages for HUI entities from resource bundles
-    public SNCAMessages messages;
+    private SNCAMessages messages;
 
     protected HUITypeFactory() {
         // Intentionally do nothing (is for the Functionless subclass).
@@ -104,7 +95,7 @@ public class HUITypeFactory {
      * @throws DBException
      */
     private HUITypeFactory(URL xmlFile) throws DBException {
-
+        
         if (xmlFile == null) {
             throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }
@@ -119,8 +110,8 @@ public class HUITypeFactory {
 
         messages = new SNCAMessages(xmlFile.toExternalForm());
 
-        if (log.isDebugEnabled()) {
-            log.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
         }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -139,12 +130,12 @@ public class HUITypeFactory {
             parser = factory.newDocumentBuilder();
 
         } catch (ParserConfigurationException e) {
-            log.error("Unrecognized parser feature.", e);
+            LOG.error("Unrecognized parser feature.", e);
             throw new RuntimeException(e);
         }
 
         try {
-            log.debug("Getting XML property definition from " + xmlFile);
+            LOG.debug("Getting XML property definition from " + xmlFile);
             parser.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
@@ -165,7 +156,7 @@ public class HUITypeFactory {
             readAllEntities();
 
         } catch (IOException ie) {
-            log.error(ie);
+            LOG.error(ie);
             throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.", ie);
         } catch (SAXException e) {
             throw new DBException("Die XML Datei mit der Definition der Formularfelder ist defekt!", e);
@@ -354,9 +345,9 @@ public class HUITypeFactory {
      * @param attribute
      */
     private void addToTagList(String tags) {
-        if (tags == null || tags.length()<1)
+        if (tags == null || tags.length()<1){
             return;
-        
+        }
         tags = tags.replaceAll("\\s+", "");
         String[] individualTags = tags.split(",");
         allTags.addAll(Arrays.asList(individualTags));
@@ -424,13 +415,13 @@ public class HUITypeFactory {
             String className = ruleElement.getAttribute("class");
             IValidationRule rule = (IValidationRule)RuleFactory.getValidationRule(className);
             String hint = ruleElement.getAttribute("hint");
-            rule.init(readValidationRuleParams(ruleElement, rule), hint);
+            rule.init(readValidationRuleParams(ruleElement), hint);
             ruleList.add(rule);
         }
         return ruleList;
     }
     
-    private String[] readValidationRuleParams(Element ruleElement, IValidationRule rule){
+    private String[] readValidationRuleParams(Element ruleElement){
         NodeList paramNodeList = ruleElement.getElementsByTagName("param");
         String[] params = new String[paramNodeList.getLength()];
         for(int i = 0; i < paramNodeList.getLength(); i++){
@@ -488,8 +479,8 @@ public class HUITypeFactory {
 			    try {
 			        dv.setValue( Integer.parseInt(value.getAttribute("value")) );
 			    } catch (Exception e) {
-			        if (log.isDebugEnabled()) {
-			            log.debug("Not a valid number for option " + value.getAttribute("value"));
+			        if (LOG.isDebugEnabled()) {
+			            LOG.debug("Not a valid number for option " + value.getAttribute("value"));
 			        }
 			        dv.setValue(null);
 			    }
@@ -661,25 +652,25 @@ public class HUITypeFactory {
         }
         String message = messages.getString(key);
         if (message != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("returning translated message: " + message + ", key: " + key);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("returning translated message: " + message + ", key: " + key);
             }
         } else {
             message = defaultMessage;
-            if (log.isDebugEnabled() && message!=null) {
-                log.debug("returning message from SNCA.XML: " + message + ", key: " + key);
+            if (LOG.isDebugEnabled() && message!=null) {
+                LOG.debug("returning message from SNCA.XML: " + message + ", key: " + key);
                 // mark missing resource bundle entries
                 message = message + " (SNCA.xml)";
             }
             if(message==null) {
                 if(emptyIfNotFound) {
                     // message is optional may be empty
-                    if (log.isDebugEnabled()) {
-                        log.debug("SNCA message not found, key is: " + key);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("SNCA message not found, key is: " + key);
                     }
                     message = "";
                 } else {
-                    log.warn("SNCA message not found, key is: " + key);
+                    LOG.warn("SNCA message not found, key is: " + key);
                     message = key + " (!)";
                 }
             }

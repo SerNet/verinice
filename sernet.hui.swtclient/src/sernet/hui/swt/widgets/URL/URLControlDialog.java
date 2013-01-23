@@ -108,7 +108,7 @@ public class URLControlDialog extends Dialog {
 		previousUrls = type.getResolvedUrls();
 		Collections.sort(previousUrls, new Comparator<HuiUrl>() {
 			public int compare(HuiUrl o1, HuiUrl o2) {
-				return o1.name.compareTo(o2.name);
+				return o1.getName().compareTo(o2.getName());
 			}
 			
 		});
@@ -120,8 +120,8 @@ public class URLControlDialog extends Dialog {
 
 			public void widgetSelected(SelectionEvent e) {
 				HuiUrl url = previousUrls.get(combo.getSelectionIndex());
-				nameText.setText(url.name);
-				hrefText.setText(url.url);
+				nameText.setText(url.getName());
+				hrefText.setText(url.getUrl());
 			}
 		});
 		
@@ -132,7 +132,7 @@ public class URLControlDialog extends Dialog {
 	private String[] getNames(List<HuiUrl> previousUrls2) {
 		String[] result = new String[previousUrls2.size()];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = previousUrls2.get(i).name;
+			result[i] = previousUrls2.get(i).getName();
 		}
 		return result;
 	}

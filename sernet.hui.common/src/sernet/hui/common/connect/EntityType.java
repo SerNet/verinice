@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class EntityType {
 	private String id;
@@ -110,8 +110,8 @@ public class EntityType {
 	public String[] getAllPropertyTypeTitlesIncludingGroups() {
         ArrayList<String> result = new ArrayList<String>();
         String[] typeIDs = getAllPropertyTypeIDsIncludingGroups();
-        for (String id : typeIDs) {
-            result.add(getPropertyType(id).getName());
+        for (String typeId : typeIDs) {
+            result.add(getPropertyType(typeId).getName());
         }
         return (String[]) result.toArray(new String[result.size()]);
     }
@@ -126,13 +126,14 @@ public class EntityType {
 
 	public PropertyType getPropertyType(String id) {
 		PropertyType type = this.propertyTypes.get(id);
-		if (type != null)
+		if (type != null){
 			return type;
-		
+		}
 		// search in groups:
 		for (PropertyGroup group : this.propertyGroups) {
-			if ((type = group.getPropertyType(id)) != null)
+			if ((type = group.getPropertyType(id)) != null){
 				return type;
+			}
 		}
 		// none found:
 		return null;
@@ -189,8 +190,9 @@ public class EntityType {
 		for (Entry<String, Set<HuiRelation>> entry : entrySet) {
 			Set<HuiRelation> value = entry.getValue();
 			for (HuiRelation huiRelation : value) {
-				if (huiRelation.getId().equals(typeId))
+				if (huiRelation.getId().equals(typeId)){
 					return huiRelation;
+				}
 			}
 		}
 		return null;

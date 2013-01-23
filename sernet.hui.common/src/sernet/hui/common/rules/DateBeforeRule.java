@@ -32,7 +32,7 @@ public class DateBeforeRule implements IValidationRule {
 
     private String hint = Messages.DateBeforeDefaultHint;
     
-    private static transient Logger LOG = Logger.getLogger(DateBeforeRule.class);
+    private static transient Logger log = Logger.getLogger(DateBeforeRule.class);
     
     private static final String PATTERN = "dd.MM.yyyy";
     
@@ -45,24 +45,25 @@ public class DateBeforeRule implements IValidationRule {
      */
     @Override
     public boolean validate(String userInput, String[] params) {
+        String input = new String(userInput);
         Long millis = null;
         try{
-            millis = Long.parseLong(userInput);
+            millis = Long.parseLong(input);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(millis);
-            userInput = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + 
-                    "." + String.valueOf(calendar.get(Calendar.MONTH) + 1) +
-                    "." + String.valueOf(calendar.get(Calendar.YEAR));
+            input = calendar.get(Calendar.DAY_OF_MONTH) + 
+                    "." + (calendar.get(Calendar.MONTH) + 1) +
+                    "." + calendar.get(Calendar.YEAR);
         
         } catch (NumberFormatException e){
             // do nothing, userInput is not a long
         }
-        if(formatter != null && userInput != null){
+        if(formatter != null && input != null){
             try {
-                Date userDate = formatter.parse(userInput);
+                Date userDate = formatter.parse(input);
                 return userDate.before(compareDate);
             } catch (Exception e) {
-                LOG.error("user given date unparseable", e);
+                log.error("user given date unparseable", e);
             }
         } 
         return false;
@@ -93,7 +94,7 @@ public class DateBeforeRule implements IValidationRule {
                 this.hint = Messages.DateBeforeDefaultHint;
             }
         } catch (ParseException e) {
-            LOG.error("Date specified by parameter not parseable", e);
+            log.error("Date specified by parameter not parseable", e);
             compareDate = null;
         }
     }

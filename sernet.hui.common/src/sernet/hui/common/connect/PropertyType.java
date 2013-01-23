@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -367,7 +368,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		this.validators = validators;
 	}
 
-	public HashMap<String, Boolean> validate(String text, String[] params) {
+	public Map<String, Boolean> validate(String text, String[] params) {
 	    HashMap<String, Boolean> validationResults = new HashMap<String, Boolean>();
 	    for (Iterator iter = validators.iterator(); iter.hasNext();) {
 			final IValidationRule validator = (IValidationRule) iter.next();
