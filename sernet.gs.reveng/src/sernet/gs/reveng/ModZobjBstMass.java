@@ -13,7 +13,7 @@ public class ModZobjBstMass implements java.io.Serializable {
 	// Fields
 
 	private ModZobjBstMassId id;
-	private Integer id1;
+	private Integer id_1;
 	private Integer orgImpId;
 	private Short ustId;
 	private Integer waeId;
@@ -62,10 +62,10 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public ModZobjBstMass(ModZobjBstMassId id, Integer id1, Integer orgImpId,
+	public ModZobjBstMass(ModZobjBstMassId id, Integer id_1, Integer orgImpId,
 			Short ustId, Integer usn, String guid, Short zykId) {
 		this.id = id;
-		this.id1 = id1;
+		this.id_1 = id_1;
 		this.orgImpId = orgImpId;
 		this.ustId = ustId;
 		this.usn = usn;
@@ -74,7 +74,7 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public ModZobjBstMass(ModZobjBstMassId id, Integer id1, Integer orgImpId,
+	public ModZobjBstMass(ModZobjBstMassId id, Integer id_1, Integer orgImpId,
 			Short ustId, Integer waeId, Integer waeImpId, Integer notizId,
 			String dateiKosten, String dateiProzess, Date umsDatVon,
 			Date umsDatBis, String umsBeschr, Double kostPersFix,
@@ -89,7 +89,7 @@ public class ModZobjBstMass implements java.io.Serializable {
 			Integer cmImpId, Integer cmVerId1, Short cmVerId2, Short cmStaId,
 			Short zykId) {
 		this.id = id;
-		this.id1 = id1;
+		this.id_1 = id_1;
 		this.orgImpId = orgImpId;
 		this.ustId = ustId;
 		this.waeId = waeId;
@@ -97,8 +97,8 @@ public class ModZobjBstMass implements java.io.Serializable {
 		this.notizId = notizId;
 		this.dateiKosten = dateiKosten;
 		this.dateiProzess = dateiProzess;
-		this.umsDatVon = (umsDatVon != null) ? (Date)umsDatVon.clone() : null;
-		this.umsDatBis = (umsDatBis != null) ? (Date)umsDatBis.clone() : null;
+		this.umsDatVon = umsDatVon;
+		this.umsDatBis = umsDatBis;
 		this.umsBeschr = umsBeschr;
 		this.kostPersFix = kostPersFix;
 		this.kostPersVar = kostPersVar;
@@ -109,21 +109,21 @@ public class ModZobjBstMass implements java.io.Serializable {
 		this.kostSachZeiId = kostSachZeiId;
 		this.kostSachZeiImpId = kostSachZeiImpId;
 		this.revBeschr = revBeschr;
-		this.revDat = (revDat != null) ? (Date)revDat.clone() : null;
+		this.revDat = revDat;
 		this.revZobIdMit = revZobIdMit;
-		this.revDatNext = (revDatNext != null) ? (Date)revDatNext.clone() : null;
+		this.revDatNext = revDatNext;
 		this.revZobIdMitNext = revZobIdMitNext;
 		this.impNeu = impNeu;
 		this.usn = usn;
 		this.guid = guid;
 		this.guidOrg = guidOrg;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.timestamp = timestamp;
+		this.loeschDatum = loeschDatum;
 		this.geloeschtDurch = geloeschtDurch;
 		this.erfasstDurch = erfasstDurch;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -142,12 +142,12 @@ public class ModZobjBstMass implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Integer getId1() {
-		return this.id1;
+	public Integer getId_1() {
+		return this.id_1;
 	}
 
-	public void setId1(Integer id1) {
-		this.id1 = id1;
+	public void setId_1(Integer id_1) {
+		this.id_1 = id_1;
 	}
 
 	public Integer getOrgImpId() {
@@ -207,19 +207,19 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getUmsDatVon() {
-		return (this.umsDatVon != null) ? (Date)this.umsDatVon.clone() : null;
+		return this.umsDatVon;
 	}
 
 	public void setUmsDatVon(Date umsDatVon) {
-		this.umsDatVon = (umsDatVon != null) ? (Date)umsDatVon.clone() : null;
+		this.umsDatVon = umsDatVon;
 	}
 
 	public Date getUmsDatBis() {
-		return (this.umsDatBis != null) ? (Date)this.umsDatBis.clone() : null;
+		return this.umsDatBis;
 	}
 
 	public void setUmsDatBis(Date umsDatBis) {
-		this.umsDatBis = (umsDatBis != null) ? (Date)umsDatBis.clone() : null;
+		this.umsDatBis = umsDatBis;
 	}
 
 	public String getUmsBeschr() {
@@ -303,11 +303,11 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getRevDat() {
-		return (this.revDat != null) ? (Date)this.revDat.clone() : null;
+		return this.revDat;
 	}
 
 	public void setRevDat(Date revDat) {
-		this.revDat = (revDat != null) ? (Date)revDat.clone() : null;
+		this.revDat = revDat;
 	}
 
 	public Integer getRevZobIdMit() {
@@ -319,11 +319,11 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getRevDatNext() {
-		return (this.revDatNext != null) ? (Date)this.revDatNext.clone() : null;
+		return this.revDatNext;
 	}
 
 	public void setRevDatNext(Date revDatNext) {
-		this.revDatNext = (revDatNext != null) ? (Date)revDatNext.clone() : null;
+		this.revDatNext = revDatNext;
 	}
 
 	public Integer getRevZobIdMitNext() {
@@ -367,19 +367,19 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Date getLoeschDatum() {
-		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 	}
 
 	public String getGeloeschtDurch() {
@@ -399,11 +399,11 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {
@@ -415,11 +415,11 @@ public class ModZobjBstMass implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return (this.cmTimestamp != null) ? (Date)this.cmTimestamp.clone() : null;
+		return this.cmTimestamp;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 	}
 
 	public String getCmUsername() {

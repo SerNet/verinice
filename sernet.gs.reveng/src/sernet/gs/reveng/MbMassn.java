@@ -61,7 +61,7 @@ public class MbMassn implements java.io.Serializable {
 		this.metaNeu = metaNeu;
 		this.metaVers = metaVers;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.usn = usn;
 	}
 
@@ -85,18 +85,18 @@ public class MbMassn implements java.io.Serializable {
 		this.metaNeu = metaNeu;
 		this.metaVers = metaVers;
 		this.obsoletVers = obsoletVers;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 		this.userdef = userdef;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.usn = usn;
 		this.erfasstDurch = erfasstDurch;
 		this.geloeschtDurch = geloeschtDurch;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -196,11 +196,11 @@ public class MbMassn implements java.io.Serializable {
 	}
 
 	public Date getLoeschDatum() {
-		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 	}
 
 	public Short getUserdef() {
@@ -220,11 +220,11 @@ public class MbMassn implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Integer getUsn() {
@@ -268,11 +268,11 @@ public class MbMassn implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? this.changedOn : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {
@@ -284,11 +284,11 @@ public class MbMassn implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return (this.cmTimestamp != null) ? (Date)this.cmTimestamp.clone() : null;
+		return this.cmTimestamp;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 	}
 
 	public String getCmUsername() {

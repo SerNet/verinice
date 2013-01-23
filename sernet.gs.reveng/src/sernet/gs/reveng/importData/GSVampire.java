@@ -1,5 +1,8 @@
 package sernet.gs.reveng.importData;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,8 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.rtf.RTFEditorKit;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 
@@ -21,6 +29,7 @@ import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MSchutzbedarfkategTxtDAO;
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
+import sernet.gs.reveng.MbDringlichkeitDAO;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
 import sernet.gs.reveng.MbMassn;
@@ -31,6 +40,7 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstId;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
+import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
 import sernet.gs.reveng.NZobSb;
@@ -40,8 +50,8 @@ import sernet.gs.reveng.NmbNotiz;
 public class GSVampire {
     
     private static final Logger LOG = Logger.getLogger(GSVampire.class);
-    
-	private List<MSchutzbedarfkategTxt> allSchutzbedarf;
+
+	List<MSchutzbedarfkategTxt> allSchutzbedarf;
 
 	private static final String QUERY_ZIELOBJEKT_TYP = "select zo, txt.name, subtxt.name "
 			+ "			from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
@@ -49,6 +59,13 @@ public class GSVampire {
 			+ "			and txt.id.sprId = 1 "
 			+ "			and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
 			+ "			and subtxt.id.sprId = 1" + "			and zo.loeschDatum = null";
+
+//	private static final String QUERY_BAUSTEIN_ZIELOBJEKT = "select zo.name, zo.id.zobId, bst.nr, "
+//			+ "zo_bst.begruendung, zo_bst.bearbeitet, zo_bst.datum "
+//			+ "from ModZobjBst zo_bst, NZielobjekt zo, MbBaust bst "
+//			+ "where zo_bst.id.bauId = bst.id.bauId "
+//			+ "and zo_bst.id.zobId = zo.id.zobId " + "order by zo.id.zobId "
+//			+ "and zo_bst.loeschDatum = null";
 
 	private static final String QUERY_BAUSTEIN_ZIELOBJEKT_MASSNAHME_FOR_ZIELOBJEKT = "select bst, mn, umstxt, zo_bst, obm "
 			+ "from ModZobjBstMass obm, "
@@ -138,6 +155,10 @@ public class GSVampire {
 	private static final String QUERY_SCHUTZBEDARF_FOR_ZIELOBJEKT = "select zsb "
 			+ "from NZobSb zsb where zsb.id.zobId = :zobId";
 
+	// private static final String QUERY_ZEITEINHEITEN_TXT_ALL = "select zeittxt
+	// " +
+	// "from MbZeiteinheitenTxt zeittxt";
+
 	private static final String QUERY_ALLSUBTYPES = "select txt.name, subtxt.name "
 			+ "			from MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
 			+ "			where txt.id.sprId = 1 "
@@ -166,9 +187,9 @@ public class GSVampire {
 			Object[] next = (Object[]) iterate.next();
 			
 			// skip deleted objects:
-			if ( ((NZielobjekt)next[0]).getLoeschDatum() != null ){
+			if ( ((NZielobjekt)next[0]).getLoeschDatum() != null )
 				continue loop;
-			}
+			
 			result.add(new ZielobjektTypeResult((NZielobjekt) next[0],
 					(String) next[1], (String) next[2]));
 		}
@@ -280,21 +301,20 @@ public class GSVampire {
 			.execute("sp_attach_single_file_db " +
 					"@dbname= N\'" + databaseName + "\', " +
 					"@physname= N\'"+ fileName + "\'"); //$NON-NLS-1$
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				// if database is attached, try to drop and attach again:
-				stmt.execute("sp_detach_db \'" + databaseName + "\'"); //$NON-NLS-1$
-			} catch (SQLException e2) {
+				stmt.execute("sp_detach_db \'" + databaseName + "\'");
+			} catch (Exception e2) {
 				// do nothing
 			}
 			stmt
 			.execute("sp_attach_single_file_db " +
 					"@dbname= N\'" + databaseName + "\', " +
 					"@physname= N\'"+ fileName + "\'"); //$NON-NLS-1$
-		} finally {
-		    stmt.close();
-		    con.close();
 		}
+		stmt.close();
+		con.close();
 	}
 	
 	public BackupFileLocation getBackupFileNames(String databaseName, String fileName, String url, String user, String pass)
@@ -305,12 +325,11 @@ public class GSVampire {
 		Connection con = DriverManager.getConnection(
 				url, user,
 				pass);
-        Statement stmt = con.createStatement();
-        try {
-            ResultSet rs = stmt
-            .executeQuery("RESTORE FILELISTONLY" +
-                     " FROM DISK = '" + fileName + "' ");
-
+		Statement stmt = con.createStatement();
+		try {
+			ResultSet rs = stmt
+			.executeQuery("RESTORE FILELISTONLY" +
+					 " FROM DISK = '" + fileName + "' ");
 			result = new BackupFileLocation();
 			if (rs.next()) {
 				result.setMdfLogicalName(rs.getString("LogicalName"));
@@ -320,12 +339,11 @@ public class GSVampire {
 				result.setLdfLogicalName(rs.getString("LogicalName"));
 				result.setLdfFileName(rs.getString("PhysicalName"));
 			}
-		} catch (SQLException e) {
-			LOG.error("Error while communicating with database",e);
-		} finally {
-		    stmt.close();
-		    con.close();
+		} catch (Exception e) {
+			System.err.println(e);
 		}
+		stmt.close();
+		con.close();
 		return result;
 	}
 	
@@ -351,14 +369,13 @@ public class GSVampire {
 			try {
 				stmt.close();
 				con.close();
-			} catch (SQLException e1) {
+			} catch (Exception e1) {
 				// do nothing
 			}
 			throw e;
-		} finally {
-		    stmt.close();
-		    con.close();
 		}
+		stmt.close();
+		con.close();
 	}
 	
 	public Set<NZielobjekt> findBefragteMitarbeiterForBaustein(
@@ -393,6 +410,13 @@ public class GSVampire {
 			result.add(new BausteineMassnahmenResult((MbBaust) next[0],
 					(MbMassn) next[1], (MUmsetzStatTxt) next[2],
 					(ModZobjBst) next[3], (ModZobjBstMass) next[4]));
+			
+//			ModZobjBst zobst = (ModZobjBst) next[3];
+//			if (LOG.isDebugEnabled()) {
+//			    if (zobst.getRefZobId() != null)
+//			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
+//            }
+			
 		}
 		
 		transaction.commit();
@@ -453,9 +477,8 @@ public class GSVampire {
 
 		for (MSchutzbedarfkategTxt kateg : allSchutzbedarf) {
 			if (kateg.getId().getSprId() == 1
-					&& kateg.getId().getSbkId().equals(zsbVerfuSbkId)){
+					&& kateg.getId().getSbkId().equals(zsbVerfuSbkId))
 				return kateg;
-			}
 		}
 		return null;
 	}

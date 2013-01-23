@@ -20,7 +20,7 @@ public class MbZielobjSubtypTxt implements java.io.Serializable {
 	private Date timestamp;
 	private Short impNeu;
 	private String guidOrg;
-	private String abstractText;
+	private String abstract_;
 	private Date changedOn;
 	private String changedBy;
 
@@ -36,24 +36,24 @@ public class MbZielobjSubtypTxt implements java.io.Serializable {
 		this.id = id;
 		this.name = name;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	/** full constructor */
 	public MbZielobjSubtypTxt(MbZielobjSubtypTxtId id, String name,
 			String beschreibung, String htmltext, String guid, Date timestamp,
-			Short impNeu, String guidOrg, String abstractText, Date changedOn,
+			Short impNeu, String guidOrg, String abstract_, Date changedOn,
 			String changedBy) {
 		this.id = id;
 		this.name = name;
 		this.beschreibung = beschreibung;
 		this.htmltext = htmltext;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.abstractText = abstractText;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.abstract_ = abstract_;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
 	}
 
@@ -100,11 +100,11 @@ public class MbZielobjSubtypTxt implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Short getImpNeu() {
@@ -123,20 +123,20 @@ public class MbZielobjSubtypTxt implements java.io.Serializable {
 		this.guidOrg = guidOrg;
 	}
 
-	public String getAbstractText() {
-		return this.abstractText;
+	public String getAbstract_() {
+		return this.abstract_;
 	}
 
-	public void setAbstractText(String abstractText) {
-		this.abstractText = abstractText;
+	public void setAbstract_(String abstract_) {
+		this.abstract_ = abstract_;
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {

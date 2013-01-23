@@ -75,15 +75,12 @@ public class ModZobjBstMitarbId implements java.io.Serializable {
 	}
 
 	public boolean equals(Object other) {
-		if ((this == other)){
+		if ((this == other))
 			return true;
-		}
-		if ((other == null)){
+		if ((other == null))
 			return false;
-		}
-		if (!(other instanceof ModZobjBstMitarbId)){
+		if (!(other instanceof ModZobjBstMitarbId))
 			return false;
-		}
 		ModZobjBstMitarbId castOther = (ModZobjBstMitarbId) other;
 
 		return ((this.getZobImpId() == castOther.getZobImpId()) || (this
@@ -111,17 +108,15 @@ public class ModZobjBstMitarbId implements java.io.Serializable {
 	public int hashCode() {
 		int result = 17;
 
-		final int prime_factor = 37;
-		
-		result = prime_factor * result
+		result = 37 * result
 				+ (getZobImpId() == null ? 0 : this.getZobImpId().hashCode());
-		result = prime_factor * result
+		result = 37 * result
 				+ (getZobId() == null ? 0 : this.getZobId().hashCode());
-		result = prime_factor * result
+		result = 37 * result
 				+ (getBauImpId() == null ? 0 : this.getBauImpId().hashCode());
-		result = prime_factor * result
+		result = 37 * result
 				+ (getBauId() == null ? 0 : this.getBauId().hashCode());
-		result = prime_factor * result
+		result = 37 * result
 				+ (getZobIdMit() == null ? 0 : this.getZobIdMit().hashCode());
 		return result;
 	}

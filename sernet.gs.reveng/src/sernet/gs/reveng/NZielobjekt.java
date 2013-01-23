@@ -18,14 +18,14 @@ public class NZielobjekt implements java.io.Serializable {
 	private MsCmState msCmState;
 	private MbStatus mbStatus;
 	private MbDringlichkeit mbDringlichkeit;
-	private MYesno mYesnoByGefOk;
-	private MYesno mYesnoByGefOkItv;
-	private MGsiegel mGsiegelBySiegel;
-	private MGsiegel mGsiegelBySiegelItv;
+	private MYesno MYesnoByGefOk;
+	private MYesno MYesnoByGefOkItv;
+	private MGsiegel MGsiegelBySiegel;
+	private MGsiegel MGsiegelBySiegelItv;
 	private NmbNotiz nmbNotiz;
 	private MbZielobjSubtyp mbZielobjSubtyp;
-	private MUmsetzStat mUmsetzStatByUstIdItv;
-	private MUmsetzStat mUmsetzStatByUstId;
+	private MUmsetzStat MUmsetzStatByUstIdItv;
+	private MUmsetzStat MUmsetzStatByUstId;
 	private Integer orgImpId;
 	private String name;
 	private String nameOrg;
@@ -79,23 +79,23 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public NZielobjekt(NZielobjektId id, MYesno mYesnoByGefOk,
-			MYesno mYesnoByGefOkItv, MGsiegel mGsiegelBySiegel,
-			MGsiegel mGsiegelBySiegelItv, NmbNotiz nmbNotiz,
-			MbZielobjSubtyp mbZielobjSubtyp, MUmsetzStat mUmsetzStatByUstIdItv,
-			MUmsetzStat mUmsetzStatByUstId, Integer orgImpId, String name,
+	public NZielobjekt(NZielobjektId id, MYesno MYesnoByGefOk,
+			MYesno MYesnoByGefOkItv, MGsiegel MGsiegelBySiegel,
+			MGsiegel MGsiegelBySiegelItv, NmbNotiz nmbNotiz,
+			MbZielobjSubtyp mbZielobjSubtyp, MUmsetzStat MUmsetzStatByUstIdItv,
+			MUmsetzStat MUmsetzStatByUstId, Integer orgImpId, String name,
 			String nameOrg, Integer nameSame, String kuerzel, Integer usn,
 			String guid, Byte exportiert, Short raFarbe, Short raFarbeItv,
 			Short setDefault) {
 		this.id = id;
-		this.mYesnoByGefOk = mYesnoByGefOk;
-		this.mYesnoByGefOkItv = mYesnoByGefOkItv;
-		this.mGsiegelBySiegel = mGsiegelBySiegel;
-		this.mGsiegelBySiegelItv = mGsiegelBySiegelItv;
+		this.MYesnoByGefOk = MYesnoByGefOk;
+		this.MYesnoByGefOkItv = MYesnoByGefOkItv;
+		this.MGsiegelBySiegel = MGsiegelBySiegel;
+		this.MGsiegelBySiegelItv = MGsiegelBySiegelItv;
 		this.nmbNotiz = nmbNotiz;
 		this.mbZielobjSubtyp = mbZielobjSubtyp;
-		this.mUmsetzStatByUstIdItv = mUmsetzStatByUstIdItv;
-		this.mUmsetzStatByUstId = mUmsetzStatByUstId;
+		this.MUmsetzStatByUstIdItv = MUmsetzStatByUstIdItv;
+		this.MUmsetzStatByUstId = MUmsetzStatByUstId;
 		this.orgImpId = orgImpId;
 		this.name = name;
 		this.nameOrg = nameOrg;
@@ -112,10 +112,10 @@ public class NZielobjekt implements java.io.Serializable {
 	/** full constructor */
 	public NZielobjekt(NZielobjektId id, MsCmState msCmState,
 			MbStatus mbStatus, MbDringlichkeit mbDringlichkeit,
-			MYesno mYesnoByGefOk, MYesno mYesnoByGefOkItv,
-			MGsiegel mGsiegelBySiegel, MGsiegel mGsiegelBySiegelItv,
+			MYesno MYesnoByGefOk, MYesno MYesnoByGefOkItv,
+			MGsiegel MGsiegelBySiegel, MGsiegel MGsiegelBySiegelItv,
 			NmbNotiz nmbNotiz, MbZielobjSubtyp mbZielobjSubtyp,
-			MUmsetzStat mUmsetzStatByUstIdItv, MUmsetzStat mUmsetzStatByUstId,
+			MUmsetzStat MUmsetzStatByUstIdItv, MUmsetzStat MUmsetzStatByUstId,
 			Integer orgImpId, String name, String nameOrg, Integer nameSame,
 			String kuerzel, String beschreibung, String anwBeschrInf,
 			String anwInf1Beschr, String anwInf2Beschr, String itvAuditor,
@@ -133,14 +133,14 @@ public class NZielobjekt implements java.io.Serializable {
 		this.msCmState = msCmState;
 		this.mbStatus = mbStatus;
 		this.mbDringlichkeit = mbDringlichkeit;
-		this.mYesnoByGefOk = mYesnoByGefOk;
-		this.mYesnoByGefOkItv = mYesnoByGefOkItv;
-		this.mGsiegelBySiegel = mGsiegelBySiegel;
-		this.mGsiegelBySiegelItv = mGsiegelBySiegelItv;
+		this.MYesnoByGefOk = MYesnoByGefOk;
+		this.MYesnoByGefOkItv = MYesnoByGefOkItv;
+		this.MGsiegelBySiegel = MGsiegelBySiegel;
+		this.MGsiegelBySiegelItv = MGsiegelBySiegelItv;
 		this.nmbNotiz = nmbNotiz;
 		this.mbZielobjSubtyp = mbZielobjSubtyp;
-		this.mUmsetzStatByUstIdItv = mUmsetzStatByUstIdItv;
-		this.mUmsetzStatByUstId = mUmsetzStatByUstId;
+		this.MUmsetzStatByUstIdItv = MUmsetzStatByUstIdItv;
+		this.MUmsetzStatByUstId = MUmsetzStatByUstId;
 		this.orgImpId = orgImpId;
 		this.name = name;
 		this.nameOrg = nameOrg;
@@ -160,20 +160,20 @@ public class NZielobjekt implements java.io.Serializable {
 		this.email = email;
 		this.abteilung = abteilung;
 		this.anzahl = anzahl;
-		this.erteiltAm = (erteiltAm != null) ? (Date)erteiltAm.clone() : null;
-		this.gueltigBis = (gueltigBis != null) ? (Date)gueltigBis.clone() : null;
+		this.erteiltAm = erteiltAm;
+		this.gueltigBis = gueltigBis;
 		this.impNeu = impNeu;
-		this.erfasstAm = (erfasstAm != null) ? (Date)erfasstAm.clone() : null;
+		this.erfasstAm = erfasstAm;
 		this.erfasstDurch = erfasstDurch;
 		this.usn = usn;
 		this.guid = guid;
 		this.guidOrg = guidOrg;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 		this.exportiert = exportiert;
 		this.geloeschtDurch = geloeschtDurch;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -223,35 +223,35 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public MYesno getMYesnoByGefOk() {
-		return this.mYesnoByGefOk;
+		return this.MYesnoByGefOk;
 	}
 
-	public void setMYesnoByGefOk(MYesno mYesnoByGefOk) {
-		this.mYesnoByGefOk = mYesnoByGefOk;
+	public void setMYesnoByGefOk(MYesno MYesnoByGefOk) {
+		this.MYesnoByGefOk = MYesnoByGefOk;
 	}
 
 	public MYesno getMYesnoByGefOkItv() {
-		return this.mYesnoByGefOkItv;
+		return this.MYesnoByGefOkItv;
 	}
 
-	public void setMYesnoByGefOkItv(MYesno mYesnoByGefOkItv) {
-		this.mYesnoByGefOkItv = mYesnoByGefOkItv;
+	public void setMYesnoByGefOkItv(MYesno MYesnoByGefOkItv) {
+		this.MYesnoByGefOkItv = MYesnoByGefOkItv;
 	}
 
 	public MGsiegel getMGsiegelBySiegel() {
-		return this.mGsiegelBySiegel;
+		return this.MGsiegelBySiegel;
 	}
 
-	public void setMGsiegelBySiegel(MGsiegel mGsiegelBySiegel) {
-		this.mGsiegelBySiegel = mGsiegelBySiegel;
+	public void setMGsiegelBySiegel(MGsiegel MGsiegelBySiegel) {
+		this.MGsiegelBySiegel = MGsiegelBySiegel;
 	}
 
 	public MGsiegel getMGsiegelBySiegelItv() {
-		return this.mGsiegelBySiegelItv;
+		return this.MGsiegelBySiegelItv;
 	}
 
-	public void setMGsiegelBySiegelItv(MGsiegel mGsiegelBySiegelItv) {
-		this.mGsiegelBySiegelItv = mGsiegelBySiegelItv;
+	public void setMGsiegelBySiegelItv(MGsiegel MGsiegelBySiegelItv) {
+		this.MGsiegelBySiegelItv = MGsiegelBySiegelItv;
 	}
 
 	public NmbNotiz getNmbNotiz() {
@@ -271,19 +271,19 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public MUmsetzStat getMUmsetzStatByUstIdItv() {
-		return this.mUmsetzStatByUstIdItv;
+		return this.MUmsetzStatByUstIdItv;
 	}
 
-	public void setMUmsetzStatByUstIdItv(MUmsetzStat mUmsetzStatByUstIdItv) {
-		this.mUmsetzStatByUstIdItv = mUmsetzStatByUstIdItv;
+	public void setMUmsetzStatByUstIdItv(MUmsetzStat MUmsetzStatByUstIdItv) {
+		this.MUmsetzStatByUstIdItv = MUmsetzStatByUstIdItv;
 	}
 
 	public MUmsetzStat getMUmsetzStatByUstId() {
-		return this.mUmsetzStatByUstId;
+		return this.MUmsetzStatByUstId;
 	}
 
-	public void setMUmsetzStatByUstId(MUmsetzStat mUmsetzStatByUstId) {
-		this.mUmsetzStatByUstId = mUmsetzStatByUstId;
+	public void setMUmsetzStatByUstId(MUmsetzStat MUmsetzStatByUstId) {
+		this.MUmsetzStatByUstId = MUmsetzStatByUstId;
 	}
 
 	public Integer getOrgImpId() {
@@ -439,19 +439,19 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public Date getErteiltAm() {
-		return (this.erteiltAm != null) ? (Date)this.erteiltAm.clone() : null;
+		return this.erteiltAm;
 	}
 
 	public void setErteiltAm(Date erteiltAm) {
-		this.erteiltAm = (erteiltAm != null) ? (Date)erteiltAm.clone() : null;
+		this.erteiltAm = erteiltAm;
 	}
 
 	public Date getGueltigBis() {
-		return (this.gueltigBis != null) ? (Date)this.gueltigBis.clone() : null;
+		return this.gueltigBis;
 	}
 
 	public void setGueltigBis(Date gueltigBis) {
-		this.gueltigBis = (gueltigBis != null) ? (Date)gueltigBis.clone() : null;
+		this.gueltigBis = gueltigBis;
 	}
 
 	public Short getImpNeu() {
@@ -463,11 +463,11 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public Date getErfasstAm() {
-		return (this.erfasstAm != null) ? (Date)this.erfasstAm.clone() : null;
+		return this.erfasstAm;
 	}
 
 	public void setErfasstAm(Date erfasstAm) {
-		this.erfasstAm = (erfasstAm != null) ? (Date)erfasstAm.clone() : null;
+		this.erfasstAm = erfasstAm;
 	}
 
 	public String getErfasstDurch() {
@@ -503,11 +503,11 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public Date getLoeschDatum() {
-		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 	}
 
 	public Byte getExportiert() {
@@ -527,11 +527,11 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {
@@ -543,11 +543,11 @@ public class NZielobjekt implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return (this.cmTimestamp != null) ? (Date)this.cmTimestamp.clone() : null;
+		return this.cmTimestamp;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 	}
 
 	public String getCmUsername() {

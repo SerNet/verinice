@@ -16,8 +16,8 @@ public class MbDringlichkeit implements java.io.Serializable {
 
 	private MbDringlichkeitId id;
 	private SysImport sysImport;
-	private MMetastatus mMetastatus;
-	private MMetatyp mMetatyp;
+	private MMetastatus MMetastatus;
+	private MMetatyp MMetatyp;
 	private Integer metaVers;
 	private Integer obsoletVers;
 	private String link;
@@ -29,7 +29,7 @@ public class MbDringlichkeit implements java.io.Serializable {
 	private String geloeschtDurch;
 	private Short impNeu;
 	private String guidOrg;
-	private Set nZielobjekts = new HashSet(0);
+	private Set NZielobjekts = new HashSet(0);
 
 	// Constructors
 
@@ -39,37 +39,37 @@ public class MbDringlichkeit implements java.io.Serializable {
 
 	/** minimal constructor */
 	public MbDringlichkeit(MbDringlichkeitId id, SysImport sysImport,
-			MMetastatus mMetastatus, MMetatyp mMetatyp, Integer metaVers) {
+			MMetastatus MMetastatus, MMetatyp MMetatyp, Integer metaVers) {
 		this.id = id;
 		this.sysImport = sysImport;
-		this.mMetastatus = mMetastatus;
-		this.mMetatyp = mMetatyp;
+		this.MMetastatus = MMetastatus;
+		this.MMetatyp = MMetatyp;
 		this.metaVers = metaVers;
 	}
 
 	/** full constructor */
 	public MbDringlichkeit(MbDringlichkeitId id, SysImport sysImport,
-			MMetastatus mMetastatus, MMetatyp mMetatyp, Integer metaVers,
+			MMetastatus MMetastatus, MMetatyp MMetatyp, Integer metaVers,
 			Integer obsoletVers, String link, Integer notizId, String guid,
 			Date timestamp, Date loeschDatum, String erfasstDurch,
 			String geloeschtDurch, Short impNeu, String guidOrg,
-			Set nZielobjekts) {
+			Set NZielobjekts) {
 		this.id = id;
 		this.sysImport = sysImport;
-		this.mMetastatus = mMetastatus;
-		this.mMetatyp = mMetatyp;
+		this.MMetastatus = MMetastatus;
+		this.MMetatyp = MMetatyp;
 		this.metaVers = metaVers;
 		this.obsoletVers = obsoletVers;
 		this.link = link;
 		this.notizId = notizId;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.timestamp = timestamp;
+		this.loeschDatum = loeschDatum;
 		this.erfasstDurch = erfasstDurch;
 		this.geloeschtDurch = geloeschtDurch;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.nZielobjekts = nZielobjekts;
+		this.NZielobjekts = NZielobjekts;
 	}
 
 	// Property accessors
@@ -91,19 +91,19 @@ public class MbDringlichkeit implements java.io.Serializable {
 	}
 
 	public MMetastatus getMMetastatus() {
-		return this.mMetastatus;
+		return this.MMetastatus;
 	}
 
-	public void setMMetastatus(MMetastatus mMetastatus) {
-		this.mMetastatus = mMetastatus;
+	public void setMMetastatus(MMetastatus MMetastatus) {
+		this.MMetastatus = MMetastatus;
 	}
 
 	public MMetatyp getMMetatyp() {
-		return this.mMetatyp;
+		return this.MMetatyp;
 	}
 
-	public void setMMetatyp(MMetatyp mMetatyp) {
-		this.mMetatyp = mMetatyp;
+	public void setMMetatyp(MMetatyp MMetatyp) {
+		this.MMetatyp = MMetatyp;
 	}
 
 	public Integer getMetaVers() {
@@ -147,19 +147,19 @@ public class MbDringlichkeit implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Date getLoeschDatum() {
-		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 	}
 
 	public String getErfasstDurch() {
@@ -195,11 +195,11 @@ public class MbDringlichkeit implements java.io.Serializable {
 	}
 
 	public Set getNZielobjekts() {
-		return this.nZielobjekts;
+		return this.NZielobjekts;
 	}
 
-	public void setNZielobjekts(Set nZielobjekts) {
-		this.nZielobjekts = nZielobjekts;
+	public void setNZielobjekts(Set NZielobjekts) {
+		this.NZielobjekts = NZielobjekts;
 	}
 
 }

@@ -55,7 +55,7 @@ public class MbZielobjSubtyp implements java.io.Serializable {
 		this.metaNeu = metaNeu;
 		this.metaVers = metaVers;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.usn = usn;
 	}
 
@@ -76,17 +76,17 @@ public class MbZielobjSubtyp implements java.io.Serializable {
 		this.metaVers = metaVers;
 		this.obsoletVers = obsoletVers;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.timestamp = timestamp;
+		this.loeschDatum = loeschDatum;
 		this.mtyId = mtyId;
 		this.usn = usn;
 		this.erfasstDurch = erfasstDurch;
 		this.geloeschtDurch = geloeschtDurch;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -162,15 +162,15 @@ public class MbZielobjSubtyp implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null;
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Date getLoeschDatum() {
-		return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
@@ -226,11 +226,11 @@ public class MbZielobjSubtyp implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {
@@ -242,11 +242,11 @@ public class MbZielobjSubtyp implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return (this.timestamp != null) ? (Date)this.cmTimestamp.clone() : null;
+		return this.cmTimestamp;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 	}
 
 	public String getCmUsername() {

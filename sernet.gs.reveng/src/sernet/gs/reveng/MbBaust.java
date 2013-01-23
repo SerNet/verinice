@@ -17,12 +17,12 @@ public class MbBaust implements java.io.Serializable {
 	private MbBaustId id;
 	private MsCmState msCmState;
 	private MbBaust mbBaust;
-	private MMetastatus mMetastatus;
+	private MMetastatus MMetastatus;
 	private MbSchicht mbSchicht;
-	private MMetatyp mMetatyp;
+	private MMetatyp MMetatyp;
 	private SysImport sysImport;
 	private NmbNotiz nmbNotiz;
-	private NZielobjekt nZielobjekt;
+	private NZielobjekt NZielobjekt;
 	private Integer nrNum;
 	private String nr;
 	private String link;
@@ -54,28 +54,28 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public MbBaust(MbBaustId id, MMetastatus mMetastatus, MbSchicht mbSchicht,
-			SysImport sysImport, NmbNotiz nmbNotiz, NZielobjekt nZielobjekt,
+	public MbBaust(MbBaustId id, MMetastatus MMetastatus, MbSchicht mbSchicht,
+			SysImport sysImport, NmbNotiz nmbNotiz, NZielobjekt NZielobjekt,
 			String nr, Byte auditrelevantJn, Integer metaVers, String guid,
 			Date timestamp, Integer usn) {
 		this.id = id;
-		this.mMetastatus = mMetastatus;
+		this.MMetastatus = MMetastatus;
 		this.mbSchicht = mbSchicht;
 		this.sysImport = sysImport;
 		this.nmbNotiz = nmbNotiz;
-		this.nZielobjekt = nZielobjekt;
+		this.NZielobjekt = NZielobjekt;
 		this.nr = nr;
 		this.auditrelevantJn = auditrelevantJn;
 		this.metaVers = metaVers;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.usn = usn;
 	}
 
 	/** full constructor */
 	public MbBaust(MbBaustId id, MsCmState msCmState, MbBaust mbBaust,
-			MMetastatus mMetastatus, MbSchicht mbSchicht, MMetatyp mMetatyp,
-			SysImport sysImport, NmbNotiz nmbNotiz, NZielobjekt nZielobjekt,
+			MMetastatus MMetastatus, MbSchicht mbSchicht, MMetatyp MMetatyp,
+			SysImport sysImport, NmbNotiz nmbNotiz, NZielobjekt NZielobjekt,
 			Integer nrNum, String nr, String link, Byte auditrelevantJn,
 			Integer metaVers, Integer obsoletVers, Date loeschDatum,
 			String guid, Date timestamp, Integer usn, String erfasstDurch,
@@ -86,29 +86,29 @@ public class MbBaust implements java.io.Serializable {
 		this.id = id;
 		this.msCmState = msCmState;
 		this.mbBaust = mbBaust;
-		this.mMetastatus = mMetastatus;
+		this.MMetastatus = MMetastatus;
 		this.mbSchicht = mbSchicht;
-		this.mMetatyp = mMetatyp;
+		this.MMetatyp = MMetatyp;
 		this.sysImport = sysImport;
 		this.nmbNotiz = nmbNotiz;
-		this.nZielobjekt = nZielobjekt;
+		this.NZielobjekt = NZielobjekt;
 		this.nrNum = nrNum;
 		this.nr = nr;
 		this.link = link;
 		this.auditrelevantJn = auditrelevantJn;
 		this.metaVers = metaVers;
 		this.obsoletVers = obsoletVers;
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 		this.guid = guid;
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 		this.usn = usn;
 		this.erfasstDurch = erfasstDurch;
 		this.geloeschtDurch = geloeschtDurch;
 		this.impNeu = impNeu;
 		this.guidOrg = guidOrg;
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 		this.changedBy = changedBy;
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone(): null;
+		this.cmTimestamp = cmTimestamp;
 		this.cmUsername = cmUsername;
 		this.cmImpId = cmImpId;
 		this.cmVerId1 = cmVerId1;
@@ -144,11 +144,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public MMetastatus getMMetastatus() {
-		return this.mMetastatus;
+		return this.MMetastatus;
 	}
 
-	public void setMMetastatus(MMetastatus mMetastatus) {
-		this.mMetastatus = mMetastatus;
+	public void setMMetastatus(MMetastatus MMetastatus) {
+		this.MMetastatus = MMetastatus;
 	}
 
 	public MbSchicht getMbSchicht() {
@@ -160,11 +160,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public MMetatyp getMMetatyp() {
-		return this.mMetatyp;
+		return this.MMetatyp;
 	}
 
-	public void setMMetatyp(MMetatyp mMetatyp) {
-		this.mMetatyp = mMetatyp;
+	public void setMMetatyp(MMetatyp MMetatyp) {
+		this.MMetatyp = MMetatyp;
 	}
 
 	public SysImport getSysImport() {
@@ -184,11 +184,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public NZielobjekt getNZielobjekt() {
-		return this.nZielobjekt;
+		return this.NZielobjekt;
 	}
 
-	public void setNZielobjekt(NZielobjekt nZielobjekt) {
-		this.nZielobjekt = nZielobjekt;
+	public void setNZielobjekt(NZielobjekt NZielobjekt) {
+		this.NZielobjekt = NZielobjekt;
 	}
 
 	public Integer getNrNum() {
@@ -240,11 +240,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public Date getLoeschDatum() {
-	        return (this.loeschDatum != null) ? (Date)this.loeschDatum.clone() : null;
+		return this.loeschDatum;
 	}
 
 	public void setLoeschDatum(Date loeschDatum) {
-		this.loeschDatum = (loeschDatum != null) ? (Date)loeschDatum.clone() : null;
+		this.loeschDatum = loeschDatum;
 	}
 
 	public String getGuid() {
@@ -256,11 +256,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public Date getTimestamp() {
-		return (this.timestamp != null) ? (Date)this.timestamp.clone() : null; 
+		return this.timestamp;
 	}
 
 	public void setTimestamp(Date timestamp) {
-		this.timestamp = (timestamp != null) ? (Date)timestamp.clone() : null;
+		this.timestamp = timestamp;
 	}
 
 	public Integer getUsn() {
@@ -304,11 +304,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public Date getChangedOn() {
-		return (this.changedOn != null) ? (Date)this.changedOn.clone() : null;
+		return this.changedOn;
 	}
 
 	public void setChangedOn(Date changedOn) {
-		this.changedOn = (changedOn != null) ? (Date)changedOn.clone() : null;
+		this.changedOn = changedOn;
 	}
 
 	public String getChangedBy() {
@@ -320,11 +320,11 @@ public class MbBaust implements java.io.Serializable {
 	}
 
 	public Date getCmTimestamp() {
-		return (this.timestamp != null) ? (Date)this.cmTimestamp.clone() : null;
+		return this.cmTimestamp;
 	}
 
 	public void setCmTimestamp(Date cmTimestamp) {
-		this.cmTimestamp = (cmTimestamp != null) ? (Date)cmTimestamp.clone() : null;
+		this.cmTimestamp = cmTimestamp;
 	}
 
 	public String getCmUsername() {
