@@ -19,6 +19,7 @@ package sernet.hui.server.connect;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -27,7 +28,7 @@ import org.hibernate.classic.Session;
 
 import sernet.hui.common.connect.Entity;
 
-public class EntityHome {
+public final class EntityHome {
 	
 	private static final String QUERY_FIND_BY_CATEGORY 
 		= "from " + Entity.class.getName() + " as entity " +
@@ -41,8 +42,9 @@ public class EntityHome {
 	private EntityHome() {}
 	
 	public static EntityHome getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new EntityHome();
+		}
 		return instance;
 	}
 
@@ -52,34 +54,38 @@ public class EntityHome {
 	}
 
 	public void close() {
-		if (session != null)
+		if (session != null){
 			session.close();
-		if (sessionFactory != null)
+		}
+		if (sessionFactory != null){
 			sessionFactory.close();
+		}
 	}
 
-	public void create(Entity entity) throws Exception {
+	public void create(Entity entity) throws HibernateException {
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
 			session.save(entity);
 			tx.commit();
-		} catch (Exception e) {
-			 if (tx!=null) 
+		} catch (HibernateException e) {
+			 if (tx!=null) {
 				 tx.rollback();
+			 }
 		     throw e;
 		}
 	}
 	
-	public void update(Entity entity) throws Exception {
+	public void update(Entity entity) throws HibernateException {
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
 			session.merge(entity);
 			tx.commit();
-		} catch (Exception e) {
-			 if (tx!=null) 
+		} catch (HibernateException e) {
+			 if (tx!=null){ 
 				 tx.rollback();
+			 }
 		     throw e;
 		}
 	}
@@ -93,8 +99,4 @@ public class EntityHome {
 		query.setString(0, type);
 		return query.list();
 	}
-	
-	
-	
-	
 }
