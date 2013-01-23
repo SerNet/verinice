@@ -347,7 +347,7 @@ public class BSIElementEditor extends EditorPart {
     @Override
     public void createPartControl(Composite parent) {
         SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-        huiComposite = new HitroUIComposite(sashForm, SWT.NULL, false);
+        huiComposite = new HitroUIComposite(sashForm, false);
         if (showLinkMaker()) {
             linkMaker = new LinkMaker(sashForm);
             sashForm.setWeights(new int[] { 66, 33});

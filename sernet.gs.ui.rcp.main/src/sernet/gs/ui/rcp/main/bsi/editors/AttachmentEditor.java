@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -115,7 +114,7 @@ public class AttachmentEditor extends EditorPart {
             command = getCommandService().executeCommand(command);
             attachment = (Attachment) command.getAddition();
             huiComposite.dispose();
-            huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+            huiComposite = new HitroUIComposite(parent, false);
             huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
             parent.layout();
             // file-data is immutable, just save new file-data
@@ -169,7 +168,7 @@ public class AttachmentEditor extends EditorPart {
     @Override
     public void createPartControl(Composite parent) {
         this.parent = parent;
-        huiComposite = new HitroUIComposite(parent, SWT.NULL, false);
+        huiComposite = new HitroUIComposite(parent, false);
         try {
             // no validation here, so empty list passed
             huiComposite.createView(attachment.getEntity(), true, true, new String[] {}, false, new ArrayList<String>(0), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));

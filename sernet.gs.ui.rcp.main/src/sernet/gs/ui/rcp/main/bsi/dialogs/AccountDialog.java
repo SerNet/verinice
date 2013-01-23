@@ -140,7 +140,7 @@ public class AccountDialog extends TitleAreaDialog {
     		
     		createPasswordComposite(innerComposite);
     		
-            huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
+            huiComposite = new HitroUIComposite(innerComposite, false);
             try {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());

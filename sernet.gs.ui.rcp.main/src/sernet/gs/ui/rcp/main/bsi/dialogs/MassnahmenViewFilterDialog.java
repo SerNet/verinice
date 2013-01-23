@@ -42,7 +42,7 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
         super(parent, null, siegel, schicht);
         this.suche = suche;
         if(filterGefMn != null){
-            this.filterGefMn = filterGefMn.clone();
+            this.filterGefMn = (filterGefMn != null) ? filterGefMn.clone() : null;
         } else {
             this.filterGefMn = new boolean[] { false, false };
         }

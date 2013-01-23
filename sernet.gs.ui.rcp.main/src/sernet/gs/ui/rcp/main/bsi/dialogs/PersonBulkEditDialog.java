@@ -125,7 +125,7 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
             innerComposite.setLayout(new GridLayout (1, false));
             
             createPasswordComposite(innerComposite);
-            HitroUIComposite huiComposite = new HitroUIComposite(innerComposite, SWT.NULL, false);
+            HitroUIComposite huiComposite = new HitroUIComposite(innerComposite, false);
             try {
                 // is always Configuration here
                 entity = new Entity(Configuration.TYPE_ID);

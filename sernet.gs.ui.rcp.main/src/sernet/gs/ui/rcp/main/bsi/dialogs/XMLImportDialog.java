@@ -582,7 +582,7 @@ public class XMLImportDialog extends Dialog {
     }
 
     private byte[] trimContentSuffix(byte[] fileData) {
-        byte[] fileDataClone = fileData.clone();
+        byte[] fileDataClone = (fileData != null) ? fileData.clone() : null;
         if(fileDataClone!=null) {
             // fileData ends with lines
             //Content-Type: text/plain

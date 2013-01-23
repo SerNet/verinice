@@ -19,21 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -43,7 +37,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Wizard page of wizard {@link IndividualProcessWizard}.
@@ -232,7 +225,7 @@ public class DatePage extends WizardPage {
             setErrorMessage(Messages.DatePage_10);
         }
         if (valid) {
-            Calendar reminderDate = (Calendar) dueDate.clone();
+            Calendar reminderDate = (dueDate != null) ? (Calendar) dueDate.clone() : null;
             reminderDate.add(Calendar.DATE, Integer.valueOf(period) * (-1));
             if (reminderDate.before(now)) {
                 valid = false;

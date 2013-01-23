@@ -55,7 +55,7 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
     
     public LoadReportNotGreenScenarios(Integer root, int[] yellowFields, String probType){
         this.rootElmt = root;
-        this.numOfYellowFields = yellowFields.clone();
+        this.numOfYellowFields = (yellowFields != null) ? yellowFields.clone() : null;
         results = new ArrayList<ArrayList<String>>(0);
         this.probabilityType = probType;
     }

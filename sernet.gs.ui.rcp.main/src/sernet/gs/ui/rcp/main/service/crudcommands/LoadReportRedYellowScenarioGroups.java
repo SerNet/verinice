@@ -69,7 +69,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     public LoadReportRedYellowScenarioGroups(Integer root, int[] numOfYellowFields, String probType){
         this.rootElmt = root;
         results = new ArrayList<ArrayList<String>>(0);
-        this.numOfYellowFields = numOfYellowFields.clone();
+        this.numOfYellowFields = (numOfYellowFields != null) ? numOfYellowFields.clone() : null;
         this.scenarioProbType = probType;
     }
     

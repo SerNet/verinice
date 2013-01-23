@@ -114,7 +114,7 @@ public class BSIModelFilterDialog extends FilterDialog {
         if (this.filteredClasses == null) {
             this.filteredClasses = new HashSet<Class<?>>();
         }
-        this.tagPattern = tags.clone();
+        this.tagPattern = (tags != null) ? tags.clone() : null;
         this.filterItVerbund = filterItVerbund;
     }
 
@@ -206,7 +206,7 @@ public class BSIModelFilterDialog extends FilterDialog {
     }
 
     public String[] getCheckedElements() {
-        return checkedElements.clone();
+        return (checkedElements != null) ? checkedElements.clone() : null;
     }
 
     private Group createAusblendenGroup(Composite parent) {

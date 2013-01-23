@@ -45,7 +45,7 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
     private boolean resultInjectedFromCache = false;
 
     public LoadPolymorphicCnAElementById(Integer[] ds) {
-        ids = ds.clone();
+        ids = (ds != null) ? ds.clone() : null;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
         Integer[] ids;
 
         Callback(Integer[] ids) {
-            this.ids = ids.clone();
+            this.ids = (ids != null) ? ids.clone() : null;
         }
 
         @Override

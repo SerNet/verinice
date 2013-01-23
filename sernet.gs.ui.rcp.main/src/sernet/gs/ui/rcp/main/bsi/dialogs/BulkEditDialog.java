@@ -75,7 +75,7 @@ public class BulkEditDialog extends Dialog {
             Composite container = (Composite) super.createDialogArea(parent);
             container.setLayout(new FillLayout());      
             
-            HitroUIComposite huiComposite = new HitroUIComposite(container, SWT.NULL, false);        
+            HitroUIComposite huiComposite = new HitroUIComposite(container, false);        
             
             try {
                 if (this.entity == null) {
