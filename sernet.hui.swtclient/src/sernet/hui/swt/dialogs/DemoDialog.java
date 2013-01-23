@@ -20,6 +20,7 @@ package sernet.hui.swt.dialogs;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -42,7 +43,7 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 			DemoDialog inst = new DemoDialog(shell, SWT.NULL);
 			inst.open();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.getLogger(DemoDialog.class).error("Error while creating Demo-Dialog", e);
 		}
 	}
 
@@ -62,12 +63,11 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 			shell.setLayout(new FillLayout());
 			this.setLayout(new FillLayout());
 
-			HitroUIComposite huiComposite = new HitroUIComposite(this, SWT.NULL, false);
+			HitroUIComposite huiComposite = new HitroUIComposite(this, false);
 			
 			try {
 				HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/sncaWorkspace/conf/SNCA.xml"));
 				
-//				Entity entity = new Entity("mnums");
 				Entity entity = new Entity("mnums");
 				// no validation here, so empty list is passed
 				huiComposite.createView(entity, true, true, new String[] {}, false, new ArrayList<String>(0), false);
@@ -98,12 +98,13 @@ public class DemoDialog extends org.eclipse.swt.widgets.Composite {
 
 			Display display = shell.getDisplay();
 			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()){
 					display.sleep();
+				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.getLogger(DemoDialog.class).error("Error while opening Demo-Dialog",e);
 		}
 	}
 

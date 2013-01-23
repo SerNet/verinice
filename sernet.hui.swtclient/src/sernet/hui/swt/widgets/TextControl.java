@@ -96,8 +96,9 @@ public class TextControl implements IHuiControl {
 		if (savedProp == null) {
 			// create property in which to save entered value:
 			String defaultValue = "" ; //$NON-NLS-1$
-			if (useRule && fieldType.getDefaultRule() != null)
+			if (useRule && fieldType.getDefaultRule() != null){
 				defaultValue = fieldType.getDefaultRule().getValue();
+			}
 			savedProp = entity.createNewProperty(fieldType, defaultValue);
 			text = createText();
 		} else {
@@ -162,24 +163,24 @@ public class TextControl implements IHuiControl {
 
 	private Text createText() {
 		if (lines > 1) {
-			Text text = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
+			Text text_ = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
 
 			GridData textLData = new GridData();
 			textLData.verticalAlignment = GridData.FILL;
 			textLData.horizontalAlignment = GridData.FILL;
 			textLData.heightHint = lines * 20;
 			textLData.grabExcessHorizontalSpace = true;
-			// textLData.grabExcessVerticalSpace = true;
-			text.setLayoutData(textLData);
-			text.setEditable(editable);
-			if (!editable)
-				text.setBackground(Colors.GREY);
-			text.setToolTipText(fieldType.getTooltiptext());
-			if(this.savedProp!=null && this.savedProp.getPropertyValue()!=null) {
-			    text.setText(this.savedProp.getPropertyValue());
+			text_.setLayoutData(textLData);
+			text_.setEditable(editable);
+			if (!editable){
+				text_.setBackground(Colors.GREY);
 			}
-			text.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);
-			return text;
+			text_.setToolTipText(fieldType.getTooltiptext());
+			if(this.savedProp!=null && this.savedProp.getPropertyValue()!=null) {
+			    text_.setText(this.savedProp.getPropertyValue());
+			}
+			text_.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);
+			return text_;
 		}
 		// single line field:
 		Text text = new Text(composite, SWT.BORDER);
@@ -188,8 +189,9 @@ public class TextControl implements IHuiControl {
 		textLData.grabExcessHorizontalSpace = true;
 		text.setLayoutData(textLData);
 		text.setEditable(editable);
-		if (!editable)
+		if (!editable){
 			text.setBackground(Colors.GREY);
+		}
 		text.setToolTipText(fieldType.getTooltiptext());
 		text.setText(notNull(this.savedProp.getPropertyValue()));
 		text.setTextLimit(HIBERNATE_MAPPED_STRING_LIMIT);

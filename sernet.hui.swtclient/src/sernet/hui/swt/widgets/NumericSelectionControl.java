@@ -61,19 +61,12 @@ public class NumericSelectionControl implements IHuiControl {
 
 	private Property savedProp;
 
-	private Color fgColor;
-
-	private Color bgColor;
-
 	private int min;
 
 	private int max;
 
-	private String[] shownItems;
 	private String[] numericItems;
 
-    private Object defaultValue;
-    
     private boolean showValidationHint;
     
     private boolean useValidationGUIHints;
@@ -135,11 +128,10 @@ public class NumericSelectionControl implements IHuiControl {
      * 
      */
     private void createCombo() {
+        String[] shownItems;
         combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
-        fgColor = combo.getForeground();
-        bgColor = combo.getBackground();
         this.numericItems = createNumericItems();
-        this.shownItems = createNumericItemsWithDisplayString();
+        shownItems = createNumericItemsWithDisplayString();
         combo.setItems(shownItems);
         if (savedProp == null) {
         	// create property in which to save entered value:
@@ -155,8 +147,9 @@ public class NumericSelectionControl implements IHuiControl {
         comboLData.grabExcessHorizontalSpace = false;
         combo.setLayoutData(comboLData);
         combo.setEnabled(editable);
-        if (!editable)
+        if (!editable){
         	combo.setBackground(GREY);
+        }
         combo.setToolTipText(fieldType.getTooltiptext());
 
         combo.addSelectionListener(new SelectionAdapter() {
@@ -210,15 +203,11 @@ public class NumericSelectionControl implements IHuiControl {
 	            }
 	        }
 		if (valid) {
-//			combo.setForeground(fgColor);
-//			combo.setBackground(bgColor);
 		    refontLabel(false);
 			return true;
 		}
 		
 		if(useValidationGUIHints){
-//		    combo.setForeground(Colors.BLACK);
-//		    combo.setBackground(Colors.YELLOW);
 		    refontLabel(true);
 		}
 		return false;

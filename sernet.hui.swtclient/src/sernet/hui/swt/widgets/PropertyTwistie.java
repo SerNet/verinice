@@ -116,5 +116,4 @@ public class PropertyTwistie implements IHuiControl {
 	public void update() {
 		// n.a.
 	}
-
 }

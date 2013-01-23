@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -62,9 +63,6 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			dialogShell.setSize(400, 300);
 			dialogShell.setText("Optionen für Feld: " + propertyType.getName());
 			
-			//Composite content = new Composite(dialogShell, SWT.NULL);
-			//content.setLayout(new FillLayout(SWT.VERTICAL));
-			
 			MultiSelectionList mList = new MultiSelectionList(entity, propertyType, dialogShell, referencesEntities);
 			mList.create();
 			GridData scrolledComposite1LData = new GridData();
@@ -85,8 +83,9 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 					for (Object object : properties) {
 						Property prop = (Property) object;
 						Object option = findOptionForId(referencedEntities, prop.getPropertyValue());
-						if (option != null)
+						if (option != null){
 							options.add(option);
+						}
 					}
 					mList.setSelection(options, true);
 				}				
@@ -132,23 +131,24 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			});
 			
 			dialogShell.layout();
-			//dialogShell.pack();
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()){
 					display.sleep();
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.getLogger(MultiSelectionDialog.class).error("Exception while opening dialog", e);
 		}
 	}
 	
 	private Object findOptionForId(List<IMLPropertyOption> referencedEntities,
 			String propertyValue) {
 		for (IMLPropertyOption option : referencedEntities) {
-			if (option.getId().equals(propertyValue))
+			if (option.getId().equals(propertyValue)){
 				return option;
+			}
 		}
 		return null;
 	}

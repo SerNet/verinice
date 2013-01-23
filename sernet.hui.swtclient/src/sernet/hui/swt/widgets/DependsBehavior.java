@@ -31,7 +31,7 @@ public abstract class DependsBehavior implements IEditorBehavior {
     protected Control control;
     protected String valueDependsOn;
     protected boolean inverse;
-    protected IEditorBehavior next;
+    private IEditorBehavior next;
 
     public void setControl(Control control) {
         this.control = control;

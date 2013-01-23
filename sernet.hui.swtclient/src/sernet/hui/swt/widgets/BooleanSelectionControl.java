@@ -17,18 +17,13 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -65,9 +60,6 @@ public class BooleanSelectionControl implements IHuiControl {
 	public Control getControl() {
 	        return button;
 	}
-
-	private static final Color GREY = new Color(Display.getDefault(), 240, 240,
-			240);
 
 	/**
 	 * Constructor for DropDownBox.

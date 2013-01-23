@@ -37,7 +37,7 @@ public class DependsTextBehavior extends DependsBehavior implements IEditorBehav
 
     private Text controlDependsOn;
 
-    ModifyListener modifyListener = new ModifyListener() {     
+    private ModifyListener modifyListener = new ModifyListener() {     
         @Override
         public void modifyText(ModifyEvent e) {
             Text text = (Text) e.getSource();

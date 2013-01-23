@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -61,16 +60,10 @@ public class SingleSelectionControl implements IHuiControl {
 
 	private boolean editable = false;
 
-	private String[] labels;
-
-	private ArrayList<IMLPropertyOption> options;
+	private List<IMLPropertyOption> options;
 
 	private Property savedProp;
 
-	private Color fgColor;
-
-	private Color bgColor;
-	
 	private boolean showValidationHint;
 	
 	private boolean useValidationGUIHints;
@@ -106,6 +99,7 @@ public class SingleSelectionControl implements IHuiControl {
 	 * 
 	 */
 	public void create() {
+	    String[] labels;
 		try {
 			label = new Label(composite, SWT.NULL);
 			String labelText = fieldType.getName();
@@ -118,8 +112,6 @@ public class SingleSelectionControl implements IHuiControl {
 			savedProp = savedProps!=null && !savedProps.isEmpty() ? (Property) savedProps.get(0) : null;
 
 			combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
-			fgColor = combo.getForeground();
-			bgColor = combo.getBackground();
 			options = fieldType.getOptions();
 			labels = new String[options.size() + 1];
 			labels[0] = Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE); 
@@ -143,8 +135,9 @@ public class SingleSelectionControl implements IHuiControl {
 			comboLData.grabExcessHorizontalSpace = false;
 			combo.setLayoutData(comboLData);
 			combo.setEnabled(editable);
-			if (!editable)
+			if (!editable){
 				combo.setBackground(GREY);
+			}
 			combo.setToolTipText(fieldType.getTooltiptext());
 
 			combo.addSelectionListener(new SelectionAdapter() {
@@ -170,8 +163,9 @@ public class SingleSelectionControl implements IHuiControl {
 		int i = 0;
 		for (Iterator iter = options.iterator(); iter.hasNext(); ++i) {
 			PropertyOption opt = (PropertyOption) iter.next();
-			if (opt.getId().equals(propertyValue))
+			if (opt.getId().equals(propertyValue)){
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -191,15 +185,11 @@ public class SingleSelectionControl implements IHuiControl {
 	            }
 	        }
 		if (valid) {
-//			combo.setForeground(fgColor);
-//			combo.setBackground(bgColor);
 		    refontLabel(false);
 			return true;
 		}
 
 		if(useValidationGUIHints){
-//		    combo.setForeground(Colors.BLACK);
-//		    combo.setBackground(Colors.YELLOW);
 		    refontLabel(true);
 		}
 		return false;

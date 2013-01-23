@@ -21,10 +21,18 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
 public abstract class Colors {
-	public static final Color BLACK = new Color(Display.getCurrent(), 0,0,0);;
-	//public static Color RED = new Color(Display.getCurrent(), 255,00,00);
-	public static Color YELLOW = new Color(Display.getCurrent(), 250,250,120);
-	public static Color GREY = new Color(Display.getDefault(), 240,240,240);
-	//public static Color WHITE = new Color(Display.getDefault(), 255,255,255);
+    
+    private static final int MAX_RGB = 255;
+    private static final int MIN_RGB = 0;
+    private static final int GREY_RGB = 240;
+    
+    private static final Display DISPLAY = (Display.getCurrent() != null)
+            ? Display.getCurrent() : Display.getDefault();
+    
+	public static final Color BLACK = new Color(DISPLAY, MIN_RGB,MIN_RGB,MIN_RGB);
+	public static final Color RED = new Color(DISPLAY, MAX_RGB,MIN_RGB,MIN_RGB);
+	public static final Color YELLOW = new Color(DISPLAY, 250,250,120);
+	public static final Color GREY = new Color(DISPLAY, GREY_RGB,GREY_RGB,GREY_RGB);
+	public static final Color WHITE = new Color(DISPLAY, MAX_RGB,MAX_RGB,MAX_RGB);
 
 }

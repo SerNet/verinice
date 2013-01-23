@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.ICheckBoxHandler;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.ISelectOptionHandler;
@@ -59,7 +58,7 @@ public class MultiSelectionList {
 	private Group group;
 
 	// map with key-value "optionid : checkbox"
-	Map<String, Button> checkboxes = new HashMap<String, Button>();
+	private Map<String, Button> checkboxes = new HashMap<String, Button>();
 
 	private GridData customLayout;
 
@@ -105,10 +104,9 @@ public class MultiSelectionList {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-		}
-		else
+		} else {
 			options = type.getOptions();
-		
+		}
 		group = createGroup();
 		list = createScrolledList();
 		int height = createButtons();
@@ -119,7 +117,7 @@ public class MultiSelectionList {
 	}
 
 	private Group createGroup() {
-		Group group = new Group(parent, SWT.BORDER);
+		Group group_ = new Group(parent, SWT.BORDER);
 
 		GridData groupLData = new GridData();
 		groupLData.verticalAlignment = GridData.CENTER;
@@ -131,10 +129,10 @@ public class MultiSelectionList {
 		groupLData.verticalSpan = 1;
 		groupLData.grabExcessHorizontalSpace = true;
 		groupLData.grabExcessVerticalSpace = false;
-		group.setLayoutData(groupLData);
-		group.setText(type.getName());
-		group.setLayout(new FillLayout(SWT.V_SCROLL));
-		return group;
+		group_.setLayoutData(groupLData);
+		group_.setText(type.getName());
+		group_.setLayout(new FillLayout(SWT.V_SCROLL));
+		return group_;
 	}
 
 	private int createButtons() {
@@ -160,8 +158,9 @@ public class MultiSelectionList {
 							// remove all other selections:
 							unselectOthers(option);
 						}
-					} else
+					} else {
 						fireUnselect(type, option);
+					}
 				}
 
 				private void unselectOthers(IMLPropertyOption option) {
@@ -192,17 +191,6 @@ public class MultiSelectionList {
 				});
 			}
 			
-//			// put callback handler in option for created checkbox:
-//			option.setCheckboxHandler(new ICheckBoxHandler() {
-//				public void optionDeleted() {
-//					checkboxes.get(option.getId()).setEnabled(false);
-//				}
-//
-//				public void optionAdded(IMLPropertyOption option) {
-//					xxx
-//				}
-//			});
-
 			checkboxes.put(option.getId(), checkbox);
 			if (i < 6) {
 				btnsHeight = btnsHeight + checkbox.getBounds().height + 5;
@@ -217,11 +205,11 @@ public class MultiSelectionList {
 	private Composite createScrolledList() {
 		ScrolledComposite scrollPane = new ScrolledComposite(group,
 				SWT.V_SCROLL);
-		Composite list = new Composite(scrollPane, SWT.NULL);
+		Composite list_ = new Composite(scrollPane, SWT.NULL);
 		GridLayout listLayout = new GridLayout(1, false);
-		list.setLayout(listLayout);
-		scrollPane.setContent(list);
-		return list;
+		list_.setLayout(listLayout);
+		scrollPane.setContent(list_);
+		return list_;
 	}
 
 	/**
@@ -246,8 +234,9 @@ public class MultiSelectionList {
 	public void setSelection(List options, boolean select) {
 		for (Iterator iter = options.iterator(); iter.hasNext();) {
 			IMLPropertyOption option = (IMLPropertyOption) iter.next();
-			if (option != null)
+			if (option != null){
 				setSelection(option.getId(), select);
+			}
 		}
 	}
 
@@ -267,15 +256,17 @@ public class MultiSelectionList {
 
 	private void fireSelect(IMLPropertyType type, IMLPropertyOption option) {
 		for (ISelectOptionHandler handler : eventHandler) {
-			if (handler != null)
+			if (handler != null){
 				handler.select(type, option);
+			}
 		}
 	}
 
 	private void fireUnselect(IMLPropertyType type, IMLPropertyOption option) {
 		for (ISelectOptionHandler handler : eventHandler) {
-			if (handler != null)
+			if (handler != null){
 				handler.unselect(type, option);
+			}
 		}
 	}
 }

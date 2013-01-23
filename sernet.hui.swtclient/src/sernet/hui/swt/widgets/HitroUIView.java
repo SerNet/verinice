@@ -140,14 +140,13 @@ public class HitroUIView implements IEntityChangedListener   {
 	 */
 	public void setInputHelper(String typeID, final IInputHelper helper, int type, final boolean showHint) {
 		IHuiControl field = this.fields.get(typeID);
-		if (field == null)
+		if (field == null){
 			return;
-		
+		}
 		final Control control = field.getControl();
-		if (!(control instanceof Text))
+		if (!(control instanceof Text)){
 			return;
-
-		//char[] autoActivationCharacters = new char[] { ' ' };
+		}
 		KeyStroke keyStroke = null;
 		try {
 			keyStroke = KeyStroke.getInstance("ARROW_DOWN");
@@ -159,21 +158,21 @@ public class HitroUIView implements IEntityChangedListener   {
 				new SimpleContentProposalProvider(helper.getSuggestions()),
 				keyStroke, 
 				null);
-		if (type == IInputHelper.TYPE_REPLACE)
+		if (type == IInputHelper.TYPE_REPLACE){
 			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-		else 
+		} else { 
 			adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
-		
+		}
 		final FocusAdapter focusAdapter = new FocusAdapter() {
-			Shell tip = null;
+			private Shell tip = null;
 			@Override
             public void focusGained(FocusEvent arg0) {
-				if (!showHint)
+				if (!showHint){
 					return; // do not show activation hint
-				
-				if (helper.getSuggestions().length<1)
+				}
+				if (helper.getSuggestions().length<1){
 					return; // no suggestions
-				
+				}
 				tip = new Shell (control.getShell(),
 						SWT.ON_TOP | SWT.NO_FOCUS | SWT.TOOL);
 				FillLayout layout = new FillLayout ();
@@ -220,8 +219,9 @@ public class HitroUIView implements IEntityChangedListener   {
 					pt.y,
 					control.getBounds().width,
 					control.getBounds().height));
-			if (choice != null && choice.length() > 0)
+			if (choice != null && choice.length() > 0){
 				((Text)control).setText(choice);
+			}
 	}
 
 	public void closeView() {
@@ -247,7 +247,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		
 		this.editable = edit;
 		this.useRules = useRules;
-		this.filterTags = tags;
+		this.filterTags = (tags != null) ? tags.clone() : null;
 		this.taggedOnly = taggedPropertiesOnly;
 		this.validationList = validationList;
 		this.useValidationGuiHints = useValidationGuiHints;
@@ -279,10 +279,9 @@ public class HitroUIView implements IEntityChangedListener   {
 	}
 
 	private void createGroup(PropertyGroup group, Composite parent) {	
-		if (hideBecauseOfTags(group.getTags()))
+		if (hideBecauseOfTags(group.getTags())){
 		    return;
-		
-		
+		}
 		
 		PropertyTwistie twistie = new PropertyTwistie(this, parent, group);
 		twistie.create();
@@ -296,29 +295,30 @@ public class HitroUIView implements IEntityChangedListener   {
 		// only allow edit if both view and field settings are true:
 		boolean editableField = editable && type.isEditable();
 		
-		if (!type.isVisible() || hideBecauseOfTags(type.getTags()))
+		if (!type.isVisible() || hideBecauseOfTags(type.getTags())){
 			return;
-		
-		if (type.isURL())
-			createURLField(type, editableField, parent, showValidationHint, useValidationGuiHints);
-		else if (type.isLine())
+		}
+		if (type.isURL()){
+			createURLField(type, parent, showValidationHint, useValidationGuiHints);
+		} else if (type.isLine()) {
 			createTextField(type, editableField, parent, type.isFocus(), 1 /*one line high*/, showValidationHint, useValidationGuiHints);
-		else if (type.isSingleSelect())
+		} else if (type.isSingleSelect()) {
 			createSingleOptionField(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
-		else if (type.isReference())
+		} else if (type.isReference()) {
 			createMultiOptionField(type, editableField, parent, type.isFocus(), true, type.isCrudButtons(), false, showValidationHint, useValidationGuiHints);
-		else if (type.isMultiselect())
+		} else if (type.isMultiselect()) {
 			createMultiOptionField(type, editableField, parent, type.isFocus(), false, false, false, showValidationHint, useValidationGuiHints);
-		else if (type.isDate())
+		} else if (type.isDate()) {
 			createDateField(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
-		else if (type.isText())
+		} else if (type.isText()) {
 			createTextField(type, editableField, parent, type.isFocus(), type.getTextrows(), showValidationHint, useValidationGuiHints);
-		else if (type.isBooleanSelect())
-		    createBooleanSelect(type, editableField, parent, type.isFocus());
-		else if (type.isNumericSelect())
+		} else if (type.isBooleanSelect()) {
+		    createBooleanSelect(type, parent, type.isFocus());
+		} else if (type.isNumericSelect()) {
 		    createNumericSelect(type, editableField, parent, type.isFocus(), showValidationHint, useValidationGuiHints);
-		else if (type.isCnaLinkReference())
+		} else if (type.isCnaLinkReference()) {
             createMultiOptionField(type, editableField, parent, type.isFocus(), false, type.isCrudButtons(), true, showValidationHint, useValidationGuiHints);
+		}
 	}
 	
 	private void addBehavior(EntityType entityType) {
@@ -374,14 +374,13 @@ public class HitroUIView implements IEntityChangedListener   {
     private boolean hideBecauseOfTags(String propertyTags) {
         if (taggedOnly) {
             // for properties with tags set, display them if tag matches:
-            boolean tagMatches = tagMatches(propertyTags);
-            return !tagMatches;
+            return !(tagMatches(propertyTags));
         } else {
             // show all without tag and matching tags:
-            if (propertyTags==null || propertyTags.length()==0)
+            if (propertyTags==null || propertyTags.length()==0){
                 return false;
-            boolean tagMatches = tagMatches(propertyTags);
-            return !tagMatches;
+            }
+            return !(tagMatches(propertyTags));
         }
     }
 
@@ -392,12 +391,13 @@ public class HitroUIView implements IEntityChangedListener   {
      * @return
      */
     private boolean tagMatches(String propertyTags) {
-        if (filterTags == null || filterTags.length==0 || propertyTags == null || propertyTags.length() == 0)
+        if (filterTags == null || filterTags.length==0 || propertyTags == null || propertyTags.length() == 0){
             return false;
-        
+        }
         for(String searchTag: filterTags) {
-           if (propertyTags.indexOf(searchTag) > -1)
+           if (propertyTags.indexOf(searchTag) > -1){
                return true;
+           }
         }
         return false;
     }
@@ -413,26 +413,27 @@ public class HitroUIView implements IEntityChangedListener   {
 		NumericSelectionControl sglControl = new NumericSelectionControl(entity, fieldType,
 				parent, editableField, showValidationHint, useValidationGuiHints);
 		sglControl.create();
-		if (focus)
+		if (focus){
 			focusField = sglControl;
+		}
 		fields.put(fieldType.getId(), sglControl);
 		sglControl.validate();
 		setFirstField(sglControl);
 	}
 	
-	private void createBooleanSelect(PropertyType fieldType, boolean editableField,
-            Composite parent, boolean focus) {
+	private void createBooleanSelect(PropertyType fieldType, Composite parent, boolean focus) {
         BooleanSelectionControl sglControl = new BooleanSelectionControl(entity, fieldType,
                 parent, editable);
         sglControl.create();
-        if (focus)
+        if (focus){
             focusField = sglControl;
+        }
         fields.put(fieldType.getId(), sglControl);
         sglControl.validate();
         setFirstField(sglControl);
     }
 
-	private void createURLField(PropertyType type, boolean editableField,
+	private void createURLField(PropertyType type,
 			Composite parent, boolean showValidationHint, boolean useValidationGuiHints) {
 		URLControl urlControl = new URLControl(entity, type, parent, editable, showValidationHint, useValidationGuiHints);
 		urlControl.create();
@@ -461,8 +462,9 @@ public class HitroUIView implements IEntityChangedListener   {
 			boolean focus, int lines, boolean showValidationHint, boolean useValidationGuiHints) {
 		TextControl textControl = new TextControl(entity, type, parent, editable, lines, useRules, showValidationHint, useValidationGuiHints);
 		textControl.create();
-		if (focus)
+		if (focus){
 			focusField = textControl;
+		}
 		fields.put(type.getId(), textControl);
 		textControl.validate();
 		setFirstField(textControl);
@@ -473,8 +475,9 @@ public class HitroUIView implements IEntityChangedListener   {
      * @param textControl
      */
     private void setFirstField(IHuiControl control) {
-        if (this.firstField == null)
+        if (this.firstField == null){
             firstField = control;
+        }
     }
 
     /**
@@ -489,8 +492,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		MultiSelectionControl mlControl = new MultiSelectionControl(entity, type,
 				parent, editable, reference, crudButtons, cnalinkreference, showValidationHint, useValidationGuiHints);
 		mlControl.create();
-		if (focus)
+		if (focus){
 			focusField = mlControl;
+		}
 		fields.put(type.getId(), mlControl);
 		mlControl.validate();
 		setFirstField(mlControl);
@@ -523,8 +527,9 @@ public class HitroUIView implements IEntityChangedListener   {
 		DateSelectionControl dateCtl = 
 			new DateSelectionControl(entity, fieldType, parent, editable, this.useRules, showValidationHint, useValidationGuiHints);
 		dateCtl.create();
-		if (focus)
+		if (focus){
 			focusField = dateCtl;
+		}
 		fields.put(fieldType.getId(), dateCtl);
 		dateCtl.validate();
 		setFirstField(dateCtl);
@@ -573,8 +578,9 @@ public class HitroUIView implements IEntityChangedListener   {
 	@Override
     public void propertyChanged(PropertyChangedEvent event) {
 		IHuiControl control = fields.get(event.getProperty().getPropertyTypeID());
-		if (control != null)
+		if (control != null){
 			control.update();
+		}
 	}
 	
 	public void addSelectionListener(String id, SelectionListener listener) {

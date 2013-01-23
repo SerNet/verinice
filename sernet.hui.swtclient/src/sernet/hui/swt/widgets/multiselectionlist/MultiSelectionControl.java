@@ -59,7 +59,7 @@ public class MultiSelectionControl implements IHuiControl {
 	private Entity entity;
 	private PropertyType type;
 	private Composite parent;
-	Text text;
+	private Text text;
 	private boolean editable = false;
 	private Color bgColor;
 	private Color fgColor;
@@ -101,7 +101,6 @@ public class MultiSelectionControl implements IHuiControl {
 	 */
 	public void create() {
 		label = new Label(parent, SWT.NULL);
-		String labelText = type.getName();
 
 		label.setText(type.getName());
 		
@@ -165,12 +164,13 @@ public class MultiSelectionControl implements IHuiControl {
 	}
 
 	public void writeToTextField() {
-		if (referencesEntities)
+		if (referencesEntities){
 			writeEntitiesToTextField();
-		else if (cnalinkreference)
+		} else if (cnalinkreference) {
 		    writeLinkedObjectsToTextField();
-		else
+		} else {
 			writeOptionsToTextField();
+		}
 	}
 
 	/**
@@ -186,29 +186,32 @@ public class MultiSelectionControl implements IHuiControl {
     private void writeEntitiesToTextField() {
 		StringBuffer names = new StringBuffer();
 		List properties = entity.getProperties(type.getId()).getProperties();
-		if (properties == null)
+		if (properties == null){
 			return;
-		
+		}
 		for (Iterator iter = properties.iterator(); iter.hasNext();) {
 			Property prop = (Property) iter.next();
 			String referencedId = prop.getPropertyValue();
 			IMLPropertyOption ref = getEntity(referencedId);
-			if (ref==null)
+			if (ref==null){
 				continue;
+			}
 			String optionName = ref.getName();
-			if (names.length()==0)
+			if (names.length()==0){
 				names.append(optionName);
-			else
-				names.append(" / " + optionName);
-				
+			} else {
+				names.append(" / ");
+				names.append(optionName);
+			}
 		}
 		text.setText(names.toString());
 	}
 
 	private IMLPropertyOption getEntity(String referencedId) {
-		for (IMLPropertyOption entity : type.getReferencedEntities()) {
-			if (entity.getId().equals(referencedId))
-				return entity;
+		for (IMLPropertyOption entity_ : type.getReferencedEntities()) {
+			if (entity_.getId().equals(referencedId)){
+				return entity_;
+			}
 		}
 		return null;
 	}
@@ -223,21 +226,23 @@ public class MultiSelectionControl implements IHuiControl {
 	private void writeOptionsToTextField() {
 		StringBuffer names = new StringBuffer();
 		List properties = entity.getProperties(type.getId()).getProperties();
-		if (properties == null)
+		if (properties == null){
 			return;
-		
+		}
 		for (Iterator iter = properties.iterator(); iter.hasNext();) {
 			Property prop = (Property) iter.next();
 			String optionId = prop.getPropertyValue();
 			IMLPropertyOption opt = type.getOption(optionId);
-			if (opt==null)
+			if (opt==null){
 				continue;
+			}
 			String optionName = opt.getName();
-			if (names.length()==0)
+			if (names.length()==0){
 				names.append(optionName);
-			else
-				names.append(" / " + optionName);
-				
+			} else {
+				names.append(" / ");
+				names.append(optionName);
+			}
 		}
 		text.setText(names.toString());
 		
@@ -270,8 +275,9 @@ public class MultiSelectionControl implements IHuiControl {
 	void showAddDialog() {
 		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), Messages.MultiSelectionControl_3, Messages.MultiSelectionControl_4, "", new IInputValidator() {
 			public String isValid(String newText) {
-				if (newText.length()<1)
+				if (newText.length()<1){
 					return Messages.MultiSelectionControl_5;
+				}
 				return null;
 			}
 		});

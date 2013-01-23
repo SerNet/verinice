@@ -63,7 +63,9 @@ public class URLControlDialog extends Dialog {
 	public URLControlDialog(Shell shell,
 			String name, String href, PropertyType type) {
 		super(shell);
-		setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+		int style = SWT.CLOSE | SWT.TITLE | SWT.BORDER;
+		style = style | SWT.APPLICATION_MODAL | SWT.RESIZE;
+		setShellStyle(style);
 		this.name = name;
 		this.href = href;
 		this.type = type;

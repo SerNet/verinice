@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -60,10 +59,6 @@ public class DateSelectionControl implements IHuiControl {
 	private Label label;
 
 	private DateTime dateTime;
-
-	private Color oldBgColor;
-
-	private Color oldFgColor;
 
 	private boolean useRule;
 	
@@ -149,16 +144,15 @@ public class DateSelectionControl implements IHuiControl {
 		startWvTextLData.grabExcessHorizontalSpace = true;
 		dateTime.setLayoutData(startWvTextLData);
 		dateTime.setEnabled(editable);
-		if (!editable)
+		if (!editable){
 			dateTime.setBackground(Colors.GREY);
-		oldBgColor = dateTime.getBackground();
-		oldFgColor = dateTime.getForeground();
-		
+		}
 		dateTime.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!isSameDay(savedProp.getPropertyValue(), getDateInMillis()))				
+				if (!isSameDay(savedProp.getPropertyValue(), getDateInMillis())){				
 					savedProp.setPropertyValue(Long.toString(getDateInMillis()), true, dateTime);
+				}
 			}
 		});
 
@@ -169,8 +163,9 @@ public class DateSelectionControl implements IHuiControl {
 		if (savedProp != null) {
 			millis = savedProp.getPropertyValue();
 		} else {
-			if (useRule)
+			if (useRule){
 				millis = fieldType.getDefaultRule().getValue();
+			}
 			savedProp = entity.createNewProperty(fieldType, millis);
 		}
 
@@ -239,9 +234,9 @@ public class DateSelectionControl implements IHuiControl {
 	public boolean validate() {
         boolean valid = true;
         for(Entry<String, Boolean> entry : fieldType.validate(
-                String.valueOf(String.valueOf(dateTime.getDay()) +
-                "." + String.valueOf(dateTime.getMonth() + 1) +
-                "." + String.valueOf(dateTime.getYear())),
+                String.valueOf(dateTime.getDay() +
+                "." + (dateTime.getMonth() + 1) +
+                "." + dateTime.getYear()),
                 null).entrySet()){
             if(!entry.getValue().booleanValue()){
                 valid = false;

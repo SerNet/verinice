@@ -37,7 +37,7 @@ public class DependsComboBehavior extends DependsBehavior implements IEditorBeha
 
     private Combo controlDependsOn;
 
-    SelectionListener selectionListener = new SelectionListener() {
+    private SelectionListener selectionListener = new SelectionListener() {
         @Override
         public void widgetDefaultSelected(SelectionEvent e) {
             // empty

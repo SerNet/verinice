@@ -18,6 +18,7 @@
 package sernet.hui.swt.widgets;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -32,18 +33,21 @@ import sernet.hui.common.connect.EntityType;
  *
  */
 public class IconRegistry {
-	private static HashMap<String, IconProvider> icons = new HashMap<String, IconProvider>();
+	private static Map<String, IconProvider> icons = new HashMap<String, IconProvider>();
 	private static Image nullImage = new Image (Display.getDefault(), 1, 1);
+	
+	private IconRegistry(){};
 	
 	public static IconProvider getIconProvider(String hui) {
 		IconProvider icon = icons.get(hui);
-		if (icon == null)
+		if (icon == null){
 			icon = new IconProvider() {
 				public Image getIcon() {
 					return nullImage;
 				}
 			
-		};
+		    };
+		}
 		return icon;
 	}
 	

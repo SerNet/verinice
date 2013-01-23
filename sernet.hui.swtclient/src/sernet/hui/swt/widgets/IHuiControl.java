@@ -27,14 +27,14 @@ import org.eclipse.swt.widgets.Control;
  *
  */
 public interface IHuiControl {
-	public void create();
-	public void setFocus();
-	public boolean validate();
-	public Control getControl();
+	void create();
+	void setFocus();
+	boolean validate();
+	Control getControl();
 	
 	/**
 	 * Compare current contents of field with propert and update if necessary.
 	 *
 	 */
-	public void update();
+	void update();
 }

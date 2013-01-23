@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Text;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public final class BehaviorFactory {
+    
+    private BehaviorFactory(){}
 
     public static DependsBehavior createBehaviorForControl(Control control) {
         DependsBehavior behavior = null;

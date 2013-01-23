@@ -57,7 +57,7 @@ public class URLControl implements IHuiControl {
 	private boolean useValidationGUIHints;
 	private Label label;
 	
-	Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
+	private Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
 	public URLControl(Entity entity, PropertyType type, Composite parent,
 			boolean editable, boolean showValidationHint, boolean useValidationGuiHints) {
@@ -71,7 +71,6 @@ public class URLControl implements IHuiControl {
 
 	public void create() {
 		label = new Label(parent, SWT.NULL);
-		String labelText = type.getName();
 		if(showValidationHint && useValidationGUIHints){
 		   refontLabel(true);
 		}
@@ -97,8 +96,9 @@ public class URLControl implements IHuiControl {
 				true, false, 1, 1));
 		link.addListener (SWT.Selection, new Listener () {
 			public void handleEvent(Event event) {
-				if (getHref() != null && getHref().length()>0)
+				if (getHref() != null && getHref().length()>0){
 					Program.launch(getHref());
+				}
 			}
 
 		});
@@ -161,10 +161,6 @@ public class URLControl implements IHuiControl {
 					+ "</a>"); //$NON-NLS-1$
 			update();
 		}
-	}
-
-	private String notNull(String propertyValue) {
-		return (propertyValue != null) ? propertyValue : ""; //$NON-NLS-1$
 	}
 
 	public Control getControl() {

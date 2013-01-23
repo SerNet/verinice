@@ -37,7 +37,7 @@ public class DependsButtonBehavior extends DependsBehavior implements IEditorBeh
 
     private Button controlDependsOn;
 
-    SelectionListener selectionListener = new SelectionListener() {
+    private SelectionListener selectionListener = new SelectionListener() {
         @Override
         public void widgetDefaultSelected(SelectionEvent e) {
             // empty
