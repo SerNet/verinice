@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -85,8 +83,6 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
-
             LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, dbId);
             try {
                 command = getCommandService().executeCommand(command);
@@ -111,7 +107,6 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
 
             // check if parent is Audit and children are SamtTopics
             List<ControlGroup> resultList = new ArrayList<ControlGroup>();
-            int count = 0;
             for (CnATreeElement elmt : controlGroupList) {
                 if(elmt instanceof ControlGroup){
                     ControlGroup controlGroup = (ControlGroup)elmt;
@@ -119,13 +114,13 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
                     if (isISO27kControlGroup(controlGroup) && isSamtTopicCollection(controlGroup.getChildren())) {
                         resultList.add(controlGroup);
                     }}
-                count++;
             }
 
             if (resultList != null && !resultList.isEmpty()) {
                 selfAssessmentGroup = determineRootControlgroup(resultList);
-                if(selfAssessmentGroup != null)
+                if(selfAssessmentGroup != null){
                     hydrate(selfAssessmentGroup);
+                }
             }
         }
     }
@@ -133,10 +128,8 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     private ControlGroup determineRootControlgroup(List<ControlGroup> list){
         ArrayList<ControlGroup> cList = new ArrayList<ControlGroup>(0);
         for(ControlGroup g : list){
-            if(hasSamtTopicChildrenOnly(g)){
-                if(g.getParent() instanceof ControlGroup){
-                    cList.add(g);
-                }
+            if(hasSamtTopicChildrenOnly(g) && g.getParent() instanceof ControlGroup){
+                cList.add(g);
             }
         }
         ControlGroup parent = null;
@@ -198,8 +191,9 @@ public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCom
     private void hydrate(ControlGroup selfAssessmentGroup) {
         selfAssessmentGroup.getTitle();
 
-        if (hydrateParent)
+        if (hydrateParent){
             selfAssessmentGroup.getParent().getTitle();
+        }
     }
 
     private boolean isISO27kControlGroup(ControlGroup group) {

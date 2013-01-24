@@ -17,15 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.interfaces.report.IReportType;
 
 
 public class ReportService implements IReportService {
-	
-	private static final Logger LOG = Logger.getLogger(ReportService.class);
 	
 	private IReportType[] reportTypes;
 
@@ -38,7 +34,7 @@ public class ReportService implements IReportService {
 	 */
 	@Override
 	public IReportType[] getReportTypes() {
-		if (reportTypes == null)
+		if (reportTypes == null){
 			reportTypes = new IReportType[] { 
 		        new UserReportType(), 
 		        new SamtReportType(), 
@@ -75,8 +71,8 @@ public class ReportService implements IReportService {
 		        new GraphischerUmsetzungsstatusReport(),
 		        new AuditberichtReport()
 		    };
-		
-		return reportTypes;
+		}
+		return reportTypes.clone();
 	}
 	
 }

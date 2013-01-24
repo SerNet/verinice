@@ -42,10 +42,7 @@ public class LoadCheckWorstFindingsCommand extends GenericCommand {
 	}
 
 	public Object[][] getResult() {
-	       if(result == null){
-	            this.hashCode();
-	        }
-		return result;
+		return (result != null) ? result.clone() : null;
 	}
 
 	@Override

@@ -19,18 +19,19 @@ package sernet.verinice.report.service.impl;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+/**
+ * deprecated since v1.6.1
+ * replaced by ismRiskManagementResults report
+ */
 @Deprecated
 public class RiskTreatmentReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(RiskTreatmentReport.class);
-
 	public String getDescription() {
         return Messages.RiskTreatmentReport_0;
     }

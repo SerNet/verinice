@@ -38,10 +38,10 @@ import sernet.verinice.report.service.impl.TocHelper2;
  */
 public class LoadISAQuestionRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadISAQuestionRadarChartData.class);
+    private static transient Logger log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
     private static final int THRESHOLD_VALUE = 3;
     
-    public static String[] COLUMNS = new String[]{"title", 
+    public static final String[] COLUMNS = new String[]{"title", 
                                                   "riskValue",
                                                   "threshold"
                                                  };
@@ -85,7 +85,7 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
                     }
                 }
             } catch (CommandException e) {
-                LOG.error("Error while determing samt topics", e);
+                getLog().error("Error while determing samt topics", e);
             }
         } 
     }
@@ -180,9 +180,16 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
+        }
+        return log;
     }
 
     /* (non-Javadoc)

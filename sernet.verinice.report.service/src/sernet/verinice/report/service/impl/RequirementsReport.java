@@ -1,17 +1,12 @@
 package sernet.verinice.report.service.impl;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
-import sernet.verinice.report.service.impl.HTMLOutputFormat;
-import sernet.verinice.report.service.impl.Messages;
-import sernet.verinice.report.service.impl.ODSOutputFormat;
-import sernet.verinice.report.service.impl.ODTOutputFormat;
 
 /*******************************************************************************
  * Copyright (c) 2012 Sebastian Hagedorn <sh@sernet.de>.
@@ -36,8 +31,6 @@ import sernet.verinice.report.service.impl.ODTOutputFormat;
  */
 public class RequirementsReport implements IReportType {
 
-    private static final Logger LOG = Logger.getLogger(RequirementsReport.class);
-    
     private static final String REPORT_DESIGN = "requirements.rptdesign"; //$NON-NLS-1$
     
     /* (non-Javadoc)

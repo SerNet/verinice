@@ -25,7 +25,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Loads and returns the report's title.
@@ -51,7 +50,6 @@ public class LoadReportTitleCommand extends GenericCommand {
     }
 
 	public String getResult() {
-//		return "<h1>Information Technologie (IT)</h1><h1>Security Assessment at VW TEST - Company 1</h1><h1>Final Report</h1>";
 		return "<h1>Information Technology (IT)</h1><h1>" + elements.get(0).getTitle() + " at " + orgName+ "</h1><h1>Final Report</h1>";
 	}
 
@@ -61,14 +59,14 @@ public class LoadReportTitleCommand extends GenericCommand {
 	        LoadReportElements command = new LoadReportElements(Audit.TYPE_ID, root);
             command = getCommandService().executeCommand(command);
             elements = command.getElements();
-            if (elements == null)
+            if (elements == null){
                 return;
-            
+            }
             LoadReportParentOrgForObject command2 = new LoadReportParentOrgForObject(elements.get(0));
             command2 = getCommandService().executeCommand(command2);
-            if (command2.getOrg() != null)
+            if (command2.getOrg() != null){
                 orgName = command2.getOrg().getTitle();
-            
+            }
         } catch (CommandException e) {
             throw new RuntimeCommandException(e);
         }

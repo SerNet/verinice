@@ -18,7 +18,6 @@
 package sernet.verinice.report.service.commands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +31,10 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
@@ -72,16 +67,17 @@ public class LoadWorstFindingsCommand extends GenericCommand {
     
     public LoadWorstFindingsCommand(int id) {
         log = Logger.getLogger(LoadWorstFindingsCommand.class);
+        int id_ = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);
             chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
             id = Integer.parseInt(chapterIdString);
         }
-        this.id = id;
+        this.id = (id > -1) ? id_ : id;
     }
 
     public Object[][] getResult() {
-        return result;
+        return (result != null) ? result.clone() : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -144,8 +140,9 @@ public class LoadWorstFindingsCommand extends GenericCommand {
             if(worstTopic.getNumericProperty(LoadDeviationRiskTableCommand.SAMT_DEVIATION_PROPERTY) == maxDev){
                 String finding = worstTopic.getEntity().getValue(SAMT_PROP_FINDING);
                 String measure = worstTopic.getEntity().getValue(SAMT_PROP_MEASURE);
-                if(finding != null && !finding.equals(""))
+                if(finding != null && !finding.equals("")){
                     arrayList.add(new Object[]{worstTopic.getDbId(), worstTopic.getTitle(), finding, maxDev, maxRisk, measure});
+                }
             }
         }
         result = arrayList.toArray(new Object[arrayList.size()][6]);

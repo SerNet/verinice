@@ -60,7 +60,7 @@ public class BIRTReportService {
 	
 	private final Logger log = Logger.getLogger(BIRTReportService.class);
 	
-	IReportEngine engine;
+	private IReportEngine engine;
 
     private IReportRunnable design;
     
@@ -72,28 +72,30 @@ public class BIRTReportService {
 		// Custom resource locator which tries to retrieve resources for the reports
 		// from the *package* where the BIRTReportService class resides.
 		resourceLocator = new IResourceLocator() {
-			IResourceLocator defaultLocator = new DefaultResourceLocator();
+			private IResourceLocator defaultLocator = new DefaultResourceLocator();
 
 			@Override
 			public URL findResource(ModuleHandle moduleHandle, String fileName,
 					int type, Map appContext) {
 				URL url = findByClassloader(fileName);
-				if (url == null)
+				if (url == null){
 					url = defaultLocator.findResource(moduleHandle, fileName, type, appContext);
-
-				if (url == null)
+				}
+				if (url == null){
 					log.warn(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
+				}
 				return url;
 			}
 			
 			@Override
 			public URL findResource(ModuleHandle moduleHandle, String fileName, int type) {
 				URL url = findByClassloader(fileName);
-				if (url == null)
+				if (url == null){
 					url = defaultLocator.findResource(moduleHandle, fileName, type);
-
-				if (url == null)
+				}
+				if (url == null){
 					log.warn(String.format("Report resource '%s' could not neither be found through internal resource loader nor through the default one.", fileName));
+				}
 				return url;
 			}
 			
@@ -223,8 +225,8 @@ public class BIRTReportService {
 		
 		IRunTask task = null;
 		try {
-			IReportRunnable design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-			task = engine.createRunTask(design);
+			IReportRunnable design_ = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+			task = engine.createRunTask(design_);
 		} catch (EngineException e) {
 		    log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
@@ -328,7 +330,7 @@ public class BIRTReportService {
 			task.run();
 			if(log.isDebugEnabled()){
 			    long duration = (System.currentTimeMillis() - startTime) / 1000;
-			    log.debug("RunAndRenderTask lasts " + String.valueOf(duration) + " seconds");
+			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
 		} catch (EngineException e) {
 		    log.error("Could not render design: ", e);
@@ -359,7 +361,7 @@ public class BIRTReportService {
             task.run();
             if(log.isDebugEnabled()){
                 long duration = (System.currentTimeMillis() - startTime) / 1000;
-                log.debug("RunTask lasts " + String.valueOf(duration) + " seconds");
+                log.debug("RunTask lasts " + duration + " seconds");
             }
         } catch(EngineException e){
             log.error("Could not run report: ", e);
@@ -391,7 +393,7 @@ public class BIRTReportService {
 	        task.render();
             if(log.isDebugEnabled()){
                 long duration = (System.currentTimeMillis() - startTime) / 1000;
-                log.debug("RenderTask lasts " + String.valueOf(duration) + " seconds");
+                log.debug("RenderTask lasts " + duration + " seconds");
             }
 	    } catch(EngineException e){
 	        log.error("Could not render design: ", e);

@@ -29,7 +29,6 @@ public class ODTOutputFormat extends AbstractOutputFormat {
 	IRenderOption createBIRTRenderOptions()
 	{
 	    RenderOption options = new RenderOption();
-//	    options.setEmitterID("org.eclipse.birt.report.engine.emitter.odt");
 	    options.setOutputFormat("odt");
 		
 	    return options;

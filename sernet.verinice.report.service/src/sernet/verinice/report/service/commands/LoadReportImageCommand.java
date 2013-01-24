@@ -52,7 +52,7 @@ public class LoadReportImageCommand extends GenericCommand {
 	}
 	
 	public byte[] getResult() {
-		return result;
+		return (result != null) ? result.clone() : null;
 	}
 
 	@Override

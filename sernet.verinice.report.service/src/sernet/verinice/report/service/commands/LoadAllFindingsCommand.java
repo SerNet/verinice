@@ -72,20 +72,21 @@ public class LoadAllFindingsCommand extends GenericCommand {
     private static final String SAMT_PERSON_INCHARGE_PROPERTY = "rel_samttopic_person-iso_resp";
     public static final String SAMT_MEASURE_PROPERTY = "samt_topic_controlnote";
 
-    static HashMap<Integer, Object[][]> computedData = new HashMap<Integer, Object[][]>();
+    private static HashMap<Integer, Object[][]> computedData = new HashMap<Integer, Object[][]>();
 
     public LoadAllFindingsCommand(int id) {
+        int id_ = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);
             chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
-            id = Integer.parseInt(chapterIdString);
+            id_ = Integer.parseInt(chapterIdString);
         }
-        this.id = id;
+        this.id = (id_ > -1) ? id_ : id;
         log = Logger.getLogger(LoadAllFindingsCommand.class);
     }
 
     public Object[][] getResult() {
-        return result;
+        return (result != null) ? result.clone() : null;
     }
 
     @SuppressWarnings("unchecked")

@@ -19,7 +19,6 @@ package sernet.verinice.report.service.impl;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
@@ -29,12 +28,8 @@ import sernet.verinice.interfaces.report.IReportType;
 
 public class StrukturanalyseReport implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(StrukturanalyseReport.class);
-	
     private static final String REPORT_DESIGN = "Strukturanalyse.rptdesign"; //$NON-NLS-1$
     
-    private String filename = null;
-
 	public String getDescription() {
 		return Messages.StrukturanalyseReport_1;
 	}

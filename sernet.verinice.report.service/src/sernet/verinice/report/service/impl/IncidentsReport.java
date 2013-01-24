@@ -19,7 +19,6 @@ package sernet.verinice.report.service.impl;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
@@ -31,8 +30,6 @@ import sernet.verinice.interfaces.report.IReportType;
  *
  */
 public class IncidentsReport implements IReportType {
-    
-    private static final Logger LOG = Logger.getLogger(IncidentsReport.class);
     
     private static final String REPORT_DESIGN = "incidents.rptdesign"; //$NON-NLS-1$
 

@@ -19,7 +19,6 @@ package sernet.verinice.report.service.impl;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,8 +38,9 @@ import org.apache.log4j.Logger;
 /**
  *
  */
-public class TocHelper2 {
+public final class TocHelper2 {
     
+    private TocHelper2(){};
     
     private static int pageBreakCount = 0;
     
@@ -56,16 +57,16 @@ public class TocHelper2 {
     
     private static int maxTocEntryLength = 0;
     
-    private static Logger LOG = Logger.getLogger(TocHelper2.class);
+    private static final Logger LOG = Logger.getLogger(TocHelper2.class);
     
     // list of tables
-    private static HashMap<Integer, TocEntry<String, Integer>> loTMap = new HashMap<Integer, TocEntry<String,Integer>>();
+    private static Map<Integer, TocEntry<String, Integer>> loTMap = new HashMap<Integer, TocEntry<String,Integer>>();
     
     // table of contents
-    private static HashMap<Integer, TocEntry<String, Integer>> tocMap = new HashMap<Integer, TocEntry<String, Integer>>();
+    private static Map<Integer, TocEntry<String, Integer>> tocMap = new HashMap<Integer, TocEntry<String, Integer>>();
     
     // list of figures
-    private static HashMap<Integer, TocEntry<String, Integer>> loFMap = new HashMap<Integer, TocEntry<String,Integer>>();
+    private static Map<Integer, TocEntry<String, Integer>> loFMap = new HashMap<Integer, TocEntry<String,Integer>>();
     
     static{
         TocEntry<String, Integer> dummyEntry = new TocEntry<String, Integer>("Inhaltsverzeichnis braucht 2 Iterationen", -1);
@@ -118,6 +119,9 @@ public class TocHelper2 {
             engineIteration = 0;
             pageStartCount = 0;
             break;
+
+        default:
+            break;
         }
     }
     
@@ -127,8 +131,8 @@ public class TocHelper2 {
     }
     
     public static void addTocEntry(String entryTitle, Integer pageNumber){
-        entryTitle = removeTags(entryTitle);
-        TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle, pageNumber);
+        String entryTitle_ = removeTags(entryTitle);
+        TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle_, pageNumber);
         int entryNumberToPut = tocEntryCount;
         for(Entry<Integer, TocEntry<String, Integer>> mapEntry : tocMap.entrySet()){
             if(mapEntry.getValue().getTitle().equals(entry.getTitle())){
@@ -159,27 +163,23 @@ public class TocHelper2 {
     public static String[] getLoTLine(Integer i){
         String[] lotEntryLine = new String[]{"", ""};
         if(engineIteration > 1){
-            try{
-                TocEntry<String, Integer> entry = loTMap.get(i);
-                lotEntryLine[0] = entry.getTitle();
-                lotEntryLine[1] = String.valueOf(entry.getPageNumber());
-            } catch (NullPointerException e){
-                LOG.error("Element (" + String.valueOf(i) + ") nicht gefunden");
-            }
+            TocEntry<String, Integer> entry = loTMap.get(i);
+            String title = (entry != null) ? entry.getTitle() : null;
+            Integer page = (entry != null) ? entry.getPageNumber() : null;
+            lotEntryLine[0] = (title != null) ? title : "dummyTitle";
+            lotEntryLine[1] = String.valueOf((page != null) ? page.intValue() : "dummyPage");
         }
         return lotEntryLine;
     }
-    
+
     public static String[] getLoFLine(Integer i){
         String[] lofEntryLine = new String[]{"", ""};
         if(engineIteration > 1){
-            try{
-                TocEntry<String, Integer> entry = loFMap.get(i);
-                lofEntryLine[0] = entry.getTitle();
-                lofEntryLine[1] = String.valueOf(entry.getPageNumber());
-            } catch (NullPointerException e){
-                LOG.error("Element (" + String.valueOf(i) + ") nicht gefunden");
-            }
+            TocEntry<String, Integer> entry = loFMap.get(i);
+            String title = (entry != null) ? entry.getTitle() : null;
+            Integer page = (entry != null) ? entry.getPageNumber() : null;
+            lofEntryLine[0] = (title != null) ? title : "dummyTitle";
+            lofEntryLine[1] = String.valueOf((page != null) ? page.intValue() : "dummyPage");
         }
         return lofEntryLine;        
     }
@@ -196,7 +196,7 @@ public class TocHelper2 {
             int entryNumberToPut = listOfTablesEntryCount;
             String entryToPut = tableName.trim();
             for(Entry<Integer, TocEntry<String, Integer>> mapEntry : loTMap.entrySet()){
-                String entryTitle = tableName.substring(tableName.indexOf(":") + 1).trim();
+                String entryTitle = tableName.substring(tableName.indexOf(':') + 1).trim();
                 String mapEntryTitle = mapEntry.getValue().getTitle().substring(mapEntry.getValue().getTitle().indexOf(":") + 1).trim();
                 if(entryTitle.equals(mapEntryTitle)){
                     String preFix = mapEntry.getValue().getTitle().substring(0, mapEntry.getValue().getTitle().indexOf(":") + 1);
@@ -231,9 +231,9 @@ public class TocHelper2 {
     public static void addTocEntry(String entryTitle, int indent, Integer pageNumber){
         StringBuilder sb = new StringBuilder();
         String chapterNumber = null;
-        entryTitle = removeTags(entryTitle);
-        if(entryTitle.contains(" ")){
-            String sub = entryTitle.substring(0, entryTitle.indexOf(" "));
+        String entryTitle_ = removeTags(entryTitle);
+        if(entryTitle_.contains(" ")){
+            String sub = entryTitle_.substring(0, entryTitle_.indexOf(' '));
             Pattern pattern  = Pattern.compile("\\d+.\\d*.*\\d*.*");
             Matcher m = pattern.matcher(sub);
             if(m.matches()){
@@ -252,17 +252,15 @@ public class TocHelper2 {
         }
         if(chapterNumber != null){
             sb.append(String.valueOf(chapterNumber));
-            entryTitle = entryTitle.substring(entryTitle.indexOf(" ")).trim();
+            entryTitle = entryTitle.substring(entryTitle.indexOf(' ')).trim();
         }
         sb.append(entryTitle);
         addTocEntry(sb.toString(), pageNumber);
     }
     
     public static void checkTocEntryLength(String entry){
-        if(engineIteration < 3){
-            if(entry.length() > maxTocEntryLength){
-                maxTocEntryLength = getStringDisplaySize(entry);
-            }
+        if(engineIteration < 3 && entry.length() > maxTocEntryLength){
+            maxTocEntryLength = getStringDisplaySize(entry);
         }
     }
     
@@ -305,7 +303,7 @@ public class TocHelper2 {
     public static String computeChapterNumber(String title){
         String number = "";
         if(title.contains(" ")){
-            String prefix = title.substring(0, title.indexOf(" "));
+            String prefix = title.substring(0, title.indexOf(' '));
             try{
                 int testInt = Integer.parseInt(prefix);
                 number = String.valueOf(testInt);
@@ -324,7 +322,6 @@ public class TocHelper2 {
         for(Object o : list){
             LOG.error(o.getClass().getCanonicalName());
         }
-        Date d = new Date();
     }
     
     public static String getEngineIteration(){
@@ -342,10 +339,9 @@ public class TocHelper2 {
         formatter.setLenient(true);
         try {
             Date fDate = formatter.parse(date);
-            String ret = destinationFormat.format(fDate);
-            return ret;
+            return destinationFormat.format(fDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            LOG.error("Error while parsing date", e);
             return date;
         }
     }
@@ -355,7 +351,6 @@ public class TocHelper2 {
    }
    
    public static int getStringDisplaySize(String input){
-       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
        BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
        Font font = new Font("Arial", Font.PLAIN, 10); 
        FontMetrics fm = bi.getGraphics().getFontMetrics(font);
@@ -387,8 +382,7 @@ public class TocHelper2 {
             if(!(entry instanceof TocEntry)){
                 return false;
             }
-            boolean retVal = this.toString().equals(((TocEntry<TITLE, PAGENUMBER>)entry).toString()); 
-            return retVal;
+            return this.toString().equals(((TocEntry<TITLE, PAGENUMBER>)entry).toString()); 
         }
         
         public int hashCode(){
@@ -404,7 +398,9 @@ public class TocHelper2 {
                 return 1;
             } else if(this.pagenumber < o.pagenumber){
                 return -1;
-            } else return 0;
+            } else {
+                return 0;
+            }
         }
     }
 

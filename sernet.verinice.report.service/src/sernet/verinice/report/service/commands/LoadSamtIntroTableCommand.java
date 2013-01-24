@@ -20,6 +20,7 @@ package sernet.verinice.report.service.commands;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sernet.verinice.interfaces.GenericCommand;
 
@@ -36,7 +37,7 @@ public class LoadSamtIntroTableCommand extends GenericCommand{
 
 	private List<List<String>> result;
 	
-	static HashMap<String, String> hardcodeTable = new HashMap<String, String>();
+	private static Map<String, String> hardcodeTable = new HashMap<String, String>();
 	
 	static
 	{

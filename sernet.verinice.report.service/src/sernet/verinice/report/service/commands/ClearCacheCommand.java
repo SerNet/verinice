@@ -24,18 +24,12 @@ package sernet.verinice.report.service.commands;
  */
 
 import net.sf.ehcache.CacheManager;
-
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
 public class ClearCacheCommand extends GenericCommand {
 
-	private transient Logger log = null;
-	
 	public ClearCacheCommand(){
-		log = Logger.getLogger(ClearCacheCommand.class);
 	}
 	
 	@Override

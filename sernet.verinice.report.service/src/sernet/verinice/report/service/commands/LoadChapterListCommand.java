@@ -18,13 +18,10 @@
  ******************************************************************************/
 package sernet.verinice.report.service.commands;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import net.sf.ehcache.Cache;
@@ -38,18 +35,11 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByTypeId;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementByTitle;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.CnALink.Id;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -102,7 +92,7 @@ public class LoadChapterListCommand extends GenericCommand {
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 CnATreeElement e = command.getFound();
-                if (e != null && e instanceof Audit) {
+                if (e instanceof Audit) {
                     rootObject = loadChildren((Audit) e);
                 }
             } catch (Exception e) {
@@ -112,7 +102,7 @@ public class LoadChapterListCommand extends GenericCommand {
     }
 
     public Object[][] getResult() {
-    	return result;
+    	return (result != null) ? result.clone() : null;
     }
 
     @Override
@@ -215,13 +205,11 @@ public class LoadChapterListCommand extends GenericCommand {
                             if (!elmt.isChildrenLoaded()) {
                                 elmt = loadChildren(elmt);
                             }
-                            if (!isCnaTreeElementInList(values, elmt)) {
-                                if (elmt instanceof ControlGroup) {
-                                    ControlGroup g = (ControlGroup) elmt;
-                                    String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
-                                    if (isOverviewElementString != null && isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
-                                        values.add(createValueEntry(elmt));
-                                    }
+                            if (!isCnaTreeElementInList(values, elmt) && elmt instanceof ControlGroup) {
+                                ControlGroup g = (ControlGroup) elmt;
+                                String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
+                                if (isOverviewElementString != null && isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
+                                    values.add(createValueEntry(elmt));
                                 }
                             }
                         }
@@ -239,13 +227,11 @@ public class LoadChapterListCommand extends GenericCommand {
                             if (!elmt.isChildrenLoaded()) {
                                 elmt = loadChildren(elmt);
                             }
-                            if (!isCnaTreeElementInList(values, elmt)) {
-                                if (elmt instanceof ControlGroup) {
-                                    ControlGroup g = (ControlGroup) elmt;
-                                    String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
-                                    if (isOverviewElementString != null && !isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
-                                        values.add(createValueEntry(elmt));
-                                    }
+                            if (!isCnaTreeElementInList(values, elmt) && elmt instanceof ControlGroup) {
+                                ControlGroup g = (ControlGroup) elmt;
+                                String isOverviewElementString = g.getEntity().getValue(OVERVIEW_PROPERTY);
+                                if (isOverviewElementString != null && !isOverviewElementString.equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))) {
+                                    values.add(createValueEntry(elmt));
                                 }
                             }
                         }
@@ -261,10 +247,8 @@ public class LoadChapterListCommand extends GenericCommand {
                 for (Object[] o : id5Groups) {
                     int groupid = ((Integer) o[0]).intValue();
                     for(ControlGroup rootChild : loadAllControlgroupChildren(rootObject)){
-                        if(rootChild.getDbId().intValue() == groupid){
-                            if(rootChild.getEntity().getValue(OVERVIEW_PROPERTY).equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))){
+                        if(rootChild.getDbId().intValue() == groupid && rootChild.getEntity().getValue(OVERVIEW_PROPERTY).equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))){
                                 values.add(createValueEntry(rootChild));
-                            }
                         }
                     }
                 }
@@ -277,8 +261,9 @@ public class LoadChapterListCommand extends GenericCommand {
                         command1 = new LoadCnAElementById(SamtTopic.TYPE_ID, id);
                         ce = command1.getFound();
                     }
-                    if (ce != null)
+                    if (ce != null){
                         getCache().put(new Element(id, ce));
+                    }
                 } catch (CommandException e) {
                     log.error("Error while executing command", e);
                 }

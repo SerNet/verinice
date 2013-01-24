@@ -40,11 +40,10 @@ public class UserReportType implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(UserReportType.class);
 	
-	private final static String VAR_ENGINE_ITERATIONS = "engineIterations";
-	private final static String PROPERTYHANDLE_PAGEVARIABLE = "pageVariables";
+	private static final String VAR_ENGINE_ITERATIONS = "engineIterations";
+	private static final String PROPERTYHANDLE_PAGEVARIABLE = "pageVariables";
 	
     private URL reportDocument;
-    private URL reportDesign;
 	
 	private String reportFile = ""; //$NON-NLS-1$
 
@@ -80,6 +79,7 @@ public class UserReportType implements IReportType {
 
 	public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
+	    URL reportDesign;
 
         try {
             reportDesign = (new File(reportFile)).toURI().toURL();
@@ -162,7 +162,7 @@ public class UserReportType implements IReportType {
 	                }
 	            }
 	        }
-	    } catch (Throwable t){
+	    } catch (NumberFormatException t){
 	        LOG.error("Error while determing number of engine iterations", t);
 	    }
 	    return 1; // default / no ReportVariable found

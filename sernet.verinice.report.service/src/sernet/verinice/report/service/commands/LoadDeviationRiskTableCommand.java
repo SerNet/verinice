@@ -53,10 +53,10 @@ import sernet.verinice.model.samt.SamtTopic;
 @SuppressWarnings("serial")
 public class LoadDeviationRiskTableCommand extends GenericCommand {
 
-    public final static String CONTROL_DEVIATION_PROPERTY = "control_isa_audit_devi";
-    public final static String CONTROL_RISK_PROPERTY = "control_isa_audit_ra";
-    public final static String SAMT_DEVIATION_PROPERTY = "samt_topic_audit_devi";
-    public final static String SAMT_RISK_PROPERTY = "samt_topic_audit_ra";
+    public static final String CONTROL_DEVIATION_PROPERTY = "control_isa_audit_devi";
+    public static final String CONTROL_RISK_PROPERTY = "control_isa_audit_ra";
+    public static final String SAMT_DEVIATION_PROPERTY = "samt_topic_audit_devi";
+    public static final String SAMT_RISK_PROPERTY = "samt_topic_audit_ra";
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
 
     private List<List<String>> result;
@@ -75,13 +75,14 @@ public class LoadDeviationRiskTableCommand extends GenericCommand {
 
     public LoadDeviationRiskTableCommand(int chapterId, String chapterName) {
         log = Logger.getLogger(LoadDeviationRiskTableCommand.class);
+        int chapterId_ = -1;
         if(String.valueOf(chapterId).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(chapterId);
             chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
-            chapterId = Integer.parseInt(chapterIdString);
+            chapterId_ = Integer.parseInt(chapterIdString);
             isNonIsoGroup = true;
         }
-        this.chapterId = chapterId;
+        this.chapterId = (chapterId_ > -1) ? chapterId_ : chapterId;
         this.chapterName = chapterName;
     }
 

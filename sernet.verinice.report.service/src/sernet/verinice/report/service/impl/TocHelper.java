@@ -18,6 +18,7 @@
 package sernet.verinice.report.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -74,12 +75,12 @@ public class TocHelper {
 	/** When the TOC items have been found out they are copied into this list to be used in
 	 * the final run.
 	 */
-	private static ArrayList<String> finalItems = new ArrayList<String>();
+	private static List<String> finalItems = new ArrayList<String>();
 
 	/** When the TOC items' page numbers have been found out they are copied into this
 	 * list to be used in the final run.
 	 */
-	private static ArrayList<Integer> finalPages = new ArrayList<Integer>();
+	private static List<Integer> finalPages = new ArrayList<Integer>();
 
 	static {
 		// Initialize the TOC item list with a helpful message (just in case someone
@@ -88,11 +89,13 @@ public class TocHelper {
 		finalPages.add(-1);
 	}
 
-	private static ArrayList<String> items = new ArrayList<String>();
+	private static List<String> items = new ArrayList<String>();
 
-	private static ArrayList<Integer> pages = new ArrayList<Integer>();
+	private static List<Integer> pages = new ArrayList<Integer>();
 	
 	private static Logger log = Logger.getLogger(TocHelper.class);
+	
+	private TocHelper(){};
 	
 	/**
 	 * Returns the amount of TOC items in the report.
@@ -116,8 +119,9 @@ public class TocHelper {
 	public static void addTocItem(String item, int depth) {
 	    if(!item.equals("")){ // create no item for dummy groups
     		StringBuilder sb = new StringBuilder(depth + item.length());
-    		for (int i = 0; i < depth; i++)
+    		for (int i = 0; i < depth; i++){
     			sb.append(" ");
+    		}
     		sb.append(item);
     
     		items.add(sb.toString());
@@ -215,6 +219,7 @@ public class TocHelper {
 			// Makes the process start over.
 			resetCount = 0;
 			break;
+		default: break;
 		}
 
 	}

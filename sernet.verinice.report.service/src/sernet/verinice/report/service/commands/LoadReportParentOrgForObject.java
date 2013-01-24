@@ -54,9 +54,9 @@ public class LoadReportParentOrgForObject extends GenericCommand implements ICac
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            if (child.getTypeId().equals(Organization.TYPE_ID))
+            if (child.getTypeId().equals(Organization.TYPE_ID)){
                 org = child;
-            else {
+            } else {
                 org = findOrg(child);
             }
         }
@@ -68,8 +68,9 @@ public class LoadReportParentOrgForObject extends GenericCommand implements ICac
      */
     private CnATreeElement findOrg(CnATreeElement cnATreeElement) {
         CnATreeElement parent = cnATreeElement.getParent();
-        if (parent == null)
+        if (parent == null){
             return null;
+        }
         if (parent.getTypeId().equals(Organization.TYPE_ID)) {
             return parent;
         }
