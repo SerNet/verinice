@@ -98,6 +98,34 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
      */
     @Override
     public void execute() {
+        List<ControlGroup> resultList = fillResultList();
+        
+        if(!resultList.isEmpty() && resultList.size()>1 && dbId != null) {
+            // find group in specified org or audit:
+            for (ControlGroup controlGroup : resultList) {
+                if (isParent(controlGroup, dbId)) {
+                    selfAssessmentGroup =  controlGroup;
+                    hydrate(selfAssessmentGroup);
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("result: " + selfAssessmentGroup);
+                    }
+                    return;
+                }
+            }
+        }
+        
+        // result is first element in resultList 
+        if(resultList!=null && !resultList.isEmpty()) {
+            getLog().debug("number of self assessment groups " + FindSamtGroup.nullSaveSize(resultList));
+            selfAssessmentGroup =  resultList.get(0);
+            hydrate(selfAssessmentGroup);
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("result: " + selfAssessmentGroup);
+            }
+        } 
+    }
+
+    private List<ControlGroup> fillResultList() {
         IBaseDao<ControlGroup, Serializable> dao = getDaoFactory().getDAO(ControlGroup.class);
         
         // find all ControlGroups
@@ -132,30 +160,7 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
                 resultList.add(controlGroup);
             }
         }
-        
-        if(resultList!=null && !resultList.isEmpty() && resultList.size()>1 && dbId != null) {
-            // find group in specified org or audit:
-            for (ControlGroup controlGroup : resultList) {
-                if (isParent(controlGroup, dbId)) {
-                    selfAssessmentGroup =  controlGroup;
-                    hydrate(selfAssessmentGroup);
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug("result: " + selfAssessmentGroup);
-                    }
-                    return;
-                }
-            }
-        }
-        
-        // result is first element in resultList 
-        if(resultList!=null && !resultList.isEmpty()) {
-            getLog().debug("number of self assessment groups " + FindSamtGroup.nullSaveSize(resultList));
-            selfAssessmentGroup =  resultList.get(0);
-            hydrate(selfAssessmentGroup);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("result: " + selfAssessmentGroup);
-            }
-        } 
+        return resultList;
     }
 
     /**
@@ -164,10 +169,12 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
      * @return
      */
     private boolean isParent(CnATreeElement child, Integer parentId) {
-        if (child.getParent()==null)
+        if (child.getParent()==null){
             return false;
-        if (child.getParent().getDbId().equals(parentId))
+        }
+        if (child.getParent().getDbId().equals(parentId)){
             return true;
+        }
         return isParent(child.getParent(), parentId);
     }
 
@@ -216,9 +223,9 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
      */
     private void hydrate(ControlGroup selfAssessmentGroup) {
         selfAssessmentGroup.getTitle();
-        
-        if (hydrateParent)
+        if (hydrateParent){
         	selfAssessmentGroup.getParent().getTitle();
+        }
     }
 
 

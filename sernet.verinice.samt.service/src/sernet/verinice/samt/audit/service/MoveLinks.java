@@ -34,7 +34,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -56,9 +55,9 @@ public class MoveLinks extends ChangeLoggingCommand implements IChangeLoggingCom
         return log;
     }
     
-    Map<String, String> sourceDestMap;
+    private Map<String, String> sourceDestMap;
     
-    CnATreeElement linkTo;
+    private CnATreeElement linkTo;
     
     private transient IBaseDao<CnATreeElement, Serializable> cnaTreeElementDao;
     

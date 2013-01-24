@@ -20,7 +20,6 @@
 package sernet.verinice.samt.service;
 
 import java.io.Serializable;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +32,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -78,11 +76,11 @@ public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareComma
         result = resultList;
     }
     
-    private void loadSamtTopics(ControlGroup cg, ArrayList<SamtTopic> result)
+    private void loadSamtTopics(ControlGroup cg, List<SamtTopic> result)
     {
-    	if (cg == null)
+    	if (cg == null){
     		return;
-    	
+    	}
     	for (CnATreeElement e : cg.getChildren())
     	{
     		if (e instanceof SamtTopic)

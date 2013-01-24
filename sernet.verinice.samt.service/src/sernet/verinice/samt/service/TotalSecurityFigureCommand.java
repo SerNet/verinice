@@ -82,7 +82,7 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
      * @return the totalSecurityFigure
      */
     public Double getResult() {
-        return totalSecurityFigure > 1.0 ? 1.0 : totalSecurityFigure;
+        return totalSecurityFigure.doubleValue() > 1.0 ? new Double(1.0) : totalSecurityFigure;
     }
 
     public Integer getWeightedMaturity(ControlGroup cg) {
@@ -109,8 +109,9 @@ public class TotalSecurityFigureCommand extends GenericCommand  {
             value = contr.getMaturity() * contr.getWeight2();
             // value must never be more than weighted threshold
             Integer weightedThreshold = getWeightedThreshold(contr);
-            if (value > weightedThreshold)
+            if (value > weightedThreshold){
                 value = weightedThreshold;
+            }
         }
         return value;
     }
