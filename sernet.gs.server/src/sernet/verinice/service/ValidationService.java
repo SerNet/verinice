@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -230,7 +231,7 @@ public class ValidationService implements IValidationService {
         return hintsOfFailedValidations;
     }
     
-    private ArrayList<String> processValidationMap(HashMap<String, Boolean> validationMap, CnATreeElement elmt, PropertyType type){
+    private ArrayList<String> processValidationMap(Map<String, Boolean> validationMap, CnATreeElement elmt, PropertyType type){
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
         for(Entry<String, Boolean> entry : validationMap.entrySet()){
             boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
