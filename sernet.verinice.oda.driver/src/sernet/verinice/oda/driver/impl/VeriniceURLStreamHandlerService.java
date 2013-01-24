@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -40,9 +41,9 @@ import sernet.verinice.interfaces.oda.IImageProvider;
 
 public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerService {
 	
-	private static final Logger log = Logger.getLogger(VeriniceURLStreamHandlerService.class);
+	private static final Logger LOG = Logger.getLogger(VeriniceURLStreamHandlerService.class);
 
-	private HashMap<String, IImageProvider> imageStreams = new HashMap<String, IImageProvider>();
+	private Map<String, IImageProvider> imageStreams = new HashMap<String, IImageProvider>();
 	
 	public VeriniceURLStreamHandlerService()
 	{
@@ -55,7 +56,7 @@ public class VeriniceURLStreamHandlerService extends AbstractURLStreamHandlerSer
 				try {
 					return new FileInputStream(f);
 				} catch (FileNotFoundException e) {
-					log.error("Could not register 'test' image");
+					LOG.error("Could not register 'test' image");
 					throw new RuntimeException();
 				}
 			}

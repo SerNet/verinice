@@ -50,8 +50,8 @@ public class LoadEntityValues extends GenericCommand {
 	
 	public LoadEntityValues(String typeId, String[] propertyTypes, Class<?>[] classes) {
 		this.typeId = typeId;
-		this.propertyTypes = propertyTypes;
-		this.classes = classes;
+		this.propertyTypes = (propertyTypes != null) ? propertyTypes.clone() : null;
+		this.classes = (classes != null) ? classes.clone() : null;
 	}
 	
 	
@@ -81,13 +81,13 @@ public class LoadEntityValues extends GenericCommand {
 		for (String name : propertyTypes)
 		{
 			Class<?> c = (i >= classes.length ? null : classes[i]);
-			if (c == null || c == String.class)
+			if (c == null || c == String.class){
 				values.add(e.getSimpleValue(name));
-			else if (c == Integer.class)
+			} else if (c == Integer.class){
 				values.add(String.valueOf(e.getInt(name)));
-			else
+			} else {
 				throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
-			
+			}
 			i++;
 		}
 		

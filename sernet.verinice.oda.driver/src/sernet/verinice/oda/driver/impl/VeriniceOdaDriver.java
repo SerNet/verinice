@@ -38,8 +38,9 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	
 	public VeriniceOdaDriver()
 	{
-		if (instance != null)
+		if (instance != null){
 			throw new IllegalStateException();
+		}
 	}
 	
 	protected void activate(ComponentContext ctx)

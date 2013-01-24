@@ -22,6 +22,8 @@ package sernet.verinice.oda.driver.preferences;
  */
 public class PreferenceConstants {
     
+    private PreferenceConstants(){};
+    
     // report preferences
     public static final String REPORT_LOGGING_ENABLED = "report_logging_enabled";
     public static final String REPORT_LOGGING_LVL = "report_logging_lvl";

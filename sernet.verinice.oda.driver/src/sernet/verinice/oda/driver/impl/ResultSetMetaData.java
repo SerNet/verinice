@@ -25,20 +25,36 @@ import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class ResultSetMetaData implements IResultSetMetaData {
-	int columnCount;
-	int rowCount;
+	private int columnCount;
+	private int rowCount;
 
-	final Accessor accessor;
+	private final Accessor accessor;
 
-	Object result;
+	private Object result;
 	
-	String[] columns;
+	private String[] columns;
 
 	ResultSetMetaData(Object result, String[] columns) {
 		this.result = result;
-		this.columns = columns;
+		this.columns = (columns != null) ? columns.clone() : null;
 
-		Class<?> rowClass = result.getClass();
+		Class<? extends Accessor> accessorClass = initValues(result, columns);
+		if(accessorClass.equals(MultiDimensionalArrayAccessor.class)){
+		    accessor = new MultiDimensionalArrayAccessor();
+		} else if(accessorClass.equals(OneDimensionalArrayAccessor.class)){
+		    accessor = new OneDimensionalArrayAccessor();
+		} else if(accessorClass.equals(MultiDimensionalCollectionAccessor.class)){
+		    accessor = new MultiDimensionalCollectionAccessor();
+		} else if(accessorClass.equals(OneDimensionalCollectionAccessor.class)){
+		    accessor = new OneDimensionalCollectionAccessor();
+		} else {
+		    accessor = new SingleValueAccessor();
+		}
+	}
+
+    private Class<? extends Accessor> initValues(Object result, String[] columns) {
+        Class<? extends Accessor> clazz = null;
+        Class<?> rowClass = result.getClass();
 		if (rowClass.isArray() && rowClass.getComponentType() != Byte.TYPE) {
 			Object firstElement = (Array.getLength(result) > 0 ? Array.get(result, 0) : null);
 			Class<?> columnClass = (firstElement != null ? firstElement.getClass() : null);
@@ -48,12 +64,12 @@ public class ResultSetMetaData implements IResultSetMetaData {
 				// second dimension: column
 				columnCount = (columns != null) ? columns.length : Array.getLength(firstElement);
 				rowCount = Array.getLength(result);
-				accessor = new MultiDimensionalArrayAccessor();
+				clazz = MultiDimensionalArrayAccessor.class;
 			} else {
 				// one-dimensional array -> elements are rows
 				columnCount = (columns != null) ? columns.length : 1;
 				rowCount = Array.getLength(result);
-				accessor = new OneDimensionalArrayAccessor();
+				clazz = OneDimensionalArrayAccessor.class;
 			}
 		} else if (Collection.class.isAssignableFrom(rowClass)) {
 			
@@ -67,25 +83,27 @@ public class ResultSetMetaData implements IResultSetMetaData {
 				// second dimension: column
 				columnCount = (columns != null) ? columns.length : ((Collection) firstElement).size();
 				rowCount = ((Collection) result).size();
-				accessor = new MultiDimensionalCollectionAccessor();
+				clazz = MultiDimensionalCollectionAccessor.class;
 			} else {
 				// one-dimensional collection -> elements are rows
 				columnCount = (columns != null) ? columns.length : 1;
 				rowCount = ((Collection) result).size();
-				accessor = new OneDimensionalCollectionAccessor();
+				clazz = OneDimensionalCollectionAccessor.class;
 			}
 		} else {
 			// single value
 			columnCount = (columns != null) ? columns.length : 1;
 			rowCount = 1;
-			accessor = new SingleValueAccessor();
+			clazz = SingleValueAccessor.class;
 		}
 
 		// If a data set is actually empty we need to pass -1 as the rowcount otherwise BIRT
 		// thinks the dataset is endless.
-		if (rowCount == 0)
+		if (rowCount == 0){
 			rowCount = -1;
-	}
+		}
+		return clazz;
+    }
 
 	Object getValue(int row, int column) {
 		try

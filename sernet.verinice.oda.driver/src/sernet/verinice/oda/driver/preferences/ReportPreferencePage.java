@@ -45,10 +45,6 @@ import sernet.verinice.oda.driver.Activator;
  */
 public class ReportPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    private BooleanFieldEditor reportLoggingEditor;
-    private ComboFieldEditor logLvlFieldEditor;
-    private StringFieldEditor logFileNameEditor;
-    
     private String[][] logLvlValues = new String[][]{
             new String[]{Messages.getString("ReportLogLevel.0"), Level.INFO.toString()},
             new String[]{Messages.getString("ReportLogLevel.1"), Level.WARNING.toString()},
@@ -78,13 +74,13 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
     @Override
     protected void createFieldEditors() {
         
-        reportLoggingEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_LOGGING_ENABLED, Messages.getString("ReportPreferencePage.1"), getFieldEditorParent());
+        BooleanFieldEditor reportLoggingEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_LOGGING_ENABLED, Messages.getString("ReportPreferencePage.1"), getFieldEditorParent());
         addField(reportLoggingEditor);
         
-        logLvlFieldEditor = new ComboFieldEditor(PreferenceConstants.REPORT_LOGGING_LVL, Messages.getString("ReportPreferencePage.2"), logLvlValues, getFieldEditorParent());
+        ComboFieldEditor logLvlFieldEditor = new ComboFieldEditor(PreferenceConstants.REPORT_LOGGING_LVL, Messages.getString("ReportPreferencePage.2"), logLvlValues, getFieldEditorParent());
         addField(logLvlFieldEditor);
         
-        logFileNameEditor = new StringFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
+        StringFieldEditor logFileNameEditor = new StringFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
         addField(logFileNameEditor);
         
         createCacheResetButton();

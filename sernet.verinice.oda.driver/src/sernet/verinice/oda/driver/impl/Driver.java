@@ -30,7 +30,7 @@ import org.eclipse.datatools.connectivity.oda.util.manifest.ManifestExplorer;
  */
 public class Driver implements IDriver
 {
-    static String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
+    private static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
     
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDriver#getConnection(java.lang.String)
@@ -90,8 +90,9 @@ public class Driver implements IDriver
         DataTypeMapping typeMapping = 
                             getManifest().getDataSetType( null )
                                 .getDataTypeMapping( nativeDataTypeCode );
-        if( typeMapping != null )
+        if( typeMapping != null ){
             return typeMapping.getNativeType();
+        }
         return "Non-defined"; 
     }
 

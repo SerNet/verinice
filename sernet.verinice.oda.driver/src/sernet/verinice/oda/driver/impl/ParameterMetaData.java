@@ -22,7 +22,7 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class ParameterMetaData implements IParameterMetaData 
 {
-	String[] inParameters;
+	private String[] inParameters;
 	
 	ParameterMetaData(String[] inParameters)
 	{

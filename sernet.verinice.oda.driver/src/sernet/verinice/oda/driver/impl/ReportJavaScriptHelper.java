@@ -23,6 +23,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.oda.driver.Activator;
@@ -35,6 +37,8 @@ import sernet.verinice.oda.driver.Activator;
 
 public class ReportJavaScriptHelper {
 	
+    private final static Logger LOG = Logger.getLogger(ReportJavaScriptHelper.class);
+    
 	public ReportJavaScriptHelper(){
 		// BIRT JavaScript Constructor for use with class.newInstance
 	}
@@ -64,8 +68,11 @@ public class ReportJavaScriptHelper {
 			return Activator.getDefault().getCommandService().executeCommand(c);
 		} catch (CommandException e)
 		{
-//		    log.error("Query Helper: running a command failed.", e);
 			throw new IllegalStateException("Running the command failed.", e);
 		}
+	}
+	
+	public static void log(String msg){
+	    LOG.debug(msg);
 	}
 }

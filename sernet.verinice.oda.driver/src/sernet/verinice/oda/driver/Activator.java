@@ -20,7 +20,6 @@ package sernet.verinice.oda.driver;
 
 import java.util.Hashtable;
 
-import org.apache.log4j.Logger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.url.URLConstants;
@@ -38,8 +37,6 @@ import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
  */
 public class Activator extends AbstractUIPlugin {
 	
-	private static Logger log = Logger.getLogger(Activator.class);
-
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.verinice.oda.driver";
 

@@ -24,11 +24,11 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 
 public class DataSetMetaData implements IDataSetMetaData
 {
-	private IConnection m_connection;
+	private IConnection mConnection;
 	
 	DataSetMetaData( IConnection connection )
 	{
-		m_connection = connection;
+		mConnection = connection;
 	}
 	
 	/*
@@ -37,7 +37,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	public IConnection getConnection() throws OdaException
 	{
         // TODO Auto-generated method stub
-		return m_connection;
+		return mConnection;
 	}
 
 	/*

@@ -55,10 +55,11 @@ public class ResultSet implements IResultSet
 	{
 		int mdMax = metaData.getRowCount();
 		
-		if (max == 0)
+		if (max == 0){
 			maxRows = mdMax;
-		else
+		} else {
 			maxRows = (mdMax <= max) ? mdMax : max;
+		}
 	}
 	
 	/**
@@ -298,8 +299,9 @@ public class ResultSet implements IResultSet
     {
         // hard-coded for demo purpose
         int columnId = 1;   // dummy column id
-        if( columnName == null || columnName.length() == 0 )
+        if( columnName == null || columnName.length() == 0 ){
             return columnId;
+        }
         String lastChar = columnName.substring( columnName.length()-1, 1 );
         try
         {

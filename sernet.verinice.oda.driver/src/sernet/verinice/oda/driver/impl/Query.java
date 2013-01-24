@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -68,9 +69,9 @@ public class Query implements IQuery
     
     private Interpreter setupInterpreter, interpreter;
     
-    private HashMap<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<String, String>();
     
-    private HashMap<String, Object> inParameterValues = new HashMap<String, Object>();
+    private Map<String, Object> inParameterValues = new HashMap<String, Object>();
     
     private Object result;
     
@@ -79,8 +80,8 @@ public class Query implements IQuery
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
     
     Query(Integer[] rootElementIds){
-    	this(new Integer(-1));
-    	vnRootElements = rootElementIds;
+    	this(Integer.valueOf(-1));
+    	vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
     }
     
     Query(Integer rootElementId)
@@ -230,9 +231,9 @@ public class Query implements IQuery
          */
         public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
         {
-            if (input == null || input.size()==0)
+            if (input == null || input.size()==0){
                 return new ArrayList<List<String>>();
-            
+            }
             
            	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
         	cmd = (MapEntityValues) execute(cmd);
@@ -244,11 +245,11 @@ public class Query implements IQuery
          * @return
          */
         private List<Integer> reduceToIDs(List<CnATreeElement> input) {
-            List<Integer> result = new ArrayList<Integer>();
+            List<Integer> result_ = new ArrayList<Integer>();
             for (CnATreeElement elmt : input) {
-                result.add(elmt.getDbId());
+                result_.add(elmt.getDbId());
             }
-            return result;
+            return result_;
         }
 
         public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
@@ -315,21 +316,22 @@ public class Query implements IQuery
 	{
 		try {
 			String setupQueryText = properties.get(PROP_SETUP_QUERY_TEXT);
-			if (setupQueryText == null)
+			if (setupQueryText == null){
 				return;
-			
+			}
 			setupInterpreter.eval(setupQueryText);
 			Object cols = setupInterpreter.get("__columns");
-			if (cols instanceof String[])
+			if (cols instanceof String[]){
 				columns = (String[]) cols;
-			else
+			} else {
 				columns = null;
-			
+			}
 			Object inp = setupInterpreter.get("__inParameters");
-			if (inp instanceof String[])
+			if (inp instanceof String[]){
 				inParameters = (String[]) inp;
-			else
+			} else {
 				inParameters = null;
+			}
 		} catch (EvalError e) {
 			log.error("Error evaluating the setup query: ", e);
 			
@@ -345,7 +347,7 @@ public class Query implements IQuery
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
 			log.error("Error evaluating the query: " + queryText, e);
-			result = new String("Exception while executing query: " + e.getErrorText());
+			result = "Exception while executing query: " + e.getErrorText();
 			if(e.getCause()!=null) {
 				result = result + ", " + e.getCause().getMessage();
 			}
@@ -513,8 +515,9 @@ public class Query implements IQuery
 	{
 		for (int i = 0; i < inParameters.length; i++)
 		{
-			if (inParameters[i].equals(parameterName))
+			if (inParameters[i].equals(parameterName)){
 				return i;
+			}
 		}
 		
 		return -1;
@@ -549,7 +552,7 @@ public class Query implements IQuery
      */
     @SuppressWarnings("restriction")
     public void setSpecification( QuerySpecification querySpec )
-            throws OdaException, UnsupportedOperationException
+            throws OdaException
     {
         // assumes no support
         throw new UnsupportedOperationException();
@@ -576,7 +579,7 @@ public class Query implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
-    public void cancel() throws OdaException, UnsupportedOperationException
+    public void cancel() throws OdaException
     {
     	result = null;
     }
