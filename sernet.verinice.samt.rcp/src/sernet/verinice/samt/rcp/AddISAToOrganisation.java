@@ -93,13 +93,11 @@ public class AddISAToOrganisation extends Action implements ISelectionListener {
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {     
         boolean enabled = false;
-        if (part instanceof SamtView) {
-            if (selection instanceof IStructuredSelection) {
-                Object element = ((IStructuredSelection) selection).getFirstElement();
-                if (element instanceof AuditGroup) {
-                    this.auditGroup = (AuditGroup) element;
-                    enabled = true;
-                }
+        if (part instanceof SamtView && selection instanceof IStructuredSelection) {
+            Object element = ((IStructuredSelection) selection).getFirstElement();
+            if (element instanceof AuditGroup) {
+                this.auditGroup = (AuditGroup) element;
+                enabled = true;
             }
         }
         if (LOG.isDebugEnabled()) {

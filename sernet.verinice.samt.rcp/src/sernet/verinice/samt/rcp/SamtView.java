@@ -22,16 +22,15 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.GroupMarker;
 
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
@@ -59,7 +58,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     public static final String ID = "sernet.verinice.samt.rcp.views.SamtView"; //$NON-NLS-1$
 
     
-    AddISAToOrganisation addIsaAction;
+    private AddISAToOrganisation addIsaAction;
     
     /**
      * The constructor.

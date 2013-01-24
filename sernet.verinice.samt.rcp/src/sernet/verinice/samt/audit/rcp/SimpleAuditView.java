@@ -18,7 +18,6 @@
 package sernet.verinice.samt.audit.rcp;
 
 import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.action.TypeFilter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;

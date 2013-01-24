@@ -39,10 +39,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,7 +54,6 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -71,7 +66,6 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
@@ -94,14 +88,14 @@ public abstract class ElementView extends ViewPart {
 
     private static final Logger LOG = Logger.getLogger(ElementView.class);
     
-    protected static ISO27KModel DUMMY = null;
+    private static volatile ISO27KModel dummy = null;
     
-    protected static ISO27KModel getDummy() {
-        if(DUMMY==null) {
-            DUMMY = new ISO27KModel();
-            DUMMY.setEntity(new Entity(ISO27KModel.TYPE_ID));
+    protected static synchronized ISO27KModel getDummy() {
+        if(dummy==null) {
+            dummy = new ISO27KModel();
+            dummy.setEntity(new Entity(ISO27KModel.TYPE_ID));
         }
-        return DUMMY;
+        return dummy;
     }
     
     protected TreeViewer viewer;
@@ -138,7 +132,7 @@ public abstract class ElementView extends ViewPart {
      * @return {@link CnATreeElement}s to show in this view
      * @throws CommandException
      */
-    abstract protected List<? extends CnATreeElement> getElementList() throws CommandException;
+    protected abstract List<? extends CnATreeElement> getElementList() throws CommandException;
     
     /**
      * Loads {@link CnATreeElement}s which are linked to the element with primary key
@@ -148,7 +142,7 @@ public abstract class ElementView extends ViewPart {
      * @return Elements linked to primary key selectedId
      * @throws CommandException
      */
-    abstract protected List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException;
+    protected abstract List<? extends CnATreeElement> getLinkedElements(int selectedId) throws CommandException;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -179,14 +173,6 @@ public abstract class ElementView extends ViewPart {
         labelLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
         textLink = new Label(compositeInfo,SWT.NONE);
         textLink.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
-        /*
-        Label labelGroup = new Label(compositeInfo,SWT.NONE);
-        labelGroup.setText(Messages.ElementView_3);
-        labelGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-        textGroup = new Label(compositeInfo,SWT.NONE);
-        textGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        */
         
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -269,7 +255,7 @@ public abstract class ElementView extends ViewPart {
         }
     }
     
-    Set<CnATreeElement> editElementSet = new HashSet<CnATreeElement>();
+    private Set<CnATreeElement> editElementSet = new HashSet<CnATreeElement>();
     /**
      * @param newElement
      */

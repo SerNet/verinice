@@ -35,7 +35,7 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class SamtWorkspace extends CnAWorkspace {
+public final class SamtWorkspace extends CnAWorkspace {
 
     private static final Logger LOG = Logger.getLogger(SamtWorkspace.class);
 
@@ -79,7 +79,7 @@ public class SamtWorkspace extends CnAWorkspace {
      * @throws NullPointerException
      * @throws IOException
      */
-    public synchronized void createSelfAssessmemtCatalog() throws NullPointerException, IOException {
+    public synchronized void createSelfAssessmemtCatalog() throws IOException {
         final String inputPath = RESOURCES_PATH + File.separatorChar + SAMT_CATALOG_FILE_NAME;
         final String ouputPath = CONF_PATH + File.separatorChar + SAMT_CATALOG_FILE_NAME;
 

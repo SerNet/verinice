@@ -34,7 +34,6 @@ public class ElementViewParentLoader implements IParentLoader {
      */
     @Override
     public CnATreeElement getParent(CnATreeElement child) {
-        CnATreeElement parent = null;
         if(child!=null) {
             child = retrieveParent(child);
         }

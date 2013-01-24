@@ -31,15 +31,15 @@ import sernet.verinice.service.commands.LoadElementByTypeId;
  */
 public interface ICommandFactory {
 
-    public String getElementTypeId();
+    String getElementTypeId();
     
-    public String getGroupTypeId();
+    String getGroupTypeId();
     
     /**
      * @return a command which loads {@link CnATreeElement}s
      * for a given class
      */
-    public LoadElementByTypeId getElementCommand();
+    LoadElementByTypeId getElementCommand();
     
     /**
      * Returns a command which loads {@link CnATreeElement}s
@@ -48,6 +48,6 @@ public interface ICommandFactory {
      * @param selectedId primary key of an {@link CnATreeElement}
      * @return a command which loads linked {@link CnATreeElement}s
      */
-    public LoadLinkedElements getLinkedElementCommand(int selectedId);
+    LoadLinkedElements getLinkedElementCommand(int selectedId);
 
 }

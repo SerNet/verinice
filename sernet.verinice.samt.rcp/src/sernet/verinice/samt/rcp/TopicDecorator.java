@@ -18,7 +18,7 @@ public class TopicDecorator extends LabelProvider implements ILightweightLabelDe
 	public static final String IMAGE_PARTLY = "overlays/partly.png";
 	public static final String IMAGE_YES = "overlays/yes.png";
 	
-	ControlMaturityService maturityService = new ControlMaturityService();
+	private ControlMaturityService maturityService = new ControlMaturityService();
 	
 	@Override
 	public void decorate(Object element, IDecoration decoration) {
@@ -38,7 +38,7 @@ public class TopicDecorator extends LabelProvider implements ILightweightLabelDe
 					decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_YES));
 				}
 			}
-		} catch(Throwable t) {
+		} catch(Exception t) {
 			LOG.error("Error while loading maturity value", t);
 		}
 	}

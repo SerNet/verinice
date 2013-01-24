@@ -46,14 +46,7 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
     
     public static final String INFO_CONTROLS_LINKED = "info_controls_linked"; //$NON-NLS-1$
     
-    
-    private ComboFieldEditor encodingFieldEditor;
-    private StringFieldEditor catalogFileName;
-    private BooleanFieldEditor expandIsa;
-	private BooleanFieldEditor showIsaResults;
-    private BooleanFieldEditor infoControlsLinked;
-    
-    private static final String[][] encodingComboValues = new String[][]{
+    private static final String[][] ENCODING_COMBO_VALUES = new String[][]{
             new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
             new String[]{VeriniceCharset.CHARSET_ISO_8859_15.displayName(),VeriniceCharset.CHARSET_ISO_8859_15.name()},
             new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}
@@ -87,19 +80,19 @@ public class SamtPreferencePage extends FieldEditorPreferencePage implements IWo
      */
     @Override
     protected void createFieldEditors() {
-        encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, encodingComboValues, getFieldEditorParent());
+        ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(CHARSET_SAMT, Messages.SamtPreferencePage_2, ENCODING_COMBO_VALUES, getFieldEditorParent());
         addField(encodingFieldEditor);
         
-        catalogFileName = new StringFieldEditor(CATALOG_FILENAME, Messages.SamtPreferencePage_5, getFieldEditorParent());
+        StringFieldEditor catalogFileName = new StringFieldEditor(CATALOG_FILENAME, Messages.SamtPreferencePage_5, getFieldEditorParent());
         addField(catalogFileName);
         
-        expandIsa = new BooleanFieldEditor(EXPAND_ISA, Messages.SamtPreferencePage_3, getFieldEditorParent());
+        BooleanFieldEditor expandIsa = new BooleanFieldEditor(EXPAND_ISA, Messages.SamtPreferencePage_3, getFieldEditorParent());
         addField(expandIsa);
         
-        showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
+        BooleanFieldEditor showIsaResults = new BooleanFieldEditor(ISA_RESULTS, Messages.SamtPreferencePage_0, getFieldEditorParent());
 		addField(showIsaResults);
 		
-		infoControlsLinked = new BooleanFieldEditor(INFO_CONTROLS_LINKED, Messages.SamtPreferencePage_4, getFieldEditorParent());
+		BooleanFieldEditor infoControlsLinked = new BooleanFieldEditor(INFO_CONTROLS_LINKED, Messages.SamtPreferencePage_4, getFieldEditorParent());
         addField(infoControlsLinked);
     }
 

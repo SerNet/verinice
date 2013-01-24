@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -139,7 +138,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
             LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
         }
         
-        //if(showChartForSelection(selectedElement)) {
         ControlGroup group = getChartControlGroup(selectedElement);
         if(group!=null) {
             if (this.element != null && selectedElement == this.element) {
@@ -191,30 +189,6 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
                  Control.TYPE_ID.equals(selection.getTypeId()) ||
                  SamtTopic.TYPE_ID.equals(selection.getTypeId()))
         );
-    }
-
-    /**
-     * Returns true if selection is a ControlGroup
-     * and if at least one of its children is a ControlGroup too.
-     * 
-     * @param selection a RCP-GUI selection from {@link ISelectionListener}
-     * @return true if a chart should be displayed for this selection
-     */
-    private boolean showChartForSelection(CnATreeElement selection) {
-        boolean showIt = false;
-        if(selection!=null && selection instanceof ControlGroup) {
-            ControlGroup group = (ControlGroup) selection;
-            Set<CnATreeElement> children = group.getChildren();
-            if(children!=null) {
-                for (CnATreeElement child : children) {
-                    if(child!=null && ControlGroup.TYPE_ID.equals(child.getTypeId())) {
-                        showIt = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return showIt;
     }
 
     public ICommandService getCommandService() {

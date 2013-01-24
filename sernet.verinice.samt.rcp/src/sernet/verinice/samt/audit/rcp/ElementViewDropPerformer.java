@@ -57,7 +57,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
 
     private static final Logger LOG = Logger.getLogger(ElementViewDropPerformer.class);
 
-    GenericElementView elementView;
+    private GenericElementView elementView;
 
     private Object target = null;
 
@@ -98,7 +98,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
                 return false;
             }
 
-            if (!validateDropObjects(target)) {
+            if (!validateDropObjects()) {
                 return false;
             }
             if(!validateLinkTypes(data)){
@@ -118,9 +118,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.run(true, true, operation);
             operation.openInformation(); 
-            if(elementView!=null) {
-                elementView.reload();
-            }
+            elementView.reload();
             return true;
         } catch (Exception e) {
             LOG.error("Error while dropping items.", e);
@@ -134,14 +132,15 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
-        return isActive = isSupportedData(transferType);
+        isActive = isSupportedData(transferType);
+        return isActive;
     }
 
     /**
      * @param target
      * @return
      */
-    private boolean validateDropObjects(Object target) {
+    private boolean validateDropObjects() {
         //validation is done in performDrop(), because data is not available here
         return true;
     }
@@ -163,14 +162,7 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
         boolean valid = true;
         if(target instanceof CnATreeElement) {
             List<Object> list = new ArrayList<Object>();
-            if(data instanceof Object[]){
-                Object[] o = (Object[])data;
-                for(Object object : o){
-                    list.add(object);
-                }
-            } else if (data instanceof Object){
-                list.add(data);
-            }
+            list.addAll(addDataToList(data));
             Set<String> draggedTypeSet = new HashSet<String>(0);
             for(Object object : list){
                 if(object instanceof CnATreeElement){
@@ -200,6 +192,19 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
             }
         }
         return valid;
+    }
+
+    private List<Object> addDataToList(Object data) {
+        ArrayList<Object> retList = new ArrayList<Object>(0);
+        if(data instanceof Object[]){
+            Object[] o = (Object[])data;
+            for(Object object : o){
+                retList.add(object);
+            }
+        } else if (data instanceof Object){
+            retList.add(data);
+        }
+        return retList;
     }
 
     /* (non-Javadoc)

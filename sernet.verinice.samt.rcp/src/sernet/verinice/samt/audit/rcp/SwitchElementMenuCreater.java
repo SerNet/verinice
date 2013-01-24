@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import java.util.AbstractSequentialList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -49,7 +50,7 @@ public class SwitchElementMenuCreater implements IViewActionDelegate, IMenuCreat
     
     private IAction action;
     private GenericElementView groupView;
-    private LinkedList<SwitchElementAction> handlerList;
+    private AbstractSequentialList<SwitchElementAction> handlerList;
     private Iterator<SwitchElementAction> handlerIterator;
 
     /* (non-Javadoc)

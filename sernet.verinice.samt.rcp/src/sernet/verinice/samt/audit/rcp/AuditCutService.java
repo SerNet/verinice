@@ -60,7 +60,7 @@ public class AuditCutService extends CutService {
         public void process(List<String> copyUuidList,Map<String, String> sourceDestMap) {
             try {
                 MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap,linkTo);          
-                moveLinksCommand = getCommandService().executeCommand(moveLinksCommand);
+                getCommandService().executeCommand(moveLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while moving links on server.", e);
             }

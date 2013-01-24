@@ -38,7 +38,7 @@ public class AuditView extends GenericElementView {
     
     public CnATreeElement getGroupToAdd() {
         CnATreeElement group = getSelectedGroup();
-        final String typeId = this.commandFactory.getElementTypeId();
+        final String typeId = this.getCommandFactory().getElementTypeId();
         if (group == null) {
             Organization org = getSelectedOrganization();
             if (org != null) {

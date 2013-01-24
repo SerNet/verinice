@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.iso27k.service.Retriever;
@@ -24,9 +25,9 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 
 	private static final Logger LOG = Logger.getLogger(TopicGroupDecorator.class);
 	
-	 private ICommandService commandService;
+	private ICommandService commandService;
 	
-	ControlMaturityService maturityService = new ControlMaturityService();
+	private ControlMaturityService maturityService = new ControlMaturityService();
 	
 	@Override
 	public void decorate(Object element, IDecoration decoration) {
@@ -71,7 +72,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 					}
 				}
 			}		
-		} catch(Throwable t) {
+		} catch(CommandException t) {
 			LOG.error("Error while loading maturity value", t);
 		}
 	}

@@ -20,17 +20,13 @@
 package sernet.verinice.samt.audit.rcp;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
-import sernet.verinice.samt.audit.rcp.AssetView;
-import sernet.verinice.samt.audit.rcp.ControlView;
-import sernet.verinice.samt.audit.rcp.ElementView;
 import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
@@ -41,7 +37,7 @@ public class AuditPerspective implements IPerspectiveFactory {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.AuditPerspective";
     
-    public static HashMap<String, String> viewRightIDs = null;
+    public static Map<String, String> viewRightIDs = null;
     
     static{
         viewRightIDs = new HashMap<String, String>();
@@ -64,11 +60,6 @@ public class AuditPerspective implements IPerspectiveFactory {
         layout.addView(SimpleAuditView.ID, IPageLayout.LEFT, 0.25f, editorArea);
         layout.addView(RelationView.ID, IPageLayout.BOTTOM, 0.7f, SimpleAuditView.ID);
         layout.addView(FileView.ID, IPageLayout.BOTTOM, 0.7f, editorArea);
-        
-        //layout.addView(OrganizationView.ID, IPageLayout.LEFT, 0.25f, editorArea);
-        //layout.addView(AuditView.ID, IPageLayout.BOTTOM, 0.25f, OrganizationView.ID);
-        //layout.addView(AssetView.ID, IPageLayout.BOTTOM, 0.33f, AuditView.ID);
-        //layout.addView(ControlView.ID, IPageLayout.BOTTOM, 0.5f, AssetView.ID);
     }
 
 }

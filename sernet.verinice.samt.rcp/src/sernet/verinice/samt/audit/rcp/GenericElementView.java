@@ -21,18 +21,14 @@ package sernet.verinice.samt.audit.rcp;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 
@@ -72,9 +68,7 @@ import sernet.verinice.model.iso27k.Organization;
 @SuppressWarnings("restriction")
 public class GenericElementView extends ElementView {
 
-    private static final Logger LOG = Logger.getLogger(GenericElementView.class);
-    
-    static Map<String, ICommandFactory> commandMap;
+    private static Map<String, ICommandFactory> commandMap;
 
     static {
         commandMap = new Hashtable<String, ICommandFactory>();
@@ -91,7 +85,7 @@ public class GenericElementView extends ElementView {
     
     private MetaDropAdapter metaDropAdapter;
     
-    protected ICommandFactory commandFactory;
+    private ICommandFactory commandFactory;
     
     public GenericElementView(ICommandFactory commandFactory) {
         super();
@@ -211,7 +205,7 @@ public class GenericElementView extends ElementView {
 
 class Filter extends ViewerFilter {
 
-    String typeId;
+    private String typeId;
     
     /**
      * @param typeId

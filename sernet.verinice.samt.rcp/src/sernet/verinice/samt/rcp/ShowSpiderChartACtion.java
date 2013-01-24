@@ -1,8 +1,8 @@
 package sernet.verinice.samt.rcp;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.internal.cheatsheets.data.IActionItem;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
@@ -11,7 +11,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import org.eclipse.jface.action.IAction;
 
 public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewActionDelegate, RightEnabledUserInteraction {
 

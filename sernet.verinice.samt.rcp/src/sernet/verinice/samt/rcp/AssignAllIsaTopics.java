@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -24,20 +23,18 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 @SuppressWarnings("restriction")
 public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUserInteraction {
@@ -48,7 +45,7 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
 
     private List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
     
-    int numberOfTopics = 0;
+    private int numberOfTopics = 0;
     
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -58,7 +55,6 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
     @Override
     public void run(IAction action) {
         IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-        //final SelectPersonDialog dialog = new SelectPersonDialog(window.getShell());
         CnATreeElement firstSelected = null;
         if(selectedElementList!=null && !selectedElementList.isEmpty()) {
             firstSelected = selectedElementList.get(0);
@@ -92,10 +88,13 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
                     Messages.bind(Messages.AssignAllIsaTopics_1, numberOfTopics), 
                     Messages.AssignAllIsaTopics_2,
                     SamtPreferencePage.INFO_CONTROLS_LINKED);
-        } catch (Throwable t) {
+        } catch (InvocationTargetException t) {
             LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
             ExceptionUtil.log(t, Messages.AssignAllIsaTopics_3); 
-        } 
+        }  catch (InterruptedException e){
+            LOG.error("Error while creating tasks.",e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AssignAllIsaTopics_3);            
+        }
            
     }
 

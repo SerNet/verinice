@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.iso27k.service.CopyService;
@@ -46,8 +45,6 @@ public class AuditCopyService extends CopyService {
     public class LinkTask implements IPostProcessor {
 
         
-        RetrieveInfo ri = new RetrieveInfo().setLinksDown(true).setLinksUp(true);
-        
         private CnATreeElement linkTo;
         
         /**
@@ -64,7 +61,7 @@ public class AuditCopyService extends CopyService {
         public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
             try {
                 CopyLinks copyLinksCommand = new CopyLinks(copyUuidList,sourceDestMap,linkTo);          
-                copyLinksCommand = getCommandService().executeCommand(copyLinksCommand);
+                getCommandService().executeCommand(copyLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while creating links on server.", e);
             }

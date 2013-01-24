@@ -70,10 +70,11 @@ public class AddAction extends Action implements ISelectionListener {
      */
     public AddAction(String typeId, String title, GenericElementView groupView) {
         this.objectTypeId = typeId;
-        if (title == null) {
-            title = AddGroup.TITLE_FOR_TYPE.get(typeId);
+        String title_ = new String(title);
+        if (title_ == null) {
+            title_ = AddGroup.TITLE_FOR_TYPE.get(typeId);
         }
-        setText(title);
+        setText(title_);
         setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
         this.groupView = groupView;
     }
@@ -126,29 +127,27 @@ public class AddAction extends Action implements ISelectionListener {
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (part instanceof ElementView) {
-            if (selection instanceof IStructuredSelection) {
-                Object element = ((IStructuredSelection) selection).getFirstElement();
-                if (element instanceof CnATreeElement) {
-                    boolean addElementEnabled = false;
-                    String elementType = groupView.getCommandFactory().getElementTypeId();
-                    String groupType = groupView.getCommandFactory().getGroupTypeId();
-                    String type = elementType;
-                    if(objectTypeId.equals(groupType)) {
-                        // this is an add group action
-                        type = groupType;
-                    }
-                    String selectedElementType = ((CnATreeElement) element).getTypeId();
-                    EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
-                    Set<HuiRelation> relationSet = entityType.getPossibleRelations();
-                    for (HuiRelation huiRelation : relationSet) {
-                        if (huiRelation.getTo().equals(type)) {
-                            addElementEnabled = true;
-                            break;
-                        }
-                    }
-                    this.setEnabled(addElementEnabled);
+        if (part instanceof ElementView && selection instanceof IStructuredSelection) {
+            Object element = ((IStructuredSelection) selection).getFirstElement();
+            if (element instanceof CnATreeElement) {
+                boolean addElementEnabled = false;
+                String elementType = groupView.getCommandFactory().getElementTypeId();
+                String groupType = groupView.getCommandFactory().getGroupTypeId();
+                String type = elementType;
+                if(objectTypeId.equals(groupType)) {
+                    // this is an add group action
+                    type = groupType;
                 }
+                String selectedElementType = ((CnATreeElement) element).getTypeId();
+                EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
+                Set<HuiRelation> relationSet = entityType.getPossibleRelations();
+                for (HuiRelation huiRelation : relationSet) {
+                    if (huiRelation.getTo().equals(type)) {
+                        addElementEnabled = true;
+                        break;
+                    }
+                }
+                this.setEnabled(addElementEnabled);
             }
         }
     }

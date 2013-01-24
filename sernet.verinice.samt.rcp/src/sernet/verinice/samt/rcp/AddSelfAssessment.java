@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.samt.rcp;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,6 +38,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
@@ -114,17 +117,7 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
-                        monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
-                        Activator.inheritVeriniceContextState();
-                        samtService.createSelfAssessment();
-                        monitor.setTaskName(Messages.AddSelfAssessment_5);
-                        if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
-                            Display.getDefault().syncExec(new Runnable() {
-                                public void run() {
-                                    samtView.expand();
-                                }
-                            });
-                        }
+                        createSelfAssessment(monitor);
                     } catch (Exception e) {
                         LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
                         status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
@@ -133,12 +126,26 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
                     }
                     return status;
                 }
+
+
             };
             JobScheduler.scheduleJob(importJob, iSchedulingRule);
         }
     }
 
-   
+    private void createSelfAssessment(final IProgressMonitor monitor) throws CommandException, IOException {
+        monitor.beginTask(Messages.AddSelfAssessment_4, IProgressMonitor.UNKNOWN);
+        Activator.inheritVeriniceContextState();
+        samtService.createSelfAssessment();
+        monitor.setTaskName(Messages.AddSelfAssessment_5);
+        if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
+            Display.getDefault().syncExec(new Runnable() {
+                public void run() {
+                    samtView.expand();
+                }
+            });
+        }
+    }
 
     /*
      * (non-Javadoc)
