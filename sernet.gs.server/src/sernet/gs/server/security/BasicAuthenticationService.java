@@ -21,13 +21,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
@@ -46,7 +43,6 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class BasicAuthenticationService implements IAuthService {
     
-    private BasicProcessingFilterEntryPoint entryPoint;
     private String guestUser = "";
     private String adminUsername;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -57,13 +53,6 @@ public class BasicAuthenticationService implements IAuthService {
      */
     public void setGuestUser(String guestUser) {
         this.guestUser = guestUser;
-    }
-
-    /**
-     * @param entryPoint the entryPoint to set
-     */
-    public void setEntryPoint(BasicProcessingFilterEntryPoint entryPoint) {
-        this.entryPoint = entryPoint;
     }
 
     /* (non-Javadoc)
@@ -88,10 +77,11 @@ public class BasicAuthenticationService implements IAuthService {
             SecurityContext context = SecurityContextHolder.getContext();
             Authentication authentication = context.getAuthentication();
             GrantedAuthority[] authorities = authentication.getAuthorities();
-            if (guestUser != null && guestUser.length()>0 && isGuestUser(authorities))
+            if (guestUser != null && guestUser.length()>0 && isGuestUser(authorities)){
                 return guestUser;
-            else
+            } else {
                 return authentication.getName();
+            }
         } catch (Exception e) {
             // do nothing, just return no user name
             Logger.getLogger( this.getClass() ).error( Messages.getString("AuthenticationService.1"), e ); //$NON-NLS-1$
@@ -153,7 +143,7 @@ public class BasicAuthenticationService implements IAuthService {
      */
     @Override
     public boolean isScopeOnly() {
-        String HQL = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+        String hql = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
                 "inner join conf.entity as entity " + //$NON-NLS-1$
                 "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
                 "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -164,7 +154,7 @@ public class BasicAuthenticationService implements IAuthService {
                 "and props.propertyValue like ? " + //$NON-NLS-1$
                 "and scopeprops.propertyType = ?";   //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME,getUsername(),Configuration.PROP_SCOPE};                
-        List<String> resultList = getConfigurationDao().findByQuery(HQL,params);
+        List<String> resultList = getConfigurationDao().findByQuery(hql,params);
         String value = null;
         if (resultList != null && resultList.size() == 1) {
             value = resultList.get(0);

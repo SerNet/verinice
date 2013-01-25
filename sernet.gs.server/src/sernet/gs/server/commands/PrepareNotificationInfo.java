@@ -29,10 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
@@ -175,9 +172,9 @@ public class PrepareNotificationInfo extends GenericCommand {
 			}
 			
 			result = lc.getConfiguration();
-			if (result == null)
+			if (result == null){
 				result = new Configuration();
-			
+			}
 			personCache.put(p, result);
 		}
 		
@@ -276,9 +273,9 @@ public class PrepareNotificationInfo extends GenericCommand {
 		PropertyList pl = mu.getEntity().getProperties(field);
 		List<Property> props = null; 
 			
-		if (pl != null)
+		if (pl != null){
 			props = pl.getProperties();
-		
+		}
 		if (props != null && !props.isEmpty())
 		{
 			List<Integer> ids = new ArrayList<Integer>(props.size());
@@ -336,9 +333,9 @@ public class PrepareNotificationInfo extends GenericCommand {
 	{
 		Date date = mu.getNaechsteRevision();
 		Calendar deadline = Calendar.getInstance();
-		if (date != null)
+		if (date != null){
 			deadline.setTime(date);
-
+		}
 		for (CnATreeElement p : retrievePersonsDirectlyResponsible(mu, false))
 		{
 			Configuration c = retrieveConfiguration(p);
@@ -375,9 +372,9 @@ public class PrepareNotificationInfo extends GenericCommand {
 
 		Date date = mu.getUmsetzungBis();
 		Calendar deadline = Calendar.getInstance();
-		if (date != null)
+		if (date != null){
 			deadline.setTime(date);
-
+		}
 		for (CnATreeElement p : retrievePersonsResponsibleForCompletion(mu))
 		{
 			Configuration c = retrieveConfiguration(p);

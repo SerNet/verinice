@@ -34,7 +34,6 @@ import org.springframework.security.context.SecurityContextHolder;
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
 
 /**
  *
@@ -47,9 +46,9 @@ public class Reminder implements EventListener  {
     
     private DummyAuthentication authentication = new DummyAuthentication(); 
     
-    String taskType;
-    String assignee;
-    String uuid;
+    private String taskType;
+    private String assignee;
+    private String uuid;
 
     public void sendEmail(String taskType, String assignee, String uuid) {
         doSendEmail(Collections.EMPTY_MAP, taskType, assignee, uuid);

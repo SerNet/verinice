@@ -250,11 +250,6 @@ public class LinkBean {
         if (LOG.isDebugEnabled()) {
             LOG.debug("selectLink() called ...");
         }
-        try {
-            
-        } catch (Throwable t) {
-            LOG.error("Error while selecting link", t);
-        }
     }
     
     public void setShowDeleteLink(String s) {
@@ -300,7 +295,7 @@ public class LinkBean {
                 setSelectedLink(null);
                 deleteVisible = false;
             }
-        } catch (Throwable t) {
+        } catch (CommandException t) {
             LOG.error("Error while deleting link", t);
             ExceptionHandler.handle(t);
         }

@@ -19,14 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -38,6 +36,8 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class HandlerFactory {
+    
+    private HandlerFactory(){};
     
     public static List<IActionHandler> getHandlerForGroup(CnATreeElement group) {       
         List<IActionHandler> handlers = new LinkedList<IActionHandler>();
@@ -58,10 +58,8 @@ public class HandlerFactory {
     
     public static IActionHandler getGroupHandler(CnATreeElement group) {       
         IActionHandler handler = null;
-        if(group instanceof IISO27kGroup && !(group instanceof ImportIsoGroup)) {
-            if(!(group instanceof IISO27Scope)) {
-                handler = new CreateElementHandler((CnATreeElement) group, group.getTypeId());
-            }               
+        if(group instanceof IISO27kGroup && !(group instanceof ImportIsoGroup) && !(group instanceof IISO27Scope)) {
+            handler = new CreateElementHandler((CnATreeElement) group, group.getTypeId());
         }
         return handler;
     }

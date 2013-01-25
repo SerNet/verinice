@@ -67,6 +67,8 @@ public class EditBean {
     
     public static final String TAG_ALL = "ALL-TAGS-VISIBLE";
     
+    private static final String SUBMIT = "submit";
+    
     private LinkBean linkBean;
     
     private AttachmentBean attachmentBean;
@@ -117,7 +119,7 @@ public class EditBean {
         }
         try {
             doInit();
-        } catch(Throwable t) {
+        } catch(CommandException t) {
             LOG.error("Error while initialization. ", t);
             Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
         }
@@ -129,8 +131,6 @@ public class EditBean {
     
     private void doInit() throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-        //ri.setLinksDownProperties(true);
-        //ri.setLinksUpProperties(true);
         ri.setPermissions(true);
         LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
         command = getCommandService().executeCommand(command);    
@@ -276,13 +276,13 @@ public class EditBean {
             }
         } catch (SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
         } catch (sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
-            Util.addError("submit", Util.getMessage(BOUNDLE_NAME, "save.failed"));
+            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.failed"));
         }
     }
 
@@ -314,7 +314,7 @@ public class EditBean {
         if(LOG.isDebugEnabled()) {
             LOG.debug("Element saved, uuid: " + getUuid());
         }   
-        Util.addInfo("submit", getSaveMessage());
+        Util.addInfo(SUBMIT, getSaveMessage());
     }
 
     private String getSaveMessage() {

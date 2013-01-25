@@ -160,9 +160,9 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
         }
         
         // if set in the entity, the user may also have the admin role:
-        if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes"))
+        if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes")){
             roles.add(ApplicationRoles.ROLE_ADMIN);
-        
+        }
         // add special roles:
         if (specialRoles != null && specialRoles.length>0) {
             for (String role: specialRoles) {
@@ -199,8 +199,9 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     private void checkAdminPassword(String username, String password) {
         String hash = DigestProcessingFilter.encodePasswordInA1Format(username,
                 passwordRealm, password);
-        if (hash.equals(adminpass))
+        if (hash.equals(adminpass)){
             return;
+        }
         throw new BadCredentialsException("Wrong username / password for administrative user.");
     }
 

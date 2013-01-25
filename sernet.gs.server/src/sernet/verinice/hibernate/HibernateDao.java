@@ -39,7 +39,7 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
 
     protected Class<T> type;
 
-    private static final Logger log = Logger.getLogger(HibernateDao.class);
+    private static final Logger LOG = Logger.getLogger(HibernateDao.class);
 
     public HibernateDao(Class<T> type) {
         this.type = type;
@@ -50,8 +50,8 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
      */
     @Override
     public void delete(T entity) {
-        if (log.isDebugEnabled()) {
-            log.debug("Deleting element: " + entity);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Deleting element: " + entity);
         }
         // TODO akoderman update protection requirements on delete (see how it's
         // done during merge())

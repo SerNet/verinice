@@ -56,7 +56,7 @@ import sernet.verinice.service.commands.SaveElement;
  */
 public class ToDoBean {
 
-	final static Logger LOG = Logger.getLogger(ToDoBean.class);
+	private static final Logger LOG = Logger.getLogger(ToDoBean.class);
 	
 	public static final String BOUNDLE_NAME = "sernet.gs.web.Messages";
 	

@@ -32,7 +32,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.ops4j.pax.web.service.WebContainer;
@@ -62,7 +61,7 @@ public class InternalServer implements IInternalServer {
 
 	private final Logger log = Logger.getLogger(InternalServer.class);
 	
-	boolean running = false;
+	private boolean running = false;
 
 	private ContextLoaderServlet contextLoaderServlet;
 
@@ -73,6 +72,10 @@ public class InternalServer implements IInternalServer {
 	private HttpContext ctx;
 	
 	private List<IInternalServerStartListener> listeners = new LinkedList<IInternalServerStartListener>();
+	
+	private static final String INTERNAL_SERVER_CONFIGURE_FAILURE = "InternalServer.configure.failed";
+	
+	private static final String SERVLET_NAME = "servlet-name";
 
 	/**
 	 * Applies the given database credentials to the verinice server and checks
@@ -90,21 +93,29 @@ public class InternalServer implements IInternalServer {
 	public void configure(String url, String user, String pass, String driver, String dialect) {
 
 		boolean fail = false;
+		Connection c = null;
 		try {
 			Class.forName(driver);
 
-			Connection c = DriverManager.getConnection(url, user, pass);
+			c = DriverManager.getConnection(url, user, pass);
 
-			c.close();
 		} catch (ClassNotFoundException cnfe) {
 			throw new IllegalStateException(Messages.InternalServer_0 + driver);
 		} catch (SQLException sqle) {
 			log.error("Could not connect to Database", sqle);
 			fail = true;
+		} finally {
+		    try {
+		        if(c != null){
+		            c.close();
+		        }
+            } catch (SQLException e) {
+                log.error("Error closing Database connection", e);
+            }
 		}
 
 		if (fail) {
-			ServerPropertyPlaceholderConfigurer.setDatabaseProperties("InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed", "InternalServer.configure.failed");
+		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);
 
 		} else {
 			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);
@@ -136,7 +147,7 @@ public class InternalServer implements IInternalServer {
 	 * is thrown.
 	 * </p>
 	 */
-	public synchronized void start() throws IllegalStateException {
+	public synchronized void start() {
 		if (log.isDebugEnabled()) {
 			log.debug("start(), starting internal server...");
 		}
@@ -177,9 +188,9 @@ public class InternalServer implements IInternalServer {
 	 * </p>
 	 */
 	public void stop() {
-		if (!running)
+		if (!running){
 			return;
-
+		}
 		teardownSpringServlets();
 
 		running = false;
@@ -200,7 +211,7 @@ public class InternalServer implements IInternalServer {
 	 * @throws ServletException
 	 * @throws NamespaceException
 	 */
-	private void initialSetup() throws ServletException, NamespaceException {
+	private void initialSetup() throws ServletException {
 		wc = Activator.getDefault().getWebContainer();
 
 		ctx = wc.createDefaultHttpContext();	
@@ -219,12 +230,12 @@ public class InternalServer implements IInternalServer {
 		wc.setContextParam(dict, ctx);
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put(SERVLET_NAME, "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
 		dict.put("snca.xml.path", "/WebContent/WEB-INF/"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put(SERVLET_NAME, "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
 	}
 
@@ -239,15 +250,14 @@ public class InternalServer implements IInternalServer {
 	    if (log.isDebugEnabled()) {
 	        log.debug("setupSpringServlets...");
         }
-		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "context"); //$NON-NLS-1$ //$NON-NLS-2$
+	    Dictionary<String, String> dict = new Hashtable<String, String>();
+		dict.put(SERVLET_NAME, "context"); //$NON-NLS-1$ //$NON-NLS-2$
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		contextLoaderServlet = new ContextLoaderServlet();
 		wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
 		dict = new Hashtable<String, String>();
-		dict.put("servlet-name", "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
+		dict.put(SERVLET_NAME, "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
 		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
 		dispatcherServlet = new DispatcherServlet();
 		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
@@ -282,17 +292,17 @@ public class InternalServer implements IInternalServer {
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			System.err.println("doGet"); //$NON-NLS-1$
+			log.error("doGet"); //$NON-NLS-1$
 
 			resp.setContentType("text/html"); //$NON-NLS-1$
 
 			PrintWriter w = resp.getWriter();
 
-			if (running)
+			if (running){
 				w.println(Messages.InternalServer_4);
-			else
+			} else {
 				w.println(Messages.InternalServer_5);
-
+			}
 			w.flush();
 		}
 	}

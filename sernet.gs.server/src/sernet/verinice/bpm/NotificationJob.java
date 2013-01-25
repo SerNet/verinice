@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
@@ -107,7 +108,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     
     private String url;
 
-    Map<String,String> model = new HashMap<String,String>();
+    private Map<String,String> model = new HashMap<String,String>();
     
     // NotificationJob can not do a real login
     // authentication is a fake instance to run secured commands and dao actions
@@ -190,7 +191,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                 model.put(TEMPLATE_REPLY_TO,getReplyTo());
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
                     
-                    public void prepare(MimeMessage mimeMessage) throws Exception {
+                    public void prepare(MimeMessage mimeMessage) throws MessagingException {
                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                        message.setTo(getEmail());
                        message.setFrom(getEmailFrom());
@@ -253,7 +254,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private void loadUserData(String name) {
         if (name != null) {
-            String HQL = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+            String hql = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
             "inner join conf.entity as entity " + //$NON-NLS-1$
             "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
             "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -265,7 +266,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             "and emailprops.propertyType = ?";          //$NON-NLS-1$
             
             Object[] params = new Object[]{Configuration.PROP_USERNAME,name,Configuration.PROP_NOTIFICATION_EMAIL};        
-            List<Object[]> configurationList = getConfigurationDao().findByQuery(HQL,params);
+            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
                 model.put(TEMPLATE_EMAIL, (String) configurationList.get(0)[1]);
@@ -281,7 +282,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
      */
     private void loadPerson(Integer dbId) {
         if(dbId!=null) {
-            String HQL = "from Configuration as conf " + //$NON-NLS-1$
+            String hql = "from Configuration as conf " + //$NON-NLS-1$
             "inner join fetch conf.person as person " + //$NON-NLS-1$
             "inner join fetch person.entity as entity " + //$NON-NLS-1$
             "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
@@ -289,7 +290,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             "where conf.dbId = ? "; //$NON-NLS-1$
             
             Object[] params = new Object[]{dbId};        
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(HQL,params);
+            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
                 if(element instanceof PersonIso) {

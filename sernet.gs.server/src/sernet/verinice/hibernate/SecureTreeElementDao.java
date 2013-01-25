@@ -17,22 +17,17 @@
  ******************************************************************************/
 package sernet.verinice.hibernate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.ConfigurationService;
 import sernet.verinice.service.IConfigurationService;
 
 /**
@@ -101,52 +96,56 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
             log.debug("Checking rights for entity: " + entity + " and username: " + username);
         } 
 	    if (isPermissionHandlingNeeded(username)) {
-	        String[] roleArray = getDynamicRoles(username);
-	        if(roleArray==null) {
-	            log.error("Role array is null for user: " + username);
-	        }
-	        if(!hasAdminRole(roleArray)) {	    
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < roleArray.length; i++) {
-                    sb.append("'").append(roleArray[i]).append("'");
-                    if(i<roleArray.length-1) {
-                        sb.append(",");
-                    }           
-                }
-                String roleParam = sb.toString();
-                
-                sb = new StringBuilder();
-                sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
-                // workaraound, because adding roles as ? param does not work
-                sb.append(roleParam);
-                sb.append(") and p.writeAllowed = ?");
-                String hql = sb.toString();
-                
-                Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
-                if (log.isDebugEnabled()) {
-                    log.debug("checkRights, hql: " + hql);
-                    log.debug("checkRights, entity db-id: " + entity.getDbId() );
-                }
-                List<Integer> idList = getPermissionDao().findByQuery(hql, params);
-                if (log.isDebugEnabled()) {
-                    log.debug("checkRights, permission ids: ");
-                    for (Integer integer : idList) {
-                        log.debug(integer);
-                    }
-                }
-                if(idList==null | idList.isEmpty()) {
-                    final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
-                    log.warn(message);
-                    throw new SecurityException(message);
-                }
-	        }
-	        if(isScopeOnly(username)  
-	           && !entity.getScopeId().equals(getConfigurationService().getScopeId(username))) {
-	                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
-                    log.warn(message);
-                    throw new SecurityException(message);
-	        }
+	        logPermissionInfo(entity, username);
 	    }
+    }
+
+    private void logPermissionInfo(CnATreeElement entity, String username) {
+        String[] roleArray = getDynamicRoles(username);
+        if(roleArray==null) {
+            log.error("Role array is null for user: " + username);
+        }
+        if(!hasAdminRole(roleArray)) {	    
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < roleArray.length; i++) {
+                sb.append("'").append(roleArray[i]).append("'");
+                if(i<roleArray.length-1) {
+                    sb.append(",");
+                }           
+            }
+            String roleParam = sb.toString();
+            
+            sb = new StringBuilder();
+            sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+            // workaraound, because adding roles as ? param does not work
+            sb.append(roleParam);
+            sb.append(") and p.writeAllowed = ?");
+            String hql = sb.toString();
+            
+            Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+            if (log.isDebugEnabled()) {
+                log.debug("checkRights, hql: " + hql);
+                log.debug("checkRights, entity db-id: " + entity.getDbId() );
+            }
+            List<Integer> idList = getPermissionDao().findByQuery(hql, params);
+            if (log.isDebugEnabled()) {
+                log.debug("checkRights, permission ids: ");
+                for (Integer integer : idList) {
+                    log.debug(integer);
+                }
+            }
+            if(idList==null | idList.isEmpty()) {
+                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+                log.warn(message);
+                throw new SecurityException(message);
+            }
+        }
+        if(isScopeOnly(username)  
+           && !entity.getScopeId().equals(getConfigurationService().getScopeId(username))) {
+                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+                log.warn(message);
+                throw new SecurityException(message);
+        }
     }
 
     /**
@@ -176,8 +175,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	private boolean hasAdminRole(String[] roles) {
 	    if(roles!=null) {
     		for (String r : roles) {
-    			if (ApplicationRoles.ROLE_ADMIN.equals(r))
+    			if (ApplicationRoles.ROLE_ADMIN.equals(r)){
     				return true;
+    			}
     		}
 	    }
 		return false;

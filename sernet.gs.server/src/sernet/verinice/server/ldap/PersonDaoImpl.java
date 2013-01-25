@@ -5,7 +5,6 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.springframework.ldap.SizeLimitExceededException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
@@ -31,7 +30,7 @@ public class PersonDaoImpl implements IPersonDao {
 	private String getForename(String fullName) {
         String forename = null;
         if(fullName!=null) {
-            int n = fullName.lastIndexOf(" ");
+            int n = fullName.lastIndexOf(' ');
             if(n!=-1) {
                 forename = fullName.substring(0,n);
             }
@@ -43,7 +42,7 @@ public class PersonDaoImpl implements IPersonDao {
         String surname = null;
         if(fullName!=null) {
             surname = fullName;
-            int n = fullName.lastIndexOf(" ");
+            int n = fullName.lastIndexOf(' ');
             if(n!=-1) {
                 surname = fullName.substring(n+1);
             }

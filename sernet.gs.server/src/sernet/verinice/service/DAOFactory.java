@@ -19,6 +19,7 @@ package sernet.verinice.service;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -28,11 +29,9 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.hibernate.ElementEntityDao;
 import sernet.verinice.interfaces.IAttachmentDao;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
@@ -67,7 +66,6 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -139,9 +137,9 @@ public class DAOFactory implements IDAOFactory {
 	
 	// injected by spring
 	@SuppressWarnings("unchecked")
-	private HashMap<Class, IBaseDao> daosByClass = new HashMap<Class, IBaseDao>(); 
+	private Map<Class, IBaseDao> daosByClass = new HashMap<Class, IBaseDao>(); 
 	
-	private HashMap<String, IBaseDao> daosByTypeID = new HashMap<String, IBaseDao>(); 
+	private Map<String, IBaseDao> daosByTypeID = new HashMap<String, IBaseDao>(); 
 	
 	/**
 	 * Setter method used by spring to inject DAO.
@@ -707,12 +705,13 @@ public class DAOFactory implements IDAOFactory {
 	 */
 	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
 		IBaseDao dao = daosByClass.get(daotype);
-		if (dao != null)
+		if (dao != null){
 			return dao;
-		
+		}
 		for (Class clazz : daosByClass.keySet()) {
-			if (clazz.isAssignableFrom(daotype))
+			if (clazz.isAssignableFrom(daotype)){
 				return daosByClass.get(clazz);
+			}
 		}
 		
 		if(daotype!=null) {

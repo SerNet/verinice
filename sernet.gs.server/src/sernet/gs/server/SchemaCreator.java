@@ -42,12 +42,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class SchemaCreator implements InitializingBean {
 	
-	final private Logger log = Logger.getLogger(this.getClass());
+	private final Logger log = Logger.getLogger(this.getClass());
 	
-	private static String SQL_GETDBVERSION_PRE_096     = "select dbversion from bsimodel";
-    private static String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement where object_type='bsimodel'";
+	private static final String SQL_GETDBVERSION_PRE_096     = "select dbversion from bsimodel";
+    private static final String SQL_GETDBVERSION_POST_096 = "select dbversion from cnatreeelement where object_type='bsimodel'";
     
-    private static String SQL_Ver_095_096 = "sernet/gs/server/hibernate/update-095-096.sql";
+    private static final String SQL_VER_095_096 = "sernet/gs/server/hibernate/update-095-096.sql";
 	
 	private DataSource dataSource;
 	
@@ -69,7 +69,7 @@ public class SchemaCreator implements InitializingBean {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	@Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws RuntimeException, IOException {
 		log.debug("afterPropertiesSet");
 		
 		double dbVersion = determineDbVersion();
@@ -84,11 +84,11 @@ public class SchemaCreator implements InitializingBean {
 				log.error("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 			}
-			if (dbVersion == 0.95D) {
+			if (Math.abs(dbVersion - 0.95D) < .0001) {
 			    if (log.isInfoEnabled()) {
 		            log.info("Updating database from version 0.95 to 0.96");
 		        }
-				updateDbVersion(SQL_Ver_095_096);
+				updateDbVersion(SQL_VER_095_096);
 			}
 			if (dbVersion == 0.97D) {
 			    if (log.isInfoEnabled()) {
@@ -102,9 +102,11 @@ public class SchemaCreator implements InitializingBean {
                 }
                 getDbUpdate98To99().update();
             }
-		} catch (Exception e) {
-		    log.error("Exception while updating database.", e);
+		} catch (RuntimeException e) {
+		    log.error("Exception while updating database, v < 0.95", e);
 		    // dont't throw an exception here to continue server start
+		} catch (IOException e){
+		    log.error("Exception while updatind database, v == 0.95", e);
 		}
 		
 	}
@@ -125,8 +127,9 @@ public class SchemaCreator implements InitializingBean {
     		String query;
     
     		while ((query = buffRead.readLine()) != null) {
-    			if (query.matches("^$") || query.matches("^--"))
+    			if (query.matches("^$") || query.matches("^--")){
     				continue;
+    			}
     			// remove ; for Derby
     			if(query.endsWith(";")) {
     				query = query.substring(0, query.length()-1);
@@ -138,6 +141,9 @@ public class SchemaCreator implements InitializingBean {
     			jdbcTemplate.execute(query);
     		}
 		} finally {
+		    if(buffRead!=null){
+		        buffRead.close();
+		    }
 		    if(read!=null) {
 		        read.close();
 		    }

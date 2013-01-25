@@ -62,7 +62,7 @@ class GetChangedElementsSince extends GenericCommand {
 
     public GetChangedElementsSince(Calendar keydate, int type, String[] classNames) {
         this.keydate = keydate.getTime();
-        this.classNames = classNames;
+        this.classNames = (classNames != null) ? classNames.clone() : null;
         this.type = type;
     }
 
@@ -86,8 +86,9 @@ class GetChangedElementsSince extends GenericCommand {
     private void hydrateChangedItems(List<ChangeLogEntry> entries) throws CommandException {
         Set<Integer> ids = new HashSet<Integer>(entries.size());
         for (ChangeLogEntry logEntry : entries) {
-            if (logEntry.getElementId() != null)
+            if (logEntry.getElementId() != null){
                 ids.add(logEntry.getElementId());
+            }
         }
 
         if (ids.isEmpty()) {
@@ -102,16 +103,16 @@ class GetChangedElementsSince extends GenericCommand {
 
     private static class Callback implements HibernateCallback, Serializable {
 
-        Date keydate;
+        private Date keydate;
 
-        String[] classNames;
+        private String[] classNames;
 
-        int type;
+        private int type;
 
         Callback(Date keydate, int type, String[] classNames) {
             this.keydate = keydate;
             this.type = type;
-            this.classNames = classNames;
+            this.classNames = (classNames != null) ? classNames.clone() : null;
         }
 
         public Object doInHibernate(Session session) throws HibernateException, SQLException {

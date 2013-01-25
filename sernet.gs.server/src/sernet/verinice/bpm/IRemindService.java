@@ -32,15 +32,15 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface IRemindService {
 
-    public static final String TEMPLATE_NUMBER = "n";    //$NON-NLS-1$
-    public static final String TEMPLATE_URL = "url";    //$NON-NLS-1$
-    public static final String TEMPLATE_EMAIL = "email"; //$NON-NLS-1$
-    public static final String TEMPLATE_EMAIL_FROM = "emailFrom"; //$NON-NLS-1$
-    public static final String TEMPLATE_REPLY_TO = "replyTo"; //$NON-NLS-1$
-    public static final String TEMPLATE_NAME = "name"; //$NON-NLS-1$
-    public static final String TEMPLATE_ADDRESS = "address"; //$NON-NLS-1$
-    public static final String TEMPLATE_SUBJECT = "subject"; //$NON-NLS-1$
-    public static final String TEMPLATE_PATH = "path"; //$NON-NLS-1$
+    static final String TEMPLATE_NUMBER = "n";    //$NON-NLS-1$
+    static final String TEMPLATE_URL = "url";    //$NON-NLS-1$
+    static final String TEMPLATE_EMAIL = "email"; //$NON-NLS-1$
+    static final String TEMPLATE_EMAIL_FROM = "emailFrom"; //$NON-NLS-1$
+    static final String TEMPLATE_REPLY_TO = "replyTo"; //$NON-NLS-1$
+    static final String TEMPLATE_NAME = "name"; //$NON-NLS-1$
+    static final String TEMPLATE_ADDRESS = "address"; //$NON-NLS-1$
+    static final String TEMPLATE_SUBJECT = "subject"; //$NON-NLS-1$
+    static final String TEMPLATE_PATH = "path"; //$NON-NLS-1$
     
     Map<String,String> loadUserData(String name) throws MissingParameterException;
     

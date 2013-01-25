@@ -161,67 +161,9 @@ public class TaskService implements ITaskService {
         }
         List<ITask> taskList = Collections.emptyList();
         if(doSearch(parameter)) {      
-            List<Object> paramList = new LinkedList<Object>();
-            StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task "); //$NON-NLS-1$
-                
-            if(parameter.getAuditUuid()!=null) {
-                sb.append("inner join task.execution.processInstance.variables as auditVar "); //$NON-NLS-1$
-            }    
-            // create (un)read query if one is false:
-            if((parameter.getRead()!=null && !parameter.getRead())
-               || (parameter.getUnread()!=null && !parameter.getUnread())) {
-                sb.append("inner join task.execution.processInstance.variables as readVar ");  //$NON-NLS-1$
-            }
-            
-            boolean where = false;
-            if(!parameter.getAllUser() && parameter.getUsername()!=null) {
-                where = concat(sb,where);
-                sb.append("task.assignee=? "); //$NON-NLS-1$
-                paramList.add(parameter.getUsername());
-            } 
-            
-            if(parameter.getProcessKey()!=null) {
-                where = concat(sb,where);
-                sb.append("task.executionId like ? "); //$NON-NLS-1$
-                paramList.add(parameter.getProcessKey() + "%"); //$NON-NLS-1$
-            }
-            
-            if(parameter.getTaskId()!=null) {
-                where = concat(sb,where);
-                sb.append("task.name=? "); //$NON-NLS-1$
-                paramList.add(parameter.getTaskId()); 
-            }
-            
-            if(parameter.getSince()!=null) {
-                where = concat(sb,where);
-                sb.append("task.createTime>=? "); //$NON-NLS-1$
-                paramList.add(parameter.getSince());
-            }
-            
-            if(parameter.getAuditUuid()!=null) {
-                where = concat(sb,where);
-                sb.append("auditVar.key=? "); //$NON-NLS-1$
-                paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
-                sb.append("and auditVar.string=? "); //$NON-NLS-1$
-                paramList.add(parameter.getAuditUuid());
-            }
-            
-            if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) { 
-                where = concat(sb,where);           
-                sb.append("readVar.key=? "); //$NON-NLS-1$
-                paramList.add(ITaskService.VAR_READ_STATUS);
-                sb.append("and readVar.string=? "); //$NON-NLS-1$
-                paramList.add(ITaskService.VAR_READ);
-            }
-            if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
-                where = concat(sb,where);
-                sb.append("readVar.key=? "); //$NON-NLS-1$
-                paramList.add(ITaskService.VAR_READ_STATUS);
-                sb.append("and readVar.string=? "); //$NON-NLS-1$
-                paramList.add(ITaskService.VAR_UNREAD);
-            }
-
-            final String hql = sb.toString();
+            Object[] queryElements = prepareSearchQuery(parameter);
+            List<Object> paramList = (List<Object>)queryElements[0];
+            final String hql = (String)queryElements[1];
             if (log.isDebugEnabled()) {
                 log.debug("getTaskList, hql: " + hql); //$NON-NLS-1$
             }
@@ -231,29 +173,7 @@ public class TaskService implements ITaskService {
             }
             
             if(jbpmTaskList!=null && !jbpmTaskList.isEmpty()) {
-                taskList = new ArrayList<ITask>();
-                Task task=null;
-                for (Iterator iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
-                    Object object = (Object) iterator.next();
-                    if(object instanceof Task ) {
-                        task = (Task) object;
-                    }
-                    if(object instanceof Object[] ) {
-                        task = (Task)((Object[])object)[0];
-                    }       
-                    if(task!=null) {
-                        ITask taskInfo = map(task);
-                        Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
-                        List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
-                        for (String id : outcomeSet) {
-                            if(!getTaskOutcomeBlacklist().contains(id)) {
-                                outcomeList.add(new KeyValue(id, Messages.getString(id)));
-                            }
-                        }
-                        taskInfo.setOutcomes(outcomeList);
-                        taskList.add(taskInfo);  
-                    }
-                }                
+                taskList = populateTaskList(jbpmTaskList);                
             }
         }    
         if (log.isDebugEnabled()) {
@@ -261,19 +181,114 @@ public class TaskService implements ITaskService {
         }
         return taskList;
     }
+
+    private List<ITask> populateTaskList(List jbpmTaskList) {
+        List<ITask> taskList;
+        taskList = new ArrayList<ITask>();
+        Task task=null;
+        for (Iterator iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
+            Object object = (Object) iterator.next();
+            if(object instanceof Task ) {
+                task = (Task) object;
+            }
+            if(object instanceof Object[] ) {
+                task = (Task)((Object[])object)[0];
+            }       
+            if(task!=null) {
+                ITask taskInfo = map(task);
+                Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
+                List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
+                for (String id : outcomeSet) {
+                    if(!getTaskOutcomeBlacklist().contains(id)) {
+                        outcomeList.add(new KeyValue(id, Messages.getString(id)));
+                    }
+                }
+                taskInfo.setOutcomes(outcomeList);
+                taskList.add(taskInfo);  
+            }
+        }
+        return taskList;
+    }
+
+    private Object[] prepareSearchQuery(ITaskParameter parameter) {
+        Object[] retValues = new Object[2];
+        StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task "); //$NON-NLS-1$
+        List<Object> paramList = new LinkedList<Object>();
+            
+        if(parameter.getAuditUuid()!=null) {
+            sb.append("inner join task.execution.processInstance.variables as auditVar "); //$NON-NLS-1$
+        }    
+        // create (un)read query if one is false:
+        if((parameter.getRead()!=null && !parameter.getRead())
+           || (parameter.getUnread()!=null && !parameter.getUnread())) {
+            sb.append("inner join task.execution.processInstance.variables as readVar ");  //$NON-NLS-1$
+        }
+        
+        boolean where = false;
+        if(!parameter.getAllUser() && parameter.getUsername()!=null) {
+            where = concat(sb,where);
+            sb.append("task.assignee=? "); //$NON-NLS-1$
+            paramList.add(parameter.getUsername());
+        } 
+        
+        if(parameter.getProcessKey()!=null) {
+            where = concat(sb,where);
+            sb.append("task.executionId like ? "); //$NON-NLS-1$
+            paramList.add(parameter.getProcessKey() + "%"); //$NON-NLS-1$
+        }
+        
+        if(parameter.getTaskId()!=null) {
+            where = concat(sb,where);
+            sb.append("task.name=? "); //$NON-NLS-1$
+            paramList.add(parameter.getTaskId()); 
+        }
+        
+        if(parameter.getSince()!=null) {
+            where = concat(sb,where);
+            sb.append("task.createTime>=? "); //$NON-NLS-1$
+            paramList.add(parameter.getSince());
+        }
+        
+        if(parameter.getAuditUuid()!=null) {
+            where = concat(sb,where);
+            sb.append("auditVar.key=? "); //$NON-NLS-1$
+            paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
+            sb.append("and auditVar.string=? "); //$NON-NLS-1$
+            paramList.add(parameter.getAuditUuid());
+        }
+        
+        if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) { 
+            where = concat(sb,where);           
+            sb.append("readVar.key=? "); //$NON-NLS-1$
+            paramList.add(ITaskService.VAR_READ_STATUS);
+            sb.append("and readVar.string=? "); //$NON-NLS-1$
+            paramList.add(ITaskService.VAR_READ);
+        }
+        if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
+            where = concat(sb,where);
+            sb.append("readVar.key=? "); //$NON-NLS-1$
+            paramList.add(ITaskService.VAR_READ_STATUS);
+            sb.append("and readVar.string=? "); //$NON-NLS-1$
+            paramList.add(ITaskService.VAR_UNREAD);
+        }
+        retValues[0] = paramList;
+        retValues[1] = sb.toString();
+        return retValues;
+    }
     
     /**
      * @param hql
      * @param where
      */
     private boolean concat(/*not final*/StringBuilder hql,/*not final*/boolean where) {
-        if(!where) {
+        boolean where_ = where;
+        if(!where_) {
             hql.append("where "); //$NON-NLS-1$
-            where = true;
+            where_ = true;
         } else {
             hql.append("and "); //$NON-NLS-1$
         }
-        return where;
+        return where_;
     }
 
     /* (non-Javadoc)
@@ -284,8 +299,7 @@ public class TaskService implements ITaskService {
         ServerInitializer.inheritVeriniceContextState();
         String hql = "select distinct var.string from Variable var where var.key = ?"; //$NON-NLS-1$
         String[] param = new String[]{IIsaExecutionProcess.VAR_AUDIT_UUID};
-        List<String> uuidAuditList = getJbpmVariableDao().findByQuery(hql, param);
-        return uuidAuditList;
+        return getJbpmVariableDao().findByQuery(hql, param);
     }
 
     private boolean doSearch(ITaskParameter parameter) {
@@ -320,7 +334,7 @@ public class TaskService implements ITaskService {
         taskInformation.setPriority(priority);
         
         Object value = varMap.get(IGenericProcess.VAR_PROPERTY_TYPES);
-        if(value!=null && value instanceof Set<?>) {
+        if(value instanceof Set<?>) {
             taskInformation.setProperties((Set<String>) value);
         }
         
@@ -384,8 +398,7 @@ public class TaskService implements ITaskService {
      */
     private Map<String, Object> loadVariablesForProcess(String executionId) {
         Set<String> varNameSet = getExecutionService().getVariableNames(executionId);      
-        Map<String, Object> varMap = getExecutionService().getVariables(executionId,varNameSet);
-        return varMap;
+        return getExecutionService().getVariables(executionId,varNameSet);
     }
 
     /**
@@ -437,7 +450,7 @@ public class TaskService implements ITaskService {
             if(sortable.length()==1 || !isNumber(sortable.substring(1,2))) {
                 sortable = new StringBuilder("0").append(sortable).toString(); //$NON-NLS-1$
             }
-            if(sortable.indexOf(".")==2 && sortable.length()>3) { //$NON-NLS-1$
+            if(sortable.indexOf('.')==2 && sortable.length()>3) { //$NON-NLS-1$
                 sortable = new StringBuilder(sortable.substring(0, 2))
                 .append(".") //$NON-NLS-1$
                 .append(createSortableString(sortable.substring(3)))

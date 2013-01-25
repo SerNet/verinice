@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.app.VelocityEngine;
-import org.eclipse.osgi.util.NLS;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -40,7 +40,6 @@ import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  *
@@ -70,17 +69,17 @@ public class RemindService implements IRemindService {
     /* (non-Javadoc)
      * @see sernet.verinice.bpm.IRemindService#sendEmail(java.util.Map)
      */
+    @SuppressWarnings("restriction")
     public void sendEmail(final Map<String,String> parameter, final boolean html) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            
-            public void prepare(MimeMessage mimeMessage) throws Exception {
+            public void prepare(MimeMessage mimeMessage) throws MessagingException {
                parameter.put(TEMPLATE_URL, getUrl());
                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                message.setTo(parameter.get(TEMPLATE_EMAIL));         
                message.setFrom(getEmailFrom());
-               String replyTo = getReplyTo();
-               if(replyTo!=null && !replyTo.isEmpty()) {
-                   message.setReplyTo(replyTo);
+               String replyTo_ = getReplyTo();
+               if(replyTo_!=null && !replyTo_.isEmpty()) {
+                   message.setReplyTo(replyTo_);
                }
                message.setSubject(parameter.get(TEMPLATE_SUBJECT)); //$NON-NLS-1$
                String text = VelocityEngineUtils.mergeTemplateIntoString(
@@ -90,7 +89,6 @@ public class RemindService implements IRemindService {
                        parameter);
                message.setText(text, html);
             }
-     
          };
          getMailSender().send(preparator);
     }
@@ -101,7 +99,7 @@ public class RemindService implements IRemindService {
     public Map<String,String> loadUserData(String name) throws MissingParameterException {
         Map<String,String> model = new HashMap<String,String>();
         if (name != null) {
-            String HQL = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+            String hql = "select conf.dbId,emailprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
             "inner join conf.entity as entity " + //$NON-NLS-1$
             "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
             "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -113,7 +111,7 @@ public class RemindService implements IRemindService {
             "and emailprops.propertyType = ?";          //$NON-NLS-1$
             
             Object[] params = new Object[]{Configuration.PROP_USERNAME,name,Configuration.PROP_NOTIFICATION_EMAIL};        
-            List<Object[]> configurationList = getConfigurationDao().findByQuery(HQL,params);
+            List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
                 String email = (String) configurationList.get(0)[1];
@@ -130,7 +128,7 @@ public class RemindService implements IRemindService {
 
     private void loadPerson(Integer dbId, Map<String,String> model) {
         if(dbId!=null) {
-            String HQL = "from Configuration as conf " + //$NON-NLS-1$
+            String hql = "from Configuration as conf " + //$NON-NLS-1$
             "inner join fetch conf.person as person " + //$NON-NLS-1$
             "inner join fetch person.entity as entity " + //$NON-NLS-1$
             "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
@@ -138,7 +136,7 @@ public class RemindService implements IRemindService {
             "where conf.dbId = ? "; //$NON-NLS-1$
             
             Object[] params = new Object[]{dbId};        
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(HQL,params);
+            List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,params);
             for (Configuration configuration : configurationList) {
                 CnATreeElement element = configuration.getPerson();
                 if(element instanceof PersonIso) {

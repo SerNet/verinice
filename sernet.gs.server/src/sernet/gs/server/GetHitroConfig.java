@@ -17,13 +17,11 @@
  ******************************************************************************/
 package sernet.gs.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +43,7 @@ public class GetHitroConfig extends HttpServlet {
 	// copy binary data using 100K buffer:
 	static final int BUFF_SIZE = 100000;
 
-	static final byte[] buffer = new byte[BUFF_SIZE];
+	static final byte[] BUFFER = new byte[BUFF_SIZE];
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -62,7 +60,7 @@ public class GetHitroConfig extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
         super.init(config);
-        ServletContext context = config.getServletContext();
+        config.getServletContext();
     }
 
 	/**
@@ -84,7 +82,7 @@ public class GetHitroConfig extends HttpServlet {
 					// return a resource bundle
 					// security check
 					if(resourceParameter.indexOf("..")!=-1 
-					   || resourceParameter.indexOf(":")!=-1
+					   || resourceParameter.indexOf(':')!=-1
 					   || !resourceParameter.startsWith(SNCAMessages.BUNDLE_NAME)
 					   || !resourceParameter.endsWith(SNCAMessages.BUNDLE_EXTENSION)) {
 						String message = "illegal parameter: " + resourceParameter;
@@ -93,7 +91,6 @@ public class GetHitroConfig extends HttpServlet {
 					}
 					fileName = resourceParameter;
 				} 
-				//String path = new File(basePath,fileName).getPath();
 				String path = basePath + "/" + fileName;
 				if (log.isDebugEnabled()) {
 					log.debug("returning: " + path );
@@ -114,17 +111,17 @@ public class GetHitroConfig extends HttpServlet {
 				} else {
     				out = response.getOutputStream();
     				while (true) {
-    					synchronized (buffer) {
-    						int amountRead = in.read(buffer);
+    					synchronized (BUFFER) {
+    						int amountRead = in.read(BUFFER);
     						if (amountRead == -1) {
     							break;
     						}
-    						out.write(buffer, 0, amountRead);
+    						out.write(BUFFER, 0, amountRead);
     					}
     				}
 				}
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			log.error("Error while getting hitro config or resource bundle.", e);
 		} finally {
 			if (in != null) {

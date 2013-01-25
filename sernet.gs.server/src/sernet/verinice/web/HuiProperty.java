@@ -41,7 +41,7 @@ public class HuiProperty<K,V> implements Serializable{
     
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
     
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
     
     private K key;
     
@@ -103,10 +103,8 @@ public class HuiProperty<K,V> implements Serializable{
             return null;
         }
         Date date = null;
-        if(value!=null && value instanceof String ) {
-            if(!((String)value).isEmpty()) {
+        if(value instanceof String && !((String)value).isEmpty()) {
                 date = new Date(Long.valueOf((String)value));
-            }
         }
         return date;
     }
@@ -180,17 +178,7 @@ public class HuiProperty<K,V> implements Serializable{
         if(item!=null) {
             for (IMLPropertyOption option : type.getOptions()) {
                 if(item.equals(option.getName())) {
-                    if(getIsSingleSelect()) {
-                        value = (V) option.getId();                    
-                    }
-                    if(getIsNumericSelect()) {
-                        PropertyOption propertyOption = (PropertyOption)option;
-                        if(propertyOption.getValue()!=null) {
-                            value = (V) propertyOption.getValue().toString(); 
-                        } else {
-                            value = null;
-                        }
-                    } 
+                    value = getSelectionValue(item, option);
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Set option value: "+ value + " for label: " + item);
                     }
@@ -200,6 +188,21 @@ public class HuiProperty<K,V> implements Serializable{
         } else {
             value = null;
         }
+    }
+
+    private V getSelectionValue(String item, IMLPropertyOption option) {
+        if(getIsSingleSelect()) {
+            return (V) option.getId();                    
+        }
+        if(getIsNumericSelect()) {
+            PropertyOption propertyOption = (PropertyOption)option;
+            if(propertyOption.getValue()!=null) {
+                return (V) propertyOption.getValue().toString(); 
+            } else {
+                return null;
+            }
+        }
+        return null;
     }
     
     public int getMax() {
@@ -257,11 +260,11 @@ public class HuiProperty<K,V> implements Serializable{
     }
 
     public String getDatePattern() {
-        return dateFormat.toPattern();
+        return DATE_FORMAT.toPattern();
     }
     
     public DateFormat getDateFormat() {
-        return dateFormat;
+        return DATE_FORMAT;
     }
 
     @Override
@@ -276,23 +279,22 @@ public class HuiProperty<K,V> implements Serializable{
     @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null || (getClass() != obj.getClass())){
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+        }
         HuiProperty other = (HuiProperty) obj;
-        if (key == null) {
-            if (other.key != null)
-                return false;
+        if (key == null && other.key != null){
+            return false;
         } else if (!key.equals(other.key))
             return false;
-        if (value == null) {
-            if (other.value != null)
-                return false;
-        } else if (!value.equals(other.value))
+        if (value == null && other.value != null){
             return false;
+        } else if (!value.equals(other.value)){
+            return false;
+        }
         return true;
     }
     

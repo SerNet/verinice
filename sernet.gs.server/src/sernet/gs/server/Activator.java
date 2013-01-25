@@ -30,7 +30,7 @@ import sernet.verinice.interfaces.IInternalServer;
 
 public class Activator extends Plugin {
 
-	Logger log = Logger.getLogger(Activator.class);
+	private Logger log = Logger.getLogger(Activator.class);
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "veriniceServer";
@@ -87,13 +87,14 @@ public class Activator extends Plugin {
 	}
 
 	WebContainer getWebContainer() {
-		if (webContainer != null)
+		if (webContainer != null){
 			return webContainer;
+		}
 		
 		synchronized (lock) {
-			if (webContainer != null)
+			if (webContainer != null){
 				return webContainer;
-			
+			}
 			BundleContext context = getBundle().getBundleContext();
 			
 			ServiceReference sr = context.getServiceReference(WebContainer.class
@@ -115,20 +116,21 @@ public class Activator extends Plugin {
 							throw new IllegalStateException(
 							"starting pax-web bundle failed.");
 						}
-					} else
+					} else {
 						throw new IllegalStateException(
 								"pax-web bundle is not in a proper state to get started.");
-
+					}
 					sr = context.getServiceReference(WebContainer.class.getName());
-					if (sr == null)
+					if (sr == null){
 						throw new IllegalStateException(
 								"pax-web bundle was started but there is still no http service available. Giving up.");
+					}
 				}
 			}
 
-			if (sr == null)
+			if (sr == null){
 				throw new IllegalStateException("No http service. Giving up.");
-
+			}
 			webContainer = (WebContainer) context.getService(sr);
 		}
 		return webContainer;

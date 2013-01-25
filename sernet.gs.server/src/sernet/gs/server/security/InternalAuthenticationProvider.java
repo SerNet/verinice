@@ -48,7 +48,7 @@ import sernet.verinice.service.HibernateCommandService;
 @SuppressWarnings("serial")
 public final class InternalAuthenticationProvider implements AuthenticationProvider {
 	
-	private static final Object lock = new Object();
+	private static final Object LOCK = new Object();
 	
 	private static InternalAuthenticationProvider instance;
 	
@@ -69,20 +69,20 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 	public InternalAuthenticationProvider()
 	{
 	    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-		synchronized (lock)
+		synchronized (LOCK)
 		{
-			if (instance != null)
+			if (instance != null){
 				throw new IllegalStateException("Only one instance of this class allowed.");
-			
+			}
 			instance = this;
 		}
 	}
 
 	public Authentication authenticate(Authentication auth)
 			throws AuthenticationException {
-		if (auth != authentication)
+		if (!auth.equals(authentication)){
 			return null;
-
+		}
 		auth.setAuthenticated(true);
 
 		return auth;
@@ -100,24 +100,23 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 		}
 
 		public void setAuthenticated(boolean b) {
-			// Allow being authenticated only when the caller is an
-			// InternalAuthenticationProvider instance.
-			StackTraceElement[] t = Thread.currentThread().getStackTrace();
-			if (b && t.length >= 1) {
-				if (InternalAuthenticationProvider.class.getName().equals(
-						t[1].getClassName())
-						&& "authenticate".equals(t[1].getMethodName())) {
-					super.setAuthenticated(true);
-				}
-			}
+		    // Allow being authenticated only when the caller is an
+		    // InternalAuthenticationProvider instance.
+		    StackTraceElement[] t = Thread.currentThread().getStackTrace();
+		    if (b && t.length >= 1 && InternalAuthenticationProvider.class.getName().equals(
+		            t[1].getClassName())
+		            && "authenticate".equals(t[1].getMethodName())) {
+		        super.setAuthenticated(true);
+		    }
 		}
 	}
 
 	public void setAllowedInstances(Set<ICommand> allowedInstances) {
 		// Prevent that anyone modifies the set after it has first been set. 
 		if (allowedInstances == null
-				|| this.allowedInstances != null)
+				|| this.allowedInstances != null){
 			throw new IllegalArgumentException();
+		}
 		
 		this.allowedInstances = new IdentityHashMap<ICommand, ICommand>();
 		for (ICommand o : allowedInstances)
@@ -157,12 +156,12 @@ public final class InternalAuthenticationProvider implements AuthenticationProvi
 		if (ctx.getAuthentication() == null || !auth.isAuthenticated())
 		{
 			Object arg = pjp.getArgs()[0];
-			if (!(arg instanceof ICommand))
+			if (!(arg instanceof ICommand)){
 				throw new IllegalStateException("Argument is either null or not of type " + ICommand.class.getName() + ".");
-			
-			if (!allowedInstances.containsKey(arg))
+			}
+			if (!allowedInstances.containsKey(arg)){
 				throw new IllegalStateException("It was not configured that this instance can receive an Authentication instance.");
-			
+			}
 			ctx.setAuthentication(authentication);
 		}
 		

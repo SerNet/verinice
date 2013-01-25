@@ -45,9 +45,9 @@ public class DummyRightsService implements IRightsService{
     
     private final Logger log = Logger.getLogger(XmlRightsService.class);
 
-    Auth auth;
+    private Auth auth;
     
-    List<Userprofile> userprofile;
+    private List<Userprofile> userprofile;
     
     private IBaseDao<Configuration, Integer> configurationDao;
     
@@ -55,13 +55,13 @@ public class DummyRightsService implements IRightsService{
     
     private IRemoteMessageSource messages;
     
-    Resource authConfigurationDefault;
+    private Resource authConfigurationDefault;
     
-    Resource authConfigurationSchema;
+    private Resource authConfigurationSchema;
     
-    Schema schema;
+    private Schema schema;
     
-    JAXBContext context;
+    private JAXBContext context;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -200,8 +200,8 @@ public class DummyRightsService implements IRightsService{
             um.setSchema(getSchema());
             
             // read default configuration
-            return auth = (Auth) um.unmarshal(getAuthConfigurationDefault().getInputStream());
-            
+            auth = (Auth) um.unmarshal(getAuthConfigurationDefault().getInputStream());
+            return auth;
         } catch (RuntimeException e) {
             log.error("Error while reading verinice authorization definition from file: " + getAuthConfigurationDefault().getFilename(), e);
             throw e;
@@ -259,7 +259,7 @@ public class DummyRightsService implements IRightsService{
      */
     private List<String> getRoleList(String username) {
         // select all groups of the user
-        String HQL = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+        String hql = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
                 "inner join conf.entity as entity " + //$NON-NLS-1$
                 "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
                 "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -270,8 +270,7 @@ public class DummyRightsService implements IRightsService{
                 "and props.propertyValue like ? " + //$NON-NLS-1$
                 "and roleprops.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_ROLES};        
-        List<String> roleList = getConfigurationDao().findByQuery(HQL,params);
-        return roleList;
+        return getConfigurationDao().findByQuery(hql,params);
     }
 
 }

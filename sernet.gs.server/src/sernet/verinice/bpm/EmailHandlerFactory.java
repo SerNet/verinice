@@ -37,30 +37,32 @@ import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
  */
 public class EmailHandlerFactory {
 
-    private static final Map<String, IEmailHandler> handlerMap;
+    private static final Map<String, IEmailHandler> HANDLERMAP;
     
     static {
-        handlerMap = new Hashtable<String, IEmailHandler>();
+        HANDLERMAP = new Hashtable<String, IEmailHandler>();
         // task reminder
         IEmailHandler taskReminder = new TaskReminderEmailHandler();
-        handlerMap.put(IIsaControlFlowProcess.TASK_ASSIGN, taskReminder);
-        handlerMap.put(IIsaControlFlowProcess.TASK_EXECUTE, taskReminder);
-        handlerMap.put(IIndividualProcess.TASK_EXECUTE, taskReminder);
-        handlerMap.put(IIndividualProcess.TASK_ASSIGN, taskReminder);
+        HANDLERMAP.put(IIsaControlFlowProcess.TASK_ASSIGN, taskReminder);
+        HANDLERMAP.put(IIsaControlFlowProcess.TASK_EXECUTE, taskReminder);
+        HANDLERMAP.put(IIndividualProcess.TASK_EXECUTE, taskReminder);
+        HANDLERMAP.put(IIndividualProcess.TASK_ASSIGN, taskReminder);
         // special reminder
-        handlerMap.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.AUDIT_STARTS, new AuditEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.REMINDER_FIXED, new IssueFixedEmailHandler());
-        handlerMap.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());      
+        HANDLERMAP.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
+        HANDLERMAP.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
+        HANDLERMAP.put(IIsaControlFlowProcess.AUDIT_STARTS, new AuditEmailHandler());
+        HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_FIXED, new IssueFixedEmailHandler());
+        HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());      
     }
+    
+    private EmailHandlerFactory(){};
     
     /**
      * @param taskId
      * @return
      */
     public static IEmailHandler getHandler(String taskId) {
-        return handlerMap.get(taskId);
+        return HANDLERMAP.get(taskId);
     }
 
 }

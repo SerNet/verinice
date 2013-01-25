@@ -68,10 +68,8 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class MailJob extends QuartzJobBean implements StatefulJob {
 	
-	private static final Logger log = Logger.getLogger(MailJob.class);
+	private static final Logger LOG = Logger.getLogger(MailJob.class);
 
-	private static SimpleDateFormat dateFormat =  new SimpleDateFormat("yyyy-MM-dd, EE"); //$NON-NLS-1$
-	
 	private boolean notificationEnabled;
 	
 	private PrepareNotificationInfo pniCommand;
@@ -104,9 +102,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
     protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		
 		// Do nothing if the notification feature is deactivated in the configuration.
-		if (!notificationEnabled)
+		if (!notificationEnabled){
 			return;
-		
+		}
 		// NotificationJob can not do a real login
         // authentication is a fake instance to run secured commands and dao actions
         // without a login
@@ -134,7 +132,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
         try {
         	commandService.executeCommand(pniCommand);
         } catch (CommandException e) {
-        	log.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
+        	LOG.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
         }
         
         // Iterates through the result, generate and send the individual messages.
@@ -148,31 +146,36 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
         			notificationEmailLinkTo);
         	
         	try {
-        		if (ei.isCompletionExpired())
-        			mh.addCompletionExpirationEvent();
-        		
-        		if (ei.isRevisionExpired())
-        			mh.addRevisionExpirationEvent();
-        		
-        		for (MassnahmenUmsetzung mu : ei.getGlobalExpiredCompletions())
-        			mh.addCompletionExpirationEvent(mu);
-        		
-        		for (MassnahmenUmsetzung mu : ei.getGlobalExpiredRevisions())
-        			mh.addRevisionExpirationEvent(mu);
-        		
-        		for (MassnahmenUmsetzung mu : ei.getModifiedMeasures())
-        			mh.addMeasureModifiedEvent(mu);
-        		
-        		for (MassnahmenUmsetzung mu : ei.getAssignedMeasures())
-        			mh.addMeasureAssignmentEvent(mu);
-   
+        		mh = prepareMessageHelper(ei, mh);
         		mailSender.send(mh.createMailMessage());
         	} catch (MessagingException me) {
-        		log.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
+        		LOG.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
         	} catch (MailSendException mse) {
-        		log.warn("failed to send notification message: " + mse); //$NON-NLS-1$
+        		LOG.warn("failed to send notification message: " + mse); //$NON-NLS-1$
         	}			
         }
+    }
+
+    private MessageHelper prepareMessageHelper(NotificationInfo ei, MessageHelper mh) {
+        if (ei.isCompletionExpired()){
+        	mh.addCompletionExpirationEvent();
+        }
+        if (ei.isRevisionExpired()){
+        	mh.addRevisionExpirationEvent();
+        }
+        for (MassnahmenUmsetzung mu : ei.getGlobalExpiredCompletions()){
+        	mh.addCompletionExpirationEvent(mu);
+        }
+        for (MassnahmenUmsetzung mu : ei.getGlobalExpiredRevisions()){
+        	mh.addRevisionExpirationEvent(mu);
+        }
+        for (MassnahmenUmsetzung mu : ei.getModifiedMeasures()){
+        	mh.addMeasureModifiedEvent(mu);
+        }
+        for (MassnahmenUmsetzung mu : ei.getAssignedMeasures()){
+        	mh.addMeasureAssignmentEvent(mu);
+        }
+        return mh;
     }
 	
 	public void setCommandService(ICommandService commandService) {
@@ -380,8 +383,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			for (Map.Entry<CnATreeElement, List<String>> e : measureAssignmentEvents.entrySet())
 			{
 				sb.append(NLS.bind(MailMessages.MailJob_10, e.getKey().getTitle()));
-				for (String s : e.getValue())
+				for (String s : e.getValue()){
 					sb.append(s);
+				}
 			}
 			
 			sb.append("\n"); //$NON-NLS-1$
