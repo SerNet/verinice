@@ -46,16 +46,16 @@ public class RightsServiceClient implements IRightsServiceClient{
 
     private static final Logger LOG = Logger.getLogger(RightsServiceClient.class);
     
-    IAuthService authService;
-    IRightsService rightsServiceExecuter;
-    List<Userprofile> userprofileList;
-    Map<String, Action> actionMap;
-    Profiles profiles;
-    Map<String, Profile> profileMap;
-    Auth auth;
-    List<String> userNameList;
-    List<String> groupNameList;
-    Properties messages;
+    private IAuthService authService;
+    private IRightsService rightsServiceExecuter;
+    private List<Userprofile> userprofileList;
+    private Map<String, Action> actionMap;
+    private Profiles profiles;
+    private Map<String, Profile> profileMap;
+    private Auth auth;
+    private List<String> userNameList;
+    private List<String> groupNameList;
+    private Properties messages;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
@@ -190,11 +190,7 @@ public class RightsServiceClient implements IRightsServiceClient{
      */
     @Override
     public String getMessage(String key) {
-        String defaultMessage = key;
-        if (LOG.isDebugEnabled()) {
-            // switch to debug in log4j.xml to find untranslated messages
-            defaultMessage = defaultMessage + " (!)";
-        }
+        // switch to debug in log4j.xml to find untranslated messages
         return getAllMessages().getProperty(key, key);
     }
     
@@ -257,12 +253,12 @@ public class RightsServiceClient implements IRightsServiceClient{
     }
     
     private Profiles loadProfileMap() {
-        Profiles profiles = getRightsServiceExecuter().getProfiles();   
+        Profiles profiles_ = getRightsServiceExecuter().getProfiles();   
         profileMap = new HashMap<String, Profile>();
-        for (Profile profile : profiles.getProfile()) {
+        for (Profile profile : profiles_.getProfile()) {
             profileMap.put(profile.getName(), profile);
         }
-        return profiles;
+        return profiles_;
     }
 
     public boolean isBlacklist() {

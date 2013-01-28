@@ -37,7 +37,7 @@ import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
  */
 public class SpringClientPlugin extends AbstractUIPlugin {
 	
-	private static final Logger log = Logger.getLogger(SpringClientPlugin.class);
+	private static final Logger LOG = Logger.getLogger(SpringClientPlugin.class);
 
 	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
 	
@@ -46,7 +46,7 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	//The shared instance.
 	private static SpringClientPlugin plugin;
 	
-	BundleContext ctx;
+	private BundleContext ctx;
 	
 	/**
 	 * The constructor.
@@ -69,11 +69,11 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 		// do not have a working internet connection.
 		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
 		if (bundle == null) {
-			log.error("Spring OSGi Extender bundle is not available. Giving up!");
+			LOG.error("Spring OSGi Extender bundle is not available. Giving up!");
 			throw new RuntimeException();
 		} else if (bundle.getState() == Bundle.INSTALLED
 				|| bundle.getState() == Bundle.RESOLVED) {
-			log.debug("Manually starting Spring's OSGi Extender");
+			LOG.debug("Manually starting Spring's OSGi Extender");
 			try {
 				bundle.start();
 			} catch (BundleException e) {
@@ -110,8 +110,8 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	
 	public synchronized void closeBeanFactory() {
 		if (beanFactory != null) {
-			AbstractApplicationContext ctx = (AbstractApplicationContext) beanFactory;
-			ctx.close();
+			AbstractApplicationContext ctx_ = (AbstractApplicationContext) beanFactory;
+			ctx_.close();
 			beanFactory = null;
 		}
 	}

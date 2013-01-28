@@ -21,24 +21,19 @@ package sernet.springclient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpHost;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
 import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.net.NetUIMessages;
 import org.eclipse.ui.internal.net.auth.Authentication;
 import org.eclipse.ui.internal.net.auth.UserValidationDialog;
 import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
@@ -186,13 +181,11 @@ public class CommonsExecuter extends CommonsHttpInvokerRequestExecutor {
 
 class AuthDialog extends UserValidationDialog {
     
-    private static final Logger LOG = Logger.getLogger(AuthDialog.class);
-    
     private static boolean canceled = false;
     
     public static Authentication getAuthentication(final String host, final String message) {
         class UIOperation implements Runnable {
-            public Authentication authentication;
+            private Authentication authentication;
             public void run() {
                 authentication = AuthDialog.askForAuthentication(host, message);
             }

@@ -22,13 +22,10 @@ import java.util.Properties;
 import java.util.UUID;
 
 import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
-import net.sf.ehcache.event.CacheEventListener;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +41,7 @@ import sernet.verinice.interfaces.ICommandService;
  */
 public class CommandCacheClient implements ICommandCacheClient {
     
-    ICommandService commandService;
+    private ICommandService commandService;
     
     
     private transient CacheManager manager = null;
@@ -67,11 +64,9 @@ public class CommandCacheClient implements ICommandCacheClient {
                     && getGlobalCache().get(cacheCommand.getCacheID()) != null 
                     && getGlobalCache().get(cacheCommand.getCacheID()).getValue() != null){
                 Object cachedValue = getGlobalCache().get(cacheCommand.getCacheID()).getValue();
-                if(getLog().isDebugEnabled()){
-                    if(cachedValue instanceof ArrayList<?>){
-                        ArrayList<?> list = (ArrayList<?>)cachedValue;
-                        getLog().debug("injecting List with " + list.size() + " elements into:\t" + cacheCommand.getCacheID());
-                    }
+                if(getLog().isDebugEnabled() && cachedValue instanceof ArrayList<?>){
+                    ArrayList<?> list = (ArrayList<?>)cachedValue;
+                    getLog().debug("injecting List with " + list.size() + " elements into:\t" + cacheCommand.getCacheID());
                 }
                 cacheCommand.injectCacheResult(cachedValue);
                 return cacheCommand;
@@ -80,11 +75,9 @@ public class CommandCacheClient implements ICommandCacheClient {
                 cacheCommand = (ICachedCommand)command;
 
                 Object cachedValue = cacheCommand.getCacheableResult();
-                if(getLog().isDebugEnabled()){
-                    if(cachedValue instanceof ArrayList<?>){
-                        ArrayList<?> list = (ArrayList<?>)cachedValue;
-                       getLog().debug("putting List with " + list.size() + " elements from "  + cacheCommand.getCacheID() + " to Cache");
-                    }
+                if(getLog().isDebugEnabled() && cachedValue instanceof ArrayList<?>){
+                    ArrayList<?> list = (ArrayList<?>)cachedValue;
+                    getLog().debug("putting List with " + list.size() + " elements from "  + cacheCommand.getCacheID() + " to Cache");
                 }
                 getGlobalCache().put(new Element(cacheCommand.getCacheID(), cacheCommand.getCacheableResult()));
                 return command;
@@ -137,8 +130,7 @@ public class CommandCacheClient implements ICommandCacheClient {
      */
     @Override
     public <T extends ICommand> T executeCommand(T command) throws CommandException {
-        Object o = executeCachableCommand(command);
-        return (T)o;
+        return (T) executeCachableCommand(command);
     }
 
     /* (non-Javadoc)
@@ -172,17 +164,17 @@ public class CommandCacheClient implements ICommandCacheClient {
     private void logCacheStatistics(){
         Statistics stats = getGlobalCache().getStatistics();
         getLog().debug("################start Cache Stats###################");
-        getLog().debug("AvgGetTime:\t" + String.valueOf(stats.getAverageGetTime()));
-        getLog().debug("CacheHits:\t" + String.valueOf(stats.getCacheHits()));
-        getLog().debug("CacheMisses:\t" + String.valueOf(stats.getCacheMisses()));
-        getLog().debug("DiskStoreObjectCount:\t" + String.valueOf(stats.getDiskStoreObjectCount()));
-        getLog().debug("EvictionCount:\t" + String.valueOf(stats.getEvictionCount()));
-        getLog().debug("InMemoryHits:\t" + String.valueOf(stats.getInMemoryHits()));
-        getLog().debug("MemoryStoreObjectCount:\t" + String.valueOf(stats.getMemoryStoreObjectCount()));
-        getLog().debug("ObjectCount:\t" + String.valueOf(stats.getObjectCount()));
-        getLog().debug("OnDiskHits:\t" + String.valueOf(stats.getOnDiskHits()));
-        getLog().debug("StatisticAccuracy:\t" + String.valueOf(stats.getStatisticsAccuracy()));
-        getLog().debug("StatisticAccuracyDescription:\t" + String.valueOf(stats.getStatisticsAccuracyDescription()));
+        getLog().debug("AvgGetTime:\t" + stats.getAverageGetTime());
+        getLog().debug("CacheHits:\t" + stats.getCacheHits());
+        getLog().debug("CacheMisses:\t" + stats.getCacheMisses());
+        getLog().debug("DiskStoreObjectCount:\t" + stats.getDiskStoreObjectCount());
+        getLog().debug("EvictionCount:\t" + stats.getEvictionCount());
+        getLog().debug("InMemoryHits:\t" + stats.getInMemoryHits());
+        getLog().debug("MemoryStoreObjectCount:\t" + stats.getMemoryStoreObjectCount());
+        getLog().debug("ObjectCount:\t" + stats.getObjectCount());
+        getLog().debug("OnDiskHits:\t" + stats.getOnDiskHits());
+        getLog().debug("StatisticAccuracy:\t" + stats.getStatisticsAccuracy());
+        getLog().debug("StatisticAccuracyDescription:\t" + stats.getStatisticsAccuracyDescription());
         getLog().debug("################end Cache Stats###################");
     }
 
