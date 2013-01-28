@@ -20,20 +20,14 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -41,7 +35,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,20 +42,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPart;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
@@ -90,6 +78,10 @@ public class ExportDialog extends TitleAreaDialog {
     
     private Text sourceIdText;
     private Text txtLocation;
+    private String defaultFolder;
+    private Button useDefaultFolderButton;
+    private boolean useDefaultFolder = true;
+   
     
     // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
     private int format = SyncParameter.EXPORT_FORMAT_DEFAULT;
@@ -124,6 +116,8 @@ public class ExportDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        
+       getDefaultFolder();
         /*
          * Dialog title, message and layout:
          */
@@ -153,7 +147,7 @@ public class ExportDialog extends TitleAreaDialog {
                 if(checkbox.getSelection()) {
                     if(txtLocation!=null) {
                         filePath = organizationWidget.getSelectedElement().getTitle() + getDefaultExtension();
-                        filePath = System.getProperty("user.home") + File.separatorChar +  filePath;
+                        filePath = defaultFolder + filePath;
                         txtLocation.setText(filePath);
                     }
                     setSourceId(organizationWidget.getSelectedElement());
@@ -243,8 +237,9 @@ public class ExportDialog extends TitleAreaDialog {
                     dialog.setText(Messages.SamtExportDialog_3);
                     if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
                         try {
-                            dialog.setFilterPath(System.getProperty("user.dir"));
-                            dialog.setFileName(getFileNameFromPath(txtLocation.getText()));
+                            //set default folder for exports which could set 
+                            dialog.setFilterPath(defaultFolder);
+                            dialog.setFileName(getFileNameFromPath(txtLocation.getText()));                      
                         } catch (Exception e1) {
                             LOG.warn(Messages.ExportDialog_1, e1);
                             dialog.setFileName(""); //$NON-NLS-1$
@@ -270,8 +265,35 @@ public class ExportDialog extends TitleAreaDialog {
                         txtLocation.setText(""); //$NON-NLS-1$
                         filePath = ""; //$NON-NLS-1$
                     }
+                    String currentPath = setupDirPath(filePath);
+                    if(defaultFolder == null | defaultFolder.isEmpty() | !currentPath.equals(defaultFolder) && currentPath.endsWith(System.getProperty("file.separator"))){
+                        defaultFolder = currentPath;
+                        Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Export, currentPath);
+                    }   
+                    filePath = exportPath;
+                    txtLocation.setText(ExportAction.addExtension(exportPath,EXTENSION_ARRAY[dialog.getFilterIndex()]));
                 }
             });
+                
+                useDefaultFolderButton = new Button(sourceIdComposite, SWT.CHECK);
+                useDefaultFolderButton.setText(Messages.ExportDialog_3);
+                useDefaultFolderButton.setSelection(true);
+                GridData  useDefaultFolderButtonGridData = new GridData();
+                useDefaultFolderButtonGridData.horizontalSpan = 3;
+                useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
+                useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
+                
+                    @Override
+                    public void widgetDefaultSelected(SelectionEvent e) {
+                        useDefaultFolder = ((Button)e.getSource()).getSelection();
+                    }
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        widgetSelected(e);
+
+                    }
+                });
+                        
             
             /*
              *  Widgets to enable/disable encryption:
@@ -296,13 +318,42 @@ public class ExportDialog extends TitleAreaDialog {
         }
             
         if(organizationWidget.getSelectedElement()!=null) {
-            filePath = organizationWidget.getSelectedElement().getTitle() + getDefaultExtension();
-            filePath = System.getProperty("user.dir") + File.separatorChar + filePath;
+            filePath = defaultFolder + organizationWidget.getSelectedElement().getTitle() + getDefaultExtension();
+            filePath = defaultFolder + filePath;
             txtLocation.setText(filePath);
         }
                
         composite.pack();     
         return composite;
+    }
+    
+    private String getDefaultFolder(){
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Export);
+        
+        return defaultFolder; 
+    }
+    
+    
+    protected String setupDirPath(String currentPath){
+        currentPath = txtLocation.getText();
+        String path = currentPath;
+        if(currentPath!=null && !currentPath.isEmpty()) {
+             int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
+            if(lastSlash!=-1) {
+                path = currentPath.substring(0,lastSlash+1);
+            }else{
+                path = currentPath.substring(0,lastSlash);
+            }
+        }
+        if(!currentPath.equals(path)) {
+            txtLocation.setText(path);
+        }
+            
+        
+        return path;
+        
+        
     }
     
     /**

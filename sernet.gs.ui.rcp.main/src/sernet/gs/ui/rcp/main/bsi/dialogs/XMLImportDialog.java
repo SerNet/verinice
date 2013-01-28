@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -85,6 +86,9 @@ public class XMLImportDialog extends Dialog {
     private String password = ""; //$NON-NLS-1$
     
     private Text certificatePathField;
+    
+    private Button useDefaultFolderButton;
+    private boolean useDefaultFolder = true;
     
     private Integer format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
@@ -447,6 +451,30 @@ public class XMLImportDialog extends Dialog {
         final Button dataBrowse = SWTElementFactory.generatePushButton(dataGroup, Messages.XMLImportDialog_14, null, dataBrowseListener);
         dataBrowse.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
         
+        useDefaultFolderButton = new Button(container, SWT.CHECK);
+        useDefaultFolderButton.setText(Messages.XMLImportDialog_38);
+        useDefaultFolderButton.setSelection(true);        
+        GridData  useDefaultFolderButtonGridData = new GridData();
+        useDefaultFolderButtonGridData.horizontalSpan = 2;
+        useDefaultFolderButtonGridData.grabExcessHorizontalSpace = true;
+        useDefaultFolderButtonGridData.horizontalAlignment = GridData.FILL;
+        useDefaultFolderButtonGridData.verticalAlignment = SWT.RIGHT;
+        useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
+        useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
+        
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                useDefaultFolder = ((Button)e.getSource()).getSelection();
+            }
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
+
+        
+        
         // prevent passwordtextfield from gaining focus automatically
         // which happens in osx client, and causes wrong default radio selection (bug 341)
         dataPathText.setFocus();
@@ -454,6 +482,8 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void displayFiles(Shell shell, Text pathText, File file) {
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        String defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Import);
         File f = file;
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { 
@@ -466,6 +496,7 @@ public class XMLImportDialog extends Dialog {
                 Messages.XMLImportDialog_33,
                 Messages.XMLImportDialog_34,
                 Messages.XMLImportDialog_35 });
+        dialog.setFilterPath(defaultFolder);
         String path = dialog.open();
 
         if (path != null) {
@@ -478,7 +509,31 @@ public class XMLImportDialog extends Dialog {
                 pathText.setText(f.getPath());
                 pathText.setEditable(true);
             }
+            String currentPath = setupDirPath(path);
+            if(defaultFolder == null | defaultFolder.isEmpty() | !currentPath.equals(defaultFolder)){
+                defaultFolder = currentPath;
+                Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Import, currentPath);
+            } 
+            pathText.setText(f.getPath());
         }
+    }
+    
+    protected String setupDirPath(String currentPath) { 
+        currentPath = dataPathText.getText();
+        String path = currentPath;
+        if(currentPath!=null && !currentPath.isEmpty()) {
+            int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
+            if(lastSlash!=-1) {
+                path = currentPath.substring(0,lastSlash+1);
+            }
+            else{
+                path = currentPath.substring(0,lastSlash);
+            }
+        }
+        if(!currentPath.equals(path)) {
+            dataPathText.setText(path);
+        }
+        return path;
     }
 
     @Override

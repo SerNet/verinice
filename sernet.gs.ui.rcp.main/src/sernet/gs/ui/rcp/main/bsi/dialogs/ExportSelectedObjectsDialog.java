@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -36,6 +37,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
  * Dialog class for the export dialog.
@@ -134,8 +138,11 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
+			    IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+                String defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Export);
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
 				dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
+				dialog.setFilterPath(defaultFolder);
 				String exportPath = dialog.open();
 				if( exportPath != null )
 				{

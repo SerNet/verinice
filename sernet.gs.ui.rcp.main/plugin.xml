@@ -1138,7 +1138,12 @@
             class="sernet.gs.ui.rcp.main.preferences.MessageDialogWithTogglePreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.messagedialogwithtogglepreferencepage"
             name="%page.name.9">
-      </page>           
+       </page>       
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.FolderPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.folderpreferencepage"
+            name="%page.name.10">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

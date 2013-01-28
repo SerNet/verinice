@@ -98,11 +98,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	
 	private Button useCacheButton;
 	
+	private Button useDefaultFolderButton;
+	
 	private boolean useCache = true;
+	
+	private boolean useDefaultFolder = true;
 	
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 700;
-    private static final int SIZE_Y = 430;
+    private static final int SIZE_Y = 470;
 
 	public GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
@@ -371,23 +375,53 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		openFileButton = new Button(groupFile, SWT.PUSH);
 		openFileButton.setText(Messages.GenerateReportDialog_11);
 		openFileButton.addSelectionListener(new SelectionAdapter() {
-	      public void widgetSelected(SelectionEvent event) {
-	        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-	        dlg.setFilterPath(textFile.getText());
-	        ArrayList<String> extensionList = new ArrayList<String>();
-	        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
-	            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
-	        }
-	        extensionList.add("*.*"); //$NON-NLS-1$
-	        dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()])); 
-	        dlg.setFileName(getDefaultOutputFilename());
-	        String fn = dlg.open();
-	        if (fn != null) {
-	          textFile.setText(fn);
-	          getButton(IDialogConstants.OK_ID).setEnabled(true);
-	        }
-	      }
-	    });
+		    public void widgetSelected(SelectionEvent event) {
+		        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+                String defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Report);
+		        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
+		        dlg.setFilterPath(defaultFolder + textFile.getText());
+		        ArrayList<String> extensionList = new ArrayList<String>();
+		        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
+		            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
+		        }
+		        extensionList.add("*.*"); //$NON-NLS-1$
+		        dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()])); 
+		        dlg.setFileName(getDefaultOutputFilename());
+		        String fn = dlg.open();
+		        if (fn != null) {
+		            textFile.setText(fn);
+		            getButton(IDialogConstants.OK_ID).setEnabled(true);
+		        }
+		        String currentPath = setupDirPath(fn);
+		        if(defaultFolder == null | defaultFolder.isEmpty() | !currentPath.equals(defaultFolder)){
+		            defaultFolder = currentPath;
+		            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Report, currentPath);
+		        } 
+		        textFile.setText(fn);
+		    }
+		});
+
+		useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
+        useDefaultFolderButton.setText(Messages.GenerateReportDialog_26);
+        useDefaultFolderButton.setSelection(true);        
+        GridData  useDefaultFolderButtonGridData = new GridData();
+        useDefaultFolderButtonGridData.horizontalSpan = 2;
+        useDefaultFolderButtonGridData.grabExcessHorizontalSpace = true;
+        useDefaultFolderButtonGridData.horizontalAlignment = GridData.FILL;
+        useDefaultFolderButtonGridData.verticalAlignment = SWT.RIGHT;
+        useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
+        useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
+        
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                useDefaultFolder = ((Button)e.getSource()).getSelection();
+            }
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                widgetSelected(e);
+
+            }
+        });
 		
         Group groupCache = new Group(composite, SWT.NULL);
         groupCache.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
@@ -395,6 +429,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         layout.numColumns = 2;
         groupCache.setLayout(layout);
         
+        GridData gridLabelCache = new GridData();
         gridLabelFile.horizontalAlignment = SWT.LEFT;
         gridLabelFile.verticalAlignment = SWT.CENTER;
         gridLabelFile.grabExcessHorizontalSpace = true;
@@ -523,6 +558,27 @@ public class GenerateReportDialog extends TitleAreaDialog {
     /**
      * 
      */
+       protected String setupDirPath(String currentPath) { 
+         currentPath = textFile.getText();
+        String path = currentPath;
+        if(currentPath!=null && !currentPath.isEmpty()) {
+            int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
+            if(lastSlash!=-1) {
+                path = currentPath.substring(0,lastSlash+1);
+            }
+            else{
+                path = currentPath.substring(0,lastSlash);
+            }
+            
+        }
+        
+        if(!currentPath.equals(path)) {
+            textFile.setText(path);
+        }
+        return path;
+        
+    }
+    
     protected void setupOutputFilepath() { 
         String currentPath = textFile.getText();
         String path = currentPath;
@@ -544,7 +600,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         if(outputFileName == null || outputFileName.equals("")){
             outputFileName = "unknown";
         }
-        StringBuilder sb = new StringBuilder(outputFileName);
+        String scopeName = scopeCombo.getText().replaceAll("[^a-zA-Z]", "");
+        StringBuilder sb = new StringBuilder(outputFileName + "_" + scopeName);
         if(chosenOutputFormat!=null) {
             sb.append(".").append(chosenOutputFormat.getFileSuffix());
         }
@@ -684,7 +741,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
             filename = filename.replace("Ö", "Oe"); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("ß", "ss"); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+            filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("|", ""); //$NON-NLS-1$ //$NON-NLS-2$
+           }
         return filename;
     }
     
@@ -712,5 +774,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     public boolean getUseReportCache(){
         return useCache;
     }
-	
+    public boolean getUseDefaultFolder(){
+        return useDefaultFolder;
+    }	
 }

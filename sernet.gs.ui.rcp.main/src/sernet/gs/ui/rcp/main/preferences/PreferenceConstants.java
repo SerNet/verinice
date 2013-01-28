@@ -122,6 +122,10 @@ public class PreferenceConstants {
 	public static final String CRYPTO_SERVER_AUTHENTICATION_VIA_CERTIFICATE_ENABLED = "gs_cna_server_authentication_via_certificate_enabled";
 	public static final String CRYPTO_PKCS11_CERTIFICATE_ALIAS = "gs_cna_pkcs11_certificate_alias";
 	
+	public static final String Default_Folder_Import = "default_folder_import";
+	public static final String Default_Folder_Export = "default_folder_export";
+    public static final String Default_Folder_Report = "default_folder_report";
+	
 	// additional gui preferences
 	public static final String SWITCH_PERSPECTIVE = "switch_perspective";
 	public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
