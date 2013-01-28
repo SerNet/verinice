@@ -58,7 +58,7 @@ import sernet.gs.service.GSServiceException;
  */
 public class GSScraper {
 
-	private final Map<String, String[]> BROKEN_ROLES = new HashMap<String, String[]>();
+	private final Map<String, String[]> broken_roles = new HashMap<String, String[]>();
 
 	private IGSPatterns patterns;
 
@@ -130,34 +130,35 @@ public class GSScraper {
 	}
 
 	private void createBrokenRoleReplacements() {
-		BROKEN_ROLES.put("Behörden-/Unter-nehmensleitung",
+	    String it_sicherheits_management = "IT-Sicherheitsmanagement";
+		broken_roles.put("Behörden-/Unter-nehmensleitung",
 				new String[] { "Behörden-/Unternehmensleitung" });
-		BROKEN_ROLES.put("IT-Sicherheits-management",
-				new String[] { "IT-Sicherheitsmanagement" });
-		BROKEN_ROLES.put("IT-Sicherheitsmanagement-Team",
-				new String[] { "IT-Sicherheitsmanagement" });
-		BROKEN_ROLES.put("IT-Sicherheitsmanagement Administrator",
-				new String[] { "IT-Sicherheitsmanagement", "Administrator" });
-		BROKEN_ROLES.put("Leiter IT Administrator", new String[] { "Leiter IT",
+		broken_roles.put("IT-Sicherheits-management",
+				new String[] { it_sicherheits_management });
+		broken_roles.put("IT-Sicherheitsmanagement-Team",
+				new String[] { it_sicherheits_management });
+		broken_roles.put("IT-Sicherheitsmanagement Administrator",
+				new String[] { it_sicherheits_management, "Administrator" });
+		broken_roles.put("Leiter IT Administrator", new String[] { "Leiter IT",
 				"Administrator" });
-		BROKEN_ROLES.put("Leiter IT IT-Sicherheitsmanagement", new String[] {
-				"Leiter IT", "IT-Sicherheitsmanagement" });
+		broken_roles.put("Leiter IT IT-Sicherheitsmanagement", new String[] {
+				"Leiter IT", it_sicherheits_management });
 	}
 
 	public List<Baustein> getBausteine(String kapitel)
-			throws GSServiceException {
+			throws GSServiceException, IOException {
 		ArrayList<Baustein> result = new ArrayList<Baustein>();
 		try {
-			ArrayList fromCache = getFromCache("bausteine_", kapitel);
+			List fromCache = getFromCache("bausteine_", kapitel);
 			for (Object object : fromCache) {
 				result.add((Baustein) object);
 			}
 		} catch (Exception e) {
 			// do nothing
 		}
-		if (result != null && result.size() > 0)
+		if (result != null && result.size() > 0){
 			return result;
-
+		}
 		// else parse from HTML:
 		try {
 			Node root = source.parseBausteinDocument(kapitel);
@@ -165,17 +166,15 @@ public class GSScraper {
 
 			bausteinContext.setContextItem(new DocumentWrapper(root, kapitel,
 					config));
-			// dynamicContext.setContextItem(
-			// staticContext.buildDocument(
-			// new StreamSource(new File("test.xml"))));
 
 			SequenceIterator iterator = getBausteineExp
 					.iterator(bausteinContext);
 
 			while (true) {
 				NodeInfo baust = (NodeInfo) iterator.next();
-				if (baust == null)
+				if (baust == null){
 					break;
+				}
 				String found = baust.getStringValue();
 				found = found.replaceAll("\n", "");
 				found = found.replaceAll(".html", "");
@@ -193,8 +192,9 @@ public class GSScraper {
 					Matcher schichtMatcher = patterns.getSchichtPat().matcher(
 							matcher.group(1));
 					String schicht = "0";
-					if (schichtMatcher.find())
+					if (schichtMatcher.find()){
 						schicht = schichtMatcher.group(1);
+					}
 					b.setSchicht(Integer.parseInt(schicht));
 					result.add(b);
 
@@ -208,13 +208,11 @@ public class GSScraper {
 		return result;
 	}
 
-	private ArrayList getFromCache(String prefix, String fileName) {
+	private List getFromCache(String prefix, String fileName) {
 		// try to get from cache:
 		try {
-			ArrayList resultFromFile = readFromFile(prefix + fileName);
+			List resultFromFile = readFromFile(prefix + fileName);
 			if (resultFromFile != null && resultFromFile.size() > 0) {
-				// Logger.getLogger(this.getClass()).debug("Cache hit: " +
-				// prefix + fileName);
 				return resultFromFile;
 			}
 		} catch (IOException e1) {
@@ -222,23 +220,21 @@ public class GSScraper {
 		} catch (ClassNotFoundException e1) {
 			// do nothing
 		}
-		// Logger.getLogger(this.getClass()).debug("Cache miss: " + prefix +
-		// fileName);
 		return new ArrayList();
 	}
 
-	private ArrayList readFromFile(String fileName) throws IOException,
+	private List readFromFile(String fileName) throws IOException,
 			ClassNotFoundException {
 		File dir = new File(cacheDir);
 		if (!dir.exists()) {
 			return null;
 		}
-
-		fileName = fileName.replaceAll("\\.\\./", "");
-		fileName = fileName.replaceAll("/", "_");
+		String filename_ = null;
+		filename_ = fileName.replaceAll("\\.\\./", "");
+		filename_ = fileName.replaceAll("/", "_");
 
 		FileInputStream fin = new FileInputStream(dir.getAbsolutePath()
-				+ File.separator + fileName);
+				+ File.separator + filename_);
 		ObjectInputStream ois = new ObjectInputStream(fin);
 		ArrayList result = (ArrayList) ois.readObject();
 		ois.close();
@@ -264,16 +260,19 @@ public class GSScraper {
 		return dir.delete();
 	}
 
-	private void writeToFile(String fileName, ArrayList b) {
+	private void writeToFile(String fileName, ArrayList b) throws IOException{
 		fileName = fileName.replaceAll("\\.\\./", "");
 		fileName = fileName.replaceAll("/", "_");
 		writeToFile(b, fileName);
 	}
 
-	private void writeToFile(Serializable object, String fileName) {
+	private void writeToFile(Serializable object, String fileName) throws IOException{
 		File dir = new File(cacheDir);
 		if (!dir.exists()) {
-			dir.mkdirs();
+			boolean success = dir.mkdirs();
+			if(!success){
+			    throw new IOException("Could not create directory");
+			}
 			Logger.getLogger(this.getClass()).debug(
 					"Creating GS cache dir " + dir.getAbsolutePath());
 		}
@@ -291,9 +290,6 @@ public class GSScraper {
 	}
 
 	private void getStand(String kapitel, Node root) throws XPathException {
-		// if (stand != null)
-		// return;
-
 		titleContext.setContextItem(new DocumentWrapper(root, kapitel, config));
 		SequenceIterator iterator = getTitleExp.iterator(titleContext);
 		NodeInfo title = (NodeInfo) iterator.next();
@@ -307,19 +303,19 @@ public class GSScraper {
 	}
 
 	public List<Massnahme> getMassnahmen(String baustein)
-			throws GSServiceException {
+			throws GSServiceException, IOException {
 		ArrayList<Massnahme> result = new ArrayList<Massnahme>();
 		try {
-			ArrayList fromCache = getFromCache("massnahmen_", baustein);
+			List fromCache = getFromCache("massnahmen_", baustein);
 			for (Object object : fromCache) {
 				result.add((Massnahme) object);
 			}
 		} catch (Exception e) {
 			// do nothing
 		}
-		if (result != null && result.size() > 0)
+		if (result != null && result.size() > 0){
 			return result;
-
+		}
 		try {
 			Node root = source.parseBausteinDocument(baustein);
 			getStand(baustein, root);
@@ -340,8 +336,9 @@ public class GSScraper {
 
 			while (true) {
 				NodeInfo mnNode = (NodeInfo) iterator.next();
-				if (mnNode == null)
+				if (mnNode == null){
 					break;
+				}
 				String found = mnNode.getStringValue();
 				// clear up paths, remove relative paths (don't work in zipfile)
 				found = found.replaceAll("\n", "");
@@ -350,7 +347,6 @@ public class GSScraper {
 				found = found.replaceAll("\\.\\./\\.\\./m/m\\d\\d/", "");
 				found = found.replaceAll("\\.\\./m/", "");
 				found = found.replaceAll("\\.\\./\\.\\./", "");
-				// System.out.println(found);
 
 				Matcher matcher = pat.matcher(found);
 				if (matcher.matches()) {
@@ -361,9 +357,9 @@ public class GSScraper {
 					mn.setTitel(matcher.group(3));
 					mn.setUrl(matcher.group(4));
 					if (matcher.group(5) != null
-							&& matcher.group(5).length() > 0)
+							&& matcher.group(5).length() > 0){
 						mn.setSiegelstufe(matcher.group(5).charAt(0));
-					else {
+					} else {
 						Logger.getLogger(this.getClass()).error(
 								"Konnte Siegelstufe nicht bestimmen für: "
 										+ mn.getId()
@@ -385,9 +381,9 @@ public class GSScraper {
 						mn.setUrl(matcher.group(3));
 						mn.setTitel(matcher.group(5));
 						if (matcher.group(4) != null
-								&& matcher.group(4).length() > 0)
+								&& matcher.group(4).length() > 0){
 							mn.setSiegelstufe(matcher.group(4).charAt(0));
-						else {
+						} else {
 							Logger
 									.getLogger(this.getClass())
 									.error(
@@ -415,10 +411,6 @@ public class GSScraper {
 			XPathException {
 		Node root = source.parseMassnahmenDocument(mn.getUrl());
 
-		// XML2String out = new XML2String();
-		// String writeXML = out.writeXML((Document) root);
-		// System.out.println(writeXML);
-
 		massnahmenVerantowrtlicheContext.setContextItem(new DocumentWrapper(
 				root, mn.getUrl(), config));
 		SequenceIterator iterator = massnahmenVerantwortlicheExp
@@ -428,9 +420,9 @@ public class GSScraper {
 
 		while (true) {
 			NodeInfo roleNode = (NodeInfo) iterator.next();
-			if (roleNode == null)
+			if (roleNode == null){
 				break;
-
+			}
 			foundItems++;
 			String allRoles = roleNode.getStringValue();
 			allRoles = allRoles.replaceAll("\n", "");
@@ -449,6 +441,7 @@ public class GSScraper {
 						case 2:
 							mn.addVerantwortlicheUmsetzung(repairedRole);
 							break;
+						default: break;
 						}
 					}
 				}
@@ -465,78 +458,59 @@ public class GSScraper {
 	 * @return
 	 */
 	private String[] repairBrokenRole(String role) {
-		String[] repairedRole = this.BROKEN_ROLES.get(role);
-		if (repairedRole != null)
+		String[] repairedRole = this.broken_roles.get(role);
+		if (repairedRole != null){
 			return repairedRole;
-		else
+		} else {
 			return new String[] { role };
-
+		}
 	}
 
 	private void setLebenszyklus(Massnahme mn, String lzString) {
-		if (lzString.equals(Massnahme.LZ_STRING_Ausonderung))
+		if (lzString.equals(Massnahme.LZ_STRING_Ausonderung)){
 			mn.setLebenszyklus(Massnahme.LZ_AUSSONDERUNG);
-
-		else if (lzString.equals(Massnahme.LZ_STRING_Beschaffung))
+		} else if (lzString.equals(Massnahme.LZ_STRING_Beschaffung)){
 			mn.setLebenszyklus(Massnahme.LZ_BESCHAFFUNG);
-
-		else if (lzString.equals(Massnahme.LZ_STRING_Betrieb))
+		} else if (lzString.equals(Massnahme.LZ_STRING_Betrieb)){
 			mn.setLebenszyklus(Massnahme.LZ_BETRIEB);
-
-		else if (lzString.equals(Massnahme.LZ_STRING_Notfall))
+		} else if (lzString.equals(Massnahme.LZ_STRING_Notfall)){
 			mn.setLebenszyklus(Massnahme.LZ_NOTFALL);
-
-		else if (lzString.equals(Massnahme.LZ_STRING_Planung))
+		} else if (lzString.equals(Massnahme.LZ_STRING_Planung)){
 			mn.setLebenszyklus(Massnahme.LZ_PLANUNG);
-
-		else if (lzString.equals(Massnahme.LZ_STRING_Umsetzung))
+		} else if (lzString.equals(Massnahme.LZ_STRING_Umsetzung)){
 			mn.setLebenszyklus(Massnahme.LZ_UMSETZUNG);
+		}
 	}
 
 	public InputStream getBausteinText(String url, String stand)
 			throws GSServiceException {
-		// if (!stand.equals(this.stand))
-		// throw new
-		// GSServiceException("Versionstand des Bausteins weicht von geladenen "
-		// +
-		// "Grundschutz-Katalogen ab.");
 		return source.getBausteinAsStream(url);
 	}
 
 	public InputStream getMassnahme(String url, String stand)
 			throws GSServiceException {
-		// if (!stand.equals(this.stand))
-		// throw new
-		// GSServiceException("Versionstand der Massnahme weicht von geladenen "
-		// +
-		// "Grundschutz-Katalogen ab.");
 		return source.getMassnahmeAsStream(url);
 	}
 
 	public InputStream getGefaehrdung(String url, String stand)
 			throws GSServiceException {
-		// if (!stand.equals(this.stand))
-		// throw new
-		// GSServiceException("Versionstand des Bausteins weicht von geladenen "
-		// +
-		// "Grundschutz-Katalogen ab.");
 		return source.getGefaehrdungAsStream(url);
 	}
 
 	public List<Gefaehrdung> getGefaehrdungen(String baustein)
-			throws GSServiceException {
+			throws GSServiceException, IOException {
 		ArrayList<Gefaehrdung> result = new ArrayList<Gefaehrdung>();
 		try {
-			ArrayList fromCache = getFromCache("gefaehrdungen_", baustein);
+			List fromCache = getFromCache("gefaehrdungen_", baustein);
 			for (Object object : fromCache) {
 				result.add((Gefaehrdung) object);
 			}
 		} catch (Exception e) {
 			// do nothing
 		}
-		if (result != null && result.size() > 0)
+		if (result != null && result.size() > 0){
 			return result;
-
+		}
 		try {
 			Node root = source.parseBausteinDocument(baustein);
 			getStand(baustein, root);
@@ -550,15 +524,15 @@ public class GSScraper {
 
 			while (true) {
 				NodeInfo gfNode = (NodeInfo) iterator.next();
-				if (gfNode == null)
+				if (gfNode == null){
 					break;
+				}
 				String found = gfNode.getStringValue();
 				found = found.replaceAll("\n", "");
 				found = found.replaceAll(".html", "");
 				found = found.replaceAll(".htm", "");
 				found = found.replaceAll("\\.\\./\\.\\./g/g\\d\\d/", "");
 				found = found.replaceAll("../g/", "");
-				// System.out.println(found);
 
 				Matcher matcher = pat.matcher(found);
 				if (matcher.matches()) {

@@ -82,8 +82,7 @@ public interface IEncryptionService {
 	throws EncryptionException, IOException, CertificateException;
 	
 	byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
-	throws CertificateNotYetValidException, CertificateExpiredException, 
-	CertificateException, EncryptionException, IOException;
+	throws CertificateException, EncryptionException, IOException;
 
 	/**
 	 * Decrypts data received from the given InputStream using the AES algorithm.
@@ -135,8 +134,7 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
-		throws CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, EncryptionException, IOException;
+		throws CertificateException, EncryptionException, IOException;
 	
 
 	/**
@@ -169,8 +167,7 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile)
-		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, EncryptionException;
+		throws IOException, CertificateException, EncryptionException;
 	
 	   /**
      * Decrypts the given byte data with the given receiver certificate and the private key
@@ -203,8 +200,7 @@ public interface IEncryptionService {
      *             if a problem occured during the encryption process
      */
     byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword)
-        throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
-        CertificateException, EncryptionException;
+        throws IOException, CertificateException, EncryptionException;
 	
 	/**
 	 * Encrypts the given OutputStream using the given X.509 certificate file.
@@ -232,8 +228,7 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
-		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, EncryptionException;
+		throws IOException, CertificateException, EncryptionException;
 	
 	/**
 	 * Decrypts the given InputStream using the given X.509 certificate file that was used for 
@@ -261,8 +256,7 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
-		File privateKeyFile) throws IOException, CertificateNotYetValidException, 
-		CertificateExpiredException, CertificateException, EncryptionException;
+		File privateKeyFile) throws IOException, CertificateException, EncryptionException;
 	
 	/**
      * Decrypts the given InputStream using the given X.509 certificate file that was used for 
@@ -291,16 +285,13 @@ public interface IEncryptionService {
      *             if a problem occured during the encryption process
      */
     InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
-        File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateNotYetValidException, 
-        CertificateExpiredException, CertificateException, EncryptionException;
+        File privateKeyFile, final String privateKeyPassword) throws IOException, CertificateException, EncryptionException;
 
 	byte[] decrypt(byte[] encryptedByteData, String keyAlias)
-			throws IOException, CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException,
+			throws IOException, CertificateException,
 			EncryptionException;
 
 	InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
-			throws IOException, CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException,
+			throws IOException, CertificateException,
 			EncryptionException;
 }

@@ -46,27 +46,27 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 	
 	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
 	
-	public static String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String[] document_mime_types = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] PDF_MIME_TYPES = new String[] {"pdf"}; //$NON-NLS-1$
+	public static String[] pdf_mime_types = new String[] {"pdf"}; //$NON-NLS-1$
 	
-	public static String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	public static String[] image_mime_types = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	
-	public static String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx","csv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	public static String[] spreadsheet_mime_types = new String[] {"xls","ods","xlsx","csv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	
-	public static String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String[] presentation_mime_types = new String[] {"ppt","odp","pptx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] HTML_MIME_TYPES = new String[] {"htm","html","php"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String[] html_mime_types = new String[] {"htm","html","php"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] XML_MIME_TYPES = new String[] {"xml","xsd"}; //$NON-NLS-1$ //$NON-NLS-2$
+	public static String[] xml_mime_types = new String[] {"xml","xsd"}; //$NON-NLS-1$ //$NON-NLS-2$
 	
-	public static String[] AUDIO_MIME_TYPES = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	public static String[] audio_mime_types = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	public static String[] video_mime_types = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj","bz2","bz"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	public static String[] archive_mime_types = new String[] {"zip","rar","tar","gz","gzip","arj","bz2","bz"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
-	public static String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public static String[] text_mime_types = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
 	private transient EntityType subEntityType;
 	
@@ -140,13 +140,14 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 	}
 	
 	public Date getDate() {
-		if (getEntity().getProperties(PROP_DATE).getProperty(0) == null)
+		if (getEntity().getProperties(PROP_DATE).getProperty(0) == null){
 			return null;
-
+		}
 		String dateString = getEntity().getProperties(PROP_DATE).getProperty(0).getPropertyValue();
 
-		if (dateString == null || dateString.length() == 0)
+		if (dateString == null || dateString.length() == 0){
 			return null;
+		}
 		return new Date(Long.parseLong(dateString));
 	}
 	
@@ -156,8 +157,9 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		}
 	}
 	public EntityType getEntityType() {
-		if (subEntityType == null)
+		if (subEntityType == null){
 			subEntityType = getTypeFactory().getEntityType(getTypeId());
+		}
 		return subEntityType;
 	}
 
@@ -184,7 +186,7 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		}
 	}
 
-	@Override
+    @Override
 	public int hashCode() {
 		if(dbId!=null) {
 			return super.hashCode();
@@ -200,19 +202,19 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		if(dbId!=null && obj!=null && (obj instanceof Addition) && ((Addition)obj).getDbId()!=null) {
 			return super.equals(obj);
 		}
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (!super.equals(obj))
-			return false;
+		}
 		// FIXME ak this will not work when comparing proxies: 
-		if (getClass() != obj.getClass())
+		if (!super.equals(obj) || (getClass() != obj.getClass())){
 			return false;
+		}
 		Attachment other = (Attachment) obj;
-		if (filePath == null) {
-			if (other.filePath != null)
-				return false;
-		} else if (!filePath.equals(other.filePath))
+		if (filePath == null && other.filePath != null){
+		    return false;
+		} else if (!filePath.equals(other.filePath)){
 			return false;
+		}
 		return true;
 	}
 
@@ -222,16 +224,11 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
     @Override
     public int compareTo(Attachment o) {
         int result = 1; // this is greater
-        if(o!=null && o.getTitel()!=null) {
-            if(this.getTitel()!=null) {
-                result = this.getTitel().compareTo(o.getTitel());
-            } else {
-                result = 0;
-            }
+        if(o!=null && o.getTitel()!=null && this.getTitel()!=null) {
+            result = this.getTitel().compareTo(o.getTitel());
+        } else {
+            result = 0;
         }
         return result;
     }
-
-	
-
 }

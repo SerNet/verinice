@@ -19,7 +19,6 @@ package sernet.verinice.model.common;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -100,8 +99,9 @@ public class CnALink implements Serializable, ITypedElement {
         
         Set<CnALink> linksDown = elmt.getLinksDown();
         for (CnALink cnALink : linksDown) {
-            if (cnALink.getDependency().getTypeId().equals(typeId))
+            if (cnALink.getDependency().getTypeId().equals(typeId)){
                 result.put(cnALink.getDependency(), cnALink);
+            }
         }
         
         Set<CnALink> linksUp = elmt.getLinksUp();
@@ -121,10 +121,11 @@ public class CnALink implements Serializable, ITypedElement {
      */
     
 	public CnATreeElement getRelationObject(CnATreeElement inputElmt, CnALink link) {
-        if (CnALink.isDownwardLink(inputElmt, link))
+        if (CnALink.isDownwardLink(inputElmt, link)){
             return link.getDependency();
-        else
+        } else {
             return link.getDependant();
+        }
     }
 	
 	/**
@@ -138,9 +139,8 @@ public class CnALink implements Serializable, ITypedElement {
 		HuiRelation relation = getTypeFactory().getRelation(link.getRelationId());
 		String name;
 		if (relation == null) {
-			name = isDownwardLink(fromElement, link) ? "" : ""; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		else {
+			name = ""; //$NON-NLS-1$
+		} else {
 			name = isDownwardLink(fromElement, link) ? relation.getName() : relation.getReversename();
 		}
 		return name;
@@ -196,7 +196,7 @@ public class CnALink implements Serializable, ITypedElement {
 			this(dependantId, dependencyId, ""); //$NON-NLS-1$
 		}
 
-		public Id(Integer dependantId, Integer dependencyId, String relationId) {;
+		public Id(Integer dependantId, Integer dependencyId, String relationId) {
 			this.dependantId = dependantId;
 			this.dependencyId = dependencyId;
 			if(relationId==null || relationId.isEmpty()) {
@@ -215,7 +215,7 @@ public class CnALink implements Serializable, ITypedElement {
         }
 
         public boolean equals(Object o) {
-			if (o != null && o instanceof Id) {
+			if (o instanceof Id) {
 				Id that = (Id)o;
 				return this.dependantId.equals(that.dependantId)
 					&& this.dependencyId.equals(that.dependencyId)
@@ -227,8 +227,9 @@ public class CnALink implements Serializable, ITypedElement {
 		}
 		
 		public int hashCode() {
-			if (dependantId == null || dependencyId == null || typeId == null)	
+			if (dependantId == null || dependencyId == null || typeId == null){	
 					return super.hashCode();
+			}
 			return dependantId.hashCode() + dependencyId.hashCode() + typeId.hashCode();
 		}
 		
@@ -283,10 +284,10 @@ public class CnALink implements Serializable, ITypedElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		
-		if (obj != null && obj instanceof CnALink) {
+		}
+		if (obj instanceof CnALink) {
 			CnALink that = (CnALink) obj;
 			return this.getId().equals(that.getId());
 		}
@@ -317,10 +318,12 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 
 	private int linkTypeFor(CnATreeElement target) {
-		if (target instanceof Person)
+		if (target instanceof Person){
 			return ADMINISTRATED_BY;
-		if (target instanceof Raum || target instanceof Gebaeude)
+		}
+		if (target instanceof Raum || target instanceof Gebaeude){
 			return LOCATED_IN;
+		}
 		return DEPENDANT_ON;
 	}
 
@@ -341,12 +344,13 @@ public class CnALink implements Serializable, ITypedElement {
 	}
 
 	public synchronized Id getId() {
-		 if (this.id == null)
+		 if (this.id == null){
 			 this.id = new Id();
+		 }
 		return id;
 	}
 
-	public void setId(Id id) {
+	public synchronized void setId(Id id) {
 		this.id = id;
 	}
 
@@ -364,8 +368,6 @@ public class CnALink implements Serializable, ITypedElement {
 			return Messages.getString("CnALink.0"); //$NON-NLS-1$
 		case ADMINISTRATED_BY:
 			return Messages.getString("CnALink.4"); //$NON-NLS-1$
-//		case USED_BY:
-//			return Messages.CnALink_used;
 		case LOCATED_IN:
 			return Messages.getString("CnALink.1"); //$NON-NLS-1$
 		}

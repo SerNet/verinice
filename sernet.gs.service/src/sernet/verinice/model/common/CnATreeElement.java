@@ -84,10 +84,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	public int getNumericProperty(String propertyTypeId) {
 	    PropertyList properties = getEntity().getProperties(propertyTypeId);
-	    if (properties == null || properties.getProperties().size()==0)
+	    if (properties == null || properties.getProperties().size()==0){
 	        return 0;
-	    else
+	    } else {
 	        return properties.getProperty(0).getNumericPropertyValue();
+	    }
 	}
 	
 	public void setNumericProperty(String propTypeId, int value) {
@@ -134,10 +135,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (!(obj instanceof CnATreeElement))
+		}
+		if (!(obj instanceof CnATreeElement)){
 			return false;
+		}
 		CnATreeElement that = (CnATreeElement) obj;
 		boolean result = false;
 		try {
@@ -150,8 +153,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	@Override
 	public int hashCode() {
-		if (getUuid() != null)
+		if (getUuid() != null){
 			return getUuid().hashCode();
+		}
 		return super.hashCode(); // basically only used during migration of old objects (without hashcode)
 	}
 
@@ -291,10 +295,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 	
 	public String getId() {
-		if (getEntity() == null)
+		if (getEntity() == null){
 			return Entity.TITLE + getUuid();
-		else
+		} else {
 			return getEntity().getId();
+		}
 	}
 
 	/**
@@ -370,8 +375,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		for (CnATreeElement elmt : getChildren()) {
 			if (elmt instanceof BausteinUmsetzung) {
 				BausteinUmsetzung bu = (BausteinUmsetzung) elmt;
-				if (bu.getKapitel().equals(kapitel))
+				if (bu.getKapitel().equals(kapitel)){
 					return true;
+				}
 			}
 		}
 		return false;
@@ -492,18 +498,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public boolean isAdditionalMgmtReviewNeeded() {
-		if (getEntity()==null)
+		if (getEntity()==null){
 			return false;
+		}
 		PropertyList properties = getEntity().getProperties(
 				getTypeId() + Schutzbedarf.ERGAENZENDEANALYSE);
 		if (properties != null 
 				&& properties.getProperties()!=null 
-				&& properties.getProperties().size() > 0)
+				&& properties.getProperties().size() > 0){
 			return Schutzbedarf.isMgmtReviewNeeded(properties.getProperty(0)
 					.getPropertyValue());
-		else
+		} else {
 			return false;
-	
+		}
 	}
 
 	/**
@@ -512,16 +519,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 * @return
 	 */
 	public synchronized IBSIModelListener getModelChangeListener() {
-		if (modelChangeListener != null)
+		if (modelChangeListener != null){
 			return modelChangeListener;
-		
-//		BSIModel model = CnAElementFactory.getLoadedModel();
-//		if (model != null && ! (model instanceof NullModel)) {
-//			modelChangeListener = model;
-//		}
-//		else {
-//			modelChangeListener = new NullListener();
-//		}
+		}
 		
 		modelChangeListener = new NullListener();
 		return modelChangeListener;
@@ -553,14 +553,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public CnATreeElement getGroup(String childTypeId) {
         CnATreeElement group = null;
         for (CnATreeElement cnATreeElement : getChildren()) {
-            if(cnATreeElement!=null && cnATreeElement instanceof IISO27kGroup) {
+            if(cnATreeElement instanceof IISO27kGroup && 
                 // true if: group can contain childTypeId
                 // or group.typeId == childTypeId
-                if(Arrays.binarySearch(((IISO27kGroup)cnATreeElement).getChildTypes(), childTypeId)>-1
-                   || ((IISO27kGroup)cnATreeElement).getTypeId().equals(childTypeId)) {
+                ((Arrays.binarySearch(((IISO27kGroup)cnATreeElement).getChildTypes(), childTypeId)>-1
+                   || ((IISO27kGroup)cnATreeElement).getTypeId().equals(childTypeId)))) {
                     group = (CnATreeElement) cnATreeElement;
                     break;
-                }
             }
         }
         return group;

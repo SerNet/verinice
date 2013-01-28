@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
@@ -63,21 +64,20 @@ public class CopyCommand extends GenericCommand {
         return log;
     }
     
-    public static List<String> COPY_BLACKLIST;
-    public static List<String> CUT_BLACKLIST;
+    public static final List<String> copy_blacklist;
+    public static final List<String> cut_blacklist;
     
     static {
-    	COPY_BLACKLIST = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
-        CUT_BLACKLIST = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
+    	copy_blacklist = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
+        cut_blacklist = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
     }
     
-    String uuidGroup;
+    private String uuidGroup;
     
     private transient CnATreeElement selectedGroup;
     
-    List<String> uuidList;
+    private List<String> uuidList;
     
-    private transient List<CnATreeElement> copyElements;
     
     private List<IPostProcessor> postProcessorList;
     
@@ -117,6 +117,7 @@ public class CopyCommand extends GenericCommand {
     @Override
     public void execute() {
         try { 
+            List<CnATreeElement> copyElements;
             newElements = new ArrayList<String>(0);
             number = 0;
             copyElements = createInsertList(uuidList);
@@ -144,11 +145,11 @@ public class CopyCommand extends GenericCommand {
         }
     }
 
-    private CnATreeElement copy(CnATreeElement group, CnATreeElement element, Map<String, String> sourceDestMap) throws Exception {
+    private CnATreeElement copy(CnATreeElement group, CnATreeElement element, Map<String, String> sourceDestMap) throws CommandException {
         CnATreeElement elementCopy = element;
         if(element!=null 
             && element.getTypeId()!=null 
-            && !COPY_BLACKLIST.contains(element.getTypeId()) 
+            && !copy_blacklist.contains(element.getTypeId()) 
             && group.canContain(element)) {
             elementCopy = saveCopy(group, element);     
             number++;
@@ -166,7 +167,7 @@ public class CopyCommand extends GenericCommand {
         return elementCopy;
     }
 
-    private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement) throws Exception {
+    private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement) throws CommandException {
         copyElement = getDao().initializeAndUnproxy(copyElement);
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
@@ -174,10 +175,10 @@ public class CopyCommand extends GenericCommand {
             if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
                if (newElement instanceof GefaehrdungsUmsetzung){
                     String title = newElement.getTitle();
-                    String CopyGefaehrdungtitle = ((GefaehrdungsUmsetzung)newElement).getText();
+                    String copyGefaehrdungtitle = ((GefaehrdungsUmsetzung)newElement).getText();
                     Set<CnATreeElement> siblings = toGroup.getChildren();
                     siblings.remove(newElement);
-                    newElement.setTitel(getUniqueTitle(title, CopyGefaehrdungtitle, siblings, 0));
+                    newElement.setTitel(getUniqueTitle(title, copyGefaehrdungtitle, siblings, 0));
                 }else {
                 String title = newElement.getTitle();
                 Set<CnATreeElement> siblings = toGroup.getChildren();
@@ -197,7 +198,7 @@ public class CopyCommand extends GenericCommand {
         return newElement;
     }
     
-    private CnATreeElement saveNew(CnATreeElement container, CnATreeElement element) throws Exception {
+    private CnATreeElement saveNew(CnATreeElement container, CnATreeElement element) throws CommandException {
         String title = HitroUtil.getInstance().getTypeFactory().getMessage(element.getTypeId());   
         CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(container, (Class<CnATreeElement>) element.getClass(), title, true, false);
         saveCommand.setInheritAuditPermissions(true);
@@ -231,15 +232,16 @@ public class CopyCommand extends GenericCommand {
     private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
         if(!tempList.contains(element)) {
             tempList.add(element);
-            if(depth==0) {
+            int depth_ = depth;
+            if(depth_==0) {
                 insertList.add(element);
             }
             if((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung) 
                && element.getChildren()!=null) {
 
-                depth++;
+                depth_++;
                 for (CnATreeElement child : element.getChildren()) {
-                    createInsertList(child,tempList,insertList,depth,removed);
+                    createInsertList(child,tempList,insertList,depth_,removed);
                 }
             }
         } else {
@@ -257,10 +259,11 @@ public class CopyCommand extends GenericCommand {
      */
     private String getUniqueTitle(String title, String copyTitle, Set<CnATreeElement> siblings, int n) {
         String result = copyTitle;
+        int n_ = n;
         for (CnATreeElement cnATreeElement : siblings) {
             if(cnATreeElement!=null && cnATreeElement.getTitle()!=null && (cnATreeElement.getTitle().equals(copyTitle)) ) {
-                n++;
-                return getUniqueTitle(title, getCopyTitle(title, n), siblings, n);
+                n_++;
+                return getUniqueTitle(title, getCopyTitle(title, n_), siblings, n_);
             }
         }
         return result;

@@ -61,15 +61,15 @@ import sernet.verinice.model.samt.SamtTopic;
 public class DeriveStatusCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
     
     // 0,4,5 only here for future use
-    private static String TAG_MATURITY_LVL_0 = "ISA_MATLVL_0";
-    private static String TAG_MATURITY_LVL_1 = "ISA_MATLVL_1";
-    private static String TAG_MATURITY_LVL_2 = "ISA_MATLVL_2";
-    private static String TAG_MATURITY_LVL_3 = "ISA_MATLVL_3";
-    private static String TAG_MATURITY_LVL_4 = "ISA_MATLVL_4";
-    private static String TAG_MATURITY_LVL_5 = "ISA_MATLVL_5";
+    private static final String TAG_MATURITY_LVL_0 = "ISA_MATLVL_0";
+    private static final String TAG_MATURITY_LVL_1 = "ISA_MATLVL_1";
+    private static final String TAG_MATURITY_LVL_2 = "ISA_MATLVL_2";
+    private static final String TAG_MATURITY_LVL_3 = "ISA_MATLVL_3";
+    private static final String TAG_MATURITY_LVL_4 = "ISA_MATLVL_4";
+    private static final String TAG_MATURITY_LVL_5 = "ISA_MATLVL_5";
     
     
-    private transient Logger LOG = Logger.getLogger(DeriveStatusCommand.class);
+    private transient Logger log = Logger.getLogger(DeriveStatusCommand.class);
     private transient CacheManager manager = null;
     private String cacheId = null;
     private transient Cache cache = null;
@@ -80,7 +80,7 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
 
     private int measureCount = 0;
     
-    transient private IBaseDao<CnATreeElement, Serializable> dao;
+    private transient IBaseDao<CnATreeElement, Serializable> dao;
     
     private CnATreeElement selectedControlgroup = null;
     
@@ -91,10 +91,10 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
     }
     
     public Logger getLog() {
-        if (LOG == null) {
-            LOG = Logger.getLogger(DeriveStatusCommand.class);
+        if (log == null) {
+            log = Logger.getLogger(DeriveStatusCommand.class);
         }
-        return LOG;
+        return log;
     }
     
     private IBaseDao<CnATreeElement, Serializable> getDao() {
@@ -120,24 +120,28 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
             List<SamtTopic> list = getAllSamtTopics((ControlGroup)selectedControlgroup);
             if(list.size() > 0){
                 for(SamtTopic t : list){
-                    RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true).setChildrenProperties(true).setParent(true);
-                    t = (SamtTopic)hydrate(t, ri);
-                    String maturity = t.getEntity().getSimpleValue(SamtTopic.PROP_MATURITY);
-                    if(Integer.parseInt(maturity) == 0){ // special case maturity equals 0
-                        setMaturityZeroMeasures(t);
-                    }
-                    else if(maturity != null && !maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){
-                        Integer matVal = Integer.parseInt(maturity);
-                        if(matVal > 0 && matVal <= 5){ // standard case,maturity between 1 and 5
-                            setControlDone(getAllMeasuresToSet(t, maturity), matVal.intValue());
-                        }
-                    } else if(maturity != null && maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){ // special case, maturity equals NA
-                        setAllLinksNA(t);
-                    }
+                    processSamtTopic(t);
                 }
             }
         } finally {
             shutdownCache();
+        }
+    }
+
+    private void processSamtTopic(SamtTopic t) {
+        RetrieveInfo ri = new RetrieveInfo().setChildren(true).setLinksUp(true).setChildrenProperties(true).setParent(true);
+        t = (SamtTopic)hydrate(t, ri);
+        String maturity = t.getEntity().getSimpleValue(SamtTopic.PROP_MATURITY);
+        if(Integer.parseInt(maturity) == 0){ // special case maturity equals 0
+            setMaturityZeroMeasures(t);
+        }
+        else if(maturity != null && !maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){
+            Integer matVal = Integer.parseInt(maturity);
+            if(matVal > 0 && matVal <= 5){ // standard case,maturity between 1 and 5
+                setControlDone(getAllMeasuresToSet(t, maturity), matVal.intValue());
+            }
+        } else if(maturity != null && maturity.equals(String.valueOf(SamtTopic.IMPLEMENTED_NA_NUMERIC))){ // special case, maturity equals NA
+            setAllLinksNA(t);
         }
     }
     
@@ -396,15 +400,19 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
      *************************************************/
     private CnATreeElement hydrate(CnATreeElement element, RetrieveInfo ri)
     { 
-        if (element == null)
+        RetrieveInfo ri_;
+        if (element == null){
             return element;
-        if(ri == null){ // no ri set, take default values (which is expensive)
-            ri = RetrieveInfo.getPropertyChildrenInstance();
-            ri.setLinksDown(true);
-            ri.setLinksUp(true);
-            ri.setLinksDownProperties(true);
-            ri.setLinksUpProperties(true);
-            ri.setParent(true);
+        }
+        if(ri != null){
+            ri_ = ri;
+        } else { // no ri set, take default values (which is expensive)
+            ri_ = RetrieveInfo.getPropertyChildrenInstance();
+            ri_.setLinksDown(true);
+            ri_.setLinksUp(true);
+            ri_.setLinksDownProperties(true);
+            ri_.setLinksUpProperties(true);
+            ri_.setParent(true);
         }
         
         CnATreeElement elementFromCache = getElementFromCache(element.getUuid());
@@ -415,7 +423,7 @@ public class DeriveStatusCommand extends ChangeLoggingCommand implements IChange
             return elementFromCache;
         }
         
-        element = getDao().retrieve(element.getDbId(), ri);
+        element = getDao().retrieve(element.getDbId(), ri_);
         
         getCache().put(new Element(element.getUuid(), element));
            
