@@ -43,7 +43,7 @@ public class NotEmpty implements IValidationRule {
      */
     @Override
     public void init(String[] params, String hint) {
-        String hint_internal = new String(hint);
+        String hint_internal = (hint != null) ? new String(hint) : null;
         if(params != null && params.length == 1){
             hint_internal = params[0];
         }

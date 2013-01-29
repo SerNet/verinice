@@ -75,10 +75,10 @@ public class GroupTester extends PropertyTester {
 				
 				List<String> currentBlacklist;
                 if (isCutOperation) {
-                    currentBlacklist = CopyCommand.CUT_BLACKLIST;    
+                    currentBlacklist = CopyCommand.cut_blacklist;    
 				}
 				else {
-				    currentBlacklist = CopyCommand.COPY_BLACKLIST;
+				    currentBlacklist = CopyCommand.copy_blacklist;
 				}
 				
 				if(currentBlacklist.contains(element.getTypeId())) {

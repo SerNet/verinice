@@ -70,7 +70,7 @@ public class AddAction extends Action implements ISelectionListener {
      */
     public AddAction(String typeId, String title, GenericElementView groupView) {
         this.objectTypeId = typeId;
-        String title_ = new String(title);
+        String title_ = (title != null) ? new String(title) : null;
         if (title_ == null) {
             title_ = AddGroup.TITLE_FOR_TYPE.get(typeId);
         }

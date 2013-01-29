@@ -181,7 +181,8 @@ public class BSIMassnahmenModel {
         return alleBst;
     }
 
-    private void processBausteinLayer(IProgress mon, List<Baustein> alleBst, String layer, int layerDescription ) throws GSServiceException {
+    private void processBausteinLayer(IProgress mon, List<Baustein> alleBst, String layer, int layerDescription ) 
+            throws GSServiceException, IOException {
         mon.subTask(BausteinUmsetzung.getSchichtenBezeichnung()[layerDescription]);
         alleBst.addAll(scrapeBausteine(layer));
         mon.worked(1);
@@ -208,7 +209,7 @@ public class BSIMassnahmenModel {
 		}
 	}
 
-	private Baustein scrapeDatenschutzBaustein() throws GSServiceException {
+	private Baustein scrapeDatenschutzBaustein() throws GSServiceException, IOException {
     	Baustein b = new Baustein();
     	b.setStand(DS_2008);
     	b.setId(DS_B_1_5);
@@ -340,7 +341,7 @@ public class BSIMassnahmenModel {
 	}
 
 	private List<Baustein> scrapeBausteine(String schicht)
-			throws GSServiceException {
+			throws GSServiceException, IOException {
 		List<Baustein> bausteine = scrape.getBausteine(schicht);
 		for (Baustein baustein : bausteine) {
 			List<Massnahme> massnahmen = scrape
@@ -364,10 +365,12 @@ public class BSIMassnahmenModel {
 		InputStream gefaehrdung = null;
 		try {
 			gefaehrdung = scrape.getGefaehrdung(url, stand);
-		} catch (Exception e) {
-			if (dsScrape != null){
+		} catch (GSServiceException e) {
+			LOG.error("Error while getting gefaehrdung",e);
+		    if (dsScrape != null){
 				gefaehrdung = dsScrape.getGefaehrdung(url, stand);
 			}
+			
 		}
 		return gefaehrdung;
 	}

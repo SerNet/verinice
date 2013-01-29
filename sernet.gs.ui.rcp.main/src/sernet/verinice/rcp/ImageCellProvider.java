@@ -101,7 +101,7 @@ public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
     protected abstract Image getImage(Object element);
     
     protected byte[] loadFileData(Attachment attachment) {
-        if(Arrays.asList(Attachment.IMAGE_MIME_TYPES).contains(attachment.getMimeType())) {
+        if(Arrays.asList(Attachment.image_mime_types).contains(attachment.getMimeType())) {
             try {
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), thumbSize);
                 command = getCommandService().executeCommand(command);
