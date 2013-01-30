@@ -89,6 +89,7 @@ public class XMLImportDialog extends Dialog {
     
     private Button useDefaultFolderButton;
     private boolean useDefaultFolder = true;
+    private String defaultFolder;
     
     private Integer format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
@@ -156,7 +157,7 @@ public class XMLImportDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-
+        getDefaultFolder();
         final Composite container = (Composite) super.createDialogArea(parent);
 
         GridLayout layout = new GridLayout();
@@ -482,8 +483,6 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void displayFiles(Shell shell, Text pathText, File file) {
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        String defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Import);
         File f = file;
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { 
@@ -510,10 +509,8 @@ public class XMLImportDialog extends Dialog {
                 pathText.setEditable(true);
             }
             String currentPath = setupDirPath(path);
-            if(defaultFolder == null | defaultFolder.isEmpty() | !currentPath.equals(defaultFolder)){
-                defaultFolder = currentPath;
-                Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Import, currentPath);
-            } 
+            defaultFolder = currentPath;
+            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Import, currentPath);
             pathText.setText(f.getPath());
         }
     }
@@ -695,5 +692,13 @@ public class XMLImportDialog extends Dialog {
         } catch (CommandException e){
             LOG.error("Error while executing validation creation command", e);
         }
+    }
+    private String getDefaultFolder(){
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Import);
+        if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
+            defaultFolder=defaultFolder+System.getProperty("file.separator"); 
+        }
+        return defaultFolder; 
     }
 }

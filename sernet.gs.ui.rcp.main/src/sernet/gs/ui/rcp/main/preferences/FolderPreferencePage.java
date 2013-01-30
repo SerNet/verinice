@@ -61,6 +61,23 @@ public class FolderPreferencePage extends FieldEditorPreferencePage implements I
         
        
     }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        super.propertyChange(event);
+        if (event.getProperty().equals(FieldEditor.VALUE)) {
+            checkState();
+        }
+    }
+
+    @Override
+    protected void checkState() {
+        super.checkState();
+        if (!isValid()) {
+            return;
+        }
+
+    }
 
    @Override
     public void init(IWorkbench workbench) {
