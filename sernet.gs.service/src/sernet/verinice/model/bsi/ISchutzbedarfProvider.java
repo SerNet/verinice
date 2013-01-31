@@ -20,27 +20,27 @@ package sernet.verinice.model.bsi;
 import sernet.verinice.model.common.CascadingTransaction;
 
 public interface ISchutzbedarfProvider {
-	public int getVertraulichkeit();
-	public int getVerfuegbarkeit();
-	public int getIntegritaet();
+	int getVertraulichkeit();
+	int getVerfuegbarkeit();
+	int getIntegritaet();
 	
-	public void setVertraulichkeit(int i);
-	public void setIntegritaet(int i);
-	public void setVerfuegbarkeit(int i);
+	void setVertraulichkeit(int i);
+	void setIntegritaet(int i);
+	void setVerfuegbarkeit(int i);
 	
-	public String getVertraulichkeitDescription();
-	public String getIntegritaetDescription();
-	public String getVerfuegbarkeitDescription();
+	String getVertraulichkeitDescription();
+	String getIntegritaetDescription();
+	String getVerfuegbarkeitDescription();
 	
-	public boolean isCalculatedConfidentiality();
-	public boolean isCalculatedIntegrity();
-	public boolean isCalculatedAvailability();
+	boolean isCalculatedConfidentiality();
+	boolean isCalculatedIntegrity();
+	boolean isCalculatedAvailability();
 
-	public void setVertraulichkeitDescription(String text);
-	public void setIntegritaetDescription(String text);
-	public void setVerfuegbarkeitDescription(String text);
+	void setVertraulichkeitDescription(String text);
+	void setIntegritaetDescription(String text);
+	void setVerfuegbarkeitDescription(String text);
 	
-	public void updateVertraulichkeit(CascadingTransaction ta);
-	public void updateIntegritaet(CascadingTransaction ta);
-	public void updateVerfuegbarkeit(CascadingTransaction ta);
+	void updateVertraulichkeit(CascadingTransaction ta);
+	void updateIntegritaet(CascadingTransaction ta);
+	void updateVerfuegbarkeit(CascadingTransaction ta);
 }

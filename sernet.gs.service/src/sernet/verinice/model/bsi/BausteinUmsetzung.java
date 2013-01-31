@@ -46,16 +46,16 @@ public class BausteinUmsetzung extends CnATreeElement {
 	@Deprecated
 	public static final String P_ERFASSTDURCH_OLD = "bstumsetzung_erfasstdurch"; //$NON-NLS-1$
 	public static final String P_ERFASSTDURCH_LINK = "bstumsetzung_erfasstdurch_link"; //$NON-NLS-1$
-	public static final String P_Baustein_Beschreibung="eigene_bstumsetzung_beschreibung";
+	public static final String P_BAUSTEIN_BESCHREIBUNG="eigene_bstumsetzung_beschreibung";
 
-	private final static Pattern kapitelPattern 
+	private static final Pattern KAPITEL_PATTERN 
 		= Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
 
-	private final static String[] schichten = new String[] {
+	private static final String[] SCHICHTEN = new String[] {
 		"1", "2", "3", "4", "5" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	};
 	
-	private final static String[] schichtenBezeichnung = new String[] {
+	private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] {
 		Messages.BausteinUmsetzung_0,
 		Messages.BausteinUmsetzung_1,
 		Messages.BausteinUmsetzung_2,
@@ -105,7 +105,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	
 	public int[] getKapitelValue() {
 		int[] kapitel = new int[2];
-		Matcher m = kapitelPattern.matcher(getKapitel());
+		Matcher m = KAPITEL_PATTERN.matcher(getKapitel());
 		if (m.find()) {
 			try {
 				kapitel[0] = Integer.parseInt(m.group(1));
@@ -143,9 +143,9 @@ public class BausteinUmsetzung extends CnATreeElement {
 		char erreichteStufe = 'C'; 
 		
 		// bausteine ohne massnahmen werden als '0' = "keine umsetzungsstufe" dargestellt:
-		if (getChildren().size() == 0)
+		if (getChildren().size() == 0){
 			return '0';
-			
+		}
 		allMassnahmen: for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			if (!(obj instanceof MassnahmenUmsetzung)) {
@@ -170,10 +170,11 @@ public class BausteinUmsetzung extends CnATreeElement {
 					break;
 				case 'C':
 					// reduzieren auf B:
-					if (erreichteStufe != 'A')
+					if (erreichteStufe != 'A'){
 						erreichteStufe = 'B';
+					}
 					break;
-				default:
+				default: break;
 					// change nothing (Z nicht umgesetzt, optional)	
 				}
 			}
@@ -183,23 +184,25 @@ public class BausteinUmsetzung extends CnATreeElement {
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof MassnahmenUmsetzung)
+		if (obj instanceof MassnahmenUmsetzung){
 			return true;
+		}
 		return false;
 	}
 
 	public static String[] getSchichten() {
-		return schichten;
+		return SCHICHTEN.clone();
 	}
 
 	public static String[] getSchichtenBezeichnung() {
-		return schichtenBezeichnung;
+		return SCHICHTEN_BEZEICHNUNG.clone();
 	}
 	
 	public static String getSchichtenBezeichnung(String schichtNummer) {
-		for (int i = 0; i < schichten.length; i++) {
-			if (schichten[i].equals(schichtNummer))
-				return schichtenBezeichnung[i];
+		for (int i = 0; i < SCHICHTEN.length; i++) {
+			if (SCHICHTEN[i].equals(schichtNummer)){
+				return SCHICHTEN_BEZEICHNUNG[i];
+			}
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -224,8 +227,9 @@ public class BausteinUmsetzung extends CnATreeElement {
 	public MassnahmenUmsetzung getMassnahmenUmsetzung(String url) {
 		for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
 			MassnahmenUmsetzung mn = (MassnahmenUmsetzung) iter.next();
-			if (mn.getUrl().equals(url))
+			if (mn.getUrl().equals(url)){
 				return mn;
+			}
 		}
 		return null;
 	}
@@ -245,7 +249,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 	}
 
 	public String getDescription() {
-		return getEntity().getSimpleValue(P_Baustein_Beschreibung);
+		return getEntity().getSimpleValue(P_BAUSTEIN_BESCHREIBUNG);
 	}
 
 }

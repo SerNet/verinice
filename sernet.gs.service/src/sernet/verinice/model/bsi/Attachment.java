@@ -212,7 +212,7 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		Attachment other = (Attachment) obj;
 		if (filePath == null && other.filePath != null){
 		    return false;
-		} else if (!filePath.equals(other.filePath)){
+		} else if (filePath != null && !filePath.equals(other.filePath)){
 			return false;
 		}
 		return true;

@@ -29,19 +29,19 @@ import java.util.regex.Pattern;
  */
 public class PatternGSHB2005_2006 implements IGSPatterns {
 	
-	private final String ENCODING = "iso-8859-1";
+	private static final String ENCODING = "iso-8859-1";
 	
-	private final String gefName = 
+	private static final String GEFNAME = 
 		"//html:a[contains(@href,'../g/g')]/../following-sibling::html:td/following-sibling::html:td";
 
-	final String GET_BAUSTEINE = 
+	private static final String GET_BAUSTEINE = 
 		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
 	    " for $a in //html:a " +
 	    " let $u := data($a/@href)" +
 	    " where contains($a/@href, \"b0\")" +
 	    " return <b>{$a}°{$u}</b>"; // id titel, url
 	
-	final String GET_MASSNAHMEN = 
+	private static final String GET_MASSNAHMEN = 
 		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
 		" for $a in //html:a" +
 		" let $u := data($a/@href)" +
@@ -54,7 +54,7 @@ public class PatternGSHB2005_2006 implements IGSPatterns {
 		" return <mn>{$h}°{$a}°{$t}°{$u}°{$s}</mn>"; // return lebenszyklus, id, titel, url, siegel
 
 	
-	final String GET_GEFAEHRDUNGEN = 
+	private static final String GET_GEFAEHRDUNGEN = 
 		" declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
 		" for $a in //html:a" + // id (filename in url)
 		" let $u := data($a/@href)" + //url
@@ -66,7 +66,7 @@ public class PatternGSHB2005_2006 implements IGSPatterns {
 		// return kategorie, id, titel, url
 		" return <mn>{$h}°{$a}°{$t}°{$u}</mn>"; 
 	
-	final String GET_TITLE = " declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
+	private static final String GET_TITLE = " declare namespace html = \"http://www.w3.org/1999/xhtml\";" +
 		" for $t in //html:title" +
 		" let $d := data($t)" +
 		" return <title>{$d}</title>";
@@ -77,16 +77,16 @@ public class PatternGSHB2005_2006 implements IGSPatterns {
 		"where contains($s/@class, \"gshbmassverantwortlichist\") " +
 		"return <role>{$r}</role>";
 
-	final Pattern standPat = Pattern.compile("(\\d{4})");
+	private final Pattern standPat = Pattern.compile("(\\d{4})");
 	
-	final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
+	private final Pattern baustPat = Pattern.compile("(B \\d+.\\d+)\\s+(\\w*.*)°(.*)");
 	
-	final Pattern schichtPat = Pattern.compile("(\\d)\\.\\d+");
+	private final Pattern schichtPat = Pattern.compile("(\\d)\\.\\d+");
 
 
 
 	public String getGefName() {
-		return gefName;
+		return GEFNAME;
 	}
 
 	public String getBausteinPattern() {

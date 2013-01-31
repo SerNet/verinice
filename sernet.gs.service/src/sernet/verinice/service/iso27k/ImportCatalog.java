@@ -61,11 +61,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
         return log;
     }
 
-    ImportConfiguration config;
+    private ImportConfiguration config;
 
-    CsvFile csvFile;
+    private CsvFile csvFile;
 
-    Catalog catalog = new Catalog();
+    private Catalog catalog = new Catalog();
 
     public ImportCatalog(String filePath) throws IOException {
         this(filePath, VeriniceCharset.CHARSET_DEFAULT);
@@ -83,7 +83,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 
     public ImportCatalog(byte[] fileContent) throws IOException {
         super();
-        csvFile = new CsvFile(fileContent);
+        csvFile = new CsvFile((fileContent != null) ? fileContent.clone() : null);
     }
 
     /*

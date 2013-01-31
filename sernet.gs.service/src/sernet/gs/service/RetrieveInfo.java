@@ -33,33 +33,33 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	
-	boolean properties = false;
+	private boolean properties = false;
 	
-	boolean linksUp = false;
+	private boolean linksUp = false;
 	
-	boolean linksUpProperties = false;
+	private boolean linksUpProperties = false;
 	
-	boolean linksDown = false;
+	private boolean linksDown = false;
 	
-	boolean linksDownProperties = false;
+	private boolean linksDownProperties = false;
 	
-	boolean children = false;
+	private boolean children = false;
 	
-	boolean childrenProperties = false;
+	private boolean childrenProperties = false;
 	
 	private boolean grandchildren = false;
 	
-	boolean parent = false;
+	private boolean parent = false;
 	
-	boolean parentPermissions = false;
+	private boolean parentPermissions = false;
 	
-	boolean siblings = false;
+	private boolean siblings = false;
 	
-	boolean permissions = false;
+	private boolean permissions = false;
 	
-	boolean childrenPermissions = false;
+	private boolean childrenPermissions = false;
 	
-	boolean innerJoin = false;
+	private boolean innerJoin = false;
 
 	public static RetrieveInfo getPropertyInstance() {
 	    RetrieveInfo ri = new RetrieveInfo();

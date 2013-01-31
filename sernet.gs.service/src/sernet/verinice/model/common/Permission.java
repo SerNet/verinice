@@ -28,13 +28,13 @@ import sernet.hui.common.connect.ITypedElement;
 @SuppressWarnings("serial")
 public class Permission implements Serializable, ITypedElement, Comparable<Permission> {
 
-	private transient static Logger LOG = Logger.getLogger(Permission.class);
+	private static transient Logger log = Logger.getLogger(Permission.class);
 	
     private static Logger getLog() {
-        if (LOG == null) {
-            LOG = Logger.getLogger(Permission.class);
+        if (log == null) {
+            log = Logger.getLogger(Permission.class);
         }
-        return LOG;
+        return log;
     }
 	
 	private Integer dbId;
@@ -173,24 +173,23 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 	@Override
 	public boolean equals(Object obj) {
 		try {
-			if (this == obj)
+			if (this == obj){
 				return true;
-			if (obj == null)
+			}
+			if (obj == null || !(obj instanceof Permission)){
 				return false;
-			if (!(obj instanceof Permission))
-			    return false;
+			}
 			Permission other = (Permission) obj;
-			if (cnaTreeElement == null) {
-				if (other.cnaTreeElement != null)
-					return false;
+			if (cnaTreeElement == null && other.cnaTreeElement != null){
+			    return false;
 			} else if (!cnaTreeElement.equals(other.cnaTreeElement)) {
 				return false;
 			}
-			if (role == null) {
-				if (other.role != null)
-					return false;
-			} else if (!role.equals(other.role))
+			if (role == null && other.role != null){
+			    return false;
+			} else if (!role.equals(other.role)){
 				return false;
+			}
 			return true;
 		} catch(Throwable t ) {
 			getLog().error("Error in equals, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
@@ -200,19 +199,19 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 
 	@Override
 	public int compareTo(Permission o) {
-		final int THIS_IS_LESS = -1;
-		final int EQUAL = 0;
-		final int THIS_IS_GREATER = 1;
-		int result = THIS_IS_LESS;
+		final int thisIsLess = -1;
+		final int equal = 0;
+		final int thisIsGreater = 1;
+		int result = thisIsLess;
 		if(o!=null && o.getRole()!=null) {
 			if(this.getRole()!=null) {
 				result = this.getRole().compareTo(o.getRole());
 			} else {
-				result = THIS_IS_GREATER;
+				result = thisIsGreater;
 			}
 		} else {
 			if(this.getRole()==null) {
-				result = EQUAL;
+				result = equal;
 			}
 		}
 		return result;

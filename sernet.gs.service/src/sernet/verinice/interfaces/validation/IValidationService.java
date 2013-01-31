@@ -34,9 +34,9 @@ public interface IValidationService {
      * Creates validations for every validation rule defined in snca.xml for any property of given element
      * @param elmt
      */
-    public void createValidationForSingleElement(CnATreeElement elmt);
+    void createValidationForSingleElement(CnATreeElement elmt);
     
-    public void createValidationByUuid(String uuid) throws CommandException;
+    void createValidationByUuid(String uuid) throws CommandException;
     
     
     /**
@@ -45,23 +45,23 @@ public interface IValidationService {
      * @param monitor (use {@link IProgressMonitor} ) to provide feedback
      * @throws CommandException
      */
-    public void createValidationsForScope(Integer scope) throws CommandException;
+    void createValidationsForScope(Integer scope) throws CommandException;
     
     /**
      * creates validations for a cnatreeElement and all of its children (recursivly)
      * @param elmt
      * @throws CommandException
      */
-    public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException;
+    void createValidationsForSubTree(CnATreeElement elmt) throws CommandException;
     
-    public void createValidationsForSubTreeByUuid(String uuid) throws CommandException;
+    void createValidationsForSubTreeByUuid(String uuid) throws CommandException;
 
     /**
      * Returns all validations for given scope
      * @param cnaDbId
      * @return
      */
-    public List<CnAValidation> getValidations(Integer scopeId);
+    List<CnAValidation> getValidations(Integer scopeId);
     
     /**
      * Returns all validations for a given element and scope
@@ -69,7 +69,7 @@ public interface IValidationService {
      * @param cnaId
      * @return
      */
-    public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId);
+    List<CnAValidation> getValidations(Integer scopeId, Integer cnaId);
     
     /**
      * Returns a single validation given by 3 determining parameters
@@ -78,7 +78,7 @@ public interface IValidationService {
      * @param hint
      * @return
      */
-    public CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint, Integer scopeId);
+    CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint, Integer scopeId);
     
     /**
      * Returns if a validation is a db entry already
@@ -87,9 +87,9 @@ public interface IValidationService {
      * @param hintID
      * @return
      */
-    public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId);
+    boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId);
     
-    public boolean isValidationExistant(Integer elmtDbId, String propertyType);
+    boolean isValidationExistant(Integer elmtDbId, String propertyType);
     
     /**
      * Deletes a validation
@@ -97,15 +97,15 @@ public interface IValidationService {
      * @param propertyType
      * @param hintID
      */
-    public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID, Integer scopeId);
+    CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID, Integer scopeId);
     
-    public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId);
+    CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId);
     
-    public CnAValidation deleteValidation(CnAValidation validation);
+    CnAValidation deleteValidation(CnAValidation validation);
     
-    public void deleteValidations(Integer scopeId, Integer elmtDbId);
+    void deleteValidations(Integer scopeId, Integer elmtDbId);
     
-    public void deleteValidationsOfSubtree(CnATreeElement elmt);
+    void deleteValidationsOfSubtree(CnATreeElement elmt);
     
     /**
      * Returns all validations for a specified {@link PropertType} of a given {@link CnATreeElement} 
@@ -113,7 +113,7 @@ public interface IValidationService {
      * @param propertyType
      * @return
      */
-    public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType);
+    List<CnAValidation> getValidations(Integer elmtDbId, String propertyType);
     
     /**
      * Updates title in existant {@link CnAValidation} 
@@ -121,12 +121,12 @@ public interface IValidationService {
      * @param elmtDbId
      * @param title
      */
-    public void updateValidations(Integer scopeId, Integer elmtDbId,  String title);
+    void updateValidations(Integer scopeId, Integer elmtDbId,  String title);
     
     /**
      * returns all propertytypeids that needs to be validated for specified cnatreeelement
      * @param dbid
      * @return
      */
-    public List<String> getPropertyTypesToValidate(Entity entity, Integer cnaDbId);
+    List<String> getPropertyTypesToValidate(Entity entity, Integer cnaDbId);
 }

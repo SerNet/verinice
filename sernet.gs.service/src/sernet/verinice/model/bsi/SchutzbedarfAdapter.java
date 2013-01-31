@@ -38,6 +38,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+@SuppressWarnings("serial")
 public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
 
     
@@ -58,26 +59,29 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
 
     public int getIntegritaet() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
-        if (hasValue(properties))
+        if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        else
+        } else {
             return Schutzbedarf.UNDEF;
+        }
     }
     
     public int getVerfuegbarkeit() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
-        if (hasValue(properties))
+        if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        else
+        } else {
             return Schutzbedarf.UNDEF;
+        }
     }
 
     public int getVertraulichkeit() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
-        if (hasValue(properties))
+        if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
-        else
+        } else {
             return Schutzbedarf.UNDEF;
+        }
     }
     
     public boolean hasValue(PropertyList properties) {      
@@ -91,21 +95,18 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.INTEGRITAET, i);
 
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET), option);
-        // cnaTreeElement.fireIntegritaetChanged(ta);
     }
 
     public void setVerfuegbarkeit(int i) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.VERFUEGBARKEIT, i);
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT), option);
-        // cnaTreeElement.fireVerfuegbarkeitChanged(ta);
     }
 
     public void setVertraulichkeit(int i) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.VERTRAULICHKEIT, i);
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT), option);
-        // cnaTreeElement.fireVertraulichkeitChanged(ta);
     }
 
     public String getIntegritaetDescription() {
@@ -123,19 +124,16 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
     public void setIntegritaetDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG), text);
-        // cnaTreeElement.fireIntegritaetChanged(ta);
     }
 
     public void setVerfuegbarkeitDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG), text);
-        // cnaTreeElement.fireVerfuegbarkeitChanged(ta);
     }
 
     public void setVertraulichkeitDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG), text);
-        // cnaTreeElement.fireVertraulichkeitChanged(ta);
     }
 
     private void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
@@ -232,8 +230,9 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
      * @return
      */
     private void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
-        if (downwardsTA.hasBeenVisited(downwardElement))
+        if (downwardsTA.hasBeenVisited(downwardElement)){
             return;
+        }
 
         try {
             downwardsTA.enter(downwardElement);
@@ -251,8 +250,9 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         }
 
         // could not go further down, so add this node:
-        if (countLinks == 0)
+        if (countLinks == 0){
             bottomNodes.add(downwardElement);
+        }
     }
 
     public CnATreeElement getParent() {

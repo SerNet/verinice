@@ -47,7 +47,7 @@ public abstract class ElementFilter {
     public static final String PARAM_TYPE_IDS = "type_ids"; //$NON-NLS-1$
     public static final String PARAM_TAGS = "tags"; //$NON-NLS-1$
     public static final String PARAM_FILTER_ORGS = "filter_orgs"; //$NON-NLS-1$
-    public static String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"}; //$NON-NLS-1$ //$NON-NLS-1$
+    public static final String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"}; //$NON-NLS-1$ //$NON-NLS-1$
     
     public static void applyParameter(CnATreeElement element, Map<String, Object> parameter) {
         if(parameter!=null && element!=null && !parameter.isEmpty()) {
@@ -116,7 +116,7 @@ public abstract class ElementFilter {
     
     static class TypeFilter implements IFilter {
 
-        Set<String[]> visibleTypeSet;
+        private Set<String[]> visibleTypeSet;
 
         public static TypeFilter createFilter(Set<String[]> visibleTypeSet) {
             return new TypeFilter(visibleTypeSet);
@@ -153,8 +153,8 @@ public abstract class ElementFilter {
     
     static class TagFilter implements IFilter {
 
-        String[] tagArray;
-        boolean filterOrgs;
+        private String[] tagArray;
+        private boolean filterOrgs;
 
         public static TagFilter createFilter(String[] tagArray, boolean filterOrgs) {
             return new TagFilter(tagArray,filterOrgs);
@@ -166,7 +166,7 @@ public abstract class ElementFilter {
          */
         protected TagFilter(String[] tagArray, boolean filterOrgs) {
             super();
-            this.tagArray = tagArray;
+            this.tagArray = (tagArray != null) ? tagArray.clone() : null;
             this.filterOrgs = filterOrgs;
         }
 
@@ -200,10 +200,8 @@ public abstract class ElementFilter {
                     result = false;
                     IISO27kElement iso = (IISO27kElement) element;
                     for (String tag : tagArray) {
-                        if (tag.equals(NO_TAG)) {
-                            if (iso.getTags().size() < 1) {
-                                result = true;
-                            }
+                        if (tag.equals(NO_TAG) && iso.getTags().size() < 1) {
+                            result = true;
                         }
                         for (String zielTag : iso.getTags()) {
                             if (zielTag.equals(tag)) {

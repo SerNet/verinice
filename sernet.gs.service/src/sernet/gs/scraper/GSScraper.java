@@ -58,7 +58,7 @@ import sernet.gs.service.GSServiceException;
  */
 public class GSScraper {
 
-	private final Map<String, String[]> broken_roles = new HashMap<String, String[]>();
+	private final Map<String, String[]> brokenRoles = new HashMap<String, String[]>();
 
 	private IGSPatterns patterns;
 
@@ -130,19 +130,19 @@ public class GSScraper {
 	}
 
 	private void createBrokenRoleReplacements() {
-	    String it_sicherheits_management = "IT-Sicherheitsmanagement";
-		broken_roles.put("Behörden-/Unter-nehmensleitung",
+	    String itSicherheitsManagement = "IT-Sicherheitsmanagement";
+		brokenRoles.put("Behörden-/Unter-nehmensleitung",
 				new String[] { "Behörden-/Unternehmensleitung" });
-		broken_roles.put("IT-Sicherheits-management",
-				new String[] { it_sicherheits_management });
-		broken_roles.put("IT-Sicherheitsmanagement-Team",
-				new String[] { it_sicherheits_management });
-		broken_roles.put("IT-Sicherheitsmanagement Administrator",
-				new String[] { it_sicherheits_management, "Administrator" });
-		broken_roles.put("Leiter IT Administrator", new String[] { "Leiter IT",
+		brokenRoles.put("IT-Sicherheits-management",
+				new String[] { itSicherheitsManagement });
+		brokenRoles.put("IT-Sicherheitsmanagement-Team",
+				new String[] { itSicherheitsManagement });
+		brokenRoles.put("IT-Sicherheitsmanagement Administrator",
+				new String[] { itSicherheitsManagement, "Administrator" });
+		brokenRoles.put("Leiter IT Administrator", new String[] { "Leiter IT",
 				"Administrator" });
-		broken_roles.put("Leiter IT IT-Sicherheitsmanagement", new String[] {
-				"Leiter IT", it_sicherheits_management });
+		brokenRoles.put("Leiter IT IT-Sicherheitsmanagement", new String[] {
+				"Leiter IT", itSicherheitsManagement });
 	}
 
 	public List<Baustein> getBausteine(String kapitel)
@@ -229,12 +229,12 @@ public class GSScraper {
 		if (!dir.exists()) {
 			return null;
 		}
-		String filename_ = null;
-		filename_ = fileName.replaceAll("\\.\\./", "");
-		filename_ = fileName.replaceAll("/", "_");
+		String filename_0 = null;
+		filename_0 = fileName.replaceAll("\\.\\./", "");
+		filename_0 = fileName.replaceAll("/", "_");
 
 		FileInputStream fin = new FileInputStream(dir.getAbsolutePath()
-				+ File.separator + filename_);
+				+ File.separator + filename_0);
 		ObjectInputStream ois = new ObjectInputStream(fin);
 		ArrayList result = (ArrayList) ois.readObject();
 		ois.close();
@@ -261,9 +261,10 @@ public class GSScraper {
 	}
 
 	private void writeToFile(String fileName, ArrayList b) throws IOException{
-		fileName = fileName.replaceAll("\\.\\./", "");
-		fileName = fileName.replaceAll("/", "_");
-		writeToFile(b, fileName);
+		String fileName_0 = fileName;
+	    fileName_0 = fileName_0.replaceAll("\\.\\./", "");
+		fileName_0 = fileName_0.replaceAll("/", "_");
+		writeToFile(b, fileName_0);
 	}
 
 	private void writeToFile(Serializable object, String fileName) throws IOException{
@@ -458,7 +459,7 @@ public class GSScraper {
 	 * @return
 	 */
 	private String[] repairBrokenRole(String role) {
-		String[] repairedRole = this.broken_roles.get(role);
+		String[] repairedRole = this.brokenRoles.get(role);
 		if (repairedRole != null){
 			return repairedRole;
 		} else {

@@ -23,82 +23,82 @@ public interface IRetrieveInfo {
 	/**
 	 * @return true if properties are joined and retrieved
 	 */
-	abstract boolean isProperties();
+	boolean isProperties();
 
-	abstract IRetrieveInfo setProperties(boolean properties);
+	IRetrieveInfo setProperties(boolean properties);
 
 	/**
 	 * @return true if links-up are joined and retrieved
 	 */
-	abstract boolean isLinksUp();
+	boolean isLinksUp();
 
-	abstract IRetrieveInfo setLinksUp(boolean linksUp);
+	IRetrieveInfo setLinksUp(boolean linksUp);
 
 	/**
 	 * @return true if properties of links-up are joined and retrieved
 	 */
-	abstract boolean isLinksUpProperties();
+	boolean isLinksUpProperties();
 
-	abstract IRetrieveInfo setLinksUpProperties(boolean linksUpProperties);
+	IRetrieveInfo setLinksUpProperties(boolean linksUpProperties);
 
 	/**
 	 * @return true if links-down are joined and retrieved
 	 */
-	abstract boolean isLinksDown();
+	boolean isLinksDown();
 
-	abstract IRetrieveInfo setLinksDown(boolean linksDown);
+	IRetrieveInfo setLinksDown(boolean linksDown);
 
 	/**
 	 * @return true if properties of links-down are joined and retrieved
 	 */
-	abstract boolean isLinksDownProperties();
+	boolean isLinksDownProperties();
 
-	abstract IRetrieveInfo setLinksDownProperties(
+	IRetrieveInfo setLinksDownProperties(
 			boolean linksDownProperties);
 
 	/**
 	 * @return true if children are joined and retrieved
 	 */
-	abstract boolean isChildren();
+	boolean isChildren();
 
-	abstract IRetrieveInfo setChildren(boolean children);
+	IRetrieveInfo setChildren(boolean children);
 
 	/**
 	 * @return true if properties of children are joined and retrieved
 	 */
-	abstract boolean isChildrenProperties();
+	boolean isChildrenProperties();
 
-	abstract IRetrieveInfo setChildrenProperties(
+	IRetrieveInfo setChildrenProperties(
 			boolean childrenProperties);
 
-	abstract IRetrieveInfo setGrandchildren(boolean grandchildren);
+	IRetrieveInfo setGrandchildren(boolean grandchildren);
 
-	abstract boolean isGrandchildren();
+	boolean isGrandchildren();
 
-	abstract boolean isParent();
+	boolean isParent();
 	
-	abstract boolean isParentPermissions();
+	boolean isParentPermissions();
 
-	abstract IRetrieveInfo setParent(boolean parent);
+	IRetrieveInfo setParent(boolean parent);
 
-	abstract boolean isSiblings();
+	boolean isSiblings();
 
-	abstract IRetrieveInfo setSiblings(boolean siblings);
+	IRetrieveInfo setSiblings(boolean siblings);
 
-	abstract boolean isPermissions();
+	boolean isPermissions();
 
-	abstract IRetrieveInfo setPermissions(boolean permissions);
+	IRetrieveInfo setPermissions(boolean permissions);
 
-	abstract IRetrieveInfo setChildrenPermissions(
+	IRetrieveInfo setChildrenPermissions(
 			boolean childrenPermissions);
 
-	abstract boolean isChildrenPermissions();
+	boolean isChildrenPermissions();
 
 	/**
 	 * @return true if inner joins are used
 	 */
-	abstract boolean isInnerJoin();
+	boolean isInnerJoin();
 
-	abstract IRetrieveInfo setInnerJoin(boolean innerJoin);
+	IRetrieveInfo setInnerJoin(boolean innerJoin);
 
 }
