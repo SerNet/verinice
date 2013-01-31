@@ -21,8 +21,6 @@ package sernet.verinice.bpm.isam;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
@@ -36,8 +34,6 @@ import sernet.verinice.model.iso27k.Control;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class NotResponsibleEmailHandler extends GenericEmailHandler implements IEmailHandler {
-    
-    private static final Logger LOG = Logger.getLogger(NotResponsibleEmailHandler.class);
     
     private static final String TEMPLATE = "NotResponsibleReminder";
     

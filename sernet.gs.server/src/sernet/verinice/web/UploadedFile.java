@@ -29,16 +29,16 @@ public class UploadedFile {
     private long length;
     private byte[] data;
     public byte[] getData() {
-        return data;
+        return (data != null) ? data.clone() : null;
     }
     public void setData(byte[] data) {
-        this.data = data;
+        this.data = (data != null) ? data.clone() : null;
     }
     public String getName() {
         return name;
     }
-    public void setName(String name_) {
-        name = name_;
+    public void setName(String name_0) {
+        name = name_0;
         int extDot = name.lastIndexOf('.');
         if(extDot > 0){
             String extension = name.substring(extDot +1);

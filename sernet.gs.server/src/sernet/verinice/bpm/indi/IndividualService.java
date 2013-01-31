@@ -63,6 +63,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
      * @return
      */
     private Map<String, Object> createParameterMap(IndividualServiceParameter parameter) {
+        final int maxDescriptionLength = 254;
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(IGenericProcess.VAR_UUID, parameter.getUuid());
         map.put(IGenericProcess.VAR_ASSIGNEE_NAME, parameter.getAssignee());
@@ -72,7 +73,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IGenericProcess.VAR_OWNER_NAME, getAuthService().getUsername());
         String description = parameter.getDescription();
         if(description!=null) {
-            if(description.length()>254) {
+            if(description.length()>maxDescriptionLength) {
                 map.put(IIndividualProcess.VAR_DESCRIPTION, description.toCharArray());
             } else {
                 map.put(IIndividualProcess.VAR_DESCRIPTION, description);

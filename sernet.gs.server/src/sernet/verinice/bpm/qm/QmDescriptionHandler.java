@@ -21,12 +21,9 @@ package sernet.verinice.bpm.qm;
 
 import java.util.Map;
 
-import org.jbpm.api.task.Task;
-
 import sernet.verinice.bpm.DefaultTaskDescriptionHandler;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
-import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.Messages;
 
 /**

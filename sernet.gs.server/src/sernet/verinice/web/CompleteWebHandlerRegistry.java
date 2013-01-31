@@ -51,7 +51,6 @@ public abstract class CompleteWebHandlerRegistry {
      */
     static {
         handler = new Hashtable<String, String>();
-        //handler.put(IIsaQmProcess.TASK_IQM_SET_ASSIGNEE + "." + IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE, new SetAssigneeClientHandler());
         handler.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, NewQmIssueBean.NAME);
     }
     

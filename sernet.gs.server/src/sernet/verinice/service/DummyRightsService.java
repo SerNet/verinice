@@ -47,8 +47,6 @@ public class DummyRightsService implements IRightsService{
 
     private Auth auth;
     
-    private List<Userprofile> userprofile;
-    
     private IBaseDao<Configuration, Integer> configurationDao;
     
     private IBaseDao<Property, Integer> propertyDao;

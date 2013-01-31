@@ -74,11 +74,11 @@ public class ValidationService implements IValidationService {
         if(eType != null){
             for(Object pElement : eType.getAllPropertyTypes()){
                 if(pElement instanceof PropertyType){
-                    hintsOfFailedValidationsMap = updateValueMap(hintsOfFailedValidationsMap, (PropertyType)pElement, elmt);
+                    hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>)updateValueMap(hintsOfFailedValidationsMap, (PropertyType)pElement, elmt);
                 } else if(pElement instanceof PropertyGroup){
                     PropertyGroup pGroup = (PropertyGroup)pElement;
                     for(PropertyType pType : pGroup.getPropertyTypes()){
-                        hintsOfFailedValidationsMap = updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
+                        hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>)updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
                     }
                 }
             }
@@ -231,7 +231,7 @@ public class ValidationService implements IValidationService {
         return hintsOfFailedValidations;
     }
     
-    private ArrayList<String> processValidationMap(Map<String, Boolean> validationMap, CnATreeElement elmt, PropertyType type){
+    private List<String> processValidationMap(Map<String, Boolean> validationMap, CnATreeElement elmt, PropertyType type){
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
         for(Entry<String, Boolean> entry : validationMap.entrySet()){
             boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
@@ -259,7 +259,7 @@ public class ValidationService implements IValidationService {
         return hintsOfFailedValidations;
     }
     
-    private HashMap<PropertyType, List<String>> updateValueMap(HashMap<PropertyType, List<String>> map, PropertyType type, CnATreeElement elmt){
+    private Map<PropertyType, List<String>> updateValueMap(HashMap<PropertyType, List<String>> map, PropertyType type, CnATreeElement elmt){
         List<String> invalidHints = getInvalidPropertyHints(type, elmt);
         if(map.containsKey(type)){
             List<String> listWithNewValues = map.get(type);
@@ -286,7 +286,6 @@ public class ValidationService implements IValidationService {
     
     @Override
     public CnAValidation deleteValidation(CnAValidation validation){
-        Integer scopeId = validation.getScopeId();
         getCnaValidationDAO().delete(validation);
         return validation;
     }

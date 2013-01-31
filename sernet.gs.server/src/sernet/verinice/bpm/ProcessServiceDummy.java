@@ -8,7 +8,6 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
-import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;

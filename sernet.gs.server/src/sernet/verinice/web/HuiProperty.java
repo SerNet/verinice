@@ -178,7 +178,7 @@ public class HuiProperty<K,V> implements Serializable{
         if(item!=null) {
             for (IMLPropertyOption option : type.getOptions()) {
                 if(item.equals(option.getName())) {
-                    value = getSelectionValue(item, option);
+                    value = getSelectionValue(option);
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Set option value: "+ value + " for label: " + item);
                     }
@@ -190,7 +190,7 @@ public class HuiProperty<K,V> implements Serializable{
         }
     }
 
-    private V getSelectionValue(String item, IMLPropertyOption option) {
+    private V getSelectionValue(IMLPropertyOption option) {
         if(getIsSingleSelect()) {
             return (V) option.getId();                    
         }
@@ -288,11 +288,11 @@ public class HuiProperty<K,V> implements Serializable{
         HuiProperty other = (HuiProperty) obj;
         if (key == null && other.key != null){
             return false;
-        } else if (!key.equals(other.key))
+        } else if (key!=null && !key.equals(other.key))
             return false;
         if (value == null && other.value != null){
             return false;
-        } else if (!value.equals(other.value)){
+        } else if (value != null && !value.equals(other.value)){
             return false;
         }
         return true;

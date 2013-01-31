@@ -281,14 +281,14 @@ public class TaskService implements ITaskService {
      * @param where
      */
     private boolean concat(/*not final*/StringBuilder hql,/*not final*/boolean where) {
-        boolean where_ = where;
-        if(!where_) {
+        boolean where_0 = where;
+        if(!where_0) {
             hql.append("where "); //$NON-NLS-1$
-            where_ = true;
+            where_0 = true;
         } else {
             hql.append("and "); //$NON-NLS-1$
         }
-        return where_;
+        return where_0;
     }
 
     /* (non-Javadoc)

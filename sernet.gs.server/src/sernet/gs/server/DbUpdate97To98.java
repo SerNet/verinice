@@ -105,8 +105,8 @@ public class DbUpdate97To98 implements IDBUpdate {
     }
     
     public class Note {
-        Integer id;
-        Integer entitiyId;
+        private Integer id;
+        private Integer entitiyId;
         public Note() {
             super();
         }

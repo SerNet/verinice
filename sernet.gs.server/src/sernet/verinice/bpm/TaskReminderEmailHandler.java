@@ -21,12 +21,7 @@ package sernet.verinice.bpm;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.bpm.GenericEmailHandler;
-import sernet.verinice.bpm.IEmailHandler;
-import sernet.verinice.bpm.IRemindService;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -36,8 +31,6 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class TaskReminderEmailHandler extends GenericEmailHandler implements IEmailHandler {
-    
-    private static final Logger LOG = Logger.getLogger(TaskReminderEmailHandler.class);
     
     private static final String TEMPLATE = "TaskReminder";
     

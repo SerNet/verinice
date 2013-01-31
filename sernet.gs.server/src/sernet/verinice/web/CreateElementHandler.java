@@ -22,7 +22,6 @@ package sernet.verinice.web;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +30,6 @@ import sernet.gs.web.Util;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.service.commands.CreateElement;
 
 public class CreateElementHandler implements IActionHandler {
@@ -107,7 +105,6 @@ public class CreateElementHandler implements IActionHandler {
      */
     @Override
     public String getIcon() {
-        //return "new-" + newElementType + "-icon";
         String path = Icons.ICONS.get(this.newElementType);
         if(path==null ) {
             path = Icons.FOLDER;

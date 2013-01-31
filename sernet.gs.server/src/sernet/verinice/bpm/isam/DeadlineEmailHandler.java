@@ -21,8 +21,6 @@ package sernet.verinice.bpm.isam;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
@@ -35,8 +33,6 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class DeadlineEmailHandler extends GenericEmailHandler implements IEmailHandler {
-    
-    private static final Logger LOG = Logger.getLogger(DeadlineEmailHandler.class);
     
     private static final String TEMPLATE = "DeadlineReminder";
     

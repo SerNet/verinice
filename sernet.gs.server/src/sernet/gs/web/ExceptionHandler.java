@@ -23,6 +23,8 @@ package sernet.gs.web;
  *
  */
 public class ExceptionHandler {
+    
+    private ExceptionHandler(){}
 
 	/**
 	 * @param e

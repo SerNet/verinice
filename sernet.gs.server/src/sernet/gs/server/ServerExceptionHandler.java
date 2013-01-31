@@ -21,7 +21,6 @@ import org.springframework.security.SpringSecurityException;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.service.BaseExceptionHandler;
-import sernet.verinice.service.ICommandExceptionHandler;
 
 /**
  * Translate certain exceptions before returning them to the client, i.e. to prevent

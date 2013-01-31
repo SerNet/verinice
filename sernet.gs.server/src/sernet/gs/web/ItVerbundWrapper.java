@@ -22,7 +22,6 @@ package sernet.gs.web;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.model.bsi.ITVerbund;
@@ -35,7 +34,7 @@ public class ItVerbundWrapper {
     
     private static final Logger LOG = Logger.getLogger(ItVerbundWrapper.class);
     
-    ITVerbund itVerbund;
+    private ITVerbund itVerbund;
 
     public ItVerbundWrapper(ITVerbund itVerbund) {
         super();

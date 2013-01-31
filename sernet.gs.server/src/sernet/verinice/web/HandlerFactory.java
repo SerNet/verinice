@@ -35,7 +35,7 @@ import sernet.verinice.model.iso27k.Organization;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class HandlerFactory {
+public final class HandlerFactory {
     
     private HandlerFactory(){};
     

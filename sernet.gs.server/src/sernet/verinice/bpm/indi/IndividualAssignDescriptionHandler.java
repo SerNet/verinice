@@ -21,8 +21,6 @@ package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
-import org.jbpm.api.task.Task;
-
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.bpm.TaskService;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;

@@ -22,13 +22,8 @@ package sernet.verinice.web;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.PropertyType;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

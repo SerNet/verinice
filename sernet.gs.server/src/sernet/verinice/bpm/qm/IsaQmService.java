@@ -22,8 +22,6 @@ package sernet.verinice.bpm.qm;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.bpm.ProcessServiceVerinice;
@@ -43,8 +41,6 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class IsaQmService extends ProcessServiceVerinice implements IIsaQmService {
 
-    private static final Logger LOG = Logger.getLogger(IsaQmService.class);
-    
     // Dao members (injected by Spring)
     private IBaseDao<CnATreeElement, Integer> elementDao;
     
@@ -96,7 +92,7 @@ public class IsaQmService extends ProcessServiceVerinice implements IIsaQmServic
             props.put(IGenericProcess.VAR_AUDIT_UUID, context.getUuidAudit());
         }
         Object comment = context.getComment();
-        if(comment!=null && comment instanceof String) {
+        if(comment instanceof String) {
             String text = (String) comment;
             text = text.trim();
             if(text.isEmpty()) {

@@ -35,7 +35,7 @@ import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class EmailHandlerFactory {
+public final class EmailHandlerFactory {
 
     private static final Map<String, IEmailHandler> HANDLERMAP;
     

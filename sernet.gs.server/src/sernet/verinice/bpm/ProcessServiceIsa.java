@@ -119,7 +119,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         } catch (RuntimeException re) {
             LOG.error("RuntimeException while handling control", re);
             throw re;
-        } catch (Throwable t) {
+        } catch (CommandException t) {
             LOG.error("Error while handling control", t);
             throw new RuntimeException(t);
         }

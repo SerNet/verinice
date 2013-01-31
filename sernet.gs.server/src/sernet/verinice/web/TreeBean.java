@@ -70,7 +70,7 @@ public class TreeBean implements IElementListener {
         }
     });
     
-    private static final int maxBreadcrumbSize = 4;
+    private static final int MAX_BREADCRUMB_SIZE = 4;
     
     private EditBean editBean;
     
@@ -88,7 +88,7 @@ public class TreeBean implements IElementListener {
     
     private String pathId;
     
-    List<CnATreeElement> path = new LinkedList<CnATreeElement>();
+    private List<CnATreeElement> path = new LinkedList<CnATreeElement>();
     
     private List<IActionHandler> handlers;
     
@@ -225,8 +225,8 @@ public class TreeBean implements IElementListener {
      */
     private Integer calculateBreadcrumbSize() {
         Integer n = 0;
-        if(path.size()>maxBreadcrumbSize) {
-            n = path.size() - maxBreadcrumbSize;
+        if(path.size()>MAX_BREADCRUMB_SIZE) {
+            n = path.size() - MAX_BREADCRUMB_SIZE;
         }
         return n;
     }
@@ -275,6 +275,7 @@ public class TreeBean implements IElementListener {
     }
     
     public void delete() {
+        final String COMPONENT_ELEMENTTABLE = "elementTable";
         try {
             RemoveElement<CnATreeElement> command = new RemoveElement(getElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -285,17 +286,17 @@ public class TreeBean implements IElementListener {
             if(isGroup()) {
                 showParent();
             }
-            Util.addInfo("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
+            Util.addInfo(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
         } catch( SecurityException e) {
             LOG.error("SecurityException while deleting element.");
-            Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+            Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
         } catch( Exception e) {
             LOG.error("Error while deleting element.");
             Throwable t = e.getCause();
             if(t instanceof SecurityException) {
-                Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+                Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
             } else {
-                Util.addError("elementTable", Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+                Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
             }
         }
     }

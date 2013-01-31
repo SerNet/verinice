@@ -30,6 +30,8 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 public class ElementInformation {
 
     private CnATreeElement element;
+    
+    private static final int MAX_TITLE_LENGTH = 100;
 
     public ElementInformation(CnATreeElement element) {
         super();
@@ -49,8 +51,8 @@ public class ElementInformation {
 
     public String getTitle() {
         String title = element.getTitle();
-        if(title.length()>100) {
-            title = title.substring(0, 99) + "...";
+        if(title.length()>MAX_TITLE_LENGTH) {
+            title = title.substring(0, MAX_TITLE_LENGTH - 1) + "...";
         }
         return title;
     }

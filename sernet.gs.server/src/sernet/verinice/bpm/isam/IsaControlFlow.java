@@ -108,12 +108,6 @@ public class IsaControlFlow extends ProzessExecution {
         try {
             CnATreeElement element = loadElementByUuid(uuid);  
             if(element instanceof Audit) {
-                /* For debug only:
-                Calendar nowPlus2Min = Calendar.getInstance();
-                nowPlus2Min.add(Calendar.MINUTE, 2);
-                date = nowPlus2Min.getTime();
-                */
-
                 date = ((Audit) element).getStartDate();
                 Date now = Calendar.getInstance().getTime();
                 if(date.before(now)) {

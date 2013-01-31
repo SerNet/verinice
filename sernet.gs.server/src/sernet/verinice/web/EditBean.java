@@ -396,7 +396,7 @@ public class EditBean {
         } catch(RuntimeException re) {
             LOG.error("Error while checking write permissions", re);
             throw re;
-        } catch(Throwable t) {
+        } catch(CommandException t) {
             LOG.error("Error while checking write permissions", t);
             throw new RuntimeException("Error while checking write permissions", t);
         }

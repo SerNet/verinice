@@ -28,13 +28,13 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class IsaProcessContext extends ProcessContext {
 
-    String uuidAudit;
+    private String uuidAudit;
     
-    String uuidOrganization;
+    private String uuidOrganization;
     
-    ControlGroup controlGroup;
+    private ControlGroup controlGroup;
     
-    SamtTopic samtTopic;
+    private SamtTopic samtTopic;
 
     public IsaProcessContext() {
         super();

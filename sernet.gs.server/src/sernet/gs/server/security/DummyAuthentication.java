@@ -42,10 +42,8 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
         // Allow being authenticated only when the caller is an
         // InternalAuthenticationProvider instance.
         StackTraceElement[] t = Thread.currentThread().getStackTrace();
-        if (b && t.length >= 1) {
-            if (InternalAuthenticationProvider.class.getName().equals(t[1].getClassName()) && "authenticate".equals(t[1].getMethodName())) { //$NON-NLS-1$
-                super.setAuthenticated(true);
-            }
+        if (b && t.length >= 1 && InternalAuthenticationProvider.class.getName().equals(t[1].getClassName()) && "authenticate".equals(t[1].getMethodName())) { //$NON-NLS-1$
+            super.setAuthenticated(true);
         }
     }
 }

@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.jbpm.api.ExecutionService;
 import org.jbpm.api.ProcessEngine;
 
 import sernet.hui.common.VeriniceContext;
@@ -54,20 +53,17 @@ public class DateChecker {
      * @return
      */
     public int getIntValue(String dayString) {
-        int days = 7;
+        final int daysAWeek = 7;
+        int days = daysAWeek;
         try {
             days = Integer.valueOf(dayString);
         } catch(Exception e) {
             LOG.error("Error while parsing day number param: " + dayString, e);
-            days = 7;
+            days = daysAWeek;
         }
         return days;
     }
     
-    private ExecutionService getExecutionService() {
-        return getProcessEngine().getExecutionService();
-    }
-
     protected ProcessEngine getProcessEngine() {
         return (ProcessEngine) VeriniceContext.get(VeriniceContext.JBPM_PROCESS_ENGINE);
     }

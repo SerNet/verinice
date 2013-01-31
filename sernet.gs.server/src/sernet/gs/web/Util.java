@@ -36,6 +36,8 @@ public class Util {
 	
 	private static FacesMessage lastMessage;
 	
+	private Util(){}
+	
     public static String getMessage(String key) {
 		return getMessage(ToDoBean.BOUNDLE_NAME, key, null);
 	}

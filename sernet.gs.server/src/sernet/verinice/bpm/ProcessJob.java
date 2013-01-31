@@ -21,7 +21,6 @@ package sernet.verinice.bpm;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -35,11 +34,9 @@ import sernet.hui.common.VeriniceContext;
  */
 public class ProcessJob extends QuartzJobBean implements StatefulJob {
 
-    private final Logger log = Logger.getLogger(ProcessJob.class);
-
     private static VeriniceContext.State state;
 
-    Set<IProcessCreater> processCreaterSet;
+    private Set<IProcessCreater> processCreaterSet;
 
     /*
      * (non-Javadoc)

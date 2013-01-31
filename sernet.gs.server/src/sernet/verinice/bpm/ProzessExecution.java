@@ -28,7 +28,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadUsername;
 
@@ -41,7 +40,7 @@ public class ProzessExecution {
 
     private static final Logger LOG = Logger.getLogger(ProzessExecution.class);
     
-    ICommandService commandService;
+    private ICommandService commandService;
     
     public String loadAssignee(String uuid, String relationId) {
         ServerInitializer.inheritVeriniceContextState();
@@ -50,7 +49,7 @@ public class ProzessExecution {
             LoadUsername command = new LoadUsername(uuid,relationId);
             command = getCommandService().executeCommand(command);
             username = command.getUsername();         
-        } catch(Throwable t) {
+        } catch(CommandException t) {
             LOG.error("Error while loading assignee.", t); //$NON-NLS-1$
         }
         if (LOG.isDebugEnabled()) {

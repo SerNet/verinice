@@ -36,7 +36,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class NotificationInfo implements Serializable{
 
-	final Configuration configuration;
+	private final Configuration configuration;
 	
 	private boolean completionExpired;
 	
@@ -62,9 +62,9 @@ public class NotificationInfo implements Serializable{
 	
 	public boolean equals(Object o)
 	{
-		if (o instanceof NotificationInfo)
+		if (o instanceof NotificationInfo){
 			return configuration.equals(((NotificationInfo)o).configuration);
-		
+		}
 		return false;
 	}
 

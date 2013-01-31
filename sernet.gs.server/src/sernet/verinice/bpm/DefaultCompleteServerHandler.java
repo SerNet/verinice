@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -62,14 +62,14 @@ public class DefaultCompleteServerHandler implements ICompleteServerHandler {
     public void execute(String taskId, Map<String, Object> parameter) {
         if(parameter!=null) {        
             Map<String, Object> taskParameter = getTaskService().getVariables(taskId);
-            for (String key : parameter.keySet()) {
-                Object value = parameter.get(key);
+            for (Entry<String, Object> entry : parameter.entrySet()) {
+                Object value = entry.getKey();
                 if(value instanceof String) {
                     String s = (String) value;
-                    if(s!=null && s.length()>254) {
-                        taskParameter.put(key, s.toCharArray());
+                    if(s.length()>254) {
+                        taskParameter.put(entry.getKey(), s.toCharArray());
                     } else {
-                        taskParameter.put(key, s);
+                        taskParameter.put(entry.getKey(), s);
                     }
                     
                 }

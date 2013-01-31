@@ -41,7 +41,7 @@ public class ControlExecution {
 
     private final Logger log = Logger.getLogger(ControlExecution.class);
     
-    ICommandService commandService;
+    private ICommandService commandService;
     
     /**
      * Loads an assignee for a {@link Control}.

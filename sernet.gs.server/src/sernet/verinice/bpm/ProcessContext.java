@@ -26,7 +26,7 @@ package sernet.verinice.bpm;
  */
 public class ProcessContext {
 
-    int numberOfProcesses = 0;
+    private int numberOfProcesses = 0;
 
     public void increaseProcessNumber() {
         numberOfProcesses++;

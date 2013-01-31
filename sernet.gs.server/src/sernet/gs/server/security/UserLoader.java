@@ -35,7 +35,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 public abstract class UserLoader {
     
     // injected by spring
-    IBaseDao<Entity, Serializable> entityDao;
+    private IBaseDao<Entity, Serializable> entityDao;
     
     
     protected List<Entity> loadUserEntites(String username) {       

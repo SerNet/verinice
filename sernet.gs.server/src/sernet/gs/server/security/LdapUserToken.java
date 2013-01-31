@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.naming.ldap.InitialLdapContext;
-
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
@@ -64,8 +62,7 @@ public class LdapUserToken extends AbstractAuthenticationToken {
     }
 
     public GrantedAuthority[] getAuthorities() {
-        GrantedAuthority[] authoritiesArray = this.authorities.toArray(new GrantedAuthority[0]);
-        return authoritiesArray;
+        return this.authorities.toArray(new GrantedAuthority[0]);
     }
 
     public void addAuthority(GrantedAuthority authority) {

@@ -62,13 +62,14 @@ public class ContextInitializer implements Filter {
 	}
 
     private String getServerUrl(HttpServletRequest request) {
+        final int port80 = 80;
         String scheme = request.getScheme();
         String serverName = request.getServerName();
         int portNumber = request.getServerPort();
         String contextPath = request.getContextPath();
         StringBuilder sb = new StringBuilder();
         sb.append(scheme).append("://").append(serverName);
-        if(portNumber!=80) {
+        if(portNumber!=port80) {
             sb.append(":").append(portNumber);
         }      
         if(contextPath!=null && !contextPath.isEmpty()) {

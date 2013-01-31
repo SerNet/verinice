@@ -77,9 +77,9 @@ public class RemindService implements IRemindService {
                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                message.setTo(parameter.get(TEMPLATE_EMAIL));         
                message.setFrom(getEmailFrom());
-               String replyTo_ = getReplyTo();
-               if(replyTo_!=null && !replyTo_.isEmpty()) {
-                   message.setReplyTo(replyTo_);
+               String replyTo_0 = getReplyTo();
+               if(replyTo_0!=null && !replyTo_0.isEmpty()) {
+                   message.setReplyTo(replyTo_0);
                }
                message.setSubject(parameter.get(TEMPLATE_SUBJECT)); //$NON-NLS-1$
                String text = VelocityEngineUtils.mergeTemplateIntoString(

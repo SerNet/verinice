@@ -162,14 +162,12 @@ public class TaskBean {
     	boolean isNext = false;
     	for (Iterator<ITask> iterator = getTaskList().iterator(); iterator.hasNext();) {
     		ITask task = iterator.next();
-    		if(task!=null && getSelectedTask()!=null && task.equals(getSelectedTask())) {
-    		    if(iterator.hasNext()) {
-    		        setSelectedTask(iterator.next());
-    		        isNext = true;
-    		        break;
-    		    }
+    		if(task!=null && getSelectedTask()!=null && task.equals(getSelectedTask()) && iterator.hasNext()) {
+    		    setSelectedTask(iterator.next());
+    		    isNext = true;
+    		    break;
     		}
-		}
+    	}
     	if(isNext) {
     	    doOpenTask();
     	}
@@ -234,12 +232,14 @@ public class TaskBean {
     }
     
     String getUniqueName(String name, int n) {
-        if(nameAuditMap.containsKey(name)) {
-            n++;
-            name = new StringBuilder(name).append(" (").append(n).append(")").toString(); //$NON-NLS-1$ //$NON-NLS-2$
-            return getUniqueName(name, n);
+        int n_0 = n;
+        String name_0 = name;
+        if(nameAuditMap.containsKey(name_0)) {
+            n_0++;
+            name_0 = new StringBuilder(name_0).append(" (").append(n).append(")").toString(); //$NON-NLS-1$ //$NON-NLS-2$
+            return getUniqueName(name_0, n_0);
         } else {
-            return name;
+            return name_0;
         }
     }
     

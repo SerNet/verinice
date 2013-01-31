@@ -30,9 +30,9 @@ import org.jbpm.api.task.AssignmentHandler;
  */
 public class TaskCounter implements AssignmentHandler {
 
-    private final static String COUNTER_SUFFIX = "_COUNTER";
+    private static final String COUNTER_SUFFIX = "_COUNTER";
     
-    String taskType;
+    private String taskType;
     
     /* (non-Javadoc)
      * @see org.jbpm.api.task.AssignmentHandler#assign(org.jbpm.api.task.Assignable, org.jbpm.api.model.OpenExecution)

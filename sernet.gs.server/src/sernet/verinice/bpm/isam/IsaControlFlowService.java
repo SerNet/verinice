@@ -193,8 +193,7 @@ public class IsaControlFlowService extends ProcessServiceVerinice implements IIs
         ServerInitializer.inheritVeriniceContextState();
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setLinksDown(true);
-        Control control = getControlDao().findByUuid(uuid, ri);
-        return control;
+        return getControlDao().findByUuid(uuid, ri);
     }
 
     public IBaseDao<Control, Integer> getControlDao() {

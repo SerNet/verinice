@@ -107,16 +107,16 @@ public class LinkInformation implements ILink, Comparable<LinkInformation>, Seri
      */
     @Override
     public int compareTo(LinkInformation o) {
-        final int this_is_less = -1;
+        final int thisIsLess = -1;
         final int equal = 0;
-        final int this_is_greater = 1;
-        int result = this_is_less;
+        final int thisIsGreater = 1;
+        int result = thisIsLess;
         if (o != null) {
             if (o.getType() != null) {
                 if (this.getType() != null) {
                     result = this.getType().compareTo(o.getType());
                 } else {
-                    result = this_is_greater;
+                    result = thisIsGreater;
                 }
             } else if (this.getType() == null) {
                 result = equal;

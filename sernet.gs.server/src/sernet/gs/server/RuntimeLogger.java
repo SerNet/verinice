@@ -36,7 +36,7 @@ import org.springframework.util.StopWatch;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class RuntimeLogger { 
-	final static Logger LOG = Logger.getLogger(RuntimeLogger.class);
+	private static final Logger LOG = Logger.getLogger(RuntimeLogger.class);
 
 	// this method is the around advice
 	public Object logRuntime(final ProceedingJoinPoint call) throws Throwable {

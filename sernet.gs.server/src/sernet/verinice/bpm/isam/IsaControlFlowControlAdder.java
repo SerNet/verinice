@@ -55,7 +55,7 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
             Audit verificationAudit = findOrCreateAudit(auditGroup, title);
             copyElementToAudit(control,verificationAudit);
             return verificationAudit.getUuid();
-        } catch(Throwable t) {
+        } catch(CommandException t) {
             LOG.error("Error while addind control to audit.", t); //$NON-NLS-1$
             return null;
         }
@@ -118,15 +118,17 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
     }     
 
     private List<CnATreeElement> getDirListInAudit(CnATreeElement element, List<CnATreeElement> dirList) throws CommandException {
+        List<CnATreeElement> dirList_0 = new LinkedList<CnATreeElement>();
+        
         if(element.getParent()!=null) {
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance().setParent(true);
             CnATreeElement parent = loadElementByUuid(element.getParent().getUuid(), ri);
             if(!parent.getTypeId().equals(Audit.TYPE_ID)) {          
-                dirList = getDirListInAudit(parent, dirList);
-                dirList.add(parent);
+                dirList_0 = getDirListInAudit(parent, dirList);
+                dirList_0.add(parent);
             }
         }
-        return dirList;
+        return dirList_0;
     }
     
     private CnATreeElement findOrAddDirectories(CnATreeElement parent, CnATreeElement dir) throws CommandException {

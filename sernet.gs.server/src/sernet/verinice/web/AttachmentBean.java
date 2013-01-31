@@ -29,7 +29,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -65,7 +64,7 @@ public class AttachmentBean {
         attachments = loadAttachments();  
     }
 
-    public void handleFileUpload(FileUploadEvent event) throws Exception {
+    public void handleFileUpload(FileUploadEvent event) throws CommandException {
         UploadedFile item = event.getFile();
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getElement().getDbId());

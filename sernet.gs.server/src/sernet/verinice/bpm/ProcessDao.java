@@ -35,7 +35,7 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class ProcessDao extends HibernateDaoSupport {
     
-    public final static String HQL = "select props.propertyValue " +
+    public static final String HQL = "select props.propertyValue " +
     "from Configuration as conf " +
     "join conf.person as person " +
     "join conf.entity as entity " +

@@ -39,8 +39,8 @@ public class ControlProcessCreator implements IProcessCreater {
 
     private final Logger log = Logger.getLogger(ControlProcessCreator.class);
     
-    IProcessServiceIsa processService;
-    IBaseDao<Control, Integer> controlDao;
+    private IProcessServiceIsa processService;
+    private IBaseDao<Control, Integer> controlDao;
     
     /* (non-Javadoc)
      * @see sernet.verinice.bpm.IProcessCreater#create()

@@ -55,6 +55,8 @@ public class SchemaCreator implements InitializingBean {
     
     private IDBUpdate dbUpdate98To99;
 
+    private static final double TOLERATED_ERROR = .0001;
+
 	/**
 	 * Use this mnethod to update database.
 	 * Method called just before the Hibernate session factory bean is instantiated.
@@ -69,12 +71,12 @@ public class SchemaCreator implements InitializingBean {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	@Override
-    public void afterPropertiesSet() throws RuntimeException, IOException {
+    public void afterPropertiesSet() throws IOException {
 		log.debug("afterPropertiesSet");
 		
 		double dbVersion = determineDbVersion();
 		
-		if (dbVersion == -1D) {
+		if (Math.abs(dbVersion - -1D) < TOLERATED_ERROR) {
 			log.debug("No database version defined, no database created yet?");
 			return;
 		}
@@ -84,19 +86,19 @@ public class SchemaCreator implements InitializingBean {
 				log.error("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 				throw new RuntimeException("Db version is: " + dbVersion + ". Can not upgrade from version below 0.95 directly. Use older version of verinice first (i.e. V 1.0.16) !");
 			}
-			if (Math.abs(dbVersion - 0.95D) < .0001) {
+			if (Math.abs(dbVersion - 0.95D) < TOLERATED_ERROR) {
 			    if (log.isInfoEnabled()) {
 		            log.info("Updating database from version 0.95 to 0.96");
 		        }
 				updateDbVersion(SQL_VER_095_096);
 			}
-			if (dbVersion == 0.97D) {
+			if (Math.abs(dbVersion - 0.97D) < TOLERATED_ERROR) {
 			    if (log.isInfoEnabled()) {
 		            log.info("Updating database from version 0.97 to 0.98");
 		        }
 			    getDbUpdate97To98().update();
             }
-			if (dbVersion == 0.98D) {
+			if (Math.abs(dbVersion - 0.98D) < TOLERATED_ERROR) {
                 if (log.isInfoEnabled()) {
                     log.info("Updating database from version 0.98 to 0.99");
                 }

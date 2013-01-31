@@ -59,15 +59,17 @@ public class AssetNavigationBean {
 	
 	private Integer selectedElementId;
 	
-	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(10);
-    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(10);
-    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(10);
+	private static final int DEFAULT_LIST_SIZE = 10;
+	
+	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
 	
 	public AssetNavigationBean() {
 		super();

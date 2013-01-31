@@ -21,8 +21,6 @@ package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
-import org.jbpm.api.task.Task;
-
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.model.bpm.Messages;
