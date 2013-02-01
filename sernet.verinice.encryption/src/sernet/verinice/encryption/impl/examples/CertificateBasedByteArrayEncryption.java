@@ -6,8 +6,6 @@ package sernet.verinice.encryption.impl.examples;
 import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 import sernet.verinice.encryption.impl.EncryptionService;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -29,6 +27,8 @@ class CertificateBasedByteArrayEncryption {
 	private static final String SECRET_MESSAGE = "Attack the mars at 4 o'clock.";
 
 	private static IEncryptionService encryptionService = new EncryptionService();
+	
+	private CertificateBasedByteArrayEncryption() {}
 
 	/**
 	 * @param args
@@ -38,11 +38,8 @@ class CertificateBasedByteArrayEncryption {
 	 * @throws IOException
 	 * @throws EncryptionException
 	 * @throws CertificateException
-	 * @throws CertificateExpiredException
-	 * @throws CertificateNotYetValidException
 	 */
-	public static void main(String[] args) throws CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException, EncryptionException, IOException {
+	public static void main(String[] args) throws CertificateException, EncryptionException, IOException {
 
 		if (args.length < 2) {
 			System.out.println("Usage: java CertificateBasedByteArrayEncryption " +

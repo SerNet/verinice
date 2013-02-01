@@ -23,6 +23,8 @@ class PasswordBasedByteArrayEncryption {
 	
 	private static IEncryptionService encryptionService = new EncryptionService();
 	
+	private PasswordBasedByteArrayEncryption(){}
+	
 	/**
 	 * @param args
 	 */

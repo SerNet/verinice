@@ -38,13 +38,15 @@ import sun.security.pkcs11.SunPKCS11;
  */
 @SuppressWarnings("restriction")
 public final class PKCS11Helper {
+    
+    private PKCS11Helper(){}
 
 	public static void setupSunPKCS11Provider(String pkcs11LibPath,
 			final char[] password) {
 		// Prevents installing the provider twice.
-		if (Security.getProvider("SunPKCS11-verinice") != null)
+		if (Security.getProvider("SunPKCS11-verinice") != null){
 			return;
-
+		}
 		// If the user enabled anything PKCS#11 related we need to lead the
 		// PKCS#11 library and add its
 		// provider.
@@ -82,8 +84,9 @@ public final class PKCS11Helper {
 		} catch (IOException e) {
 			return null;
 		} finally {
-			if (writer != null)
+			if (writer != null){
 				writer.close();
+			}
 		}
 
 		return f.getAbsolutePath();

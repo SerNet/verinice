@@ -8,8 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 import sernet.verinice.encryption.impl.EncryptionService;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -29,6 +27,8 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  * 
  */
 class PKCS11BasedStreamEncryption {
+    
+    private PKCS11BasedStreamEncryption(){}
 
 	/**
 	 * The secret message that shall be encrypted.
@@ -45,13 +45,12 @@ class PKCS11BasedStreamEncryption {
 	 * @throws IOException
 	 * @throws EncryptionException
 	 * @throws CertificateException
-	 * @throws CertificateExpiredException
-	 * @throws CertificateNotYetValidException
 	 */
-	public static void main(String[] args) throws IOException, CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException, EncryptionException {
+	public static void main(String[] args) throws IOException, CertificateException, EncryptionException {
 
-		if (args.length < 3) {
+	    final int nrNeededArguments = 3;
+	    
+		if (args.length < nrNeededArguments) {
 			System.out.println("Usage: java PKCS11BasedStreamEncryption " +
 					"<pkcs11 lib> <key alias> <password> ");
 			return;

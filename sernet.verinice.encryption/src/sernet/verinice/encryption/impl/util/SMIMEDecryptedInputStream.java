@@ -49,6 +49,8 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
 public class SMIMEDecryptedInputStream extends FilterInputStream {
 
 	private byte[] decryptedByteData = new byte[] {};
+	
+	private static final String STD_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
 
 	/**
      * Creates a new S/MIME encrypted InputStream that is decrypted using the 
@@ -77,8 +79,7 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
      */
     public SMIMEDecryptedInputStream(InputStream encryptedInputStream, File x509CertificateFile, 
             File privateKeyFile) 
-        throws CertificateNotYetValidException, CertificateExpiredException, 
-        CertificateException, IOException, EncryptionException {
+        throws CertificateException, IOException, EncryptionException {
         this(encryptedInputStream,x509CertificateFile,privateKeyFile,null);
     }
 	
@@ -110,8 +111,7 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 	 */
 	public SMIMEDecryptedInputStream(InputStream encryptedInputStream, File x509CertificateFile, 
 			File privateKeyFile, final String privateKeyPassword) 
-		throws CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, IOException, EncryptionException {
+		throws CertificateException, IOException, EncryptionException {
 		super(encryptedInputStream);
 		
 		X509Certificate x509Certificate = CertificateUtils.loadX509CertificateFromFile(x509CertificateFile);
@@ -153,19 +153,14 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);
 			super.in = byteInStream;
 		} catch (MessagingException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException(STD_ERR_MSG, e);
 		} catch (CMSException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException(STD_ERR_MSG, e);
 		}
 	}
 
 	public SMIMEDecryptedInputStream(InputStream encryptedInputStream, String keyAlias) 
-		throws CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, IOException, EncryptionException {
+		throws CertificateException, IOException, EncryptionException {
 		super(encryptedInputStream);
 		
 		try {
@@ -195,17 +190,11 @@ public class SMIMEDecryptedInputStream extends FilterInputStream {
 			ByteArrayInputStream byteInStream = new ByteArrayInputStream(decryptedByteData);
 			super.in = byteInStream;
 		} catch (GeneralSecurityException e) {
-			throw new EncryptionException(
-				"There was an IO problem during the en- or decryption process. "
-						+ "See the stacktrace for details.", e);
+			throw new EncryptionException(STD_ERR_MSG, e);
 		} catch (MessagingException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException(STD_ERR_MSG, e);
 		} catch (CMSException e) {
-			throw new EncryptionException(
-					"There was an IO problem during the en- or decryption process. "
-							+ "See the stacktrace for details.", e);
+			throw new EncryptionException(STD_ERR_MSG, e);
 		}
 	}
 	

@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 import sernet.verinice.encryption.impl.EncryptionService;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -37,6 +35,8 @@ class CertificateBasedStreamEncryption {
 	private static final String SECRET_MESSAGE = "Attack the mars at 4 o'clock.";
 
 	private static IEncryptionService encryptionService = new EncryptionService();
+	
+	private CertificateBasedStreamEncryption(){}
 
 	/**
 	 * @param args
@@ -46,13 +46,12 @@ class CertificateBasedStreamEncryption {
 	 * @throws IOException
 	 * @throws EncryptionException
 	 * @throws CertificateException
-	 * @throws CertificateExpiredException
-	 * @throws CertificateNotYetValidException
 	 */
-	public static void main(String[] args) throws IOException, CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException, EncryptionException {
+	public static void main(String[] args) throws IOException, CertificateException, EncryptionException {
 
-		if (args.length < 2) {
+	    final int nrNeededArguments = 2; 
+	    
+		if (args.length < nrNeededArguments) {
 			System.out.println("Usage: java CertificateBasedStreamEncryption "
 					+ "<certificate-file> <private-key-file>");
 			return;

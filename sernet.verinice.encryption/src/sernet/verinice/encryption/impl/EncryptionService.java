@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -66,15 +64,13 @@ public class EncryptionService implements IEncryptionService {
 
 	@Override
 	public byte[] encrypt(byte[] unencryptedByteData, File x509CertificateFile)
-			throws CertificateNotYetValidException, CertificateExpiredException,
-			CertificateException, EncryptionException, IOException {
+			throws CertificateException, EncryptionException, IOException {
 		return SMIMEBasedEncryption.encrypt(unencryptedByteData, x509CertificateFile);
 	}
 
 	@Override
 	public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile)
-			throws IOException, CertificateNotYetValidException, CertificateExpiredException,
-			CertificateException, EncryptionException {
+			throws IOException, CertificateException, EncryptionException {
 		return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
 				privateKeyPemFile);
 	}
@@ -85,31 +81,27 @@ public class EncryptionService implements IEncryptionService {
      */
     @Override
     public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyPemFile, String privateKeyPassword) 
-        throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
-        CertificateException, EncryptionException {
+        throws IOException, CertificateException, EncryptionException {
         return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile,
                 privateKeyPemFile,privateKeyPassword);
     }
 	
 	@Override
     public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile, final String privateKeyPassword)
-            throws IOException, CertificateNotYetValidException, CertificateExpiredException,
-            CertificateException, EncryptionException {
+            throws IOException, CertificateException, EncryptionException {
         return SMIMEBasedEncryption.decrypt(encryptedByteData, x509CertificateFile,
                 privateKeyPemFile, privateKeyPassword);
     }
 	
 	@Override
 	public OutputStream encrypt(OutputStream unencryptedDataStream, File x509CertificateFile)
-		throws IOException, CertificateNotYetValidException, CertificateExpiredException, 
-		CertificateException, EncryptionException {
+		throws IOException, CertificateException, EncryptionException {
 		return SMIMEBasedEncryption.encrypt(unencryptedDataStream, x509CertificateFile);
 	}
 	
 	@Override
 	public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, 
-			File privateKeyFile) throws IOException, CertificateNotYetValidException, 
-			CertificateExpiredException, CertificateException, EncryptionException {
+			File privateKeyFile) throws IOException, CertificateException, EncryptionException {
 		return SMIMEBasedEncryption.decrypt(encryptedDataStream, x509CertificateFile, 
 				privateKeyFile);
 	}
@@ -122,23 +114,20 @@ public class EncryptionService implements IEncryptionService {
 
 	@Override
 	public byte[] encrypt(byte[] unencryptedByteData, String keyAlias)
-			throws CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException,
+			throws CertificateException,
 			EncryptionException, IOException {
 		return SMIMEBasedEncryption.encrypt(unencryptedByteData, keyAlias);
 	}
 
 	@Override
     public byte[] decrypt(byte[] encryptedByteData, String keyAlias)
-            throws IOException, CertificateNotYetValidException, CertificateExpiredException,
-            CertificateException, EncryptionException {
+            throws IOException, CertificateException, EncryptionException {
         return SMIMEBasedEncryption.decrypt(encryptedByteData, keyAlias);
     }
 
 	@Override
 	public InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
-		throws IOException, CertificateNotYetValidException, 
-			CertificateExpiredException, CertificateException, EncryptionException {
+		throws IOException, CertificateException, EncryptionException {
 		return SMIMEBasedEncryption.decrypt(encryptedDataStream, keyAlias);
 	}
 

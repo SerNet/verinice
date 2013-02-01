@@ -5,8 +5,6 @@ package sernet.verinice.encryption.impl.examples;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 import sernet.verinice.encryption.impl.EncryptionService;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -21,6 +19,8 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  * 
  */
 class PKCS11BasedByteArrayEncryption {
+    
+    private PKCS11BasedByteArrayEncryption(){}
 
 	/**
 	 * The secret message that shall be encrypted.
@@ -37,13 +37,12 @@ class PKCS11BasedByteArrayEncryption {
 	 * @throws IOException
 	 * @throws EncryptionException
 	 * @throws CertificateException
-	 * @throws CertificateExpiredException
-	 * @throws CertificateNotYetValidException
 	 */
-	public static void main(String[] args) throws CertificateNotYetValidException,
-			CertificateExpiredException, CertificateException, EncryptionException, IOException {
+	public static void main(String[] args) throws CertificateException, EncryptionException, IOException {
 
-		if (args.length < 3) {
+	    final int numberOfArguments = 3;
+	    
+		if (args.length < numberOfArguments) {
 			System.out.println("Usage: java PKCS11BasedByteArrayEncryption " +
 					"<pkcs11 lib> <key alias> <password> ");
 			return;

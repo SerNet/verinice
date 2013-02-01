@@ -32,6 +32,8 @@ class PasswordBasedStreamEncryption {
 	
 	private static IEncryptionService encryptionService = new EncryptionService();
 	
+	private PasswordBasedStreamEncryption(){}
+	
 	/**
 	 * 
 	 * @param args args[0] - path to file to encrypt

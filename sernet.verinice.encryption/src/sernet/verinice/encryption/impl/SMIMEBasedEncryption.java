@@ -84,10 +84,12 @@ import sernet.verinice.interfaces.encryption.EncryptionException;
  */
 public class SMIMEBasedEncryption {
     
-    private final static String CRYPT_PROVIDER = "SunPKCS11-verinice";
-    private final static String CRYPT_TYPE = "PKCS11";
-    private final static String STD_ERR_MSG = "There was a problem during the en- or decryption process. See the stacktrace for details.";
-    private final static String IO_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
+    private static final String CRYPT_PROVIDER = "SunPKCS11-verinice";
+    private static final String CRYPT_TYPE = "PKCS11";
+    private static final String STD_ERR_MSG = "There was a problem during the en- or decryption process. See the stacktrace for details.";
+    private static final String IO_ERR_MSG = "There was an IO problem during the en- or decryption process. See the stacktrace for details.";
+    
+    private SMIMEBasedEncryption(){}
 
     /**
      * Encrypts the given byte data with the given X.509 certificate file.
@@ -132,8 +134,8 @@ public class SMIMEBasedEncryption {
         try {
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
             generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(x509Certificate).setProvider(CRYPT_PROVIDER));
-            unencryptedByteData = Base64.encode(unencryptedByteData);
-            MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
+            byte[] unencryptedByteData_0 = Base64.encode(unencryptedByteData);
+            MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData_0);
 
             // Encrypt the byte data and make a MimeBodyPart from it
             MimeBodyPart encryptedMimeBodyPart = generator.generate(
@@ -177,8 +179,8 @@ public class SMIMEBasedEncryption {
             SMIMEEnvelopedGenerator generator = new SMIMEEnvelopedGenerator();
             generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(cert));
             //.setProvider("SunPKCS11-verinice")
-            unencryptedByteData = Base64.encode(unencryptedByteData);
-            MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData);
+            byte[] unencryptedByteData_0 = Base64.encode(unencryptedByteData);
+            MimeBodyPart unencryptedContent = SMIMEUtil.toMimeBodyPart(unencryptedByteData_0);
 
             // Encrypt the byte data and make a MimeBodyPart from it
             MimeBodyPart encryptedMimeBodyPart = generator.generate(
