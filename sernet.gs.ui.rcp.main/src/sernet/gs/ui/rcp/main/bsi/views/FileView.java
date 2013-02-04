@@ -109,7 +109,6 @@ import sernet.verinice.service.commands.LoadAttachments;
 public class FileView extends ViewPart implements ILinkedWithEditorView, IPropertyChangeListener {
     
     static final Logger LOG = Logger.getLogger(FileView.class);
-    private CnATreeElement inputElmt;
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
     
@@ -155,15 +154,15 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
 
     private ICommandService commandService;
 
-    protected TableViewer viewer;
-    protected TableColumn iconColumn;
-    protected TableViewerColumn imageColumn;
-    protected TableColumn fileNameColumn;
-    protected TableColumn mimeTypeColumn;
-    protected TableColumn textColumn;
-    protected TableColumn dateColumn;
-    protected TableColumn versionColumn;
-    TableSorter tableSorter = new TableSorter();
+    private TableViewer viewer;
+    private TableColumn iconColumn;
+    private TableViewerColumn imageColumn;
+    private TableColumn fileNameColumn;
+    private TableColumn mimeTypeColumn;
+    private TableColumn textColumn;
+    private TableColumn dateColumn;
+    private TableColumn versionColumn;
+    private TableSorter tableSorter = new TableSorter();
 
     private List<Attachment> attachmentList;
 
@@ -464,18 +463,17 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
      */
     @Override
     public void propertyChange(PropertyChangeEvent changeEvent) {
-        if(changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE) && imageCellProvider!=null) {
-            if(!changeEvent.getNewValue().equals(changeEvent.getOldValue())) {
-                imageCellProvider.setThumbSize(Integer.valueOf(changeEvent.getNewValue().toString()));
-                imageCellProvider.clearCache();
-                if(getThumbnailSize()>0) {
-                    imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
-                } else {
-                    imageColumn.getColumn().setWidth(0);
-                }
-                loadFiles();
+        if(changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE) && imageCellProvider!=null
+                && !changeEvent.getNewValue().equals(changeEvent.getOldValue())) {
+            imageCellProvider.setThumbSize(Integer.valueOf(changeEvent.getNewValue().toString()));
+            imageCellProvider.clearCache();
+            if(getThumbnailSize()>0) {
+                imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
+            } else {
+                imageColumn.getColumn().setWidth(0);
             }
-        }        
+            loadFiles();
+        }
     }
 
     private void fillLocalToolBar() {
@@ -496,23 +494,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0) {
-                    File file = new File(selected);
-                    if (file.isDirectory()){
+                    if(!createAndOpenAttachment(selected)){
                         return;
                     }
-                    Attachment attachment = new Attachment();
-                    attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
-                    attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
-                    attachment.setTitel(file.getName());
-                    attachment.setDate(Calendar.getInstance().getTime());
-                    attachment.setFilePath(selected);
-                    attachment.addListener(new Attachment.INoteChangedListener() {
-                        public void noteChanged() {
-                            loadFiles();
-
-                        }
-                    });
-                    EditorFactory.getInstance().openEditor(attachment);
                 }
             }
         };
@@ -525,22 +509,10 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
             public void run() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
                 boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
-
                 if (!confirm){
                     return;
                 }
-                Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
-                while (iterator.hasNext()) {
-                    Attachment sel = (Attachment) iterator.next();
-                    DeleteNote command = new DeleteNote(sel);
-                    try {
-                        command = getCommandService().executeCommand(command);
-                    } catch (CommandException e) {
-                        LOG.error("Error while saving note", e); //$NON-NLS-1$
-                        ExceptionUtil.log(e, Messages.FileView_22);
-                    }
-                }
-
+                deleteAttachments();
                 loadFiles();
             }
         };
@@ -577,29 +549,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
             public void run() {
                 isLinkingActive = !isLinkingActive;
                 toggleLinkAction.setChecked(isLinkingActive());
-                if (CnAElementFactory.isModelLoaded()) {
-                    loadFiles();
-                } else if (modelLoadListener == null) {
-                    // model is not loaded yet: add a listener to load data when
-                    // it's laoded
-                    modelLoadListener = new IModelLoadListener() {
-
-                        public void closed(BSIModel model) {
-                            // nothing to do
-                        }
-
-                        public void loaded(BSIModel model) {
-                            startInitDataJob();
-                        }
-
-                        @Override
-                        public void loaded(ISO27KModel model) {
-                            // work is done in loaded(BSIModel model)
-                        }
-
-                    };
-                    CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-                }
+                checkModelAndLoadFiles();
             }
         };
         toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
@@ -793,14 +743,10 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
             Attachment a1 = (Attachment) e1;
             Attachment a2 = (Attachment) e2;
             int rc = 0;
-            if (e1 == null) {
-                if (e2 != null) {
-                    rc = 1;
-                }
-            } else if (e2 == null) {
-                if (e1 != null) {
-                    rc = -1;
-                }
+            if (e1 == null && e2 != null) {
+                rc = 1;
+            } else if (e2 == null && e1 != null) {
+                rc = -1;
             } else {
                 // e1 and e2 != null
                 switch (propertyIndex) {
@@ -850,9 +796,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     }
 
     private static class SortSelectionAdapter extends SelectionAdapter {
-        FileView fileView;
-        TableColumn column;
-        int index;
+        private FileView fileView;
+        private TableColumn column;
+        private int index;
 
         public SortSelectionAdapter(FileView fileView, TableColumn column, int index) {
             super();
@@ -917,12 +863,72 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     }
 
     private void setNewInput(CnATreeElement elmt) {
-        this.inputElmt = elmt;
         setViewTitle(Messages.FileView_7 + " " + elmt.getTitle());
     }
 
     private void setViewTitle(String title) {
         this.setContentDescription(title);
+    }
+
+    private boolean createAndOpenAttachment(String selected) {
+        File file = new File(selected);
+        if (file.isDirectory()){
+            return false;
+        }
+        Attachment attachment = new Attachment();
+        attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
+        attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
+        attachment.setTitel(file.getName());
+        attachment.setDate(Calendar.getInstance().getTime());
+        attachment.setFilePath(selected);
+        attachment.addListener(new Attachment.INoteChangedListener() {
+            public void noteChanged() {
+                loadFiles();
+
+            }
+        });
+        EditorFactory.getInstance().openEditor(attachment);
+        return true;
+    }
+
+    private void deleteAttachments() {
+        Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
+        while (iterator.hasNext()) {
+            Attachment sel = (Attachment) iterator.next();
+            DeleteNote command = new DeleteNote(sel);
+            try {
+                command = getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                LOG.error("Error while saving note", e); //$NON-NLS-1$
+                ExceptionUtil.log(e, Messages.FileView_22);
+            }
+        }
+    }
+
+    private void checkModelAndLoadFiles() {
+        if (CnAElementFactory.isModelLoaded()) {
+            loadFiles();
+        } else if (modelLoadListener == null) {
+            // model is not loaded yet: add a listener to load data when
+            // it's laoded
+            modelLoadListener = new IModelLoadListener() {
+
+                public void closed(BSIModel model) {
+                    // nothing to do
+                }
+
+                public void loaded(BSIModel model) {
+                    startInitDataJob();
+                }
+
+                @Override
+                public void loaded(ISO27KModel model) {
+                    // work is done in loaded(BSIModel model)
+                }
+
+            };
+            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+        }
     }
 
 }

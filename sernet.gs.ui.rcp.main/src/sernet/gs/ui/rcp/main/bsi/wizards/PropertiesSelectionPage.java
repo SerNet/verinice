@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -50,7 +49,7 @@ public class PropertiesSelectionPage extends WizardPage {
     private File csvDatei;
     private Table mainTable;
     private TableItem[] items;
-    private TableEditor editor;
+
     private List<Text> texts;
     private List<CCombo> combos;
     private List<String> propertyIDs;
@@ -86,7 +85,8 @@ public class PropertiesSelectionPage extends WizardPage {
         layout.spacing = 3;
 
         GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginWidth = gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
 
         Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(gridLayout);
@@ -122,10 +122,11 @@ public class PropertiesSelectionPage extends WizardPage {
 
     // if next is pressed call this method to fill the table with content
     public void fillTable() throws IOException {
+        TableEditor editor;
         // get entities from verinice
-        if (propertyIDs.size() > 0)
+        if (propertyIDs.size() > 0){
             propertyIDs.clear();
-
+        }
         String[] propertyNames = null;
         
         if (entityId != null) {
@@ -143,8 +144,9 @@ public class PropertiesSelectionPage extends WizardPage {
         }
 
         if (items != null) {
-            for (int i = 0; i < items.length; i++)
+            for (int i = 0; i < items.length; i++){
                 items[i].dispose();
+            }
         }
 
         String[] propertyColumns = getFirstLine();
@@ -230,11 +232,9 @@ public class PropertiesSelectionPage extends WizardPage {
                 for (int j = i + 1; j < this.combos.size() - 1; j++) {
                     int is = combos.get(i).getSelectionIndex();
                     int js = combos.get(j).getSelectionIndex();
-                    if(is>-1 && js>-1) {
-                        if (combos.get(i).getItem(is).equals(combos.get(j).getItem(js))) {
-                            valid = false;
-                            break;
-                        }
+                    if(is>-1 && js>-1 && combos.get(i).getItem(is).equals(combos.get(j).getItem(js))) {
+                        valid = false;
+                        break;
                     }
                 }
             }
@@ -287,7 +287,7 @@ public class PropertiesSelectionPage extends WizardPage {
         if (columnHeaders == null) {
             readFile();
         }
-        return columnHeaders;
+        return columnHeaders.clone();
     }
 
     public List<List<String>> getContent() throws IOException {

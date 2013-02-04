@@ -50,7 +50,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -75,11 +74,9 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  */
 public class ElementSelectionComponent {
 
-    Composite container;
+    private Composite container;
 
     private TableViewer viewer;
-    private TableViewerColumn column1;
-    private TableViewerColumn column2;
     private Text text;
     private Button checkbox;
     
@@ -134,23 +131,25 @@ public class ElementSelectionComponent {
         });
         
         if(isShowScopeCheckbox()) {
-            checkbox = new Button(container, SWT.CHECK);
-            checkbox.setText(Messages.CnATreeElementSelectionDialog_4);
-            checkbox.setSelection(true);
+            SelectionListener listener = new SelectionListener() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    Button button = (e.getSource() instanceof Button) ? (Button)e.getSource() : null;
+                    if(button != null){
+                        scopeOnly = button.getSelection();
+                        loadElements();
+                    }
+                }
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
+            };
+            checkbox = SWTElementFactory.generateCheckboxButton(container, Messages.CnATreeElementSelectionDialog_4, true, listener);
             FormData checkboxFD = new FormData();
             checkboxFD.top = new FormAttachment(text, 5);
             checkboxFD.left = new FormAttachment(0, 5);
             checkbox.setLayoutData(checkboxFD);
             checkbox.pack();
-            checkbox.addSelectionListener(new SelectionListener() {
-                public void widgetSelected(SelectionEvent e) {
-                    scopeOnly = checkbox.getSelection();
-                    loadElements();
-                }
-                
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
-            });
         }
         
         viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
@@ -168,15 +167,15 @@ public class ElementSelectionComponent {
         viewer.getTable().setLinesVisible(true);
         
         // image column:
-        column1 = new TableViewerColumn(viewer, SWT.LEFT);
+        TableViewerColumn column1 = new TableViewerColumn(viewer, SWT.LEFT);
         column1.getColumn().setText(""); //$NON-NLS-1$
         column1.getColumn().setWidth(25);
         column1.getColumn().setResizable(false);
         column1.setLabelProvider(new CellLabelProvider() {
             public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder)
+                if (cell.getElement() instanceof PlaceHolder){
                     return;
-                
+                }
                 CnATreeElement element = (CnATreeElement)cell.getElement();
                 Image image = CnAImageProvider.getCustomImage(element);
                 if(image==null) {
@@ -187,7 +186,7 @@ public class ElementSelectionComponent {
         });
         
         // label column:
-        column2 = new TableViewerColumn(viewer, SWT.LEFT);
+        TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setWidth(200);
         column2.setLabelProvider(new CellLabelProvider() {
             public void update(ViewerCell cell) {
@@ -231,9 +230,9 @@ public class ElementSelectionComponent {
     }
 
     public void loadElementsAndSelect(final CnATreeElement selected) {
-        if (entityType == null || entityType.length()==0)
+        if (entityType == null || entityType.length()==0){
             return;
-        
+        }
         ArrayList temp = new ArrayList(1);
         temp.add(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6));
         viewer.setInput(temp);
@@ -250,34 +249,12 @@ public class ElementSelectionComponent {
                     if (scopeOnly && inputElmt!=null) {
                         LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        elementList = command.getElements();
-                        Display.getDefault().asyncExec(new Runnable() {
-                            public void run() {
-                                if (elementList!=null)
-                                    viewer.setInput(elementList);
-                                else {
-                                    ArrayList temp = new ArrayList(0);
-                                    viewer.setInput(temp);
-                                }
-                                setSelectedElement(selected);
-                            }
-                        });
+                        loadAndSelectElements(selected, command.getElements());
                         
                     } else {
                         LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        elementList = command.getElements();
-                        Display.getDefault().asyncExec(new Runnable() {
-                            public void run() {
-                                if (elementList!=null)
-                                    viewer.setInput(elementList);
-                                else {
-                                    ArrayList temp = new ArrayList(0);
-                                    viewer.setInput(temp);
-                                }
-                                setSelectedElement(selected);
-                            }
-                        });
+                        loadAndSelectElements(selected, command.getElements());
                     }                 
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
@@ -354,5 +331,20 @@ public class ElementSelectionComponent {
                 selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
             }
         }
+    }
+
+    private void loadAndSelectElements(final CnATreeElement selected, final List<CnATreeElement> list) {
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                if (list !=null){
+                    viewer.setInput(list);
+                } else {
+                    ArrayList temp = new ArrayList(0);
+                    viewer.setInput(temp);
+                }
+                setSelectedElement(selected);
+            }
+        });
+        elementList = list;
     }
 }

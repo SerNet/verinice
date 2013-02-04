@@ -68,7 +68,7 @@ import sernet.verinice.service.ldap.SaveLdapUser;
  */
 public class LdapImportDialog extends TitleAreaDialog {
 
-	private static final Logger log = Logger.getLogger(LdapImportDialog.class);
+	private static final Logger LOG = Logger.getLogger(LdapImportDialog.class);
 
 	private TableViewer viewer;
 	
@@ -76,7 +76,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	private Set<PersonInfo> personSet;
 	
-	Button buttonRemove;
+	private Button buttonRemove;
 
 	@SuppressWarnings("unchecked")
 	public LdapImportDialog(Shell parent) {
@@ -88,19 +88,23 @@ public class LdapImportDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
+		final int shellWidth = 700;
+		final int shellHeight = 800;
 		newShell.setText(Messages.LdapImportDialog_28);
-		newShell.setSize(700, 800);
+		newShell.setSize(shellWidth, shellHeight);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 
 		setTitle(Messages.LdapImportDialog_30);
+		
+		final int defaultMarginHeight = 10;
 
 		final Composite composite = (Composite) super.createDialogArea(parent);
 		GridLayout layoutRoot = (GridLayout) composite.getLayout();
-		layoutRoot.marginWidth = 10;
-		layoutRoot.marginHeight = 10;
+		layoutRoot.marginWidth = defaultMarginHeight;
+		layoutRoot.marginHeight = defaultMarginHeight;
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
 		gd.grabExcessHorizontalSpace = true;
 		gd.grabExcessVerticalSpace = true;
@@ -112,8 +116,8 @@ public class LdapImportDialog extends TitleAreaDialog {
 		
 		final Composite containerRoles = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 10;
-		layout.marginHeight = 10;
+		layout.marginWidth = defaultMarginHeight;
+		layout.marginHeight = defaultMarginHeight;
 		containerRoles.setLayout(layout);
 		containerRoles.setLayoutData(gd);
 		
@@ -152,6 +156,16 @@ public class LdapImportDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = GridData.FILL;
 		company.setLayoutData(gridData);
 		
+		SelectionListener addListener = new SelectionListener() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        loadLdapUser();
+		    }
+		    
+		    @Override
+		    public void widgetDefaultSelected(SelectionEvent e) {
+		    }
+		};
 		Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
 		buttonAdd.setText(Messages.LdapImportDialog_35);
 		gridData = new GridData();
@@ -159,16 +173,6 @@ public class LdapImportDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = SWT.RIGHT;
 		gridData.horizontalSpan = 2;
 		buttonAdd.setLayoutData(gridData);
-		buttonAdd.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				loadLdapUser();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
 
 		createViewer(containerRoles);
 		
@@ -226,7 +230,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 			try {
 				refreshTable();
 			} catch (Exception t) {
-				log.error("Error while setting table data", t); //$NON-NLS-1$
+				LOG.error("Error while setting table data", t); //$NON-NLS-1$
 			}
 		}
 	}
@@ -245,15 +249,15 @@ public class LdapImportDialog extends TitleAreaDialog {
 			// contentProvider
 			refreshTable();
 		} catch (SizeLimitExceededException sizeLimitExceededException) {
-		    log.warn("To many results ehen searching for LDAP users."); //$NON-NLS-1$
-            if (log.isDebugEnabled()) {
-                log.debug("stacktrace: ", sizeLimitExceededException); //$NON-NLS-1$
+		    LOG.warn("To many results ehen searching for LDAP users."); //$NON-NLS-1$
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("stacktrace: ", sizeLimitExceededException); //$NON-NLS-1$
             }
             personSet.clear();
             refreshTable();
             MessageDialog.openInformation(getShell(), Messages.LdapImportDialog_6, Messages.LdapImportDialog_7);
         } catch (Exception t) {
-			log.error("Error while setting table data", t); //$NON-NLS-1$
+			LOG.error("Error while setting table data", t); //$NON-NLS-1$
 			personSet.clear();
 			refreshTable();
 			MessageDialog.openError(getShell(), Messages.LdapImportDialog_45, Messages.LdapImportDialog_1);        
@@ -271,9 +275,11 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 
 	private void createViewer(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+	    int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
+	    style = style | SWT.FULL_SELECTION | SWT.BORDER;
+		viewer = new TableViewer(parent, style);
 
-		createColumns(parent, viewer);
+		createColumns();
 		final Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -290,12 +296,12 @@ public class LdapImportDialog extends TitleAreaDialog {
 		viewer.getControl().setLayoutData(gridData);
 	}
 
-	private void createColumns(final Composite parent, final TableViewer viewer) {
+	private void createColumns() {
 		String[] titles = { Messages.LdapImportDialog_39, Messages.LdapImportDialog_40, Messages.LdapImportDialog_41, Messages.LdapImportDialog_2, Messages.LdapImportDialog_3, Messages.LdapImportDialog_4 };
 		int[] bounds = { 80, 90, 130, 100, 100, 120 };
 
 		// First column: login name
-		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
+		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -304,7 +310,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 		});
 
 		// 2. column: name
-		col = createTableViewerColumn(titles[1], bounds[1], 1);
+		col = createTableViewerColumn(titles[1], bounds[1]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -313,7 +319,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 		});
 
 		// 3. column: surname
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col = createTableViewerColumn(titles[2], bounds[2]);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -321,8 +327,12 @@ public class LdapImportDialog extends TitleAreaDialog {
 			}
 		});
 		
+		final int constant3 = 3;
+		final int constant4 = 4;
+        final int constant5 = 5;
+		
 		// 4. column: tile
-        col = createTableViewerColumn(titles[3], bounds[3], 3);
+        col = createTableViewerColumn(titles[constant3], bounds[constant3]);
         col.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -331,7 +341,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
         
         // 5. column: department
-        col = createTableViewerColumn(titles[4], bounds[4], 4);
+        col = createTableViewerColumn(titles[constant4], bounds[constant4]);
         col.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -340,7 +350,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
         
         // 6. column: company
-        col = createTableViewerColumn(titles[5], bounds[5], 5);
+        col = createTableViewerColumn(titles[constant5], bounds[constant5]);
         col.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -349,7 +359,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         });
 	}
 
-	private TableViewerColumn createTableViewerColumn(String title, int bound, final int colNumber) {
+	private TableViewerColumn createTableViewerColumn(String title, int bound) {
 		final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
 		final TableColumn column = viewerColumn.getColumn();
 		column.setText(title);
@@ -366,9 +376,9 @@ public class LdapImportDialog extends TitleAreaDialog {
 		try {
 			saveLdapUser = ServiceFactory.lookupCommandService().executeCommand(saveLdapUser);
 		} catch (UsernameExistsException e) {
-			log.error(e.getMessage());
-			if (log.isDebugEnabled()) {
-				log.debug("Stacktrace: ", e); //$NON-NLS-1$
+			LOG.error(e.getMessage());
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
 			}
 			MessageDialog.openError(this.getShell(), 
 					Messages.LdapImportDialog_45,
@@ -387,7 +397,8 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 
 	private void updateModel(CnATreeElement importRootObject, List<CnATreeElement> changedElement) {
-        if(changedElement!=null && changedElement.size()>9) {
+        final int maxNrOfElements = 9;
+	    if(changedElement!=null && changedElement.size()>maxNrOfElements) {
             // if more than 9 elements changed or added do a complete reload
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         } else {

@@ -80,25 +80,19 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private Combo scopeCombo;
 
-    private ArrayList<CnATreeElement> scopes;
+    private List<CnATreeElement> scopes;
 
-    private ArrayList<String> scopeTitles;
+    private List<String> scopeTitles;
 
     private Integer auditId=null;
 
     private String auditName=null;
     
-    private boolean userTemplate = true;
-
 	private List<CnATreeElement> preSelectedElments;
 	
 	private String useCase;
 	
-	public boolean isContextMenuCall;
-	
-	private Button useCacheButton;
-	
-	private Button useDefaultFolderButton;
+	private boolean isContextMenuCall;
 	
 	private boolean useCache = true;
 	
@@ -185,6 +179,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Override
 	protected Control createDialogArea(Composite parent) {
+        final int dataScopeMinimumWidth = 140;
+        final int dataScopeComboMinimumWidth = 346;
+        final int marginWidth = 10;
+        final int defaultColNr = 3;
+        
         getDefaultFolder();
         
         if(useCase != null){
@@ -195,14 +194,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         final Composite frame = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) frame.getLayout();
-        layout.marginWidth = 10;
-        layout.marginHeight = 10;
+        layout.marginWidth = marginWidth;
+        layout.marginHeight = marginWidth;
         GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
         gd.grabExcessHorizontalSpace = true;
         frame.setLayoutData(gd);
         
         final Composite composite = new Composite(frame, SWT.NONE);  
-		layout = new GridLayout(3, false);
+		layout = new GridLayout(defaultColNr, false);
 		composite.setLayout(layout);
 		gd = new GridData(GridData.GRAB_HORIZONTAL);
         gd.grabExcessHorizontalSpace = true;
@@ -210,9 +209,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		composite.setLayoutData(gd);
 
 		Group reportGroup = new Group(composite, SWT.NULL);
-		reportGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+		reportGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
 		layout = new GridLayout();
-        layout.numColumns = 3;
+        layout.numColumns = defaultColNr;
         reportGroup.setLayout(layout);
 		
 		Label labelReportType = new Label(reportGroup, SWT.NONE);
@@ -220,7 +219,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		gridDataLabel.horizontalAlignment = SWT.LEFT;
 		gridDataLabel.verticalAlignment = SWT.CENTER;
 		gridDataLabel.grabExcessHorizontalSpace = true;
-		gridDataLabel.minimumWidth = 140;
+		gridDataLabel.minimumWidth = dataScopeMinimumWidth;
 		labelReportType.setText(Messages.GenerateReportDialog_1);
 		labelReportType.setLayoutData(gridDataLabel);
 
@@ -230,7 +229,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		gridComboReportType.grabExcessHorizontalSpace = true;
 		gridComboReportType.horizontalSpan=2;
 		gridComboReportType.grabExcessHorizontalSpace = true;
-		gridComboReportType.minimumWidth = 346;
+		gridComboReportType.minimumWidth = dataScopeComboMinimumWidth;
 		comboReportType.setLayoutData(gridComboReportType);
 
 		for (IReportType rt : reportTypes) {
@@ -277,7 +276,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         });
         
         Group scopeGroup = new Group(composite, SWT.NULL);
-        scopeGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        scopeGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
         layout = new GridLayout();
         layout.numColumns = 2;
         scopeGroup.setLayout(layout);
@@ -288,14 +287,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gridDataScope.horizontalAlignment = SWT.LEFT;
         gridDataScope.verticalAlignment = SWT.CENTER;
         gridDataScope.grabExcessHorizontalSpace = true;
-        gridDataScope.minimumWidth = 140;
+        gridDataScope.minimumWidth = dataScopeMinimumWidth;
         labelScope.setLayoutData(gridDataScope);
         labelScope.setText(Messages.GenerateReportDialog_8);
 
         scopeCombo = new Combo(scopeGroup, SWT.READ_ONLY);
         GridData gridDatascopeCombo = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gridDatascopeCombo.grabExcessHorizontalSpace = true;
-        gridDatascopeCombo.minimumWidth = 346;
+        gridDatascopeCombo.minimumWidth = dataScopeComboMinimumWidth;
         scopeCombo.setLayoutData(gridDatascopeCombo);
         
         scopeCombo.addSelectionListener(new SelectionListener() {
@@ -311,9 +310,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         });
 
         Group groupFile = new Group(composite, SWT.NULL);
-        groupFile.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        groupFile.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
         layout = new GridLayout();
-        layout.numColumns = 3;
+        layout.numColumns = defaultColNr;
         groupFile.setLayout(layout);
         
 		Label labelOutputFormat = new Label(groupFile, SWT.NONE);
@@ -321,7 +320,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		gridLabelOutputFormat.horizontalAlignment = SWT.LEFT;
 		gridLabelOutputFormat.verticalAlignment = SWT.CENTER;
 		gridLabelOutputFormat.grabExcessHorizontalSpace = true;
-		gridLabelOutputFormat.minimumWidth = 140;
+		gridLabelOutputFormat.minimumWidth = dataScopeMinimumWidth;
 		labelOutputFormat.setText(Messages.GenerateReportDialog_9);
 		labelOutputFormat.setLayoutData(gridLabelOutputFormat);
 
@@ -332,7 +331,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		gridComboOutputFormat.grabExcessHorizontalSpace = true;
 		gridComboOutputFormat.horizontalSpan=2;
 		gridComboOutputFormat.grabExcessHorizontalSpace = true;
-		gridComboOutputFormat.minimumWidth = 346;
+		gridComboOutputFormat.minimumWidth = dataScopeComboMinimumWidth;
 		comboOutputFormat.setLayoutData(gridComboOutputFormat);
 		comboOutputFormat.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -349,7 +348,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gridLabelFile.horizontalAlignment = SWT.LEFT;
         gridLabelFile.verticalAlignment = SWT.CENTER;
         gridLabelFile.grabExcessHorizontalSpace = true;
-        gridLabelFile.minimumWidth = 140;
+        gridLabelFile.minimumWidth = dataScopeMinimumWidth;
         
         GridData gridTextFile = new GridData();
         gridTextFile.horizontalAlignment = SWT.FILL;
@@ -397,7 +396,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		       }
 		});
 
-		useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
+		Button useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
         useDefaultFolderButton.setText(Messages.GenerateReportDialog_26);
         useDefaultFolderButton.setSelection(true);        
         GridData  useDefaultFolderButtonGridData = new GridData();
@@ -420,18 +419,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
         });
 		
         Group groupCache = new Group(composite, SWT.NULL);
-        groupCache.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+        groupCache.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
         layout = new GridLayout();
         layout.numColumns = 2;
         groupCache.setLayout(layout);
         
-        GridData gridLabelCache = new GridData();
         gridLabelFile.horizontalAlignment = SWT.LEFT;
         gridLabelFile.verticalAlignment = SWT.CENTER;
         gridLabelFile.grabExcessHorizontalSpace = true;
-        gridLabelFile.minimumWidth = 140;
+        gridLabelFile.minimumWidth = dataScopeMinimumWidth;
         
-        useCacheButton = new Button(groupCache, SWT.CHECK);
+        Button useCacheButton = new Button(groupCache, SWT.CHECK);
         useCacheButton.setText(Messages.GenerateReportDialog_25);
 		useCacheButton.setSelection(true);
 	    GridData  useCacheButtonGridData = new GridData();
@@ -493,8 +491,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
             StringBuilder sb = new StringBuilder();
             for(CnATreeElement elmt : preSelectedElments){
             	sb.append(elmt.getTitle());
-            	if(preSelectedElments.indexOf(elmt) != preSelectedElments.size() - 1)
+            	if(preSelectedElments.indexOf(elmt) != preSelectedElments.size() - 1){
             		sb.append(" & ");
+            	}
             	auditIDList.add(elmt.getDbId());
             }
             scopeCombo.add(sb.toString());
@@ -532,7 +531,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     protected void enableFileSelection() {
-        userTemplate = false;
+        boolean userTemplate = false;
         if (reportTypes[comboReportType.getSelectionIndex()].getReportFile() == null || reportTypes[comboReportType.getSelectionIndex()].getReportFile().equals("")) {
             userTemplate = true;
         }
@@ -544,7 +543,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		comboOutputFormat.removeAll();
 		for (IOutputFormat of : reportTypes[comboReportType.getSelectionIndex()].getOutputFormats()) {
 			comboOutputFormat.add(of.getLabel());
-		};
+		}
 		comboOutputFormat.select(0);
 		if(chosenReportType!=null) {
             chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];    
@@ -608,14 +607,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
             MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
             return;
         }
-        List<Integer> rootElements = new ArrayList<Integer>(0);
-        rootElements.add(getRootElement());
-        if(getRootElements() != null)rootElements.addAll(Arrays.asList(getRootElements()));
+        List<Integer> scopeIds = new ArrayList<Integer>(0);
+        scopeIds.add(getRootElement());
+        if(getRootElements() != null){
+            scopeIds.addAll(Arrays.asList(getRootElements()));
+        }
         IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
         boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
         IValidationService vService = ServiceFactory.lookupValidationService();
         boolean validationsExistant = false;
-        for(Integer scopeId : rootElements){
+        for(Integer scopeId : scopeIds){
             if(vService.getValidations(scopeId, (Integer)null).size() > 0){
                 validationsExistant = true;
                 break;
@@ -693,7 +694,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * @return
      */
     public Integer[] getRootElements(){
-    	return rootElements;
+    	return (rootElements != null) ? rootElements.clone() : null;
     }
     
     private List<Organization> loadScopes() {
@@ -748,7 +749,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private void filterReportTypes(){
 		ArrayList<IReportType> list = new ArrayList<IReportType>();
-		boolean userReportAdded = false;
 		if(useCase != null && !useCase.equals("")){
 			for(IReportType rt : reportTypes){
 				if(rt.getUseCaseID().equals(useCase) || rt.getUseCaseID().equals(IReportType.USE_CASE_ID_ALWAYS_REPORT)){

@@ -167,19 +167,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private OpenViewAction openDocumentViewAction;
 
-    private BausteinZuordnungAction bausteinZuordnungAction;
-    
-    private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
-
-    private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
-
 	private ImportGstoolNotesAction importGSNotesAction;
 
     private RunRiskAnalysisAction runRiskAnalysisAction;
     
     private ServerConnectionToggleAction serverConnectionToggleAction;
-
-    private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -189,6 +181,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
+        
+        BausteinZuordnungAction bausteinZuordnungAction;
+        GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
+        GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
+        TestAction testAction;
+        
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
         // The corresponding commands keybindings are defined in the plugin.xml

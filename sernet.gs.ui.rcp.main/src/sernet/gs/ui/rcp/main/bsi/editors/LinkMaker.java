@@ -100,7 +100,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private SelectionListener unlinkAction;
     private LinkRemover linkRemover;
     
-    static int oldSelection =-1;
+    private static int oldSelection =-1;
 
     /**
      * @param parent
@@ -118,43 +118,41 @@ public class LinkMaker extends Composite implements IRelationTable {
      */
     public void createPartControl(Boolean isWriteAllowed) {
         this.writeable = isWriteAllowed;
-
+        
+        final int formAttachmentOffsetDefault = 5;
 
         Label label1 = new Label(this, SWT.NULL);
         label1.setText(Messages.LinkMaker_0);
 
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, 5);
-        formData.left = new FormAttachment(0, 5);
+        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData.left = new FormAttachment(0, formAttachmentOffsetDefault);
         label1.setLayoutData(formData);
         label1.pack();
 
         combo = new Combo(this, SWT.READ_ONLY);
         FormData formData2 = new FormData();
-        formData2.top = new FormAttachment(0, 5);
-        formData2.left = new FormAttachment(label1, 5);
+        formData2.top = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData2.left = new FormAttachment(label1, formAttachmentOffsetDefault);
         combo.setLayoutData(formData2);
-        // combo.pack();
 
         buttonLink = new Button(this, SWT.PUSH);
         FormData formData3 = new FormData();
         formData3.top = new FormAttachment(combo, 0, SWT.CENTER);
-        formData3.left = new FormAttachment(combo, 5);
+        formData3.left = new FormAttachment(combo, formAttachmentOffsetDefault);
         buttonLink.setLayoutData(formData3);
         buttonLink.setText(Messages.LinkMaker_1);
         buttonLink.setToolTipText(Messages.LinkMaker_2);
         buttonLink.setEnabled(false);
-        // buttonLink.pack();
 
         buttonUnlink = new Button(this, SWT.PUSH);
         FormData formData5 = new FormData();
         formData5.top = new FormAttachment(combo, 0, SWT.CENTER);
-        formData5.left = new FormAttachment(buttonLink, 5);
+        formData5.left = new FormAttachment(buttonLink, formAttachmentOffsetDefault);
         buttonUnlink.setLayoutData(formData5);
         buttonUnlink.setText(Messages.LinkMaker_3);
         buttonUnlink.setEnabled(writeable && checkRights());
         buttonUnlink.setToolTipText(Messages.LinkMaker_4);
-        // buttonUnlink.pack();
 
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
         FormData formData6 = new FormData();
@@ -233,21 +231,18 @@ public class LinkMaker extends Composite implements IRelationTable {
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 // create new link to object
                 Object[] array = namesAndIds.entrySet().toArray();
                 String selectedType = ((Entry<String, String>) array[combo.getSelectionIndex()]).getValue();
                 CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(viewer.getControl().getShell(), selectedType, inputElmt);
-                
-                if (dialog.open() != Window.OK)
+                if (dialog.open() != Window.OK){
                     return;
+                }
                 List<CnATreeElement> linkTargets = dialog.getSelectedElements();
-
                 // this method also fires events for added links:
                 CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(getInputElmt(), linkTargets);
-                
                 // refresh viewer because it doesn't listen to events:
                 reloadLinks();
             }
@@ -258,33 +253,28 @@ public class LinkMaker extends Composite implements IRelationTable {
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 // delete link:
-
-                if (viewer.getSelection().isEmpty())
+                if (viewer.getSelection().isEmpty()){
                     return;
-
+                }
                 List selection = ((IStructuredSelection) viewer.getSelection()).toList();
                 boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.LinkMaker_5, NLS.bind(Messages.LinkMaker_6, selection.size()));
                 if (!confirm) {
                     return;
                 }
-                
                 CnALink link = null;                     
                 for (Object object : selection) {
                     link = (CnALink) object;
                     try {
                         CnAElementHome.getInstance().remove(link);
-                        //viewer.remove(link);
                         inputElmt.removeLinkDown(link);                        
                     } catch (Exception e1) {
                         LOG.error("Error while removing link",e1);
                         ExceptionUtil.log(e1, Messages.LinkMaker_7);
                     }
                 }
-                
                 // calling linkRemoved for one link reloads all changed links
                 if(link!=null) {
                     // notify local listeners:
@@ -365,9 +355,9 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         namesAndIds.put(Messages.LinkMaker_8, null);
 
-        Set<String> names = namesAndIds.keySet();
-        this.names = new String[names.size()];
-        this.names = names.toArray(new String[names.size()]);
+        Set<String> namesSet = namesAndIds.keySet();
+        this.names = new String[namesSet.size()];
+        this.names = namesSet.toArray(new String[namesSet.size()]);
     }
 
     /**
@@ -407,11 +397,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         }
         boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
         boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
-        if (removedLinkUp)
+        if (removedLinkUp){
             inputElmt.addLinkUp(newLink);
-        if (removedLinkDown)
+        }
+        if (removedLinkDown){
             inputElmt.addLinkDown(newLink);
-
+        }
         viewer.refresh();
     }
 
@@ -424,9 +415,9 @@ public class LinkMaker extends Composite implements IRelationTable {
      */
     @Override
     public void setInputElmt(CnATreeElement inputElmt) {
-        if (inputElmt == null || this.inputElmt == inputElmt)
+        if (inputElmt == null || this.inputElmt == inputElmt){
             return;
-
+        }
         if (oldSelection==-1) {
             oldSelection = combo.getSelectionIndex();
         }

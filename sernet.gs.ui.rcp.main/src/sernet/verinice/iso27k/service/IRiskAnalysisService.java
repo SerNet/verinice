@@ -34,45 +34,45 @@ import sernet.verinice.model.iso27k.IncidentScenario;
  */
 public interface IRiskAnalysisService {
     
-    public static final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
-    public static final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
-    public static final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
+    static final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
+    static final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
+    static final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
     
-    public static final String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
-    public static final String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
-    public static final String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
+    static final String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
+    static final String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
+    static final String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
     
-    public static final String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
-    public static final String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
-    public static final String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
+    static final String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
+    static final String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
+    static final String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
 
-    public static final String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
-    public static final String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
+    static final String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
+    static final String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
     
-    public static final String PROP_VULNERABILITY_EXPLOITABILITY = "vulnerability_level"; //$NON-NLS-1$
+    static final String PROP_VULNERABILITY_EXPLOITABILITY = "vulnerability_level"; //$NON-NLS-1$
 
-    public static final String PROP_ASSET_RISK_C ="asset_riskvalue_c";
-    public static final String PROP_ASSET_RISK_I ="asset_riskvalue_i";
-    public static final String PROP_ASSET_RISK_A ="asset_riskvalue_a";
-    public static final String PROP_ASSET_CONTROLRISK_C ="asset_riskwcontrolvalue_c";
-    public static final String PROP_ASSET_CONTROLRISK_I ="asset_riskwcontrolvalue_i";
-    public static final String PROP_ASSET_CONTROLRISK_A ="asset_riskwcontrolvalue_a";
-    public static final String PROP_ASSET_PLANCONTROLRISK_C ="asset_riskwplancontrolvalue_c";
-    public static final String PROP_ASSET_PLANCONTROLRISK_I ="asset_riskwplancontrolvalue_i";
-    public static final String PROP_ASSET_PLANCONTROLRISK_A ="asset_riskwplancontrolvalue_a";
+    static final String PROP_ASSET_RISK_C ="asset_riskvalue_c";
+    static final String PROP_ASSET_RISK_I ="asset_riskvalue_i";
+    static final String PROP_ASSET_RISK_A ="asset_riskvalue_a";
+    static final String PROP_ASSET_CONTROLRISK_C ="asset_riskwcontrolvalue_c";
+    static final String PROP_ASSET_CONTROLRISK_I ="asset_riskwcontrolvalue_i";
+    static final String PROP_ASSET_CONTROLRISK_A ="asset_riskwcontrolvalue_a";
+    static final String PROP_ASSET_PLANCONTROLRISK_C ="asset_riskwplancontrolvalue_c";
+    static final String PROP_ASSET_PLANCONTROLRISK_I ="asset_riskwplancontrolvalue_i";
+    static final String PROP_ASSET_PLANCONTROLRISK_A ="asset_riskwplancontrolvalue_a";
     
-    public static final String PROP_CONTROL_EFFECT_C ="control_effectiveness_confidentiality";
-    public static final String PROP_CONTROL_EFFECT_I ="control_effectiveness_integrity";
-    public static final String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
-    public static final String PROP_CONTROL_EFFECT_P ="control_eff_probability";
+    static final String PROP_CONTROL_EFFECT_C ="control_effectiveness_confidentiality";
+    static final String PROP_CONTROL_EFFECT_I ="control_effectiveness_integrity";
+    static final String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
+    static final String PROP_CONTROL_EFFECT_P ="control_eff_probability";
     
-    public static final int RISK_PRE_CONTROLS = 0;
-    public static final int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
-    public static final int RISK_WITH_ALL_CONTROLS = 2;
+    static final int RISK_PRE_CONTROLS = 0;
+    static final int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
+    static final int RISK_WITH_ALL_CONTROLS = 2;
     
-    public static final int RISK_COLOR_GREEN = 0;
-    public static final int RISK_COLOR_YELLOW = 1;
-    public static final int RISK_COLOR_RED = 2;
+    static final int RISK_COLOR_GREEN = 0;
+    static final int RISK_COLOR_YELLOW = 1;
+    static final int RISK_COLOR_RED = 2;
     
     
 
@@ -106,7 +106,7 @@ public interface IRiskAnalysisService {
      * @param impactA
      * @throws CommandException
      */
-    public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
+    Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
     
     int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType);
 

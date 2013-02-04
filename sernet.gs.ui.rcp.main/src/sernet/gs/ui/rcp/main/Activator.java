@@ -187,6 +187,72 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         Preferences prefs = getPluginPreferences();
 
+        checkPKCS11Support(prefs);
+
+        // set service factory location to local / remote according to
+        // preferences:
+        standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+
+        initializeInternalServer();
+
+        setGSDSCatalog(prefs);
+
+        // Set the derby log file path
+        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
+
+        // Provide initial DB connection details to server.
+        internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
+
+        // prepare client's workspace:
+        CnAWorkspace.getInstance().prepare();
+
+        try {
+            ServiceFactory.openCommandService();
+        } catch (Exception e) {
+            // if this fails, try rewriting config:
+            LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
+            CnAWorkspace.getInstance().prepare(true);
+        }
+
+        // When the service factory is initialized the client's work objects can
+        // be accessed.
+        // The line below initializes the VeriniceContext initially.
+        state = ServiceFactory.getClientWorkObjects();
+        VeriniceContext.setState(state);
+
+        // Make command service available as an OSGi service
+        context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+
+        Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
+             * .IProgressMonitor)
+             */
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                try {
+                    addUpdateRepository();
+                } catch (URISyntaxException e) {
+                    LOG.error("Error while adding update repository."); //$NON-NLS-1$
+                }
+                return Status.OK_STATUS;
+
+            };
+        };
+        repositoryJob.schedule();
+
+        StartupImporter.importVna();
+
+        // Log the system and application configuration
+        ConfigurationLogger.logSystemProperties();
+        ConfigurationLogger.logApplicationProperties();
+        ConfigurationLogger.logProxyPreferences();
+    }
+
+    private void checkPKCS11Support(Preferences prefs) {
         // May replace the JDK's built-in security settings
         try {
             String osName = System.getProperty("os.name"); //$NON-NLS-1$
@@ -200,11 +266,32 @@ public class Activator extends AbstractUIPlugin implements IMain {
         } catch (Exception e) {
             LOG.error("Error while registering verinice security provider.", e); //$NON-NLS-1$
         }
+    }
 
-        // set service factory location to local / remote according to
-        // preferences:
-        standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+    private void setGSDSCatalog(Preferences prefs) {
+        if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR)) {
+            try {
+                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
+            } catch (MalformedURLException mfue) {
+                LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
+            }
+        } else {
+            try {
+                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
+            } catch (MalformedURLException mfue) {
+                LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
+            }
 
+        }
+        try {
+            internalServer.setDSCatalogURL(new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
+        } catch (MalformedURLException mfue) {
+            LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
+        }
+    }
+
+    private void initializeInternalServer() throws BundleException {
+        Bundle bundle;
         // Start server only when it is needed.
         if (standalone) {
             bundle = Platform.getBundle("sernet.gs.server"); //$NON-NLS-1$
@@ -241,79 +328,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 LOG.error("Error while stopping pax-web http-service.", e); //$NON-NLS-1$
             }
         }
-
-        if (prefs.getString(PreferenceConstants.GSACCESS).equals(PreferenceConstants.GSACCESS_DIR)) {
-            try {
-                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIDIR)).toURI().toURL());
-            } catch (MalformedURLException mfue) {
-                LOG.warn("Stored GS catalog dir is an invalid URL."); //$NON-NLS-1$
-            }
-        } else {
-            try {
-                internalServer.setGSCatalogURL(new File(prefs.getString(PreferenceConstants.BSIZIPFILE)).toURI().toURL());
-            } catch (MalformedURLException mfue) {
-                LOG.warn("Stored GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
-            }
-
-        }
-        try {
-            internalServer.setDSCatalogURL(new File(prefs.getString(PreferenceConstants.DSZIPFILE)).toURI().toURL());
-        } catch (MalformedURLException mfue) {
-            LOG.warn("Stored DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
-        }
-
-        // Set the derby log file path
-        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
-
-        // Provide initial DB connection details to server.
-        internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
-
-        // prepare client's workspace:
-        CnAWorkspace.getInstance().prepare();
-
-        try {
-            ServiceFactory.openCommandService();
-        } catch (Exception e) {
-            // if this fails, try rewriting config:
-            LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
-            CnAWorkspace.getInstance().prepare(true);
-        }
-
-        // When the service factory is initialized the client's work objects can
-        // be accessed.
-        // The line below initializes the VeriniceContext initially.
-        VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
-
-        // Make command service available as an OSGi service
-        context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
-
-        Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
-            /*
-             * (non-Javadoc)
-             * 
-             * @see
-             * org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
-             * .IProgressMonitor)
-             */
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                try {
-                    addUpdateRepository();
-                } catch (URISyntaxException e) {
-                    LOG.error("Error while adding update repository."); //$NON-NLS-1$
-                }
-                return Status.OK_STATUS;
-
-            };
-        };
-        repositoryJob.schedule();
-
-        StartupImporter.importVna();
-
-        // Log the system and application configuration
-        ConfigurationLogger.logSystemProperties();
-        ConfigurationLogger.logApplicationProperties();
-        ConfigurationLogger.logProxyPreferences();
     }
 
     /**
@@ -730,7 +744,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
             } catch (MalformedURLException e) {
                 throw new IllegalStateException(e);
             }
-            VeriniceContext.setState(state = ServiceFactory.getClientWorkObjects());
+            state = ServiceFactory.getClientWorkObjects();
+            VeriniceContext.setState(state);
 
             // Make command service available as an OSGi service
             context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
