@@ -35,6 +35,8 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$
 
 	public static final String PROP_PROBABILITY = "incscen_likelihood"; //$NON-NLS-1$
+
+    public static final String REL_INCSCEN_ASSET = "rel_incscen_asset"; //$NON-NLS-1$
 	
 	
 	/**
@@ -70,11 +72,13 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 
@@ -86,7 +90,8 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	

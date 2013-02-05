@@ -100,10 +100,21 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     <bean id="individualService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service//individualHttpInvoker</value>
+            <value>${verinice.serverURL}/service/individualHttpInvoker</value>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.bpm.IIndividualService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+    </bean>
+    
+    <bean id="gsmService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/gsmHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IGsmService</value>         
         </property>
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
@@ -259,6 +270,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="isaControlFlowService" value-ref="isaControlFlowService" />
             <entry key="isaQmService" value-ref="qmService" />
             <entry key="individualService" value-ref="individualService" />
+            <entry key="gsmService" value-ref="gsmService" />          
             <entry key="processServiceIsa" value-ref="processServiceIsa" />
             <entry key="rightsService" value-ref="rightsServiceClient" />
             <entry key="validationService" value-ref="validationService" />

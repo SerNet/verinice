@@ -364,12 +364,12 @@ public class TaskService implements ITaskService {
         return Messages.getString(processKey);
     }
 
-    public String loadTaskDescription(String taskId, Map<String, Object> varMap) {
+    public String loadTaskDescription(String taskId, Map<String, Object> processVars) {
         ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
         if(handler==null) {
             handler = getDefaultDescriptionHandler();
         }
-        return handler.loadDescription(taskId, varMap);
+        return handler.loadDescription(taskId, processVars);
     }
     
     public String loadTaskTitle(String taskId, Map<String, Object> varMap) {

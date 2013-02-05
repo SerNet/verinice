@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,29 +17,26 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.rcp.gsm;
 
-import java.util.Map;
+import org.eclipse.osgi.util.NLS;
 
 /**
- * A ITaskDescriptionHandler loads a description of a jBPM task
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface ITaskDescriptionHandler {
+public class Messages extends NLS {
+    private static final String BUNDLE_NAME = "sernet.verinice.rcp.gsm.messages"; //$NON-NLS-1$
+    public static String StartGsmExecuteProcess_0;
+    public static String StartGsmExecuteProcess_1;
+    public static String StartGsmExecuteProcess_2;
+    public static String StartGsmExecuteProcess_3;
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The description of a task
-     */
-    String loadDescription(String taskId, Map<String, Object> processVars);
-
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The title of a task
-     */
-    String loadTitle(String taskId, Map<String, Object> processVars);
-    
+    private Messages() {
+    }
 }

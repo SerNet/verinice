@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -19,27 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
-import java.util.Map;
-
 /**
- * A ITaskDescriptionHandler loads a description of a jBPM task
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface ITaskDescriptionHandler {
-
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The description of a task
-     */
-    String loadDescription(String taskId, Map<String, Object> processVars);
-
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The title of a task
-     */
-    String loadTitle(String taskId, Map<String, Object> processVars);
+public interface IGsmIsmExecuteProzess extends IGenericProcess {
     
+    String KEY = "gsm-ism-execute";
+    
+    String VAR_ELEMENT_SET = "GSM_ISM_ELEMENT_SET";
+    
+    String TASK_EXECUTE = "gsm.ism.execute.task.execute"; 
 }

@@ -80,6 +80,17 @@
         </property>
     </bean>
     
+    <bean name="/gsmHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="gsmService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IGsmService</value>
+        </property>
+    </bean>
+    
     <bean name="/rightsServiceHttpInvoker"
           class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
           lazy-init="false">

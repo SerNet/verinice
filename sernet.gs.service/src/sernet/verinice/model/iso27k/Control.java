@@ -65,6 +65,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability"; 
     public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
     public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso"; 
+    public static final String REL_CONTROL_INCSCEN = "rel_control_incscen";
 	
    
 	/**
@@ -104,11 +105,13 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 	
@@ -116,24 +119,29 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public String getDescription() {
+	@Override
+    public String getDescription() {
 		return getEntity().getSimpleValue(PROP_DESC);
 	}
 	
-	public void setDescription(String description) {
+	@Override
+    public void setDescription(String description) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
 	}
 
 	
-	public void setMaturity(String value) {
+	@Override
+    public void setMaturity(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MATURITY), value);
 	}
 	
-	public int getMaturity() {
+	@Override
+    public int getMaturity() {
 	    return getEntity().getInt(PROP_MATURITY);
 	}
 	
@@ -170,7 +178,8 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	    return getImplementation(entity).equals(IMPLEMENTED_YES);
 	}
 	
-	public boolean isImplemented() {
+	@Override
+    public boolean isImplemented() {
 	    return getImplementation().equals(IMPLEMENTED_YES);
 	}
 
@@ -178,15 +187,18 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	 * Returns the used weight.
 	 * @return
 	 */
-	public int getWeight2() {
+	@Override
+    public int getWeight2() {
 	    return getEntity().getInt(PROP_WEIGHT2);
 	}
 	
-	public int getThreshold1() {
+	@Override
+    public int getThreshold1() {
 	    return getEntity().getInt(PROP_THRESHOLD1);
     }
 
-	public int getThreshold2() {
+	@Override
+    public int getThreshold2() {
 	    return getEntity().getInt(PROP_THRESHOLD2);
 	}
 
@@ -195,6 +207,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
      * Returns the used weight.
      * @return
      */
+    @Override
     public int getWeight1() {
         return getEntity().getInt(PROP_WEIGHT1);
     }
@@ -203,7 +216,8 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	 * Sets the suggested weight for maturity calculation.
 	 * @param value
 	 */
-	public void setWeight1(String value) {
+	@Override
+    public void setWeight1(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT1), value);
 		
 	}
@@ -212,17 +226,20 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	 * Sets the actually used weight for maturity calculation.
 	 * @param value
 	 */
-	public void setWeight2(String value) {
+	@Override
+    public void setWeight2(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_WEIGHT2), value);
 		
 	}
 
-	public void setThreshold1(String value) {
+	@Override
+    public void setThreshold1(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD1), value);
 		
 	}
 
-	public void setThreshold2(String value) {
+	@Override
+    public void setThreshold2(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_THRESHOLD2), value);
 		
 	}

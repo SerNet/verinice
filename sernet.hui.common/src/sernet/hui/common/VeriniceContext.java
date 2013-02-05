@@ -97,6 +97,8 @@ public final class VeriniceContext {
     public final static String ISA_QM_SERVICE = "isaQmService";
 
     public final static String INDIVIDUAL_SERVICE = "individualService";
+
+    public final static String GSM_SERVICE = "gsmService";
     
     public final static String RIGHTS_SERVICE = "rightsService";
     

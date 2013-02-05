@@ -36,4 +36,6 @@ public interface IProcessStartInformation extends Serializable {
      * @return
      */
     int getNumber();
+    
+    void increaseNumber();
 }

@@ -29,7 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class AssetGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "assetgroup"; //$NON-NLS-1$
-	public static final String PROP_NAME = "assetgroup_name"; //$NON-NLS-1$
+	public static final String PROP_NAME = "assetgroup_name"; //$NON-NLS-1$	
+    public static final String REL_PERSON_ISO = "rel_assetgroup_person-iso"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Asset.TYPE_ID};
 	
@@ -61,7 +62,8 @@ public class AssetGroup extends Group<Asset> {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 

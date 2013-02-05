@@ -3313,6 +3313,11 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Asset-Group"
         id="assetgroup" >
+        
+        <huirelation to="person-iso" id="rel_assetgroup_person-iso" 
+            name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/>
+        
+        
         <huiproperty
             name="Title"
             id="assetgroup_name" />

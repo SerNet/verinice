@@ -922,7 +922,29 @@
                style="push"
                tooltip="%action.tooltip.33">
          </action>
-      </objectContribution>  
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.bpm.rcp.StartIndividualProcess"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+         <menu id="workflow"
+			   label="%menu.label.workflow"
+			   icon="icons/tasks.gif"
+			   path="special"> 
+			   <separator name="create"/>
+			   <separator name="special"/>
+		 </menu>
+        <action
+               class="sernet.verinice.rcp.gsm.StartGsmExecuteProcess"
+               enablesFor="1"
+               icon="icons/task-start.gif"
+               id="sernet.verinice.rcp.gsm.StartGsmExecuteProcess.action"
+               label="Start fix vulnerabilities prozess..."
+               menubarPath="workflow/create"
+               style="push"
+               tooltip="Start fix vulnerabilities prozess...">
+         </action>
+      </objectContribution>
       <objectContribution 
       		adaptable="false"
       		id="sernet.verinice.validation.CnAValidationAction"

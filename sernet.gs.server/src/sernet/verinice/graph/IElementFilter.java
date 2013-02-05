@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,29 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.graph;
 
-import java.util.Map;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A ITaskDescriptionHandler loads a description of a jBPM task
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface ITaskDescriptionHandler {
+public interface IElementFilter {
 
     /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The description of a task
+     * @param element
+     * @return
      */
-    String loadDescription(String taskId, Map<String, Object> processVars);
+    boolean check(CnATreeElement element);
 
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The title of a task
-     */
-    String loadTitle(String taskId, Map<String, Object> processVars);
-    
 }

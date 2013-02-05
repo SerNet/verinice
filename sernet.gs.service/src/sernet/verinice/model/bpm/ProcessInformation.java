@@ -31,7 +31,12 @@ public class ProcessInformation implements IProcessStartInformation, Serializabl
 
     private int number;
     
-    
+    public ProcessInformation() {
+        super();
+        number=0;
+    }
+
+
     public ProcessInformation(int number) {
         super();
         this.number = number;
@@ -44,6 +49,15 @@ public class ProcessInformation implements IProcessStartInformation, Serializabl
     @Override
     public int getNumber() {
         return this.number;
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessStartInformation#increaseNumber()
+     */
+    @Override
+    public void increaseNumber() {
+        this.number++;
     }
 
 }

@@ -5,9 +5,14 @@
    
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
    
-   <start name="start">
+   <start g="16,22,80,40" name="start">
+      <transition to="gsm.ism.execute.task.execute"/>
    </start>
    
-   <end name="end"/>
+   <task assignee="#{ISA_OWNER_NAME}" g="252,21,187,52" name="gsm.ism.execute.task.execute">
+      <transition name="gsm.ism.execute.trans.complete" g="-48,-22" to="end"/>
+   </task>
+   
+   <end g="615,22,80,40" name="end"/>
 
 </process>

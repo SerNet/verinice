@@ -25,6 +25,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
@@ -121,6 +122,10 @@ public abstract class ServiceFactory {
     
     public static IIndividualService lookupIndividualService() {
         return (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
+    }
+    
+    public static IGsmService lookupGsmService() {
+        return (IGsmService) VeriniceContext.get(VeriniceContext.GSM_SERVICE);
     }
 	
 	public static boolean isPermissionHandlingNeeded() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,29 +17,32 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.bpm.gsm;
 
-import java.util.Map;
+import sernet.verinice.graph.IElementFilter;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A ITaskDescriptionHandler loads a description of a jBPM task
+ * Filter to reject all (objects at the first level below organization.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface ITaskDescriptionHandler {
+public class TopElementFilter implements IElementFilter {
 
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The description of a task
-     */
-    String loadDescription(String taskId, Map<String, Object> processVars);
-
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The title of a task
-     */
-    String loadTitle(String taskId, Map<String, Object> processVars);
+    private Integer orgId;
     
+    public TopElementFilter(Integer orgId) {
+        super();
+        this.orgId = orgId;
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.graph.IElementFilter#check(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    public boolean check(CnATreeElement element) {
+        return element!=null && !element.getParentId().equals(orgId);
+    }
+
 }

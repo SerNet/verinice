@@ -38,5 +38,7 @@
     <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmServiceDummy" />
     
     <bean id="individualService" class="sernet.verinice.bpm.indi.IndividualServiceDummy" />
+    
+    <bean id="gsmService" class="sernet.verinice.bpm.gsm.GsmServiceDummy" />
   
 </beans>

@@ -27,6 +27,7 @@
                 <value>sernet/verinice/bpm/isam/isa-control-flow.jpdl.xml</value>
                 <value>sernet/verinice/bpm/qm/isa-quality-management.jpdl.xml</value>
                 <value>sernet/verinice/bpm/indi/individual-task.jpdl.xml</value>
+                <value>sernet/verinice/bpm/gsm/gsm-ism-execute.jpdl.xml</value>
             </set>
         </property>
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -63,6 +64,15 @@
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="processDao" ref="processDao" />
         <property name="authService" ref="authService" />
+    </bean>
+    
+    <bean id="gsmService" class="sernet.verinice.bpm.gsm.GsmService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="authService" ref="authService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="graphService" ref="graphService" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->
@@ -104,8 +114,8 @@
                 <entry key="indi.task.check" value-ref="indiCheckDescriptionHandler"/>
                 <entry key="indi.task.assign" value-ref="indiAssignDescriptionHandler"/>
                 <entry key="indi.task.assign.deadline" value-ref="indiDeadlineDescriptionHandler"/>
-                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>
-                
+                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>                      
+                <entry key="gsm.ism.execute.task.execute" value-ref="gsmIsmDescriptionHandler"/>            
             </map>
         </property>
         <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
@@ -127,6 +137,7 @@
     <bean id="indiAssignDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualAssignDescriptionHandler" />
     <bean id="indiDeadlineDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualDeadlineDescriptionHandler" />
     <bean id="indiNrDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualNotResponsibleDescriptionHandler" />
+    <bean id="gsmIsmDescriptionHandler" class="sernet.verinice.bpm.gsm.GsmServiceTaskDescriptionHandler" />
     
     <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
         <property name="mailSender" ref="mailSender" />
