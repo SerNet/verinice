@@ -31,7 +31,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
@@ -48,7 +47,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
  */
 public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
     
-    private static transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
+    private static transient Logger log = Logger.getLogger(RiskAnalysisServiceImpl.class);
 
     /*
      * (non-Javadoc)
@@ -71,16 +70,14 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                     //use higher value of likelihood or impact:
                     int level1 = threat.getNumericProperty(PROP_THREAT_LIKELIHOOD);
                     int level2 = threat.getNumericProperty(PROP_THREAT_IMPACT);
-                    int level = level1 > level2 ? level1 : level2;
-                    if (level > threatImpact)
-                        threatImpact = level;
+                    int level = (level1 > level2) ? level1 : level2;
+                    threatImpact = (level > threatImpact) ? level : threatImpact;
                 }
                 
                 int exploitability = 0;
                 for (CnATreeElement vuln : vulns.keySet()) {
                     int level = vuln.getNumericProperty(PROP_VULNERABILITY_EXPLOITABILITY);
-                    if (level > exploitability)
-                        exploitability = level;
+                    exploitability = (level > exploitability) ? level : exploitability;
                 }
                 
                 // set values to highest found:
@@ -105,7 +102,6 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         for (CnATreeElement control : linkedControlMap.keySet()) {
             int controlEffect = control.getNumericProperty(PROP_CONTROL_EFFECT_P);
             int probAfterControl =0;
-            String optionValue = control.getEntity().getOptionValue(IControl.PROP_IMPL);
             // risk with planned controls
             probAfterControl = scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS)-controlEffect;
             scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, 
@@ -213,39 +209,45 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      * @throws CommandException 
      */
     public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA)  {
-        if (riskType == RISK_PRE_CONTROLS)
+        if (riskType == RISK_PRE_CONTROLS){
             return null; // do nothing
-
+        }
         asset = Retriever.checkRetrieveLinks(asset, true);
         
         Map<CnATreeElement, CnALink> linkedElements = CnALink.getLinkedElements(asset, Control.TYPE_ID);
         
-
+        Integer impactC0 = Integer.valueOf(impactC.intValue());
+        Integer impactI0 = Integer.valueOf(impactI.intValue());
+        Integer impactA0 = Integer.valueOf(impactA.intValue());
+        
+        
         switch (riskType) {
         case RISK_WITH_IMPLEMENTED_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
                 control = Retriever.checkRetrieveElement(control);
                 if (Control.isImplemented(control.getEntity())) {
-                    impactC -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
-                    impactI -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
-                    impactA -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
+                    impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
+                    impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
+                    impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
                 } 
             }
             break;
         case RISK_WITH_ALL_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
-                impactC -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
-                impactI -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
-                impactA -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
+                impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
+                impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
+                impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
             }
+            break;
+        default: // do nothing
             break;
         }      
         
-        impactC = (impactC < 0) ? 0 : impactC;
-        impactI = (impactI < 0) ? 0 : impactI;
-        impactA = (impactA < 0) ? 0 : impactA;
+        impactC0 = (impactC0.intValue() < 0) ? Integer.valueOf(0) : impactC0;
+        impactI0 = (impactI0.intValue() < 0) ? Integer.valueOf(0) : impactI0;
+        impactA0 = (impactA0.intValue() < 0) ? Integer.valueOf(0) : impactA0;
         
-        return new Integer[] {impactC, impactI, impactA};
+        return new Integer[] {impactC0, impactI0, impactA0};
         
     }
 
@@ -293,6 +295,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         case 'a':
             riskColour = (getRiskColor(riskA, getTolerableRisks(asset, 'a'), numOfYellowFields));
             break;
+        default: // do nothing
+            break;
         }
         return riskColour;
     }
@@ -303,7 +307,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             elmt = ServiceFactory.lookupCommandService().executeCommand(rootLoader).getElements().get(0);
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setProperties(true));
         } catch (CommandException e) {
-            LOG.error("Error while executing command");
+            log.error("Error while executing command");
         }
         if(elmt instanceof Organization){
             switch(riskType){

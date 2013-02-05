@@ -18,12 +18,10 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.hibernate.HibernateException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -94,12 +92,12 @@ import sernet.verinice.model.samt.SamtTopic;
  * @author koderman[at]sernet[dot]de
  * 
  */
-public class EditorFactory {
+public final class EditorFactory {
 	
 	private final Logger log = Logger.getLogger(EditorFactory.class);
 	
 	private static EditorFactory instance;
-	private static HashMap<Class, IEditorTypeFactory> typedFactories = new HashMap<Class, IEditorTypeFactory>();
+	private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<Class<?>, IEditorTypeFactory>();
 
 	private interface IEditorTypeFactory {
 		void openEditorFor(Object o) throws Exception;

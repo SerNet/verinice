@@ -155,13 +155,13 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     private ICommandService commandService;
 
     private TableViewer viewer;
-    private TableColumn iconColumn;
+
     private TableViewerColumn imageColumn;
-    private TableColumn fileNameColumn;
-    private TableColumn mimeTypeColumn;
-    private TableColumn textColumn;
-    private TableColumn dateColumn;
-    private TableColumn versionColumn;
+
+    
+    
+    
+    
     private TableSorter tableSorter = new TableSorter();
 
     private List<Attachment> attachmentList;
@@ -233,6 +233,15 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     }
 
     private void createTable(Composite parent) {
+        TableColumn iconColumn;
+        TableColumn fileNameColumn;
+        TableColumn mimeTypeColumn;
+        TableColumn textColumn;
+        TableColumn dateColumn;
+        TableColumn versionColumn;
+        
+        final int widthHeightPadding = 4;
+        
         viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AttachmentLabelProvider());
@@ -241,14 +250,14 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         table.addListener(SWT.MeasureItem, new Listener() {   
             public void handleEvent(Event event) {
                // height cannot be per row so simply set
-               event.height = getThumbnailSize() + 4;
+               event.height = getThumbnailSize() + widthHeightPadding;
             }
          });
            
         imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
         imageColumn.setLabelProvider(getImageCellProvider());
         if(getThumbnailSize()>0) {         
-            imageColumn.getColumn().setWidth(getThumbnailSize() + 4);          
+            imageColumn.getColumn().setWidth(getThumbnailSize() + widthHeightPadding);          
         } else {
             // dummy column
             imageColumn.getColumn().setWidth(0);
@@ -276,7 +285,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         dateColumn = new TableColumn(table, SWT.LEFT);
         dateColumn.setText(Messages.FileView_5);
         dateColumn.setWidth(120);
-        dateColumn.addSelectionListener(new SortSelectionAdapter(this, dateColumn, 4));
+        dateColumn.addSelectionListener(new SortSelectionAdapter(this, dateColumn, widthHeightPadding));
 
         versionColumn = new TableColumn(table, SWT.LEFT);
         versionColumn.setText(Messages.FileView_6);
@@ -493,10 +502,8 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 fd.setText(Messages.FileView_14);
                 fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
                 String selected = fd.open();
-                if (selected != null && selected.length() > 0) {
-                    if(!createAndOpenAttachment(selected)){
-                        return;
-                    }
+                if (selected != null && selected.length() > 0 && !createAndOpenAttachment(selected)){
+                    return;
                 }
             }
         };
@@ -749,46 +756,52 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 rc = -1;
             } else {
                 // e1 and e2 != null
-                switch (propertyIndex) {
-                case 0:
-                    String mimeType1 = a1.getMimeType();
-                    String mimeType2 = a2.getMimeType();
-                    if (mimeType1 == null || mimeType2 == null){
-                        return 0;
-                    }
-                    String image1 = mimeImageMap.get(mimeType1);
-                    String image2 = mimeImageMap.get(mimeType2);
-                    if (image1 != null && image2 != null) {
-                        rc = image1.compareTo(image2);
-                    }
-                    break;
-                case 1:
-                    rc = a1.getFileName().compareTo(a2.getFileName());
-                    break;
-                case 2:
-                    mimeType1 = a1.getMimeType();
-                    mimeType2 = a2.getMimeType();
-                    if (mimeType1 == null || mimeType2 == null){
-                        return 0;
-                    }
-                    rc = mimeType1.compareTo(mimeType2);
-                    break;
-                case 3:
-                    rc = a1.getText().compareTo(a2.getText());
-                    break;
-                case 4:
-                    rc = a1.getDate().compareTo(a2.getDate());
-                    break;
-                case 5:
-                    rc = a1.getVersion().compareTo(a2.getVersion());
-                    break;
-                default:
-                    rc = 0;
-                }
+                rc = compareNullSafe(a1, a2);
             }
             // If descending order, flip the direction
             if (direction == DESCENDING) {
                 rc = -rc;
+            }
+            return rc;
+        }
+
+        private int compareNullSafe(Attachment a1, Attachment a2) {
+            int rc = 0;
+            switch (propertyIndex) {
+            case 0:
+                String mimeType1 = a1.getMimeType();
+                String mimeType2 = a2.getMimeType();
+                if (mimeType1 == null || mimeType2 == null){
+                    return 0;
+                }
+                String image1 = mimeImageMap.get(mimeType1);
+                String image2 = mimeImageMap.get(mimeType2);
+                if (image1 != null && image2 != null) {
+                    rc = image1.compareTo(image2);
+                }
+                break;
+            case 1:
+                rc = a1.getFileName().compareTo(a2.getFileName());
+                break;
+            case 2:
+                mimeType1 = a1.getMimeType();
+                mimeType2 = a2.getMimeType();
+                if (mimeType1 == null || mimeType2 == null){
+                    return 0;
+                }
+                rc = mimeType1.compareTo(mimeType2);
+                break;
+            case 3:
+                rc = a1.getText().compareTo(a2.getText());
+                break;
+            case 4:
+                rc = a1.getDate().compareTo(a2.getDate());
+                break;
+            case 5:
+                rc = a1.getVersion().compareTo(a2.getVersion());
+                break;
+            default:
+                rc = 0;
             }
             return rc;
         }

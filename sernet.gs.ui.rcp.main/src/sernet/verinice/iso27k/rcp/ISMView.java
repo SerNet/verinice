@@ -75,8 +75,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.action.AddGroup;
@@ -148,9 +146,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 
 	protected TreeViewer viewer;
 	
-	//ISMViewContentProvider contentProvider;
-	TreeContentProvider contentProvider;
-	ElementManager elementManager;
+	private TreeContentProvider contentProvider;
+	private ElementManager elementManager;
 	
 	private DrillDownAdapter drillDownAdapter;
 
@@ -172,16 +169,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private ISMViewFilter filterAction;
 	
-	protected HideEmptyFilter hideEmptyFilter;
+	private HideEmptyFilter hideEmptyFilter;
 	
-	protected TypeParameter typeParameter;
+	private TypeParameter typeParameter;
     
 	private MetaDropAdapter metaDropAdapter;
 
-	private ControlDropPerformer controlDropAdapter;
-
-	private BSIModelViewDropListener bsiDropAdapter;
-	
 	private ShowAccessControlEditAction accessControlEditAction;
 
     private NaturalizeAction naturalizeAction;
@@ -205,10 +198,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
         elementManager = new ElementManager();
     }
 
-    private boolean checkRights(){
-	    return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
-	}
-	
 	public String getRightID(){
 	    return ActionRightIDs.ISMVIEW;
 	}
@@ -288,8 +277,9 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	        if(CnAElementFactory.isIsoModelLoaded()) {
 	            if (modelUpdateListener == null ) {
 	                // modellistener should only be created once!
-	                if (LOG.isDebugEnabled())
+	                if (LOG.isDebugEnabled()){
 	                    Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
+	                }
 	                modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
 	                CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
 	                Display.getDefault().syncExec(new Runnable(){
@@ -350,6 +340,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	}
 	
 	private void makeActions() {
+	    ControlDropPerformer controlDropAdapter;
+	    BSIModelViewDropListener bsiDropAdapter;
 		doubleClickAction = new Action() {
 			public void run() {
 				if(viewer.getSelection() instanceof IStructuredSelection) {
@@ -559,7 +551,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element==null || !(element instanceof IISO27kElement)) {
+        if(!(element instanceof IISO27kElement)) {
             return;
         }
         
