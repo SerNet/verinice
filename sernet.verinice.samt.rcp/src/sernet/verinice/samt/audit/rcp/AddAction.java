@@ -70,11 +70,11 @@ public class AddAction extends Action implements ISelectionListener {
      */
     public AddAction(String typeId, String title, GenericElementView groupView) {
         this.objectTypeId = typeId;
-        String title_ = (title != null) ? new String(title) : null;
-        if (title_ == null) {
-            title_ = AddGroup.TITLE_FOR_TYPE.get(typeId);
+        String title_0 = title;
+        if (title_0 == null) {
+            title_0 = AddGroup.TITLE_FOR_TYPE.get(typeId);
         }
-        setText(title_);
+        setText(title_0);
         setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
         this.groupView = groupView;
     }

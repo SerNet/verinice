@@ -123,7 +123,8 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     }
     
     protected void expand() {
-        viewer.expandToLevel(5);
+        final int maxExpandLvl = 5;
+        viewer.expandToLevel(maxExpandLvl);
     }
 
     /*

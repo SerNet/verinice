@@ -37,7 +37,7 @@ public class AuditPerspective implements IPerspectiveFactory {
 
     public static final String ID = "sernet.verinice.samt.audit.rcp.AuditPerspective";
     
-    public static Map<String, String> viewRightIDs = null;
+    private static final Map<String, String> viewRightIDs;
     
     static{
         viewRightIDs = new HashMap<String, String>();
@@ -55,11 +55,13 @@ public class AuditPerspective implements IPerspectiveFactory {
      */
     @Override
     public void createInitialLayout(IPageLayout layout) {
+        final float ratio70Percent = 0.7f;
+        final float ratio25Percent = 0.25f;
         String editorArea = layout.getEditorArea();
         layout.setEditorAreaVisible(true);
-        layout.addView(SimpleAuditView.ID, IPageLayout.LEFT, 0.25f, editorArea);
-        layout.addView(RelationView.ID, IPageLayout.BOTTOM, 0.7f, SimpleAuditView.ID);
-        layout.addView(FileView.ID, IPageLayout.BOTTOM, 0.7f, editorArea);
+        layout.addView(SimpleAuditView.ID, IPageLayout.LEFT, ratio25Percent, editorArea);
+        layout.addView(RelationView.ID, IPageLayout.BOTTOM, ratio70Percent, SimpleAuditView.ID);
+        layout.addView(FileView.ID, IPageLayout.BOTTOM, ratio70Percent, editorArea);
     }
 
 }

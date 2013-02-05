@@ -147,30 +147,35 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (part instanceof ElementView && !(part.equals(groupView)) && selection instanceof IStructuredSelection) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
-            if (element instanceof CnATreeElement) {
-                boolean addElementEnabled = false;
-                boolean addGroupEnabled = false;
-                String elementType = groupView.getCommandFactory().getElementTypeId();
-                String groupType = groupView.getCommandFactory().getGroupTypeId();
-                String selectedElementType = ((CnATreeElement) element).getTypeId();
-                EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
-                Set<HuiRelation> relationSet = entityType.getPossibleRelations();
-                for (HuiRelation huiRelation : relationSet) {
-                    if (huiRelation.getTo().equals(elementType)) {                          
-                        addElementEnabled = true;
-                    }
-                    if (huiRelation.getTo().equals(groupType)) {                     
-                        addGroupEnabled = true;
-                    }
-                    if(addElementEnabled && addGroupEnabled) {
-                        break;
-                    }
+            setEnablements(element);
+        }
+    }
+
+
+    private void setEnablements(Object element) {
+        if (element instanceof CnATreeElement) {
+            boolean addElementEnabled = false;
+            boolean addGroupEnabled = false;
+            String elementType = groupView.getCommandFactory().getElementTypeId();
+            String groupType = groupView.getCommandFactory().getGroupTypeId();
+            String selectedElementType = ((CnATreeElement) element).getTypeId();
+            EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
+            Set<HuiRelation> relationSet = entityType.getPossibleRelations();
+            for (HuiRelation huiRelation : relationSet) {
+                if (huiRelation.getTo().equals(elementType)) {                          
+                    addElementEnabled = true;
                 }
-                addElementAction.setEnabled(addElementEnabled);
-                addGroupAction.setEnabled(addGroupEnabled); 
-                setEnabled(addElementEnabled||addGroupEnabled);
-                action.setEnabled(isEnabled());
+                if (huiRelation.getTo().equals(groupType)) {                     
+                    addGroupEnabled = true;
+                }
+                if(addElementEnabled && addGroupEnabled) {
+                    break;
+                }
             }
+            addElementAction.setEnabled(addElementEnabled);
+            addGroupAction.setEnabled(addGroupEnabled); 
+            setEnabled(addElementEnabled||addGroupEnabled);
+            action.setEnabled(isEnabled());
         }
     }
 

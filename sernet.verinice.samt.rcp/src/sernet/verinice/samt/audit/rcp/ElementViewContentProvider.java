@@ -100,15 +100,7 @@ public class ElementViewContentProvider implements ITreeContentProvider {
         }
 
 		RetrieveCnATreeElement command = null;
-		if(el instanceof ISO27KModel) {
-			command = RetrieveCnATreeElement.getISO27KModelISMViewInstance(el.getDbId());
-		} else if(el instanceof Organization) {
-			command = RetrieveCnATreeElement.getOrganizationISMViewInstance(el.getDbId());
-		} else if( el instanceof IISO27kGroup ) {
-			command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), el.getTypeId());
-		} else if( el instanceof CnATreeElement) {
-			command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getTypeId());
-		}
+		command = generateRetrieveCommand(el);
 
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		CnATreeElement newElement = command.getElement();
@@ -137,6 +129,20 @@ public class ElementViewContentProvider implements ITreeContentProvider {
 		}
 		return newElement;
 	}
+
+    private RetrieveCnATreeElement generateRetrieveCommand(CnATreeElement el) {
+        RetrieveCnATreeElement command = null;
+        if(el instanceof ISO27KModel) {
+			command = RetrieveCnATreeElement.getISO27KModelISMViewInstance(el.getDbId());
+		} else if(el instanceof Organization) {
+			command = RetrieveCnATreeElement.getOrganizationISMViewInstance(el.getDbId());
+		} else if( el instanceof IISO27kGroup ) {
+			command = RetrieveCnATreeElement.getGroupISMViewInstance(el.getDbId(), el.getTypeId());
+		} else if( el instanceof CnATreeElement) {
+			command = RetrieveCnATreeElement.getElementISMViewInstance(el.getDbId(), el.getTypeId());
+		}
+        return command;
+    }
 	
 	public CnATreeElement getCachedObject(CnATreeElement o) {
 		return cache.getCachedObject(o);

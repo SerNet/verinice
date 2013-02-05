@@ -56,26 +56,30 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 				boolean addDecorator = retrieveChildren(group);
 				if(addDecorator) {
 					String state = maturityService.getImplementationState(group);
-					if(IControl.IMPLEMENTED_NO.equals(state)) {
-						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_NO));
-					}
-					if(IControl.IMPLEMENTED_PARTLY.equals(state)) {
-						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_PARTLY));
-					}
-					if(IControl.IMPLEMENTED_YES.equals(state)) {
-						decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
-					}
-					if(securityFigure!=null) {
-					    StringBuilder sb = new StringBuilder();
-					    sb.append(" [").append(getPercent(securityFigure)).append(" %") .append("]");
-					    decoration.addSuffix(sb.toString());
-					}
+					addOverlayAndSuffix(decoration, securityFigure, state);
 				}
 			}		
 		} catch(CommandException t) {
 			LOG.error("Error while loading maturity value", t);
 		}
 	}
+
+    private void addOverlayAndSuffix(IDecoration decoration, Double securityFigure, String state) {
+        if(IControl.IMPLEMENTED_NO.equals(state)) {
+        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_NO));
+        }
+        if(IControl.IMPLEMENTED_PARTLY.equals(state)) {
+        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_PARTLY));
+        }
+        if(IControl.IMPLEMENTED_YES.equals(state)) {
+        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
+        }
+        if(securityFigure!=null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(" [").append(getPercent(securityFigure)).append(" %") .append("]");
+            decoration.addSuffix(sb.toString());
+        }
+    }
 	
 	/**
 	 * Retrieves all children of a ControlGroup.
@@ -107,7 +111,9 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 	}
 	
 	private Double getPercent(Double d) {
-	    return Math.round(d*10000.0) / 100.0;
+	    final double factor = 10000.0;
+	    final double divisor = 100.0;
+	    return Math.round(d*factor) / divisor;
 	}
 	
 	private ICommandService getCommandService() {

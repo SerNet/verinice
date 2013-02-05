@@ -114,9 +114,9 @@ public abstract class ElementView extends ViewPart {
     
     private ICommandService commandService;
 
-    protected Integer selectedId;
+    private Integer selectedId;
     
-    protected Object selection;
+    private Object selection;
     
     protected CnATreeElement selectedGroup;
     
@@ -267,52 +267,21 @@ public abstract class ElementView extends ViewPart {
     
     protected ISO27KModelViewUpdate createISO27KModelViewUpdate() {
         return new ISO27KModelViewUpdate(viewer,cache) {
-            /* (non-Javadoc)
-             * @see sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
-             */
             public void linkAdded(CnALink link) {
                 reload();
                 // Open the editors registered before in AddAction
                 synchronized (editElementSet) {
-                    Set<CnATreeElement> workSet =  new HashSet<CnATreeElement>(editElementSet);
-                    for (CnATreeElement element : workSet) {
-                        if(element.equals(link.getDependant())) {
-                            EditorFactory.getInstance().openEditor(link.getDependant());
-                            editElementSet.remove(element);
-                        }
-                        if(element.equals(link.getDependency())) {
-                            EditorFactory.getInstance().openEditor(link.getDependency());
-                            editElementSet.remove(element);
-                        }
-                    }
-                    if(editElementSet.size()>0) {
-                        LOG.warn("Two links added at the same time");
-                    }
+                    openEqualLinkEditors(link);
                 }
             }
-            
-            /* (non-Javadoc)
-             * @see sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate#databaseChildRemoved(sernet.verinice.model.common.CnATreeElement)
-             */
             @Override
             public void databaseChildRemoved(CnATreeElement child) {              
                 super.databaseChildRemoved(child);
                 reload();
             }
-            /**
-             * 
-             */
-            /* (non-Javadoc)
-             * @see sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate#databaseChildAdded(sernet.verinice.model.common.CnATreeElement)
-             */
             @Override
             public void databaseChildAdded(CnATreeElement child) {
-                // reload the parent, put is to the cache
-                RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
-                CnATreeElement parent = Retriever.retrieveElement(child.getParent(), ri);
-                cache.clear(parent);      
-                cache.addObject(parent);
-                child.setParentAndScope(parent);
+                child = reloadParent(child);
                 super.databaseChildAdded(child);
             }
          };
@@ -340,34 +309,38 @@ public abstract class ElementView extends ViewPart {
             if(element instanceof CnATreeElement) {
                 CnATreeElement treeElement = (CnATreeElement) element;
                 boolean sourceIsThisView = this.equals(sourcePart);
-                if(!sourceIsThisView) {
-                    // check if treeElement has a relation to elements in this view
-                    if(checkRelations(treeElement)) {   
-                        loadElements(treeElement);
-                        setElementToLink(treeElement);
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Selected link element, Type: " + treeElement.getObjectType() + ", name: " + treeElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
-                        } 
-                    }
-                    if(treeElement!=null && treeElement.getTypeId().equals(Audit.TYPE_ID)) {
-                        setSelectedAudit((Audit)treeElement);
-                    }
-                    if(treeElement!=null && treeElement.getTypeId().equals(Organization.TYPE_ID)) {
-                        setSelectedOrganization((Organization)treeElement);
-                    }
-                } else {         
-                    if(element instanceof Group ) {
-                        CnATreeElement selectedElement = (CnATreeElement) element;
-                        setSelectedGroup(selectedElement);                
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
-                        }
-                    } else {
-                        setSelectedGroup(null);                
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
-                        }
-                    }
+                setPageSelection(element, treeElement, sourceIsThisView);
+            }
+        }
+    }
+
+    private void setPageSelection(Object element, CnATreeElement treeElement, boolean sourceIsThisView) {
+        if(!sourceIsThisView) {
+            // check if treeElement has a relation to elements in this view
+            if(checkRelations(treeElement)) {   
+                loadElements(treeElement);
+                setElementToLink(treeElement);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Selected link element, Type: " + treeElement.getObjectType() + ", name: " + treeElement.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                } 
+            }
+            if(treeElement!=null && treeElement.getTypeId().equals(Audit.TYPE_ID)) {
+                setSelectedAudit((Audit)treeElement);
+            }
+            if(treeElement!=null && treeElement.getTypeId().equals(Organization.TYPE_ID)) {
+                setSelectedOrganization((Organization)treeElement);
+            }
+        } else {         
+            if(element instanceof Group ) {
+                CnATreeElement selectedElement = (CnATreeElement) element;
+                setSelectedGroup(selectedElement);                
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            } else {
+                setSelectedGroup(null);                
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Removing selected group, Type: " + selectedGroup.getObjectType() + ", name: " + selectedGroup.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
@@ -580,6 +553,33 @@ public abstract class ElementView extends ViewPart {
 
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
+    }
+
+    private CnATreeElement reloadParent(CnATreeElement child) {
+        // reload the parent, put is to the cache
+        RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
+        CnATreeElement parent = Retriever.retrieveElement(child.getParent(), ri);
+        cache.clear(parent);      
+        cache.addObject(parent);
+        child.setParentAndScope(parent);
+        return child;
+    }
+
+    private void openEqualLinkEditors(CnALink link) {
+        Set<CnATreeElement> workSet =  new HashSet<CnATreeElement>(editElementSet);
+        for (CnATreeElement element : workSet) {
+            if(element.equals(link.getDependant())) {
+                EditorFactory.getInstance().openEditor(link.getDependant());
+                editElementSet.remove(element);
+            }
+            if(element.equals(link.getDependency())) {
+                EditorFactory.getInstance().openEditor(link.getDependency());
+                editElementSet.remove(element);
+            }
+        }
+        if(editElementSet.size()>0) {
+            LOG.warn("Two links added at the same time");
+        }
     }
 
 }
