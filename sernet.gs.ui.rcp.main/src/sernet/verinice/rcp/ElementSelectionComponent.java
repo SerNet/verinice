@@ -64,6 +64,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementsForScope;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
@@ -85,8 +86,8 @@ public class ElementSelectionComponent {
     private List<CnATreeElement> elementList;
     private CnATreeElement inputElmt;
     private String entityType;
-    protected boolean scopeOnly;
-    protected boolean showScopeCheckbox;
+    private boolean scopeOnly;
+    private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
     
@@ -102,22 +103,23 @@ public class ElementSelectionComponent {
     }
     
     public void init() {
+        final int formAttachmentDefaultOffset = 5;
         container.setLayout(new FormLayout());
              
         Label label1 = new Label(container, SWT.NULL);
         label1.setText(Messages.CnATreeElementSelectionDialog_3);
 
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, 5);
-        formData.left = new FormAttachment(0, 5);
+        formData.top = new FormAttachment(0, formAttachmentDefaultOffset);
+        formData.left = new FormAttachment(0, formAttachmentDefaultOffset);
         label1.setLayoutData(formData);
         label1.pack();
         
         text = new Text(container, SWT.BORDER);
         FormData formData2 = new FormData();
-        formData2.top = new FormAttachment(0, 5);
-        formData2.left = new FormAttachment(label1, 5);
-        formData2.right = new FormAttachment(100, -5);
+        formData2.top = new FormAttachment(0, formAttachmentDefaultOffset);
+        formData2.left = new FormAttachment(label1, formAttachmentDefaultOffset);
+        formData2.right = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
         text.setLayoutData(formData2);
         text.addKeyListener(new KeyListener() {
             @Override
@@ -146,8 +148,8 @@ public class ElementSelectionComponent {
             };
             checkbox = SWTElementFactory.generateCheckboxButton(container, Messages.CnATreeElementSelectionDialog_4, true, listener);
             FormData checkboxFD = new FormData();
-            checkboxFD.top = new FormAttachment(text, 5);
-            checkboxFD.left = new FormAttachment(0, 5);
+            checkboxFD.top = new FormAttachment(text, formAttachmentDefaultOffset);
+            checkboxFD.left = new FormAttachment(0, formAttachmentDefaultOffset);
             checkbox.setLayoutData(checkboxFD);
             checkbox.pack();
         }
@@ -155,13 +157,13 @@ public class ElementSelectionComponent {
         viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
         FormData formData3 = new FormData();
         if(isShowScopeCheckbox()) {
-            formData3.top = new FormAttachment(checkbox, 5);
+            formData3.top = new FormAttachment(checkbox, formAttachmentDefaultOffset);
         } else {
-            formData3.top = new FormAttachment(text, 5);
+            formData3.top = new FormAttachment(text, formAttachmentDefaultOffset);
         }
-        formData3.left = new FormAttachment(0, 5);
-        formData3.right = new FormAttachment(100, -5);
-        formData3.bottom = new FormAttachment(100, -5);
+        formData3.left = new FormAttachment(0, formAttachmentDefaultOffset);
+        formData3.right = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
+        formData3.bottom = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
         viewer.getTable().setLayoutData(formData3);
         viewer.getTable().setHeaderVisible(false);
         viewer.getTable().setLinesVisible(true);
@@ -237,7 +239,6 @@ public class ElementSelectionComponent {
         temp.add(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6));
         viewer.setInput(temp);
         
-        
         WorkspaceJob job = new WorkspaceJob(Messages.CnATreeElementSelectionDialog_7) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -245,17 +246,7 @@ public class ElementSelectionComponent {
 
                 try {
                     monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
-
-                    if (scopeOnly && inputElmt!=null) {
-                        LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        loadAndSelectElements(selected, command.getElements());
-                        
-                    } else {
-                        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        loadAndSelectElements(selected, command.getElements());
-                    }                 
+                    scopeAndElmntDpntElmntSlctn(selected);                 
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
@@ -346,5 +337,18 @@ public class ElementSelectionComponent {
             }
         });
         elementList = list;
+    }
+
+    private void scopeAndElmntDpntElmntSlctn(final CnATreeElement selected) throws CommandException {
+        if (scopeOnly && inputElmt!=null) {
+            LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            loadAndSelectElements(selected, command.getElements());
+            
+        } else {
+            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            loadAndSelectElements(selected, command.getElements());
+        }
     }
 }

@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -57,7 +54,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -83,20 +79,20 @@ public class ProfileDialog extends TitleAreaDialog {
     private TableViewer tableSelected;
     private TableViewer table;
     
-    Button addAllButton;
-    Button removeAllButton;
+    private Button addAllButton;
+    private Button removeAllButton;
     
-    Auth auth;
-    String profileName;
-    String profileNameOld;
-    Profile profile;  
+    private Auth auth;
+    private String profileName;
+    private String profileNameOld;
+    private Profile profile;  
     private List<Action> selectedActions = new ArrayList<Action>(); 
     private List<Action> selectedActionsOld = new ArrayList<Action>();   
     private List<Action> unselectedActions;
     private List<String> allActions;
     
 
-    IRightsServiceClient rightsService;
+    private IRightsServiceClient rightsService;
 
     public ProfileDialog(Shell parent) {
         super(parent);
@@ -247,14 +243,14 @@ public class ProfileDialog extends TitleAreaDialog {
         table.remove(unselectedActions);
         tableSelected.remove(selectedActions);
         if(profileName!=null) {
-            for (Profile profile :  auth.getProfiles().getProfile()) {
-                if(profileName.equals(profile.getName())) {
-                    this.profile = profile;
-                    selectedActions = profile.getAction();
+            for (Profile prf :  auth.getProfiles().getProfile()) {
+                if(profileName.equals(prf.getName())) {
+                    this.profile = prf;
+                    selectedActions = prf.getAction();
                     selectedActionsOld = new ArrayList<Action>(selectedActions);
-                    textName.setText(profile.getName());
-                    profileNameOld = profile.getName();
-                    translated.setText(getRightService().getMessage(profile.getName()));
+                    textName.setText(prf.getName());
+                    profileNameOld = prf.getName();
+                    translated.setText(getRightService().getMessage(prf.getName()));
                     break;
                 }
             }
@@ -276,8 +272,8 @@ public class ProfileDialog extends TitleAreaDialog {
     
     private void setUnselected() {
         Map<String, String> mapSelected = new HashMap<String, String>(allActions.size());
-        for (Action profile : selectedActions) {
-            mapSelected.put(profile.getId(), profile.getId());
+        for (Action action : selectedActions) {
+            mapSelected.put(action.getId(), action.getId());
         }
         unselectedActions.clear();
         for (String name : allActions) {
@@ -341,14 +337,14 @@ public class ProfileDialog extends TitleAreaDialog {
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        TableViewer table0 = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        table.getControl().setLayoutData(gd);
+        table0.getControl().setLayoutData(gd);
 
-        table.setUseHashlookup(true);
+        table0.setUseHashlookup(true);
 
-        return table;
+        return table0;
     }
     
     private void createButtons(Composite parent) {
@@ -525,7 +521,7 @@ public class ProfileDialog extends TitleAreaDialog {
         private static final int ASCENDING = 0;
         private static final int DESCENDING = 1;
         private int direction = ASCENDING;
-        Collator collator = Collator.getInstance();
+        private Collator collator = Collator.getInstance();
 
         public ActionTableComparator() {
             this.propertyIndex = 0;

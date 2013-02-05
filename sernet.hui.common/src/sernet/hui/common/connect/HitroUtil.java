@@ -148,7 +148,7 @@ public class HitroUtil {
 	 */
 	static class DelegatingHUITypeFactory extends HUITypeFactory {
 		
-		private static final Logger LOG_ = Logger.getLogger(DelegatingHUITypeFactory.class);
+		private static final Logger LOG_0 = Logger.getLogger(DelegatingHUITypeFactory.class);
 		
 		// dont't use typeFactory directly, use getTypeFactory() instead !
 		private HUITypeFactory typeFactory;
@@ -174,7 +174,7 @@ public class HitroUtil {
 					
 					resolverFactory.createResolvers(typeFactory);
 				} catch (DBException e) {
-					LOG_.warn("Unable to reach document: " + url);
+					LOG_0.error("Unable to reach document: " + url, e);
 					
 					// TODO rschuster: Provide a message which is informative
 					// to the user.

@@ -245,11 +245,11 @@ public class Query implements IQuery
          * @return
          */
         private List<Integer> reduceToIDs(List<CnATreeElement> input) {
-            List<Integer> result_ = new ArrayList<Integer>();
+            List<Integer> result_0 = new ArrayList<Integer>();
             for (CnATreeElement elmt : input) {
-                result_.add(elmt.getDbId());
+                result_0.add(elmt.getDbId());
             }
-            return result_;
+            return result_0;
         }
 
         public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
