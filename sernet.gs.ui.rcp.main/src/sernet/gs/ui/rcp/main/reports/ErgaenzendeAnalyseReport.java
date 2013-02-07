@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.Properties;
 
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
@@ -47,8 +45,8 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 		super(reportProperties);
 	}
 
-	private ArrayList<CnATreeElement> items;
-	private ArrayList<CnATreeElement> categories;
+	private List<CnATreeElement> items;
+	private List<CnATreeElement> categories;
 	
 	
 	public String getTitle() {
@@ -61,16 +59,18 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 						&& !(child instanceof Person)
 						&& analyseNeeded(child)) {
 					items.add(child);
-					if (! categories.contains(child.getParent()))
+					if (! categories.contains(child.getParent())){
 						categories.add(child.getParent());
+					}
 				}
 				getStrukturElements(child);
 		}
 	}
 
 	private boolean analyseNeeded(CnATreeElement child) {
-		if (child.isAdditionalMgmtReviewNeeded())
+		if (child.isAdditionalMgmtReviewNeeded()){
 			return true;
+		}
 		
 		if (child instanceof NetzKomponente) {
 			// include all critical connections:
@@ -92,9 +92,10 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 		return false;
 	}
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		
@@ -102,18 +103,20 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 		return items;
 	}
 
-	private ArrayList<CnATreeElement> getItems(CnATreeElement category) {
-		if (items == null)
+	private List<CnATreeElement> getItems(CnATreeElement category) {
+		if (items == null){
 			getItems();
+		}
 		ArrayList<CnATreeElement> categoryItems = new ArrayList<CnATreeElement>();
 		for (CnATreeElement item : items) {
-			if (item.getParent().equals(category))
+			if (item.getParent().equals(category)){
 				categoryItems.add(item);
+			}
 		}
 		return categoryItems;
 	}
 	
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		
 		AllCategories: for (CnATreeElement category : categories) {
@@ -131,9 +134,9 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 			
 			AllItems: for (CnATreeElement child : getItems(category)) {
 				List<String> columns = shownColumns.get(child.getEntity().getEntityType());
-				if (columns.size() == 0)
+				if (columns.size() == 0){
 					break AllItems;
-				
+				}
 				if (!wroteHeader) {
 					categoryRows.add(new PropertyHeadersRow(
 							child,

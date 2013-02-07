@@ -42,7 +42,7 @@ public class ISMTypedItemReport extends BsiReport
 		super(reportProperties);
 	}
 
-	private ArrayList<CnATreeElement> items;
+	private List<CnATreeElement> items;
 	private Organization organization;
 	private String entityTypeId;
 	
@@ -62,29 +62,30 @@ public class ISMTypedItemReport extends BsiReport
 	 * @see sernet.gs.ui.rcp.main.reports.BsiReport#isDefaultColumn(java.lang.String)
 	 */
 	@Override
-	public boolean isDefaultColumn(String property_id) {
+	public boolean isDefaultColumn(String propertyId) {
 	    // include titles and abbreviations as default columns for all elements:
-	    if (property_id.indexOf("_name") >-1 ||
-	            property_id.indexOf("_abbr") >-1 ) {
+	    if (propertyId.indexOf("_name") >-1 ||
+	            propertyId.indexOf("_abbr") >-1 ) {
 	        return true;
 	    }
 	    
 	    // include state for controls:
-	    if (property_id.indexOf("_implemented") >-1 
-             || property_id.indexOf(Control.PROP_MATURITY) >-1 
-	        || property_id.indexOf(Control.PROP_WEIGHT1) >-1 
-	        || property_id.indexOf(Control.PROP_WEIGHT2) >-1 
-	        || property_id.indexOf(Control.PROP_THRESHOLD1) >-1 
-	         || property_id.indexOf(Control.PROP_THRESHOLD2) >-1 ) {
+	    if (propertyId.indexOf("_implemented") >-1 
+             || propertyId.indexOf(Control.PROP_MATURITY) >-1 
+	        || propertyId.indexOf(Control.PROP_WEIGHT1) >-1 
+	        || propertyId.indexOf(Control.PROP_WEIGHT2) >-1 
+	        || propertyId.indexOf(Control.PROP_THRESHOLD1) >-1 
+	         || propertyId.indexOf(Control.PROP_THRESHOLD2) >-1 ) {
             return true;
         }
 	    
 	    return false;
 	}
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		
 		Organization org = getOrganization();
@@ -111,22 +112,24 @@ public class ISMTypedItemReport extends BsiReport
      * @param elmt
      */
     private void addAllSubitems(CnATreeElement elmt) {
-        if (!items.contains(elmt))
+        if (!items.contains(elmt)){
             items.add(elmt);
+        }
         for (CnATreeElement child: elmt.getChildren()) {
             addAllSubitems(child);
         }
     }
 
-    public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+    public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		List<String> columns = new ArrayList<String>(0);
 		int maxColumns = 0;
 		for (CnATreeElement child : items) {
 		    if (!(child instanceof IISO27kGroup)) {
                 columns = shownColumns.get(child.getEntity().getEntityType());
-                if (columns.size()>maxColumns)
+                if (columns.size()>maxColumns){
                     maxColumns = columns.size();
+                }
                 rows.add(new PropertyHeadersRow(
                         child,
                         columns,
@@ -150,8 +153,9 @@ public class ISMTypedItemReport extends BsiReport
 		    if (child instanceof Control) {
 		        Control control = (Control) child;
 		        columns = shownColumns.get(child.getEntity().getEntityType());
-		        if (columns.size()>maxColumns)
+		        if (columns.size()>maxColumns){
                     maxColumns = columns.size();
+		        }
 		        ControlMaturityRow row = new ControlMaturityRow(
 		                control, 
 		                columns, 

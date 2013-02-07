@@ -25,7 +25,6 @@ import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
@@ -44,13 +43,14 @@ public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport 
 		// TODO Auto-generated constructor stub
 	}
 
-	private ArrayList<CnATreeElement> items;
+	private List<CnATreeElement> items;
 
-	private ArrayList<CnATreeElement> categories;
+	private List<CnATreeElement> categories;
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		
@@ -63,7 +63,6 @@ public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport 
 		for (CnATreeElement kategorie : verbund.getChildren()) {
 			if (kategorie instanceof AnwendungenKategorie) {
 				for (CnATreeElement anwendung : kategorie.getChildren()) {
-					//items.add(anwendung);
 					categories.add(anwendung);
 					getDatenschutzElements(anwendung);
 				}
@@ -79,18 +78,20 @@ public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport 
 		}
 	}
 
-	private ArrayList<CnATreeElement> getItems(CnATreeElement category) {
-		if (items == null)
+	private List<CnATreeElement> getItems(CnATreeElement category) {
+		if (items == null){
 			getItems();
+		}
 		ArrayList<CnATreeElement> categoryItems = new ArrayList<CnATreeElement>();
 		for (CnATreeElement item : items) {
-			if (item.getParent().equals(category))
+			if (item.getParent().equals(category)){
 				categoryItems.add(item);
+			}
 		}
 		return categoryItems;
 	}
 
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 
 		AllCategories: for (CnATreeElement anwendung : categories) {
@@ -101,9 +102,9 @@ public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport 
 				ArrayList<IOOTableRow> categoryRows = new ArrayList<IOOTableRow>();
 				List<String> columns = shownColumns.get(dsElement.getEntity()
 						.getEntityType());
-				if (columns.size() == 0)
+				if (columns.size() == 0){
 					continue AllItems;
-
+				}
 				categoryRows.add(new SimpleRow(IOOTableRow.ROW_STYLE_SUBHEADER,
 						dsElement.getTitle()));
 
@@ -119,7 +120,7 @@ public class VerfahrensUebersichtReport extends BsiReport implements IBSIReport 
 		return rows;
 	}
 
-	private void addProperties(ArrayList<IOOTableRow> categoryRows,
+	private void addProperties(List<IOOTableRow> categoryRows,
 			CnATreeElement dsElement, List<String> columns) {
 		for (String column : columns) {
 			

@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.service;
 
 
-public class AuthenticationHelper {
+public final class AuthenticationHelper {
 
 	private String[] currentRoles = null;
 	private static AuthenticationHelper instance = new AuthenticationHelper();
@@ -38,13 +38,14 @@ public class AuthenticationHelper {
 		}
 		
 		// roles might still be uninitialized (authservice can also return null):
-		if (currentRoles == null)
+		if (currentRoles == null){
 			return false;
-		
+		}
 		for (String role : allowedRoles) {
 			for (String userRole : currentRoles) {
-				if (role.equals(userRole))
+				if (role.equals(userRole)){
 					return true;
+				}
 			}
 		}
 		return false;

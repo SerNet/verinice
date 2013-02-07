@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -115,40 +114,52 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 
 	        if(!useScopeID || !hasScopeID(root)){
 
-	            //if typeId is that of the root object, just return it itself. else look for children:
-	            ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
-	            if (this.typeId.equals(root.getTypeId())) {
-	                this.elements = items;
-	                this.elements.add(root);
-	            }
-	            else {
-	                elements = getElements(typeId, root);
-	            }
+	            loadElementsRecursive(root);
 
 
 	        } else {
 	            elements = new ArrayList<CnATreeElement>(0);
-	            if(root instanceof Organization || root instanceof ITVerbund){
-	                try {
-	                    LoadCnAElementByScopeId scopeCommand = new LoadCnAElementByScopeId(rootElement, typeId);
-	                    scopeCommand = getCommandService().executeCommand(scopeCommand);
-	                    elements.addAll(scopeCommand.getResults());
-	                } catch (CommandException e) {
-	                    log.error("Error while retrieving elements via scopeid", e);
-	                }
-	            }
+	            loadElementsUsingScopeId(root);
 	        }
 	        if(elements != null){
-	            Collections.sort(elements, new Comparator<CnATreeElement>() {
-	                @Override
-	                public int compare(CnATreeElement o1, CnATreeElement o2) {
-	                    NumericStringComparator comparator = new NumericStringComparator();
-	                    return comparator.compare(o1.getTitle(), o2.getTitle());
-	                }
-	            });
+	            sortResult();
 	        }
 	    }
 	}
+
+    private void loadElementsRecursive(CnATreeElement root) {
+        //if typeId is that of the root object, just return it itself. else look for children:
+        ArrayList<CnATreeElement> items = new ArrayList<CnATreeElement>();
+        if (this.typeId.equals(root.getTypeId())) {
+            this.elements = items;
+            this.elements.add(root);
+        }
+        else {
+            elements = getElements(typeId, root);
+        }
+    }
+
+    private void loadElementsUsingScopeId(CnATreeElement root) {
+        if(root instanceof Organization || root instanceof ITVerbund){
+            try {
+                LoadCnAElementByScopeId scopeCommand = new LoadCnAElementByScopeId(rootElement, typeId);
+                scopeCommand = getCommandService().executeCommand(scopeCommand);
+                elements.addAll(scopeCommand.getResults());
+            } catch (CommandException e) {
+                log.error("Error while retrieving elements via scopeid", e);
+            }
+        }
+    }
+
+    private void sortResult() {
+        Collections.sort(elements, new Comparator<CnATreeElement>() {
+            @Override
+            public int compare(CnATreeElement o1, CnATreeElement o2) {
+                NumericStringComparator comparator = new NumericStringComparator();
+                return comparator.compare(o1.getTitle(), o2.getTitle());
+            }
+        });
+    }
 
 	
 	private boolean hasScopeID(CnATreeElement root){
@@ -182,10 +193,11 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                 }
             // gs elements that can contain children
             } else if(child instanceof IBSIStrukturKategorie){ 
-                if(isGSKategorieAndCanContain((IBSIStrukturKategorie)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
+                if(isGSKategorieAndCanContain((IBSIStrukturKategorie)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter)){
                     children.addAll(getElements(typeFilter, child));
-            } else if(child instanceof IBSIStrukturElement){
-                if(isGSElementAndCanContain((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))
+                }
+            } else if(child instanceof IBSIStrukturElement && 
+                    (isGSElementAndCanContain((IBSIStrukturElement)child, typeFilter) || Arrays.asList(specialGSClasses).contains(typeFilter))){
                     children.addAll(getElements(typeFilter, child));
             } 
         }

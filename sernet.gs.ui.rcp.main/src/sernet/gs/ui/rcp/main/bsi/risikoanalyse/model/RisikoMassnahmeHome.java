@@ -30,7 +30,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.service.commands.SaveElement;
 
-public class RisikoMassnahmeHome {
+public final class RisikoMassnahmeHome {
 	
 	private static RisikoMassnahmeHome instance;
 	private ICommandService commandService;
@@ -39,25 +39,26 @@ public class RisikoMassnahmeHome {
 		commandService = ServiceFactory.lookupCommandService();
 	}
 	
-	public synchronized static RisikoMassnahmeHome getInstance() {
-		if (instance == null)
+	public static synchronized RisikoMassnahmeHome getInstance() {
+		if (instance == null){
 			instance = new RisikoMassnahmeHome();
+		}
 		return instance;
 	}
 	
 	
-	public RisikoMassnahme save(RisikoMassnahme mn) throws Exception {
+	public RisikoMassnahme save(RisikoMassnahme mn) throws CommandException {
 		SaveElement command = new SaveElement(mn);
 		command = commandService.executeCommand(command);
 		return (RisikoMassnahme) command.getElement();
 	}
 	
-	public void remove(RisikoMassnahme mn) throws Exception {
+	public void remove(RisikoMassnahme mn) throws CommandException {
 		RemoveGenericElement command = new RemoveGenericElement(mn);
 		commandService.executeCommand(command);
 	}
 	
-	public List<RisikoMassnahme> loadAll() throws Exception {
+	public List<RisikoMassnahme> loadAll() throws CommandException {
 		LoadGenericElementByType<RisikoMassnahme> command 
 			= new LoadGenericElementByType<RisikoMassnahme>(RisikoMassnahme.class);
 		command = commandService.executeCommand(command);

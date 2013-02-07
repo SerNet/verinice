@@ -88,10 +88,10 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 	 * 
 	 */
 	static class Configuration {
-		KeyStore keyStore;
-		PasswordHandler passwordHandler;
-		int maxAttempts;
-		String certificateAlias;
+		protected KeyStore keyStore;
+		protected PasswordHandler passwordHandler;
+		protected int maxAttempts;
+		private String certificateAlias;
 	}
 	
 	/** Helper interface for retrieving the actual password.
@@ -295,26 +295,28 @@ abstract class DelegatingKeyStore extends KeyStoreSpi {
 		// If there is no password handler there is nothing we can do in case
 		// the password is wrong/missing/whatever.
 		// Handling this case here, simplifies later code.
-		if (passwordHandler == null)
+		if (passwordHandler == null){
 			return engineGetKeyImpl(alias, password);
-		
+		}
 		PasswordSession session = new PasswordSession();
 		int attempt = 0;
+		char[] password0 = (password != null) ? password.clone() : null ;
 		while (attempt < maxAttempts) {
 			// First attempt might happen with a default password.
 			try {
-				return engineGetKeyImpl(alias, password);
+				return engineGetKeyImpl(alias, password0);
 			} catch (UnrecoverableKeyException e) {
-				session.wasWrong = (password != null);
+				session.wasWrong = (password0 != null);
 				// If a password was provided, count this as an attempt.
 				// Otherwise not.
-				if (password != null)
+				if (password0 != null){
 					attempt++;
+				}
 				passwordHandler.handle(session);
 				if (session.userGaveUp()) {
 					throw new UnrecoverableKeyException("User voluntarily gave up supplying a password.");
 				}
-				password = session.getPassword();
+				password0 = session.getPassword();
 			} finally {
 				session.clearPassword();
 			}

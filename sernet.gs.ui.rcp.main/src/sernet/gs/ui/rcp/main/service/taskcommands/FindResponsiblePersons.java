@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
@@ -64,8 +63,9 @@ public class FindResponsiblePersons extends GenericCommand {
 		for (Iterator iterator = persons.iterator(); iterator.hasNext();) {
 			Person person = (Person) iterator.next();
 			names.append(person.getFullName());
-			if (iterator.hasNext())
+			if (iterator.hasNext()){
 				names.append(", "); //$NON-NLS-1$
+			}
 		}
 		return names.toString();
 	}
@@ -84,9 +84,9 @@ public class FindResponsiblePersons extends GenericCommand {
 			// try to find someone responsible by role:
 			List<Person> foundPersons = getLinkedPersonsByRoles(umsetzung, field);
 			
-			if (foundPersons == null || foundPersons.size()==0)
+			if (foundPersons == null || foundPersons.size()==0){
 				unresolvedItem.getItem().setUmsetzungDurch("");
-			else {
+			} else {
 				unresolvedItem.getItem().setUmsetzungDurch(getNames(foundPersons));
 			}
 			
@@ -120,14 +120,15 @@ public class FindResponsiblePersons extends GenericCommand {
 	}
 	
 	private void findLinkedPersons(Set<Person> result, CnATreeElement currentElement, Set<Property> rolesToSearch ) {
-		Integer id = null;
+		final String STD_ERR_MSG = "findLinkedPersons - currentElement:";
+	    Integer id = null;
 		if (log.isDebugEnabled()) {
 			StringBuffer sb = new StringBuffer();
 			for (Property role : rolesToSearch) {
 				sb.append(role.getPropertyValue()).append(", ");
 			}
 			id = (currentElement!=null) ? currentElement.getDbId() : -1;
-			log.debug("findLinkedPersons - currentElement:" + id + ", rollen:" + sb.toString());
+			log.debug(STD_ERR_MSG + id + ", rollen:" + sb.toString());
 		}
 		
 		allRoles: for (Property role : rolesToSearch) {
@@ -143,13 +144,13 @@ public class FindResponsiblePersons extends GenericCommand {
 							Person person = getPerson(link.getDependency().getDbId());
 								
 							if (log.isDebugEnabled()) {
-								log.debug("findLinkedPersons - currentElement:" + id + ", person found: " + person.getDbId());
+								log.debug(STD_ERR_MSG + id + ", person found: " + person.getDbId());
 							}
 							if (person.hasRole(role)) {
 								// we found someone for this role, continue with next role:
 								subResult.add(person);
 								if (log.isDebugEnabled()) {
-									log.debug("findLinkedPersons - currentElement:" + id + ", role match: " + role.getPropertyValue() + ", person: " + person.getDbId());
+									log.debug(STD_ERR_MSG + id + ", role match: " + role.getPropertyValue() + ", person: " + person.getDbId());
 								}
 								cacheRolePerson.put(key, subResult);
 								result.addAll(subResult);
@@ -159,7 +160,7 @@ public class FindResponsiblePersons extends GenericCommand {
 					}
 				}
 				if (log.isDebugEnabled()) {
-					log.debug("findLinkedPersons - currentElement:" + id + ", no role found" );
+					log.debug(STD_ERR_MSG + id + ", no role found" );
 				}
 				// no matching person here, try further up the tree for this role:
 				Set<Property> justOneRole = new HashSet<Property>(1);
@@ -219,25 +220,33 @@ public class FindResponsiblePersons extends GenericCommand {
 		}
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj){
 				return true;
-			if (obj == null)
+			}
+			if (obj == null){
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()){
 				return false;
+			}
 			CacheRolePersonKey other = (CacheRolePersonKey) obj;
-			if (!getOuterType().equals(other.getOuterType()))
+			if (!getOuterType().equals(other.getOuterType())){
 				return false;
+			}
 			if (elementDbId == null) {
-				if (other.elementDbId != null)
+				if (other.elementDbId != null){
 					return false;
-			} else if (!elementDbId.equals(other.elementDbId))
+				}
+			} else if (!elementDbId.equals(other.elementDbId)){
 				return false;
+			}
 			if (role == null) {
-				if (other.role != null)
+				if (other.role != null){
 					return false;
-			} else if (!role.equals(other.role))
+				}
+			} else if (!role.equals(other.role)){
 				return false;
+			}
 			return true;
 		}
 		private FindResponsiblePersons getOuterType() {

@@ -12,6 +12,7 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.ui.internal.net.auth.NetAuthenticator;
@@ -52,7 +53,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 @SuppressWarnings("restriction")
 public class VeriniceAuthenticator extends NetAuthenticator {
 	
-	private HashMap<String, LinkedList<X509Certificate>> certMap = new HashMap<String, LinkedList<X509Certificate>>(); 
+	private Map<String, LinkedList<X509Certificate>> certMap = new HashMap<String, LinkedList<X509Certificate>>(); 
 
 	@Override
 	protected PasswordAuthentication getPasswordAuthentication() {
@@ -123,9 +124,9 @@ public class VeriniceAuthenticator extends NetAuthenticator {
 			certMap.put(host, certs);
 		}
 		
-		if (certs.isEmpty())
+		if (certs.isEmpty()){
 			return null;
-		
+		}
 		return certs.removeFirst();
 	}
 
@@ -152,8 +153,9 @@ public class VeriniceAuthenticator extends NetAuthenticator {
 			
 			// Only certificates that denote endpoints (as opposed to CAs) should be considered.
 			// (Usually a smartcard contains just one such client certificate).
-			if (cert.getBasicConstraints() == -1)
+			if (cert.getBasicConstraints() == -1){
 				certs.add(cert);
+			}
 		}
 		
 		return certs;

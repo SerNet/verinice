@@ -36,14 +36,15 @@ public class BSISearchFilter extends TextFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (regex==null)
+		if (regex==null){
 			return true;
-		
+		}
 		if (element instanceof Baustein) {
 			Baustein bs = (Baustein) element;
 			Matcher matcher = regex.matcher(bs.getTitel());
-			if (matcher.find())
+			if (matcher.find()){
 				return true;
+			}
 			// show baustein if one child matches:
 			return checkMassnahmen(bs) || checkGefaehrdungen(bs);
 		}
@@ -67,8 +68,9 @@ public class BSISearchFilter extends TextFilter {
 		List<Massnahme> massnahmen = bs.getMassnahmen();
 		for (Massnahme mn : massnahmen) {
 			Matcher matcher = regex.matcher(mn.getTitel());
-			if (matcher.find())
+			if (matcher.find()){
 				return true;
+			}
 		}
 		return false;
 	}
@@ -77,8 +79,9 @@ public class BSISearchFilter extends TextFilter {
 		List<Gefaehrdung> gefaehrdungen= bs.getGefaehrdungen();
 		for (Gefaehrdung gefaehrdung : gefaehrdungen) {
 			Matcher m = regex.matcher(gefaehrdung.getTitel());
-			if (m.find())
+			if (m.find()){
 				return true;
+			}
 		}
 		return false;
 	}

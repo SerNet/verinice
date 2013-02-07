@@ -172,7 +172,7 @@ public class BSIElementEditor extends EditorPart {
         if (isModelModified) {
 
             monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
-            save(true);
+            save();
            
             // Refresh other views in background
             Job job = new RefreshJob("Refresh application...");
@@ -192,9 +192,9 @@ public class BSIElementEditor extends EditorPart {
             allEditors: for (IEditorReference editorReference : editorReferences) {
                 IEditorInput input;
                 try {
-                    if (editorReference.isPinned() || editorReference.isDirty())
+                    if (editorReference.isPinned() || editorReference.isDirty()){
                         continue allEditors;
-
+                    }
                     input = editorReference.getEditorInput();
                     if (input instanceof BSIElementEditorInput) {
                         BSIElementEditorInput bsiInput = (BSIElementEditorInput) input;
@@ -214,7 +214,7 @@ public class BSIElementEditor extends EditorPart {
         }
     }
 
-    private void save(boolean completeRefresh) {
+    private void save() {
         if (!getIsWriteAllowed()) {
             ExceptionUtil.log(new IllegalStateException(), Messages.BSIElementEditor_3);
             return;
@@ -251,8 +251,9 @@ public class BSIElementEditor extends EditorPart {
         boolean wasDirty = isDirty();
         isModelModified = true;
 
-        if (!wasDirty)
+        if (!wasDirty){
             firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
     }
 
     /**
@@ -264,8 +265,8 @@ public class BSIElementEditor extends EditorPart {
             return new String[] {};
         }
 
-        tags = tags.replaceAll("\\s+", "");
-        return tags.split(",");
+        String tags0 = tags.replaceAll("\\s+", "");
+        return tags0.split(",");
     }
 
     /**
@@ -303,14 +304,6 @@ public class BSIElementEditor extends EditorPart {
         return icon;
     }
 
-    private Image getCustomImage(CnATreeElement element) {
-        Image image = null;
-        if(element.getIconPath()!=null) {
-            image = ImageCache.getInstance().getCustomImage(element.getIconPath());
-        }
-        return image;
-    }
-    
     @Override
     public boolean isDirty() {
         return isModelModified;
@@ -359,8 +352,9 @@ public class BSIElementEditor extends EditorPart {
         setIcon();
         
         // if opened the first time, save initialized entity:
-        if (isDirty())
-            save(false);
+        if (isDirty()){
+            save();
+        }
     }
     
     private boolean showLinkMaker() {
@@ -383,7 +377,6 @@ public class BSIElementEditor extends EditorPart {
 
     @Override
     public void setFocus() {
-        // huiComposite.setFocus();
         huiComposite.resetInitialFocus();
     }
 

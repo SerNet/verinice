@@ -38,15 +38,16 @@ public class ZielobjektPropertyFilter extends StringPropertyFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof IMassnahmeUmsetzung))
+		if (!(element instanceof IMassnahmeUmsetzung)){
 			return true;
-		
+		}
 		
 		
 		String value = ((IMassnahmeUmsetzung)element).getParentTitle();
 		Matcher matcher = super.regex.matcher(value);
-		if (matcher.find())
+		if (matcher.find()){
 			return true;
+		}
 		return false;
 	}
 

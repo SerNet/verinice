@@ -174,30 +174,32 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         Map<CnATreeElement, CnALink> threats = CnALink.getLinkedElements(scenario, Threat.TYPE_ID);
         Map<CnATreeElement, CnALink> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
         
-        if (threats.size()==0) 
+        if (threats.size()==0) {
                threatTitle = "";
-        else {
+        } else {
             // scenario may be linked to more than one threat, add all to description:
             // (for risk calculation, the highest threat will be used, see RiskAnalysisServiceImpl.java)
             StringBuilder sb = new StringBuilder();
             for (Iterator iterator = threats.keySet().iterator(); iterator.hasNext();) {
                 CnATreeElement t = (CnATreeElement) iterator.next();
                 sb.append(t.getTitle());
-                if (iterator.hasNext())
+                if (iterator.hasNext()){
                     sb.append(", ");
+                }
             }
             threatTitle = sb.toString();
         }
         
-        if (vulns.size()==0)
+        if (vulns.size()==0){
             vulnTitle = "";
-        else {
+        } else {
             StringBuilder sb = new StringBuilder();
             for (Iterator iterator = vulns.keySet().iterator(); iterator.hasNext();) {
                 CnATreeElement t = (CnATreeElement) iterator.next();
                 sb.append(t.getTitle());
-                if (iterator.hasNext())
+                if (iterator.hasNext()){
                     sb.append(", ");
+                }
             }
             vulnTitle = sb.toString();
         }

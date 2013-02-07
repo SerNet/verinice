@@ -44,17 +44,18 @@ public class ObjektLebenszyklusPropertyFilter extends StringPropertyFilter {
 		if (!(element instanceof CnATreeElement)
 				|| element instanceof ITVerbund
 				|| !(element instanceof IBSIStrukturElement)
-				|| element instanceof IBSIStrukturKategorie)
+				|| element instanceof IBSIStrukturKategorie){
 			return true;
-		
+		}
 		
 		
 		Entity entity = ((CnATreeElement)element).getEntity();
 		String propertyTypeId = ((CnATreeElement)element).getTypeId() + "_status";
 		String value = entity.getSimpleValue(propertyTypeId);
 		Matcher matcher = regex.matcher(value);
-		if (matcher.find())
+		if (matcher.find()){
 			return true;
+		}
 		return false;
 	}
 

@@ -49,7 +49,7 @@ public class StrukturanalyseReport extends BsiReport
 
 	// this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
 	// TODO akoderman change marker interface to object composition: add adaptable interface for strukturelements to model classes
-	public static final String[] strukturElementTypes = new String[] {
+	private static final String[] strukturElementTypes = new String[] {
 		Anwendung.TYPE_ID,
 		BSIModel.TYPE_ID,
 		Client.TYPE_ID,
@@ -67,8 +67,8 @@ public class StrukturanalyseReport extends BsiReport
 		super(reportProperties);
 	}
 
-	private ArrayList<CnATreeElement> items;
-	private ArrayList<CnATreeElement> categories;
+	private List<CnATreeElement> items;
+	private List<CnATreeElement> categories;
 	
 	
 	public String getTitle() {
@@ -80,8 +80,9 @@ public class StrukturanalyseReport extends BsiReport
 			
 			if ( isStrukturElement(child) ) {
 				items.add(child);
-				if (! categories.contains(child.getParent()))
+				if (! categories.contains(child.getParent())){
 					categories.add(child.getParent());
+				}
 			}
 			getStrukturElements(child);
 		}
@@ -93,15 +94,17 @@ public class StrukturanalyseReport extends BsiReport
 	 */
 	private boolean isStrukturElement(CnATreeElement child) {
 		for (String strukturType : strukturElementTypes) {
-			if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType))
+			if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
 				return true;
+			}
 		}
 		return false;
 	}
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 		
@@ -128,18 +131,20 @@ public class StrukturanalyseReport extends BsiReport
 		});
 	}
 
-	private ArrayList<CnATreeElement> getItems(CnATreeElement category) {
-		if (items == null)
+	private List<CnATreeElement> getItems(CnATreeElement category) {
+		if (items == null){
 			getItems();
+		}
 		ArrayList<CnATreeElement> categoryItems = new ArrayList<CnATreeElement>();
 		for (CnATreeElement item : items) {
-			if (item.getParent().equals(category))
+			if (item.getParent().equals(category)){
 				categoryItems.add(item);
+			}
 		}
 		return categoryItems;
 	}
 	
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		
 		AllCategories: for (CnATreeElement category : categories) {
@@ -157,9 +162,9 @@ public class StrukturanalyseReport extends BsiReport
 			
 			AllItems: for (CnATreeElement child : getItems(category)) {
 				List<String> columns = shownColumns.get(child.getEntity().getEntityType());
-				if (columns.size() == 0)
+				if (columns.size() == 0){
 					break AllItems;
-				
+				}
 				if (!wroteHeader) {
 					categoryRows.add(new PropertyHeadersRow(
 							child,

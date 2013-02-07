@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,11 +51,12 @@ public class MassnahmenSiegelFilter extends ViewerFilter {
 		boolean active = siegelPattern != null;
 		if (newPattern != null && newPattern.length > 0) {
 			siegelPattern = new HashSet<String>();
-			for (String type : newPattern) 
+			for (String type : newPattern) {
 				siegelPattern.add(type);
-			if (active)
+			}
+			if (active){
 				viewer.refresh();
-			else {
+			} else {
 				viewer.addFilter(this);
 				active = true;
 			}
@@ -73,8 +73,9 @@ public class MassnahmenSiegelFilter extends ViewerFilter {
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (!(element instanceof IMassnahmeUmsetzung
-				|| element instanceof Massnahme))
+				|| element instanceof Massnahme)){
 			return true;
+		}
 		
 		if (element instanceof IMassnahmeUmsetzung) {
 			IMassnahmeUmsetzung mn = (IMassnahmeUmsetzung) element;
@@ -84,8 +85,4 @@ public class MassnahmenSiegelFilter extends ViewerFilter {
 		Massnahme mn = (Massnahme) element;
 		return siegelPattern.contains(Character.toString(mn.getSiegelstufe()));
 	}
-	
-//	public boolean isFilterProperty(Object element, String property) {
-//		return true;
-//	}
 }

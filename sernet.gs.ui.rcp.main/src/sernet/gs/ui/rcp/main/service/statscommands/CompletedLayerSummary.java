@@ -41,7 +41,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 @SuppressWarnings("serial")
 public class CompletedLayerSummary extends MassnahmenSummary {
 
-	private static final Logger log = Logger.getLogger(CompletedLayerSummary.class);
+	private static final Logger LOG = Logger.getLogger(CompletedLayerSummary.class);
 	
 	private HibernateCallback hcb = new Callback();
 	
@@ -67,8 +67,8 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 			
 			Baustein baustein = getBaustein(chapter);
 			if (baustein == null) {
-			    if (log.isDebugEnabled()) {
-			        log.debug("Kein Baustein gefunden für chapter: " + chapter);
+			    if (LOG.isDebugEnabled()) {
+			        LOG.debug("Kein Baustein gefunden für chapter: " + chapter);
                 }			
 				continue;
 			}
@@ -76,9 +76,9 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 			String schicht = Integer.toString(baustein.getSchicht());
 
 			Integer saved = result.get(schicht);
-			if (saved == null)
+			if (saved == null){
 				result.put(schicht, count);
-			else {
+			} else {
 				result.put(schicht, saved + count);
 			}
 		}
@@ -128,9 +128,9 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 					.setString("muptype", MassnahmenUmsetzung.P_UMSETZUNG)
 					.setParameterList("mupvalues", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
 			
-			if (log.isDebugEnabled())
-				log.debug("generated query:" + query.getQueryString());
-					
+			if (LOG.isDebugEnabled()){
+				LOG.debug("generated query:" + query.getQueryString());
+			}
 			return query.list();
 		}
 		
@@ -143,8 +143,9 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 			this.bausteine = command.getBausteine();
 		}
 		for (Baustein baustein : bausteine) {
-			if (baustein.getId().equals(kapitel))
+			if (baustein.getId().equals(kapitel)){
 				return baustein;
+			}
 		}
 		return null;
 		

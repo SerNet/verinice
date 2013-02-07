@@ -39,7 +39,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 
 	private CnATreeElement cnaElement;
 	private List<Baustein> alleBausteine;
-	private ArrayList<GefaehrdungsUmsetzung> associatedGefaehrdungen;
+	private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
 
 	public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
 		this.cnaElement = cnaElement;
@@ -53,14 +53,14 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 		
 		Set<CnATreeElement> children = cnaElement.getChildren();
 		for (CnATreeElement cnATreeElement : children) {
-			if (!(cnATreeElement instanceof BausteinUmsetzung))
+			if (!(cnATreeElement instanceof BausteinUmsetzung)){
 				continue;
-
+			}
 			BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
 			Baustein baustein = findBausteinForId(bausteinUmsetzung.getKapitel());
-			if (baustein == null)
+			if (baustein == null){
 				continue;
-
+			}
 			for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
 				if (!GefaehrdungsUtil.listContainsById(associatedGefaehrdungen, gefaehrdung)) {
 					associatedGefaehrdungen.add(
@@ -85,8 +85,9 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 		
 		if(alleBausteine != null){ 
     		for (Baustein baustein : alleBausteine) {
-    			if (baustein.getId().equals(id))
+    			if (baustein.getId().equals(id)){
     				return baustein;
+    			}
     		}
 		}
 		return null;
@@ -97,7 +98,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 		cnaElement = null;
 	}
 
-	public ArrayList<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
+	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
 		return associatedGefaehrdungen;
 	}
 

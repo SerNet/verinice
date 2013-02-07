@@ -32,7 +32,7 @@ public class ComboModelObject<T> implements Comparable<ComboModelObject<T>> {
 
 	private String label;
 	
-	Collator collator = Collator.getInstance();
+	private Collator collator = Collator.getInstance();
 	
 	public ComboModelObject(T object, String label) {
 		super();
@@ -66,19 +66,24 @@ public class ComboModelObject<T> implements Comparable<ComboModelObject<T>> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
+		}
 		// FIXME ak this will not work when comparing proxies: 
-		if (getClass() != obj.getClass())
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		ComboModelObject other = (ComboModelObject) obj;
 		if (object == null) {
-			if (other.object != null)
+			if (other.object != null){
 				return false;
-		} else if (!object.equals(other.object))
+			}
+		} else if (!object.equals(other.object)){
 			return false;
+		}
 		return true;
 	}
 

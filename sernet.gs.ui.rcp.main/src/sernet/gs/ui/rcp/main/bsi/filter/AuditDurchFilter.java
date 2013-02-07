@@ -32,15 +32,17 @@ public class AuditDurchFilter extends UmsetzungDurchFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof IMassnahmeUmsetzung) || regex==null)
+		if (!(element instanceof IMassnahmeUmsetzung) || regex==null){
 			return true;
-		
+		}
 		IMassnahmeUmsetzung mnums = (IMassnahmeUmsetzung)element;
-		if(mnums.getRevisionDurch()==null) 
+		if(mnums.getRevisionDurch()==null){ 
 		    return false;
+		}
 		Matcher matcher = regex.matcher(mnums.getRevisionDurch());
-		if (matcher.find())
+		if (matcher.find()){
 			return true;
+		}
 		return false;
 	}
 }

@@ -82,7 +82,7 @@ import sernet.verinice.model.samt.SamtTopic;
  * @author koderman[at]sernet[dot]de
  *
  */
-public class ImageCache {
+public final class ImageCache {
 
     private static final Logger LOG = Logger.getLogger(ImageCache.class);
     
@@ -247,7 +247,6 @@ public class ImageCache {
 	public static final String ISO27K_ASSETGROUP        = "sweetie-verinice/png/assetgroup.png";
     public static final String ISO27K_THREAT 			= "sweetie-verinice/png/16-lightening.png";
 	public static final String ISO27K_VULNERABILITY 	= "sweetie-verinice/png/16-shield-blue-broken.png";
-//	public static final String ISO27K_INCIDENT_SCENARIO = "sweetie-verinice/png/16-arrow-branch-bgr.png";
 	public static final String ISO27K_INCIDENT_SCENARIO = "dialog-warning.png";
 	public static final String ISO27K_INCIDENT 			= "sweetie-verinice/png/16-arrow-incident-red.png";
 	public static final String ISO27K_REQUIREMENT 		= "sweetie-verinice/png/16-paper-gavel-alt.png";
@@ -296,10 +295,10 @@ public class ImageCache {
 	private final Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
 
 	// for BSI elements: map of <element type> : <icon name> 
-	private static final HashMap<String, String> BSI_ICON_MAP;
+	private static final Map<String, String> BSI_ICON_MAP;
 	
 	// for ISO27k elements: map of <element type> : <icon name> 
-	private static final HashMap<String, String> ISO27K_ICON_MAP;
+	private static final Map<String, String> ISO27K_ICON_MAP;
 	
 	private static Bundle bundle;
 
@@ -390,8 +389,9 @@ public class ImageCache {
 
 	public Image getObjectTypeImage(String typeId) {
 		Image image = getISO27kTypeImage(typeId);
-		if (image == getImage(ImageCache.UNKNOWN))
+		if (image == getImage(ImageCache.UNKNOWN)){
 			image = getBSITypeImage(typeId);
+		}
 		return image;
 	}
 	
@@ -437,8 +437,9 @@ public class ImageCache {
 
 
 	public Image getImage(ImageDescriptor id) {
-		if (id == null)
+		if (id == null){
 			return null;
+		}
 		Image image = imageMap.get(id);
 		if (image == null) {
 			image = createImage(id);
@@ -476,21 +477,21 @@ public class ImageCache {
 	 * @return
 	 */
 	public Image getControlImplementationImage(String implemented) {
-		if (IControl.IMPLEMENTED_NOTEDITED.equals(implemented))
+		if (IControl.IMPLEMENTED_NOTEDITED.equals(implemented)){
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
-		
-		if (IControl.IMPLEMENTED_NA.equals(implemented))
+		}
+		if (IControl.IMPLEMENTED_NA.equals(implemented)){
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-		
-		if (IControl.IMPLEMENTED_NO.equals(implemented))
+		}
+		if (IControl.IMPLEMENTED_NO.equals(implemented)){
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
-		
-		if (IControl.IMPLEMENTED_PARTLY.equals(implemented))
+		}
+		if (IControl.IMPLEMENTED_PARTLY.equals(implemented)){
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-		
-		if (IControl.IMPLEMENTED_YES.equals(implemented))
+		}
+		if (IControl.IMPLEMENTED_YES.equals(implemented)){
 			return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-		
+		}
 		// else simply return notedited:
 		return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
 	}

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Properties;
 
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -44,27 +43,31 @@ public class MassnahmenTodoReport extends BsiReport
 		super(reportProperties);
 	}
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		categories = new ArrayList<CnATreeElement>();
 
 		ITVerbund verbund = getItverbund();
 		items.add(verbund);
-		if (! categories.contains(verbund.getParent()))
+		if (! categories.contains(verbund.getParent())){
 			categories.add(verbund.getParent());
+		}
 		getStrukturElements(verbund);
 		return items;
 	}
 	
-	protected ArrayList<CnATreeElement> getItems(CnATreeElement category) {
-		if (items == null)
+	protected List<CnATreeElement> getItems(CnATreeElement category) {
+		if (items == null){
 			getItems();
+		}
 		ArrayList<CnATreeElement> categoryItems = new ArrayList<CnATreeElement>();
 		for (CnATreeElement item : items) {
-			if (item.getParent().equals(category))
+			if (item.getParent().equals(category)){
 				categoryItems.add(item);
+			}
 		}
 		return categoryItems;
 	}
@@ -72,14 +75,15 @@ public class MassnahmenTodoReport extends BsiReport
 		for (CnATreeElement child : parent.getChildren()) {
 				if (! (child instanceof IDatenschutzElement)) {
 					items.add(child);
-					if (! categories.contains(child.getParent()))
+					if (! categories.contains(child.getParent())){
 						categories.add(child.getParent());
+					}
 				}
 				getStrukturElements(child);
 		}
 	}
-	private ArrayList<CnATreeElement> items;
-	private ArrayList<CnATreeElement> categories;
+	private List<CnATreeElement> items;
+	private List<CnATreeElement> categories;
 	
 	private String umgesetzt = MassnahmenUmsetzung.P_UMSETZUNG_JA + 
 		MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH;
@@ -88,21 +92,13 @@ public class MassnahmenTodoReport extends BsiReport
 		return "[BSI] Realisierungsplan";
 	}
 	
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		
 		AllCategories: for (CnATreeElement category : categories) {
 			ArrayList<IOOTableRow> categoryRows = new ArrayList<IOOTableRow>();
 			
 			AllItems: for (CnATreeElement child : getItems(category)) {
-//				if ( child instanceof IBSIStrukturElement) {
-//					List<String> columns = shownColumns.get(child.getEntity().getEntityType());
-//					
-//					categoryRows.add(new PropertiesRow(
-//							child,
-//							columns,
-//							IOOTableRow.ROW_STYLE_SUBHEADER));
-//				} else
 				
 				if (child instanceof BausteinUmsetzung) {
 					List<String> columns = shownColumns.get(child.getEntity().getEntityType());
@@ -136,17 +132,17 @@ public class MassnahmenTodoReport extends BsiReport
 	}
 	
 	private void addMassnahmen(PropertySelection shownColumns, 
-			ArrayList<IOOTableRow> categoryRows,
+			List<IOOTableRow> categoryRows,
 			BausteinUmsetzung baustein) {
-		 if (!baustein.getChildren().iterator().hasNext())
+		 if (!baustein.getChildren().iterator().hasNext()){
 			 return;
-		 
+		 }
 		MassnahmenUmsetzung massnahme 
 			= (MassnahmenUmsetzung) baustein.getChildren().iterator().next();
 		List<String> columns = shownColumns.get(massnahme.getEntity().getEntityType());
-		if (columns.size() == 0)
+		if (columns.size() == 0){
 			return;
-		
+		}
 		categoryRows.add(new PropertyHeadersRow(
 				massnahme, 
 				columns, 

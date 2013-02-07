@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,7 +35,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class PrefilledRow implements IOOTableRow, ICnaItemRow {
 
     private IOOTableRow row;
-    ArrayList<Object> columns;
+    List<Object> columns;
 
     public PrefilledRow(ControlMaturityRow originalRow) {
         this.row = originalRow;
@@ -54,10 +55,12 @@ public class PrefilledRow implements IOOTableRow, ICnaItemRow {
     
     
     private Object getCellByType(IOOTableRow row, int col) {
-        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING)
+        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_STRING){
             return row.getCellAsString(col);
-        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_DOUBLE)
+        }
+        if (row.getCellType(col) == IOOTableRow.CELL_TYPE_DOUBLE){
             return row.getCellAsDouble(col);
+        }
         
         return "";
     }

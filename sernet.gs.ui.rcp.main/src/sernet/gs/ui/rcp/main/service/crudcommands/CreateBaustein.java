@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,13 +28,11 @@ import sernet.gs.model.Massnahme;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -88,9 +85,9 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			IBaseDao<CnATreeElement, Integer> containerDao = getDaoFactory().getDAO(typeId);
 			CnATreeElement container = containerDao.findById(dbId);
 			
-			if (container.containsBausteinUmsetzung(baustein.getId()))
+			if (container.containsBausteinUmsetzung(baustein.getId())){
 				return;
-			
+			}
 			
 			MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
 

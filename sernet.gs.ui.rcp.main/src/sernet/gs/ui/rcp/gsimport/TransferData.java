@@ -43,6 +43,7 @@ import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
@@ -72,7 +73,7 @@ public class TransferData {
 	private GSVampire vampire;
 	private boolean importRollen;
 	private List<MbDringlichkeitTxt> dringlichkeiten;
-	private HashMap<String, String> drgMap;
+	private Map<String, String> drgMap;
 	
 	  public TransferData(GSVampire vampire, boolean importRollen) {
 	        this.vampire = vampire;
@@ -82,7 +83,7 @@ public class TransferData {
 	        
 	    }
 
-	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws Exception {
+	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws CommandException {
 		NZielobjekt source = result.zielobjekt;
 		itverbund.setTitel(source.getName());
 		CnAElementHome.getInstance().update(itverbund);
@@ -143,9 +144,9 @@ public class TransferData {
 	}
 
 	private String translateDringlichkeit(MbDringlichkeit mbDringlichkeit) {
-		if (mbDringlichkeit == null)
+		if (mbDringlichkeit == null){
 			return "";
-		
+		}
 		if (dringlichkeiten == null) {
 			dringlichkeiten = vampire.findDringlichkeitAll();
 		}
@@ -194,11 +195,12 @@ public class TransferData {
 			List<MbRolleTxt> rollen = vampire.findRollenByZielobjekt(result.zielobjekt);
 			for (MbRolleTxt rolle : rollen) {
 				boolean success = element.addRole(rolle.getName());
-				if (!success)
+				if (!success){
 					Logger.getLogger(this.getClass()).debug("Rolle konnte nicht übertragen werden: " + 
 							rolle.getName());
-				else
+				} else {
 					Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName() + " für Benutzer " + element.getTitle());
+				}
 			}
 		}
 		
@@ -242,12 +244,15 @@ public class TransferData {
 	}
 
 	public int translateSchutzbedarf(String name) {
-		if (name.equals("normal"))
+		if (name.equals("normal")){
 			return Schutzbedarf.NORMAL;
-		if (name.equals("hoch"))
+		}
+		if (name.equals("hoch")){
 			return Schutzbedarf.HOCH;
-		if (name.equals("sehr hoch"))
+		}
+		if (name.equals("sehr hoch")){
 			return Schutzbedarf.SEHRHOCH;
+		}
 		return Schutzbedarf.UNDEF;
 	}
 
@@ -293,9 +298,10 @@ public class TransferData {
         Pattern pattern = Pattern.compile("(\\d+)\\.0*(\\d+)");
 
         Matcher match = pattern.matcher(mbBaust.getNr());
-        if (match.matches())
+        if (match.matches()){
             return "B " + match.group(1) + "."
                     + Integer.parseInt(match.group(2));
+        }
         return "";
     }
 	
@@ -338,9 +344,8 @@ public class TransferData {
         RTFEditorKit kit = new RTFEditorKit();
         Document document = kit.createDefaultDocument();
         kit.read(reader, document, 0);
-
-        String plainText = document.getText(0, document.getLength());
-        return plainText;
+        // return plaintext
+        return document.getText(0, document.getLength());
     }
 
     /**

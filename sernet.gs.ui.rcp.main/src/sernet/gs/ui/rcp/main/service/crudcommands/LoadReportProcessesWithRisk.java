@@ -52,7 +52,7 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
 
 	private String typeId = Process.TYPE_ID;
     private Integer rootElement;
-    private ArrayList<CnATreeElement> elements;
+    private List<CnATreeElement> elements;
 
     private boolean resultInjectedFromCache = false;
 
@@ -135,12 +135,15 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                     List<CnALink> links = command2.getLinkList();
                     
                     for (CnALink link : links) {
-                    	if(link.getRiskConfidentiality() != null)
+                    	if(link.getRiskConfidentiality() != null){
                     		totalRisk += link.getRiskConfidentiality();
-                    	if(link.getRiskIntegrity() != null)
+                    	}
+                    	if(link.getRiskIntegrity() != null){
                     		totalRisk += link.getRiskIntegrity();
-                    	if(link.getRiskAvailability() != null)
+                    	}
+                    	if(link.getRiskAvailability() != null){
                     		totalRisk += link.getRiskAvailability();
+                    	}
                     }
                 }
                 

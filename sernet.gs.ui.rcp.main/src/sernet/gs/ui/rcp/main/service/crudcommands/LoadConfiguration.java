@@ -62,13 +62,14 @@ public class LoadConfiguration extends GenericCommand {
 		List<Configuration> queryResult;
 		if (person == null) {
 			queryResult = (List<Configuration>) dao.findByQuery(QUERY_NULL, new Object[] {});
-		} else
+		} else {
 			queryResult = (List<Configuration>) dao.findByQuery(QUERY, new Object[] {person.getUuid()});
-		
+		}
 		if (queryResult != null && queryResult.size()>0) {
 			configuration = (Configuration) queryResult.get(0);
-			if (hydrateElement)
+			if (hydrateElement){
 				HydratorUtil.hydrateElement(dao, configuration, false);
+			}
 		}
 		
 	}

@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.verinice.model.common.CnATreeElement;
@@ -31,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface IBSIReport extends Serializable {
 	
-	public static String PROPERTY_FILE = "reports.properties";
+	String PROPERTY_FILE = "reports.properties";
 	
 	/**
 	 * Get all items to include in the report as flat list,
@@ -39,13 +39,13 @@ public interface IBSIReport extends Serializable {
 	 * 
 	 * @return
 	 */
-	public ArrayList<CnATreeElement> getItems();
+	List<CnATreeElement> getItems();
 
 	
 	/**
 	 * Get the title for this report. 
 	 */
-	public String getTitle();
+	String getTitle();
 	
 	/**
 	 * Get the complete report as data source for OpenOffice Calc export.
@@ -53,7 +53,7 @@ public interface IBSIReport extends Serializable {
 	 * @param shownPropertyTypes
 	 * @return
 	 */
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownPropertyTypes);
+	List<IOOTableRow> getReport(PropertySelection shownPropertyTypes);
 		
 	/**
 	 * Which columns should be included in this report?
@@ -61,7 +61,7 @@ public interface IBSIReport extends Serializable {
 	 * @param property_id
 	 * @return
 	 */
-	public boolean isDefaultColumn(String property_id);
+	boolean isDefaultColumn(String property_id);
 
 
 	

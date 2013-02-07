@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.filter;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,11 +59,12 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 		boolean active = umsetzungPattern != null;
 		if (newPattern != null && newPattern.length > 0) {
 			umsetzungPattern = new HashSet<String>();
-			for (String type : newPattern) 
+			for (String type : newPattern){
 				umsetzungPattern.add(type);
-			if (active)
+			}
+			if (active){
 				viewer.refresh();
-			else {
+			} else {
 				viewer.addFilter(this);
 				active = true;
 			}
@@ -80,9 +80,9 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 	
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (!(element instanceof IMassnahmeUmsetzung))
+		if (!(element instanceof IMassnahmeUmsetzung)){
 			return true;
-		
+		}
 		IMassnahmeUmsetzung mn = (IMassnahmeUmsetzung) element;
 		return umsetzungPattern.contains(mn.getUmsetzung());
 	}

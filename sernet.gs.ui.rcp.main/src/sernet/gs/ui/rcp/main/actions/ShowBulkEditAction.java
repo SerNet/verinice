@@ -82,7 +82,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
     // FIXME server: bulk edit does not notify changes on self
 
-    private static transient final Logger LOG = Logger.getLogger(ShowBulkEditAction.class);
+    private static final transient Logger LOG = Logger.getLogger(ShowBulkEditAction.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
@@ -208,11 +208,12 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         }
         
         Entity tmpEntity = null;
-        if(dialog instanceof BulkEditDialog)
+        if(dialog instanceof BulkEditDialog){
             tmpEntity = ((BulkEditDialog)dialog).getEntity();
-        if(dialog instanceof PersonBulkEditDialog)
+        }
+        if(dialog instanceof PersonBulkEditDialog){
             tmpEntity = ((PersonBulkEditDialog)dialog).getEntity();
-        
+        }
         final Entity dialogEntity = tmpEntity;
         final Dialog chosenDialog = dialog;
         
@@ -351,15 +352,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     }
                 }
 
-                if (elmt == null) {
+                if (elmt == null || elmt.getEntity() == null || !elmt.getEntity().getEntityType().equals(type)) {
                     setEnabled(false);
                     return;
                 }
 
-                if (elmt.getEntity() == null || !elmt.getEntity().getEntityType().equals(type)) {
-                    setEnabled(false);
-                    return;
-                }
                 if(checkRights()){
                     setEnabled(true);
                 }
@@ -369,11 +366,8 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         setEnabled(false);
     }
 
-    private void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
-    }
 
-    private void editLocally(ArrayList<CnATreeElement> selectedElements, Entity dialogEntity, IProgressMonitor monitor) {
+    private void editLocally(List<CnATreeElement> selectedElements, Entity dialogEntity, IProgressMonitor monitor) {
         monitor.setTaskName(Messages.ShowBulkEditAction_9);
         monitor.beginTask(Messages.ShowBulkEditAction_10, selectedElements.size() + 1);
 

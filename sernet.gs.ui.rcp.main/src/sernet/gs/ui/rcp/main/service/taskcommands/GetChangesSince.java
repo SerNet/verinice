@@ -28,7 +28,6 @@ import java.util.Map;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -71,10 +70,11 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 	 * @throws IllegalArgumentException when stationId is null.
 	 */
 	public GetChangesSince(Date lastChecked, String stationId) {
-		if (stationId == null)
+		if (stationId == null){
 			throw new IllegalArgumentException("Station id must not be null.");
+		}
 		this.stationId = stationId;
-		this.lastChecked = lastChecked;
+		this.lastChecked = (lastChecked != null) ? (Date)lastChecked.clone() : null;
 	}
 	
 	/* (non-Javadoc)
@@ -130,16 +130,17 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
 	 * @throws CommandException 
 	 */
 	private void hydrateChangedItems(List<ChangeLogEntry> entries2) throws CommandException {
-		if (entries2.size()<1)
+		if (entries2.size()<1){
 			return;
-		
+		}
 		List<Integer> dbIdList = new ArrayList<Integer>(entries2.size());
 		changedElements = new HashMap<Integer, CnATreeElement>(entries2.size());
 		
 		// get IDs of changed items:
 		for (ChangeLogEntry logEntry : entries2) {
-			if (logEntry.getElementId() != null)
+			if (logEntry.getElementId() != null){
 				dbIdList.add(logEntry.getElementId());
+			}
 		}
 		
 		List<CnATreeElement> elements = loadElementsWithDao(dbIdList);
@@ -166,21 +167,8 @@ public class GetChangesSince extends GenericCommand implements INoAccessControl 
         return elements;
     }
 
-    /**
-     * @param dbIdList
-     * @return
-     * @throws CommandException
-     */
-    private List<CnATreeElement> loadElements(List<Integer> dbIdList) throws CommandException {
-        Integer[] dbIdArray = (Integer[]) dbIdList.toArray(new Integer[dbIdList.size()]);
-		LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(dbIdArray);
-		command = getCommandService().executeCommand(command);	
-		List<CnATreeElement> elements = command.getElements();
-        return elements;
-    }
-
 	public Date getLastChecked() {
-		return lastChecked;
+		return (lastChecked != null) ? (Date)lastChecked.clone() : null;
 	}
 
 	public List<ChangeLogEntry> getEntries() {

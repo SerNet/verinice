@@ -63,23 +63,24 @@ public class PasteBsiModelViewAction extends Action {
 	@Override
 	public void run() {
 		final List items = CnPItems.getItems();
-		if ( items.size() == 0 )
+		if ( items.size() == 0 ){
 			return;
-		
+		}
 		// insert Bausteine (modules):
 		if ((items.get(0) instanceof Baustein)) {
 			// check if only Bausteine present:
 			for (Object item : items) {
-				if (!(item instanceof Baustein))
+				if (!(item instanceof Baustein)){
 					return;
+				}
 			}
 			try {
 				final IStructuredSelection sel = (IStructuredSelection) view
 				.getSelection();
 				
-				if (!checkLayers(items, sel))
+				if (!checkLayers(items, sel)){
 					return;
-				
+				}
 				Job dropJob = bausteinDropJob(sel);
 				dropJob.setUser(true);
 				dropJob.setSystem(false);
@@ -93,16 +94,18 @@ public class PasteBsiModelViewAction extends Action {
 		if (items.get(0) instanceof IBSIStrukturElement) {
 			// all items must be objects that can be linked together:
 			for (Object object : items) {
-				if (!(object instanceof IBSIStrukturElement))
+				if (!(object instanceof IBSIStrukturElement)){
 					return;
+				}
 			}
 			final IStructuredSelection targets = (IStructuredSelection) view
 			.getSelection();
 			LinkDropper dropper = new LinkDropper();
 			for (Iterator iter = targets.iterator(); iter.hasNext();) {
 				Object target =  iter.next();
-				if (!(target instanceof IBSIStrukturElement))
+				if (!(target instanceof IBSIStrukturElement)){
 					continue;
+				}
 				dropper.dropLink(items, (CnATreeElement) target);
 			}
 		}
@@ -154,10 +157,10 @@ public class PasteBsiModelViewAction extends Action {
 				for (Iterator iter2 = items.iterator(); iter2.hasNext();) {
 					Object sourceObject = iter2.next();
 					int targetSchicht = 0;
-					if (target instanceof IBSIStrukturElement)
+					if (target instanceof IBSIStrukturElement){
 						targetSchicht = ((IBSIStrukturElement) target)
 								.getSchicht();
-
+					}
 					if (sourceObject instanceof Baustein 
 							&& target.canContain(sourceObject)) {
 						Baustein sourceBst = (Baustein) sourceObject;
@@ -165,10 +168,11 @@ public class PasteBsiModelViewAction extends Action {
 						if (sourceBst.getSchicht() != targetSchicht) {
 							if (!SanityCheckDialog.checkLayer(view
 									.getControl().getShell(), sourceBst
-									.getSchicht(), targetSchicht))
+									.getSchicht(), targetSchicht)){
 								return false;
-							else
+							} else {
 								break Check; // user says he knows what he's doing, stop checking.
+							}
 						}
 					}
 				}

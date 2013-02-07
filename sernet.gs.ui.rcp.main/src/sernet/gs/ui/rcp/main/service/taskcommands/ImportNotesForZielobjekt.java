@@ -21,8 +21,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +43,6 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CnATypeMapper;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
@@ -119,13 +118,14 @@ public class ImportNotesForZielobjekt extends GenericCommand {
     @SuppressWarnings("restriction")
     public void appendDescription(CnATreeElement element, String description) {
            // do not save empty text:
-           if (description == null || description.length()==0 )
+           if (description == null || description.length()==0 ){
                return;
+           }
             Pattern pattern = Pattern.compile("^\\s+$");
             Matcher matcher = pattern.matcher(description);
-            if (matcher.matches())
+            if (matcher.matches()){
                 return;
-            
+            }
             String convertedText;
             try {
                 convertedText = TransferData.convertRtf(description);
@@ -139,12 +139,13 @@ public class ImportNotesForZielobjekt extends GenericCommand {
            CnATypeMapper mapper = new CnATypeMapper();
            String descriptionPropId = mapper.getDescriptionPropertyForType(typeId);
 
-           if (descriptionPropId == null)
+           if (descriptionPropId == null){
                return;
-           
+           }
            PropertyList properties = element.getEntity().getProperties(descriptionPropId);
-           if (properties == null || properties.getProperties().size()==0)
+           if (properties == null || properties.getProperties().size()==0){
                return;
+           }
            Property property = properties.getProperty(0);
            
            StringBuilder sb = new StringBuilder();
@@ -226,9 +227,9 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         // do not save empty notes:
         Pattern pattern = Pattern.compile("^\\s+$");
         Matcher matcher = pattern.matcher(convertedText);
-        if (matcher.matches())
+        if (matcher.matches()){
             return;
-        
+        }
         Note note = new Note();
         note.setCnATreeElementId(dbId);
         note.setCnAElementTitel(elmtTitle);
@@ -250,8 +251,9 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             if (child instanceof BausteinUmsetzung) {
                 BausteinUmsetzung bstums = (BausteinUmsetzung) child;
                 String id = TransferData.getId(baust);
-                if (bstums.getKapitel().equals(id))
+                if (bstums.getKapitel().equals(id)){
                     return bstums;
+                }
             }
         }
         return null;

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -13,7 +14,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -29,8 +29,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     private transient Logger log = Logger.getLogger(LoadReportLinkedElements.class);
     
     private boolean resultInjectedFromCache = false;
-    
-    private boolean relationType;
     
     public Logger getLog() {
         if (log == null) {
@@ -54,7 +52,7 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     private boolean doUpLinksAlso = true;
     
     //for statistical use only
-    private HashMap<String, Integer> linkTypeIdMap;
+    private Map<String, Integer> linkTypeIdMap;
     
     public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep) {
 	    this.typeId = typeId;
@@ -77,7 +75,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
         if(!resultInjectedFromCache){
             LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
             try {
-                ICommandService cms = getCommandService();
                 command = getCommandService().executeCommand(command);
             } catch (CommandException e) {
                 throw new RuntimeCommandException(e);
@@ -107,7 +104,7 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
      * @param typeId2
      * @return
      */
-    private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, ArrayList<CnATreeElement> result, boolean doUpLinksAlso) {
+    private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, List<CnATreeElement> result, boolean doUpLinksAlso) {
         // FIXME externalize strings in SNCA.xml!
         String identifier = root.getTypeId() + "->" + typeId;
         if(!linkTypeIdMap.containsKey(identifier)){
@@ -116,34 +113,34 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
             linkTypeIdMap.put(identifier, linkTypeIdMap.get(identifier) + 1);
         }
         for (CnALink link : root.getLinksDown()) {
-            if (link.getDependency().getTypeId().equals(this.typeId)) {
-                if (!ta.hasBeenVisited(link.getDependency())) {
-                    try {
-                        ta.enter(link.getDependency());
-                    } catch (TransactionAbortedException e) {
-                        return result;
-                    }
-                    result.add(link.getDependency());
-                    if (goDeep){
-                        getLinkedElements(ta, link.getDependency(), result, doUpLinksAlso);
-                    }
+            if (link.getDependency().getTypeId().equals(this.typeId) &&
+                    !ta.hasBeenVisited(link.getDependency())) {
+                try {
+                    ta.enter(link.getDependency());
+                } catch (TransactionAbortedException e) {
+                    return result;
+                }
+                result.add(link.getDependency());
+                if (goDeep){
+                    getLinkedElements(ta, link.getDependency(), result, doUpLinksAlso);
                 }
             }
         }
         if(doUpLinksAlso){
-            for (CnALink link : root.getLinksUp()) 
-                if (link.getDependant().getTypeId().equals(this.typeId)) {
-                    if (!ta.hasBeenVisited(link.getDependant())) {
-                        try {
-                            ta.enter(link.getDependant());
-                        } catch (TransactionAbortedException e) {
-                            return result;
-                        }
-                        result.add(link.getDependant());
-                        if (goDeep)
-                            getLinkedElements(ta, link.getDependant(), result, doUpLinksAlso);
+            for (CnALink link : root.getLinksUp()){ 
+                if (link.getDependant().getTypeId().equals(this.typeId) &&
+                        !ta.hasBeenVisited(link.getDependant())) {
+                    try {
+                        ta.enter(link.getDependant());
+                    } catch (TransactionAbortedException e) {
+                        return result;
+                    }
+                    result.add(link.getDependant());
+                    if (goDeep){
+                        getLinkedElements(ta, link.getDependant(), result, doUpLinksAlso);
                     }
                 }
+            }
         }
         return result;
     }
@@ -188,21 +185,4 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     public Object getCacheableResult() {
         return elements;
     }
-    
-    /**
-     * approach to improve report perfomance, didnt work out this way
-     */
-    @Deprecated
-    private List<CnALink> getLinks(CnATreeElement root, String relationId, boolean doUpLinks){
-        String qualifier = "";
-        if(doUpLinks){
-            qualifier = "dependency";
-        } else {
-            qualifier = "dependant";
-        }
-        String hql = "from sernet.verinice.model.common.CnALink where " + qualifier + " = ? " +
-                "AND id.typeId = ?";
-        return getDaoFactory().getDAO(CnALink.class).findByQuery(hql, new Object[]{root, relationId});
-    }
-
 }

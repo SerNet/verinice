@@ -32,6 +32,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -84,7 +85,7 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	private List<Person> personen;
 
-	public void run() throws Exception {
+	public void run() throws CommandException {
 	    LOG.debug("Updating DB model to V 0.92.");
 		createNewFieldsArray();
 		LoadCnAElementByType<Person> command = new LoadCnAElementByType<Person>(Person.class);
@@ -115,8 +116,9 @@ public class MigrateDbTo0_92 extends DbMigration {
 		List<CnATreeElement> changeElements = new ArrayList<CnATreeElement>();
 		for (CnATreeElement element : allElements) {
 			Entity entity = element.getEntity();
-			if (entity == null)
+			if (entity == null){
 				continue;
+			}
 			for (int i = 0; i < personFieldsOld.length; i++) {
 				PropertyList properties = entity.getProperties(personFieldsOld[i]);
 				if (properties != null && properties.getProperties() != null) {
@@ -141,8 +143,9 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	private String findActualPerson(String oldName) {
 		for (Person person : personen) {
-			if (person.getTitle().equals(oldName))
+			if (person.getTitle().equals(oldName)){
 				return person.getEntity().getDbId().toString();
+			}
 		}
 		return null;
 	}
@@ -158,7 +161,8 @@ public class MigrateDbTo0_92 extends DbMigration {
 
 	@Override
 	public double getVersion() {
-		return 0.92D;
+	    final double versionToMigrateTo = 0.92D;
+		return versionToMigrateTo;
 	}
 
 	@Override

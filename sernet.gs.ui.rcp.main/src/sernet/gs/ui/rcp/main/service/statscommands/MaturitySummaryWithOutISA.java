@@ -44,9 +44,9 @@ public class MaturitySummaryWithOutISA extends MaturitySummary {
 	
 	@Override
     public void execute() {
-        if (! entityType.equals(ControlGroup.TYPE_ID))
+        if (! entityType.equals(ControlGroup.TYPE_ID)){
             return;
-        
+        }
         try {
             LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(dbId);
             command = getCommandService().executeCommand(command);
@@ -64,22 +64,23 @@ public class MaturitySummaryWithOutISA extends MaturitySummary {
     private void getItems(ControlGroup topGroup) {
         Set<CnATreeElement> groups = topGroup.getChildren();
         for (CnATreeElement group : groups) {
-            if (group instanceof ControlGroup)
+            if (group instanceof ControlGroup){
                 getSummary((ControlGroup)group);
+            }
         }
     }
 	
     private void getSummary(ControlGroup group) {
         ControlMaturityWithOutISAService maturityService = new ControlMaturityWithOutISAService();
-        if (type == TYPE_MAX)
+        if (type == TYPE_MAX){
             maturity.put(group.getTitle(), maturityService.getMaxMaturityValue(group));
-        else if (type == TYPE_IMPLEMENTATION)
+        } else if (type == TYPE_IMPLEMENTATION) {
             maturity.put(group.getTitle(), maturityService.getMaturityByWeight(group));
-        else if (type == TYPE_THRESHOLD1){
+        } else if (type == TYPE_THRESHOLD1){
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD1));
-        }
-        else if (type == TYPE_THRESHOLD2)
+        } else if (type == TYPE_THRESHOLD2) {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
+        }
     }
     
     /**

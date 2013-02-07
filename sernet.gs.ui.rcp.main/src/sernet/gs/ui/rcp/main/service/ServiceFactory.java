@@ -78,9 +78,9 @@ public abstract class ServiceFactory {
 		
 		IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
 		
-		if (permissionHandlingNeeded == null)
+		if (permissionHandlingNeeded == null){
 			permissionHandlingNeeded = authService.isPermissionHandlingNeeded();
-		
+		}
 		return authService;
 	}
 	
@@ -129,8 +129,9 @@ public abstract class ServiceFactory {
     }
 	
 	public static boolean isPermissionHandlingNeeded() {
-		if (permissionHandlingNeeded == null)
+		if (permissionHandlingNeeded == null){
 			return true; /* return true, just to be safe */
+		}
 		return permissionHandlingNeeded;
 	}
 	

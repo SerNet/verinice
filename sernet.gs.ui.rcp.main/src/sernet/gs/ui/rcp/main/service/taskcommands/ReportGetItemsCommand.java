@@ -18,29 +18,25 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.BsiReport;
+import sernet.gs.ui.rcp.main.reports.IBSIReport;
 import sernet.gs.ui.rcp.main.reports.ISMReport;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.LoadBSIModel;
 
 public class ReportGetItemsCommand extends GenericCommand {
 
     private BsiReport report;
-    private ArrayList<CnATreeElement> items;
+    private List<CnATreeElement> items;
     private Integer itverbundDbId;
     private Integer scopeDbId;
 
@@ -49,8 +45,9 @@ public class ReportGetItemsCommand extends GenericCommand {
         if (report instanceof ISMReport) {
             ISMReport ismReport = (ISMReport) report;
             scopeDbId = ismReport.getOrganization().getDbId();
-        } else
+        } else {
             itverbundDbId = report.getItverbund().getDbId();
+        }
     }
 
     public void execute() {
@@ -107,7 +104,7 @@ public class ReportGetItemsCommand extends GenericCommand {
         HydratorUtil.hydrateElements(dao, items, false);
     }
 
-    public ArrayList<CnATreeElement> getItems() {
+    public List<CnATreeElement> getItems() {
         return items;
     }
 

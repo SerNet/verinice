@@ -25,15 +25,10 @@ import java.util.Set;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityId;
-import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
-//import sernet.verinice.iso27k.model.Control;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.iso27k.service.ControlMaturityService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 
@@ -48,7 +43,7 @@ public class MaturitySummary extends GenericCommand {
     public static final int ISR_TYPE_IMPLEMENTATION = 4;
     public static final int ISR_TYPE_MAX = 7;
     
-    Map<String, Double> maturity = new HashMap<String, Double>();
+    protected Map<String, Double> maturity = new HashMap<String, Double>();
     private Integer dbId;
     private String entityType;
     private int type;
@@ -66,9 +61,9 @@ public class MaturitySummary extends GenericCommand {
     }
 
     public void execute() {
-        if (! entityType.equals(ControlGroup.TYPE_ID))
+        if (! entityType.equals(ControlGroup.TYPE_ID)){
             return;
-        
+        }
         try {
             LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(dbId);
             command = getCommandService().executeCommand(command);
@@ -89,8 +84,9 @@ public class MaturitySummary extends GenericCommand {
     private void getItems(ControlGroup topGroup) {
         Set<CnATreeElement> groups = topGroup.getChildren();
         for (CnATreeElement group : groups) {
-            if (group instanceof ControlGroup)
+            if (group instanceof ControlGroup){
                 getSummary((ControlGroup)group);
+            }
         }
     }
 
@@ -101,18 +97,19 @@ public class MaturitySummary extends GenericCommand {
         ControlMaturityService maturityService = new ControlMaturityService(ControlMaturityService.TYPE_MATURITY);
         ControlMaturityService isrService = new ControlMaturityService(ControlMaturityService.TYPE_ISR);
         
-        if (type == TYPE_MAX)
+        if (type == TYPE_MAX){
             maturity.put(group.getTitle(), maturityService.getMaxMaturityValue(group));
-        else if (type == TYPE_IMPLEMENTATION)
+        } else if (type == TYPE_IMPLEMENTATION) {
             maturity.put(group.getTitle(), maturityService.getMaturityByWeight(group));
-        else if (type == TYPE_THRESHOLD1)
+        } else if (type == TYPE_THRESHOLD1) {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD1));
-        else if (type == TYPE_THRESHOLD2)
+        } else if (type == TYPE_THRESHOLD2) {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
-        else if (type == ISR_TYPE_MAX) 
+        } else if (type == ISR_TYPE_MAX) { 
             maturity.put(group.getTitle(), isrService.getMaxMaturityValue(group));
-        else if (type == ISR_TYPE_IMPLEMENTATION) 
+        } else if (type == ISR_TYPE_IMPLEMENTATION) { 
             maturity.put(group.getTitle(), isrService.getMaturityByWeight(group));
+        }
     }
 
     
@@ -152,15 +149,6 @@ public class MaturitySummary extends GenericCommand {
             }
         }
         return result;
-    }
-
-    /**
-     * @return
-     */
-    private Double getMaxMaturityValue() {
-        HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-        PropertyType propertyType = hui.getPropertyType(Control.TYPE_ID, Control.PROP_MATURITY);
-        return Double.valueOf(propertyType.getMaxValue());
     }
 
     /**

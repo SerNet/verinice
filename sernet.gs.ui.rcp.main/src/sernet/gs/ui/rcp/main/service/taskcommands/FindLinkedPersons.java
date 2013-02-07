@@ -75,9 +75,9 @@ public class FindLinkedPersons extends GenericCommand {
 			dbIds.addAll(getEntityIDs(item.getRevisionDurchLinks()));
 		}
 		
-		if (dbIds.size()==0)
+		if (dbIds.size()==0){
 			return;
-		
+		}
 		IBaseDao<Person, Serializable> dao = getDaoFactory().getDAO(Person.class);
 		List<Entity> personenEntities = dao.findByCallback(new HibernateCallback() {
 
@@ -133,10 +133,12 @@ public class FindLinkedPersons extends GenericCommand {
 		for (Integer dbId : entityIDs) {
 			Entity entity = personenMap.get(dbId);
 			if (entity != null) {
-				if (result.length() > 0)
-					result.append(", " + Person.getTitel(entity));
-				else
+				if (result.length() > 0){
+					result.append(", ");
+				    result.append(Person.getTitel(entity));
+				} else {
 					result.append(Person.getTitel(entity));
+				}
 			}
 		}
 		return result.toString();
@@ -147,9 +149,9 @@ public class FindLinkedPersons extends GenericCommand {
 	 * @return
 	 */
 	private Set<Integer> getEntityIDs(PropertyList links) {
-		if (links == null || links.getProperties() == null || links.getProperties().size() == 0)
+		if (links == null || links.getProperties() == null || links.getProperties().size() == 0){
 			return new HashSet<Integer>(0);
-		
+		}
 		HashSet<Integer> result = new HashSet<Integer>();
 		List<Property> properties = links.getProperties();
 		for (Property property : properties) {

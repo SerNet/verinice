@@ -29,7 +29,7 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
 
 	private String typeId;
     private Integer rootElement;
-    List<List<String>> result;
+    private List<List<String>> result;
     private List<CnALink> linkList;
 
     private transient CnATypeMapper cnATypeMapper;
@@ -81,19 +81,21 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
         result = new ArrayList<List<String>>();
 
         for (CnALink link : getSortedLinkList(root, false, true)) {
-            if (typeId == null )
+            if (typeId == null ){
                 result.add(makeRow(root, link));
-            else {
-                if (link.getDependency().getTypeId().equals(typeId))
+            } else {
+                if (link.getDependency().getTypeId().equals(typeId)){
                     result.add(makeRow(root, link));
+                }
             }
         }
         for (CnALink link : getSortedLinkList(root, true, false)) {
             if (typeId == null )
                 result.add(makeRow(root, link));
             else {
-                if (link.getDependant().getTypeId().equals(typeId))
+                if (link.getDependant().getTypeId().equals(typeId)){
                     result.add(makeRow(root, link));
+                }
             }
         }
     }
@@ -215,10 +217,10 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
      */
     @Override
     public Object getCacheableResult() {
-        Object[] result = new Object[2];
-        result[0] = this.result;
-        result[1] = this.linkList;
-        return result;
+        Object[] resultForCache = new Object[2];
+        resultForCache[0] = this.result;
+        resultForCache[1] = this.linkList;
+        return resultForCache;
     }
 
 }

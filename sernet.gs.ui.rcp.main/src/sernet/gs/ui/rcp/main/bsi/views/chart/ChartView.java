@@ -86,17 +86,11 @@ public class ChartView extends ViewPart {
 
 	private StufenBarChart stufenChart;
 
-	private Action chooseStufenDiagramAction;
-
 	private LebenszyklusBarChart zyklusChart;
-
-	private Action chooseZyklusDiagramAction;
 
 	private SchichtenBarChart schichtenChart;
 
-	private Action chooseSchichtDiagramAction;
-
-	protected MaturitySpiderChart maturitySpiderChart;
+	private MaturitySpiderChart maturitySpiderChart;
 	
 	protected SamtProgressChart samtProgressChart;
 
@@ -166,6 +160,9 @@ public class ChartView extends ViewPart {
 	}
 
 	protected void createMenus() {
+	    Action chooseStufenDiagramAction;
+	    Action chooseZyklusDiagramAction;
+	    Action chooseSchichtDiagramAction;
 		IMenuManager menuManager = getViewSite().getActionBars()
 				.getMenuManager();
 		chooseBarDiagramAction = new Action(Messages.ChartView_1, SWT.CHECK) {
@@ -286,8 +283,9 @@ public class ChartView extends ViewPart {
                         Display.getDefault().syncExec(new Runnable() {
                             public void run() {
                                 try {
-                                    if (frame.isDisposed())
+                                    if (frame.isDisposed()){
                                         return;
+                                    }
                                     frame.setChart(chart);
                                     frame.forceRedraw();
                                 } catch (Exception e) {
@@ -361,8 +359,9 @@ public class ChartView extends ViewPart {
      * @param selection the newly selected GUI element
 	 */
 	protected synchronized void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (!(selection instanceof IStructuredSelection)) 
+        if (!(selection instanceof IStructuredSelection)){ 
             return;
+        }
         Object firstSelection = ((IStructuredSelection) selection).getFirstElement();
         CnATreeElement selectedElement = (CnATreeElement) firstSelection;
         if (LOG.isDebugEnabled()) {
@@ -370,8 +369,9 @@ public class ChartView extends ViewPart {
         }
         
         if (firstSelection instanceof CnATreeElement) {
-            if (this.element != null && selectedElement == this.element)
+            if (this.element != null && selectedElement == this.element){
                 return;             		
+            }
             this.element = selectedElement;
             drawChart();
         }
@@ -379,9 +379,10 @@ public class ChartView extends ViewPart {
 
 	protected void hookSelectionListeners() {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		if (CnAElementFactory.getLoadedModel() != null)
+		if (CnAElementFactory.getLoadedModel() != null){
 			CnAElementFactory.getLoadedModel().addBSIModelListener(
 					changeListener);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -395,9 +396,10 @@ public class ChartView extends ViewPart {
 			CnAElementFactory.getLoadedModel().removeBSIModelListener(
 					changeListener);
 		}
-		if (CnAElementFactory.getLoadedModel() != null)
+		if (CnAElementFactory.getLoadedModel() != null){
 			CnAElementFactory.getLoadedModel().removeBSIModelListener(
 					changeListener);
+		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Disposing chart view " + this); //$NON-NLS-1$
 		}

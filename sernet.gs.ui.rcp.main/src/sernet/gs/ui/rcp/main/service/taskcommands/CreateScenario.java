@@ -73,6 +73,7 @@ public class CreateScenario extends GenericCommand {
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
+        final int maxTitleLength = 21;
         IBaseDao<Threat, Serializable> threatDao = getDaoFactory().getDAO(Threat.class);
         IBaseDao<Vulnerability, Serializable> vulnDao = getDaoFactory().getDAO(Vulnerability.class);
         Threat threat = threatDao.findById(threatdbId);
@@ -80,9 +81,9 @@ public class CreateScenario extends GenericCommand {
         
         Organization org = findOrganization(threat);
         IncidentScenarioGroup group = findScenarioGroup(org);
-        if (group == null)
+        if (group == null){
             return;
-        
+        }
         try {
             
             CreateElement<IncidentScenario> cmd = new CreateElement<IncidentScenario>(group, IncidentScenario.class, true);
@@ -91,12 +92,12 @@ public class CreateScenario extends GenericCommand {
             
             StringBuilder sb = new StringBuilder();
             sb.append(Messages.CreateScenario_2);
-            sb.append(threat.getTitle().substring(0, threat.getTitle().length()<21 ? threat.getTitle().length() : 20  ));
-            sb.append(threat.getTitle().length()<21 ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(threat.getTitle().substring(0, threat.getTitle().length()< maxTitleLength ? threat.getTitle().length() : (maxTitleLength - 1)  ));
+            sb.append(threat.getTitle().length()<maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
             sb.append(" - "); //$NON-NLS-1$
             
-            sb.append(vulnerability.getTitle().substring(0, vulnerability.getTitle().length()<21 ? vulnerability.getTitle().length() : 20));
-            sb.append(vulnerability.getTitle().length()<21 ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(vulnerability.getTitle().substring(0, vulnerability.getTitle().length()<maxTitleLength ? vulnerability.getTitle().length() : (maxTitleLength - 1)));
+            sb.append(vulnerability.getTitle().length()<maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
             
             incidentScenario.setTitel(sb.toString());
             
@@ -119,8 +120,9 @@ public class CreateScenario extends GenericCommand {
     private IncidentScenarioGroup findScenarioGroup(Organization org) {
         Set<CnATreeElement> children = org.getChildren();
         for (CnATreeElement cnATreeElement : children) {
-            if (cnATreeElement.getTypeId().equals(IncidentScenarioGroup.TYPE_ID))
+            if (cnATreeElement.getTypeId().equals(IncidentScenarioGroup.TYPE_ID)){
                 return (IncidentScenarioGroup) cnATreeElement;
+            }
         }
         return null;
     }

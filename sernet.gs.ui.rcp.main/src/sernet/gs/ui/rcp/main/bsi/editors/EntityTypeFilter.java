@@ -20,7 +20,6 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.hibernate.dialect.function.CastFunction;
 
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -47,9 +46,9 @@ public class EntityTypeFilter extends ViewerFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (!(element instanceof CnALink))
+        if (!(element instanceof CnALink)){
             return false;
-        
+        }
         CnALink link = (CnALink) element;
         CnATreeElement viewInput = (CnATreeElement) viewer.getInput();
         return link.getRelationObject(viewInput, link).getEntity().getEntityType().equals(entityType);
@@ -71,8 +70,9 @@ public class EntityTypeFilter extends ViewerFilter {
             return;
         }
         entityType = null;
-        if (active)
+        if (active){
             viewer.removeFilter(this);
+        }
     }
 
 }
