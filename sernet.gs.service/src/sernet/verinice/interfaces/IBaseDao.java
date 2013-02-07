@@ -24,38 +24,38 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 public interface IBaseDao<T, ID extends Serializable> extends IDao<T, ID> {
 
-	public T merge(T entity, boolean fireUpdates);
+	T merge(T entity, boolean fireUpdates);
 
-	public T findByUuid(String uuid, IRetrieveInfo ri);
+	T findByUuid(String uuid, IRetrieveInfo ri);
 
-	public T retrieve(ID id, IRetrieveInfo ri);
+	T retrieve(ID id, IRetrieveInfo ri);
 
 	/**
 	 * @param ri
 	 * @return
 	 */
-	public List findAll(IRetrieveInfo ri);
+	List findAll(IRetrieveInfo ri);
 
-	public List findByCallback(HibernateCallback hcb);
+	List findByCallback(HibernateCallback hcb);
 
-	public Object executeCallback(HibernateCallback hcb);
+	Object executeCallback(HibernateCallback hcb);
 
-	public int updateByQuery(String hqlQuery, Object[] values);
+	int updateByQuery(String hqlQuery, Object[] values);
 
-	public void reload(T element, Serializable id);
+	void reload(T element, Serializable id);
 
-	public void initialize(Object collection);
+	void initialize(Object collection);
 
-	public void flush();
+	void flush();
 
-	public Class<T> getType();
+	Class<T> getType();
 	
-	public void checkRights(T entity) /*throws SecurityException*/ ;
+	void checkRights(T entity) /*throws SecurityException*/ ;
 	
-	public void checkRights(T entity, String username) /*throws SecurityException*/ ;
+	void checkRights(T entity, String username) /*throws SecurityException*/ ;
 	
-	public void clear();
+	void clear();
 	
-	public boolean contains(T entity);
+	boolean contains(T entity);
 
 }

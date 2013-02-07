@@ -99,7 +99,7 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     private boolean isImage(Attachment attachment) {
         boolean isImage = Boolean.FALSE;
-        for (String imageMimeType : Attachment.image_mime_types) {
+        for (String imageMimeType : Attachment.getImageMimeTypes()) {
             if (attachment.getMimeType().equals(imageMimeType)) {
                 isImage = Boolean.TRUE;
                 break;

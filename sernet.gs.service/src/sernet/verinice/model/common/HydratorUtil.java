@@ -20,8 +20,8 @@ package sernet.verinice.model.common;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -30,7 +30,6 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -49,16 +48,16 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class HydratorUtil {
 	
-	private static final Logger log = Logger.getLogger(HydratorUtil.class);
+	private HydratorUtil(){}
 
 	public static void hydrateEntity(IBaseDao dao, Entity entity) {
 		if (dao == null) {
 			Logger.getLogger(HydratorUtil.class).error("Missing DAO, cannot hydrate.");
 			return;
 		}
-		if (entity == null)
+		if (entity == null){
 			return;
-		
+		}
 		Map<String, PropertyList> lists = entity.getTypedPropertyLists();
 		Set<Entry<String, PropertyList>> entrySet = lists.entrySet();
 		for (Entry<String, PropertyList> entry : entrySet) {
@@ -83,9 +82,9 @@ public class HydratorUtil {
 	
 	
 	public static void hydrateElement(IBaseDao dao, CnATreeElement element, RetrieveInfo ri) {
-		if (element == null)
+		if (element == null){
 			return;
-		
+		}
 		hydrateEntity(dao, element.getEntity());
 
 		// Initialize permissions, so it should be possible to access an elements'
@@ -99,7 +98,7 @@ public class HydratorUtil {
 		
 		// Initialize the complete child->parent chain, since that is needed for checks
 		// whether an element belongs to a specific IT-Verbund.
-		for (CnATreeElement e = element.getParent(); e != null; e = e.getParent());
+		for (CnATreeElement e = element.getParent(); e != null; e = e.getParent()){}
 
 		if (ri!=null ) {
 			CnATreeElement elementWithChildren = (CnATreeElement) dao.retrieve(element.getDbId(),ri);

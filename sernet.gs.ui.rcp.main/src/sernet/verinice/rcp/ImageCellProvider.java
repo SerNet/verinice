@@ -21,11 +21,6 @@ package sernet.verinice.rcp;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
-import java.util.UUID;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Status;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
@@ -101,7 +96,7 @@ public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
     protected abstract Image getImage(Object element);
     
     protected byte[] loadFileData(Attachment attachment) {
-        if(Arrays.asList(Attachment.image_mime_types).contains(attachment.getMimeType())) {
+        if(Arrays.asList(Attachment.getImageMimeTypes()).contains(attachment.getMimeType())) {
             try {
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), thumbSize);
                 command = getCommandService().executeCommand(command);

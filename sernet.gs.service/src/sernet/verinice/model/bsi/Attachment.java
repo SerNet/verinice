@@ -46,27 +46,27 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 	
 	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
 	
-	public static String[] document_mime_types = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] pdf_mime_types = new String[] {"pdf"}; //$NON-NLS-1$
+	private static final String[] PDF_MIME_TYPES = new String[] {"pdf"}; //$NON-NLS-1$
 	
-	public static String[] image_mime_types = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private static final String[] IMAGE_MIME_TYPES = new String[] {"gif","jpg","jpeg","png","tif","tiff","bmp","svg","psd"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	
-	public static String[] spreadsheet_mime_types = new String[] {"xls","ods","xlsx","csv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] SPREADSHEET_MIME_TYPES = new String[] {"xls","ods","xlsx","csv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	
-	public static String[] presentation_mime_types = new String[] {"ppt","odp","pptx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] PRESENTATION_MIME_TYPES = new String[] {"ppt","odp","pptx"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] html_mime_types = new String[] {"htm","html","php"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] HTML_MIME_TYPES = new String[] {"htm","html","php"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
-	public static String[] xml_mime_types = new String[] {"xml","xsd"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] XML_MIME_TYPES = new String[] {"xml","xsd"}; //$NON-NLS-1$ //$NON-NLS-2$
 	
-	public static String[] audio_mime_types = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	private static final String[] AUDIO_MIME_TYPES = new String[] {"mp3","mp2","mp4","ogg","wav","fla","wma"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] video_mime_types = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+	private static final String[] VIDEO_MIME_TYPES = new String[] {"xvid","divx","ogv","flv","avi","vob","mpeg"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 	
-	public static String[] archive_mime_types = new String[] {"zip","rar","tar","gz","gzip","arj","bz2","bz"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	private static final String[] ARCHIVE_MIME_TYPES = new String[] {"zip","rar","tar","gz","gzip","arj","bz2","bz"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
-	public static String[] text_mime_types = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] TEXT_MIME_TYPES = new String[] {"txt","log","readme"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	
 	private transient EntityType subEntityType;
 	
@@ -230,5 +230,49 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
             result = 0;
         }
         return result;
+    }
+
+    public static String[] getDocumentMimeTypes() {
+        return (DOCUMENT_MIME_TYPES != null) ? DOCUMENT_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getPdfMimeTypes() {
+        return (PDF_MIME_TYPES != null)  ? PDF_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getImageMimeTypes() {
+        return (IMAGE_MIME_TYPES != null) ? IMAGE_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getSpreadsheetMimeTypes() {
+        return (SPREADSHEET_MIME_TYPES != null) ? SPREADSHEET_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getPresentationMimeTypes() {
+        return (PRESENTATION_MIME_TYPES != null) ? PRESENTATION_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getHtmlMimeTypes() {
+        return (HTML_MIME_TYPES != null) ? HTML_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getXmlMimeTypes() {
+        return (XML_MIME_TYPES != null) ? XML_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getAudioMimeTypes() {
+        return (AUDIO_MIME_TYPES != null) ? AUDIO_MIME_TYPES.clone() :  null;
+    }
+
+    public static String[] getVideoMimeTypes() {
+        return (VIDEO_MIME_TYPES != null) ? VIDEO_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getArchiveMimeTypes() {
+        return (ARCHIVE_MIME_TYPES != null) ? ARCHIVE_MIME_TYPES.clone() : null;
+    }
+
+    public static String[] getTextMimeTypes() {
+        return (TEXT_MIME_TYPES != null) ? TEXT_MIME_TYPES.clone() : null;
     }
 }

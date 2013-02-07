@@ -59,6 +59,11 @@ import sernet.gs.service.GSServiceException;
 public class GSScraper {
 
 	private final Map<String, String[]> brokenRoles = new HashMap<String, String[]>();
+	
+	private static final int GROUP3 = 3;
+    private static final int GROUP4 = 4;
+    private static final int GROUP5 = 5;
+	
 
 	private IGSPatterns patterns;
 
@@ -186,7 +191,7 @@ public class GSScraper {
 					b.setStand(stand);
 					b.setId(matcher.group(1));
 					b.setTitel(matcher.group(2));
-					b.setUrl(matcher.group(3));
+					b.setUrl(matcher.group(GROUP3));
 					b.setEncoding(getPatterns().getEncoding());
 
 					Matcher schichtMatcher = patterns.getSchichtPat().matcher(
@@ -229,12 +234,12 @@ public class GSScraper {
 		if (!dir.exists()) {
 			return null;
 		}
-		String filename_0 = null;
-		filename_0 = fileName.replaceAll("\\.\\./", "");
-		filename_0 = fileName.replaceAll("/", "_");
+		String filename0 = null;
+		filename0 = fileName.replaceAll("\\.\\./", "");
+		filename0 = fileName.replaceAll("/", "_");
 
 		FileInputStream fin = new FileInputStream(dir.getAbsolutePath()
-				+ File.separator + filename_0);
+				+ File.separator + filename0);
 		ObjectInputStream ois = new ObjectInputStream(fin);
 		ArrayList result = (ArrayList) ois.readObject();
 		ois.close();
@@ -261,10 +266,9 @@ public class GSScraper {
 	}
 
 	private void writeToFile(String fileName, ArrayList b) throws IOException{
-		String fileName_0 = fileName;
-	    fileName_0 = fileName_0.replaceAll("\\.\\./", "");
-		fileName_0 = fileName_0.replaceAll("/", "_");
-		writeToFile(b, fileName_0);
+	    String fileName0 = fileName.replaceAll("\\.\\./", "");
+		fileName0 = fileName0.replaceAll("/", "_");
+		writeToFile(b, fileName0);
 	}
 
 	private void writeToFile(Serializable object, String fileName) throws IOException{
@@ -323,82 +327,7 @@ public class GSScraper {
 			massnahmenContext.setContextItem(new DocumentWrapper(root,
 					baustein, config));
 
-			SequenceIterator iterator = getMassnahmenExp
-					.iterator(massnahmenContext);
-
-			// normal pattern for massnahmen:
-			Pattern pat = Pattern.compile("(.*)°(.*)°(.+)°(.*)°\\((.*)\\)");
-
-			// sometimes the 3rd column is missing:
-			Pattern pat2 = Pattern
-					.compile("(.*)°(.*)°°(.*)°\\s*\\((.)\\)\\s*(.*)");
-			// i.e.: Planung und Konzeption°M 2.343°°m02343°(C) Absicherung
-			// eines SAP Systems im Portal-Szenario
-
-			while (true) {
-				NodeInfo mnNode = (NodeInfo) iterator.next();
-				if (mnNode == null){
-					break;
-				}
-				String found = mnNode.getStringValue();
-				// clear up paths, remove relative paths (don't work in zipfile)
-				found = found.replaceAll("\n", "");
-				found = found.replaceAll(".html", "");
-				found = found.replaceAll(".htm", "");
-				found = found.replaceAll("\\.\\./\\.\\./m/m\\d\\d/", "");
-				found = found.replaceAll("\\.\\./m/", "");
-				found = found.replaceAll("\\.\\./\\.\\./", "");
-
-				Matcher matcher = pat.matcher(found);
-				if (matcher.matches()) {
-					Massnahme mn = new Massnahme();
-					mn.setStand(stand);
-					setLebenszyklus(mn, matcher.group(1));
-					mn.setId(matcher.group(2));
-					mn.setTitel(matcher.group(3));
-					mn.setUrl(matcher.group(4));
-					if (matcher.group(5) != null
-							&& matcher.group(5).length() > 0){
-						mn.setSiegelstufe(matcher.group(5).charAt(0));
-					} else {
-						Logger.getLogger(this.getClass()).error(
-								"Konnte Siegelstufe nicht bestimmen für: "
-										+ mn.getId()
-										+ "\n Setze auf Stufe A (höchste).");
-						mn.setSiegelstufe('A');
-					}
-					addRoles(mn);
-
-					result.add(mn);
-				} else {
-					// sometimes, 3rd column is missing
-					// siegel included in 4th column:
-					matcher = pat2.matcher(found);
-					if (matcher.matches()) {
-						Massnahme mn = new Massnahme();
-						mn.setStand(stand);
-						setLebenszyklus(mn, matcher.group(1));
-						mn.setId(matcher.group(2));
-						mn.setUrl(matcher.group(3));
-						mn.setTitel(matcher.group(5));
-						if (matcher.group(4) != null
-								&& matcher.group(4).length() > 0){
-							mn.setSiegelstufe(matcher.group(4).charAt(0));
-						} else {
-							Logger
-									.getLogger(this.getClass())
-									.error(
-											"Konnte Siegelstufe nicht bestimmen für: "
-													+ mn.getId()
-													+ "\n Setze auf Stufe A (höchste).");
-							mn.setSiegelstufe('A');
-						}
-						addRoles(mn);
-						result.add(mn);
-					}
-				}
-
-			}
+			result = fillResult(result);
 		} catch (XPathException e) {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
@@ -407,6 +336,86 @@ public class GSScraper {
 		return result;
 
 	}
+
+    private ArrayList<Massnahme> fillResult(ArrayList<Massnahme> result) throws XPathException, GSServiceException {
+        SequenceIterator iterator = getMassnahmenExp
+        		.iterator(massnahmenContext);
+
+        // normal pattern for massnahmen:
+        Pattern pat = Pattern.compile("(.*)°(.*)°(.+)°(.*)°\\((.*)\\)");
+
+        // sometimes the 3rd column is missing:
+        Pattern pat2 = Pattern
+        		.compile("(.*)°(.*)°°(.*)°\\s*\\((.)\\)\\s*(.*)");
+        // i.e.: Planung und Konzeption°M 2.343°°m02343°(C) Absicherung
+        // eines SAP Systems im Portal-Szenario
+
+        while (true) {
+        	NodeInfo mnNode = (NodeInfo) iterator.next();
+        	if (mnNode == null){
+        		break;
+        	}
+        	String found = mnNode.getStringValue();
+        	// clear up paths, remove relative paths (don't work in zipfile)
+        	found = found.replaceAll("\n", "");
+        	found = found.replaceAll(".html", "");
+        	found = found.replaceAll(".htm", "");
+        	found = found.replaceAll("\\.\\./\\.\\./m/m\\d\\d/", "");
+        	found = found.replaceAll("\\.\\./m/", "");
+        	found = found.replaceAll("\\.\\./\\.\\./", "");
+
+        	Matcher matcher = pat.matcher(found);
+        	if (matcher.matches()) {
+        		Massnahme mn = new Massnahme();
+        		mn.setStand(stand);
+        		setLebenszyklus(mn, matcher.group(1));
+        		mn.setId(matcher.group(2));
+        		mn.setTitel(matcher.group(GROUP3));
+        		mn.setUrl(matcher.group(GROUP4));
+        		if (matcher.group(GROUP5) != null
+        				&& matcher.group(GROUP5).length() > 0){
+        			mn.setSiegelstufe(matcher.group(GROUP5).charAt(0));
+        		} else {
+        			Logger.getLogger(this.getClass()).error(
+        					"Konnte Siegelstufe nicht bestimmen für: "
+        							+ mn.getId()
+        							+ "\n Setze auf Stufe A (höchste).");
+        			mn.setSiegelstufe('A');
+        		}
+        		addRoles(mn);
+
+        		result.add(mn);
+        	} else {
+        		// sometimes, 3rd column is missing
+        		// siegel included in 4th column:
+        		matcher = pat2.matcher(found);
+        		if (matcher.matches()) {
+        			Massnahme mn = new Massnahme();
+        			mn.setStand(stand);
+        			setLebenszyklus(mn, matcher.group(1));
+        			mn.setId(matcher.group(2));
+        			mn.setUrl(matcher.group(GROUP3));
+        			mn.setTitel(matcher.group(GROUP5));
+        			if (matcher.group(GROUP4) != null
+        					&& matcher.group(GROUP4).length() > 0){
+        				mn.setSiegelstufe(matcher.group(GROUP4).charAt(0));
+        			} else {
+        				Logger
+        						.getLogger(this.getClass())
+        						.error(
+        								"Konnte Siegelstufe nicht bestimmen für: "
+        										+ mn.getId()
+        										+ "\n Setze auf Stufe A (höchste).");
+        				mn.setSiegelstufe('A');
+        			}
+        			addRoles(mn);
+        			result.add(mn);
+        		}
+        	}
+
+        }
+        return result;
+    }
 
 	private void addRoles(Massnahme mn) throws GSServiceException,
 			XPathException {
@@ -542,8 +551,8 @@ public class GSScraper {
 					gef.setKategorie(Gefaehrdung.kategorieAsInt(matcher
 							.group(1)));
 					gef.setId(matcher.group(2));
-					gef.setTitel(matcher.group(3));
-					gef.setUrl(matcher.group(4));
+					gef.setTitel(matcher.group(GROUP3));
+					gef.setUrl(matcher.group(GROUP4));
 					gef.setEncoding(getPatterns().getEncoding());
 
 					result.add(gef);

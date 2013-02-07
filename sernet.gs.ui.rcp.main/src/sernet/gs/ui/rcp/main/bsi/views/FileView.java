@@ -116,38 +116,38 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
 
     private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
     static {
-        for (int i = 0; i < Attachment.archive_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.archive_mime_types[i], ImageCache.MIME_ARCHIVE);
+        for (int i = 0; i < Attachment.getArchiveMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getArchiveMimeTypes()[i], ImageCache.MIME_ARCHIVE);
         }
-        for (int i = 0; i < Attachment.audio_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.audio_mime_types[i], ImageCache.MIME_AUDIO);
+        for (int i = 0; i < Attachment.getAudioMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getAudioMimeTypes()[i], ImageCache.MIME_AUDIO);
         }
-        for (int i = 0; i < Attachment.document_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.document_mime_types[i], ImageCache.MIME_DOCUMENT);
+        for (int i = 0; i < Attachment.getDocumentMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getDocumentMimeTypes()[i], ImageCache.MIME_DOCUMENT);
         }
-        for (int i = 0; i < Attachment.html_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.html_mime_types[i], ImageCache.MIME_HTML);
+        for (int i = 0; i < Attachment.getHtmlMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getHtmlMimeTypes()[i], ImageCache.MIME_HTML);
         }
-        for (int i = 0; i < Attachment.image_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.image_mime_types[i], ImageCache.MIME_IMAGE);
+        for (int i = 0; i < Attachment.getImageMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getImageMimeTypes()[i], ImageCache.MIME_IMAGE);
         }
-        for (int i = 0; i < Attachment.pdf_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.pdf_mime_types[i], ImageCache.MIME_PDF);
+        for (int i = 0; i < Attachment.getPdfMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getPdfMimeTypes()[i], ImageCache.MIME_PDF);
         }
-        for (int i = 0; i < Attachment.presentation_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.presentation_mime_types[i], ImageCache.MIME_PRESENTATION);
+        for (int i = 0; i < Attachment.getPresentationMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getPresentationMimeTypes()[i], ImageCache.MIME_PRESENTATION);
         }
-        for (int i = 0; i < Attachment.spreadsheet_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.spreadsheet_mime_types[i], ImageCache.MIME_SPREADSHEET);
+        for (int i = 0; i < Attachment.getSpreadsheetMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getSpreadsheetMimeTypes()[i], ImageCache.MIME_SPREADSHEET);
         }
-        for (int i = 0; i < Attachment.text_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.text_mime_types[i], ImageCache.MIME_TEXT);
+        for (int i = 0; i < Attachment.getTextMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getTextMimeTypes()[i], ImageCache.MIME_TEXT);
         }
-        for (int i = 0; i < Attachment.video_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.video_mime_types[i], ImageCache.MIME_VIDEO);
+        for (int i = 0; i < Attachment.getVideoMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getVideoMimeTypes()[i], ImageCache.MIME_VIDEO);
         }
-        for (int i = 0; i < Attachment.xml_mime_types.length; i++) {
-            mimeImageMap.put(Attachment.xml_mime_types[i], ImageCache.MIME_XML);
+        for (int i = 0; i < Attachment.getXmlMimeTypes().length; i++) {
+            mimeImageMap.put(Attachment.getXmlMimeTypes()[i], ImageCache.MIME_XML);
         }
 
     }

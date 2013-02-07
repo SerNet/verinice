@@ -55,7 +55,7 @@ public class AttachmentImageCellProvider extends ImageCellProvider {
         Attachment attachment = (Attachment) element;
         
         Image thumb = null;
-        if(Arrays.asList(Attachment.image_mime_types).contains(attachment.getMimeType())) {
+        if(Arrays.asList(Attachment.getImageMimeTypes()).contains(attachment.getMimeType())) {
             Element cacheElement = getCache().get(attachment.getDbId());
             if(cacheElement!=null) {         
                 // != is correct here
