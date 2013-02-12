@@ -44,7 +44,6 @@
             classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
             classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
             classpath:sernet/gs/server/spring/veriniceserver-rightmanagement.xml
-            classpath:sernet/gs/server/spring/veriniceserver-graph.xml
         </param-value>
 	</context-param>
 	

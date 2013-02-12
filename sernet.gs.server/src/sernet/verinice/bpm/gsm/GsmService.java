@@ -148,9 +148,23 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
     private Map<String, Object> createParameterMap(GsmServiceParameter processParameter) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_SET, processParameter.getElementSet());
-        //map.put(IGenericProcess.VAR_OWNER_NAME, getAuthService().getUsername());
-        map.put(IGenericProcess.VAR_OWNER_NAME, "GsmService test");
+        String loginNameAssignee = null;
+        if(processParameter.getPerson()!=null) {
+            map.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, processParameter.getPerson().getTitle());
+            loginNameAssignee = getProcessDao().loadUsername(processParameter.getPerson().getUuid());
+            if(loginNameAssignee==null) {
+                LOG.error("Can't determine username of person (there is probably no account): " + processParameter.getPerson().getTitle());
+            }
+        }
+        if(loginNameAssignee==null) {
+            LOG.warn("Username of assignee not found. Using currently logged in person as assignee.");
+            loginNameAssignee = getAuthService().getUsername();
+        }       
+        map.put(IGenericProcess.VAR_ASSIGNEE_NAME, loginNameAssignee);
+        if(processParameter.getControlGroup()!=null) {
+            map.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, processParameter.getControlGroup().getTitle());
+        }
+        map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_SET, processParameter.getElementSet());     
         return map;
     }
 

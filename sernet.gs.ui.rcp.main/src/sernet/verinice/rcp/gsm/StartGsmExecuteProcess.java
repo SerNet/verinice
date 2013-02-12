@@ -39,6 +39,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.bpm.rcp.TaskChangeRegistry;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
@@ -94,12 +95,15 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
                     IProcessStartInformation info = ServiceFactory.lookupGsmService().startProcessesForOrganization(orgId);
                     numberOfProcess = info.getNumber();                
                 }
-            });
+            });           
             InfoDialogWithShowToggle.openInformation(
                     Messages.StartGsmExecuteProcess_0,  
                     Messages.bind(Messages.StartGsmExecuteProcess_1, numberOfProcess),
                     Messages.StartGsmExecuteProcess_2,
                     PreferenceConstants.INFO_PROCESSES_STARTED);
+            if(numberOfProcess > 0) {
+                TaskChangeRegistry.tasksAdded();
+            }
         } catch (Exception t) {
             LOG.error("Error while creating process.",t); //$NON-NLS-1$
             ExceptionUtil.log(t, Messages.StartGsmExecuteProcess_3); 

@@ -82,6 +82,7 @@ public class GraphService implements IGraphService {
     public void create() {
         long time = initRuntime();
         graph = new Pseudograph<CnATreeElement, Edge>(Edge.class);
+        uuidMap.clear();
         
         loadVerticesAndRelatives();     
         loadLinks();

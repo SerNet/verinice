@@ -54,7 +54,9 @@ public interface IEmailHandler {
      * This method must return the name of the template file without path, locale and file extensions.
      * 
      * If template files are IssueReminder.vm and IssueReminder_de.vm
-     * this method must return "IssueReminder"
+     * this method must return "IssueReminder".
+     * 
+     * Templates directory is "sernet/verinice/bpm" in bundle "sernet.gs.server".
      * 
      * @return Name of the template file without path, locale and file extensions
      */

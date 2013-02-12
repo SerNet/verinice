@@ -102,7 +102,7 @@
             </map>
         </property>
         <property name="defaultCompleteServerHandler" ref="defaultCompleteServerHandler" />
-        <!-- Add task description handler here -->
+        <!-- Add Task-Description-Handler here -->
         <!-- Key is <TASK_ID> from jbpm file -->
         <!-- See ITaskDescriptionHandler for more documentation. -->
         <!-- If no handler is set for a task bean "defaultDescriptionHandler" is used  -->
@@ -137,7 +137,10 @@
     <bean id="indiAssignDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualAssignDescriptionHandler" />
     <bean id="indiDeadlineDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualDeadlineDescriptionHandler" />
     <bean id="indiNrDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualNotResponsibleDescriptionHandler" />
-    <bean id="gsmIsmDescriptionHandler" class="sernet.verinice.bpm.gsm.GsmServiceTaskDescriptionHandler" />
+    
+    <bean id="gsmIsmDescriptionHandler" class="sernet.verinice.bpm.gsm.GsmServiceTaskDescriptionHandler">      
+        <property name="velocityEngine" ref="velocityEngine"/>
+    </bean>
     
     <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
         <property name="mailSender" ref="mailSender" />

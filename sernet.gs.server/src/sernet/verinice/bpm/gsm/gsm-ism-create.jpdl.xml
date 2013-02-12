@@ -5,9 +5,12 @@
    
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
    
-   <start name="start">
+   <start g="16,22,80,40" name="start">
+      <transition to="end"/>
    </start>
    
-   <end name="end"/>
+  
+   
+   <end g="615,22,80,40" name="end"/>
 
 </process>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,34 +17,38 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.verinice.bpm.gsm;
 
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Instances of ITaskDescriptionHandler loads titles and descriptions of jBPM tasks.
- * Task-Description-Handlers are configured in veriniceserver-jbpm.xml.
- * 
- * Task-Description-Handlers are an optional configuration feature. If no
- * Task-Description-Handler is configured for a task 
- * sernet.verinice.bpm.DefaultTaskDescriptionHandler is used to load title and description.
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface ITaskDescriptionHandler {
+public class Messages {
+    private static final String BUNDLE_NAME = "sernet.verinice.bpm.gsm.messages"; //$NON-NLS-1$
 
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The description of a task
-     */
-    String loadDescription(String taskId, Map<String, Object> processVars);
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-    /**
-     * @param taskId a jBPM task-id
-     * @param processVars jBPM process variables
-     * @return The title of a task
-     */
-    String loadTitle(String taskId, Map<String, Object> processVars);
+    private Messages() {
+    }
+
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
     
+    public static String getString(String key, Object... params  ) {
+        try {
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

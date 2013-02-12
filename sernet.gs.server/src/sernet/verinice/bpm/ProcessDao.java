@@ -68,7 +68,7 @@ public class ProcessDao extends HibernateDaoSupport {
         return loadUsername(uuidAssignee);
     }
 
-    private String loadUsername(String uuidAssignee) {
+    public String loadUsername(String uuidAssignee) {
         String username = null;
         if(uuidAssignee!=null) {
             List<String> result = getHibernateTemplate().find(ProcessDao.HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});

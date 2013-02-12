@@ -19,45 +19,123 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler {
 
     private static final Logger LOG = Logger.getLogger(GsmServiceTaskDescriptionHandler.class);
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(java.lang.String, java.util.Map)
-     */
-    @Override
-    public String loadDescription(String taskId, Map<String, Object> processVars) {        
-        Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_SET);
-        String description = "unknown";
-        if(!(value instanceof Set<?>)) {
-            LOG.error("Process variable " + IGsmIsmExecuteProzess.VAR_ELEMENT_SET + " is not a Set. This is nasty...");
-        } else {
-            description = GsmService.createElementInformation((Set<CnATreeElement>) value);
-        }
-        return description;
-    }
-
+    public static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
+    
+    // template path without lang code "_en" and file extension ".vm"
+    private String templateBasePath = "sernet/verinice/bpm/gsm/IsmExecuteDescription"; //$NON-NLS-1$
+    
+    private VelocityEngine velocityEngine;
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadTitle(java.lang.String, java.util.Map)
      */
     @Override
     public String loadTitle(String taskId, Map<String, Object> processVars) {
-        return sernet.verinice.model.bpm.Messages.getString(taskId);
+        return sernet.verinice.model.bpm.Messages.getString(taskId, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE));
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(java.lang.String, java.util.Map)
+     */
+    @Override
+    public String loadDescription(String taskId, Map<String, Object> processVars) {      
+        return loadDescriptionByVelocity(convertProcessVarsToTemplateVars(processVars));
+    }
+
+    private String loadDescriptionByVelocity(Map<String, Object> templateVars) {
+        return VelocityEngineUtils.mergeTemplateIntoString(
+                getVelocityEngine(), 
+                getTemplatePath(), 
+                VeriniceCharset.CHARSET_UTF_8.name(), 
+                templateVars);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars) {
+        Map<String, Object> templateVars = new Hashtable<String, Object>();
+        Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_SET);
+        if(!(value instanceof Set<?>)) {
+            LOG.error("Process variable " + IGsmIsmExecuteProzess.VAR_ELEMENT_SET + " is not a Set. This is nasty...");
+        } else {
+            Set<CnATreeElement> elementSet = (Set<CnATreeElement>) value;
+            templateVars.put(Asset.TYPE_ID, getElementsAsTemplateVar(Asset.TYPE_ID, elementSet));
+            templateVars.put(IncidentScenario.TYPE_ID, getElementsAsTemplateVar(IncidentScenario.TYPE_ID, elementSet));
+        } 
+        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, processVars.get(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME));   
+        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE));
+        return templateVars;
+    }
+
+    private Set<String> getElementsAsTemplateVar(String typeId, Set<CnATreeElement> elementSet) {
+        Set<String> elementTitles = new HashSet<String>();
+        for (CnATreeElement element : elementSet) {
+            if(element.getTypeId().equals(typeId)) {
+                elementTitles.add(element.getTitle());
+            }
+        }
+        return elementTitles;
+    }
+
+    /**
+     * Returns the bundle/jar relative path to the velocity email template.
+     * First a localized template is search by the default locale of the java vm.
+     * If localized template is not found default/english template is returned.
+     * 
+     * Localized template path: <TEMPLATE_BASE_PATH>_<LANG_CODE>.vm
+     * Default template path: <TEMPLATE_BASE_PATH>.vm
+     * 
+     * @return bundle/jar relative path to the velocity email template
+     */
+    protected String getTemplatePath() {      
+        String langCode = Locale.getDefault().getLanguage();
+        String path = getTemplateBasePath() + "_" + langCode + TEMPLATE_EXTENSION; //$NON-NLS-1$
+        if(this.getClass().getClassLoader().getResource(path)==null) {
+            path = getTemplateBasePath() + TEMPLATE_EXTENSION;
+        }
+        return path;
+    }
+
+    public String getTemplateBasePath() {
+        return templateBasePath;
+    }
+
+    public void setTemplateBasePath(String templateBasePath) {
+        this.templateBasePath = templateBasePath;
+    }
+
+    public VelocityEngine getVelocityEngine() {
+        return velocityEngine;
+    }
+
+    public void setVelocityEngine(VelocityEngine velocityEngine) {
+        this.velocityEngine = velocityEngine;
     }
 
 }

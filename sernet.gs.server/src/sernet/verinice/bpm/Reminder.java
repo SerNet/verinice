@@ -51,23 +51,28 @@ public class Reminder implements EventListener  {
     private String uuid;
 
     public void sendEmail(String taskType, String assignee, String uuid) {
-        doSendEmail(Collections.EMPTY_MAP, taskType, assignee, uuid);
+        ServerInitializer.inheritVeriniceContextState();
+        doSendEmail(Collections.<String, Object> emptyMap(), taskType, assignee, uuid);
     }
     
     public void sendEmail(String executionId, String taskType, String assignee, String uuid) {
+        ServerInitializer.inheritVeriniceContextState();
         doSendEmail(loadVariablesForProcess(executionId), taskType, assignee, uuid);
+    }
+    
+    public void sendEmailWithoutElement(String executionId, String taskType, String assignee) {
+        ServerInitializer.inheritVeriniceContextState();
+        doSendEmail(loadVariablesForProcess(executionId), taskType, assignee, null);
     }
    
     private void doSendEmail(Map<String, Object> variables, String taskType, String assignee, String uuid) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("sendEmail called...");           
+            LOG.debug("sendEmail called (taskType: " + taskType + ", recipient: " + assignee + ")...");           
         }
         
-        if(!validate(taskType,assignee,uuid)) {
+        if(!validate(taskType,assignee)) {
             return;
-        }
-        
-        ServerInitializer.inheritVeriniceContextState();      
+        }      
         
         // NotificationJob can not do a real login
         // authentication is a fake instance to run secured commands and dao actions
@@ -81,6 +86,10 @@ public class Reminder implements EventListener  {
             }
                  
             IEmailHandler handler = EmailHandlerFactory.getHandler(taskType);
+            if(handler==null) {
+                LOG.error("No email handler found for task: " + taskType + ". Can not send email."); 
+                return;
+            }
             handler.send(assignee, taskType, variables, uuid);
         } finally {
             if(dummyAuthAdded) {
@@ -89,17 +98,13 @@ public class Reminder implements EventListener  {
         }
     }
     
-    private boolean validate(String taskType, String assignee, String uuid) {
+    private boolean validate(String taskType, String assignee) {
         if(taskType==null) {
             LOG.error("Task type is null. Can not send email.");
             return false;
         }
         if(assignee==null) {
             LOG.error("Assignee type is null. Can not send email.");
-            return false;
-        }
-        if(uuid==null) {
-            LOG.error("Uuid type is null. Can not send email.");
             return false;
         }
         if(EmailHandlerFactory.getHandler(taskType)==null) {

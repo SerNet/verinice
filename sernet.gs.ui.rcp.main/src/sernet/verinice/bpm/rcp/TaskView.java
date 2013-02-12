@@ -46,6 +46,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -146,9 +147,16 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     @Override
     public void createPartControl(Composite parent) {
         this.parent = parent;
-        Composite container = createContainer(parent);
+        //Composite container = createContainer(parent);
+        SashForm container = new SashForm(parent, SWT.VERTICAL);       
+              
         createInfoPanel(container);
         createTreeViewer(container);
+        
+        container.setWeights(new int[] { 50, 50});
+        container.setSashWidth(4);
+        container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+        
         initData();
         makeActions();
         addActions();

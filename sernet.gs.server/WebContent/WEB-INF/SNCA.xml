@@ -4427,7 +4427,8 @@ the value between <param></param> will be used directly if no string is found fo
          </huipropertygroup>
         
           <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
-                <huiproperty id="gsm_ism_control_description" name="" tags="Greenbone_GSM" inputtype="text" editable="false" />
+                <huiproperty id="gsm_ism_control_description" name="GSM Description" tags="Greenbone_GSM" inputtype="text" editable="false" />
+                <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" inputtype="text" editable="false" />
             </huipropertygroup>
         
          <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->

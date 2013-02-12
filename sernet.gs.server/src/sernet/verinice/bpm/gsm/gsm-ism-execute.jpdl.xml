@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <process key="gsm-ism-execute" name="Greenbone ISM Execute Task" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
-   <description>Workflow to manage individual tasks.</description>
+   <description>Workflow to manage Greenbone vulnerabilities resolutions.</description>
    
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
    
@@ -9,10 +9,20 @@
       <transition to="gsm.ism.execute.task.execute"/>
    </start>
    
-   <task assignee="#{ISA_OWNER_NAME}" g="252,21,187,52" name="gsm.ism.execute.task.execute">
-      <transition name="gsm.ism.execute.trans.complete" g="-48,-22" to="end"/>
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="233,21,227,52" name="gsm.ism.execute.task.execute">
+      <transition g="-123,-19" name="gsm.ism.execute.trans.complete" to="end"/>
+      <transition g="-228,-11" name="gsm.ism.execute.trans.reminder" to="java.sendReminder">
+        <timer duedate="2 minutes"/>
+      </transition>
    </task>
    
-   <end g="615,22,80,40" name="end"/>
+   <java class="sernet.verinice.bpm.Reminder" g="261,154,170,40" method="sendEmailWithoutElement" name="java.sendReminder">
+      <arg><object expr="#{execution.id}"/></arg>
+      <arg><object expr="gsm.ism.execute.task.execute"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <transition to="gsm.ism.execute.task.execute"/>
+   </java>
+   
+   <end g="723,20,80,40" name="end"/>
 
 </process>

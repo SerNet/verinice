@@ -1,0 +1,11 @@
+## Don't add white space
+<b>Anwendung</b>: ${GSM_ISM_CONTROL_GROUP_TITLE}<table width="100%"><tr><td width="50%"><b>Assets</b>:<br/>
+#foreach( $element in $asset )
+$element<br/>
+#end</td><td width="50%"><b>Schwachstellen</b>:<br/>
+#foreach( $element in $incident_scenario )
+$element<br/>
+#end
+</td>
+</tr>
+</table>

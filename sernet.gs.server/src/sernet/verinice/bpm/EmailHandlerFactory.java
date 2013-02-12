@@ -22,11 +22,13 @@ package sernet.verinice.bpm;
 import java.util.Hashtable;
 import java.util.Map;
 
+import sernet.verinice.bpm.gsm.GsmExecuteEmailHandler;
 import sernet.verinice.bpm.isam.AuditEmailHandler;
 import sernet.verinice.bpm.isam.DeadlineEmailHandler;
 import sernet.verinice.bpm.isam.NotResponsibleEmailHandler;
 import sernet.verinice.bpm.qm.IssueFixedEmailHandler;
 import sernet.verinice.bpm.qm.IssueNotFixedEmailHandler;
+import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 
@@ -52,7 +54,8 @@ public final class EmailHandlerFactory {
         HANDLERMAP.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
         HANDLERMAP.put(IIsaControlFlowProcess.AUDIT_STARTS, new AuditEmailHandler());
         HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_FIXED, new IssueFixedEmailHandler());
-        HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler());      
+        HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler()); 
+        HANDLERMAP.put(IGsmIsmExecuteProzess.TASK_EXECUTE, new GsmExecuteEmailHandler());      
     }
     
     private EmailHandlerFactory(){};
