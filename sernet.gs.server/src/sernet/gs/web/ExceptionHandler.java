@@ -22,7 +22,7 @@ package sernet.gs.web;
  * @author Daniel <dm[at]sernet[dot]de>
  *
  */
-public class ExceptionHandler {
+public final class ExceptionHandler {
     
     private ExceptionHandler(){}
 

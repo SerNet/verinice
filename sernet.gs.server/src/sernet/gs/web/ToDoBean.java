@@ -58,6 +58,9 @@ public class ToDoBean {
 
 	private static final Logger LOG = Logger.getLogger(ToDoBean.class);
 	
+	private static final int MAX_EXECUTIONS = 5;
+	private static final int NR_SEAL = 4;
+	
 	public static final String BOUNDLE_NAME = "sernet.gs.web.Messages";
 	
 	private AssetNavigationBean assetNavigation;
@@ -100,7 +103,7 @@ public class ToDoBean {
 	public ToDoBean() {
 		super();
 		// Grundschutz
-		executionList = new ArrayList<KeyValue>(5);
+		executionList = new ArrayList<KeyValue>(MAX_EXECUTIONS);
 		executionList.add(new KeyValue(UmsetzungConverter.ENTBERHRLICH, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH));
 		executionList.add(new KeyValue(UmsetzungConverter.JA, MassnahmenUmsetzung.P_UMSETZUNG_JA));
 		executionList.add(new KeyValue(UmsetzungConverter.NEIN, MassnahmenUmsetzung.P_UMSETZUNG_NEIN));
@@ -167,7 +170,7 @@ public class ToDoBean {
 	}
 	
 	private Set<String> createExecutionSet() {
-		Set<String> executionSet = new HashSet<String>(5);
+		Set<String> executionSet = new HashSet<String>(MAX_EXECUTIONS);
 		// Grundschutz
 		if(isExecutionDispensable()) {
 			executionSet.add(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
@@ -205,7 +208,7 @@ public class ToDoBean {
 	}
 	
 	private Set<String> createSealSet() {
-		Set<String> sealSet = new HashSet<String>(4);
+		Set<String> sealSet = new HashSet<String>(NR_SEAL);
 		if(isSealA()) {
 			sealSet.add("A");
 		}

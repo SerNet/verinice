@@ -281,14 +281,14 @@ public class TaskService implements ITaskService {
      * @param where
      */
     private boolean concat(/*not final*/StringBuilder hql,/*not final*/boolean where) {
-        boolean where_0 = where;
-        if(!where_0) {
+        boolean where0 = where;
+        if(!where0) {
             hql.append("where "); //$NON-NLS-1$
-            where_0 = true;
+            where0 = true;
         } else {
             hql.append("and "); //$NON-NLS-1$
         }
-        return where_0;
+        return where0;
     }
 
     /* (non-Javadoc)
@@ -446,14 +446,15 @@ public class TaskService implements ITaskService {
     
     private String createSortableString(String text) {
         String sortable = text;
+        final int minimumLength = 3;
         if(sortable!=null && sortable.length()>0 && isNumber(sortable.substring(0,1)) ) {
             if(sortable.length()==1 || !isNumber(sortable.substring(1,2))) {
                 sortable = new StringBuilder("0").append(sortable).toString(); //$NON-NLS-1$
             }
-            if(sortable.indexOf('.')==2 && sortable.length()>3) { //$NON-NLS-1$
+            if(sortable.indexOf('.')==2 && sortable.length()>minimumLength) { //$NON-NLS-1$
                 sortable = new StringBuilder(sortable.substring(0, 2))
                 .append(".") //$NON-NLS-1$
-                .append(createSortableString(sortable.substring(3)))
+                .append(createSortableString(sortable.substring(minimumLength)))
                 .toString();
             }
         }

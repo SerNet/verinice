@@ -424,8 +424,7 @@ public class XmlRightsService implements IRightsService {
         String hql = "select props.propertyValue from Property as props " + //$NON-NLS-1$
                 "where props.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_ROLES};  
-        List<String> groupnameList = getPropertyDao().findByQuery(hql,params);
-        return groupnameList;
+        return getPropertyDao().findByQuery(hql,params);
     }
     
     /* (non-Javadoc)
@@ -708,8 +707,6 @@ public class XmlRightsService implements IRightsService {
      */
     private Map<String, Action> loadAllReferencedActions(Auth auth) {
         Map<String, Action> actionMap = new HashMap<String, Action>();
-       
-        actionMap = new HashMap<String, Action>();
         for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {  
             List<ProfileRef> profileList = userprofile.getProfileRef();
             if(profileList!=null) {

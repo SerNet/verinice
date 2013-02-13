@@ -288,8 +288,9 @@ public class HuiProperty<K,V> implements Serializable{
         HuiProperty other = (HuiProperty) obj;
         if (key == null && other.key != null){
             return false;
-        } else if (key!=null && !key.equals(other.key))
+        } else if (key!=null && !key.equals(other.key)){
             return false;
+        }
         if (value == null && other.value != null){
             return false;
         } else if (value != null && !value.equals(other.value)){

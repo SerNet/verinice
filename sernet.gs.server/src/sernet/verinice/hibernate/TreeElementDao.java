@@ -95,9 +95,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         // List results = getHibernateTemplate().findByCriteria(criteria, 0,
         // 1000);
         // return results;
-        IRetrieveInfo ri_0 = (ri == null) ? new RetrieveInfo() : ri;
+        IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
-        configureCriteria(criteria, ri_0);
+        configureCriteria(criteria, ri0);
         return findByCriteria(criteria);
     }
 
@@ -109,19 +109,22 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
     
     public T findByUuid(String uuid, IRetrieveInfo ri) {
-        IRetrieveInfo ri_0 = (ri == null) ? new RetrieveInfo() : ri;
+        IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
         criteria.add(Restrictions.eq("uuid", uuid));
-        configureCriteria(criteria, ri_0);
+        configureCriteria(criteria, ri0);
         return loadByCriteria(criteria);
     }
 
     public T retrieve(ID id, IRetrieveInfo ri) {
+        IRetrieveInfo ri0 = null;
         if(LOG.isDebugEnabled()) {
             LOG.debug("retrieve - id: " + id + " " + ri);
         }
         if (ri == null) {
-            ri = new RetrieveInfo();
+            ri0 = new RetrieveInfo();
+        } else {
+            ri0 = ri;
         }
 
         DetachedCriteria criteria = DetachedCriteria.forClass(type);

@@ -136,7 +136,12 @@ public class PrepareNotificationInfo extends GenericCommand {
 			}
 		}
 		
-		LoadCnAElementByType<MassnahmenUmsetzung> lmu = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, false);
+		handleMeasures(globalNotifees, globalAuditorNotifees);
+		
+	}
+
+    private void handleMeasures(Set<Configuration> globalNotifees, Set<Configuration> globalAuditorNotifees) {
+        LoadCnAElementByType<MassnahmenUmsetzung> lmu = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, false);
 		
 		try {
 			lmu = (LoadCnAElementByType<MassnahmenUmsetzung>) getCommandService().executeCommand(lmu);
@@ -156,8 +161,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				handleIncompletedMeasure(mu, globalNotifees);
 			}
 		}
-		
-	}
+    }
 	
 	private Configuration retrieveConfiguration(CnATreeElement p)
 	{

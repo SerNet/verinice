@@ -28,7 +28,7 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-public class Util {
+public final class Util {
 
 	private static final String DEFAULT_COMPONENT_ID = "massagePanel";
 

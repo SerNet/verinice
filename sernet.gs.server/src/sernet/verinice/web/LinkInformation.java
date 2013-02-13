@@ -140,13 +140,14 @@ public class LinkInformation implements ILink, Comparable<LinkInformation>, Seri
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         LinkInformation other = (LinkInformation) obj;
+        return compareIds(other);
+    }
+
+    private boolean compareIds(LinkInformation other) {
         if (dependantId == null) {
             if (other.dependantId != null) {
                 return false;

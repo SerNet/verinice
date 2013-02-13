@@ -56,7 +56,12 @@ public class PersonDaoImpl implements IPersonDao {
 			sb.append("(&");
 		}
 		sb.append(getFilter());
-		if(parameter!=null && !parameter.isEmpty() ) {
+		sb = appendUserParameter(parameter, sb);
+		return sb.toString();
+	}
+
+    private StringBuilder appendUserParameter(PersonParameter parameter, StringBuilder sb) {
+        if(parameter!=null && !parameter.isEmpty() ) {
 			if(parameter.getSurname()!=null && !parameter.getSurname().isEmpty()) {
 				sb.append("(sn=").append(parameter.getSurname()).append("*)");
 			}
@@ -76,8 +81,8 @@ public class PersonDaoImpl implements IPersonDao {
 			}
 			sb.append(")");
 		}
-		return sb.toString();
-	}
+        return sb;
+    }
 	
 	public String getBase() {
 		return base;
@@ -107,67 +112,102 @@ public class PersonDaoImpl implements IPersonDao {
         public Object mapFromAttributes(Attributes attrs)
            throws NamingException {
            PersonIso person = new PersonIso();
-           String login = null;
-           if(attrs.get("sAMAccountName")!=null) {
-               login = (String) attrs.get("sAMAccountName").get();
-           } else if(attrs.get("userPrincipalName")!=null) {
-               // pre windows 2000:
-               login = (String) attrs.get("userPrincipalName").get();
-           } else if(attrs.get("uid")!=null) {
-               // OpenLDAP
-               login = (String) attrs.get("uid").get();
-           }
-           if(attrs.get("givenName")!=null) {
-               // AD
-               person.setName((String) attrs.get("givenName").get());
-           }else {
-               // OpenLDAP
-               String forname = getForename((String) attrs.get("cn").get());
-               if(forname!=null) {
-                   person.setName(forname);
-               }
-           }
-           if(attrs.get("sn")!=null) {
-               // AD
-               person.setSurname((String) attrs.get("sn").get());
-           } else {
-               // OpenLDAP
-               String surname = getSurname((String) attrs.get("cn").get());
-               if(surname!=null) {
-                   person.setSurname(surname);
-               }
-           }
-           if(attrs.get("telephoneNumber")!=null) {
-               // AD
-               person.setPhone((String) attrs.get("telephoneNumber").get());
-           }
-           if(attrs.get("mail")!=null) {
-               // AD
-               person.setEmail((String) attrs.get("mail").get());
-           }
-           String title = null;
-           if(attrs.get("title")!=null) {
-               // AD
-               title = (String) attrs.get("title").get();
-           }
-           String department = null;
-           if(attrs.get("department")!=null) {
-               // AD
-               department = (String) attrs.get("department").get();
-           } else if(attrs.get("subDepartment")!=null) {
-               // LDAP
-               department = (String) attrs.get("subDepartment").get();
-           }
-           String company = null;
-           if(attrs.get("company")!=null) {
-               // AD
-               company = (String) attrs.get("company").get();
-           } else if(attrs.get("companyCode")!=null)  {
-               // LDAP
-               company = (String) attrs.get("companyCode").get();
-           }
+           String login = determineLogin(attrs);
+           person = determineGivenName(attrs, person);
+           person = determineSurname(attrs, person);
+           person = determineEmailPhone(attrs, person);
+           String title = determineTitle(attrs);
+           String department = determineDepartment(attrs);
+           String company = determineCompany(attrs);
            
            return new PersonInfo(person, login, title, department, company);
+        }
+
+        private String determineCompany(Attributes attrs) throws NamingException {
+            String company = null;
+               if(attrs.get("company")!=null) {
+                   // AD
+                   company = (String) attrs.get("company").get();
+               } else if(attrs.get("companyCode")!=null)  {
+                   // LDAP
+                   company = (String) attrs.get("companyCode").get();
+               }
+            return company;
+        }
+
+        private String determineDepartment(Attributes attrs) throws NamingException {
+            String department = null;
+               if(attrs.get("department")!=null) {
+                   // AD
+                   department = (String) attrs.get("department").get();
+               } else if(attrs.get("subDepartment")!=null) {
+                   // LDAP
+                   department = (String) attrs.get("subDepartment").get();
+               }
+            return department;
+        }
+
+        private String determineTitle(Attributes attrs) throws NamingException {
+            String title = null;
+               if(attrs.get("title")!=null) {
+                   // AD
+                   title = (String) attrs.get("title").get();
+               }
+            return title;
+        }
+
+        private PersonIso determineEmailPhone(Attributes attrs, PersonIso person) throws NamingException {
+            if(attrs.get("telephoneNumber")!=null) {
+                   // AD
+                   person.setPhone((String) attrs.get("telephoneNumber").get());
+               }
+               if(attrs.get("mail")!=null) {
+                   // AD
+                   person.setEmail((String) attrs.get("mail").get());
+               }
+               return person;
+        }
+
+        private PersonIso determineSurname(Attributes attrs, PersonIso person) throws NamingException {
+            if(attrs.get("sn")!=null) {
+                   // AD
+                   person.setSurname((String) attrs.get("sn").get());
+               } else {
+                   // OpenLDAP
+                   String surname = getSurname((String) attrs.get("cn").get());
+                   if(surname!=null) {
+                       person.setSurname(surname);
+                   }
+               }
+            return person;
+        }
+
+        private PersonIso determineGivenName(Attributes attrs, PersonIso person) throws NamingException {
+            if(attrs.get("givenName")!=null) {
+                   // AD
+                   person.setName((String) attrs.get("givenName").get());
+               }else {
+                   // OpenLDAP
+                   String forname = getForename((String) attrs.get("cn").get());
+                   if(forname!=null) {
+                       person.setName(forname);
+                   }
+               }
+            return person;
+        }
+
+        private String determineLogin(Attributes attrs) throws NamingException {
+            String login = null;
+               if(attrs.get("sAMAccountName")!=null) {
+                   login = (String) attrs.get("sAMAccountName").get();
+               } else if(attrs.get("userPrincipalName")!=null) {
+                   // pre windows 2000:
+                   login = (String) attrs.get("userPrincipalName").get();
+               } else if(attrs.get("uid")!=null) {
+                   // OpenLDAP
+                   login = (String) attrs.get("uid").get();
+               }
+            return login;
         }
     }
 

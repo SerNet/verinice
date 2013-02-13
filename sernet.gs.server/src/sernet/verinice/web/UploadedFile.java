@@ -37,8 +37,8 @@ public class UploadedFile {
     public String getName() {
         return name;
     }
-    public void setName(String name_0) {
-        name = name_0;
+    public void setName(String name0) {
+        name = name0;
         int extDot = name.lastIndexOf('.');
         if(extDot > 0){
             String extension = name.substring(extDot +1);

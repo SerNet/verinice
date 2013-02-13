@@ -2,7 +2,7 @@ package sernet.gs.server;
 
 import org.eclipse.osgi.util.NLS;
 
-class Messages extends NLS {
+final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.server.messages"; //$NON-NLS-1$
 	public static String InternalServer_0;
 	public static String InternalServer_1;

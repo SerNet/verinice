@@ -210,23 +210,7 @@ public class LinkBean {
                     // try to link from target to dragged elements first:
                     // use first relation type (user can change it later):
                     if (!possibleRelations.isEmpty()) {
-                        boolean reverse = false;
-                        HuiRelation selectedRelation = huiRelationMap.get(getSelectedLinkType());
-                        CnALink link = createLink(getElement(), target, selectedRelation.getId(), "Created by web client");
-                        if(link==null) {
-                            // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
-                            possibleRelations = getHuiService().getPossibleRelations(target.getTypeId(), getTypeId());
-                            if ( !possibleRelations.isEmpty()) {
-                                link = createLink(target, getElement(), selectedRelation.getId(), "Created by web client");
-                            }
-                            reverse = true;
-                        } 
-                        if(link!=null) {
-                            LinkInformation linkInformation = map(link,reverse);
-                            linkInformation.setType(getTypeName(link));
-                            linkList.add(linkInformation);
-                            Util.addInfo("addLink", Util.getMessage(EditBean.BOUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
-                        }
+                        createLinkLookupRelations(target);
                     }
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("addLink, type-id: " + typeId);
@@ -236,6 +220,27 @@ public class LinkBean {
         } catch (Exception t) {
             LOG.error("Error while creating link, typeId: " + typeId, t);
             ExceptionHandler.handle(t);
+        }
+    }
+
+    private void createLinkLookupRelations(CnATreeElement target) throws CommandException {
+        Set<HuiRelation> possibleRelations;
+        boolean reverse = false;
+        HuiRelation selectedRelation = huiRelationMap.get(getSelectedLinkType());
+        CnALink link = createLink(getElement(), target, selectedRelation.getId(), "Created by web client");
+        if(link==null) {
+            // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
+            possibleRelations = getHuiService().getPossibleRelations(target.getTypeId(), getTypeId());
+            if ( !possibleRelations.isEmpty()) {
+                link = createLink(target, getElement(), selectedRelation.getId(), "Created by web client");
+            }
+            reverse = true;
+        } 
+        if(link!=null) {
+            LinkInformation linkInformation = map(link,reverse);
+            linkInformation.setType(getTypeName(link));
+            linkList.add(linkInformation);
+            Util.addInfo("addLink", Util.getMessage(EditBean.BOUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
         }
     }
     

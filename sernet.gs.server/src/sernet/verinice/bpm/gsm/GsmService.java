@@ -57,14 +57,14 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
     private static final Logger LOG = Logger.getLogger(GsmService.class);
     
-    private static final String[] typeIds = {Asset.TYPE_ID,
+    private static final String[] TYPE_IDS = {Asset.TYPE_ID,
                                              AssetGroup.TYPE_ID,
                                              Control.TYPE_ID,
                                              ControlGroup.TYPE_ID,
                                              IncidentScenario.TYPE_ID,
                                              PersonIso.TYPE_ID};
     
-    private static final String[] relationIds = {Control.REL_CONTROL_INCSCEN,
+    private static final String[] RELATION_IDS = {Control.REL_CONTROL_INCSCEN,
                                              AssetGroup.REL_PERSON_ISO,
                                              IncidentScenario.REL_INCSCEN_ASSET};
     
@@ -96,8 +96,8 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
      */
     public void initGraph(Integer orgId) {
         try {          
-            getGraphService().setTypeIds(typeIds);
-            getGraphService().setRelationIds(relationIds);
+            getGraphService().setTypeIds(TYPE_IDS);
+            getGraphService().setRelationIds(RELATION_IDS);
             getGraphService().setElementFilter(new TopElementFilter(orgId));
             getGraphService().setScopeId(orgId);
             getGraphService().create();          

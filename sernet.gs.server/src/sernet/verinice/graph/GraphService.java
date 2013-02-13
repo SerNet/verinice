@@ -216,21 +216,21 @@ public class GraphService implements IGraphService {
     }
 
     public String[] getTypeIds() {
-        return typeIds;
+        return (typeIds != null) ? typeIds.clone() : null;
     }
 
     @Override
     public void setTypeIds(String[] typeIds) {
-        this.typeIds = typeIds;
+        this.typeIds = (typeIds != null) ? typeIds.clone() : null;
     }
 
     public String[] getRelationIds() {
-        return relationIds;
+        return (relationIds != null) ? relationIds.clone() : null;
     }
 
     @Override
     public void setRelationIds(String[] relationIds) {
-        this.relationIds = relationIds;
+        this.relationIds = (relationIds != null) ? relationIds.clone() : null;
     }
 
     public TreeElementDao<CnATreeElement, Long> getCnaTreeElementDao() {

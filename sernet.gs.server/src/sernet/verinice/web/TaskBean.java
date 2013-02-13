@@ -232,14 +232,14 @@ public class TaskBean {
     }
     
     String getUniqueName(String name, int n) {
-        int n_0 = n;
-        String name_0 = name;
-        if(nameAuditMap.containsKey(name_0)) {
-            n_0++;
-            name_0 = new StringBuilder(name_0).append(" (").append(n).append(")").toString(); //$NON-NLS-1$ //$NON-NLS-2$
-            return getUniqueName(name_0, n_0);
+        int n0 = n;
+        String name0 = name;
+        if(nameAuditMap.containsKey(name0)) {
+            n0++;
+            name0 = new StringBuilder(name0).append(" (").append(n).append(")").toString(); //$NON-NLS-1$ //$NON-NLS-2$
+            return getUniqueName(name0, n0);
         } else {
-            return name_0;
+            return name0;
         }
     }
     

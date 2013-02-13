@@ -118,17 +118,17 @@ public class IsaControlFlowControlAdder extends ProzessExecution {
     }     
 
     private List<CnATreeElement> getDirListInAudit(CnATreeElement element, List<CnATreeElement> dirList) throws CommandException {
-        List<CnATreeElement> dirList_0 = new LinkedList<CnATreeElement>();
+        List<CnATreeElement> dirList0 = new LinkedList<CnATreeElement>();
         
         if(element.getParent()!=null) {
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance().setParent(true);
             CnATreeElement parent = loadElementByUuid(element.getParent().getUuid(), ri);
             if(!parent.getTypeId().equals(Audit.TYPE_ID)) {          
-                dirList_0 = getDirListInAudit(parent, dirList);
-                dirList_0.add(parent);
+                dirList0 = getDirListInAudit(parent, dirList);
+                dirList0.add(parent);
             }
         }
-        return dirList_0;
+        return dirList0;
     }
     
     private CnATreeElement findOrAddDirectories(CnATreeElement parent, CnATreeElement dir) throws CommandException {

@@ -275,7 +275,7 @@ public class TreeBean implements IElementListener {
     }
     
     public void delete() {
-        final String COMPONENT_ELEMENTTABLE = "elementTable";
+        final String componentElementtable = "elementTable";
         try {
             RemoveElement<CnATreeElement> command = new RemoveElement(getElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -286,17 +286,17 @@ public class TreeBean implements IElementListener {
             if(isGroup()) {
                 showParent();
             }
-            Util.addInfo(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
+            Util.addInfo(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
         } catch( SecurityException e) {
             LOG.error("SecurityException while deleting element.");
-            Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+            Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
         } catch( Exception e) {
             LOG.error("Error while deleting element.");
             Throwable t = e.getCause();
             if(t instanceof SecurityException) {
-                Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
             } else {
-                Util.addError(COMPONENT_ELEMENTTABLE, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
             }
         }
     }
