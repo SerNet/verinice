@@ -176,18 +176,21 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
                 categorie.addLinkUp(link);
                 daoLink.saveOrUpdate(link);
             }
-        } catch (Exception e) {
+        } catch (CommandException e) {
             getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
+        } catch (IOException e){
+            getLog().error("I-/O-Error while creating self assesment", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("I-/O-Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         }
     }
     
     public Organization saveNewOrganisation(CnATreeElement container, String title) throws CommandException {
-        String title_ = (title != null) ? new String(title) : null;
-        if(title_==null) {
-            title_ = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);   
+        String title0 = (title != null) ? title : null;
+        if(title0==null) {
+            title0 = HitroUtil.getInstance().getTypeFactory().getMessage(Organization.TYPE_ID);   
         }
-        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container, Organization.class, title_, false, true);
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(container, Organization.class, title0, false, true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         Organization child = saveCommand.getNewElement();
         container.addChild(child);
@@ -271,16 +274,16 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
      * @return
      */
     private AuditGroup getAuditGroup(CnATreeElement selfAssessment) {
-        AuditGroup auditGroup_ = null;
+        AuditGroup auditGroup0 = null;
         Set<CnATreeElement> elementSet = selfAssessment.getChildren();
         for (Iterator<CnATreeElement> iterator = elementSet.iterator(); iterator.hasNext();) {
             CnATreeElement element = iterator.next();
             if (element instanceof AuditGroup) {
-                auditGroup_ = (AuditGroup) element;
+                auditGroup0 = (AuditGroup) element;
                 break;
             }
         }
-        return auditGroup_;
+        return auditGroup0;
     }
     
     /**
