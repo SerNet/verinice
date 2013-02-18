@@ -153,8 +153,8 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 
 		public void modelRefresh(Object source) {
 			if (source != null) {
-			    todoView.loadBlockNumber=0;
-		        todoView.loadMoreAction.setEnabled(true);
+			    todoView.setLoadBlockNumber(0);
+		        todoView.getLoadMoreAction().setEnabled(true);
 				reloadMeasures();
 			}
 		}

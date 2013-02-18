@@ -115,13 +115,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 	private TreeViewer viewer;
 	
-	private Label labelCatalog;
-	
 	private Combo comboCatalog;
 	
 	private ComboModel<Attachment> comboModel;
-	
-	private Label labelFilter;
 	
 	private Text filter;
 	
@@ -178,6 +174,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 
 	private void initView(Composite parent) {
+	    Label labelCatalog;
+	    Label labelFilter;
 		GridLayout gl = new GridLayout(1, true);
 		parent.setLayout(gl);
 		
@@ -201,7 +199,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			public String getLabel(Attachment attachment) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(attachment.getFileName());
-				sb.append(" (").append(DATE_TIME_FORMAT_SHORT.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+				DateFormat df = (DateFormat)DATE_TIME_FORMAT_SHORT.clone();
+				sb.append(" (").append(df.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 				return sb.toString();
 			}		
 		});
@@ -222,8 +221,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		//viewer.setSorter(new KapitelSorter());
-			
+
 		getSite().setSelectionProvider(viewer);
 		
 		makeActions();
@@ -307,9 +305,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			attachmentFile.setDbId(attachment.getDbId());
 			attachmentFile.setFileData(csvFile.getFileContent());
 			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
-//			saveAttachmentFile = getCommandService().executeCommand(saveAttachmentFile);
 			getCommandService().executeCommand(saveAttachmentFile);
-//			attachmentFile = saveAttachmentFile.getElement();
 			saveAttachmentFile.clear();
 		}
 		return attachment;
@@ -350,8 +346,9 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
 			public void run() {
 				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
-				if (confirm)
+				if (confirm){
 					deleteCatalog();
+				}
 			}
 		};
 		deleteCatalogAction.setText(Messages.CatalogView_14);
@@ -466,10 +463,11 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		}
 
 		public String getText(Object obj) {
+		    final int maxLabelWidth = 80;
 			IItem item = ((IItem)obj);
 			String label = "";
 			if(item!=null) {
-			    label = ItemControlTransformer.truncate(item.getName(), 80);
+			    label = ItemControlTransformer.truncate(item.getName(), maxLabelWidth);
 			}
 			return label;
 		}

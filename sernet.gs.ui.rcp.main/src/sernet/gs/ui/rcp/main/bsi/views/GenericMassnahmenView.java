@@ -95,7 +95,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	public int loadBlockNumber = 0;
+	private int loadBlockNumber = 0;
 	
 	private boolean isDateSet = false;
 	
@@ -447,18 +447,19 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
         }
 	};
 
-	protected TableViewer viewer;
-	protected TableColumn iconColumn;
-	protected TableColumn titleColumn;
-	protected TableColumn siegelColumn;
-	protected TableColumn dateColumn;
-	protected TableColumn zielColumn;
+	private TableViewer viewer;
+
+    protected TableColumn iconColumn;
+    protected TableColumn titleColumn;
+    protected TableColumn siegelColumn;
+    protected TableColumn dateColumn;
+    protected TableColumn zielColumn;
 	private Action doubleClickAction;
     private Action selectionAction;
     protected TableColumn bearbeiterColumn;
 
 	private Action filterAction;
-	public Action loadMoreAction;
+	private Action loadMoreAction;
 	private Action toggleDateAction;
 	
 
@@ -948,11 +949,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	}
 	
 	protected static class TableSorter extends ViewerSorter {
-		protected int propertyIndex;
+		private int propertyIndex;
 		private static final int DEFAULT_SORT_COLUMN = 1;
 		protected static final int DESCENDING = 1;
 		protected static final int ASCENDING = 0;
-		protected int direction = ASCENDING;
+		private int direction = ASCENDING;
 		
 		public TableSorter() {
 			this.propertyIndex = DEFAULT_SORT_COLUMN;
@@ -1040,6 +1041,25 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	        }
 			return date1.compareTo(date2);
 		}
+
+        public int getPropertyIndex() {
+            return propertyIndex;
+        }
+
+        public int getDirection() {
+            return direction;
+        }
 	}
+
+    public void setLoadBlockNumber(int loadBlockNumber) {
+        this.loadBlockNumber = loadBlockNumber;
+    }
+    public TableViewer getViewer() {
+        return viewer;
+    }
+
+    public Action getLoadMoreAction() {
+        return loadMoreAction;
+    }
 
 }

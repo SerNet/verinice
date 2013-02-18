@@ -54,7 +54,7 @@ public class AuditView extends GenericMassnahmenView {
 	
 	@Override
 	protected void createPartControlImpl(Composite parent) {
-		Table table = viewer.getTable();
+		Table table = getViewer().getTable();
 		
 		iconColumn = new TableColumn(table, SWT.LEFT);
 		iconColumn.setText(" "); //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class AuditView extends GenericMassnahmenView {
 		titleColumn.setWidth(250);
 		titleColumn.addSelectionListener(new SortSelectionAdapter(this,titleColumn,5));
 		
-		viewer.setColumnProperties(new String[] {
+		getViewer().setColumnProperties(new String[] {
 				"_icon", //$NON-NLS-1$
 				"_date", //$NON-NLS-1$
 				"_bearbeiter", //$NON-NLS-1$
@@ -110,7 +110,7 @@ public class AuditView extends GenericMassnahmenView {
 	protected Action createFilterAction(
 			MassnahmenUmsetzungFilter umsetzungFilter,
 			MassnahmenSiegelFilter siegelFilter) {
-		return new AuditViewFilterAction(this,viewer, Messages.AuditView_19,
+		return new AuditViewFilterAction(this,getViewer(), Messages.AuditView_19,
 				umsetzungFilter, siegelFilter);
 	}
 
@@ -232,7 +232,7 @@ public class AuditView extends GenericMassnahmenView {
                     }
                 } else {
                     // e1 and e2 != null    
-                    switch (propertyIndex) {
+                    switch (getPropertyIndex()) {
                     case 0:
                         rc = sortByString(mn1.getUmsetzung(),mn2.getUmsetzung());
                         break;
@@ -256,7 +256,7 @@ public class AuditView extends GenericMassnahmenView {
                     }
                 }
                 // If descending order, flip the direction
-                if (direction == DESCENDING) {
+                if (getDirection() == DESCENDING) {
                     rc = -rc;
                 }
             } catch(Exception e) {

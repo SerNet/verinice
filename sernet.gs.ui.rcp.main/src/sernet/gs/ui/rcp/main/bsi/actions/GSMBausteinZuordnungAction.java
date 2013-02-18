@@ -145,6 +145,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
             String[] bausteine = getSplitBausteine(serverelement);
             if (bausteine == null || bausteine.length == 0 ) {
                 showInfoMessage();
+                return;
             }
             RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true).setParent(true);
             serverelement = (Server) Retriever.retrieveElement(serverelement,ri);

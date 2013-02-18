@@ -52,7 +52,7 @@ public class TodoView extends GenericMassnahmenView {
 
     @Override
     protected void createPartControlImpl(Composite parent) {
-        Table table = viewer.getTable();
+        Table table = getViewer().getTable();
 
         iconColumn = new TableColumn(table, SWT.LEFT);
         iconColumn.setText(" "); //$NON-NLS-1$
@@ -84,7 +84,7 @@ public class TodoView extends GenericMassnahmenView {
         titleColumn.setWidth(250);
         titleColumn.addSelectionListener(new SortSelectionAdapter(this, titleColumn, 5));
 
-        viewer.setColumnProperties(new String[] { "_icon", //$NON-NLS-1$
+        getViewer().setColumnProperties(new String[] { "_icon", //$NON-NLS-1$
                 "_date", //$NON-NLS-1$
                 "_bearbeiter", //$NON-NLS-1$
                 "_siegel", //$NON-NLS-1$
@@ -97,7 +97,7 @@ public class TodoView extends GenericMassnahmenView {
     }
 
     protected Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter, MassnahmenSiegelFilter siegelFilter) {
-        return new TodoViewFilterAction(this,viewer, Messages.TodoView_2, umsetzungFilter, siegelFilter);
+        return new TodoViewFilterAction(this,getViewer(), Messages.TodoView_2, umsetzungFilter, siegelFilter);
 
     }
 

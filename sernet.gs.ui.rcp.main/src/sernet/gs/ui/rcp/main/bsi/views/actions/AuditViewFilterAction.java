@@ -62,15 +62,15 @@ public class AuditViewFilterAction extends Action {
 				siegelFilter.getPattern(),
 				umsetzungDurchFilter.getPattern(),
 				zielobjektFilter.getPattern());
-		if (dialog.open() != InputDialog.OK)
+		if (dialog.open() != InputDialog.OK){
 			return;
-		
+		}
 		umsetzungFilter.setUmsetzungPattern(dialog.getUmsetzungSelection());
 		siegelFilter.setPattern(dialog.getSiegelSelection());
 		umsetzungDurchFilter.setPattern(dialog.getUmsetzungDurch());
 		zielobjektFilter.setPattern(dialog.getZielobjekt());
-		view.loadBlockNumber=0;
-		view.loadMoreAction.setEnabled(true);
+		view.setLoadBlockNumber(0);
+		view.getLoadMoreAction().setEnabled(true);
 		view.reloadMeasures();
 		
 	}
