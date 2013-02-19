@@ -19,33 +19,19 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Status;
 
 import sernet.gs.model.Baustein;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dnd.CnPItems;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.dnd.Messages;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.service.commands.SaveElement;
 
 /**
  * A CopyBausteineService is a job, which

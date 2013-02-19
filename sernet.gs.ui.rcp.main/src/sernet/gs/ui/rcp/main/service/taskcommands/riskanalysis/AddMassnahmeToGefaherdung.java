@@ -17,16 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
-import java.io.Serializable;
-
-import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 
 /**

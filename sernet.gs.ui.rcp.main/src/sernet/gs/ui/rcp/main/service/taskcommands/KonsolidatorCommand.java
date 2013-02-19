@@ -18,13 +18,11 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.bsi.model.Konsolidator;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -35,8 +33,8 @@ public class KonsolidatorCommand extends ChangeLoggingCommand implements IChange
 
 	private List<BausteinUmsetzung> selectedElements;
 	private BausteinUmsetzung source;
-    protected String stationId;
-    List<CnATreeElement> changedElements;
+    private String stationId;
+    private List<CnATreeElement> changedElements;
     
     
 	public KonsolidatorCommand(List<BausteinUmsetzung> selectedElements,
@@ -55,9 +53,9 @@ public class KonsolidatorCommand extends ChangeLoggingCommand implements IChange
 		// for every target:
 		for (BausteinUmsetzung target: selectedElements) {
 			// do not copy source onto itself:
-			if (source.equals(target))
+			if (source.equals(target)){
 				continue;
-			
+			}
 			dao.reload(target, target.getDbId());
 			// set values:
 			Konsolidator.konsolidiereBaustein(source, target);

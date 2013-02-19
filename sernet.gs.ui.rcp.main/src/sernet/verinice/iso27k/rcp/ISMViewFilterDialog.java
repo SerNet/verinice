@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -47,14 +46,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
-import sernet.verinice.iso27k.rcp.action.TypeFilter;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -99,10 +95,13 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class ISMViewFilterDialog extends Dialog {
 
-    private static final Logger log = Logger.getLogger(ISMViewFilterDialog.class);
+    private static final int CHECKBOX_COLUMN_WIDTH = 430;
+    private static final int VIEWER_TABLE_WIDTH = 470;
+    private static final int VIEWER_TABLE_HEIGHT = 135;
+    
     private boolean state = true;
 
-    public static final String[][] TYPES = new String[][] {
+    private static final String[][] TYPES = new String[][] {
         new String[] {Asset.TYPE_ID,AssetGroup.TYPE_ID},
         new String[] {Audit.TYPE_ID,AuditGroup.TYPE_ID},
         new String[] {Control.TYPE_ID,ControlGroup.TYPE_ID},
@@ -123,7 +122,7 @@ public class ISMViewFilterDialog extends Dialog {
         new String[] {Vulnerability.TYPE_ID,VulnerabilityGroup.TYPE_ID}
     };
     
-    private Composite container;
+
 
     private String[] tagPattern;
     private CheckboxTableViewer viewer;
@@ -140,7 +139,9 @@ public class ISMViewFilterDialog extends Dialog {
 
     public ISMViewFilterDialog(Shell parent, ISMViewFilter ismViewFilter) {
         super(parent);
-        setShellStyle(SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        int style = SWT.CLOSE | SWT.TITLE | SWT.BORDER;
+        style = style | SWT.APPLICATION_MODAL | SWT.RESIZE;
+        setShellStyle(style);
         this.tagPattern = ismViewFilter.getTagParameter().getPattern();
         this.filterOrg = ismViewFilter.getTagParameter().isFilterOrg();
         this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
@@ -149,7 +150,7 @@ public class ISMViewFilterDialog extends Dialog {
 
     @Override
     protected org.eclipse.swt.widgets.Control createDialogArea(Composite parent) {
-        container = (Composite) super.createDialogArea(parent);
+        Composite container = (Composite) super.createDialogArea(parent);
         GridLayout layout = new GridLayout();
         layout.numColumns = 1;
         container.setLayout(layout);
@@ -173,6 +174,7 @@ public class ISMViewFilterDialog extends Dialog {
      * @return
      */
     private void createTypeGroup(Composite parent) {  
+
         Group groupComposite = new Group(parent, SWT.BORDER);
         groupComposite.setText(Messages.ISMViewFilterDialog_2);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
@@ -190,10 +192,10 @@ public class ISMViewFilterDialog extends Dialog {
         table.setHeaderVisible(false);
         table.setLinesVisible(false);    
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setWidth(430);
+        checkboxColumn.setWidth(CHECKBOX_COLUMN_WIDTH);
         
         comp.setContent(viewerType.getControl());
-        viewerType.getTable().setSize(470, 135);
+        viewerType.getTable().setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
  
         viewerType.setContentProvider(new ArrayContentProvider());
 
@@ -244,10 +246,10 @@ public class ISMViewFilterDialog extends Dialog {
         table.setHeaderVisible(false);
         table.setLinesVisible(false);
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setWidth(430);
+        checkboxColumn.setWidth(CHECKBOX_COLUMN_WIDTH);
         
         comp.setContent(viewer.getControl());
-        viewer.getTable().setSize(470, 135);
+        viewer.getTable().setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
 
         viewer.setContentProvider(new ArrayContentProvider());
 
@@ -296,7 +298,7 @@ public class ISMViewFilterDialog extends Dialog {
     }
 
     public String[] getCheckedElements() {
-        return checkedElements;
+        return (checkedElements != null ) ? checkedElements.clone() : null;
     }
 
     public boolean getHideEmpty() {
@@ -359,10 +361,12 @@ public class ISMViewFilterDialog extends Dialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
+        final int shellWidth = 500;
+        final int shellHeight = 570;
         newShell.setText(Messages.ISMViewFilterDialog_5);
 
         // workaround to prevent tableviewer size from exceeding shell size:
-        newShell.setSize(500, 570);
+        newShell.setSize(shellWidth, shellHeight);
     }
     
     protected HUITypeFactory getTypeFactory() {
@@ -375,7 +379,7 @@ public class ISMViewFilterDialog extends Dialog {
 
 class CheckStateProvider implements ICheckStateProvider  {
 
-    Set<String[]> visibleTypes;
+    private Set<String[]> visibleTypes;
     
     /**
      * @param visibleTypes

@@ -48,7 +48,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -146,15 +145,16 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
      */
     @Override
     public void createPartControl(Composite parent) {
+        final int defaultContainerWeight = 50;
+        final int defaultContainerSashWidth = 4;
         this.parent = parent;
-        //Composite container = createContainer(parent);
         SashForm container = new SashForm(parent, SWT.VERTICAL);       
               
         createInfoPanel(container);
         createTreeViewer(container);
         
-        container.setWeights(new int[] { 50, 50});
-        container.setSashWidth(4);
+        container.setWeights(new int[] { defaultContainerWeight, defaultContainerWeight});
+        container.setSashWidth(defaultContainerSashWidth);
         container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
         
         initData();
@@ -241,26 +241,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
         refresh.refresh();
     }
     
-    private Composite createContainer(Composite parent) {
-        final Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layoutRoot = new GridLayout(1, false);
-        layoutRoot.marginWidth = 2;
-        layoutRoot.marginHeight = 2;
-        composite.setLayout(layoutRoot);
-        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
-        gd.grabExcessVerticalSpace = true;
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.FILL;
-        composite.setLayoutData(gd);
-        return composite;
-    }
-    
     private void createInfoPanel(Composite container) {
+        final int gridDataHeight = 80;
         textPanel = new Browser(container, SWT.NONE);
         textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ));
         final GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
-        gridData.heightHint = 80;
+        gridData.heightHint = gridDataHeight;
         textPanel.setLayoutData(gridData);
     }
 

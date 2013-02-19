@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import sernet.gs.ui.rcp.main.Perspective;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
-import sun.nio.cs.ext.ISO2022_CN;
 
 /**
  * @author koderman@sernet.de

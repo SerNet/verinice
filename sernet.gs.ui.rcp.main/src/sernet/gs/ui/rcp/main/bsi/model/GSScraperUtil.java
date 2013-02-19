@@ -18,18 +18,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.model;
 
-import javax.naming.InitialContext;
-
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.hui.common.VeriniceContext;
 
-import sernet.gs.service.ServerInitializer;
-import sernet.gs.ui.rcp.main.common.model.IProgress;
-
-public class GSScraperUtil {
+public final class GSScraperUtil {
 	
-	private static final Logger log = Logger.getLogger(GSScraperUtil.class);
+	private static final Logger LOG = Logger.getLogger(GSScraperUtil.class);
 	
 	private BSIMassnahmenModel model;
 	
@@ -54,7 +50,7 @@ public class GSScraperUtil {
     };
 	
 	private GSScraperUtil() {
-		log.debug(
+		LOG.debug(
 		"Initializing GS catalogues service ...");
 	}
 
@@ -77,9 +73,9 @@ public class GSScraperUtil {
         try {
             gsScraperUtil.getModel().loadBausteine(nullMonitor);
         } catch (Exception e) {
-            log.error("Fehler beim Laden der Grundschutzkataloge: " + e.getMessage());
-            if (log.isDebugEnabled()) {
-                log.debug("stacktrace: " + e);
+            LOG.error("Fehler beim Laden der Grundschutzkataloge: " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("stacktrace: " + e);
             }
         }
 	}

@@ -29,9 +29,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
 
@@ -41,15 +39,15 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  */
 public class TaskLabelProvider implements ITableLabelProvider {
 
-    boolean onlyMyTasks = true;
+    private boolean onlyMyTasks = true;
     
-    private static final Map<String, String> prioImageMap;
+    private static final Map<String, String> PRIO_IMAGE_MAP;
     
     static {
-        prioImageMap = new Hashtable<String, String>();
-        prioImageMap.put(ITask.PRIO_LOW, ImageCache.PRIORITY_LOW);
-        prioImageMap.put(ITask.PRIO_NORMAL, ImageCache.PRIORITY_NORMAL);
-        prioImageMap.put(ITask.PRIO_HIGH, ImageCache.PRIORITY_HIGH);
+        PRIO_IMAGE_MAP = new Hashtable<String, String>();
+        PRIO_IMAGE_MAP.put(ITask.PRIO_LOW, ImageCache.PRIORITY_LOW);
+        PRIO_IMAGE_MAP.put(ITask.PRIO_NORMAL, ImageCache.PRIORITY_NORMAL);
+        PRIO_IMAGE_MAP.put(ITask.PRIO_HIGH, ImageCache.PRIORITY_HIGH);
     }
     
     /**
@@ -69,7 +67,9 @@ public class TaskLabelProvider implements ITableLabelProvider {
             ITask task = (ITask) element;
             switch (columnIndex) {
             case 0:
-                image = ImageCache.getInstance().getImage(prioImageMap.get(task.getPriority()));
+                image = ImageCache.getInstance().getImage(PRIO_IMAGE_MAP.get(task.getPriority()));
+                break;
+            default:
                 break;
             }
         }
@@ -81,11 +81,10 @@ public class TaskLabelProvider implements ITableLabelProvider {
      */
     @Override
     public String getColumnText(Object element, int columnIndex) {
+        final int maxColumnTextLength = 100;
         String text = null;
-        if(element instanceof KeyValue) {
-            if(columnIndex==0) {
-                text = ((KeyValue)element).getValue();
-            }
+        if(element instanceof KeyValue && columnIndex==0) {
+            text = ((KeyValue)element).getValue();
         }
         if(element instanceof ITask) {
             ITask task = (ITask) element;
@@ -115,8 +114,8 @@ public class TaskLabelProvider implements ITableLabelProvider {
                 break;
             }
         }
-        if(text!=null && text.length()>100) {
-            text = text.substring(0, 99) + "...";
+        if(text!=null && text.length()>maxColumnTextLength) {
+            text = text.substring(0, maxColumnTextLength - 1) + "...";
         }
         return text;
     }

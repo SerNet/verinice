@@ -17,12 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -32,14 +26,12 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.iso27k.rcp.JobScheduler;
 
 public class OpenMultipleViewAction extends RightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;
     private int instance = 0;
-    private Logger LOG = Logger.getLogger(OpenMultipleViewAction.class);
 
     public OpenMultipleViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc) {
         this.window = window;

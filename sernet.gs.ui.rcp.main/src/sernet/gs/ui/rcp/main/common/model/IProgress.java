@@ -18,11 +18,11 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 public interface IProgress {
-	public static final int UNKNOWN_WORK = -1;
+	static final int UNKNOWN_WORK = -1;
 	
-		public void beginTask(String name, int totalWork);
-		public void worked(int work);
-		public void done();
-		public void setTaskName(String string);
-		public void subTask(String string);
+		void beginTask(String name, int totalWork);
+		void worked(int work);
+		void done();
+		void setTaskName(String string);
+		void subTask(String string);
 }

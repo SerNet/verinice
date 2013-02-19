@@ -20,7 +20,6 @@ package sernet.verinice.iso27k.rcp;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.hibernate.dialect.function.CastFunction;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
@@ -29,7 +28,6 @@ import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -62,15 +60,10 @@ public class ISMViewLabelProvider extends LabelProvider  {
 	public Image getImage(Object obj) {
 		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 		
-		if (!(obj instanceof IISO27kElement))
+		if (!(obj instanceof IISO27kElement)){
 			return image;
 		
-//		else if (obj instanceof ControlGroup) {
-//		    ControlGroup controlgroup = (ControlGroup) obj;
-//		    maturityService.getImplementationState(controlgroup);
-//		}
-		
-		else if (obj instanceof Group && !(obj instanceof ImportIsoGroup)) {
+		} else if (obj instanceof Group && !(obj instanceof ImportIsoGroup)) {
 			Group group = (Group) obj;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
             image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
@@ -96,21 +89,23 @@ public class ISMViewLabelProvider extends LabelProvider  {
 
 	@Override
 	public String getText(Object obj) {
-		String text = "unknown";
-		if (obj != null) {	
+	    final int maxWidth = 80;
+		Object obj0 = obj;
+	    String text = "unknown";
+		if (obj0 != null) {	
 		    
 		    Object cachedObject = null;
-            if(obj instanceof CnATreeElement) {
-                cachedObject = cache.getCachedObject((CnATreeElement) obj);
+            if(obj0 instanceof CnATreeElement) {
+                cachedObject = cache.getCachedObject((CnATreeElement) obj0);
                 if (cachedObject == null) {
-                    cache.addObject(obj);
+                    cache.addObject(obj0);
                 } else {
-                    obj = cachedObject;
+                    obj0 = cachedObject;
                 }
             }
             
-			if (obj instanceof CnATreeElement) {
-				CnATreeElement element = (CnATreeElement) obj;
+			if (obj0 instanceof CnATreeElement) {
+				CnATreeElement element = (CnATreeElement) obj0;
 				StringBuilder sb = new StringBuilder();
 				if(element instanceof Control) {
 					String abbreviation = ((Control)element).getAbbreviation();
@@ -132,17 +127,13 @@ public class ISMViewLabelProvider extends LabelProvider  {
                     sb.append(title);
                 }
                 if(sb.length()>0) {
-                    text = ItemControlTransformer.truncate(sb.toString(),80) ;
+                    text = ItemControlTransformer.truncate(sb.toString(),maxWidth) ;
                 }
                 if (LOG.isDebugEnabled()) {
                     text = text + " (" + element.getScopeId() + ")";
                 }
-                
 			}
 		}
 		return text;
 	}
-
-   
-
 }

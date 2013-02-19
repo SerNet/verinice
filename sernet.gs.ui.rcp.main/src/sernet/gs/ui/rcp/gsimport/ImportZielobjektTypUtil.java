@@ -29,8 +29,6 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.SonstigeITKategorie;
-import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 
 public abstract class ImportZielobjektTypUtil {
@@ -168,8 +166,9 @@ public abstract class ImportZielobjektTypUtil {
 
 	public static String translateZielobjektType(String zoTypeName, String zoSubtypeName) {
 		String type = GS_TYPES.get(zoTypeName);
-		if (type == null)
+		if (type == null){
 			type = GS_ITSYSTEM_SUBTYPES.get(zoSubtypeName);
+		}
 		return type;
 	}
 

@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
@@ -31,18 +30,15 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.action.AddOrganisation;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("restrictions")
 public class AddITVerbundActionDelegate extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction  {
-    
-    private static final Logger LOG = Logger.getLogger(AddITVerbundActionDelegate.class);
     
     /*
      * (non-Javadoc)

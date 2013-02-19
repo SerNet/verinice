@@ -7,26 +7,26 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public interface ILoadChildren extends ICommand{
 
-	public abstract void execute();
+	void execute();
 
-	public abstract List<CnATreeElement> getGebaeudeList();
+	List<CnATreeElement> getGebaeudeList();
 
-	public abstract List<CnATreeElement> getRaumList();
+	List<CnATreeElement> getRaumList();
 
-	public abstract List<CnATreeElement> getClienteList();
+	List<CnATreeElement> getClienteList();
 
-	public abstract List<CnATreeElement> getServerList();
+	List<CnATreeElement> getServerList();
 
-	public abstract List<CnATreeElement> getNetzList();
+	List<CnATreeElement> getNetzList();
 
-	public abstract List<CnATreeElement> getAnwendungList();
+	List<CnATreeElement> getAnwendungList();
 
-	public abstract List<CnATreeElement> getPersonList();
+	List<CnATreeElement> getPersonList();
 	
-	public abstract List<CnATreeElement> getTkKomponenteList();
+	List<CnATreeElement> getTkKomponenteList();
 
-    public abstract List<CnATreeElement> getSonstItList();
+    List<CnATreeElement> getSonstItList();
 
-	public abstract void setId(Integer id);
+	void setId(Integer id);
 
 }

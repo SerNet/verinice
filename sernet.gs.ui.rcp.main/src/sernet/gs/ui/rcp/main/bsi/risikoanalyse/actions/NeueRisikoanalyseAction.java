@@ -39,7 +39,6 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
  * Starts the wizard for a risk analysis according to
@@ -90,14 +89,17 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
 									Activator.inheritVeriniceContextState();
-
+									
+									final int pageWidht = 800;
+									final int pageHeight = 600;
+									
 									CnATreeElement element = (CnATreeElement) selection;
 									Shell shell = new Shell();
 									RiskAnalysisWizard wizard = new RiskAnalysisWizard(element);
 									wizard.init(PlatformUI.getWorkbench(), null);
 									WizardDialog wizardDialog = new org.eclipse.jface.wizard.WizardDialog(
 											shell, wizard);
-									wizardDialog.setPageSize(800, 600);
+									wizardDialog.setPageSize(pageWidht, pageHeight);
 									wizardDialog.open();
 								}
 							});
@@ -138,8 +140,9 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 			
 			// Only change state when it is enabled, since we do not want to
 			// trash the enablement settings of plugin.xml
-			if (action.isEnabled())
+			if (action.isEnabled()){
 				action.setEnabled(b);
+			}
 		}
 	}
 }

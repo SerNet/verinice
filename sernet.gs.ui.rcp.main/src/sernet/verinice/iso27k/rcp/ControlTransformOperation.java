@@ -19,12 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.verinice.iso27k.service.ControlTransformService;
 import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.iso27k.service.IProgressObserver;
@@ -42,10 +40,6 @@ import sernet.verinice.model.iso27k.Group;
  */
 public class ControlTransformOperation implements IRunnableWithProgress {
 
-	private static final Logger LOG = Logger.getLogger(ControlTransformOperation.class);
-
-	private IProgressObserver progressObserver;
-	
 	private ControlTransformService service;
 	
 	private IModelUpdater modelUpdater;
@@ -67,7 +61,7 @@ public class ControlTransformOperation implements IRunnableWithProgress {
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void run(IProgressMonitor monitor)  {	
-		progressObserver = new RcpProgressObserver(monitor);
+	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new ControlTransformService(progressObserver,modelUpdater,this.selectedGroup, data);
 		Activator.inheritVeriniceContextState();
 		service.run();

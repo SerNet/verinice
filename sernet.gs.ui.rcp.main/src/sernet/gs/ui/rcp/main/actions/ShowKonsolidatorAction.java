@@ -19,10 +19,8 @@ package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -42,7 +40,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.KonsolidatorCommand;
-import sernet.hui.common.connect.EntityType;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
@@ -61,7 +58,6 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         this.window = window;
         setText(label);
         setId(ID);
-        // setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.KONSOLIDATOR));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowKonsolidatorAction_1);
@@ -94,7 +90,6 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
             return;
         }
         final List<BausteinUmsetzung> selectedElements = new ArrayList<BausteinUmsetzung>();
-        EntityType entType = null;
         for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
             if (o instanceof BausteinUmsetzung) {

@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.verinice.interfaces.CommandException;

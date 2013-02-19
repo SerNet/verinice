@@ -20,8 +20,6 @@ package sernet.gs.ui.rcp.gsimport;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.Hibernate;
@@ -36,7 +34,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportNotesForZielobjekt;
-import sernet.hui.common.VeriniceContext;
+import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
 
 /**
@@ -51,14 +49,14 @@ public class ImportNotesTask {
 	private GSVampire vampire;
 	private TransferData transferData;
 
-	public void execute(int importType, IProgress monitor) throws Exception {
+	public void execute(int importType, IProgress monitor) throws DBException, CommandException {
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(Hibernate.class.getClassLoader());
 		
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
 		if (sourceDbUrl.indexOf("odbc") > -1) {
-			throw new Exception("Kann nicht direkt aus MDB Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
+			throw new DBException("Kann nicht direkt aus MDB Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
 		}
 
 		this.monitor = monitor;

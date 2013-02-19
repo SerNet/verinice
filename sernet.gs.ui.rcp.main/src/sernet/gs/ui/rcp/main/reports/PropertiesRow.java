@@ -17,18 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.hibernate.LazyInitializationException;
-
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -77,15 +70,17 @@ public class PropertiesRow implements IOOTableRow, ICnaItemRow {
 
 	public int getCellType(int column) {
 	    Matcher match = numbersOnly.matcher(getCellAsString(column));
-	    if (match.matches())
+	    if (match.matches()){
 	        return IOOTableRow.CELL_TYPE_DOUBLE;
-	    else
+	    } else {
 	        return IOOTableRow.CELL_TYPE_STRING;
+	    }
 	}
 
 	public int getNumColumns() {
-		if (properties == null)
+		if (properties == null){
 			return 0;
+		}
 		return properties.size();
 	}
 	

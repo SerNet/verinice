@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.verinice.iso27k.service.GS2BSITransformService;
 import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.iso27k.service.IProgressObserver;
@@ -29,8 +28,6 @@ import sernet.verinice.model.iso27k.Group;
 
 public class GS2BSITransformOperation implements IRunnableWithProgress {
 
-	private IProgressObserver progressObserver;
-	
 	private GS2BSITransformService service;
 	
 	private IModelUpdater modelUpdater;
@@ -53,8 +50,8 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void run(IProgressMonitor monitor)  {	
-		progressObserver = new RcpProgressObserver(monitor);
+	public void run(IProgressMonitor monitor)  {
+	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new GS2BSITransformService(progressObserver,modelUpdater,this.selectedGroup, data);
 		Activator.inheritVeriniceContextState();
 		service.run();

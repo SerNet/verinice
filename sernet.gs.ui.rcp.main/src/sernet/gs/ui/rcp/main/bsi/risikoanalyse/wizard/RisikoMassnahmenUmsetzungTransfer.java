@@ -22,7 +22,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -46,12 +45,12 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
 
     private static final int TYPE_ID = registerType(TYPE_NAME);
 
-    private static RisikoMassnahmenUmsetzungTransfer INSTANCE = new RisikoMassnahmenUmsetzungTransfer();
+    private static RisikoMassnahmenUmsetzungTransfer instance = new RisikoMassnahmenUmsetzungTransfer();
     
-    private static Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungTransfer.class);
+    private static final Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungTransfer.class);
 
     public static RisikoMassnahmenUmsetzungTransfer getInstance() {
-      return INSTANCE;
+      return instance;
     }
 
     /**
@@ -81,7 +80,7 @@ public class RisikoMassnahmenUmsetzungTransfer extends ByteArrayTransfer {
 	 * platform-specific one.
 	 */
 	   public void javaToNative (Object data, TransferData transferData){
-	        if (data == null || !(validateData(data))) return;
+	        if (data == null || !(validateData(data))) {return;}
 	        if (isSupportedType(transferData)) {
 	            ArrayList<RisikoMassnahmenUmsetzung> rMassnahmen = new ArrayList<RisikoMassnahmenUmsetzung>(0);
 	            if(data instanceof RisikoMassnahmenUmsetzung[]){

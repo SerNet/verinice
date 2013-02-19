@@ -57,7 +57,7 @@ import sernet.verinice.rcp.tree.TreeContentProvider;
 @SuppressWarnings("restriction")
 public class ISMViewContentProvider implements ITreeContentProvider {
 
-    private static final Logger log = Logger.getLogger(ISMViewContentProvider.class);
+    private static final Logger LOG = Logger.getLogger(ISMViewContentProvider.class);
 
     private final ElementComparator<CnATreeElement> comparator = new ElementComparator<CnATreeElement>(new ITitleAdaptor<CnATreeElement>() {
         @Override
@@ -121,14 +121,11 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         Object cachedObject = null;
         if(o instanceof CnATreeElement) {
             cachedObject = cache.getCachedObject((CnATreeElement) o);
-            if (cachedObject != null) {             
-                o = cachedObject;
-            }
         }
         
         try {
-            if (o instanceof List<?>) {
-                List<CnATreeElement> list = (List<CnATreeElement>) o;
+            if (cachedObject instanceof List<?>) {
+                List<CnATreeElement> list = (List<CnATreeElement>) cachedObject;
                 children = new CnATreeElement[list.size()];
                 int i = 0;
                 for (Iterator<CnATreeElement> iterator = list.iterator(); iterator.hasNext();) {
@@ -136,8 +133,8 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                     children[i] = loadChildren(cnATreeElement, true);
                     i++;
                 }
-            } else if (o instanceof CnATreeElement) {
-                CnATreeElement element = (CnATreeElement) o;
+            } else if (cachedObject instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) cachedObject;
                 CnATreeElement newElement;
 
                 if (!element.isChildrenLoaded()) {
@@ -149,9 +146,9 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                             element.replace(newElement);
                         } else {
                             final String message = "Element or children are not initialized. This might be a problem. uuid is: " + element.getUuid();
-                            log.warn(message);
-                            if (log.isDebugEnabled()) {
-                                log.debug("stacktrace: ", new RuntimeException(message));
+                            LOG.warn(message);
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("stacktrace: ", new RuntimeException(message));
                             }
                         }
                         
@@ -165,7 +162,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 Arrays.sort(children, comparator);
             }
         } catch (CommandException e) {
-            log.error("Error while loading child elements", e);
+            LOG.error("Error while loading child elements", e);
             ExceptionUtil.log(e, "Konnte untergeordnete Objekte nicht laden.");
         }
         return children;
@@ -192,9 +189,9 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                         hasChildren = !children.isEmpty();
                     } else {
                         final String message = "Can not determine if element has children, assuming: yes, uuid id is: " + element.getUuid();
-                        log.error(message);
-                        if (log.isDebugEnabled()) {
-                            log.debug("stacktrace: ", new RuntimeException(message));
+                        LOG.error(message);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("stacktrace: ", new RuntimeException(message));
                         }
                         hasChildren = true;
                     }
@@ -222,11 +219,7 @@ public class ISMViewContentProvider implements ITreeContentProvider {
                 }
                 */               
             } catch (Exception e) {
-                if (parent != null) {
-                    log.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
-                } else {
-                    log.error("Error in hasChildren, element is null", e);
-                }
+                LOG.error("Error in hasChildren, element type: " + parent.getClass().getSimpleName(), e);
                 hasChildren = true;
             }
         }
@@ -293,8 +286,8 @@ public class ISMViewContentProvider implements ITreeContentProvider {
             }
 
             // replace with loaded object in cache:
-            if (log.isDebugEnabled()) {
-                log.debug("Replacing in cache: " + el + " replaced with " + newElement);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Replacing in cache: " + el + " replaced with " + newElement);
             }
             cache.addObject(newElement);
             if (loadParent && newElement.getParent() != null) {
@@ -340,13 +333,6 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         cache.addObject(o);
     }
 
-    private void addParentToCache(CnATreeElement element) {
-        if (element != null) {
-            cache.addObject(element);
-            addParentToCache(element.getParent());
-        }
-    }
-
     /**
      * @return
      */
@@ -382,5 +368,4 @@ public class ISMViewContentProvider implements ITreeContentProvider {
         }
 
     }
-
 }

@@ -3,32 +3,18 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-
-import com.sun.xml.messaging.saaj.util.LogDomainConstants;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
 
@@ -54,7 +40,7 @@ public class LoadElementsForScope extends GenericCommand {
 
 	private String typeId;
     private Integer anyElement;
-    private ArrayList<CnATreeElement> elements;
+    private List<CnATreeElement> elements;
     
     public LoadElementsForScope(String typeId, Integer anyElement) {
 	    this.typeId = typeId;
@@ -87,11 +73,6 @@ public class LoadElementsForScope extends GenericCommand {
 	    IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 	    RetrieveInfo ri = new RetrieveInfo();
 	    ri.setProperties(true);
-//	    ri.setParent(true);
-//	    ri.setPermissions(true);
-//	    ri.setParentPermissions(true);
-//	    ri.setChildren(true);
-//	    ri.setChildren(true);
 	    HydratorUtil.hydrateElements(dao, elements, ri);
 
 	}
@@ -102,8 +83,9 @@ public class LoadElementsForScope extends GenericCommand {
      */
     private CnATreeElement findRoot(CnATreeElement elmtInScope) {
         if (elmtInScope.getTypeId().equals(Organization.TYPE_ID) ||
-            elmtInScope.getTypeId().equals(ITVerbund.TYPE_ID))
+            elmtInScope.getTypeId().equals(ITVerbund.TYPE_ID)){
             return elmtInScope;
+        }
         return findRoot(elmtInScope.getParent());
     }
 

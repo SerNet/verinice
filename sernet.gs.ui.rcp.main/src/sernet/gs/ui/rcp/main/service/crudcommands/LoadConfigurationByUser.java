@@ -18,31 +18,21 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.HibernateProxyHelper;
 
-import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * 
  */
 public class LoadConfigurationByUser extends GenericCommand {
 
-    private transient Logger LOG = Logger.getLogger(LoadConfigurationByUser.class);
+    private transient Logger log = Logger.getLogger(LoadConfigurationByUser.class);
     
     private Configuration configuration;
     
@@ -73,7 +63,7 @@ public class LoadConfigurationByUser extends GenericCommand {
                     break;
                 }
             } catch (Exception e){
-                LOG.error("Error", e);
+                log.error("Error", e);
             }
         }
     }

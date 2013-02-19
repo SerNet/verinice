@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -43,7 +42,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -55,8 +53,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     public static final String ID = "sernet.gs.ui.rcp.main.bausteinzuordnungaction"; //$NON-NLS-1$
 
     private final IWorkbenchWindow window;
-    
-    private String rightID  = null;
     
     private boolean serverIsRunning = true;
 
@@ -134,10 +130,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         }
     }
 
-    private void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
-    }
-
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (serverIsRunning) {
             setEnabled(checkRights());
@@ -150,7 +142,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                 return;
             }
 
-            String kapitel = null;
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 if (!(o instanceof IBSIStrukturElement)) {
@@ -165,7 +156,5 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         }
         // no structured selection:
         setEnabled(false);
-
     }
-
 }

@@ -18,10 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartFactory;
@@ -30,14 +29,8 @@ import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
-import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.Layer;
-import org.jfree.ui.RectangleAnchor;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.TextAnchor;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
@@ -53,6 +46,9 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class SamtProgressChart extends MaturitySpiderChart {
     
+    private static final float CHART_FOREGROUND_ALPHA = 0.6f;
+    private static final int AXIS_UPPER_BOUND = 55;
+    
     /*
      * (non-Javadoc)
      * 
@@ -61,9 +57,9 @@ public class SamtProgressChart extends MaturitySpiderChart {
      * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
     public JFreeChart createChart(CnATreeElement elmt) {
-        if (!(elmt instanceof ControlGroup))
+        if (!(elmt instanceof ControlGroup)){
             return null;
-
+        }
         super.elmt = (ControlGroup) elmt;
         try {
             return createBarChart(createBarDataset());
@@ -85,7 +81,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
                 false);
         
         chart.setBackgroundPaint(Color.white);
-        chart.getPlot().setForegroundAlpha(0.6f);
+        chart.getPlot().setForegroundAlpha(CHART_FOREGROUND_ALPHA);
         chart.setBackgroundPaint(Color.white);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         
@@ -95,7 +91,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
         
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setUpperBound(55);
+        axis.setUpperBound(AXIS_UPPER_BOUND);
    
         return chart;
     }

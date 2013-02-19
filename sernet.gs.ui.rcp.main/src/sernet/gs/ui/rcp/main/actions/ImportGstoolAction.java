@@ -20,11 +20,8 @@ package sernet.gs.ui.rcp.main.actions;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -36,9 +33,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
@@ -48,7 +43,6 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 public class ImportGstoolAction extends RightsEnabledAction {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
-	private final IWorkbenchWindow window;
 
     private IModelLoadListener loadListener = new IModelLoadListener() {
         
@@ -86,7 +80,6 @@ public class ImportGstoolAction extends RightsEnabledAction {
     };
 
     public ImportGstoolAction(IWorkbenchWindow window, String label) {
-		this.window = window;
         setText(label);
         setId(ID);
         setEnabled(true); // now works in standalone again
@@ -116,9 +109,9 @@ public class ImportGstoolAction extends RightsEnabledAction {
         try {
             
             final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
-			if (dialog.open() != InputDialog.OK)
+			if (dialog.open() != InputDialog.OK){
                 return;
-
+			}
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

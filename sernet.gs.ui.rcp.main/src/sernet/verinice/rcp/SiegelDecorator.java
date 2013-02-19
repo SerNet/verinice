@@ -27,10 +27,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -47,7 +45,7 @@ public class SiegelDecorator extends LabelProvider implements ILightweightLabelD
      */
     @Override
     public void decorate(Object o, IDecoration decoration) {
-        if(o!=null && o instanceof BausteinUmsetzung) {
+        if(o instanceof BausteinUmsetzung) {
             Activator.inheritVeriniceContextState();
             BausteinUmsetzung baustein = (BausteinUmsetzung) o;        
             baustein = (BausteinUmsetzung) Retriever.retrieveElement(baustein,RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
@@ -60,6 +58,8 @@ public class SiegelDecorator extends LabelProvider implements ILightweightLabelD
                     break;
                 case 'C':
                     decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_C));
+                    break;
+                default:
                     break;
             }
             

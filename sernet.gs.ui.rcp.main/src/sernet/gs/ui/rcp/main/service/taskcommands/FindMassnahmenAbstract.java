@@ -49,7 +49,9 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 @SuppressWarnings("serial")
 public abstract class FindMassnahmenAbstract extends GenericCommand {
 
-	protected List<TodoViewItem> all = new ArrayList<TodoViewItem>(2000);
+    private static final int TODOVIEWITEM_LIST_SIZE = 2000; 
+    
+	private List<TodoViewItem> all = new ArrayList<TodoViewItem>(TODOVIEWITEM_LIST_SIZE);
 	private Set<String> executionSet;
 	private Set<String> sealSet;
 
@@ -60,12 +62,9 @@ public abstract class FindMassnahmenAbstract extends GenericCommand {
 	 * @throws CommandException
 	 */
 	protected void fillList(List<MassnahmenUmsetzung> alleMassnahmen) throws CommandException {
-		int count = 0;
 		Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
 
 		for (MassnahmenUmsetzung mn : alleMassnahmen) {
-			// log.debug("Processing Massnahme: " + count);
-			// hydrate(mn);
 
 			String umsetzung = mn.getUmsetzung();
 			String siegelStufe = String.valueOf(mn.getStufe());

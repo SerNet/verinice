@@ -21,8 +21,6 @@ package sernet.verinice.iso27k.service;
 
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 
@@ -35,7 +33,8 @@ import sernet.verinice.model.iso27k.ThreatGroup;
  */
 public class ItemThreatTransformer {
 
-	
+	private ItemThreatTransformer(){}
+    
 	public static Threat transform(IItem item) {
 	    Threat threat = new Threat();
 		if(item.getName()!=null) {
@@ -65,9 +64,10 @@ public class ItemThreatTransformer {
 	 * @return truncated text (if text is longer than maxWidth) and three dots ("...") 
 	 */
 	public static String truncate(String text, int maxWidth) {
+	    final int maxWidthMinuend = 3;
 	    String truncatedText = text;
 	    if(text!=null && text.length()>maxWidth) {
-	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-3))).append("...").toString(); //$NON-NLS-1$
+	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-maxWidthMinuend))).append("...").toString(); //$NON-NLS-1$
 	    }
 	    return truncatedText;
 	}

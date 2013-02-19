@@ -27,9 +27,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -41,6 +39,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -63,8 +63,6 @@ import sernet.verinice.model.iso27k.RequirementGroup;
 import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -187,11 +185,11 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
             } else if(sel instanceof IISO27kGroup) {
             	enabled = true;
 			    IISO27kGroup group = (IISO27kGroup) sel;
-			    String typeId = group.getChildTypes()[0];
+			    String typeId0 = group.getChildTypes()[0];
                 if(group instanceof Asset) {
-                    typeId = Control.TYPE_ID;
+                    typeId0 = Control.TYPE_ID;
                 }
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));	
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId0)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 			}
 			// Only change state when it is enabled, since we do not want to

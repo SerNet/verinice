@@ -34,45 +34,45 @@ import sernet.verinice.model.iso27k.IncidentScenario;
  */
 public interface IRiskAnalysisService {
     
-    final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
-    final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
-    final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
+    String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
+    String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
+    String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
     
-    final String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
-    final String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
-    final String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
+    String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
+    String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
+    String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
     
-    final String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
-    final String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
-    final String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
+    String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
+    String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
+    String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
 
-    final String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
-    final String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
+    String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
+    String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
     
-    final String PROP_VULNERABILITY_EXPLOITABILITY = "vulnerability_level"; //$NON-NLS-1$
+    String PROP_VULNERABILITY_EXPLOITABILITY = "vulnerability_level"; //$NON-NLS-1$
 
-    final String PROP_ASSET_RISK_C ="asset_riskvalue_c";
-    final String PROP_ASSET_RISK_I ="asset_riskvalue_i";
-    final String PROP_ASSET_RISK_A ="asset_riskvalue_a";
-    final String PROP_ASSET_CONTROLRISK_C ="asset_riskwcontrolvalue_c";
-    final String PROP_ASSET_CONTROLRISK_I ="asset_riskwcontrolvalue_i";
-    final String PROP_ASSET_CONTROLRISK_A ="asset_riskwcontrolvalue_a";
-    final String PROP_ASSET_PLANCONTROLRISK_C ="asset_riskwplancontrolvalue_c";
-    final String PROP_ASSET_PLANCONTROLRISK_I ="asset_riskwplancontrolvalue_i";
-    final String PROP_ASSET_PLANCONTROLRISK_A ="asset_riskwplancontrolvalue_a";
+    String PROP_ASSET_RISK_C ="asset_riskvalue_c";
+    String PROP_ASSET_RISK_I ="asset_riskvalue_i";
+    String PROP_ASSET_RISK_A ="asset_riskvalue_a";
+    String PROP_ASSET_CONTROLRISK_C ="asset_riskwcontrolvalue_c";
+    String PROP_ASSET_CONTROLRISK_I ="asset_riskwcontrolvalue_i";
+    String PROP_ASSET_CONTROLRISK_A ="asset_riskwcontrolvalue_a";
+    String PROP_ASSET_PLANCONTROLRISK_C ="asset_riskwplancontrolvalue_c";
+    String PROP_ASSET_PLANCONTROLRISK_I ="asset_riskwplancontrolvalue_i";
+    String PROP_ASSET_PLANCONTROLRISK_A ="asset_riskwplancontrolvalue_a";
     
-    final String PROP_CONTROL_EFFECT_C ="control_effectiveness_confidentiality";
-    final String PROP_CONTROL_EFFECT_I ="control_effectiveness_integrity";
-    final String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
-    final String PROP_CONTROL_EFFECT_P ="control_eff_probability";
+    String PROP_CONTROL_EFFECT_C ="control_effectiveness_confidentiality";
+    String PROP_CONTROL_EFFECT_I ="control_effectiveness_integrity";
+    String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
+    String PROP_CONTROL_EFFECT_P ="control_eff_probability";
     
-    final int RISK_PRE_CONTROLS = 0;
-    final int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
-    final int RISK_WITH_ALL_CONTROLS = 2;
+    int RISK_PRE_CONTROLS = 0;
+    int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
+    int RISK_WITH_ALL_CONTROLS = 2;
     
-    final int RISK_COLOR_GREEN = 0;
-    final int RISK_COLOR_YELLOW = 1;
-    final int RISK_COLOR_RED = 2;
+    int RISK_COLOR_GREEN = 0;
+    int RISK_COLOR_YELLOW = 1;
+    int RISK_COLOR_RED = 2;
     
     
 

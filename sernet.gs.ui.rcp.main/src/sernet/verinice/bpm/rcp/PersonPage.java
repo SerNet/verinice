@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.text.DateFormat;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -35,8 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -62,7 +59,7 @@ public class PersonPage extends WizardPage {
     
     private boolean isActive = true;
     
-    ElementSelectionComponent component;
+    private ElementSelectionComponent component;
     
     /**
      * @param pageName
@@ -142,20 +139,16 @@ public class PersonPage extends WizardPage {
      */
     @Override
     public void createControl(Composite parent) {
+        final int marginWidth = 10;
         final Composite composite = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(1, true);
-        layout.marginWidth = 10;
+        layout.marginWidth = marginWidth;
         composite.setLayout(layout);
-        //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);  
         
         addFormElements(composite);
                   
-        // Build the separator line
-        //Label separator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
-        //separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
         composite.pack(); 
         
         // Required to avoid an error in the system
@@ -189,7 +182,6 @@ public class PersonPage extends WizardPage {
     public void setSelectedPerson(CnATreeElement selectedPerson) {
         if(selectedPerson!=null) {
             this.selectedPerson = selectedPerson;
-            //this.component.setSelectedElement(selectedPerson);
             setErrorMessage(null);                   
             setPageComplete(true);
         }

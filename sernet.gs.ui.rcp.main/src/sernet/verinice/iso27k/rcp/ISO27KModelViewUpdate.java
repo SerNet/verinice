@@ -47,11 +47,13 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 public class ISO27KModelViewUpdate implements IISO27KModelListener {
 
     private static final Logger LOG = Logger.getLogger(ISO27KModelViewUpdate.class);
+    
+    private static final String DEFAULT_ERR_MSG = "Error while updating treeview";
 
     private TreeViewer viewer;
     private TreeViewerCache cache;
     private ThreadSafeViewerUpdate updater;
-    Object[] expandedElements = null;
+    private Object[] expandedElements = null;
 
     public ISO27KModelViewUpdate(TreeViewer viewer, TreeViewerCache cache) {
         super();
@@ -88,7 +90,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             }
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -120,7 +122,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             }
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -135,7 +137,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
         try {
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -154,7 +156,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
                 return; // not currently displayed or already changed object
                         // itself so nothing to update
             }
-            if (cachedObject != child) {
+            if (!cachedObject.equals(child)) {
                 // update entity of cached object:
                 CnAElementHome.getInstance().refresh(cachedObject);
                 child = cachedObject; 
@@ -340,7 +342,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
      */
     private final class ExpandJob extends Job {
         
-        Object [] elements;
+        private Object [] elements;
         
         /**
          * @param name

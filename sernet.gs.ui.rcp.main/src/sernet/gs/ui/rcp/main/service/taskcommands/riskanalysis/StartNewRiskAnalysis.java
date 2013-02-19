@@ -17,12 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
-import java.util.HashSet;
-
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.common.CnATreeElement;

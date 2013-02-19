@@ -1,16 +1,11 @@
 package sernet.gs.ui.rcp.main.service.statscommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -63,8 +58,9 @@ public class SamtProgressSummary extends GenericCommand implements IAuthAwareCom
     }
 
     private void loadSamtTopics(ControlGroup cg) {
-        if (cg == null)
+        if (cg == null){
             return;
+        }
         ControlMaturityService maturityService = new ControlMaturityService();
 
         for (CnATreeElement e : cg.getChildren()) {

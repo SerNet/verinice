@@ -23,10 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -76,8 +73,8 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 	}
 	
 	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cteTypeId);
-		CnATreeElement cte = dao.findById(cteDbId);
+		IBaseDao<? extends CnATreeElement, Serializable> dao0 = getDaoFactory().getDAO(cteTypeId);
+		CnATreeElement cte = dao0.findById(cteDbId);
 		
 		updateElement(cte);
 		

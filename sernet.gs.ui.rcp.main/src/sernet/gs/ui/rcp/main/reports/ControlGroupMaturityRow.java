@@ -17,21 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.hibernate.LazyInitializationException;
-
 import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.iso27k.service.ControlMaturityService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 
 /**
@@ -45,6 +37,8 @@ public class ControlGroupMaturityRow implements IOOTableRow, ICnaItemRow {
 
 	private ControlGroup control;
 	private List<String> properties;
+	
+	private static final int MAX_COLUMNS_PADDING = 3; 
 	
 	private Pattern numbersOnly = Pattern.compile("^\\d+[\\.,]*\\d*$");
 
@@ -91,24 +85,26 @@ public class ControlGroupMaturityRow implements IOOTableRow, ICnaItemRow {
 	    if (column == maxColumns+2) {
 	        return Double.toString(maturityService.getMaturityByWeight(control));
 	    }
-	    if (column > properties.size()-1)
+	    if (column > properties.size()-1){
 	        return "";
-	    else
+	    } else {
 	        return control.getEntity().getSimpleValue(properties.get(column));
+	    }
 	}
 
 	
 
     public int getCellType(int column) {
 	    Matcher match = numbersOnly.matcher(getCellAsString(column));
-	    if (match.matches())
+	    if (match.matches()){
 	        return IOOTableRow.CELL_TYPE_DOUBLE;
-	    else
+	    } else {
 	        return IOOTableRow.CELL_TYPE_STRING;
+	    }
 	}
 
 	public int getNumColumns() {
-	    return maxColumns+3;
+	    return maxColumns+MAX_COLUMNS_PADDING;
 	}
 	
 	public String getRowStyle() {

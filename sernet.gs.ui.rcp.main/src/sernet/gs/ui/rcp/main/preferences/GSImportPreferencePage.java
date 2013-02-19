@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.preferences;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
@@ -29,7 +30,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -58,7 +58,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
  */
 public class GSImportPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	private static final Logger log = Logger.getLogger(GSImportRestorePreferencePage.class);
+	private static final Logger LOG = Logger.getLogger(GSImportRestorePreferencePage.class);
 
 	public static final String ID = "sernet.gs.ui.rcp.main.page5"; //$NON-NLS-1$
 
@@ -138,17 +138,17 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 
 						monitor.beginTask(Messages.getString("GSImportPreferencePage_1"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 						monitor.setTaskName(Messages.getString("GSImportPreferencePage_1")); //$NON-NLS-1$
+						Connection con = null;
+						Statement stmt = null;
 						try {
-							log.debug("Loading MSSQL JDBC driver."); //$NON-NLS-1$
+							LOG.debug("Loading MSSQL JDBC driver."); //$NON-NLS-1$
 							Class.forName("net.sourceforge.jtds.jdbc.Driver"); //$NON-NLS-1$
-							log.debug("Establishing database connection"); //$NON-NLS-1$
-							Connection con = DriverManager.getConnection(urlString, userString, passString);
-							log.debug("Running test query."); //$NON-NLS-1$
-							Statement stmt = con.createStatement();
+							LOG.debug("Establishing database connection"); //$NON-NLS-1$
+							con = DriverManager.getConnection(urlString, userString, passString);
+							LOG.debug("Running test query."); //$NON-NLS-1$
+							stmt = con.createStatement();
 							stmt.executeQuery(TEST_QUERY);
-							stmt.close();
-							con.close();
-							log.debug("Finished MSSQL connection test."); //$NON-NLS-1$
+							LOG.debug("Finished MSSQL connection test."); //$NON-NLS-1$
 
 							// success:
 							Display.getDefault().syncExec(new Runnable() {
@@ -167,6 +167,17 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage implements
 								ExceptionUtil.log(e1, Messages.getString("GSImportPreferencePage_7") + urlString); //$NON-NLS-1$
 							}
 							return Status.CANCEL_STATUS;
+						} finally {
+	                          try {
+	                              if(stmt != null){
+	                                  stmt.close();
+	                              }
+	                              if(con != null) {
+	                                  con.close();
+	                              }
+                            } catch (SQLException e) {
+                            }
+
 						}
 
 						return Status.OK_STATUS;

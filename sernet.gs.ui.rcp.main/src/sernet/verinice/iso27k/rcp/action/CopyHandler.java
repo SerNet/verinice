@@ -24,20 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.CnPItems;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.RightsEnabledHandler;
@@ -50,7 +43,7 @@ public class CopyHandler extends RightsEnabledHandler {
 
 	private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 	
-	List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
+	private List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	
     public CopyHandler(){
 	    super();
