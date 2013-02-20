@@ -413,7 +413,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
             @Override
             public void widgetSelected(SelectionEvent e) {
-                widgetSelected(e);
+                widgetDefaultSelected(e);
 
             }
         });
@@ -553,8 +553,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     /**
      * 
      */
-    protected String setupDirPath(String currentPath) { 
-        currentPath = textFile.getText();
+    protected String setupDirPath() { 
+        String currentPath = textFile.getText();
         String path = currentPath;
         if(currentPath!=null && !currentPath.isEmpty()) {
             int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
@@ -644,7 +644,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
         }
 
-        String currentPath = setupDirPath(f);
+        String currentPath = setupDirPath();
         defaultFolder = currentPath;
         Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Report, currentPath);
         outputFile = new File(f);

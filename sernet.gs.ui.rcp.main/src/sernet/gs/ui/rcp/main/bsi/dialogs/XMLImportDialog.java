@@ -469,7 +469,7 @@ public class XMLImportDialog extends Dialog {
             }
             @Override
             public void widgetSelected(SelectionEvent e) {
-                widgetSelected(e);
+                widgetDefaultSelected(e);
 
             }
         });
@@ -508,15 +508,15 @@ public class XMLImportDialog extends Dialog {
                 pathText.setText(f.getPath());
                 pathText.setEditable(true);
             }
-            String currentPath = setupDirPath(path);
+            String currentPath = setupDirPath();
             defaultFolder = currentPath;
             Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Import, currentPath);
             pathText.setText(f.getPath());
         }
     }
     
-    protected String setupDirPath(String currentPath) { 
-        currentPath = dataPathText.getText();
+    protected String setupDirPath() { 
+        String currentPath = dataPathText.getText();
         String path = currentPath;
         if(currentPath!=null && !currentPath.isEmpty()) {
             int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));

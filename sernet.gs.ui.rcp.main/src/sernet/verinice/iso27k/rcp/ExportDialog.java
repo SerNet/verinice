@@ -282,7 +282,7 @@ public class ExportDialog extends TitleAreaDialog {
                     }
                     @Override
                     public void widgetSelected(SelectionEvent e) {
-                        widgetSelected(e);
+                        widgetDefaultSelected(e);
 
                     }
                 });
@@ -328,8 +328,8 @@ public class ExportDialog extends TitleAreaDialog {
         return defaultFolder; 
     }
     
-    protected String setupDirPath(String currentPath){
-        currentPath = txtLocation.getText();
+    protected String setupDirPath(){
+       String currentPath = txtLocation.getText();
         String path = currentPath;
         if(currentPath!=null && !currentPath.isEmpty()) {
              int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
@@ -399,7 +399,7 @@ public class ExportDialog extends TitleAreaDialog {
             sb.append(Messages.SamtExportDialog_13);
             setMessage(sb.toString(), IMessageProvider.ERROR);
         } else {
-            String currentPath = setupDirPath(filePath);
+            String currentPath = setupDirPath();
             defaultFolder = currentPath;
             Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Export, currentPath);
             super.okPressed();
