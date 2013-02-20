@@ -295,19 +295,17 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
          * @return
          */
         private boolean checkSiegelFilter(Object prop, Object filter) {
-            if(prop!=null) {
-                // for Oracle prop is SerializableClob (bug 165)
-                if(prop instanceof SerializableClob) {
-                    SerializableClob clob = (SerializableClob) prop;
-                    try {
-                        prop = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
-                    } catch (SQLException e) {
-                        log.error("Error while getting string value from clob", e);
-                    }
+            // for Oracle prop is SerializableClob (bug 165)
+            if(prop instanceof SerializableClob) {
+                SerializableClob clob = (SerializableClob) prop;
+                try {
+                    prop = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
+                } catch (SQLException e) {
+                    log.error("Error while getting string value from clob", e);
                 }
             }
             return (filter==null) 
-            || ((Set) filter).contains(prop);
+                    || ((Set) filter).contains(prop);
         }
 
         /**
@@ -316,23 +314,21 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
          */
         private boolean checkUmsetzungFilter(Object prop, Object filter) {
             String value = null;
-            if(prop!=null) {
-                // for Oracle prop is SerializableClob (bug 165)
-                if(prop instanceof SerializableClob) {
-                    SerializableClob clob = (SerializableClob) prop;
-                    try {
-                        value = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
-                    } catch (SQLException e) {
-                        log.error("Error while getting string value from clob", e);
-                    }
-                } else {
-                    value = (String) prop;
+            // for Oracle prop is SerializableClob (bug 165)
+            if(prop instanceof SerializableClob) {
+                SerializableClob clob = (SerializableClob) prop;
+                try {
+                    value = clob.getSubString(Long.valueOf(1).longValue(), Long.valueOf(clob.length()).intValue());
+                } catch (SQLException e) {
+                    log.error("Error while getting string value from clob", e);
                 }
+            } else {
+                value = (String) prop;
             }
             return (filter==null) 
-            || ((Set) filter).contains(value)
-            || (((Set) filter).contains(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET) && (value==null || value.isEmpty()));
-            
+                    || ((Set) filter).contains(value)
+                    || (((Set) filter).contains(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET) && (value==null || value.isEmpty()));
+
         }
 
         /**

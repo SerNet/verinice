@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -108,17 +107,21 @@ public class EncryptionDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int defaultMarginWidth = 10;
+        final int defaultMarginHeight = defaultMarginWidth;
+        final int defaultColumnNr = 3;
+        final int defaultGridDataWidthHint = 280;
         setTitle(DEFAULT_DIALOG_TITLE);
         setMessage(DEFAULT_DIALOG_MESSAGE);
 
         Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout compositeLayout = (GridLayout) composite.getLayout();
-        compositeLayout.marginWidth = 10;
-        compositeLayout.marginHeight = 10;
+        compositeLayout.marginWidth = defaultMarginWidth;
+        compositeLayout.marginHeight = defaultMarginHeight;
 
         // ===== Password Based Encryption controls =====
         Composite encryptionChoicePanel = new Composite(composite, SWT.NONE);
-        GridLayout pbeLayout = new GridLayout(3, false);
+        GridLayout pbeLayout = new GridLayout(defaultColumnNr, false);
         encryptionChoicePanel.setLayout(pbeLayout);
 
         final Button passwordEncryptionRadio = new Button(encryptionChoicePanel, SWT.RADIO);
@@ -138,7 +141,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 
         passwordField = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = defaultGridDataWidthHint;
         passwordField.setLayoutData(data);
         new Label(encryptionChoicePanel, SWT.NONE);
 
@@ -147,7 +150,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 
         passwordField2 = new Text(encryptionChoicePanel, SWT.PASSWORD | SWT.BORDER);
         GridData data2 = new GridData();
-        data2.widthHint = 280;
+        data2.widthHint = defaultGridDataWidthHint;
         passwordField2.setLayoutData(data2);
         // FIXME: span two cols instead of using an invisible label here
         new Label(encryptionChoicePanel, SWT.NONE);
@@ -170,7 +173,7 @@ public class EncryptionDialog extends TitleAreaDialog {
 
         certificatePathField = new Text(encryptionChoicePanel, SWT.SINGLE | SWT.BORDER);
         data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = defaultGridDataWidthHint;
         certificatePathField.setLayoutData(data);
         certificatePathField.addFocusListener(new FocusAdapter() {
             @Override
@@ -240,7 +243,7 @@ public class EncryptionDialog extends TitleAreaDialog {
         });
         pkcs11KeyEncryptionCombo = new Combo(encryptionChoicePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
         data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = defaultGridDataWidthHint;
         pkcs11KeyEncryptionCombo.setLayoutData(data);
         pkcs11KeyEncryptionCombo.setEnabled(false);
         pkcs11KeyEncryptionCombo.addSelectionListener(new SelectionAdapter() {
@@ -302,7 +305,7 @@ public class EncryptionDialog extends TitleAreaDialog {
      * @return the password to use for encryption entered by the user
      */
     public char[] getEnteredPassword() {
-        return enteredPassword;
+        return (enteredPassword != null) ? enteredPassword.clone() : null;
     }
 
     /**

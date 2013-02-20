@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.hui.common.connect.Entity;
@@ -78,11 +77,11 @@ public class LoadNotes extends GenericCommand {
 			crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
 			crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
 			crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			List<Note> noteList = dao.findByCriteria(crit);
+			List<Note> internalNoteList = dao.findByCriteria(crit);
 			if (getLog().isDebugEnabled()) {
-				getLog().debug("number of notes found: " + noteList.size());
+				getLog().debug("number of notes found: " + internalNoteList.size());
 			}
-			for (Note note : noteList) {
+			for (Note note : internalNoteList) {
 				Entity entity = note.getEntity();
 				if(entity!=null) {
 					for (PropertyList pl : entity.getTypedPropertyLists().values()) {
@@ -92,8 +91,8 @@ public class LoadNotes extends GenericCommand {
 					}
 				}
 			}
-			Collections.sort(noteList, sorter);
-			setNoteList(noteList);
+			Collections.sort(internalNoteList, sorter);
+			setNoteList(internalNoteList);
 		}
 	}
 

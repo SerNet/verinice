@@ -21,7 +21,6 @@ package sernet.verinice.iso27k.service.commands;
 
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.iso27k.ISO27KModel;

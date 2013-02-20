@@ -20,5 +20,5 @@ package sernet.gs.ui.rcp.main.reports;
 import sernet.verinice.model.common.CnATreeElement;
 
 public interface ICnaItemRow {
-	public CnATreeElement getItem();
+	CnATreeElement getItem();
 }

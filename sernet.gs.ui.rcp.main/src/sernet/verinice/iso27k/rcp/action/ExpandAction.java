@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
@@ -45,11 +44,11 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 
 	private static final Logger LOG = Logger.getLogger(ExpandAction.class);
 	
-	TreeViewer viewer;
+	private TreeViewer viewer;
 	
-	CnATreeElement selectedElement;
+	private CnATreeElement selectedElement;
 	
-	ITreeContentProvider contentProvider;
+	private ITreeContentProvider contentProvider;
 	
 	public ExpandAction(TreeViewer viewer, ITreeContentProvider contentProvider) {
 		this.viewer = viewer;
@@ -93,15 +92,6 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 			expandedElements.addAll(Arrays.asList(children));
 			for (Object child : children) {
 			    if(child instanceof CnATreeElement) {
-			        /*
-			        CnATreeElement e = (CnATreeElement) child;
-			        CnATreeElement cachedObject = contentProvider.getCachedObject(e);
-    				if (cachedObject == null) {
-    					contentProvider.addCachedObject(child);
-    				} else {
-    					child = cachedObject;
-    				}
-    				*/
     				if (LOG.isDebugEnabled()) {
     					LOG.debug("child: " + ((CnATreeElement)child).getTitle());
     				}

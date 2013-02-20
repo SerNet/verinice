@@ -23,8 +23,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.verinice.interfaces.CommandException;
@@ -38,8 +36,6 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
  */
 @SuppressWarnings("serial")
 public class FindMassnahmeById extends FindMassnahmenAbstract {
-
-	private static final Logger log = Logger.getLogger(FindMassnahmeById.class);
 
 	private Integer dbId = null;
 	

@@ -21,7 +21,6 @@ package sernet.verinice.iso27k.rcp;
 
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 
@@ -36,6 +35,8 @@ public class JobScheduler {
 	private static final Mutex INIT_MUTEX = new Mutex();
 	
 	private static final IProgressMonitor INIT_PROGRESS_MONITOR = Job.getJobManager().createProgressGroup();
+	
+	private JobScheduler(){}
 	
 	public static ISchedulingRule getInitMutex() {
 		return INIT_MUTEX;

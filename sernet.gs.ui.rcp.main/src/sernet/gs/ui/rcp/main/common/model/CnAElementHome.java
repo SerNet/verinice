@@ -660,7 +660,7 @@ public final class CnAElementHome {
      * @return update command
      */
     private UpdateElementEntity<? extends CnATreeElement> createCommand(CnATreeElement element) {
-        return new UpdateElementEntity<CnATreeElement>(element, true, ChangeLogEntry.STATION_ID);
+        return new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
     }
 
     private void validateElement(CnATreeElement elmt){

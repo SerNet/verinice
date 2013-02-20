@@ -84,13 +84,12 @@ public class IconSelectDialog extends Dialog {
     private static final int SIZE_X = 485;
     private static final int NUMBER_OF_COLUMNS = 10;
     private static final int ICON_SPACING = 10;
+    private static final int THUMBNAIL_SIZE = 20;
 
     private Combo dirCombo;
     private ComboModel<IconPathDescriptor> dirComboModel;
 
     private TableViewer viewer;
-
-    private IconDescriptor[][] iconDescriptorArray;
 
     private IconPathDescriptor directory;
 
@@ -156,6 +155,9 @@ public class IconSelectDialog extends Dialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        
+        final int gridDataSizeMinuend = 20;
+        
         Composite comp = (Composite) super.createDialogArea(parent);
 
         Label dirLabel = new Label(comp, SWT.NONE);
@@ -178,8 +180,8 @@ public class IconSelectDialog extends Dialog {
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         group.setLayout(groupOrganizationLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.minimumWidth = SIZE_Y - 20;
-        gd.heightHint = SIZE_X - 20;
+        gd.minimumWidth = SIZE_Y - gridDataSizeMinuend;
+        gd.heightHint = SIZE_X - gridDataSizeMinuend;
         group.setLayoutData(gd);
 
         createTable(group);
@@ -205,8 +207,9 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void loadIcons(String path) {
-        File directory = new File(path);
-        File[] files = directory.listFiles(ICON_FILE_FILTER);
+        final int maxRowCount = 10;
+        File internalDirectory = new File(path);
+        File[] files = internalDirectory.listFiles(ICON_FILE_FILTER);
         Arrays.sort(files);
 
         List<IconDescriptor[]> iconDescriptorList = new ArrayList<IconDescriptor[]>();
@@ -215,7 +218,7 @@ public class IconSelectDialog extends Dialog {
         for (File file : files) {
             iconRow[i] = new IconDescriptor(file);
             i++;
-            if (i == 10) {
+            if (i == maxRowCount) {
                 iconDescriptorList.add(iconRow);
                 iconRow = new IconDescriptor[NUMBER_OF_COLUMNS];
                 i = 0;
@@ -224,29 +227,36 @@ public class IconSelectDialog extends Dialog {
         if (i != 0) {
             iconDescriptorList.add(iconRow);
         }
-        iconDescriptorArray = null;
+        IconDescriptor[][] iconDescriptorArray = null;
         iconDescriptorArray = iconDescriptorList.toArray(new IconDescriptor[iconDescriptorList.size()][NUMBER_OF_COLUMNS]);
         viewer.setInput(iconDescriptorArray);
     }
 
     private void createTable(Composite parent) {
-        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
+        
+        final int gdHeightMinuend = 100;
+        final int iconRowSize = 10;
+        
+        int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+        style = style | SWT.SINGLE | SWT.FULL_SELECTION;
+        viewer = new TableViewer(parent, style);
         viewer.setContentProvider(new ArrayContentProvider());
 
         TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(viewer, new FocusCellOwnerDrawHighlighter(viewer));
         ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
             @Override
             protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
-                return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+                boolean retVal = event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
+                retVal = retVal || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR);
+                return  retVal || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
             }
         };
 
         TableViewerEditor.create(viewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION);
 
         Table table = viewer.getTable();
-        //table.setLinesVisible(true);
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.heightHint = SIZE_X - 100;
+        gd.heightHint = SIZE_X - gdHeightMinuend;
         table.setLayoutData(gd);
 
         table.addListener(SWT.MeasureItem, new Listener() {
@@ -280,7 +290,7 @@ public class IconSelectDialog extends Dialog {
             }
         });
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < iconRowSize; i++) {
             TableViewerColumn imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
             imageColumn.setLabelProvider(new IconCellProvider(i));
             imageColumn.getColumn().setWidth(getThumbnailSize() + ICON_SPACING);
@@ -315,7 +325,7 @@ public class IconSelectDialog extends Dialog {
      * @return
      */
     protected int getThumbnailSize() {
-        return 20;
+        return THUMBNAIL_SIZE;
     }
 
     public String getSelectedPath() {

@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IElementEntityDao;
@@ -56,13 +55,11 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
     }
     
 	private T newElement;
-	private boolean fireupdates;
 	
 	private String stationId;
 
-	public UpdateElementEntity(T element, boolean fireUpdates, String stationId) {
+	public UpdateElementEntity(T element, String stationId) {
 	    this.newElement = element;
-		this.fireupdates = fireUpdates;
 		this.stationId = stationId;
 	}
 

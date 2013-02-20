@@ -40,7 +40,7 @@ public class EntitySelectionPage extends WizardPage{
 	private Text csvText;
 	private Text entityText;
 	private Label warningLabel;
-	private Vector<String> entityNames;
+	private java.util.List<String> entityNames;
 	private String entityNameId = ""; //$NON-NLS-1$
 	private boolean insert;
 	private boolean update;
@@ -57,8 +57,18 @@ public class EntitySelectionPage extends WizardPage{
 	@Override
 	public void createControl(final Composite parent) {
 
+	    final int sixColumnAmount = 6;
+	    final int threeColumnAmount = 3;
+	    final int defaultGridDataVerticalSpan = 4;
+	    final int defaultHorizontalSpacing = 30;
+	    final int defaultGridDataHorizontalSpan = threeColumnAmount;
+	    final int defaultListHeightFactor = 12;
+	    final int defaultGridDataWidth = 120;
+	    final int defaultGridDataHeight = 15;
+	    
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.marginWidth = gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
 		
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(gridLayout);
@@ -68,7 +78,7 @@ public class EntitySelectionPage extends WizardPage{
 		
 		Group idGroup = new Group(container,SWT.NULL);
     	idGroup.setText(Messages.EntitySelectionPage_2);
-		gridLayout = new GridLayout(6, false);
+		gridLayout = new GridLayout(sixColumnAmount, false);
 		idGroup.setLayout(gridLayout);
 		idGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
@@ -155,8 +165,8 @@ public class EntitySelectionPage extends WizardPage{
     	
 	    final List list = new List(container, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 	    GridData gridData = new GridData(GridData.FILL,GridData.FILL, true, true);
-	    gridData.verticalSpan = 4;
-	    int listHeight = list.getItemHeight() * 12;
+	    gridData.verticalSpan = defaultGridDataVerticalSpan;
+	    int listHeight = list.getItemHeight() * defaultListHeightFactor;
 	    Rectangle trim = list.computeTrim(0, 0, 0, listHeight);
 	    gridData.heightHint = trim.height;
 	    list.setLayoutData(gridData);
@@ -194,8 +204,8 @@ public class EntitySelectionPage extends WizardPage{
 		    }
 	    });
         
-        gridLayout = new GridLayout(3, false);
-		gridLayout.horizontalSpacing = 30;
+        gridLayout = new GridLayout(threeColumnAmount, false);
+		gridLayout.horizontalSpacing = defaultHorizontalSpacing;
 		Composite comp = new Composite(container, 0);
 		comp.setLayout(gridLayout);
 		
@@ -211,11 +221,11 @@ public class EntitySelectionPage extends WizardPage{
 	    
 	    this.entityText = new Text(comp, SWT.BORDER);
 	    this.entityText.setEnabled(false);
-	    entityText.setLayoutData(new GridData(120, 15));
+	    entityText.setLayoutData(new GridData(defaultGridDataWidth, defaultGridDataHeight));
 	    
 	    this.csvText = new Text(comp, SWT.BORDER);
 	    csvText.setEnabled(false);
-	    csvText.setLayoutData(new GridData(120,15));
+	    csvText.setLayoutData(new GridData(defaultGridDataWidth, defaultGridDataHeight));
 	    
 	    final Button dataBrowse = new Button(comp,SWT.PUSH);
     	dataBrowse.setText(Messages.EntitySelectionPage_18);
@@ -228,17 +238,17 @@ public class EntitySelectionPage extends WizardPage{
 		});
 		
 		warningLabel = new Label(comp, SWT.NONE);
-		warningLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,1));
+		warningLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, defaultGridDataHorizontalSpan,1));
 		
 	}
 	
 
 	public boolean validateData() {
-	    boolean valid = sourceIdText.getText()!=null && !sourceIdText.getText().isEmpty() &&
-	                    entityName!=null && !entityName.isEmpty() &&
-	                    csvText.getText()!=null && !csvText.getText().isEmpty() &&
-	                    (insert || update || delete);	
-		return valid;
+	    boolean valid = sourceIdText.getText()!=null && !sourceIdText.getText().isEmpty();
+	    valid = valid && entityName!=null && !entityName.isEmpty();
+	    valid = valid && csvText.getText()!=null && !csvText.getText().isEmpty();
+	    return valid && (insert || update || delete);	
+	    
 	}
 	
 	private void displayFiles(Shell shell) {
@@ -299,7 +309,10 @@ public class EntitySelectionPage extends WizardPage{
     }
     
     public void setWarning(String message) {
-        warningLabel.setForeground(new Color(getShell().getDisplay(),200,0,0));
+        final int red = 200;
+        final int green = 0;
+        final int blue = green;
+        warningLabel.setForeground(new Color(getShell().getDisplay(),red,green,blue));
         warningLabel.setText(message);
     }
 }

@@ -10,7 +10,7 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public interface ISMReport {
 	
-	public Organization getOrganization();
+	Organization getOrganization();
 	
-	public void setOrganization(Organization org);
+	void setOrganization(Organization org);
 }

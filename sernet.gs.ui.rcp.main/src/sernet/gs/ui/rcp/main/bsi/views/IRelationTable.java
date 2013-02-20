@@ -28,14 +28,14 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface IRelationTable {
 	
-	static final String COLUMN_IMG = "_img";
-	static final String COLUMN_TYPE = "_type";
-	static final String COLUMN_TYPE_IMG = "_type_img";
-	static final String COLUMN_TITLE = "_title";
-	static final String COLUMN_COMMENT= "_comment";
-    static final String COLUMN_RISK_C = "_riskc";
-    static final String COLUMN_RISK_I = "_riski";
-    static final String COLUMN_RISK_A = "_riska";
+	String COLUMN_IMG = "_img";
+	String COLUMN_TYPE = "_type";
+	String COLUMN_TYPE_IMG = "_type_img";
+	String COLUMN_TITLE = "_title";
+	String COLUMN_COMMENT= "_comment";
+    String COLUMN_RISK_C = "_riskc";
+    String COLUMN_RISK_I = "_riski";
+    String COLUMN_RISK_A = "_riska";
 
 
 

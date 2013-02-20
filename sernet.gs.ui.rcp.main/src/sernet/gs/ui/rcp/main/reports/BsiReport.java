@@ -20,13 +20,12 @@ package sernet.gs.ui.rcp.main.reports;
 import java.io.Serializable;
 import java.util.Properties;
 
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 
 @SuppressWarnings("serial")
 public abstract class BsiReport implements Serializable, IBSIReport {
 
-	protected Properties reportProperties;
+	private Properties reportProperties;
 	private ITVerbund itverbund;
 	
 	public ITVerbund getItverbund() {
@@ -45,11 +44,12 @@ public abstract class BsiReport implements Serializable, IBSIReport {
 	 * Check if list of default columns for export contains the given column.
 	 * 
 	 */
-	public boolean isDefaultColumn(String property_id) {
+	public boolean isDefaultColumn(String propertyId) {
 		String prop = reportProperties.getProperty(getClass().getSimpleName());
-		if (prop == null)
+		if (prop == null){
 			return false;
-		return (prop.indexOf(property_id) > -1 );
+		}
+		return (prop.indexOf(propertyId) > -1 );
 	}
 
 

@@ -63,6 +63,9 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 	@Override
 	protected Control createDialogArea(Composite parent)
 	{
+	    final int gridLayoutDefaultMarginHeight = 10;
+	    final int gridLayoutDefaultMarginWidth = gridLayoutDefaultMarginHeight;
+	    final int rowLayoutDefaultMarginTop = 15;
 		/*++++
 		 * Dialog title, message and layout:
 		 *++++++++++++++++++++++++++++++++++*/
@@ -71,8 +74,8 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 		setMessage(Messages.ExportSelectedObjectsDialog_0, IMessageProvider.INFORMATION);
 		
 		final Composite composite = (Composite) super.createDialogArea(parent);
-		((GridLayout)composite.getLayout()).marginWidth = 10;
-		((GridLayout)composite.getLayout()).marginHeight = 10;
+		((GridLayout)composite.getLayout()).marginWidth = gridLayoutDefaultMarginWidth;
+		((GridLayout)composite.getLayout()).marginHeight = gridLayoutDefaultMarginHeight;
 		
 		/*++++
 		 * Widgets for source ID:
@@ -98,7 +101,7 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 		
 		final Composite encryptionOptionComposite = new Composite(composite, SWT.NONE);
 		encryptionOptionComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
-		((RowLayout) encryptionOptionComposite.getLayout()).marginTop = 15;
+		((RowLayout) encryptionOptionComposite.getLayout()).marginTop = rowLayoutDefaultMarginTop;
 		
 		final Button encryptionCheckbox = new Button(encryptionOptionComposite, SWT.CHECK);
 		encryptionCheckbox.setText("Encrypt output");
@@ -120,12 +123,13 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 		
 		final Composite compositeSaveLocation = new Composite(composite,SWT.NONE);
 		compositeSaveLocation.setLayout(new RowLayout(SWT.HORIZONTAL));
-		((RowLayout) compositeSaveLocation.getLayout()).marginTop = 15;
+		((RowLayout) compositeSaveLocation.getLayout()).marginTop = rowLayoutDefaultMarginTop;
 		final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
 		labelLocation.setText(Messages.ExportDialog_5);
 		final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
 		short textLocationWidth = 300;
-		txtLocation.setSize(textLocationWidth, 30);
+		short textLocationHeight = 30;
+		txtLocation.setSize(textLocationWidth, textLocationHeight);
 		final RowData textLocationData = new RowData();
 		textLocationData.width = textLocationWidth;
 		txtLocation.setLayoutData(textLocationData);

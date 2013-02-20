@@ -97,6 +97,13 @@ public class ChooseGefaehrdungPage extends WizardPage {
      *            the parent Composite
      */
     public void createControl(Composite parent) {
+        final int checkboxColumnWidth = 35;
+        final int imageColumnWidth = checkboxColumnWidth;
+        final int numberColumnWidth = 100;
+        final int nameColumnWidth = numberColumnWidth;
+        final int descriptionColumnWidth = 200;
+        final int buttonsGridColumnAmount = 5;
+        
         composite = new Composite(parent, SWT.NULL);
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -118,23 +125,23 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
         checkboxColumn = new TableColumn(table, SWT.LEFT);
         checkboxColumn.setText(""); //$NON-NLS-1$
-        checkboxColumn.setWidth(35);
+        checkboxColumn.setWidth(checkboxColumnWidth);
 
         imageColumn = new TableColumn(table, SWT.LEFT);
         imageColumn.setText(""); //$NON-NLS-1$
-        imageColumn.setWidth(35);
+        imageColumn.setWidth(imageColumnWidth);
 
         numberColumn = new TableColumn(table, SWT.LEFT);
         numberColumn.setText(Messages.ChooseGefaehrdungPage_5);
-        numberColumn.setWidth(100);
+        numberColumn.setWidth(numberColumnWidth);
 
         nameColumn = new TableColumn(table, SWT.LEFT);
         nameColumn.setText(Messages.ChooseGefaehrdungPage_6);
-        nameColumn.setWidth(100);
+        nameColumn.setWidth(nameColumnWidth);
 
         descriptionColumn = new TableColumn(table, SWT.LEFT);
         descriptionColumn.setText(Messages.ChooseGefaehrdungPage_7);
-        descriptionColumn.setWidth(200);
+        descriptionColumn.setWidth(descriptionColumnWidth);
 
         /*
          * listener adds/removes Gefaehrdungen to Array of selected
@@ -301,21 +308,11 @@ public class ChooseGefaehrdungPage extends WizardPage {
             }
         });
 
-        /*
-         * group the buttons with composite Composite compositeButtons = new
-         * Composite(composite, SWT.NULL); GridLayout gridLayoutButtons = new
-         * GridLayout(); gridLayoutButtons.numColumns = 5;
-         * compositeButtons.setLayout(gridLayoutButtons); GridData data2 = new
-         * GridData(); data2.horizontalAlignment = SWT.RIGHT;
-         * data2.verticalAlignment = SWT.TOP;
-         * compositeButtons.setLayoutData(data2);
-         */
-
         /* group the buttons with Group */
         Group groupButtons = new Group(composite, SWT.SHADOW_ETCHED_OUT);
         groupButtons.setText(Messages.ChooseGefaehrdungPage_11);
         GridLayout gridLayoutButtons = new GridLayout();
-        gridLayoutButtons.numColumns = 5;
+        gridLayoutButtons.numColumns = buttonsGridColumnAmount;
         groupButtons.setLayout(gridLayoutButtons);
         GridData gridButtons = new GridData();
         gridButtons.horizontalAlignment = SWT.RIGHT;
@@ -391,13 +388,13 @@ public class ChooseGefaehrdungPage extends WizardPage {
     }
 
     protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
-        RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
+        RiskAnalysisWizard internalWizard = ((RiskAnalysisWizard) getWizard());
 
         if (select) {
-            wizard.addAssociatedGefaehrdung(currentGefaehrdung);
+            internalWizard.addAssociatedGefaehrdung(currentGefaehrdung);
         } else {
             try {
-                wizard.removeAssociatedGefaehrdung(currentGefaehrdung);
+                internalWizard.removeAssociatedGefaehrdung(currentGefaehrdung);
             } catch (Exception e) {
                 ExceptionUtil.log(e, NLS.bind(Messages.ChooseGefaehrdungPage_18, currentGefaehrdung.getTitel()));
             }
@@ -540,7 +537,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
      * 
      * @author ahanekop[at]sernet[dot]de
      */
-    class OwnGefaehrdungenFilter extends ViewerFilter {
+    static class OwnGefaehrdungenFilter extends ViewerFilter {
 
         /**
          * Returns true, if the given element is an OwnGefaehrdung.
@@ -567,7 +564,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
      * 
      * @author ahanekop[at]sernet[dot]de
      */
-    class GefaehrdungenFilter extends ViewerFilter {
+    static class GefaehrdungenFilter extends ViewerFilter {
 
         /**
          * Returns true, if the given element is a Gefaehrdung.
@@ -584,9 +581,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
         public boolean select(Viewer viewer, Object parentElement, Object element) {
             if (!(element instanceof OwnGefaehrdung)) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
     }
 
@@ -628,9 +624,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
             if (matcher.find()) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
+            return false;
         }
     }
 }

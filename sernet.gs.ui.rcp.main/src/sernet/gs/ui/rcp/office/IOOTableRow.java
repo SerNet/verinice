@@ -20,13 +20,13 @@ package sernet.gs.ui.rcp.office;
 import java.io.Serializable;
 
 public interface IOOTableRow extends Serializable {
-	static final int CELL_TYPE_STRING = 0;
-	static final int CELL_TYPE_DOUBLE = 1;
+	int CELL_TYPE_STRING = 0;
+	int CELL_TYPE_DOUBLE = 1;
 	
 	// row styles, names must match style definition in OpenOffice template:
-	static final String ROW_STYLE_ELEMENT = "Element";
-	static final String ROW_STYLE_SUBHEADER = "ElementHeader";
-	static final String ROW_STYLE_HEADER = "Kategorie";
+	String ROW_STYLE_ELEMENT = "Element";
+	String ROW_STYLE_SUBHEADER = "ElementHeader";
+	String ROW_STYLE_HEADER = "Kategorie";
 	
 	String getCellAsString(int column);
 	double getCellAsDouble(int column);

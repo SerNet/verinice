@@ -19,11 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import org.jfree.chart.JFreeChart;
 
-import sernet.verinice.model.common.CnATreeElement;
-
 public interface IChartGenerator {
 
-	public JFreeChart createChart();
-	
-
+	JFreeChart createChart();
 }

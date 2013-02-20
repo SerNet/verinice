@@ -48,40 +48,47 @@ public class TodoView extends GenericMassnahmenView {
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$
 
-    TableSorter tableSorter = new TableSorter();
+    private TableSorter tableSorter = new TableSorter();
 
     @Override
     protected void createPartControlImpl(Composite parent) {
         Table table = getViewer().getTable();
 
+        final int iconColumnWidth = 25;
+        final int dateColumnWidth = 200;
+        final int bearbeiterColumnWidth = 100;
+        final int siegelColumnWidth = 20;
+        final int zielColumnWidth = 150;
+        final int titleColumnWidth = 250;
+        
         iconColumn = new TableColumn(table, SWT.LEFT);
         iconColumn.setText(" "); //$NON-NLS-1$
-        iconColumn.setWidth(25);
+        iconColumn.setWidth(iconColumnWidth);
         iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, 0));
 
         dateColumn = new TableColumn(table, SWT.LEFT);
         dateColumn.setText(Messages.TodoView_8);
-        dateColumn.setWidth(200);
+        dateColumn.setWidth(dateColumnWidth);
         dateColumn.addSelectionListener(new SortSelectionAdapter(this, dateColumn, 1));
 
         bearbeiterColumn = new TableColumn(table, SWT.LEFT);
         bearbeiterColumn.setText(Messages.TodoView_9);
-        bearbeiterColumn.setWidth(100);
+        bearbeiterColumn.setWidth(bearbeiterColumnWidth);
         bearbeiterColumn.addSelectionListener(new SortSelectionAdapter(this, bearbeiterColumn, 2));
 
         siegelColumn = new TableColumn(table, SWT.LEFT);
         siegelColumn.setText(Messages.TodoView_10);
-        siegelColumn.setWidth(20);
+        siegelColumn.setWidth(siegelColumnWidth);
         siegelColumn.addSelectionListener(new SortSelectionAdapter(this, siegelColumn, 3));
 
         zielColumn = new TableColumn(table, SWT.LEFT);
         zielColumn.setText(Messages.TodoView_11);
-        zielColumn.setWidth(150);
+        zielColumn.setWidth(zielColumnWidth);
         zielColumn.addSelectionListener(new SortSelectionAdapter(this, zielColumn, 4));
 
         titleColumn = new TableColumn(table, SWT.LEFT);
         titleColumn.setText(Messages.TodoView_12);
-        titleColumn.setWidth(250);
+        titleColumn.setWidth(titleColumnWidth);
         titleColumn.addSelectionListener(new SortSelectionAdapter(this, titleColumn, 5));
 
         getViewer().setColumnProperties(new String[] { "_icon", //$NON-NLS-1$
@@ -168,9 +175,10 @@ public class TodoView extends GenericMassnahmenView {
         }
 
         public String getColumnText(Object element, int columnIndex) {
+            final int fullTextColumnIndex = 5;
             if (element instanceof PlaceHolder) {
                 PlaceHolder ph = (PlaceHolder) element;
-                if (columnIndex == 5) {       
+                if (columnIndex == fullTextColumnIndex) {       
                     return ph.getTitle();
                 } else if(columnIndex>0) {
                     return ph.getTitleShort();
@@ -200,7 +208,4 @@ public class TodoView extends GenericMassnahmenView {
             return ""; //$NON-NLS-1$
         }
     }
-
-    
-
 }

@@ -241,6 +241,12 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         TableColumn versionColumn;
         
         final int widthHeightPadding = 4;
+        final int itemColumnWidth = 26;
+        final int filenameColumnWidth = 152;
+        final int mimeTypeColumnWidth = 50;
+        final int textColumnWidth = 250;
+        final int dateColumnWidth = 120;
+        final int versionColumnWidth = 60;
         
         viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
@@ -264,32 +270,32 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         }
         
         iconColumn = new TableColumn(table, SWT.LEFT);
-        iconColumn.setWidth(26);
+        iconColumn.setWidth(itemColumnWidth);
         iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, 0));
 
         fileNameColumn = new TableColumn(table, SWT.LEFT);
         fileNameColumn.setText(Messages.FileView_2);
-        fileNameColumn.setWidth(152);
+        fileNameColumn.setWidth(filenameColumnWidth);
         fileNameColumn.addSelectionListener(new SortSelectionAdapter(this, fileNameColumn, 1));
         
         mimeTypeColumn = new TableColumn(table, SWT.LEFT);
         mimeTypeColumn.setText(Messages.FileView_3);
-        mimeTypeColumn.setWidth(50);
+        mimeTypeColumn.setWidth(mimeTypeColumnWidth);
         mimeTypeColumn.addSelectionListener(new SortSelectionAdapter(this, mimeTypeColumn, 2));
 
         textColumn = new TableColumn(table, SWT.LEFT);
         textColumn.setText(Messages.FileView_4);
-        textColumn.setWidth(250);
+        textColumn.setWidth(textColumnWidth);
         textColumn.addSelectionListener(new SortSelectionAdapter(this, textColumn, 3));
 
         dateColumn = new TableColumn(table, SWT.LEFT);
         dateColumn.setText(Messages.FileView_5);
-        dateColumn.setWidth(120);
+        dateColumn.setWidth(dateColumnWidth);
         dateColumn.addSelectionListener(new SortSelectionAdapter(this, dateColumn, widthHeightPadding));
 
         versionColumn = new TableColumn(table, SWT.LEFT);
         versionColumn.setText(Messages.FileView_6);
-        versionColumn.setWidth(60);
+        versionColumn.setWidth(versionColumnWidth);
         versionColumn.addSelectionListener(new SortSelectionAdapter(this, versionColumn, 5));
 
         table.setHeaderVisible(true);
@@ -472,12 +478,13 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
      */
     @Override
     public void propertyChange(PropertyChangeEvent changeEvent) {
+        final int thumbnailWidthPadding = 4;
         if(changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE) && imageCellProvider!=null
                 && !changeEvent.getNewValue().equals(changeEvent.getOldValue())) {
             imageCellProvider.setThumbSize(Integer.valueOf(changeEvent.getNewValue().toString()));
             imageCellProvider.clearCache();
             if(getThumbnailSize()>0) {
-                imageColumn.getColumn().setWidth(getThumbnailSize() + 4);
+                imageColumn.getColumn().setWidth(getThumbnailSize() + thumbnailWidthPadding);
             } else {
                 imageColumn.getColumn().setWidth(0);
             }

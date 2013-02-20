@@ -29,6 +29,6 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface ISelectionChartGenerator extends IChartGenerator {
 
-    public JFreeChart createChart(CnATreeElement elmt);
+    JFreeChart createChart(CnATreeElement elmt);
     
 }

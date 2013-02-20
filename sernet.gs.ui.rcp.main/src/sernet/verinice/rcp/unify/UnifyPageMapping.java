@@ -73,20 +73,25 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
      */
     protected UnifyPageMapping() {
         super(UnifyWizard.PAGE_SELECT_MAPPING_ID);
+        final int rgbMax = 255;
+        final int dtBlue = 170;
+        final int cnmGreen = 210;
+        final int cnmBlue = cnmGreen;
         setTitle(Messages.UnifyPageMapping_0);   
         Device device = Display.getCurrent();
-        colorDifferentTitle = new Color(device, 255, 255, 170);
-        colorNoMapping = new Color(device, 255, 210, 210);
+        colorDifferentTitle = new Color(device, rgbMax, rgbMax, dtBlue);
+        colorNoMapping = new Color(device, rgbMax, cnmGreen, cnmBlue);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {               
+    public void createControl(Composite parent) {
+        final int characterAmountToConvert = 40;
         Composite composite = new Composite(parent, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(characterAmountToConvert);
         composite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -140,6 +145,8 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     private TableViewer createTable(Composite parent) {
 
+        final int defaultColumnWeight = 50;
+        
         Composite tableComposite = new Composite(parent, SWT.NONE);
         tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
@@ -148,10 +155,10 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         
         TableViewer tableViewer = new TableViewer(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 
-        Table table = tableViewer.getTable();
+        Table internalTable = tableViewer.getTable();
         // Spaltenköpfe und Zeilenbegrenzungen sichtbar machen
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
+        internalTable.setHeaderVisible(true);
+        internalTable.setLinesVisible(true);
         
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         tableViewer.getControl().setLayoutData(gd);
@@ -172,7 +179,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             }
          
         });
-        tableColumnLayout.setColumnData(sourceColumn.getColumn(), new ColumnWeightData(50));
+        tableColumnLayout.setColumnData(sourceColumn.getColumn(), new ColumnWeightData(defaultColumnWeight));
         
         TableViewerColumn destinationColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         destinationColumn.getColumn().setText(Messages.UnifyPageMapping_6);
@@ -187,7 +194,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
                 setCellColor(cell,mapping); 
             }
         });
-        tableColumnLayout.setColumnData(destinationColumn.getColumn(), new ColumnWeightData(50));
+        tableColumnLayout.setColumnData(destinationColumn.getColumn(), new ColumnWeightData(defaultColumnWeight));
         
         return tableViewer;
     }

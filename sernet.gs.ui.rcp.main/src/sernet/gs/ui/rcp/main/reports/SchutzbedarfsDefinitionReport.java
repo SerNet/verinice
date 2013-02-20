@@ -24,7 +24,6 @@ import java.util.Properties;
 import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -42,15 +41,13 @@ public class SchutzbedarfsDefinitionReport extends BsiReport implements IBSIRepo
 		// TODO Auto-generated constructor stub
 	}
 
-	private ArrayList<CnATreeElement> items;
+	private List<CnATreeElement> items;
 
-	private ArrayList<CnATreeElement> categories;
-
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
-		categories = new ArrayList<CnATreeElement>();
 			
 		ITVerbund verbund = getItverbund();
 		items.add(verbund);
@@ -60,7 +57,7 @@ public class SchutzbedarfsDefinitionReport extends BsiReport implements IBSIRepo
 
 
 
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 
 		String[] stufen = new String[] {"Normal", "Hoch", "Sehr Hoch"};
@@ -78,7 +75,7 @@ public class SchutzbedarfsDefinitionReport extends BsiReport implements IBSIRepo
 		return rows;
 	}
 
-	private void addProperties(ArrayList<IOOTableRow> categoryRows,
+	private void addProperties(List<IOOTableRow> categoryRows,
 			CnATreeElement dsElement, List<String> columns, String stufenId) {
 		for (String column : columns) {
 			

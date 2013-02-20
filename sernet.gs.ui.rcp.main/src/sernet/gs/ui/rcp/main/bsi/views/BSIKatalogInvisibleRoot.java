@@ -36,11 +36,15 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
-public class BSIKatalogInvisibleRoot {
+public final class BSIKatalogInvisibleRoot {
 	
-	private static final Logger log = Logger.getLogger(BSIKatalogInvisibleRoot.class); 
+	private static final Logger LOG = Logger.getLogger(BSIKatalogInvisibleRoot.class); 
 
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
+	
+	private static final int DEFAULT_LISTENER_AMOUNT = 5;
+	
+	private static final int WHOLE_FACTOR = 1000;
 
 	/**
 	 * Listen for preference changes and update model if necessary:
@@ -53,7 +57,7 @@ public class BSIKatalogInvisibleRoot {
 					|| event.getProperty()
 							.equals(PreferenceConstants.DSZIPFILE))
 			{
-				log.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty()); //$NON-NLS-1$
+				LOG.debug("Reloading catalogues since catalogue properties changed: " + event.getProperty()); //$NON-NLS-1$
 				try {
 					// Load the catalogues using a configuration object which points
 					// to local files.
@@ -71,7 +75,7 @@ public class BSIKatalogInvisibleRoot {
 	};
 
 	public interface ISelectionListener {
-		public void cataloguesChanged();
+		void cataloguesChanged();
 	}
 
 	private class NullBaustein extends Baustein {
@@ -84,10 +88,10 @@ public class BSIKatalogInvisibleRoot {
 	}
 
 	private static volatile BSIKatalogInvisibleRoot instance;
-	List<Baustein> bausteine = new ArrayList<Baustein>();
+	private List<Baustein> bausteine = new ArrayList<Baustein>();
 
 	private List<ISelectionListener> listeners = new ArrayList<ISelectionListener>(
-			5);
+			DEFAULT_LISTENER_AMOUNT);
 
 	public void addListener(ISelectionListener listener) {
 		synchronized (listeners) {
@@ -159,7 +163,7 @@ public class BSIKatalogInvisibleRoot {
 		if (m.find()) {
 			int whole = Integer.parseInt(m.group(1));
 			int radix = Integer.parseInt(m.group(2));
-			int kapitelValue = whole * 1000 + radix;
+			int kapitelValue = whole * WHOLE_FACTOR + radix;
 
 			for (Baustein baustein : bausteine) {
 				if (baustein.getKapitelValue() == kapitelValue){

@@ -599,7 +599,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	 * 
 	 * @param compound
 	 */
-	private final void loadCompounds(final ITVerbund compound) {
+	private void loadCompounds(final ITVerbund compound) {
 		if (!CnAElementHome.getInstance().isOpen()) {
 			compoundChoser.setEnabled(false);
 			return;

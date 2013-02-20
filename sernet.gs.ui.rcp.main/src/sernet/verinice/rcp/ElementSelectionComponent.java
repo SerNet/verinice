@@ -103,7 +103,12 @@ public class ElementSelectionComponent {
     }
     
     public void init() {
+        
         final int formAttachmentDefaultOffset = 5;
+        final int column1Width = 25;
+        final int column2Width = 200;
+        final int formData2Numerator = 100;
+        final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
              
         Label label1 = new Label(container, SWT.NULL);
@@ -119,7 +124,7 @@ public class ElementSelectionComponent {
         FormData formData2 = new FormData();
         formData2.top = new FormAttachment(0, formAttachmentDefaultOffset);
         formData2.left = new FormAttachment(label1, formAttachmentDefaultOffset);
-        formData2.right = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
+        formData2.right = new FormAttachment(formData2Numerator, (-1) * formAttachmentDefaultOffset);
         text.setLayoutData(formData2);
         text.addKeyListener(new KeyListener() {
             @Override
@@ -162,8 +167,8 @@ public class ElementSelectionComponent {
             formData3.top = new FormAttachment(text, formAttachmentDefaultOffset);
         }
         formData3.left = new FormAttachment(0, formAttachmentDefaultOffset);
-        formData3.right = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
-        formData3.bottom = new FormAttachment(100, (-1) * formAttachmentDefaultOffset);
+        formData3.right = new FormAttachment(formData3Numerator, (-1) * formAttachmentDefaultOffset);
+        formData3.bottom = new FormAttachment(formData3Numerator, (-1) * formAttachmentDefaultOffset);
         viewer.getTable().setLayoutData(formData3);
         viewer.getTable().setHeaderVisible(false);
         viewer.getTable().setLinesVisible(true);
@@ -171,7 +176,7 @@ public class ElementSelectionComponent {
         // image column:
         TableViewerColumn column1 = new TableViewerColumn(viewer, SWT.LEFT);
         column1.getColumn().setText(""); //$NON-NLS-1$
-        column1.getColumn().setWidth(25);
+        column1.getColumn().setWidth(column1Width);
         column1.getColumn().setResizable(false);
         column1.setLabelProvider(new CellLabelProvider() {
             public void update(ViewerCell cell) {
@@ -189,7 +194,7 @@ public class ElementSelectionComponent {
         
         // label column:
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
-        column2.getColumn().setWidth(200);
+        column2.getColumn().setWidth(column2Width);
         column2.setLabelProvider(new CellLabelProvider() {
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder) {

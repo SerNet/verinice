@@ -66,7 +66,9 @@ public class PasswordDialog extends Dialog {
      */
     public PasswordDialog(Shell parentShell) {
         super(parentShell);
-        setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
+        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
+        setShellStyle(style | SWT.RESIZE);
     }
     
     @Override
@@ -86,6 +88,10 @@ public class PasswordDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
 
+        final int defaultFormAttachmentOffset = 5;
+        final int formDataLeftNumerator = 33;
+        final int formDataRightNumerator = 100;
+        
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new FormLayout());
         
@@ -93,16 +99,16 @@ public class PasswordDialog extends Dialog {
         Label label1 = new Label(container, SWT.NULL);
         label1.setText(Messages.PasswordDialog_1);
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, 5);
-        formData.left = new FormAttachment(0, 5);
+        formData.top = new FormAttachment(0, defaultFormAttachmentOffset);
+        formData.left = new FormAttachment(0, defaultFormAttachmentOffset);
         label1.setLayoutData(formData);
         label1.pack();
         
         text = new Text(container, SWT.BORDER|SWT.PASSWORD);
         FormData formData2 = new FormData();
-        formData2.top = new FormAttachment(0, 5);
-        formData2.left = new FormAttachment(33, 0);
-        formData2.right = new FormAttachment(100, -5);
+        formData2.top = new FormAttachment(0, defaultFormAttachmentOffset);
+        formData2.left = new FormAttachment(formDataLeftNumerator, 0);
+        formData2.right = new FormAttachment(100, (-1)*defaultFormAttachmentOffset);
         text.setLayoutData(formData2);
         text.addFocusListener(new FocusListener() {
             
@@ -126,25 +132,28 @@ public class PasswordDialog extends Dialog {
         Label label2 = new Label(container, SWT.NULL);
         label2.setText(Messages.PasswordDialog_2);
         FormData formDataLabel2 = new FormData();
-        formDataLabel2.top = new FormAttachment(text, 5);
-        formDataLabel2.left = new FormAttachment(0, 5);
+        formDataLabel2.top = new FormAttachment(text, defaultFormAttachmentOffset);
+        formDataLabel2.left = new FormAttachment(0, defaultFormAttachmentOffset);
         label2.setLayoutData(formDataLabel2);
         label2.pack();
 
         text2 = new Text(container, SWT.BORDER|SWT.PASSWORD);
         FormData formdata3 = new FormData();
-        formdata3.top = new FormAttachment(text, 5);
-        formdata3.left = new FormAttachment(33,0);
-        formdata3.right = new FormAttachment(100, -5);
+        formdata3.top = new FormAttachment(text, defaultFormAttachmentOffset);
+        formdata3.left = new FormAttachment(formDataLeftNumerator,0);
+        formdata3.right = new FormAttachment(formDataRightNumerator, (-1)*defaultFormAttachmentOffset);
         text2.setLayoutData(formdata3);
         oldBackground = text2.getBackground();
         text2.addKeyListener(new KeyListener() {
             
             @Override
             public void keyReleased(KeyEvent e) {
+                final int red = 250;
+                final int green = red;
+                final int blue = 120;
                 if (!text.getText().equals(text2.getText())) {
                     //yellow:
-                    text2.setBackground(new Color(Display.getCurrent(), 250,250,120));
+                    text2.setBackground(new Color(Display.getCurrent(), red,green,blue));
                 } else {
                     text2.setBackground(oldBackground);
                 }

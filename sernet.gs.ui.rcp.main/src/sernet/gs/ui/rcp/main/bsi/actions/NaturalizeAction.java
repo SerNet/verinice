@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -64,11 +63,10 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     public static final String ID = "sernet.gs.ui.rcp.main.actions.NaturalizeAction"; //$NON-NLS-1$
     
     public static final String TYPE_ID = "naturalizeAction";
-    
 
-    List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
+    private List<CnATreeElement> selectedElementList = new LinkedList<CnATreeElement>();
 
-    ICommandService commandService;
+    private ICommandService commandService;
 
     public NaturalizeAction(IWorkbenchWindow window) {
         setText(Messages.NaturalizeAction_0);
@@ -97,6 +95,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
+        final int maxChangedElements = 10;
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -117,7 +116,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                             List<CnATreeElement> changedElements = command.getChangedElements();
                                                
                             if(changedElements!=null) {
-                                if(changedElements.size()<10) {
+                                if(changedElements.size()<maxChangedElements) {
                                     for (CnATreeElement elementFromServer : changedElements) {
                                         CnATreeElement element = uuidElementMap.get(elementFromServer.getUuid());
                                         element.setSourceId(elementFromServer.getSourceId());
@@ -178,5 +177,4 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
     }
-
 }

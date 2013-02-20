@@ -89,10 +89,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     private static final String STD_LOAD_ERRMSG = "Error while loading data";
     
     private TableViewer viewer;
-    private TableColumn elementTypeColumn;
-    private TableColumn elementNameColumn;
-    private TableColumn propertyColumn;
-    private TableColumn hintColumn;
+
     private TableSorter tableSorter = new TableSorter();
     private ICommandService commandService;
     
@@ -196,29 +193,39 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     }
     
     private void createTable(Composite parent) {
+        TableColumn elementTypeColumn;
+        TableColumn elementNameColumn;
+        TableColumn propertyColumn;
+        TableColumn hintColumn;
+        
+        final int typeColumnWidth = 80;
+        final int nameColumnWidth = 150;
+        final int propertyColumnWidth = 100;
+        final int hintColumnWidth = 200;
+        
         viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new ValidationLabelProvider());
         Table table = viewer.getTable();
         
         elementTypeColumn = new TableColumn(table, SWT.LEFT);
-        elementTypeColumn.setWidth(80);
+        elementTypeColumn.setWidth(typeColumnWidth);
         elementTypeColumn.setText(Messages.ValidationView_5);
         elementTypeColumn.addSelectionListener(new SortSelectionAdapter(this, elementTypeColumn, 0));
              
         elementNameColumn = new TableColumn(table, SWT.LEFT);
-        elementNameColumn.setWidth(150);
+        elementNameColumn.setWidth(nameColumnWidth);
         elementNameColumn.setText(Messages.ValidationView_4);
         elementNameColumn.addSelectionListener(new SortSelectionAdapter(this, elementNameColumn, 1));
         
         propertyColumn = new TableColumn(table, SWT.LEFT);
-        propertyColumn.setWidth(100);
+        propertyColumn.setWidth(propertyColumnWidth);
         propertyColumn.setText(Messages.ValidationView_6);
         propertyColumn.addSelectionListener(new SortSelectionAdapter(this, propertyColumn, 2));
 
         hintColumn = new TableColumn(table, SWT.LEFT);
         hintColumn.setText(Messages.ValidationView_7);
-        hintColumn.setWidth(200);
+        hintColumn.setWidth(hintColumnWidth);
         hintColumn.addSelectionListener(new SortSelectionAdapter(this, hintColumn, 3));
 
         table.setHeaderVisible(true);
@@ -469,9 +476,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
                     rc = 1;
                 }
             } else if (e2 == null) {
-                if (e1 != null) {
-                    rc = -1;
-                }
+                rc = -1;
             } else {
                 // e1 and e2 != null
                 switch (propertyIndex) {

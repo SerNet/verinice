@@ -18,7 +18,7 @@
 package sernet.gs.ui.rcp.main.common.model;
 
 public interface IProgress {
-	static final int UNKNOWN_WORK = -1;
+	final int UNKNOWN_WORK = -1;
 	
 		void beginTask(String name, int totalWork);
 		void worked(int work);

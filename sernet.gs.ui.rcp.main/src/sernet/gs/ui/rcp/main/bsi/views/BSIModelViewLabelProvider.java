@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.LinkKategorie;
@@ -76,8 +75,6 @@ public class BSIModelViewLabelProvider extends LabelProvider {
             if (obj == null) {
                 return "<null>";
             }
-    
-            Object cachedObject = null;          
     
             if (obj instanceof IBSIStrukturElement) {
                 IBSIStrukturElement el = (IBSIStrukturElement) obj;

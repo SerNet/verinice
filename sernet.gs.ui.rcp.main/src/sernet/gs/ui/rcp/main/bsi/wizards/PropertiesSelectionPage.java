@@ -78,11 +78,19 @@ public class PropertiesSelectionPage extends WizardPage {
      */
     @Override
     public void createControl(Composite parent) {
+        
+        final int layoutMarginWidth = 5;
+        final int layoutMarginHeight = 10;
+        final int layoutSpacing = 3;
+        final int gdVerticalSpan = 4;
+        final int mainTableItemHeightFactor = 20;
+        final int tableColumnDefaultWidth = 225;
+        
         FillLayout layout = new FillLayout();
         layout.type = SWT.VERTICAL;
-        layout.marginWidth = 5;
-        layout.marginHeight = 10;
-        layout.spacing = 3;
+        layout.marginWidth = layoutMarginWidth;
+        layout.marginHeight = layoutMarginHeight;
+        layout.spacing = layoutSpacing;
 
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginWidth = 0;
@@ -98,8 +106,8 @@ public class PropertiesSelectionPage extends WizardPage {
 
         mainTable = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.verticalSpan = 4;
-        int listHeight = mainTable.getItemHeight() * 20;
+        gridData.verticalSpan = gdVerticalSpan;
+        int listHeight = mainTable.getItemHeight() * mainTableItemHeightFactor;
         Rectangle trim = mainTable.computeTrim(0, 0, 0, listHeight);
         gridData.heightHint = trim.height;
         mainTable.setLayoutData(gridData);
@@ -112,7 +120,7 @@ public class PropertiesSelectionPage extends WizardPage {
         for (int i = 0; i < 2; i++) {
             TableColumn column = new TableColumn(mainTable, SWT.NONE);
             column.setText(titles[i]);
-            column.setWidth(225);
+            column.setWidth(tableColumnDefaultWidth);
         }
     }
 
@@ -248,8 +256,8 @@ public class PropertiesSelectionPage extends WizardPage {
         return valid;
     }
 
-    public Vector<Vector<String>> getPropertyTable() throws IOException {
-        Vector<Vector<String>> table = new Vector<Vector<String>>();
+    public List<Vector<String>> getPropertyTable() throws IOException {
+        List<Vector<String>> table = new Vector<Vector<String>>();
         String[] spalten = getFirstLine();
         for (int i = 1; i < spalten.length; i++) {
             Vector<String> temp = new Vector<String>();

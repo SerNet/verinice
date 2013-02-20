@@ -158,10 +158,13 @@ public class TreeViewerCache {
     }
     
     private Cache createCache() {
+        final int overflowToDisk = 5000;
+        final int timeToLive = 3600;
+        final int timeToIdle = timeToLive;
         shutdownCache();
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 5000, false, false, 3600, 3600);
+        cache = new Cache(cacheId, overflowToDisk, false, false, timeToLive, timeToIdle);
         manager.addCache(cache);
         return cache;
     }

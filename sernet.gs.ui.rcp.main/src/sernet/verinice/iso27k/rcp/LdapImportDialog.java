@@ -75,8 +75,6 @@ public class LdapImportDialog extends TitleAreaDialog {
 	private Text surname, givenName,  title, department, company;
 
 	private Set<PersonInfo> personSet;
-	
-	private Button buttonRemove;
 
 	@SuppressWarnings("unchecked")
 	public LdapImportDialog(Shell parent) {
@@ -96,6 +94,10 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+	    
+	    final int gridDataHorizontalSpan = 5;
+	    
+	    Button buttonRemove;
 
 		setTitle(Messages.LdapImportDialog_30);
 		
@@ -156,16 +158,6 @@ public class LdapImportDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = GridData.FILL;
 		company.setLayoutData(gridData);
 		
-		SelectionListener addListener = new SelectionListener() {
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
-		        loadLdapUser();
-		    }
-		    
-		    @Override
-		    public void widgetDefaultSelected(SelectionEvent e) {
-		    }
-		};
 		Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
 		buttonAdd.setText(Messages.LdapImportDialog_35);
 		gridData = new GridData();
@@ -189,7 +181,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 			}
 		});
 		gridData = new GridData();
-		gridData.horizontalSpan = 5;
+		gridData.horizontalSpan = gridDataHorizontalSpan;
 		gridData.horizontalAlignment = SWT.RIGHT;
 		buttonRemove.setLayoutData(gridData);
 		
@@ -298,7 +290,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	private void createColumns() {
 		String[] titles = { Messages.LdapImportDialog_39, Messages.LdapImportDialog_40, Messages.LdapImportDialog_41, Messages.LdapImportDialog_2, Messages.LdapImportDialog_3, Messages.LdapImportDialog_4 };
-		int[] bounds = { 80, 90, 130, 100, 100, 120 };
+		final int[] bounds = { 80, 90, 130, 100, 100, 120 };
 
 		// First column: login name
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0]);

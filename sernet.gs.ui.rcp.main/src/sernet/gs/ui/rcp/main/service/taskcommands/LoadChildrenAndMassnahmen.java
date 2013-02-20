@@ -63,21 +63,24 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadChildren {
 
-	private static final Logger log = Logger.getLogger(LoadChildrenAndMassnahmen.class);
+	private static final Logger LOG = Logger.getLogger(LoadChildrenAndMassnahmen.class);
 
 	private final Comparator<CnATreeElement> cnAComparator = new CnAComparator();
 	
-	private Set<TodoViewItem> massnahmen = new HashSet<TodoViewItem>(20);
+	private static final int massnahmenListSize = 20;
+	private static final int defaultListSize = 10;
 	
-	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(10);
-	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(10);
-    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(10);
-    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(10);
+	private Set<TodoViewItem> massnahmen = new HashSet<TodoViewItem>(massnahmenListSize);
+	
+	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(defaultListSize);
+    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(defaultListSize);
+    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(defaultListSize);
 	
 	private Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
 	
@@ -121,7 +124,6 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 	public void execute() {
 		try {
 			long start = System.currentTimeMillis();
-//			List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 			List<CnATreeElement> list = null;
 			IBaseDao<ITVerbund, Serializable> dao = getDaoFactory().getDAO(ITVerbund.class);
 			DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
@@ -136,9 +138,9 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 				// create display items:
 				fillLists(list.get(0));
 			}
-			if (log.isDebugEnabled()) {
+			if (LOG.isDebugEnabled()) {
 				long runtime = System.currentTimeMillis() - start;
-				log.debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
+				LOG.debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
 			}
 		} catch (CommandException e) {
 			throw new RuntimeCommandException(e);
@@ -181,7 +183,7 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
                     } else if(SonstIT.TYPE_ID.equals(entityTypeId)) {
                         sonstItList.add(clcl);
                     } else  {
-						log.error("Unknown object type: " + entityTypeId);
+						LOG.error("Unknown object type: " + entityTypeId);
 					}
 				}
 			}
@@ -216,11 +218,11 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 
 			item = new TodoViewItem();
 
-			if (el.getParent() instanceof GefaehrdungsUmsetzung)
+			if (el.getParent() instanceof GefaehrdungsUmsetzung){
 				item.setParentTitle(el.getParent().getParent().getParent().getTitle());
-			else
+			} else {
 				item.setParentTitle(el.getParent().getParent().getTitle());
-
+			}
 			item.setTitel(el.getTitle());
 			item.setUmsetzung(umsetzung);
 			item.setUmsetzungBis(el.getUmsetzungBis());

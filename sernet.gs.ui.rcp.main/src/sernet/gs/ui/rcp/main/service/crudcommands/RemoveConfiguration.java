@@ -19,19 +19,14 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * 
  */
 public class RemoveConfiguration extends GenericCommand {
-    
-    private transient Logger log = Logger.getLogger(RemoveConfiguration.class);
     
     private Configuration elementToRemove = null;
 

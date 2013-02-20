@@ -24,12 +24,13 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("unchecked")
 public class DNDItems {
 	// TODO use system DND, (dragsource and droptarget)
+    
+    private DNDItems(){}
 
 	private static final Logger LOG = Logger.getLogger(DNDItems.class);
 	

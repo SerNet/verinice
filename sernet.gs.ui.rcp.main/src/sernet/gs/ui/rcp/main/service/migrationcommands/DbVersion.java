@@ -59,8 +59,9 @@ public class DbVersion extends GenericCommand  {
 	 * @throws CommandException
 	 */
 	public void updateDBVersion(double dbVersion) throws CommandException {
+	    final double maxPercent = 100.0;
 	        // round
-	        dbVersion = Math.round(dbVersion*100.0)/100.0;
+	        dbVersion = Math.round(dbVersion*maxPercent)/maxPercent;
 	        if (getLog().isDebugEnabled()) {
                 getLog().debug("updateDBVersion, current version is: " + dbVersion );
             }
@@ -117,7 +118,8 @@ public class DbVersion extends GenericCommand  {
 
 
 	public void execute() {
-	    if(!(Math.abs(clientVersion - IVersionConstants.COMPATIBLE_CLIENT_VERSION) < 0.01)){
+	    final double tolerableDiff = 0.01;
+	    if(!(Math.abs(clientVersion - IVersionConstants.COMPATIBLE_CLIENT_VERSION) < tolerableDiff)){
 			throw new RuntimeCommandException("Inkompatible Client Version. " +
 					"Server akzeptiert nur V " + IVersionConstants.COMPATIBLE_CLIENT_VERSION
 					+ ". Vorhandene Client Version: " + clientVersion);

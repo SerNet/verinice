@@ -32,12 +32,7 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class RelationTableViewer extends TableViewer {
 
-	private TableColumn col1;
-	private TableViewerColumn viewerCol2;
-	private TableColumn col4;
-	private IRelationTable view;
-	private TableColumn col3;
-    private TableViewerColumn  viewerCol5;
+
     private TableViewerColumn col6;
     private TableViewerColumn col7;
     private TableViewerColumn col8;
@@ -48,51 +43,64 @@ public class RelationTableViewer extends TableViewer {
 	 */
 	public RelationTableViewer(IRelationTable relationView, Composite parent, int style, boolean showRisk) {
 		super(parent, style);
-		this.view = relationView;
+		
+		final int defaultColumnWidth = 25;
+		final int viewerCol2Width = 150;
+		final int col4Width = 200;
+		final int viewerCol5Width = 250;
+		
+		TableColumn col1;
+		TableViewerColumn viewerCol2;
+		TableColumn col4;
+		IRelationTable view;
+		TableColumn col3;
+		TableViewerColumn viewerCol5;
+		
+		view = relationView;
 		
 		Table table = getTable();
 		
 		// relation icon:
 		col1 = new TableColumn(table, SWT.LEFT);
 		col1.setText(""); //$NON-NLS-1$
-		col1.setWidth(25);
+		col1.setWidth(defaultColumnWidth);
 		col1.setResizable(false);
 		
 		// name of relation: (i.e. "author of")
 		viewerCol2 = new TableViewerColumn(this, SWT.LEFT);
 		viewerCol2.getColumn().setText(Messages.RelationTableViewer_1);
-		viewerCol2.getColumn().setWidth(150);
+		viewerCol2.getColumn().setWidth(viewerCol2Width);
 		
 		viewerCol2.setEditingSupport(new RelationTypeEditingSupport(view, this));
 
 		// element type icon:
 		col3 = new TableColumn(table, SWT.CENTER);
 		col3.setText(""); //$NON-NLS-1$
-		col3.setWidth(25);
+		col3.setWidth(defaultColumnWidth);
 		
 		// element title:
 		col4 = new TableColumn(table, SWT.LEFT);
 		col4.setText(Messages.RelationTableViewer_6);
-		col4.setWidth(200);
+		col4.setWidth(col4Width);
 		
 		viewerCol5 = new TableViewerColumn(this, SWT.LEFT);
         viewerCol5.getColumn().setText(Messages.RelationTableViewer_7);
-        viewerCol5.getColumn().setWidth(250);  
+        viewerCol5.getColumn().setWidth(viewerCol5Width);  
         viewerCol5.setEditingSupport(new RelationDescriptionEditingSupport(view, this));
          
 		// risk avalues if requested:
 		if (showRisk) {
 		    col6 = new TableViewerColumn(this, SWT.LEFT);
 		    col6.getColumn().setText("C"); //$NON-NLS-1$
-		    col6.getColumn().setWidth(25);
+		    col6.getColumn().setWidth(defaultColumnWidth);
 		    
 		    col7 = new TableViewerColumn(this, SWT.LEFT);
 		    col7.getColumn().setText("I"); //$NON-NLS-1$
-		    col7.getColumn().setWidth(25);
+		    col7.getColumn().setWidth(defaultColumnWidth);
 		    
 		    col8 = new TableViewerColumn(this, SWT.LEFT);
 		    col8.getColumn().setText("A"); //$NON-NLS-1$
-		    col8.getColumn().setWidth(25);
+		    col8.getColumn().setWidth(defaultColumnWidth);
 		}
 		
 		

@@ -30,7 +30,6 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -48,7 +47,7 @@ import sernet.verinice.model.iso27k.PersonIso;
 @SuppressWarnings({"serial", "restriction"})
 public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implements IChangeLoggingCommand, IAuthAwareCommand {
     
-    private transient Logger LOG;
+    private transient Logger log;
     private List<Integer> dbIDs;
     private Entity dialogEntity;
     private transient IAuthService authService;
@@ -62,8 +61,8 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
      * @param dbIDs
      * @param dialogEntity
      */
-    public ConfigurationBulkEditUpdate(Class clazz, List<Integer> dbIDs, Entity dialogEntity, boolean updatePW, String newPassword) {
-        LOG = Logger.getLogger(ConfigurationBulkEditUpdate.class);
+    public ConfigurationBulkEditUpdate(List<Integer> dbIDs, Entity dialogEntity, boolean updatePW, String newPassword) {
+        log = Logger.getLogger(ConfigurationBulkEditUpdate.class);
         this.dbIDs = dbIDs;
         this.dialogEntity = dialogEntity;
         this.updatePassword = updatePW;
@@ -87,7 +86,7 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
                 command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
                 pElmt = command2.getElementWithChildren();
             } catch (CommandException e) {
-                e.printStackTrace();
+                getLog().error("Error while retrieving children", e);
             }
             // username must be set, to be able to edit password, empty username isn't allowed also
             if(found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) == null ||
@@ -123,10 +122,8 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
         ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
 
         dao = getDaoFactory().getDAO(Person.class);
-        if(!element.isChildrenLoaded()){
-            if(!element.isChildrenLoaded()){
-                element = dao.retrieve(element.getDbId(), ri);
-            }
+        if(!element.isChildrenLoaded() && !element.isChildrenLoaded()){
+            element = dao.retrieve(element.getDbId(), ri);
         }
         if(checkStringEmpty(element.getKuerzel())){
             sb.append(element.getKuerzel());
@@ -149,10 +146,8 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
         ri.setParent(true).setProperties(true).setChildren(true).setChildrenProperties(true).setGrandchildren(true);
 
         dao = getDaoFactory().getDAO(PersonIso.class);
-        if(!person.isChildrenLoaded()){
-            if(!person.isChildrenLoaded()){
-                person = dao.retrieve(person.getDbId(), ri);
-            }
+        if(!person.isChildrenLoaded() && !person.isChildrenLoaded()){
+            person = dao.retrieve(person.getDbId(), ri);
         }
         if(checkStringEmpty(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR))){
             sb.append(person.getEntity().getSimpleValue(PersonIso.PROP_ABBR));
@@ -209,10 +204,10 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
     
     
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(this.getClass());
+        if(log == null){
+            log = Logger.getLogger(this.getClass());
         }
-        return LOG;
+        return log;
     }
 
 

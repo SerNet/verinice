@@ -87,9 +87,6 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
      */
     public void setRightID(String rightID) {
         this.rightID = rightID;
-        if(rightID!=null && rightID.contains("notes")){
-            rightID.hashCode();
-        }
     }
     
     /**

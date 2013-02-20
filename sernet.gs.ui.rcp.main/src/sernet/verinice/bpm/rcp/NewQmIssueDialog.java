@@ -49,8 +49,8 @@ import sernet.verinice.interfaces.bpm.ITask;
  */
 public class NewQmIssueDialog extends TitleAreaDialog {
 
-    private static final String[] priorityArray = {ITask.PRIO_LOW,ITask.PRIO_NORMAL,ITask.PRIO_HIGH};
-    private static final String[] priorityLabelArray = {Messages.NewQmIssueDialog_0,Messages.NewQmIssueDialog_1,Messages.NewQmIssueDialog_2};
+    private static final String[] PRIORITY_ARRAY = {ITask.PRIO_LOW,ITask.PRIO_NORMAL,ITask.PRIO_HIGH};
+    private static final String[] PRIORITY_LABEL_ARRAY = {Messages.NewQmIssueDialog_0,Messages.NewQmIssueDialog_1,Messages.NewQmIssueDialog_2};
     private static final int DEFAULT_PRIORITY_INDEX = 1;
     
     private int dialogWidth = 400;
@@ -66,7 +66,9 @@ public class NewQmIssueDialog extends TitleAreaDialog {
      */
     public NewQmIssueDialog(Shell parentShell) {
         super(parentShell);
-        setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);    
+        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
+        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
+        setShellStyle(style | SWT.RESIZE);    
     }
     
 
@@ -76,14 +78,17 @@ public class NewQmIssueDialog extends TitleAreaDialog {
      */
     public NewQmIssueDialog(Shell activeShell, String title) {
         this(activeShell);
-        if(title.length()>40) {
-            title = title.substring(0, 40) + "..."; //$NON-NLS-1$
+        final int maxTitleLength = 40;
+        if(title.length()>maxTitleLength) {
+            title = title.substring(0, maxTitleLength) + "..."; //$NON-NLS-1$
         }
         this.elementTitle = title;
     }
 
 
     private void addFormElements(Composite composite) {
+        final int dialogWidthMinuend = 30;
+        final int gdHeightHint = 150;
         if(elementTitle!=null) {
             final Label objectLabel = new Label(composite, SWT.NONE);
             objectLabel.setText(Messages.NewQmIssueDialog_4);
@@ -97,8 +102,8 @@ public class NewQmIssueDialog extends TitleAreaDialog {
             object.setFont(newFont);
             GC gc = new GC(object);
             Point size = gc.textExtent(elementTitle);
-            if(size.x > dialogWidth - 30) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-30) + "..."; //$NON-NLS-1$
+            if(size.x > dialogWidth - dialogWidthMinuend) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-dialogWidthMinuend) + "..."; //$NON-NLS-1$
             }
             object.setText(elementTitle);
         }
@@ -107,7 +112,7 @@ public class NewQmIssueDialog extends TitleAreaDialog {
         descriptionLabel.setText(Messages.NewQmIssueDialog_6);
         final Text textArea = new Text(composite, SWT.MULTI | SWT.LEAD | SWT.BORDER | SWT.WRAP);
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-        gd.heightHint = 150;
+        gd.heightHint = gdHeightHint;
         
         textArea.setLayoutData(gd);
         textArea.addFocusListener(new FocusListener() {            
@@ -124,12 +129,12 @@ public class NewQmIssueDialog extends TitleAreaDialog {
         final Label priorityLabel = new Label(composite, SWT.NONE);
         priorityLabel.setText(Messages.NewQmIssueDialog_7);
         final Combo priorityCombo = new Combo(composite, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
-        priorityCombo.setItems(priorityLabelArray);
+        priorityCombo.setItems(PRIORITY_LABEL_ARRAY);
         priorityCombo.select(DEFAULT_PRIORITY_INDEX);
-        priority = priorityArray[DEFAULT_PRIORITY_INDEX];
+        priority = PRIORITY_ARRAY[DEFAULT_PRIORITY_INDEX];
         priorityCombo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                priority = priorityArray[priorityCombo.getSelectionIndex()];
+                priority = PRIORITY_ARRAY[priorityCombo.getSelectionIndex()];
             }
         });
     }
@@ -155,7 +160,8 @@ public class NewQmIssueDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setSize(dialogWidth, 450);
+        final int shellHeight = 450;
+        newShell.setSize(dialogWidth, shellHeight);
         newShell.setText(Messages.NewQmIssueDialog_9);
     }
     
@@ -164,13 +170,13 @@ public class NewQmIssueDialog extends TitleAreaDialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int defaultMarginWidth = 10;
         setTitle(Messages.NewQmIssueDialog_10);
         setMessage(Messages.NewQmIssueDialog_11);
         
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = 10;
-        //layout.marginHeight = 10;
+        layout.marginWidth = defaultMarginWidth;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);
 

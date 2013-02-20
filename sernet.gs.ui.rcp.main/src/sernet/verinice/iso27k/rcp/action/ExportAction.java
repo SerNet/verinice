@@ -104,11 +104,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private static ISchedulingRule iSchedulingRule = new Mutex();
 	
-	CnATreeElement selectedOrganization;
+	private CnATreeElement selectedOrganization;
 	
-	ITreeSelection selection;
-	
-	private IViewPart view;
+	private ITreeSelection selection;
 	
 	private boolean serverIsRunning = true;
 	
@@ -119,7 +117,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      */
     @Override
     public void init(IViewPart view) {
-        this.view = view;
     }
     
     /* (non-Javadoc)
@@ -228,13 +225,17 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             File x509CertificateFile,
             String keyAlias,
             int fileFormat) {
+        String internalSourceId = null;
+        final int uuidStringLength = 6;
         if(elementSet!=null && elementSet.size()>0) {
         	if(sourceId==null || sourceId.isEmpty()) {
         		// if source id is not set by user the first 6 char. of an uuid is used
-        		sourceId = UUID.randomUUID().toString().substring(0, 6);
+        		internalSourceId = UUID.randomUUID().toString().substring(0, uuidStringLength);
+        	} else {
+        	    internalSourceId = sourceId;
         	}
             Activator.inheritVeriniceContextState();
-            ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), sourceId, reImport, fileFormat);
+            ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), internalSourceId, reImport, fileFormat);
         	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
@@ -246,8 +247,9 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     }
     
     private void updateModel(List<CnATreeElement> changedElementList) {
+        final int maxChangedElements = 9;
         if(changedElementList!=null && !changedElementList.isEmpty() ) {
-        	if(changedElementList.size()>9) {
+        	if(changedElementList.size()>maxChangedElements) {
 	            // if more than 9 elements changed or added do a complete reload
 	            CnAElementFactory.getInstance().reloadModelFromDatabase();
         	} else {
@@ -271,17 +273,20 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      * @throws CertificateExpiredException 
      * @throws CertificateNotYetValidException 
      */
-    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2, String keyAlias) throws CertificateNotYetValidException, CertificateExpiredException, CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2, String keyAlias) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        byte[] returnResult;
         if (keyAlias != null) {
-        	result = service.encrypt(result, keyAlias);
+        	returnResult = service.encrypt(result, keyAlias);
         } else if (password!=null) {
-            result = service.encrypt(result, password);
+            returnResult = service.encrypt(result, password);
         } else if (x509CertificateFile!=null) {
-            result = service.encrypt(result, x509CertificateFile);
+            returnResult = service.encrypt(result, x509CertificateFile);
+        } else {
+            returnResult = result;
         }
         
-        return result;
+        return returnResult;
     }
 
     public OutputStream getExportOutputStream(String path, char[] password, File x509CertificateFile) {
@@ -339,12 +344,15 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     }
     
     public static String addExtension(String exportPath,String extension) {
+        String returnedPath = null;
         if(exportPath!=null 
            && !exportPath.isEmpty()
            && !exportPath.endsWith(extension)) {
-            exportPath = exportPath + extension;
-        }      
-        return exportPath;
+            returnedPath = exportPath + extension;
+        } else {
+            returnedPath = exportPath;
+        }
+        return returnedPath;
     }
 
     /* (non-Javadoc)

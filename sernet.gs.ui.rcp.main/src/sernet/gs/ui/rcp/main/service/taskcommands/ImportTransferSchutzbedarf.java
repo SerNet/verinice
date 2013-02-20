@@ -23,7 +23,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
-import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class ImportTransferSchutzbedarf extends GenericCommand {
@@ -59,9 +58,9 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 	}
 
 	public boolean transferSchutzbedarf() {
-		if (element.getSchutzbedarfProvider() == null)
+		if (element.getSchutzbedarfProvider() == null){
 			return false;
-
+		}
 		ISchutzbedarfProvider zielElmt = element.getSchutzbedarfProvider();
 
 		zielElmt.setVertraulichkeit(vertraulichkeit);
@@ -80,7 +79,6 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 			Anwendung anwendung = (Anwendung) element;
 			anwendung.setPersonenbezogen(true);
 		}
-
 		return true;
 	}
 

@@ -22,13 +22,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import sernet.gs.ui.rcp.main.common.model.CSRMassnahmenSummaryHome;
-import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.verinice.interfaces.CommandException;
 
 /**

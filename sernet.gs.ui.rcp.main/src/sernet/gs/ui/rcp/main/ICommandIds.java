@@ -26,6 +26,6 @@ package sernet.gs.ui.rcp.main;
  */
 public interface ICommandIds {
 
-    public static final String CMD_OPEN = "sernet.gs.ui.rcp.main.open";
+    String CMD_OPEN = "sernet.gs.ui.rcp.main.open";
     
 }

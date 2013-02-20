@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
@@ -44,7 +44,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 
 /**
@@ -54,12 +53,10 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class ISRSpiderChart implements ISelectionChartGenerator {
 
-    protected ControlGroup elmt;
+    private ControlGroup elmt;
 
     protected JFreeChart createSpiderChart(Object dataset) {
         SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-        // plot.setStartAngle(54);
-        // plot.setInteriorGap(0.40);
         plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
 
         plot.setSeriesPaint(0, new Color(0.0f, 1f, 0f, 1f)); // green

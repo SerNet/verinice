@@ -30,18 +30,17 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
-import sernet.gs.model.Baustein;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 /**
  *
  */
-public class BausteinUmsetzungTransfer extends ByteArrayTransfer {
+public final class BausteinUmsetzungTransfer extends ByteArrayTransfer {
     
     private static final String TYPENAME_BAUSTEINELEMENT = BausteinUmsetzung.class.getCanonicalName();
     private static final int TYPEID_BAUSTEINELEMENT = registerType(TYPENAME_BAUSTEINELEMENT);
 
-    private static Logger LOG = Logger.getLogger(BausteinUmsetzungTransfer.class);
+    private static final Logger LOG = Logger.getLogger(BausteinUmsetzungTransfer.class);
     
     private static BausteinUmsetzungTransfer instance = new BausteinUmsetzungTransfer();
     
@@ -68,7 +67,7 @@ public class BausteinUmsetzungTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))){ return;}
         if (isSupportedType(transferData)) {
             ArrayList<BausteinUmsetzung> bausteine = new ArrayList<BausteinUmsetzung>(0);
             if(data instanceof BausteinUmsetzung[]){

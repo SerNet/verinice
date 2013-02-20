@@ -50,40 +50,47 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 public class AuditView extends GenericMassnahmenView {
 	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.auditview"; //$NON-NLS-1$
 
-	AuditTableSorter tableSorter = new AuditTableSorter();
+	private AuditTableSorter tableSorter = new AuditTableSorter();
 	
 	@Override
 	protected void createPartControlImpl(Composite parent) {
 		Table table = getViewer().getTable();
 		
+		final int iconColumnWidth = 25;
+		final int dateColumnWidth = 200;
+		final int bearbeiterColumnWidth = 100;
+		final int siegelColumnWidth = 20;
+		final int zielColumnWidth = 150;
+		final int titleColumnWidth = 250;
+		
 		iconColumn = new TableColumn(table, SWT.LEFT);
 		iconColumn.setText(" "); //$NON-NLS-1$
-		iconColumn.setWidth(25);
+		iconColumn.setWidth(iconColumnWidth);
 		iconColumn.addSelectionListener(new SortSelectionAdapter(this,iconColumn,0));
 		
 		dateColumn = new TableColumn(table, SWT.LEFT);
 		dateColumn.setText(Messages.AuditView_8);
-		dateColumn.setWidth(200);
+		dateColumn.setWidth(dateColumnWidth);
 		dateColumn.addSelectionListener(new SortSelectionAdapter(this,dateColumn,1));
 		
 		bearbeiterColumn = new TableColumn(table, SWT.LEFT);
 		bearbeiterColumn.setText(Messages.AuditView_9);
-		bearbeiterColumn.setWidth(100);
+		bearbeiterColumn.setWidth(bearbeiterColumnWidth);
 		bearbeiterColumn.addSelectionListener(new SortSelectionAdapter(this,bearbeiterColumn,2));
 		
 		siegelColumn = new TableColumn(table, SWT.LEFT);
 		siegelColumn.setText(Messages.AuditView_10);
-		siegelColumn.setWidth(20);
+		siegelColumn.setWidth(siegelColumnWidth);
 		siegelColumn.addSelectionListener(new SortSelectionAdapter(this,siegelColumn,3));
 		
 		zielColumn = new TableColumn(table, SWT.LEFT);
 		zielColumn.setText(Messages.AuditView_11);
-		zielColumn.setWidth(150);
+		zielColumn.setWidth(zielColumnWidth);
 		zielColumn.addSelectionListener(new SortSelectionAdapter(this,zielColumn,4));
 		
 		titleColumn = new TableColumn(table, SWT.LEFT);
 		titleColumn.setText(Messages.AuditView_12);
-		titleColumn.setWidth(250);
+		titleColumn.setWidth(titleColumnWidth);
 		titleColumn.addSelectionListener(new SortSelectionAdapter(this,titleColumn,5));
 		
 		getViewer().setColumnProperties(new String[] {
@@ -227,9 +234,7 @@ public class AuditView extends GenericMassnahmenView {
                         rc = 1;
                     }
                 } else if(o2==null) {
-                    if(o1!=null) {
-                        rc = -1;
-                    }
+                    rc = -1;
                 } else {
                     // e1 and e2 != null    
                     switch (getPropertyIndex()) {

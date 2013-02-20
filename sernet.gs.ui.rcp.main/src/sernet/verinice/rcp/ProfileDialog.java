@@ -125,6 +125,12 @@ public class ProfileDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int numColumnsCombo = 4;
+        final int numColumns4ColComposite = 3;
+        final int minWidthGridLayout = 200;
+        final int gridDataHeightCharacterAmount = 20;
+        final int gridDataWidthCharacterAmount = 40;
+        
         setTitle(Messages.ProfileDialog_1);
         setMessage(Messages.ProfileDialog_2);
         setTitleImage(ImageCache.getInstance().getImage(ImageCache.PROFILE_64));
@@ -139,7 +145,7 @@ public class ProfileDialog extends TitleAreaDialog {
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         gridData.horizontalAlignment=GridData.HORIZONTAL_ALIGN_FILL;
         comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(4, false);
+        GridLayout gridLayout = new GridLayout(numColumnsCombo, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
@@ -149,7 +155,7 @@ public class ProfileDialog extends TitleAreaDialog {
 
         textName = new Text(comboComposite,SWT.BORDER);
         gridData = new GridData(GridData.GRAB_HORIZONTAL);
-        gridData.minimumWidth = 200;
+        gridData.minimumWidth = minWidthGridLayout;
         textName.setLayoutData(gridData);
         textName.addFocusListener(new FocusListener() {
             
@@ -173,16 +179,16 @@ public class ProfileDialog extends TitleAreaDialog {
         
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = convertHeightInCharsToPixels(20);
+        gridData.heightHint = convertHeightInCharsToPixels(gridDataHeightCharacterAmount);
         fourColumnComposite.setLayoutData(gridData);
-        gridLayout = new GridLayout(3, false);
+        gridLayout = new GridLayout(numColumns4ColComposite, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         fourColumnComposite.setLayout(gridLayout);
 
         Composite leftComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(gridDataWidthCharacterAmount);
         leftComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -198,7 +204,7 @@ public class ProfileDialog extends TitleAreaDialog {
 
         Composite rightComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(gridDataWidthCharacterAmount);
         rightComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;

@@ -101,9 +101,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 *            the parent Composite
 	 */
 	public void createControl(Composite parent) {
+	    
+	    final int gridColumnAmount = 4;
+	    final int gefaehrdungGridColumnAmount = 3;
+	    final int buttonMnGridColumnAmount = gefaehrdungGridColumnAmount;
+	    final int gridCompositeHorizontalSpan = gridColumnAmount;
+	    final int imageCMWidth = 35;
+	    final int numberCMWidth = 100;
+	    final int nameCMWidth = numberCMWidth;
+	    final int descriptionCMWidth = 200;
+	    
 		composite = new Composite(parent, SWT.NULL);
 		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 4;
+		gridLayout.numColumns = gridColumnAmount;
 		composite.setLayout(gridLayout);
 		setControl(composite);
 
@@ -132,19 +142,19 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 
 		imageColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		imageColumnMassnahme.setText(""); //$NON-NLS-1$
-		imageColumnMassnahme.setWidth(35);
+		imageColumnMassnahme.setWidth(imageCMWidth);
 
 		numberColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		numberColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_4);
-		numberColumnMassnahme.setWidth(100);
+		numberColumnMassnahme.setWidth(numberCMWidth);
 
 		nameColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		nameColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_5);
-		nameColumnMassnahme.setWidth(100);
+		nameColumnMassnahme.setWidth(nameCMWidth);
 
 		descriptionColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		descriptionColumnMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_6);
-		descriptionColumnMassnahme.setWidth(200);
+		descriptionColumnMassnahme.setWidth(descriptionCMWidth);
 
 		/* listener opens edit Dialog for selected Massnahme */
 		viewerMassnahme.addDoubleClickListener(new IDoubleClickListener() {
@@ -181,7 +191,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		Group groupButtonsGefaehrdung = new Group(composite, SWT.SHADOW_ETCHED_OUT);
 		groupButtonsGefaehrdung.setText(Messages.AdditionalSecurityMeasuresPage_7);
 		GridLayout gridLayoutButtonsGefaehrdung = new GridLayout();
-		gridLayoutButtonsGefaehrdung.numColumns = 3;
+		gridLayoutButtonsGefaehrdung.numColumns = gefaehrdungGridColumnAmount;
 		groupButtonsGefaehrdung.setLayout(gridLayoutButtonsGefaehrdung);
 		GridData gridGroupButtonsGefaehrdung = new GridData();
 		gridGroupButtonsGefaehrdung.horizontalSpan = 2;
@@ -223,7 +233,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		Group groupButtonsMassnahme = new Group(composite, SWT.SHADOW_ETCHED_OUT);
 		groupButtonsMassnahme.setText(Messages.AdditionalSecurityMeasuresPage_12);
 		GridLayout gridLayoutButtonsMassnahme = new GridLayout();
-		gridLayoutButtonsMassnahme.numColumns = 3;
+		gridLayoutButtonsMassnahme.numColumns = buttonMnGridColumnAmount;
 		groupButtonsMassnahme.setLayout(gridLayoutButtonsMassnahme);
 		GridData gridGroupButtonsMassnahme = new GridData();
 		gridGroupButtonsMassnahme.horizontalSpan = 2;
@@ -318,7 +328,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		gridLayoutSearch.numColumns = 2;
 		compositeFilter.setLayout(gridLayoutSearch);
 		GridData gridCompositeFilter = new GridData();
-		gridCompositeFilter.horizontalSpan = 4;
+		gridCompositeFilter.horizontalSpan = gridCompositeHorizontalSpan;
 		gridCompositeFilter.horizontalAlignment = SWT.RIGHT;
 		gridCompositeFilter.verticalAlignment = SWT.TOP;
 		compositeFilter.setLayoutData(gridCompositeFilter);

@@ -24,7 +24,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.Note;
 
 public class AttachmentEditorInput implements IEditorInput {
 

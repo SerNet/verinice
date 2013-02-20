@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Label;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.verinice.bpm.rcp.TaskFilterDialog.KeyMessage;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -142,20 +141,16 @@ public class RelationPage extends WizardPage {
      */
     @Override
     public void createControl(Composite parent) {
+        final int defaultMarginWidth = 10;
         final Composite composite = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(1, true);
-        layout.marginWidth = 10;
+        layout.marginWidth = defaultMarginWidth;
         composite.setLayout(layout);
-        //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);  
         
         addFormElements(composite);
                   
-        // Build the separator line
-        //Label separator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
-        //separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
         composite.pack(); 
         
         // Required to avoid an error in the system
@@ -194,5 +189,4 @@ public class RelationPage extends WizardPage {
             }
         }
     }   
-
 }

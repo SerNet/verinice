@@ -86,9 +86,9 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     
     private IndividualServiceParameter parameter = new IndividualServiceParameter();
     
-    int numberOfProcess = 0;
+    private int numberOfProcess = 0;
     
-    Boolean isActive = null;
+    private Boolean isActive = null;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -105,16 +105,14 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     @Override  
     public void run(IAction action) {
         try {
-            if(!selectedUuids.isEmpty()) {
-                if(isValid()) {
-                    IndividualProcessWizard wizard = new IndividualProcessWizard(selectedUuids, selectedTitles.get(0),selectedTypeIds.get(0));                 
-                    wizard.setPersonTypeId(personTypeId);
-                    WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
-                    if (wizardDialog.open() == Window.OK) {
-                        wizard.saveTemplate();
-                        parameter = wizard.getParameter();                                 
-                        startProcess(wizard.getUuids());
-                    }
+            if(!selectedUuids.isEmpty() && isValid()) {
+                IndividualProcessWizard wizard = new IndividualProcessWizard(selectedUuids, selectedTitles.get(0),selectedTypeIds.get(0));                 
+                wizard.setPersonTypeId(personTypeId);
+                WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
+                if (wizardDialog.open() == Window.OK) {
+                    wizard.saveTemplate();
+                    parameter = wizard.getParameter();                                 
+                    startProcess(wizard.getUuids());
                 }
             }
         } catch( Exception e) {
@@ -275,8 +273,9 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     class NonModalWizardDialog extends WizardDialog {
         public NonModalWizardDialog(Shell parentShell, IWizard newWizard) {
             super(parentShell, newWizard);
-            setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER
-                     | SWT.RESIZE | getDefaultOrientation());         
+            int style = SWT.CLOSE | SWT.MAX | SWT.TITLE;
+            style = style | SWT.BORDER | SWT.RESIZE;
+            setShellStyle(style | getDefaultOrientation());         
         }
     }
 }

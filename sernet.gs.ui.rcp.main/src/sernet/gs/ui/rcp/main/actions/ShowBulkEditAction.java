@@ -290,7 +290,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     changePassword = true;
                 }
             }
-            command = new ConfigurationBulkEditUpdate(clazz, dbIDs, dialogEntity, changePassword, newPassword);
+            command = new ConfigurationBulkEditUpdate(dbIDs, dialogEntity, changePassword, newPassword);
         }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         if(((ConfigurationBulkEditUpdate)command).getFailedUpdates().size() > 0){

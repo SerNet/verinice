@@ -181,7 +181,6 @@ public class ImportTask {
             try {
                 source.close();
                 target.close();
-                String dirName = CnAWorkspace.getInstance().getTempImportDbDirName();
             } catch (Exception e) {
                 LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
             }
@@ -204,20 +203,22 @@ public class ImportTask {
 
     private void importZielobjekte() throws Exception {
         // generate a sourceId for objects created by this import:
-
-        String sourceId = UUID.randomUUID().toString().substring(0, 6);
+        final int maxUuidLength = 6;
+        final String defaultSubTaskDescription = "Schreibe alle Objekte in Verinice-Datenbank...";
+        String sourceId = UUID.randomUUID().toString().substring(0, maxUuidLength);
 
         List<ZielobjektTypeResult> zielobjekte;
         try {
             zielobjekte = vampire.findZielobjektTypAll();
-        } catch (Exception e) {
-            if (e instanceof SQLGrammarException) {
-                SQLGrammarException sqlException = (SQLGrammarException) e;
-                // wrong db version has columns missing, i.e. "GEF_ID":
-                if (sqlException.getSQLException().getMessage().indexOf("GEF_OK") > -1) {
-                    ExceptionUtil.log(sqlException.getSQLException(), "Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? " + "\nEs wird nur der Import der aktuellen Version (4.7) des GSTOOL unterstützt.");
-                }
+        } catch(SQLGrammarException e){
+            SQLGrammarException sqlException = (SQLGrammarException) e;
+            // wrong db version has columns missing, i.e. "GEF_ID":
+            if (sqlException.getSQLException().getMessage().indexOf("GEF_OK") > -1) {
+                ExceptionUtil.log(sqlException.getSQLException(), "Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? " + "\nEs wird nur der Import der aktuellen Version (4.7) des GSTOOL unterstützt.");
             }
+            throw e;
+        } catch (Exception e) {
+            ExceptionUtil.log(e, "Fehler beim Laden der Zielobjekte");
             throw e;
         }
         if (this.importBausteine) {
@@ -269,19 +270,19 @@ public class ImportTask {
             }
         }
 
-        monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+        monitor.subTask(defaultSubTaskDescription);
 
         importMassnahmenVerknuepfungen();
-        monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+        monitor.subTask(defaultSubTaskDescription);
 
         importBausteinPersonVerknuepfungen();
-        monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+        monitor.subTask(defaultSubTaskDescription);
 
         importZielobjektVerknuepfungen();
-        monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+        monitor.subTask(defaultSubTaskDescription);
 
         importSchutzbedarf();
-        monitor.subTask("Schreibe alle Objekte in Verinice-Datenbank...");
+        monitor.subTask(defaultSubTaskDescription);
 
         monitor.beginTask("Lese Bausteinreferenzen...", zielobjekte.size());
         for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
@@ -331,8 +332,8 @@ public class ImportTask {
         Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
 
         for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
-            List<NZobSb> schutzbedarf = vampire.findSchutzbedarfByZielobjekt(entry.getKey());
-            for (NZobSb schubeda : schutzbedarf) {
+            List<NZobSb> internalSchutzbedarf = vampire.findSchutzbedarfByZielobjekt(entry.getKey());
+            for (NZobSb schubeda : internalSchutzbedarf) {
                 CnATreeElement element = entry.getValue();
 
                 MSchutzbedarfkategTxt vertr = vampire.findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
@@ -491,7 +492,7 @@ public class ImportTask {
         return result;
     }
 
-    private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt) throws Exception {
+    private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt) throws CommandException {
         if (!importBausteine) {
             return;
         }
