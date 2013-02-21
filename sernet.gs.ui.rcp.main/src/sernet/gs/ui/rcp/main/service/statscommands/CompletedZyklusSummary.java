@@ -47,6 +47,7 @@ public class CompletedZyklusSummary extends MassnahmenSummary {
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Integer> getCompletedZyklusSummary() {
+	    final int maxLcLength = 5;
 		Map<String, Integer> result = new HashMap<String, Integer>();
 		
 		List<Object[]> list = (List<Object[]>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
@@ -55,7 +56,7 @@ public class CompletedZyklusSummary extends MassnahmenSummary {
 			String lc = (String) l[0];
 			Integer count = (Integer) l[1];
 
-			if (lc == null || lc.length() <5){
+			if (lc == null || lc.length() <maxLcLength){
 				lc = "sonstige";
 			}
 			result.put(lc, count);

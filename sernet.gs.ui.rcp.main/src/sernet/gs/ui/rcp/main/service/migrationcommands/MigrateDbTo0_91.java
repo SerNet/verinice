@@ -38,8 +38,9 @@ public class MigrateDbTo0_91 extends DbMigration {
 			
 			ITVerbund verbund = model.getItverbuende().iterator().next();
 			for (CnATreeElement child : verbund.getChildren()) {
-				if (child instanceof SonstigeITKategorie)
+				if (child instanceof SonstigeITKategorie){
 					return;
+				}
 
 			}
 			SonstigeITKategorie kategorie = new SonstigeITKategorie(verbund);

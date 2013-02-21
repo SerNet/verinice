@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -40,27 +41,27 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class LoadReportISARiskChapter extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportISARiskChapter.class);
+    private static transient Logger log = Logger.getLogger(LoadReportISARiskChapter.class);
     
-    public final static String[] COLUMNS = new String[]{"RISK_NO",
+    public static final String[] COLUMNS = new String[]{"RISK_NO",
                                                          "RISK_LOW",
                                                          "RISK_MEDIUM",
                                                          "RISK_HIGH",
                                                          "RISK_VERYHIGH",
                                                          "CHAPTERNAME"};
     
-    private final static int RISK_NO = -1;
-    private final static int RISK_LOW = 0;
-    private final static int RISK_MEDIUM = 1;
-    private final static int RISK_HIGH = 2;
-    private final static int RISK_VERYHIGH = 3;
-    private final static String RISK_PROPERTY = "samt_topic_audit_ra";
-    private final static String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
+    private static final int RISK_NO = -1;
+    private static final int RISK_LOW = 0;
+    private static final int RISK_MEDIUM = 1;
+    private static final int RISK_HIGH = 2;
+    private static final int RISK_VERYHIGH = 3;
+    private static final String RISK_PROPERTY = "samt_topic_audit_ra";
+    private static final String PROP_CG_ISISAELMNT = "controlgroup_is_NoIso_group";
 
 
     private Integer rootElmt;
     private Integer rootSgGroup;
-    private HashMap<String, Integer[]> results;
+    private Map<String, Integer[]> results;
     // caches if group is relevant
     private Set<String> groupCache;
     // caches if samtTopic was already iterated
@@ -130,7 +131,7 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
                 }
 
             } catch (CommandException e){
-                LOG.error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
@@ -148,7 +149,7 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
                         parent = (ControlGroup)command.getElements().get(0);
                         parent.setChildrenLoaded(true);
                     } catch (CommandException e) {
-                        LOG.error("Error while executing command", e);
+                        log.error("Error while executing command", e);
                     }
                 }
                 if(parent.getEntity().getSimpleValue(PROP_CG_ISISAELMNT).equals("0")){
@@ -231,8 +232,8 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
             this.results = (HashMap<String, Integer[]>)array[0];
             this.resultTopics = (ArrayList<SamtTopic>)array[1];
             resultInjectedFromCache = true;
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if(log.isDebugEnabled()){
+                log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
     }
@@ -242,9 +243,9 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
      */
     @Override
     public Object getCacheableResult() {
-        Object[] results = new Object[2];
-        results[0] = this.results;
-        results[1] = resultTopics;
-        return results;
+        Object[] cacheableResults = new Object[2];
+        cacheableResults[0] = this.results;
+        cacheableResults[1] = resultTopics;
+        return cacheableResults;
     }
 }

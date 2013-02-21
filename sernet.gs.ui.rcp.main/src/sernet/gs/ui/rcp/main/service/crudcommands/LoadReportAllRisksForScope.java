@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -34,8 +32,6 @@ import sernet.verinice.model.iso27k.Process;
  * 
  */
 public class LoadReportAllRisksForScope extends GenericCommand implements ICachedCommand{
-    
-    private static Logger LOG = Logger.getLogger(LoadReportAllRisksForScope.class);
     
     public static final String[] COLUMNS = new String[] { 
         "Probability", 
@@ -98,7 +94,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
         this(rootElement, distinct, IRiskAnalysisService.RISK_PRE_CONTROLS);
     }
         
-    @SuppressWarnings({ "restriction", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     public void execute() {
         try {
             // determine max and tolerable risk values. initialize matrices to save value counts:
@@ -108,14 +104,14 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
             PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
             int probMax = type.getMaxValue();
 
-            int cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
-            riskMatrixC = new RiskMatrix(probMax, cia_max);
+            int ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
+            riskMatrixC = new RiskMatrix(probMax, ciaMax);
 
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
-            riskMatrixI = new RiskMatrix(probMax, cia_max);
+            ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
+            riskMatrixI = new RiskMatrix(probMax, ciaMax);
 
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
-            riskMatrixA = new RiskMatrix(probMax, cia_max);
+            ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
+            riskMatrixA = new RiskMatrix(probMax, ciaMax);
 
             if(!resultInjectedFromCache){
 
@@ -188,6 +184,8 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
             break;
         case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
             probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+            break;
+        default:
             break;
         }
         
@@ -297,14 +295,14 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
             PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
             int probMax = type.getMaxValue();
 
-            int cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
-            riskMatrixC = new RiskMatrix(probMax, cia_max);
+            int ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
+            riskMatrixC = new RiskMatrix(probMax, ciaMax);
 
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
-            riskMatrixI = new RiskMatrix(probMax, cia_max);
+            ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.INTEGRITY).getMaxValue();
+            riskMatrixI = new RiskMatrix(probMax, ciaMax);
 
-            cia_max = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
-            riskMatrixA = new RiskMatrix(probMax, cia_max);
+            ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.AVAILABILITY).getMaxValue();
+            riskMatrixA = new RiskMatrix(probMax, ciaMax);
             Object[] array = (Object[])result;
             this.result = (ArrayList<List<String>>)array[0];
             riskMatrixC.map = (Integer[][])array[1];
@@ -319,12 +317,12 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
      */
     @Override
     public Object getCacheableResult() {
-        Object[] result = new Object[4];
-        result[0] = this.result;
-        result[1] = riskMatrixC.map;
-        result[2] = riskMatrixI.map;
-        result[3] = riskMatrixA.map;
-        return result;
+        Object[] cacheableResult = new Object[4];
+        cacheableResult[0] = this.result;
+        cacheableResult[1] = riskMatrixC.map;
+        cacheableResult[2] = riskMatrixI.map;
+        cacheableResult[3] = riskMatrixA.map;
+        return cacheableResult;
     }
     
 }

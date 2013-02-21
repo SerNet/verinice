@@ -67,10 +67,11 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
+	    final int maxTitleLength = 21; 
 		return element.getTitle().substring(0, 
-		            element.getTitle().length() < 21 
+		            element.getTitle().length() < maxTitleLength 
 		            ? element.getTitle().length() 
-		            : 20  
+		            : maxTitleLength - 1  
 		       );
 	}
 
@@ -111,8 +112,7 @@ public class BSIElementEditorInput implements IEditorInput {
             return null;
         }
         
-        CnATreeElement element = elementInput.getCnAElement();
-        return element;
+        return elementInput.getCnAElement();
     }
 	
 

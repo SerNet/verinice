@@ -64,10 +64,10 @@ public class ItemThreatTransformer {
 	 * @return truncated text (if text is longer than maxWidth) and three dots ("...") 
 	 */
 	public static String truncate(String text, int maxWidth) {
-	    final int maxWidthMinuend = 3;
+	    final int maxWidthSubtrahend = 3;
 	    String truncatedText = text;
 	    if(text!=null && text.length()>maxWidth) {
-	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-maxWidthMinuend))).append("...").toString(); //$NON-NLS-1$
+	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-maxWidthSubtrahend))).append("...").toString(); //$NON-NLS-1$
 	    }
 	    return truncatedText;
 	}

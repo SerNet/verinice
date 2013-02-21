@@ -61,7 +61,6 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  */
 public class EstimateGefaehrdungPage extends WizardPage {
 
-    private Composite composite;
     private TableColumn checkboxColumn;
     private TableColumn imageColumn;
     private TableColumn numberColumn;
@@ -71,7 +70,6 @@ public class EstimateGefaehrdungPage extends WizardPage {
     private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
     private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
     private SearchFilter searchFilter = new SearchFilter();
-    private RiskAnalysisWizard wizard;
 
     /**
      * Constructor sets title and description of WizardPage.
@@ -89,7 +87,14 @@ public class EstimateGefaehrdungPage extends WizardPage {
      *            the parent Composite
      */
     public void createControl(Composite parent) {
-        composite = new Composite(parent, SWT.NULL);
+        
+        final int checkboxColumnWidth = 35;
+        final int imageColumnWidth = checkboxColumnWidth;
+        final int numberColumnWidth = 100;
+        final int nameColumnWidth = numberColumnWidth;
+        final int descriptionColumnWidht = 200;
+        
+        Composite composite = new Composite(parent, SWT.NULL);
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 1;
         composite.setLayout(gridLayout);
@@ -109,23 +114,23 @@ public class EstimateGefaehrdungPage extends WizardPage {
 
         checkboxColumn = new TableColumn(table, SWT.LEFT);
         checkboxColumn.setText(""); //$NON-NLS-1$
-        checkboxColumn.setWidth(35);
+        checkboxColumn.setWidth(checkboxColumnWidth);
 
         imageColumn = new TableColumn(table, SWT.LEFT);
         imageColumn.setText(""); //$NON-NLS-1$
-        imageColumn.setWidth(35);
+        imageColumn.setWidth(imageColumnWidth);
 
         numberColumn = new TableColumn(table, SWT.LEFT);
         numberColumn.setText(Messages.EstimateGefaehrdungPage_5);
-        numberColumn.setWidth(100);
+        numberColumn.setWidth(numberColumnWidth);
 
         nameColumn = new TableColumn(table, SWT.LEFT);
         nameColumn.setText(Messages.EstimateGefaehrdungPage_6);
-        nameColumn.setWidth(100);
+        nameColumn.setWidth(nameColumnWidth);
 
         descriptionColumn = new TableColumn(table, SWT.LEFT);
         descriptionColumn.setText(Messages.EstimateGefaehrdungPage_7);
-        descriptionColumn.setWidth(200);
+        descriptionColumn.setWidth(descriptionColumnWidht);
 
         /**
          * listener adds/removes Gefaehrdungen to Arrays of Gefaehrdungen
@@ -136,16 +141,16 @@ public class EstimateGefaehrdungPage extends WizardPage {
              * Notifies of a change to the checked state of an element.
              */
             public void checkStateChanged(CheckStateChangedEvent event) {
-                RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
+                RiskAnalysisWizard internalWizard = ((RiskAnalysisWizard) getWizard());
                 GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
 
                 if (event.getChecked()) {
                     /* checkbox set */
 
                     try {
-                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(wizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, wizard.getFinishedRiskAnalysis());
+                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(internalWizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        wizard.setFinishedRiskLists(command.getLists());
+                        internalWizard.setFinishedRiskLists(command.getLists());
                     } catch (Exception e) {
                         ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_8);
                     }
@@ -153,9 +158,9 @@ public class EstimateGefaehrdungPage extends WizardPage {
                 } else {
                     try {
                         /* checkbox unset */
-                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(wizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, wizard.getFinishedRiskAnalysis());
+                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(internalWizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        wizard.setFinishedRiskLists(command.getLists());
+                        internalWizard.setFinishedRiskLists(command.getLists());
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_9);
                     }
@@ -320,8 +325,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
      * Fills the CheckboxTableViewer with all previously selected Gefaehrdungen.
      * Is processed each time the WizardPage is set visible.
      */
-    private void initContents() {
-        wizard = ((RiskAnalysisWizard) getWizard());
+    private void initContents() {   
+        RiskAnalysisWizard wizard = ((RiskAnalysisWizard) getWizard());
         List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = wizard.getAssociatedGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */
@@ -463,9 +468,8 @@ public class EstimateGefaehrdungPage extends WizardPage {
             Matcher matcher = pattern.matcher(gefaehrdungTitle);
             if (matcher.find()) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
+            return false;
         }
     }
 }

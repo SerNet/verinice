@@ -156,7 +156,7 @@ public class IconSelectDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         
-        final int gridDataSizeMinuend = 20;
+        final int gridDataSizeSubtrahend = 20;
         
         Composite comp = (Composite) super.createDialogArea(parent);
 
@@ -180,8 +180,8 @@ public class IconSelectDialog extends Dialog {
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         group.setLayout(groupOrganizationLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.minimumWidth = SIZE_Y - gridDataSizeMinuend;
-        gd.heightHint = SIZE_X - gridDataSizeMinuend;
+        gd.minimumWidth = SIZE_Y - gridDataSizeSubtrahend;
+        gd.heightHint = SIZE_X - gridDataSizeSubtrahend;
         group.setLayoutData(gd);
 
         createTable(group);
@@ -234,7 +234,7 @@ public class IconSelectDialog extends Dialog {
 
     private void createTable(Composite parent) {
         
-        final int gdHeightMinuend = 100;
+        final int gdHeightSubtrahend = 100;
         final int iconRowSize = 10;
         
         int style = SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
@@ -256,7 +256,7 @@ public class IconSelectDialog extends Dialog {
 
         Table table = viewer.getTable();
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.heightHint = SIZE_X - gdHeightMinuend;
+        gd.heightHint = SIZE_X - gdHeightSubtrahend;
         table.setLayoutData(gd);
 
         table.addListener(SWT.MeasureItem, new Listener() {

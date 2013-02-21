@@ -34,7 +34,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class LoadReportAvgMaturity extends GenericCommand implements ICachedCommand {
     
-    private static Logger LOG = Logger.getLogger(LoadReportAvgMaturity.class);
+    private transient Logger log = Logger.getLogger(LoadReportAvgMaturity.class);
     
     private int matCount = 0;
     private double matSum = 0.0;
@@ -82,10 +82,10 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
     }
         
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadReportAvgMaturity.class);
+        if(log == null){
+            log = Logger.getLogger(LoadReportAvgMaturity.class);
         }
-        return LOG;
+        return log;
     }
 
     private void addMaturity(double mat){
@@ -96,17 +96,18 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
     }
 
     private String getMaturityAvg(){
+        final int precision = 3;
         if(matCount > 0){
-            double d = new Double(matSum).doubleValue() / new Double(matCount).doubleValue();
-            String s = String.valueOf(round(d, 3));
-            return s;
-        } else return "0.0";
+            double d = (double)matSum / (double)matCount;
+            return String.valueOf(round(d, precision));
+        } else {return "0.0";}
     }
     
     private double round(double value, int precision)
     {
-        double rounded = Math.round(value * Math.pow(10d, precision));
-        return rounded / Math.pow(10d, precision);
+        final double powBase = 10d;
+        double rounded = Math.round(value * Math.pow(powBase, precision));
+        return rounded / Math.pow(powBase, precision);
     } 
     
     public List<List<String>> getResult(){

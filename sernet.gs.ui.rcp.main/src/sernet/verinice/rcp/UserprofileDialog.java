@@ -87,21 +87,19 @@ public class UserprofileDialog extends TitleAreaDialog {
     private TableViewer tableAction;
      
     
-    Button addAllButton;
-    Button removeAllButton;
+    private Button addAllButton;
+    private Button removeAllButton;
     
-    Auth auth;
-    Userprofile userprofile;
+    private Auth auth;
+    private Userprofile userprofile;
     private List<ProfileRef> selectedProfiles = new ArrayList<ProfileRef>();   
     private List<ProfileRef> unselectedProfiles;
     private List<Profile> allProfiles;    
 
     private ProfileRef selectedProfileRef;
     
-    IRightsServiceClient rightsService;
+    private IRightsServiceClient rightsService;
     
-    private Composite rightButtonComposite = null;
-
     public UserprofileDialog(Shell parent) {
         super(parent);
         auth = getRightService().getConfiguration();
@@ -122,6 +120,12 @@ public class UserprofileDialog extends TitleAreaDialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int fourColCompCharHeight = 20;
+        final int fourColCompNumColumns = 4;
+        final int leftCompCharHeight = 40;
+        final int rightCompCharHeight = 40;
+        
+        
         setTitle(Messages.UserprofileDialog_1);
         String message = Messages.UserprofileDialog_2;
         if(auth.getType().equals(ConfigurationType.BLACKLIST)) {
@@ -150,7 +154,6 @@ public class UserprofileDialog extends TitleAreaDialog {
         label.setText(Messages.UserprofileDialog_3);
 
         comboLogin = new Combo(comboComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-        //comboLogin.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         comboLogin.addSelectionListener(new SelectionAdapter() {
               public void widgetSelected(SelectionEvent e) {
                   comboModel.setSelectedIndex(comboLogin.getSelectionIndex());
@@ -167,16 +170,16 @@ public class UserprofileDialog extends TitleAreaDialog {
         
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = convertHeightInCharsToPixels(20);
+        gridData.heightHint = convertHeightInCharsToPixels(fourColCompCharHeight);
         fourColumnComposite.setLayoutData(gridData);
-        gridLayout = new GridLayout(4, false);
+        gridLayout = new GridLayout(fourColCompNumColumns, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         fourColumnComposite.setLayout(gridLayout);
 
         Composite leftComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(leftCompCharHeight);
         leftComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -192,14 +195,14 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         Composite rightComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, false, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(rightCompCharHeight);
         rightComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         rightComposite.setLayout(gridLayout);
 
-        rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
+        Composite rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.CENTER, SWT.FILL, false, true);
         gridData.widthHint = convertWidthInCharsToPixels(40);
         rightButtonComposite.setLayoutData(gridData);
@@ -298,21 +301,21 @@ public class UserprofileDialog extends TitleAreaDialog {
         table.remove(unselectedProfiles);
         tableSelected.remove(selectedProfiles);
         boolean profileFound = false;
-        for (Userprofile userprofile :  auth.getUserprofiles().getUserprofile()) {
-            if(username.equals(userprofile.getLogin())) {
-                this.userprofile = userprofile;
-                selectedProfiles = userprofile.getProfileRef();
+        for (Userprofile internalUserprofile :  auth.getUserprofiles().getUserprofile()) {
+            if(username.equals(internalUserprofile.getLogin())) {
+                this.userprofile = internalUserprofile;
+                selectedProfiles = internalUserprofile.getProfileRef();
                 profileFound = true;
                 break;
             }
         }
         if(!profileFound) {
             // create a new one
-            Userprofile userprofile = new Userprofile();
-            userprofile.setLogin(username);
-            auth.getUserprofiles().getUserprofile().add(userprofile);
-            this.userprofile = userprofile;
-            selectedProfiles = userprofile.getProfileRef();
+            Userprofile internalUserprofile = new Userprofile();
+            internalUserprofile.setLogin(username);
+            auth.getUserprofiles().getUserprofile().add(internalUserprofile);
+            this.userprofile = internalUserprofile;
+            selectedProfiles = internalUserprofile.getProfileRef();
         }
         setUnselected();
         table.setInput(unselectedProfiles);
@@ -352,8 +355,10 @@ public class UserprofileDialog extends TitleAreaDialog {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(title);
         label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+        
+        int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
-        TableViewer table = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        TableViewer table = new TableViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         table.getControl().setLayoutData(gd);
@@ -591,8 +596,8 @@ public class UserprofileDialog extends TitleAreaDialog {
                 profile.setName(selectedProfileRef.getName());
                 auth.getProfiles().getProfile().remove(profile);
                         
-                for (Userprofile userprofile : auth.getUserprofiles().getUserprofile()) {      
-                    userprofile.getProfileRef().remove(selectedProfileRef);
+                for (Userprofile internalUserprofile : auth.getUserprofiles().getUserprofile()) {      
+                    internalUserprofile.getProfileRef().remove(selectedProfileRef);
                 }          
                 loadProfiles(); 
             }
@@ -675,7 +680,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         private static final int ASCENDING = 0;
         private static final int DESCENDING = 1;
         private int direction = ASCENDING;
-        Collator collator = Collator.getInstance();
+        private Collator collator = Collator.getInstance();
 
         public TableComparator() {
             this.propertyIndex = 0;

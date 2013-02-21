@@ -92,42 +92,41 @@ public class TreeLabelProvider extends LabelProvider  {
     }
 
     @Override
-	public String getText(Object obj) {
-		String text = "unknown";
-		try {
-    		if (obj != null) {	
-    		    if (obj instanceof CnATreeElement) {
-    				CnATreeElement element = (CnATreeElement) obj;
-    				StringBuilder sb = new StringBuilder();
-    				if(element instanceof Control) {
-    					String abbreviation = ((Control)element).getAbbreviation();
-    					if(abbreviation!=null && !abbreviation.isEmpty()) {
-    					    sb.append(abbreviation).append(" ");
-    					}
-    				}
-    				
-    				if(element instanceof IISO27kElement) {
-                        String abbreviation = ((IISO27kElement)element).getAbbreviation();
-                        if(abbreviation!=null && !abbreviation.isEmpty()) {
-                            sb.append(abbreviation).append(" ");
-                        }
+    public String getText(Object obj) {
+        final int maxTextWidth = 80;
+        String text = "unknown";
+        try {
+            if (obj instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) obj;
+                StringBuilder sb = new StringBuilder();
+                if(element instanceof Control) {
+                    String abbreviation = ((Control)element).getAbbreviation();
+                    if(abbreviation!=null && !abbreviation.isEmpty()) {
+                        sb.append(abbreviation).append(" ");
                     }
-    				String title = element.getTitle();
-                    if(title!=null && !title.isEmpty()) {
-                        sb.append(title);
+                }
+
+                if(element instanceof IISO27kElement) {
+                    String abbreviation = ((IISO27kElement)element).getAbbreviation();
+                    if(abbreviation!=null && !abbreviation.isEmpty()) {
+                        sb.append(abbreviation).append(" ");
                     }
-                    if(sb.length()>0) {
-                        text = ItemControlTransformer.truncate(sb.toString(),80) ;
-                    }
-                    if (LOG.isDebugEnabled()) {
-                        text = text + " (" + element.getScopeId() + "," + element.getUuid() + ")";
-                    }
-                    
-    			}
-    		}
-		} catch(Exception e) {
-		    LOG.error("Error while getting label for tree item.", e);
-		}
+                }
+                String title = element.getTitle();
+                if(title!=null && !title.isEmpty()) {
+                    sb.append(title);
+                }
+                if(sb.length()>0) {
+                    text = ItemControlTransformer.truncate(sb.toString(),maxTextWidth) ;
+                }
+                if (LOG.isDebugEnabled()) {
+                    text = text + " (" + element.getScopeId() + "," + element.getUuid() + ")";
+                }
+
+            }
+        } catch(Exception e) {
+            LOG.error("Error while getting label for tree item.", e);
+        }
 		return text;
 	}
 

@@ -146,6 +146,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 */
 		@Override
 		public void fill(ToolBar parent, int index) {
+		    final int toolItemWidth = 200;
 			ToolItem ti = new ToolItem(parent, SWT.SEPARATOR, index);
 
 			combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -177,7 +178,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			});
 
 			ti.setControl(combo);
-			ti.setWidth(200);
+			ti.setWidth(toolItemWidth);
 		}
 
 		/**

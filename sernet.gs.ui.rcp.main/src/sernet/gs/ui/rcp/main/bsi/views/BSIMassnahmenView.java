@@ -249,13 +249,6 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		menuManager.add(collapseAction);
 	}
 
-	// public Clipboard getClipboard() {
-	// if (clipboard == null) {
-	// clipboard = new Clipboard(getSite().getShell().getDisplay());
-	// }
-	// return clipboard;
-	// }
-
 	public List<Baustein> getSelectedBausteine() {
 		ArrayList<Baustein> result = new ArrayList<Baustein>();
 		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
@@ -310,8 +303,9 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		}
 
 		public Object[] getChildren(Object parent) {
+		    final int childrenListSize = 100;
 			if (parent instanceof Baustein) {
-				ArrayList<IGSModel> children = new ArrayList<IGSModel>(100);
+				ArrayList<IGSModel> children = new ArrayList<IGSModel>(childrenListSize);
 				children.addAll(((Baustein) parent).getGefaehrdungen());
 				children.addAll(((Baustein) parent).getMassnahmen());
 				return children.toArray();
@@ -330,9 +324,9 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		}
 
 		public boolean hasChildren(Object parent) {
-			if (parent instanceof Baustein)
+			if (parent instanceof Baustein){
 				return ((Baustein) parent).getMassnahmen().size() > 0;
-			else if (parent instanceof BSIKatalogInvisibleRoot){
+			} else if (parent instanceof BSIKatalogInvisibleRoot){
 				return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
 			}
 			return false;

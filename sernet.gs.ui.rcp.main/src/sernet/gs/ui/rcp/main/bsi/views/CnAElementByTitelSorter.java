@@ -28,7 +28,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 class CnAElementByTitelSorter extends ViewerSorter {
-		NumericStringComparator numComp = new NumericStringComparator();
+		private NumericStringComparator numComp = new NumericStringComparator();
 		
 		@Override
 		public int category(Object element) {
@@ -37,14 +37,15 @@ class CnAElementByTitelSorter extends ViewerSorter {
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
+		    final int chapterFactor = 1000;
 			if (e1 instanceof MassnahmenUmsetzung
 					&& e2 instanceof MassnahmenUmsetzung) {
 				// sort chapters correctly by converting 2.45, 2.221, 3.42
 				// to 2045, 2221, 3024
 				int[] kap1 = ((MassnahmenUmsetzung) e1).getKapitelValue();
 				int[] kap2 = ((MassnahmenUmsetzung) e2).getKapitelValue();
-				return (Integer.valueOf(kap1[0] * 1000 + kap1[1])
-						.compareTo((kap2[0] * 1000 + kap2[1])));
+				return (Integer.valueOf(kap1[0] * chapterFactor + kap1[1])
+						.compareTo((kap2[0] * chapterFactor + kap2[1])));
 			}
 
 			if (e1 instanceof BausteinUmsetzung
@@ -54,14 +55,12 @@ class CnAElementByTitelSorter extends ViewerSorter {
 				// to 2045, 2221, 3024
 				int[] kap1 = ((BausteinUmsetzung) e1).getKapitelValue();
 				int[] kap2 = ((BausteinUmsetzung) e2).getKapitelValue();
-				return (Integer.valueOf(kap1[0] * 1000 + kap1[1])
-						.compareTo((kap2[0] * 1000 + kap2[1])));
+				return (Integer.valueOf(kap1[0] * chapterFactor + kap1[1])
+						.compareTo((kap2[0] * chapterFactor + kap2[1])));
 			}
 			
 			if (e1 instanceof IBSIStrukturElement
 					&& e2 instanceof IBSIStrukturElement) {
-//				String k1 = ((IBSIStrukturElement)e1).getKuerzel();
-//				String k2 = ((IBSIStrukturElement)e2).getKuerzel();
 				String k1 = ((IBSIStrukturElement)e1).getKuerzel() + ((CnATreeElement)e1).getTitle();
 				String k2 = ((IBSIStrukturElement)e2).getKuerzel() + ((CnATreeElement)e2).getTitle();
 				return numComp.compare(k1, k2);

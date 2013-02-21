@@ -279,21 +279,24 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
+        final int statusItemCharWidth = 100;
         if(isServerMode()) {
-            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",100);
+            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",statusItemCharWidth);
             statusItem.setText("Server: " + getShortServerUrl());
             statusLine.add(statusItem);
         }       
     }
     
     private String getShortServerUrl() {
+        final int httpURLLength = 7;
+        final int httpsURLLength = 8;
         String url = getServerUrlPreference();
         if(url!=null && !url.isEmpty()) {
            if(url.startsWith("http://")) {
-               url = url.substring(7);
+               url = url.substring(httpURLLength);
            }
            if(url.startsWith("https://")) {
-               url = url.substring(8);
+               url = url.substring(httpsURLLength);
            }
         }
         return url;

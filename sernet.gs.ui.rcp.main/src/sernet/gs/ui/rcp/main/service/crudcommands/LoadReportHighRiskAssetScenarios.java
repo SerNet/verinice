@@ -50,7 +50,7 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
     
     private boolean resultInjectedFromCache = false;
     
-    public static String[] COLUMNS = new String[]{
+    public static final String[] COLUMNS = new String[]{
                                     "assetName",
                                     "scenarioName",
                                     "riskC",
@@ -69,6 +69,8 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
      */
     @Override
     public void execute() {
+        final int fourYellowFields = 4;
+        final int threeYellowFields = 3;
         if(!resultInjectedFromCache){
             results = new ArrayList<List<String>>(0);
             try{
@@ -123,9 +125,9 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                                 for(char c : cia){
                                     int yellowFields = 0;
                                     if(c == 'i'){
-                                        yellowFields = 4;
+                                        yellowFields = fourYellowFields;
                                     } else {
-                                        yellowFields = 3;
+                                        yellowFields = threeYellowFields;
                                     }
                                     int riskColor = raService.getRiskColor(asset, scenario, c, yellowFields, scenProbType);
                                     if(!isRedRisk && riskColor == IRiskAnalysisService.RISK_COLOR_RED){

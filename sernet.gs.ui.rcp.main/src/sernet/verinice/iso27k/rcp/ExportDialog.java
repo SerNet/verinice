@@ -61,7 +61,7 @@ import sernet.verinice.service.sync.VeriniceArchive;
 public class ExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 
-    public static final String[] EXTENSION_ARRAY = new String[] {VeriniceArchive.EXTENSION_VERINICE_ARCHIVE,ExportAction.EXTENSION_XML};
+    private static final String[] EXTENSION_ARRAY = new String[] {VeriniceArchive.EXTENSION_VERINICE_ARCHIVE,ExportAction.EXTENSION_XML};
     
     /**
      * Indicates if the output should be encrypted.
@@ -70,11 +70,10 @@ public class ExportDialog extends TitleAreaDialog {
     private boolean reImport = true;
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
-    //private Set<CnATreeElement> selectedElementSet;
     private String filePath;
     private String sourceId;
     
-    OrganizationWidget organizationWidget = null;
+    private OrganizationWidget organizationWidget = null;
     
     private Text sourceIdText;
     private Text txtLocation;
@@ -89,7 +88,7 @@ public class ExportDialog extends TitleAreaDialog {
     private boolean serverConnectionMode = false;
     
     public ExportDialog(Shell activeShell) {
-        this(activeShell, null);
+        this(activeShell, (CnATreeElement)null);
     }
 
     public ExportDialog(Shell activeShell, boolean serverConnectionMode, String filePath) {
@@ -109,15 +108,25 @@ public class ExportDialog extends TitleAreaDialog {
         selectedElement = selectedOrganization;
     }
     
-    public ExportDialog(Shell activeShell, CnATreeElement elmt, ITreeSelection selection){
-        this(activeShell, null);
+    public ExportDialog(Shell activeShell, ITreeSelection selection){
+        this(activeShell, (CnATreeElement)null);
         this.selection = selection;
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        
-       getDefaultFolder();
+
+        final int layoutMarginWidth = 10;
+        final int layoutMarginHeight = layoutMarginWidth;
+        final int sourceIdCompositeNumColumns = 3;
+        final int sourceIdCompositeMarginTop = 15;
+        final int reimportChechboxHorizontalSpan = sourceIdCompositeNumColumns;
+        final int sourceIdTextMinimumWidth = 150;
+        final int txtLocationMinimumWidth = 302;
+        final int udfbHorizontalSpan = reimportChechboxHorizontalSpan;
+        final int encryptionCheckboxHorizontalSpan = udfbHorizontalSpan;
+
+        getDefaultFolder();
         /*
          * Dialog title, message and layout:
          */
@@ -127,8 +136,8 @@ public class ExportDialog extends TitleAreaDialog {
 
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = 10;
-        layout.marginHeight = 10;
+        layout.marginWidth = layoutMarginWidth;
+        layout.marginHeight = layoutMarginHeight;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);
         
@@ -161,8 +170,8 @@ public class ExportDialog extends TitleAreaDialog {
         
         if(!serverConnectionMode) {    
             final Composite sourceIdComposite = new Composite(composite, SWT.NONE);
-            sourceIdComposite.setLayout(new GridLayout(3,false));
-            ((GridLayout) sourceIdComposite.getLayout()).marginTop = 15;
+            sourceIdComposite.setLayout(new GridLayout(sourceIdCompositeNumColumns,false));
+            ((GridLayout) sourceIdComposite.getLayout()).marginTop = sourceIdCompositeMarginTop;
             gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
             gd.grabExcessHorizontalSpace=true;
             sourceIdComposite.setLayoutData(gd);
@@ -174,7 +183,7 @@ public class ExportDialog extends TitleAreaDialog {
             final Button reImportCheckbox = new Button(sourceIdComposite, SWT.CHECK);
             reImportCheckbox.setText(Messages.ExportDialog_0);
             gd = new GridData();
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = reimportChechboxHorizontalSpan;
             reImportCheckbox.setLayoutData(gd);
             reImportCheckbox.setSelection(true);
             reImportCheckbox.setEnabled(true);
@@ -195,7 +204,7 @@ public class ExportDialog extends TitleAreaDialog {
             sourceIdText = new Text(sourceIdComposite, SWT.BORDER);
             gd = new GridData(GridData.GRAB_HORIZONTAL);
             gd.horizontalSpan = 2;
-            gd.minimumWidth = 150;
+            gd.minimumWidth = sourceIdTextMinimumWidth;
             sourceIdText.setLayoutData(gd);
             sourceIdText.addModifyListener(new ModifyListener() {         
                 @Override
@@ -215,7 +224,7 @@ public class ExportDialog extends TitleAreaDialog {
             txtLocation = new Text(sourceIdComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
             gd = new GridData(SWT.FILL, SWT.TOP, true,false);
             gd.grabExcessHorizontalSpace=true;
-            gd.minimumWidth = 302;
+            gd.minimumWidth = txtLocationMinimumWidth;
             txtLocation.setLayoutData(gd);
             txtLocation.addKeyListener(new KeyListener() {
                 @Override
@@ -272,7 +281,7 @@ public class ExportDialog extends TitleAreaDialog {
                 useDefaultFolderButton.setText(Messages.ExportDialog_3);
                 useDefaultFolderButton.setSelection(true);
                 GridData  useDefaultFolderButtonGridData = new GridData();
-                useDefaultFolderButtonGridData.horizontalSpan = 3;
+                useDefaultFolderButtonGridData.horizontalSpan = udfbHorizontalSpan;
                 useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
                 useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
                 
@@ -295,7 +304,7 @@ public class ExportDialog extends TitleAreaDialog {
             final Button encryptionCheckbox = new Button(sourceIdComposite, SWT.CHECK);
             encryptionCheckbox.setText(Messages.SamtExportDialog_5);
             gd = new GridData();
-            gd.horizontalSpan = 3;
+            gd.horizontalSpan = encryptionCheckboxHorizontalSpan;
             encryptionCheckbox.setLayoutData(gd);
             encryptionCheckbox.setSelection(encryptOutput);
             encryptionCheckbox.setEnabled(true);
@@ -367,10 +376,13 @@ public class ExportDialog extends TitleAreaDialog {
 	}
 
 	private String getFileNameFromPath(String path) {
+	    String returnPath = null;
         if(path!=null && path.indexOf(File.separatorChar)!=-1) {
-            path = path.substring(path.lastIndexOf(File.separatorChar)+1);
+            returnPath = path.substring(path.lastIndexOf(File.separatorChar)+1);
+        } else {
+            returnPath = path;
         }
-        return path;
+        return returnPath;
     }
     
     /*
@@ -444,6 +456,10 @@ public class ExportDialog extends TitleAreaDialog {
     }
     public boolean getUseDefaultFolder(){
         return useDefaultFolder;
+    }
+
+    public static String[] getExtensionArray() {
+        return EXTENSION_ARRAY;
     }
 
 }

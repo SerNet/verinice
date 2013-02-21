@@ -18,6 +18,7 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -32,27 +33,31 @@ import sernet.verinice.validation.CnAValidationView;
 public class Iso27kPerspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.verinice.iso27k.rcp.Iso27kPerspective";
 
-	public static HashMap<String, String> viewsRightIDs;
+	private static final Map<String, String> VIEWS_RIGHT_IDS;
 	
 	static{
-	    viewsRightIDs = new HashMap<String, String>();
-	    viewsRightIDs.put(CatalogView.ID, ActionRightIDs.ISMCATALOG);
-	    viewsRightIDs.put(ISMView.ID, ActionRightIDs.ISMVIEW);
-	    viewsRightIDs.put(RelationView.ID, ActionRightIDs.RELATIONS);
-	    viewsRightIDs.put(FileView.ID, ActionRightIDs.FILES);
-	    viewsRightIDs.put(NoteView.ID, ActionRightIDs.NOTES);
+	    VIEWS_RIGHT_IDS = new HashMap<String, String>();
+	    VIEWS_RIGHT_IDS.put(CatalogView.ID, ActionRightIDs.ISMCATALOG);
+	    VIEWS_RIGHT_IDS.put(ISMView.ID, ActionRightIDs.ISMVIEW);
+	    VIEWS_RIGHT_IDS.put(RelationView.ID, ActionRightIDs.RELATIONS);
+	    VIEWS_RIGHT_IDS.put(FileView.ID, ActionRightIDs.FILES);
+	    VIEWS_RIGHT_IDS.put(NoteView.ID, ActionRightIDs.NOTES);
 	}
 	
 	public void createInitialLayout(IPageLayout layout) {
+	    final float catalogRatio = 0.20f;
+	    final float ismRatio = 0.35f;
+	    final float relationRatio = 0.7f;
+	    final float folderRatio = 0.75f;
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
 		
-		layout.addView(CatalogView.ID,  IPageLayout.LEFT, 0.20f, editorArea);
+		layout.addView(CatalogView.ID,  IPageLayout.LEFT, catalogRatio, editorArea);
 		
-		layout.addView(ISMView.ID,  IPageLayout.LEFT, 0.35f, editorArea);
-		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, 0.7f, ISMView.ID);
+		layout.addView(ISMView.ID,  IPageLayout.LEFT, ismRatio, editorArea);
+		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, relationRatio, ISMView.ID);
 		
-		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, 0.75f, editorArea);
+		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, folderRatio, editorArea);
 		folder.addView(FileView.ID);
 		folder.addPlaceholder(NoteView.ID + ":*");
 		folder.addView(CnAValidationView.ID);

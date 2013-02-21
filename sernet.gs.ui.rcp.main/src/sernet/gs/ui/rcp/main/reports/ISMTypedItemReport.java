@@ -121,6 +121,7 @@ public class ISMTypedItemReport extends BsiReport
     }
 
     public List<IOOTableRow> getReport(PropertySelection shownColumns) {
+        final int maxColumnsPadding = 3;
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		List<String> columns = new ArrayList<String>(0);
 		int maxColumns = 0;
@@ -136,7 +137,7 @@ public class ISMTypedItemReport extends BsiReport
                         IOOTableRow.ROW_STYLE_SUBHEADER));
                 
                 // add header for controlgroups:
-                String[] cols = new String[maxColumns+3];
+                String[] cols = new String[maxColumns+maxColumnsPadding];
                 for(int i=0; i < maxColumns; ++i) {
                     cols[i] = "";
                 }
@@ -167,8 +168,9 @@ public class ISMTypedItemReport extends BsiReport
 		        ControlGroup control = (ControlGroup) child;
 		        columns = shownColumns.get(child.getEntity().getEntityType());
 		        // maxColumns is used to pad controlGroups up to control's columns:
-		        if (columns.size()>maxColumns)
+		        if (columns.size()>maxColumns){
                     maxColumns = columns.size();
+		        }
 		        ControlGroupMaturityRow row = new ControlGroupMaturityRow(
 		                control, 
 		                columns, 

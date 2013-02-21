@@ -60,7 +60,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
         if (!(elmt instanceof ControlGroup)){
             return null;
         }
-        super.elmt = (ControlGroup) elmt;
+        super.setElmt((ControlGroup) elmt);
         try {
             return createBarChart(createBarDataset());
         } catch (CommandException e) {
@@ -99,7 +99,7 @@ public class SamtProgressChart extends MaturitySpiderChart {
     protected Object createBarDataset() throws CommandException {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
-        Map<String, Integer> items = dao.getSamtTopicsProgress(super.elmt);
+        Map<String, Integer> items = dao.getSamtTopicsProgress(getElmt());
         Set<Entry<String, Integer>> entrySet = items.entrySet();
         for (Entry<String, Integer> entry : entrySet) {
             dataset.addValue(entry.getValue(), entry.getKey(), ""); //$NON-NLS-1$

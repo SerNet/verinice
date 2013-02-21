@@ -138,7 +138,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
     }
 
     private GroupByTagDialog openGroupByTagDialog() {      
-        return new GroupByTagDialog(Display.getCurrent().getActiveShell(), group, allTags);             
+        return new GroupByTagDialog(Display.getCurrent().getActiveShell(), allTags);             
     }
     
     /**

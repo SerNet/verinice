@@ -38,8 +38,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
  * Dialog to select tags.
  * For each tag a checkbox is shown.
@@ -57,21 +55,25 @@ public class GroupByTagDialog extends TitleAreaDialog {
      * @param activeShell
      * @param selectedOrganization
      */
-    public GroupByTagDialog(Shell activeShell, CnATreeElement group, Set<String> tags) {
+    public GroupByTagDialog(Shell activeShell, Set<String> tags) {
         super(activeShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.tags = tags;
     }
 
     @Override
-    protected Control createDialogArea(Composite parent) {        
+    protected Control createDialogArea(Composite parent) { 
+        final int layoutMarginWidth = 10;
+        final int layoutMarginHeight = layoutMarginWidth;
+        final int gdMinWidth = 400;
+        final int gdHeightHint = 200;
         setTitle(Messages.GroupByTagDialog_0);
         setMessage(Messages.GroupByTagDialog_1, IMessageProvider.INFORMATION);
 
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = 10;
-        layout.marginHeight = 10;
+        layout.marginWidth = layoutMarginWidth;
+        layout.marginHeight = layoutMarginHeight;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);    
         
@@ -80,8 +82,8 @@ public class GroupByTagDialog extends TitleAreaDialog {
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         groupOrganization.setLayout(groupOrganizationLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        gd.minimumWidth = 400;
-        gd.heightHint = 200; 
+        gd.minimumWidth = gdMinWidth;
+        gd.heightHint = gdHeightHint; 
         groupOrganization.setLayoutData(gd);
 
         ScrolledComposite scrolledComposite = new ScrolledComposite(groupOrganization, SWT.V_SCROLL);

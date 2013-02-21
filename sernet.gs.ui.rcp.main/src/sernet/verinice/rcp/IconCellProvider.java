@@ -34,13 +34,15 @@ public class IconCellProvider extends ImageCellProvider {
 
     private static final Logger LOG = Logger.getLogger(IconCellProvider.class);
     
-    int column;
+    private int column;
+    
+    private static final int columnAmount = 20;
     
     /**
      * @param thumbnailSize
      */
     protected IconCellProvider(int column) {
-        super(20);
+        super(columnAmount);
         this.column = column;
     }
 
@@ -65,9 +67,9 @@ public class IconCellProvider extends ImageCellProvider {
     }
 
     public Image getImage(ImageDescriptor id) {
-        if (id == null)
+        if (id == null){
             return null;
-
+        }
         Image image = id.createImage(false);
         if (image == null) {
             image = getImage(ImageCache.UNKNOWN);

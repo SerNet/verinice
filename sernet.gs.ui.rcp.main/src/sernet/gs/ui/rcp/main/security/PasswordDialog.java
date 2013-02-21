@@ -85,6 +85,7 @@ final class PasswordDialog extends Dialog {
 
     @Override
 	protected Control createDialogArea(Composite parent) {
+        final int defaultTextLimit = 15;
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout(2, true);
 		container.setLayout(layout);
@@ -95,7 +96,7 @@ final class PasswordDialog extends Dialog {
 		l2.setEnabled(isKeyStoreEnabled);
 		
 		keyStorePasswordText = new Text(container, SWT.SINGLE | SWT.PASSWORD | SWT.BORDER);
-		keyStorePasswordText.setTextLimit(15);
+		keyStorePasswordText.setTextLimit(defaultTextLimit);
 		keyStorePasswordText.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		keyStorePasswordText.setEnabled(isKeyStoreEnabled);
 
@@ -105,7 +106,7 @@ final class PasswordDialog extends Dialog {
 		l3.setEnabled(isTokenPINEnabled);
 		
 		tokenPINText = new Text(container, SWT.SINGLE | SWT.PASSWORD | SWT.BORDER);
-		tokenPINText.setTextLimit(15);
+		tokenPINText.setTextLimit(defaultTextLimit);
 		tokenPINText.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		tokenPINText.setEnabled(isTokenPINEnabled);
 		

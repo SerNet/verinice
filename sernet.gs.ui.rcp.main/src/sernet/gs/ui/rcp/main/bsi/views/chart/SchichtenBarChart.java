@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -43,7 +43,6 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 public class SchichtenBarChart implements IChartGenerator {
 
 	public JFreeChart createChart() {
-		// return createBarChart(createBarDataset());
 		try {
 			return createSpiderChart(createBarDataset());
 		} catch (CommandException e) {
@@ -53,9 +52,10 @@ public class SchichtenBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
+	    final float plotForegroundAlpha = 0.6f;
 		JFreeChart chart = ChartFactory.createBarChart3D(null, Messages.SchichtenBarChart_1, Messages.SchichtenBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
-		chart.getPlot().setForegroundAlpha(0.6f);
+		chart.getPlot().setForegroundAlpha(plotForegroundAlpha);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
@@ -66,8 +66,6 @@ public class SchichtenBarChart implements IChartGenerator {
 
 	protected JFreeChart createSpiderChart(Object dataset) {
 		SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-		// plot.setStartAngle(54);
-		// plot.setInteriorGap(0.40);
 		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
 
 		JFreeChart chart = new JFreeChart(Messages.SchichtenBarChart_3, TextTitle.DEFAULT_FONT, plot, false);

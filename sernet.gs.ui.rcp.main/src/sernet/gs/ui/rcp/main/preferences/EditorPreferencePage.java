@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
@@ -25,8 +24,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.HitroUtil;
 
 public class EditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-
-    private Group tagGroup;
 
     private CheckboxTableViewer viewer;
 
@@ -56,6 +53,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
      * 
      */
     private void createTagList() {
+        final int checkboxColumnWidth = 35;
+        final int tagColumnWidth = 200;
         viewer = CheckboxTableViewer.newCheckList(getFieldEditorParent(), SWT.BORDER | SWT.V_SCROLL);
         Table table = viewer.getTable();
         table.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
@@ -181,8 +180,8 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
             return new String[] {};
         }
 
-        tags = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-        return tags.split(","); //$NON-NLS-1$
+        String returnTags = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        return returnTags.split(","); //$NON-NLS-1$
     }
 
 }

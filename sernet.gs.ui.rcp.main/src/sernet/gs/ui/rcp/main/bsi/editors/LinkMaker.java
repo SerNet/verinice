@@ -117,6 +117,9 @@ public class LinkMaker extends Composite implements IRelationTable {
      * @param isWriteAllowed
      */
     public void createPartControl(Boolean isWriteAllowed) {
+        
+        final int defaultFormAttachmentNumerator = 100;
+        
         this.writeable = isWriteAllowed;
         
         final int formAttachmentOffsetDefault = 5;
@@ -158,8 +161,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         FormData formData6 = new FormData();
         formData6.top = new FormAttachment(buttonLink, 2);
         formData6.left = new FormAttachment(0, 1);
-        formData6.right = new FormAttachment(100, -1);
-        formData6.bottom = new FormAttachment(100, -1);
+        formData6.right = new FormAttachment(defaultFormAttachmentNumerator, -1);
+        formData6.bottom = new FormAttachment(defaultFormAttachmentNumerator, -1);
         viewer.getTable().setLayoutData(formData6);
         viewer.getTable().setEnabled(writeable);
 

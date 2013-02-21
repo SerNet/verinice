@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -57,14 +56,12 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class OrganizationWidget {
 
-    private static final Logger LOG = Logger.getLogger(OrganizationWidget.class);
-    
     private List<CnATreeElement> orgsAndITVs;   
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
     private Set<CnATreeElement> selectedElementSet;
     
-    Group group;
+    private Group group;
     private List<Button> radioOrganizationList;
     
     /**
@@ -101,12 +98,14 @@ public class OrganizationWidget {
     }
 
     private void init() {
+        final int gdMinimumWidth = 550;
+        final int gdHeightHint = 200; 
         group.setText(Messages.SamtExportDialog_2);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         group.setLayout(groupOrganizationLayout);
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        gd.minimumWidth = 550;
-        gd.heightHint = 200; 
+        gd.minimumWidth = gdMinimumWidth;
+        gd.heightHint = gdHeightHint; 
         group.setLayoutData(gd);
 
         ScrolledComposite scrolledComposite = new ScrolledComposite(group, SWT.V_SCROLL);

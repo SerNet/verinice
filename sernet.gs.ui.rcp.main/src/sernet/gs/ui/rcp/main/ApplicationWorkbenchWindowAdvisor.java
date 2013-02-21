@@ -67,7 +67,7 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
-    private static Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
+    private static final Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
     
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -83,9 +83,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      */
     @Override
     public void preWindowOpen() {
+        final int pointX = 1100;
+        final int pointY = 768;
+        final int perspectiveBarSize = 360;
         try {
             IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-            configurer.setInitialSize(new Point(1100, 768));
+            configurer.setInitialSize(new Point(pointX, pointY));
             configurer.setShowCoolBar(true);
             configurer.setShowStatusLine(true);
             configurer.setShowProgressIndicator(true);
@@ -97,7 +100,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             // If other menus exists then this will be on the left of them
             apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
             apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
-            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, 360);
+            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, perspectiveBarSize);
         } catch(Exception t) {
             LOG.error("Error while configuring window.", t);
         }
@@ -124,7 +127,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         showFirstSteps();
         preloadDBMapper();
         for(IWorkbenchPage page : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()){
-            initPerspective(page.getPerspective().getId());
+            initPerspective();
         }
         closeUnallowedViews();
     }
@@ -152,14 +155,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
 
             public void partClosed(IWorkbenchPart part) {
-                if (part instanceof ViewIntroAdapterPart) {
-                    if (Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.FIRSTSTART)) {
-                        Preferences prefs = Activator.getDefault().getPluginPreferences();
-                        prefs.setValue(PreferenceConstants.FIRSTSTART, false);
+                if (part instanceof ViewIntroAdapterPart &&
+                        Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.FIRSTSTART)) {
+                    Preferences prefs = Activator.getDefault().getPluginPreferences();
+                    prefs.setValue(PreferenceConstants.FIRSTSTART, false);
 
-                        ShowCheatSheetAction action = new ShowCheatSheetAction(Messages.ApplicationWorkbenchWindowAdvisor_3);
-                        action.run();
-                    }
+                    ShowCheatSheetAction action = new ShowCheatSheetAction(Messages.ApplicationWorkbenchWindowAdvisor_3);
+                    action.run();
                 }
             }
 
@@ -187,18 +189,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
            @Override
            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor descriptor){
                super.perspectiveActivated(page, descriptor);
-               initPerspective(descriptor.getId());
+               initPerspective();
            }
            @Override
            public void perspectiveOpened(IWorkbenchPage page,
                    IPerspectiveDescriptor perspective){
                super.perspectiveOpened(page, perspective);
-               initPerspective(perspective.getId());
+               initPerspective();
            }
         });
     }
     
-    private void initPerspective(String perspectiveID){
+    private void initPerspective(){
         Activator.inheritVeriniceContextState();
         Vector<String> openViews = new Vector<String>();
         String rightID = "";

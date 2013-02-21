@@ -104,8 +104,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private static ISchedulingRule iSchedulingRule = new Mutex();
 	
-	private CnATreeElement selectedOrganization;
-	
 	private ITreeSelection selection;
 	
 	private boolean serverIsRunning = true;
@@ -154,7 +152,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	 */
     @Override
     public void run(IAction action) {
-		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), null, selection);
+		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
 		if( dialog.open() == Dialog.OK )
 		{	     
 		    if(dialog.getEncryptOutput()) {
@@ -176,7 +174,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                 }
             }
 		    filePath = dialog.getFilePath();
-		    filePath = ExportAction.addExtension(filePath,ExportDialog.EXTENSION_ARRAY[dialog.getFormat()]);
+		    filePath = ExportAction.addExtension(filePath,ExportDialog.getExtensionArray()[dialog.getFormat()]);
 		    if(password!=null) {		        
 		        filePath = addExtension(filePath, EXTENSION_PASSWORD_ENCRPTION);
 		    }
@@ -238,7 +236,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), internalSourceId, reImport, fileFormat);
         	try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, x509CertificateFile, keyAlias));
+        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, keyAlias));
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
@@ -273,7 +271,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
      * @throws CertificateExpiredException 
      * @throws CertificateNotYetValidException 
      */
-    private byte[] encrypt(byte[] result, char[] password, File x509CertificateFile2, String keyAlias) throws CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result, char[] password, String keyAlias) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
         byte[] returnResult;
         if (keyAlias != null) {
@@ -337,7 +335,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                 }
             }
             if (selectedElement instanceof Organization || selectedElement instanceof ITVerbund) {
-                selectedOrganization = (CnATreeElement)selectedElement;
                 this.selection = treeSelection;
             }
         }

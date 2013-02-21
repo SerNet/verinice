@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -37,10 +37,7 @@ import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class LebenszyklusBarChart implements IChartGenerator {
 
@@ -51,13 +48,14 @@ public class LebenszyklusBarChart implements IChartGenerator {
 			ExceptionUtil.log(e, Messages.LebenszyklusBarChart_0);
 		}
 		return null;
-		// return createSpiderChart(createBarDataset());
 	}
 
 	protected JFreeChart createSpiderChart(Object dataset) {
+	    final int startAngle = 54;
+	    final double interiorGap = 0.4d;
 		SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-		plot.setStartAngle(54);
-		plot.setInteriorGap(0.40);
+		plot.setStartAngle(startAngle);
+		plot.setInteriorGap(interiorGap);
 		plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
 		JFreeChart chart = new JFreeChart(Messages.LebenszyklusBarChart_1, TextTitle.DEFAULT_FONT, plot, false);
 		LegendTitle legend = new LegendTitle(plot);
@@ -67,9 +65,10 @@ public class LebenszyklusBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
+	    final float foregroundAlpha = 0.6f;
 		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.LebenszyklusBarChart_2, Messages.LebenszyklusBarChart_3, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
-		chart.getPlot().setForegroundAlpha(0.6f);
+		chart.getPlot().setForegroundAlpha(foregroundAlpha);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
@@ -96,13 +95,4 @@ public class LebenszyklusBarChart implements IChartGenerator {
 
 		return dataset;
 	}
-
-	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null) {
-			return Messages.LebenszyklusBarChart_6;
-		}
-		return type.getOption(key).getName();
-	}
-
 }

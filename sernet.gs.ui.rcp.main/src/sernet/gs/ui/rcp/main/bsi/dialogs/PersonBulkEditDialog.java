@@ -89,12 +89,16 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
+        final int shellWidth = 460;
+        final int shellHeight = 640;
+        final int cursorLocationXSubtrahend = 200;
+        final int cursorLocationYSubtrahend = 400;
         newShell.setText(title);
-        newShell.setSize(460, 640);
+        newShell.setSize(shellWidth, shellHeight);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-200, cursorLocation.y-400));
+        newShell.setLocation(new Point(cursorLocation.x-cursorLocationXSubtrahend, cursorLocation.y-cursorLocationYSubtrahend));
     }
     
     

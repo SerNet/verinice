@@ -44,14 +44,16 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
  * 
  */
 public abstract class FilterDialog extends Dialog {
+    
+    private static final int DEFAULT_NUM_COLUMNS = 5;
 
-    protected HashMap<String, Button> typeFieldsUmsetzung;
-    protected HashMap<String, Button> typeFieldsSiegel;
-    protected HashMap<String, Button> typeFieldsSchicht;
+    private HashMap<String, Button> typeFieldsUmsetzung;
+    private HashMap<String, Button> typeFieldsSiegel;
+    private HashMap<String, Button> typeFieldsSchicht;
 
-    protected HashSet<String> selectedUmsetzungTypes;
-    protected HashSet<String> selectedSiegelTypes;
-    protected HashSet<String> selectedSchichtTypes;
+    private HashSet<String> selectedUmsetzungTypes;
+    private HashSet<String> selectedSiegelTypes;
+    private HashSet<String> selectedSchichtTypes;
 
     public FilterDialog(Shell parent, String[] umsetzung, String[] siegel, String[] schicht) {
         super(parent);
@@ -190,12 +192,13 @@ public abstract class FilterDialog extends Dialog {
     }
 
     protected Group createSiegelGroup(Composite parent) {
+        final int numColumns = 4;
         Group boxesComposite2 = new Group(parent, SWT.BORDER);
         boxesComposite2.setText(Messages.FilterDialog_1);
         GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
         boxesComposite2.setLayoutData(gridData2);
         GridLayout layout3 = new GridLayout();
-        layout3.numColumns = 4;
+        layout3.numColumns = numColumns;
         boxesComposite2.setLayout(layout3);
         return boxesComposite2;
     }
@@ -206,7 +209,7 @@ public abstract class FilterDialog extends Dialog {
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
         boxesComposite.setLayoutData(gridData);
         GridLayout layout2 = new GridLayout();
-        layout2.numColumns = 5;
+        layout2.numColumns = DEFAULT_NUM_COLUMNS;
         boxesComposite.setLayout(layout2);
         return boxesComposite;
     }
@@ -217,7 +220,7 @@ public abstract class FilterDialog extends Dialog {
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
         boxesComposite.setLayoutData(gridData);
         GridLayout layout2 = new GridLayout();
-        layout2.numColumns = 5;
+        layout2.numColumns = DEFAULT_NUM_COLUMNS;
         boxesComposite.setLayout(layout2);
         return boxesComposite;
     }

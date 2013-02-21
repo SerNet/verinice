@@ -80,16 +80,15 @@ import sernet.verinice.service.commands.LoadElementByUuid;
 public class DeleteActionDelegate implements IObjectActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(DeleteActionDelegate.class);
+    
+    private static final String DEFAULT_ERR_MSG = "Error while deleting element.";
 
     private IWorkbenchPart targetPart;
-
-    private String rightID;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
     }
 
-    @SuppressWarnings("unchecked")
     public void run(IAction action) {
         try {
             Activator.inheritVeriniceContextState();
@@ -179,30 +178,30 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                                     }
                                     removeElement(el);
                                 } catch (CommandException e) {
-                                    LOG.error("Error while deleting element.", e);
+                                    LOG.error(DEFAULT_ERR_MSG, e);
                                     ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                                 } catch (DataIntegrityViolationException de) {
-                                    LOG.error("Error while deleting element.", de);
+                                    LOG.error(DEFAULT_ERR_MSG, de);
                                 } catch (Exception e) {
-                                    LOG.error("Error while deleting element.", e);
+                                    LOG.error(DEFAULT_ERR_MSG, e);
                                     ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                                 }
                             }
                         });
                     } catch (Exception e) {
-                        LOG.error("Error while deleting element.", e);
+                        LOG.error(DEFAULT_ERR_MSG, e);
                         ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                     }
                 }
             });
         } catch (InvocationTargetException e) {
-            LOG.error("Error while deleting element.", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
             ExceptionUtil.log(e.getCause(), Messages.DeleteActionDelegate_16);
         } catch (InterruptedException e) {
-            LOG.error("Error while deleting element.", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         } catch (Exception e) {
-            LOG.error("Error while deleting element(s).", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }
     }
@@ -227,10 +226,10 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                 insertList.add(element);
             }
             if (element instanceof IISO27kGroup && element.getChildren() != null) {
-                depth++;
+                int newDepth = depth++;
                 element = Retriever.checkRetrieveChildren(element);
                 for (CnATreeElement child : element.getChildren()) {
-                    createList(child, tempList, insertList, depth, removed);
+                    createList(child, tempList, insertList, newDepth, removed);
                 }
             }
         } else {
@@ -334,7 +333,6 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
     }
 
     private boolean determineConfiguration(CnATreeElement elmt) {
-        boolean foundConfiguration = false;
         String[] types = new String[] { Person.TYPE_ID, PersonIso.TYPE_ID };
         ICommandService service = ServiceFactory.lookupCommandService();
         for (String type : types) {

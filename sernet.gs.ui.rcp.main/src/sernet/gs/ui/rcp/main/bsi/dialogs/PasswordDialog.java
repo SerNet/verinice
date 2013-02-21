@@ -108,7 +108,7 @@ public class PasswordDialog extends Dialog {
         FormData formData2 = new FormData();
         formData2.top = new FormAttachment(0, defaultFormAttachmentOffset);
         formData2.left = new FormAttachment(formDataLeftNumerator, 0);
-        formData2.right = new FormAttachment(100, (-1)*defaultFormAttachmentOffset);
+        formData2.right = new FormAttachment(formDataRightNumerator, (-1)*defaultFormAttachmentOffset);
         text.setLayoutData(formData2);
         text.addFocusListener(new FocusListener() {
             

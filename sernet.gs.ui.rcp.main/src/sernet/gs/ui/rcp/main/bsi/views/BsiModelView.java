@@ -64,10 +64,10 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
+import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
@@ -97,7 +97,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
-import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -137,8 +136,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private BSIModelViewFilterAction filterAction;
 
-	TreeContentProvider contentProvider;
-    ElementManager elementManager;
+	private TreeContentProvider contentProvider;
+    private ElementManager elementManager;
 
 	private Action expandAllAction;
 
@@ -161,9 +160,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	private BausteinZuordnungAction bausteinZuordnungAction;
 	
 	private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
-	
-	
-	private MetaDropAdapter dropAdapter;
 	
 	private IModelLoadListener modelLoadListener;
 
@@ -247,7 +243,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
-		//viewer.setContentProvider(contentProvider = new BSIModelViewContentProvider(cache));    
         contentProvider = new TreeContentProvider(elementManager);	
         viewer.setContentProvider(contentProvider);
                 
@@ -392,7 +387,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	}
 
 	private void makeActions() {
-
+	    final int newSelDefaultSize = 10;
 		selectEqualsAction = new Action() {
 			@Override
 			public void run() {
@@ -400,7 +395,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 				Object o = sel.getFirstElement();
 				if (o instanceof BausteinUmsetzung) {
 					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
-					ArrayList newsel = new ArrayList(10);
+					ArrayList newsel = new ArrayList(newSelDefaultSize);
 					newsel.add(sourceBst);
 
 					try {
@@ -441,6 +436,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		doubleClickAction = new Action() {
 			@Override
 			public void run() {
+			    final int wizardWidth = 800;
+			    final int wizardHeight = 600;
 				Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
 				if (sel instanceof FinishedRiskAnalysis) {
@@ -448,7 +445,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 					RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(), analysis);
 					wizard.init(PlatformUI.getWorkbench(), null);
 					WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
-					wizDialog.setPageSize(800, 600);
+					wizDialog.setPageSize(wizardWidth, wizardHeight);
 					wizDialog.open();
 				} else {
 					// open editor:

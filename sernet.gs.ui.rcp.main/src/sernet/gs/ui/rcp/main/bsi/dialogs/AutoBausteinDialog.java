@@ -74,6 +74,8 @@ public class AutoBausteinDialog extends Dialog {
     }
 
     protected void createListGroup(Composite parent) {
+        final int scrolledCompWidth = 100;
+        final int scrolledCompHeight = scrolledCompWidth;
         Group groupComposite = new Group(parent, SWT.BORDER);
         groupComposite.setText(Messages.AutoBausteinDialog_0);
         GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
@@ -86,7 +88,7 @@ public class AutoBausteinDialog extends Dialog {
 
         viewer = new ListViewer(comp, SWT.CHECK);
         comp.setContent(viewer.getControl());
-        comp.setMinSize(100, 100);
+        comp.setMinSize(scrolledCompWidth, scrolledCompHeight);
 
         LoadGenericElementByType<BausteinVorschlag> command = new LoadGenericElementByType<BausteinVorschlag>(BausteinVorschlag.class);
         try {
@@ -246,8 +248,10 @@ public class AutoBausteinDialog extends Dialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
+        final int shellWidth = 640;
+        final int shellHeight = 480;
         newShell.setText(Messages.AutoBausteinDialog_12);
-        newShell.setSize(640, 480);
+        newShell.setSize(shellWidth, shellHeight);
     }
 
     public BausteinVorschlag getSelectedSubtype() {

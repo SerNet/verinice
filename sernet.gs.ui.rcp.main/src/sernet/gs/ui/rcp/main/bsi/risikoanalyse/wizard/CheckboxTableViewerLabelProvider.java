@@ -42,8 +42,9 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 
-		if (columnIndex == 1)
+		if (columnIndex == 1){
 			return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
+		}
 
 		return null;
 	}
@@ -88,7 +89,7 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 			return gefaehrdung.getTitel();
 		case 4:
 			return gefaehrdung.getKategorieAsString();
-		};
+		}
 		return "";
 	}
 
@@ -112,7 +113,7 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 			return gef.getTitle();
 		case 4:
 			return gef.getKategorie();
-		};
+		}
 		return "";
 	}
 

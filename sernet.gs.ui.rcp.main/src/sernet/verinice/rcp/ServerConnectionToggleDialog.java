@@ -74,6 +74,10 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         final Composite composite = (Composite) super.createDialogArea(parent);
+        final int layoutMarginWidth = 10;
+        final int layoutMarginHeight = layoutMarginWidth;
+        final int layoutVerticalSpacing = layoutMarginHeight;
+        final int urlTextMinimumWidth = 150;
         
         if(isServerMode()) {
             setTitle(Messages.ServerConnectionToggleDialog_0);
@@ -85,9 +89,9 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
         
         
         GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = 10;
-        layout.marginHeight = 10;
-        layout.verticalSpacing = 10;
+        layout.marginWidth = layoutMarginWidth;
+        layout.marginHeight = layoutMarginHeight;
+        layout.verticalSpacing = layoutVerticalSpacing;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);
         
@@ -96,7 +100,7 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
         
         final Text urlText = new Text(composite, SWT.BORDER);
         gd = new GridData(SWT.FILL, SWT.BOTTOM, true,false);
-        gd.minimumWidth = 150;
+        gd.minimumWidth = urlTextMinimumWidth;
         urlText.setLayoutData(gd);
         urlText.addModifyListener(new ModifyListener() {              
             @Override

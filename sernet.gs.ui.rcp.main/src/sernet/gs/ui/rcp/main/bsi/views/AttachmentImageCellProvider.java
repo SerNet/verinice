@@ -78,6 +78,7 @@ public class AttachmentImageCellProvider extends ImageCellProvider {
     
     protected void finalize() throws Throwable {
         shutdownCache();
+        super.finalize();
     }
     
     public void shutdownCache() {
@@ -99,8 +100,11 @@ public class AttachmentImageCellProvider extends ImageCellProvider {
     }
     
     private Cache createCache() {
+        final int overFlowToDisk = 1000;
+        final long timeToLive = 3600;
+        final long timeToIdle = 3600;
         cacheId = UUID.randomUUID().toString();
-        cache = new Cache(cacheId, 1000, false, false, 3600, 3600);
+        cache = new Cache(cacheId, overFlowToDisk, false, false, timeToLive, timeToIdle);
         getManager().addCache(cache);
         return cache;
     }

@@ -54,6 +54,9 @@ import sernet.verinice.model.iso27k.Vulnerability;
 public abstract class HtmlWriter {
 
     private static final Logger LOG = Logger.getLogger(HtmlWriter.class);
+    
+    private static final String ISO_8859_1 = "iso-8859-1";
+    private static final String UTF_8 = "utf-8";
   
     public static String getHtml(Object element) throws GSServiceException {
         String html = null;
@@ -73,7 +76,7 @@ public abstract class HtmlWriter {
             if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals("null")) { //$NON-NLS-1$
                 html = toHtml(gefUms);
             } else {
-                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), "iso-8859-1"); //$NON-NLS-1$
+                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), ISO_8859_1); //$NON-NLS-1$
                 
             }
         }
@@ -149,26 +152,26 @@ public abstract class HtmlWriter {
     
     private static String toHtml(BausteinUmsetzung bstums){
     	StringBuilder buf =  new StringBuilder();
-    	writeHtml(buf, bstums.getTitle(), bstums.getDescription(), "iso-8859-1");
+    	writeHtml(buf, bstums.getTitle(), bstums.getDescription(), ISO_8859_1);
     	return buf.toString();
     }
     
     private static String toHtml(MassnahmenUmsetzung mnums){
     	StringBuilder buf =  new StringBuilder();
-    	writeHtml(buf, mnums.getTitle(), mnums.getDescription(), "iso-8859-1");
+    	writeHtml(buf, mnums.getTitle(), mnums.getDescription(), ISO_8859_1);
     	return buf.toString();
     }
     
     private static String toHtml(GefaehrdungsUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
-        writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription(), "iso-8859-1"); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
         RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
-        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), "iso-8859-1"); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     
@@ -196,9 +199,10 @@ public abstract class HtmlWriter {
     
     
    private static String getHtmlFromStream(InputStream is, String encoding) {
+       final int utf8SkipWhitespaceChar = 160;
        try {
-           if ( !(encoding.equalsIgnoreCase("iso-8859-1") || encoding.equalsIgnoreCase("utf-8")) ) { //$NON-NLS-1$ //$NON-NLS-2$
-               encoding = "utf-8"; //$NON-NLS-1$
+           if ( !(encoding.equalsIgnoreCase(ISO_8859_1) || encoding.equalsIgnoreCase(UTF_8)) ) { //$NON-NLS-1$ //$NON-NLS-2$
+               encoding = UTF_8; //$NON-NLS-1$
            }
            
            InputStreamReader read = new InputStreamReader(is, encoding); //$NON-NLS-1$
@@ -213,15 +217,14 @@ public abstract class HtmlWriter {
            while ((line = buffRead.readLine()) != null) {
                if (!skipComplete) {
                    if (line.matches(".*div.*id=\"menuoben\".*") //$NON-NLS-1$
-                           || line.matches(".*div.*class=\"standort\".*")) //$NON-NLS-1$
+                           || line.matches(".*div.*class=\"standort\".*")){ //$NON-NLS-1$
                        skip = true;
-                   else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
+                   } else if (line.matches(".*div.*id=\"content\".*")) { //$NON-NLS-1$
                        skip = false;
                        skipComplete = true;
                    }
                }
 
-               // Logger.getLogger(this.getClass()).debug("PRE: " + line);
 
                // we strip away images et al to keep just the information we
                // need:
@@ -232,13 +235,10 @@ public abstract class HtmlWriter {
                line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
                line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
                line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-               line = line.replace((char) 160, ' '); // replace non-breaking
-                                                       // spaces
+               line = line.replace((char) utf8SkipWhitespaceChar, ' '); // replace non-breaking spaces
 
-               // Logger.getLogger(this.getClass()).debug("POST: " + line);
 
                if (!skip) {
-                   // Logger.getLogger(BrowserView.class).debug(line);
                    b.append(line);
                }
            }

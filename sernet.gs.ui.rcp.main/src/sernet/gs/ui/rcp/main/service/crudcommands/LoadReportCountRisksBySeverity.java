@@ -8,7 +8,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -57,7 +56,6 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
         }
     }
 
-    @SuppressWarnings("restriction")
     public void execute() {
         if(!resultInjectedFromCache){
             try {
@@ -77,6 +75,8 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
                     tolerableRisk = org.getNumericProperty(PROP_ORG_RISKACCEPT_A);
                     ciaRelevantProperty = "scenario_value_method_availability";
                     break;
+                default:
+                    break;
                 }
 
                 // load risk values from elements (following links to process, asset, scenario)
@@ -90,7 +90,6 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
 
                 for (CnATreeElement process : elements) {
                     LoadReportLinkedElements cmnd2 = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
-                    ICommandService cms = getCommandService();
                     cmnd2 = getCommandService().executeCommand(cmnd2);
                     List<CnATreeElement> assets = cmnd2.getElements();
                     for (CnATreeElement asset : assets) {
@@ -138,6 +137,8 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
         case 'a':
             increaseCount(riskA);
             break;
+        default:
+            break;
         }
         
         return row;
@@ -150,12 +151,13 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
      * @param tolerableRisk2
      */
     private void increaseCount(int risk) {
-        if (risk > tolerableRisk)
+        if (risk > tolerableRisk){
             countRYG[0]++; // red
-        else if (risk < tolerableRisk-numYellowFields+1)
+        } else if (risk < tolerableRisk-numYellowFields+1) {
             countRYG[2]++; // green
-        else
+        } else {
             countRYG[1]++; // yellow
+        }
     }
 
     /**
@@ -202,7 +204,7 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
      */
     @Override
     public Object getCacheableResult() {
-        return countRYG;
+        return (countRYG != null) ? countRYG.clone() : null;
     }
   
 }

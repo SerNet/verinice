@@ -38,7 +38,7 @@ import sernet.verinice.interfaces.ICachedCommand;
  */
 public class LoadSamtComplianceRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
+    private static transient Logger log = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
     
     public static final String[] COLUMNS = new String[] { 
         "CATEGORIES",
@@ -52,9 +52,9 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand implements 
     
     private Integer rootElmt;
     
-    private static int THRESHHOLDRED = 2;
-    private static int THRESHHOLDYELLOW = 3;
-    private static int THRESHHOLDGREEN = 5;
+    private static final int THRESHHOLDRED = 2;
+    private static final int THRESHHOLDYELLOW = 3;
+    private static final int THRESHHOLDGREEN = 5;
     
     private boolean resultInjectedFromCache = false;
     
@@ -95,10 +95,10 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand implements 
     }
     
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
+        if(log == null){
+            log = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
         }
-        return LOG;
+        return log;
     }
     
     private List<Entry<String, Double>> sort(Set<Entry<String, Double>> entrySet) {

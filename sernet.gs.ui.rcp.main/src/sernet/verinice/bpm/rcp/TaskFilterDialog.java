@@ -49,11 +49,11 @@ public class TaskFilterDialog extends Dialog {
     
     private final KeyMessage allKeyMessage = new KeyMessage(ALL_KEY,sernet.verinice.bpm.rcp.Messages.TaskFilterDialog_1);
     
-    Combo processCombo;
-    ComboModel<KeyMessage> processComboModel;
+    private Combo processCombo;
+    private ComboModel<KeyMessage> processComboModel;
     
-    Combo typeCombo;
-    ComboModel<KeyMessage> typeComboModel;
+    private Combo typeCombo;
+    private ComboModel<KeyMessage> typeComboModel;
     
     private String processKey;
     private String typeId;
@@ -67,7 +67,9 @@ public class TaskFilterDialog extends Dialog {
      */
     protected TaskFilterDialog(Shell parentShell, String processKey, String taskId, boolean allTasks) {
         super(parentShell);
-        setShellStyle(SWT.MAX | SWT.CLOSE | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
+        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
+        setShellStyle(style | SWT.RESIZE);
         this.processKey = processKey;
         this.typeId = taskId;
         this.allTasks = allTasks;
@@ -222,9 +224,10 @@ public class TaskFilterDialog extends Dialog {
      */
     @Override
     protected Point getInitialLocation(Point initialSize) {
+        final int yPointPadding = 20;
         Point cursorPoint = getShell().getDisplay().getCursorLocation();
         int x = cursorPoint.x - initialSize.x;
-        int y = cursorPoint.y + 20;
+        int y = cursorPoint.y + yPointPadding;
         return new Point(x,y);
     }
     

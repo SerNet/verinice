@@ -70,6 +70,9 @@ public class NewRisikoMassnahmeDialog extends Dialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int textDescriptionWidthHint = 400;
+        final int textDescriptionHeigthHint = 200;
+        
         Composite container = (Composite) super.createDialogArea(parent);
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -122,8 +125,8 @@ public class NewRisikoMassnahmeDialog extends Dialog {
         gridTextDescription.verticalAlignment = SWT.FILL;
         gridTextDescription.grabExcessHorizontalSpace = true;
         gridTextDescription.grabExcessVerticalSpace = true;
-        gridTextDescription.widthHint = 400;
-        gridTextDescription.heightHint = 200;
+        gridTextDescription.widthHint = textDescriptionWidthHint;
+        gridTextDescription.heightHint = textDescriptionHeigthHint;
         textDescription.setLayoutData(gridTextDescription);
 
         return container;

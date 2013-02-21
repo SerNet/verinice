@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -32,10 +32,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class StufenBarChart implements IChartGenerator {
 
@@ -49,9 +46,10 @@ public class StufenBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
+	    final float plotForegroundAlpha = 0.6f;
 		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.StufenBarChart_1, Messages.StufenBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
-		chart.getPlot().setForegroundAlpha(0.6f);
+		chart.getPlot().setForegroundAlpha(plotForegroundAlpha);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
@@ -78,13 +76,4 @@ public class StufenBarChart implements IChartGenerator {
 
 		return dataset;
 	}
-
-	private String getLabel(String key) {
-		PropertyType type = HUITypeFactory.getInstance().getPropertyType(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_UMSETZUNG);
-		if (type == null || type.getOption(key) == null) {
-			return Messages.StufenBarChart_5;
-		}
-		return type.getOption(key).getName();
-	}
-
 }

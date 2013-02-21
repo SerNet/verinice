@@ -72,13 +72,11 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(NoteView.class);
 
-    private CnATreeElement inputElmt;
-
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.NoteView"; //$NON-NLS-1$
 
-    Composite parent;
+    private Composite parent;
 
-    ExpandBar expandBar;
+    private ExpandBar expandBar;
 
     private ISelectionListener selectionListener;
 
@@ -90,7 +88,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
     private IBSIModelListener modelListener;
 
-    List<Note> noteList;
+    private List<Note> noteList;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
@@ -107,14 +105,16 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
     @Override
     public void createPartControl(Composite parent) {
-
+        
+        final int expandBarSpacing = 4;
+        
         this.parent = parent;
         parent.setLayout(new FillLayout());
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         try {
             expandBar = new ExpandBar(parent, SWT.V_SCROLL);
-            expandBar.setSpacing(4);
+            expandBar.setSpacing(expandBarSpacing);
             hookPageSelection();
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.BrowserView_3);
@@ -222,6 +222,9 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     }
 
     public void loadNotes() {
+        final int defaultMargin = 4;
+        final int layoutVerticalSpacing = 10;
+        final int gdHeightHint = 100;
         try {
             LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());
             command = getCommandService().executeCommand(command);
@@ -239,8 +242,11 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
                     note.setCnAElementTitel(getCurrentCnaElement().getTitle());
                     Composite composite = new Composite(expandBar, SWT.NONE);
                     GridLayout layout = new GridLayout(2, false);
-                    layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 4;
-                    layout.verticalSpacing = 10;
+                    layout.marginLeft = defaultMargin;
+                    layout.marginTop = defaultMargin;
+                    layout.marginRight = defaultMargin;
+                    layout.marginBottom = defaultMargin;
+                    layout.verticalSpacing = layoutVerticalSpacing;
                     composite.setLayout(layout);
 
                     GridData gdText = new GridData();
@@ -248,9 +254,10 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
                     gdText.grabExcessVerticalSpace = false;
                     gdText.horizontalAlignment = GridData.FILL;
                     gdText.verticalAlignment = GridData.CENTER;
-                    gdText.heightHint = 100;
+                    gdText.heightHint = gdHeightHint;
                     gdText.verticalSpan = 2;
-                    Text text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+                    int style = SWT.BORDER | SWT.MULTI | SWT.READ_ONLY;
+                    Text text = new Text(composite, style | SWT.WRAP | SWT.V_SCROLL);
                     text.setLayoutData(gdText);
                     if (note.getText() != null) {
                         text.setText(note.getText());
@@ -382,7 +389,6 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     }
 
     private void setNewInput(CnATreeElement elmt) {
-        this.inputElmt = elmt;
         setViewTitle(Messages.NoteView_8 + " " + elmt.getTitle());
     }
 

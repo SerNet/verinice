@@ -88,8 +88,6 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	
 	private Button[] radioButtonMode = new Button[2];
 	
-	private Button buttonRemove;
-	
 	private static final int MARGIN_WIDTH_DEFAULT = 10;
 	
 	private static final int MARGIN_HEIGHT_DEFAULT = 10;
@@ -198,7 +196,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
             }
         };
 		
-		buttonRemove = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_16, null, removeListener);
+        
+        Button buttonRemove = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_16, null, removeListener);
 		gridData = generateGridData(null, null, null, SWT.RIGHT, null, Integer.valueOf(COLSPAN_DEFAULT));
 		buttonRemove.setLayoutData(gridData);
 
@@ -286,6 +285,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	}
 
 	private void createViewer(Composite parent) {
+	    final int gridDataHorizontalSpan = 5;
 	    int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
 	    style = style | SWT.FULL_SELECTION | SWT.BORDER;
 		viewer = new TableViewer(parent, style);
@@ -315,7 +315,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 		// Layout the viewer
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
-		gridData.horizontalSpan = 5;
+		gridData.horizontalSpan = gridDataHorizontalSpan;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;

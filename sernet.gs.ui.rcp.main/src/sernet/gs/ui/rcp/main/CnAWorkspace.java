@@ -262,7 +262,8 @@ public class CnAWorkspace {
 	}
 
 	public void createGstoolImportDatabaseConfig(String url, String user, String pass) throws IOException {
-		HashMap<String, String> settings = new HashMap<String, String>(5);
+	    final int settingsSize = 5;
+		HashMap<String, String> settings = new HashMap<String, String>(settingsSize);
 		settings.put("url", url.replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		settings.put("user", user); //$NON-NLS-1$
 		settings.put("pass", pass); //$NON-NLS-1$

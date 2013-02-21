@@ -19,8 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views.chart;
 
 import java.awt.Color;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -49,9 +49,10 @@ public class UmsetzungBarChart implements IChartGenerator {
 	}
 
 	protected JFreeChart createBarChart(Object dataset) {
+	    final float plotForegroundAlpha = 0.6f;
 		JFreeChart chart = ChartFactory.createStackedBarChart3D(null, Messages.UmsetzungBarChart_1, Messages.UmsetzungBarChart_2, (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
-		chart.getPlot().setForegroundAlpha(0.6f);
+		chart.getPlot().setForegroundAlpha(plotForegroundAlpha);
 		chart.setBackgroundPaint(Color.white);
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 

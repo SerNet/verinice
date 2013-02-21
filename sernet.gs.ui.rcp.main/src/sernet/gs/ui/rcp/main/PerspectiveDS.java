@@ -28,28 +28,21 @@ import sernet.verinice.interfaces.ActionRightIDs;
 public class PerspectiveDS implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.dsperspective";
 	
-    public static HashMap<String, String> viewsRightIDs;
+    public static final HashMap<String, String> VIEWS_RIGHT_IDS;
     
     static{
-        viewsRightIDs = new HashMap<String, String>();
-        viewsRightIDs.put(DSModelView.ID, ActionRightIDs.DSMODELVIEW);
+        VIEWS_RIGHT_IDS = new HashMap<String, String>();
+        VIEWS_RIGHT_IDS.put(DSModelView.ID, ActionRightIDs.DSMODELVIEW);
     }
 	
 	public void createInitialLayout(IPageLayout layout) {
+	    final float modelViewRatio = 0.25f;
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
 		
-		//layout.addStandaloneView(NavigationView.ID,  false, IPageLayout.LEFT, 0.25f, editorArea);
-		layout.addView(DSModelView.ID,  IPageLayout.LEFT, 0.25f, editorArea);
+		layout.addView(DSModelView.ID,  IPageLayout.LEFT, modelViewRatio, editorArea);
 		
 		layout.getViewLayout(DSModelView.ID).setCloseable(true);
 		layout.addPerspectiveShortcut(ID);
-
-//		PlatformUI.getWorkbench().showPerspective(YOUR_PERSPECTIVE_ID, 
-//				PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-
-
 	}
-	
-	
 }

@@ -42,9 +42,9 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 		
-		if (columnIndex == 0)
+		if (columnIndex == 0){
 		  return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
-		
+		}
 		return null;
 	}
 
@@ -56,18 +56,20 @@ public class TableViewerLabelProvider implements ITableLabelProvider {
 	 *        in which the label appears
 	 */
 	public String getColumnText(Object element, int columnIndex) {
-		GefaehrdungsUmsetzung	 gef = (GefaehrdungsUmsetzung) element;
-		switch (columnIndex) {
-		case 0:
-			return null;
-		case 1:
-			return gef.getId();
-		case 2:
-			return gef.getTitle();
-		case 3:
-			return gef.getAlternativeText();
-		};
-		return "";
+	    GefaehrdungsUmsetzung	 gef = (GefaehrdungsUmsetzung) element;
+	    switch (columnIndex) {
+	    case 0:
+	        return null;
+	    case 1:
+	        return gef.getId();
+	    case 2:
+	        return gef.getTitle();
+	    case 3:
+	        return gef.getAlternativeText();
+	    default:
+	        break;
+	    }
+	    return "";
 	}
 
 	/**

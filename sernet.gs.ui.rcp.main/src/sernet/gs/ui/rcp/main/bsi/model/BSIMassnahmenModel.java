@@ -98,7 +98,8 @@ public class BSIMassnahmenModel {
 			LOG.debug(Messages.BSIMassnahmenModel_0);
 			return loadBausteineRemote();
 		}
-
+		final int maxTaskSteps = 5;
+		
 		String gsPath = config.getGsPath();
 		String dsPath = config.getDsPath();
 		boolean fromZipFile = config.isFromZipFile();
@@ -136,7 +137,7 @@ public class BSIMassnahmenModel {
 			scrape.setCacheDir(cacheDir); //$NON-NLS-1$
 			
 			Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
-			mon.beginTask(Messages.BSIMassnahmenModel_3, 5);
+			mon.beginTask(Messages.BSIMassnahmenModel_3, maxTaskSteps);
 			List<Baustein> alleBst = new ArrayList<Baustein>();
 
 			processBausteinLayer(mon, alleBst, "b01", 0);
@@ -280,6 +281,7 @@ public class BSIMassnahmenModel {
 	}
 	
 	public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
+	    final int utf8NoBreakSpace = 160;
 	    try {
 	        InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8 ); //$NON-NLS-1$
 			BufferedReader buffRead = new BufferedReader(read);
@@ -310,7 +312,7 @@ public class BSIMassnahmenModel {
 				line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				line = line.replace((char) 160, ' '); // replace non-breaking spaces
+				line = line.replace((char) utf8NoBreakSpace, ' '); // replace non-breaking spaces
 	
 				if (!skip) {
 					b.append(line);

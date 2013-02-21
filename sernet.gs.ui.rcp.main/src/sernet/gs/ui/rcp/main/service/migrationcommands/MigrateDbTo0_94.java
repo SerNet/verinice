@@ -130,6 +130,8 @@ public class MigrateDbTo0_94 extends DbMigration {
 
 		public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
+		    final int debugModulo = 500;
+		    final int commitModulo = 10000;
 			Connection connection = session.connection();
 			connection.setAutoCommit(false);
 			
@@ -166,12 +168,12 @@ public class MigrateDbTo0_94 extends DbMigration {
 
 				// speed up debug logging:
 				++i;
-				if (log.isDebugEnabled() && (i % 500 == 0))
+				if (log.isDebugEnabled() && (i % debugModulo == 0))
 				{
 					log.debug("migrating table [" + table + "] - processed elements: " + i + "/" + size);
 				}
 				
-				if (i % 10000 == 0)
+				if (i % commitModulo == 0)
 				{
 					connection.commit();
 				}

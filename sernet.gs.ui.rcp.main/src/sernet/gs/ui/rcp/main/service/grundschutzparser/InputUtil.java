@@ -23,8 +23,9 @@ import java.io.InputStream;
 public abstract class InputUtil {
 
     public static String streamToString(InputStream in, String charset) throws IOException {
+        final int byteArraySize = 4096;
         StringBuffer out = new StringBuffer();
-        byte[] b = new byte[4096];
+        byte[] b = new byte[byteArraySize];
         if(in!=null) {
             for (int n; (n = in.read(b)) != -1;) {
                 out.append(new String(b, 0, n, charset));

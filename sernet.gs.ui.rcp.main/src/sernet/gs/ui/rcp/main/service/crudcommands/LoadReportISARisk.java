@@ -62,12 +62,12 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
         };
     private Integer rootElmt;
     
-    private int risk_0 = 0;
-    private int risk_1 = 0;
-    private int risk_2 = 0;
-    private int risk_3 = 0;
-    private int risk_4 = 0;
-    private int risk_sum = 0;
+    private int risk0 = 0;
+    private int risk1 = 0;
+    private int risk2 = 0;
+    private int risk3 = 0;
+    private int risk4 = 0;
+    private int riskSum = 0;
     private double p0 = 0.0;
     private double p1 = 0.0;
     private double p2 = 0.0;
@@ -118,19 +118,19 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
                                 if(!alreadySeenST.contains(t.getUuid())){
                                     int riskValue = Integer.parseInt(t.getEntity().getSimpleValue(PROP_ISATOPIC_RISK));
                                     switch(riskValue){
-                                    case -1: risk_0++; risk_sum++;
+                                    case -1: risk0++; riskSum++;
                                     break;
 
-                                    case 0: risk_1++; risk_sum++;
+                                    case 0: risk1++; riskSum++;
                                     break;
 
-                                    case 1: risk_2++; risk_sum++;
+                                    case 1: risk2++; riskSum++;
                                     break;
 
-                                    case 2: risk_3++; risk_sum++;
+                                    case 2: risk3++; riskSum++;
                                     break;
 
-                                    case 3: risk_4++; risk_sum++;
+                                    case 3: risk4++; riskSum++;
                                     break;
 
                                     default:
@@ -146,20 +146,20 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
                 }
                 alreadySeenCG.add(g.getUuid());
             }
-            if(risk_sum > 0){
-                p0 = computePercentage(risk_0);
-                p1 = computePercentage(risk_1);
-                p2 = computePercentage(risk_2);
-                p3 = computePercentage(risk_3);
-                p4 = computePercentage(risk_4);
-                pSum = new Double(p0) + new Double(p1) + new Double(p2) + new Double(p3) + new Double(p4);
+            if(riskSum > 0){
+                p0 = computePercentage(risk0);
+                p1 = computePercentage(risk1);
+                p2 = computePercentage(risk2);
+                p3 = computePercentage(risk3);
+                p4 = computePercentage(risk4);
+                pSum = p0 + p1 + p2 + p3 + p4;
             }
-            List<String> asList = Arrays.asList(Integer.toString(risk_0), 
-                    Integer.toString(risk_1), 
-                    Integer.toString(risk_2),
-                    Integer.toString(risk_3),
-                    Integer.toString(risk_4),
-                    Integer.toString(risk_sum),
+            List<String> asList = Arrays.asList(Integer.toString(risk0), 
+                    Integer.toString(risk1), 
+                    Integer.toString(risk2),
+                    Integer.toString(risk3),
+                    Integer.toString(risk4),
+                    Integer.toString(riskSum),
                     adjustPercentageString(p0),
                     adjustPercentageString(p1),
                     adjustPercentageString(p2),
@@ -174,8 +174,9 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
     }
     
     private double computePercentage(Integer riskValue){
-        Double d = new Double(riskValue).doubleValue() / new Double(risk_sum).doubleValue();
-        return d * 100.00;
+        final double maxPercent = 100.00;
+        double d = (double)riskValue.intValue() / (double)riskSum;
+        return d * maxPercent;
     }
     
     private String adjustPercentageString(Double value){
@@ -183,50 +184,9 @@ public class LoadReportISARisk extends GenericCommand implements ICachedCommand{
         return df.format(value.doubleValue()) + "%";
     }
     
-    private ArrayList<String> getArrayList(int input){
-        ArrayList<String> list = new ArrayList<String>(0);
-        list.add(String.valueOf(input));
-        return list;
-    }
-    
     public List<List<String>> getResult(){
         result.remove(null);
         return result;
-    }
-
-    private CnATreeElement loadChildren(CnATreeElement el) {
-        if (el.isChildrenLoaded()) {
-            return el;
-        } 
-        LoadChildrenForExpansion command;
-        command = new LoadChildrenForExpansion(el);
-        try {
-            command = getCommandService().executeCommand(command);
-            CnATreeElement newElement = command.getElementWithChildren();
-            newElement.setChildrenLoaded(true);
-            return newElement;
-        } catch (CommandException e) {
-            LOG.error("error while loading children of CnaTreeElment", e);
-        }
-        return null;
-    }
-    
-    /**
-     * sets all result values to 0, to be ready for next iteration (controlgroup)
-     */
-    private void resetValues(){
-        risk_0 = 0;
-        risk_1 = 0;
-        risk_2 = 0;
-        risk_3 = 0;
-        risk_4 = 0;
-        risk_sum = 0;
-        p0 = 0.0;
-        p1 = 0.0;
-        p2 = 0.0;
-        p3 = 0.0;
-        p4 = 0.0;
-        pSum = 0.0;
     }
 
     /* (non-Javadoc)

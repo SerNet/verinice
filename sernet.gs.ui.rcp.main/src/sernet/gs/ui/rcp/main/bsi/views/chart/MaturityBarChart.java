@@ -59,7 +59,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
             return null;
         }
 
-        super.elmt = (ControlGroup) elmt;
+        setElmt((ControlGroup) elmt);
         try {
             return createBarChart(createBarDataset());
         } catch (CommandException e) {
@@ -70,12 +70,14 @@ public class MaturityBarChart extends MaturitySpiderChart {
     }
     
     protected JFreeChart createBarChart(Object dataset) {
+        final float plotForegroundAlpha = 0.6f;
+        final int axisUpperBound = 9;
         JFreeChart chart = ChartFactory.createBarChart3D(null, 
                 Messages.MaturityBarChart_1, Messages.MaturityBarChart_2,
                 (CategoryDataset) dataset, PlotOrientation.HORIZONTAL, false,
                 true, false);
         chart.setBackgroundPaint(Color.white);
-        chart.getPlot().setForegroundAlpha(0.6f);
+        chart.getPlot().setForegroundAlpha(plotForegroundAlpha);
         chart.setBackgroundPaint(Color.white);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         
@@ -84,7 +86,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
         plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
         
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setUpperBound(9);  
+        axis.setUpperBound(axisUpperBound);  
         
         return chart;
     }
@@ -93,7 +95,7 @@ public class MaturityBarChart extends MaturitySpiderChart {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         MassnahmenSummaryHome dao = new MassnahmenSummaryHome();
 
-        Map<String, Double> items1 = dao.getControlGroups(elmt);
+        Map<String, Double> items1 = dao.getControlGroups(getElmt());
         Set<Entry<String, Double>> entrySet = items1.entrySet();
         for (Entry<String, Double> entry : entrySet) {
             dataset.addValue(entry.getValue(), Messages.MaturityBarChart_3, entry.getKey());

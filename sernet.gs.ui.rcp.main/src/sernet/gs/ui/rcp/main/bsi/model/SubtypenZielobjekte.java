@@ -33,14 +33,14 @@ public class SubtypenZielobjekte {
 
     private static final Logger LOG = Logger.getLogger(SubtypenZielobjekte.class);
 
-    List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(80);
-
-    private Properties properties;
+    final int mappingListSize = 80;
+    
+    private List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(mappingListSize);
 
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
 
     public SubtypenZielobjekte() {
-        properties = new Properties();
+        Properties properties = new Properties();
         InputStream stream = getClass().getClassLoader().getResourceAsStream(SUBTYP_MAPPING_FILE);
         try {
             properties.load(stream);

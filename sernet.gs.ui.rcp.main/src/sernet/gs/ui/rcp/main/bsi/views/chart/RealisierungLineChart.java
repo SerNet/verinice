@@ -21,8 +21,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -61,6 +61,9 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 	}
 
 	private JFreeChart createProgressChart(Object dataset) {
+	    final double plotGap = 10.0;
+	    final int axisUpperBoundPadding = 50;
+	    final int labelFontSize = 10;
 		XYDataset data1 = (XYDataset) dataset;
 		XYItemRenderer renderer1 = new StandardXYItemRenderer();
 		NumberAxis rangeAxis1 = new NumberAxis(Messages.RealisierungLineChart_1);
@@ -68,7 +71,7 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 		subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 
 		CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new DateAxis(Messages.RealisierungLineChart_2));
-		plot.setGap(10.0);
+		plot.setGap(plotGap);
 
 		plot.add(subplot1, 1);
 		plot.setOrientation(PlotOrientation.VERTICAL);
@@ -82,13 +85,13 @@ public class RealisierungLineChart implements IChartGenerator, Serializable {
 		int totalNum = command.getTotalCount();
 
 		NumberAxis axis = (NumberAxis) subplot1.getRangeAxis();
-		axis.setUpperBound(totalNum + 50);
+		axis.setUpperBound(totalNum + axisUpperBoundPadding);
 
 		ValueMarker bst = new ValueMarker(totalNum);
 		bst.setPaint(Color.GREEN);
 		bst.setLabel(Messages.RealisierungLineChart_4);
 		bst.setLabelAnchor(RectangleAnchor.LEFT);
-		bst.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, 10)); //$NON-NLS-1$
+		bst.setLabelFont(new Font("SansSerif", Font.ITALIC + Font.BOLD, labelFontSize)); //$NON-NLS-1$
 		bst.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
 		subplot1.addRangeMarker(bst, Layer.BACKGROUND);
 

@@ -127,8 +127,8 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 		final Label labelLocation = new Label(compositeSaveLocation, SWT.NONE);
 		labelLocation.setText(Messages.ExportDialog_5);
 		final Text txtLocation = new Text(compositeSaveLocation, SWT.SINGLE | SWT.BORDER);
-		short textLocationWidth = 300;
-		short textLocationHeight = 30;
+		final short textLocationWidth = 300;
+		final short textLocationHeight = 30;
 		txtLocation.setSize(textLocationWidth, textLocationHeight);
 		final RowData textLocationData = new RowData();
 		textLocationData.width = textLocationWidth;

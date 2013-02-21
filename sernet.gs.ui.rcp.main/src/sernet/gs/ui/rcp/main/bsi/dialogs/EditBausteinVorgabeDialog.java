@@ -70,6 +70,9 @@ public class EditBausteinVorgabeDialog extends Dialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        
+        final int textDescriptionWidthHint = 400;
+        
         Composite composite = (Composite) super.createDialogArea(parent);
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -93,7 +96,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
         GridData gridTextDescription = new GridData();
         gridTextDescription.horizontalAlignment = SWT.FILL;
         gridTextDescription.grabExcessHorizontalSpace = true;
-        gridTextDescription.widthHint = 400;
+        gridTextDescription.widthHint = textDescriptionWidthHint;
         textName.setLayoutData(gridTextDescription);
         textName.setText(vorschlag.getName());
 
@@ -108,7 +111,7 @@ public class EditBausteinVorgabeDialog extends Dialog {
         GridData gridTextDescription2 = new GridData();
         gridTextDescription2.horizontalAlignment = SWT.FILL;
         gridTextDescription2.grabExcessHorizontalSpace = true;
-        gridTextDescription2.widthHint = 400;
+        gridTextDescription2.widthHint = textDescriptionWidthHint;
         textBausteine.setLayoutData(gridTextDescription2);
         textBausteine.setText(vorschlag.getBausteine());
 

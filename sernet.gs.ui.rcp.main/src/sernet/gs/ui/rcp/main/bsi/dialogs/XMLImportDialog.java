@@ -87,8 +87,7 @@ public class XMLImportDialog extends Dialog {
     
     private Text certificatePathField;
     
-    private Button useDefaultFolderButton;
-    private boolean useDefaultFolder = true;
+    private boolean useDefaultFolder;
     private String defaultFolder;
     
     private Integer format = SyncParameter.EXPORT_FORMAT_DEFAULT;
@@ -157,22 +156,38 @@ public class XMLImportDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int layoutNumColumns = 5;
+        final int layoutVerticalSpacing = 15;
+        final int separatorHorizontalSpan = layoutNumColumns;
+        final int operationHorizontalSpan = separatorHorizontalSpan;
+        final int operationVerticalSpan = 3;
+        final int pbeNumColumns = operationVerticalSpan;
+        final int cryptGroupHorizontalSpan = operationHorizontalSpan;
+        final int passwordWidthHint = 280;
+        final int certificateWidthHint = passwordWidthHint;
+        final int dataGroupHorizontalSpan = cryptGroupHorizontalSpan;
+        final int dataGroupNumColumns = 4;
+        final int dataIntroHorizontalSpan = dataGroupNumColumns;
+        final int dataPathHorizontalSpan = pbeNumColumns;
+        
+        Button useDefaultFolderButton;
+        
         getDefaultFolder();
         final Composite container = (Composite) super.createDialogArea(parent);
 
         GridLayout layout = new GridLayout();
-        layout.numColumns = 5;
-        layout.verticalSpacing = 15;
+        layout.numColumns = layoutNumColumns;
+        layout.verticalSpacing = layoutVerticalSpacing;
         container.setLayout(layout);
 
         Label seperator = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-        seperator.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 5, 1));
+        seperator.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, separatorHorizontalSpan, 1));
 
         // Operations of database (update,insert,delete)
 
         Group operationGroup = new Group(container, SWT.NULL);
         operationGroup.setText(Messages.XMLImportDialog_6);
-        operationGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 5, 3));
+        operationGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, operationHorizontalSpan, operationVerticalSpan));
 
         layout = new GridLayout();
         layout.numColumns = 2;
@@ -231,8 +246,8 @@ public class XMLImportDialog extends Dialog {
         
         final Group cryptGroup = new Group(container, SWT.NULL);
         cryptGroup.setText(Messages.XMLImportDialog_15);
-        cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 5, 1));       
-        GridLayout pbeLayout = new GridLayout(3, false);
+        cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, cryptGroupHorizontalSpan, 1));       
+        GridLayout pbeLayout = new GridLayout(pbeNumColumns, false);
         cryptGroup.setLayout(pbeLayout);
         
         // by default, no encryption is selected
@@ -248,7 +263,7 @@ public class XMLImportDialog extends Dialog {
         
         passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = passwordWidthHint;
         passwordField.setLayoutData(data); 
         // FocusListener is added to passwordField afterwards
         new Label(cryptGroup, SWT.NONE);
@@ -292,7 +307,7 @@ public class XMLImportDialog extends Dialog {
        
         certificatePathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER);
         data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = certificateWidthHint;
         certificatePathField.setLayoutData(data);
         certificatePathField.addFocusListener(new FocusAdapter() {
             @Override
@@ -419,18 +434,18 @@ public class XMLImportDialog extends Dialog {
 
         Group dataGroup = new Group(container, SWT.NULL);
         dataGroup.setText(Messages.XMLImportDialog_11);
-        dataGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 5, 1));
+        dataGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, dataGroupHorizontalSpan, 1));
         layout = new GridLayout();
-        layout.numColumns = 4;
+        layout.numColumns = dataGroupNumColumns;
         layout.makeColumnsEqualWidth = true;
         dataGroup.setLayout(layout);
 
         Label dataIntro1 = new Label(dataGroup, SWT.LEFT);
         dataIntro1.setText(Messages.XMLImportDialog_12);
-        dataIntro1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 4, 1));
+        dataIntro1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, dataIntroHorizontalSpan, 1));
 
         dataPathText = new Text(dataGroup, SWT.BORDER);
-        dataPathText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 3, 1));
+        dataPathText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, dataPathHorizontalSpan, 1));
         dataPathText.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
                 dataFile = new File(dataPathText.getText());
@@ -656,7 +671,8 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
-        if(changedElement!=null && changedElement.size()>9) {
+        final int maxChangedElements = 9;
+        if(changedElement!=null && changedElement.size()>maxChangedElements) {
             // if more than 9 elements changed or added do a complete reload
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         } else {

@@ -104,9 +104,10 @@ public class IndividualProcessWizard extends Wizard {
     
     @SuppressWarnings("deprecation")
     public void setTemplate(IndividualServiceParameter template) {
+        final int calYearPadding = 1900;
         Date dueDate = template.getDueDate();
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, dueDate.getYear()+1900);
+        cal.set(Calendar.YEAR, dueDate.getYear()+calYearPadding);
         cal.set(Calendar.MONTH, dueDate.getMonth());
         cal.set(Calendar.DAY_OF_MONTH, dueDate.getDate());
         datePage.setDueDate(cal);

@@ -70,10 +70,11 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public void createControl(Composite parent) {     
+    public void createControl(Composite parent) {   
+        final int compCharToConvert = 40;
         Composite composite = new Composite(parent, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(compCharToConvert);
         composite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -125,7 +126,9 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TableViewer table = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
+        
+        TableViewer table = new TableViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         table.getControl().setLayoutData(gd);

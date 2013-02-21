@@ -53,7 +53,7 @@ public class NewQmIssueDialog extends TitleAreaDialog {
     private static final String[] PRIORITY_LABEL_ARRAY = {Messages.NewQmIssueDialog_0,Messages.NewQmIssueDialog_1,Messages.NewQmIssueDialog_2};
     private static final int DEFAULT_PRIORITY_INDEX = 1;
     
-    private int dialogWidth = 400;
+    private final int dialogWidth = 400;
     
     private String elementTitle;
     
@@ -79,15 +79,16 @@ public class NewQmIssueDialog extends TitleAreaDialog {
     public NewQmIssueDialog(Shell activeShell, String title) {
         this(activeShell);
         final int maxTitleLength = 40;
+        String newTitle = title;
         if(title.length()>maxTitleLength) {
-            title = title.substring(0, maxTitleLength) + "..."; //$NON-NLS-1$
+            newTitle = title.substring(0, maxTitleLength) + "..."; //$NON-NLS-1$
         }
-        this.elementTitle = title;
+        this.elementTitle = newTitle;
     }
 
 
     private void addFormElements(Composite composite) {
-        final int dialogWidthMinuend = 30;
+        final int dialogWidthSubtrahend = 30;
         final int gdHeightHint = 150;
         if(elementTitle!=null) {
             final Label objectLabel = new Label(composite, SWT.NONE);
@@ -102,8 +103,8 @@ public class NewQmIssueDialog extends TitleAreaDialog {
             object.setFont(newFont);
             GC gc = new GC(object);
             Point size = gc.textExtent(elementTitle);
-            if(size.x > dialogWidth - dialogWidthMinuend) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-dialogWidthMinuend) + "..."; //$NON-NLS-1$
+            if(size.x > dialogWidth - dialogWidthSubtrahend) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
             }
             object.setText(elementTitle);
         }

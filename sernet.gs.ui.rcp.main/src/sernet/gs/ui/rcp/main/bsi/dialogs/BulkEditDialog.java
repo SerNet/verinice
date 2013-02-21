@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -40,18 +41,20 @@ import sernet.snutils.DBException;
 
 public class BulkEditDialog extends Dialog {
 
+    private static final Logger LOG = Logger.getLogger(BulkEditDialog.class);
+
     private EntityType entType;
     private Entity entity = null;
     private boolean useRules = false;
     private String title = Messages.BulkEditDialog_0;
-
+    
     public BulkEditDialog(Shell parent, EntityType entType) {
         super(parent);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.entType = entType;
     }
 
-    public BulkEditDialog(Shell shell, EntityType entType2, boolean b, String title, Entity entity) {
+    public BulkEditDialog(Shell shell, EntityType entType2, String title, Entity entity) {
         this(shell, entType2);
         useRules = true;
         this.title = title;
@@ -61,12 +64,16 @@ public class BulkEditDialog extends Dialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
+        final int shellWidth = 440;
+        final int shellHeight = 800;
+        final int shellLocationXSubtrahend = 200;
+        final int shellLocationYSubtrahend = 400;
         newShell.setText(title);
-        newShell.setSize(440, 800);
+        newShell.setSize(shellWidth, shellHeight);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-200, cursorLocation.y-400));
+        newShell.setLocation(new Point(cursorLocation.x-shellLocationXSubtrahend, cursorLocation.y-shellLocationYSubtrahend));
     }
 
     @Override
@@ -94,7 +101,7 @@ public class BulkEditDialog extends Dialog {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Error creating BulkeditDialog", e);
         }
         return null;
     }

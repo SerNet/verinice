@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
@@ -43,12 +43,10 @@ import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MaturitySpiderChart implements ISelectionChartGenerator {
 
-    protected ControlGroup elmt;
+    private ControlGroup elmt;
 
     protected JFreeChart createSpiderChart(Object dataset) {
         SpiderWebPlot plot = new SpiderWebPlot((CategoryDataset) dataset);
-        // plot.setStartAngle(54);
-        // plot.setInteriorGap(0.40);
         plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
 
         plot.setSeriesPaint(0, new Color(0.0f, 1f, 0f, 1f)); // green
@@ -123,9 +121,9 @@ public class MaturitySpiderChart implements ISelectionChartGenerator {
      * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
     public JFreeChart createChart(CnATreeElement elmt) {
-        if (!(elmt instanceof ControlGroup))
+        if (!(elmt instanceof ControlGroup)){
             return null;
-
+        }
         this.elmt = (ControlGroup) elmt;
         try {
             return createSpiderChart(createSpiderDataset());
@@ -143,6 +141,14 @@ public class MaturitySpiderChart implements ISelectionChartGenerator {
      */
     public JFreeChart createChart() {
         return null;
+    }
+
+    public ControlGroup getElmt() {
+        return elmt;
+    }
+
+    public void setElmt(ControlGroup elmt) {
+        this.elmt = elmt;
     }
 
 }

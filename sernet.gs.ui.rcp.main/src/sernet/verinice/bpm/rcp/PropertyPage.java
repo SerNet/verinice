@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -69,11 +68,11 @@ public class PropertyPage extends WizardPage {
     
     private TreeViewer tableSelected;
     private TreeViewer table;
-    PropertyTreeContentProvider selectedContentProvider = new PropertyTreeContentProvider();
-    PropertyTreeContentProvider contentProvider = new PropertyTreeContentProvider();
+    private PropertyTreeContentProvider selectedContentProvider = new PropertyTreeContentProvider();
+    private PropertyTreeContentProvider contentProvider = new PropertyTreeContentProvider();
     
-    Button addAllButton;
-    Button removeAllButton;
+    private Button addAllButton;
+    private Button removeAllButton;
     
     private List selectedItems; 
     private List unselectedItems = new ArrayList();
@@ -91,22 +90,27 @@ public class PropertyPage extends WizardPage {
     }   
 
     private void addFormElements(Composite parent) {
+        final int fourCCompositeCharLength = 20;
+        final int fourCCompositeNumColumns = 3;
+        final int leftCompositeCharLength = 40;
+        final int rightCompositeCharLength = leftCompositeCharLength;
+
         Composite composite = new Composite(parent, SWT.FILL);
         composite.setLayout(new GridLayout());
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         
         Composite fourColumnComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = convertHeightInCharsToPixels(20);
+        gridData.heightHint = convertHeightInCharsToPixels(fourCCompositeCharLength);
         fourColumnComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(3, false);
+        GridLayout gridLayout = new GridLayout(fourCCompositeNumColumns, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         fourColumnComposite.setLayout(gridLayout);
 
         Composite leftComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(leftCompositeCharLength);
         leftComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -122,7 +126,7 @@ public class PropertyPage extends WizardPage {
 
         Composite rightComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(rightCompositeCharLength);
         rightComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -344,22 +348,9 @@ public class PropertyPage extends WizardPage {
         label.setText(title);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        TreeViewer table = new TreeViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
-
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        table.getControl().setLayoutData(gd);
-
-        table.setUseHashlookup(true);
-
-        return table;
-    }
-    
-    private TableViewer createTable(Composite parent, String title) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(title);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-
-        TableViewer table = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
+        
+        TreeViewer table = new TreeViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         table.getControl().setLayoutData(gd);
@@ -375,11 +366,11 @@ public class PropertyPage extends WizardPage {
      */
     @Override
     public void createControl(Composite parent) {
+        final int layoutMarginWidth = 10;
         final Composite composite = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(1, true);
-        layout.marginWidth = 10;
+        layout.marginWidth = layoutMarginWidth;
         composite.setLayout(layout);
-        //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);  
         

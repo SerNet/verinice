@@ -114,6 +114,11 @@ public class DocumentView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+	    
+	    final int colum1Width = 200;
+        final int colum2Width = 100;
+        final int colum3Width = colum2Width;
+	    
 		viewer = new TreeViewer(parent,SWT.FULL_SELECTION | SWT.MULTI);
 		viewer.getTree().setLinesVisible(true);
 		viewer.getTree().setHeaderVisible(true);
@@ -175,9 +180,9 @@ public class DocumentView extends ViewPart {
 		
 		setInput();
 		
-		column.getColumn().setWidth(200);
-		column2.getColumn().setWidth(100);
-		column3.getColumn().setWidth(100);
+		column.getColumn().setWidth(colum1Width);
+		column2.getColumn().setWidth(colum2Width);
+		column3.getColumn().setWidth(colum3Width);
 		
 		makeActions();
 		hookActions();

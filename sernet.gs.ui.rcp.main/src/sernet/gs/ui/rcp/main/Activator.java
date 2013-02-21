@@ -475,6 +475,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     public static void checkDbVersion() throws CommandException {
         final boolean[] done = new boolean[1];
+        final int sleepTime = 1000;
+        final int maxStartTime = 30000;
         done[0] = false;
         Thread timeout = new Thread() {
             @Override
@@ -482,9 +484,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 long startTime = System.currentTimeMillis();
                 while (!done[0]) {
                     try {
-                        sleep(1000);
+                        sleep(sleepTime);
                         long now = System.currentTimeMillis();
-                        if (now - startTime > 30000) {
+                        if (now - startTime > maxStartTime) {
                             ExceptionUtil.log(new Exception(sernet.gs.ui.rcp.main.Messages.Activator_8), sernet.gs.ui.rcp.main.Messages.Activator_10);
                             return;
                         }

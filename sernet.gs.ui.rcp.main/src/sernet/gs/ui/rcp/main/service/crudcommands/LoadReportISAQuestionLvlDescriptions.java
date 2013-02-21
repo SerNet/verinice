@@ -39,7 +39,6 @@ import sernet.verinice.model.samt.SamtTopic;
 public class LoadReportISAQuestionLvlDescriptions extends GenericCommand implements ICachedCommand{
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionLvlDescriptions.class);
-    private static final String CONTROL_DESCRIPTION = "control_desc"; // content shown in objectbrowser when control selected
 
     private Integer requestedLvl = 0;
     private Integer rootElmt;
@@ -128,7 +127,7 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                         }
                         // first results needs lvlPrefix and be bold
                         if(count == 0){
-                            description = "<B> Level " + String.valueOf(requestedLvl) + ": " + description + "</B>";
+                            description = "<B> Level " + requestedLvl + ": " + description + "</B>";
                             //every result > 1 needs to be a list item
                         } else {
                             description = "<LI>" + description + "</LI>";
@@ -169,13 +168,14 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
      */
     private int getLevel(String controlGroupTitle){
         int lvl = 0;
+        final int maxSupportedLvl = 3;
         if(controlGroupTitle.contains(",")){
-            String lvlString = controlGroupTitle.substring(controlGroupTitle.lastIndexOf(",") + 1).trim();
+            String lvlString = controlGroupTitle.substring(controlGroupTitle.lastIndexOf(',') + 1).trim();
             if(lvlString.contains(" ")){
-                String lvlNrString = lvlString.substring(lvlString.lastIndexOf(" ")).trim();
+                String lvlNrString = lvlString.substring(lvlString.lastIndexOf(' ')).trim();
                 try{
                     lvl = Integer.parseInt(lvlNrString);
-                    if(lvl > 3){ // lvl > 3 not supported
+                    if(lvl > maxSupportedLvl){ // lvl > 3 not supported
                         lvl  = 0;
                     }
                 } catch (NumberFormatException e){

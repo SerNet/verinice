@@ -117,17 +117,20 @@ public class ControlMaturityRow implements IOOTableRow, ICnaItemRow {
 
     public int getCellType(int column) {
 	    Matcher match = numbersOnly.matcher(getCellAsString(column));
-	    if (match.matches())
+	    if (match.matches()){
 	        return IOOTableRow.CELL_TYPE_DOUBLE;
-	    else
+	    } else {
 	        return IOOTableRow.CELL_TYPE_STRING;
+	    }
 	}
 
 	public int getNumColumns() {
-		if (properties == null)
+	    final int propertiesSizePadding = 3;
+		if (properties == null){
 			return 0;
+		}
 		// add two calculated columns:
-		return properties.size()+3;
+		return properties.size()+propertiesSizePadding;
 	}
 	
 	public String getRowStyle() {

@@ -339,12 +339,15 @@ public class BSIElementEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
+        final int sashWeight1 = 66;
+        final int sashWeight2 = 33;
+        final int sashWidth = 4;
         SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
         huiComposite = new HitroUIComposite(sashForm, false);
         if (showLinkMaker()) {
             linkMaker = new LinkMaker(sashForm);
-            sashForm.setWeights(new int[] { 66, 33});
-            sashForm.setSashWidth(4);
+            sashForm.setWeights(new int[] { sashWeight1, sashWeight2});
+            sashForm.setSashWidth(sashWidth);
             sashForm.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
         }   
         

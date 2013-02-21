@@ -40,25 +40,25 @@ public class CSRMaturitySpiderChart extends MaturitySpiderChart {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         CSRMassnahmenSummaryHome dao = new CSRMassnahmenSummaryHome();
 
-        Map<String, Double> items2 = dao.getControlMaxGroups(elmt);
+        Map<String, Double> items2 = dao.getControlMaxGroups(getElmt());
         Set<Entry<String, Double>> entrySet2 = items2.entrySet();
         for (Entry<String, Double> entry : sort(entrySet2)) {
             dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_1, entry.getKey());
         }
 
-        Map<String, Double> items4 = dao.getControlGoal2Groups(elmt);
+        Map<String, Double> items4 = dao.getControlGoal2Groups(getElmt());
         Set<Entry<String, Double>> entrySet4 = items4.entrySet();
         for (Entry<String, Double> entry : sort(entrySet4)) {
             dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_2, entry.getKey());
         }
 
-        Map<String, Double> items3 = dao.getControlGoal1Groups(elmt);
+        Map<String, Double> items3 = dao.getControlGoal1Groups(getElmt());
         Set<Entry<String, Double>> entrySet3 = items3.entrySet();
         for (Entry<String, Double> entry : sort(entrySet3)) {
             dataset.addValue(entry.getValue(), Messages.MaturitySpiderChart_3, entry.getKey());
         }
 
-        Map<String, Double> items1 = dao.getControlGroups(elmt);
+        Map<String, Double> items1 = dao.getControlGroups(getElmt());
         Set<Entry<String, Double>> entrySet = items1.entrySet();
        
         for (Entry<String, Double> entry : sort(entrySet)) {

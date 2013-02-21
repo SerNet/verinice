@@ -72,9 +72,8 @@ public class DescriptionPage extends WizardPage {
     
     private Map<String, IndividualServiceParameter> templateMap;
     
-    private IndividualServiceParameter template;
-    Preferences preferences;
-    Preferences bpmPreferences;
+    private Preferences preferences;
+    private Preferences bpmPreferences;
     
     private String elementTitle;
     
@@ -84,7 +83,7 @@ public class DescriptionPage extends WizardPage {
     
     private boolean overwriteTemplate = true;
     
-    private int pageWidth = 600;
+    private final int pageWidth = 600;
     
     /**
      * @param elementTitle Title of affected element for the task
@@ -99,6 +98,8 @@ public class DescriptionPage extends WizardPage {
     }
 
     private void addFormElements(Composite composite) {
+        final int pageWidthSubtrahend = 30;
+        final int gdHeightHint = 150;
         if(elementTitle!=null) {
             final Label objectLabel = new Label(composite, SWT.NONE);
             objectLabel.setText(Messages.DescriptionPage_3);
@@ -112,8 +113,8 @@ public class DescriptionPage extends WizardPage {
             object.setFont(newFont);
             GC gc = new GC(object);
             Point size = gc.textExtent(elementTitle);
-            if(size.x > pageWidth - 30) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,pageWidth-30) + "..."; //$NON-NLS-1$
+            if(size.x > pageWidth - pageWidthSubtrahend) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,pageWidth-pageWidthSubtrahend) + "..."; //$NON-NLS-1$
             }
             object.setText(elementTitle);
         }
@@ -157,7 +158,7 @@ public class DescriptionPage extends WizardPage {
         templateCombo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 templateComboModel.setSelectedIndex(templateCombo.getSelectionIndex());
-                template=templateComboModel.getSelectedObject();
+                IndividualServiceParameter template=templateComboModel.getSelectedObject();
                 ((IndividualProcessWizard) getWizard()).setTemplate(template);
                 deleteButton.setEnabled(true);
                 overwriteTemplateCheckbox.setEnabled(true);
@@ -184,9 +185,10 @@ public class DescriptionPage extends WizardPage {
         
         final Label descriptionLabel = new Label(composite, SWT.NONE);
         descriptionLabel.setText(Messages.DescriptionPage_6);
-        textArea = new Text(composite, SWT.MULTI | SWT.LEAD | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL );
+        int style = SWT.MULTI | SWT.LEAD | SWT.BORDER;
+        textArea = new Text(composite, style | SWT.WRAP | SWT.V_SCROLL );
         gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-        gd.heightHint = 150;
+        gd.heightHint = gdHeightHint;
         
         textArea.setLayoutData(gd);
         textArea.addKeyListener(new KeyListener() {            
@@ -211,9 +213,9 @@ public class DescriptionPage extends WizardPage {
     
     protected void deleteTemplate() {
         try {
-            IndividualServiceParameter template = templateComboModel.getSelectedObject();
-            if(template!=null) {
-                getTemplateMap().remove(template.getTitle());
+            IndividualServiceParameter internalTemplate = templateComboModel.getSelectedObject();
+            if(internalTemplate!=null) {
+                getTemplateMap().remove(internalTemplate.getTitle());
                 String value = IndividualProcessWizard.toString((Serializable) getTemplateMap());
                 getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
                 getPreferences().flush();
@@ -285,9 +287,7 @@ public class DescriptionPage extends WizardPage {
     public void createControl(Composite parent) {  
         final Composite composite = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(1, true);
-        //layout.marginWidth = 10;
         composite.setLayout(layout);
-        //layout.marginHeight = 10;
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
         composite.setLayoutData(gd);  
         

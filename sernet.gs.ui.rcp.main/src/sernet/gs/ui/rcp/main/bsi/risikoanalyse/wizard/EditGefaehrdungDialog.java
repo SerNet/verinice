@@ -71,6 +71,8 @@ public class EditGefaehrdungDialog extends Dialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
+        final int gridTextDescriptionWidthHint = 400;
+        final int gridTextDescriptionHeightHint = 200;
         Composite composite = (Composite) super.createDialogArea(parent);
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -125,8 +127,8 @@ public class EditGefaehrdungDialog extends Dialog {
         gridTextDescription.verticalAlignment = SWT.FILL;
         gridTextDescription.grabExcessHorizontalSpace = true;
         gridTextDescription.grabExcessVerticalSpace = true;
-        gridTextDescription.widthHint = 400;
-        gridTextDescription.heightHint = 200;
+        gridTextDescription.widthHint = gridTextDescriptionWidthHint;
+        gridTextDescription.heightHint = gridTextDescriptionHeightHint;
         textDescription.setLayoutData(gridTextDescription);
         textDescription.setText(ownGefaehrdung.getBeschreibung());
 
