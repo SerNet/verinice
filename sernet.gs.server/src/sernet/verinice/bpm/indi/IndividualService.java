@@ -34,7 +34,8 @@ import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.bpm.ProcessInformation;
 
 /**
- *
+ * Process service to create and handle individual tasks
+ * defined in jBPM definition: individual-task.jpdl.xml
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

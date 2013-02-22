@@ -61,6 +61,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class GraphService implements IGraphService {
     
     private static final Logger LOG = Logger.getLogger(GraphService.class);
+    private static final Logger LOG_RUNTIME = Logger.getLogger(GraphService.class.getName() + ".runtime");
     
     private Graph<CnATreeElement, Edge> graph;
     
@@ -87,7 +88,8 @@ public class GraphService implements IGraphService {
         loadVerticesAndRelatives();     
         loadLinks();
          
-        log(time);
+        log();
+        logRuntime("create, runtime: ", time);
     }
     
     private void loadVerticesAndRelatives() {
@@ -214,7 +216,7 @@ public class GraphService implements IGraphService {
     public void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
-
+    
     public String[] getTypeIds() {
         return (typeIds != null) ? typeIds.clone() : null;
     }
@@ -232,7 +234,7 @@ public class GraphService implements IGraphService {
     public void setRelationIds(String[] relationIds) {
         this.relationIds = (relationIds != null) ? relationIds.clone() : null;
     }
-
+    
     public TreeElementDao<CnATreeElement, Long> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
@@ -257,10 +259,7 @@ public class GraphService implements IGraphService {
 
     }
     
-    private void log(long time) {
-        if (LOG.isInfoEnabled()) {
-            logRuntime(time);
-        }     
+    private void log() {    
         if (LOG.isInfoEnabled()) {
             logStatistics();
         }
@@ -287,16 +286,14 @@ public class GraphService implements IGraphService {
     
     private long initRuntime() {
         long time = 0;
-        if (LOG.isDebugEnabled()) {
+        if (LOG_RUNTIME.isDebugEnabled()) {
             time = System.currentTimeMillis();
         }
         return time;
     }
     
-    private void logRuntime(long starttime) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Runtime: " + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
-        }
+    private void logRuntime(String message, long starttime) {
+        LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
     }
   
 }

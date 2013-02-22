@@ -20,13 +20,15 @@
 package sernet.verinice.bpm.gsm;
 
 import java.util.Map;
+import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * Dummy implementation for standalone mode.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -68,6 +70,14 @@ public class GsmServiceDummy implements IGsmService {
     @Override
     public IProcessStartInformation startProcessesForOrganization(Integer orgId) {
         return new ProcessInformation(0);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+     */
+    @Override
+    public int deleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {
+        return 0;
     } 
 
 

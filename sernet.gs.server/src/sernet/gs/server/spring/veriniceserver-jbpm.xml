@@ -70,9 +70,35 @@
         <property name="processEngine" ref="processEngine" />
         <property name="authService" ref="authService" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
-        <property name="processDao" ref="processDao" />
+        <property name="processDao" ref="processDao" /> 
+        
+        <property name="processStarterFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmProcessParameterCreater" />
+                </property>
+            </bean>
+        </property>
+        
+        <property name="assetScenarioRemoverFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmAssetScenarioRemover" />
+                </property>
+            </bean>
+        </property>          
+    </bean>
+    
+    <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.GsmProcessParameterCreater" scope="prototype">
+        <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
         <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <bean id="gsmAssetScenarioRemover" class="sernet.verinice.bpm.gsm.GsmAssetScenarioRemover" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />  
+        <property name="linkDao" ref="cnaLinkDao" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->

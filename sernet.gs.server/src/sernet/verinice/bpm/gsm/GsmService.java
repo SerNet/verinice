@@ -20,21 +20,15 @@
 package sernet.verinice.bpm.gsm;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.ObjectFactory;
 
 import sernet.verinice.bpm.ProcessServiceVerinice;
-import sernet.verinice.graph.Edge;
-import sernet.verinice.graph.IGraphService;
 import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.IGsmService;
@@ -44,12 +38,11 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- *
+ * Process service for GSM vulnerability tracking process
+ * Process definition is: gsm-ism-execute.jpdl.xml 
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -57,22 +50,20 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
     private static final Logger LOG = Logger.getLogger(GsmService.class);
     
-    private static final String[] TYPE_IDS = {Asset.TYPE_ID,
-                                             AssetGroup.TYPE_ID,
-                                             Control.TYPE_ID,
-                                             ControlGroup.TYPE_ID,
-                                             IncidentScenario.TYPE_ID,
-                                             PersonIso.TYPE_ID};
-    
-    private static final String[] RELATION_IDS = {Control.REL_CONTROL_INCSCEN,
-                                             AssetGroup.REL_PERSON_ISO,
-                                             IncidentScenario.REL_INCSCEN_ASSET};
-    
-    private IGraphService graphService;
-    
     private IAuthService authService;
     
-    private IBaseDao<CnATreeElement, Integer> elementDao;
+    /**
+     * Factory to create GsmProcessStarter instances
+     * configured in veriniceserver-jbpm.xml
+     */
+    private ObjectFactory processStarterFactory;
+    
+    /**
+     * Factory to create GsmProcessStarter instances
+     * configured in veriniceserver-jbpm.xml
+     */
+    private ObjectFactory assetScenarioRemoverFactory;
+    
 
     public GsmService() {
         super();
@@ -90,48 +81,23 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     public void testStartProcess(Integer orgId) {
         startProcessesForOrganization(orgId);
     }
-    
-    /**
-     * Called on initialization configured in veriniceserver-jbpm.xml
-     */
-    public void initGraph(Integer orgId) {
-        try {          
-            getGraphService().setTypeIds(TYPE_IDS);
-            getGraphService().setRelationIds(RELATION_IDS);
-            getGraphService().setElementFilter(new TopElementFilter(orgId));
-            getGraphService().setScopeId(orgId);
-            getGraphService().create();          
-        } catch(Exception e) {
-            LOG.error("Error while initialization", e);
-        }
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IGsmService#startProcess(java.lang.Integer)
      */
     @Override
     public IProcessStartInformation startProcessesForOrganization(Integer orgId) {
-        initGraph(orgId);
-      
-        List<CnATreeElement> controlGroupList = get2ndLevelControlGroups(orgId);
-        List<CnATreeElement> personList = getPersons(orgId);
         
-        if (LOG.isInfoEnabled()) {
-            LOG.info( controlGroupList.size() + " control groups");
-            LOG.info( personList.size() + " persons");
-        }
+        // creates a new (prototype) instances of the GsmProcessStarter spring bean
+        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
+        GsmProcessParameterCreater processStarter = (GsmProcessParameterCreater) processStarterFactory.getObject();
+        
+        List<GsmServiceParameter> parameterList = processStarter.createProcessParameterForOrganization(orgId);
         
         ProcessInformation information = new ProcessInformation();
-        for (CnATreeElement controlGroup : controlGroupList) {           
-            for (CnATreeElement person : personList) {
-                GsmServiceParameter parameter = new GsmServiceParameter(controlGroup, person);
-                Set<CnATreeElement> elements = getAllElements(controlGroup, person);
-                if(!elements.isEmpty()) {
-                    parameter.setElementSet(elements);
-                    startProcess(parameter);
-                    information.increaseNumber();
-                }
-            }
+        for (GsmServiceParameter parameter : parameterList) {                      
+            startProcess(parameter);
+            information.increaseNumber();            
         }
         
         if (LOG.isInfoEnabled()) {
@@ -139,6 +105,22 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         }
 
         return information;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+     */
+    @Override
+    public int deleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {  
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Deleting links from assets to scenario...");
+        }
+        
+        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
+        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
+        GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
+        Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementSet); 
+        return numberOfDeletedLinks;
     }
 
     private void startProcess(GsmServiceParameter processParameter) {
@@ -167,70 +149,6 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_SET, processParameter.getElementSet());     
         return map;
     }
-
-    private Set<CnATreeElement> getAllElements(CnATreeElement controlGroup, CnATreeElement person) {       
-        Set<CnATreeElement> setA = getObjectsForControlGroup(controlGroup);
-        Set<CnATreeElement> setB = getObjectsForPerson(person);
-        Set<CnATreeElement> result = createIntersection(setA,setB);
-        if (LOG.isDebugEnabled() && !result.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Task for \"" + person.getTitle() + "\" and group \"" + controlGroup.getTitle() + "\"");
-            }
-            logElementSet(result);
-        }
-        return result;
-    }
-
-    private Set<CnATreeElement> getObjectsForControlGroup(CnATreeElement controlGroup) {
-        // elements is a set of controls
-        Set<CnATreeElement> elements = getGraphService().getLinkTargets(controlGroup);
-        Set<CnATreeElement> scenarios = new HashSet<CnATreeElement>();
-        for (CnATreeElement control : elements) {
-            scenarios.addAll(getGraphService().getLinkTargets(control, Control.REL_CONTROL_INCSCEN));
-        }
-        Set<CnATreeElement> assets = new HashSet<CnATreeElement>();
-        for (CnATreeElement scen : scenarios) {
-            assets.addAll(getGraphService().getLinkTargets(scen, IncidentScenario.REL_INCSCEN_ASSET));
-        }
-        Set<CnATreeElement> assetGroups = new HashSet<CnATreeElement>();
-        for (CnATreeElement asset : assets) {
-            assetGroups.addAll(getGraphService().getLinkTargets(asset, Edge.RELATIVES));
-        }
-        elements.addAll(scenarios);
-        elements.addAll(assets);
-        elements.addAll(assetGroups);
-        return elements;
-    }
-
-    private Set<CnATreeElement> getObjectsForPerson(CnATreeElement person) {
-        // elements is a set of AssetGroups
-        Set<CnATreeElement> elements = getGraphService().getLinkTargets(person,AssetGroup.REL_PERSON_ISO);
-        Set<CnATreeElement> assets = new HashSet<CnATreeElement>();
-        for (CnATreeElement assetGroup : elements) {
-            assets.addAll(getGraphService().getLinkTargets(assetGroup, Edge.RELATIVES));
-        }
-        Set<CnATreeElement> scenarios = new HashSet<CnATreeElement>();
-        for (CnATreeElement asset : assets) {
-            scenarios.addAll(getGraphService().getLinkTargets(asset, IncidentScenario.REL_INCSCEN_ASSET));
-        }
-        Set<CnATreeElement> controls = new HashSet<CnATreeElement>();
-        for (CnATreeElement scen : scenarios) {
-            controls.addAll(getGraphService().getLinkTargets(scen, Control.REL_CONTROL_INCSCEN));
-        }
-        elements.addAll(assets);
-        elements.addAll(scenarios);
-        elements.addAll(controls);
-        return elements;
-    }
-
-    private Set<CnATreeElement> createIntersection(Set<CnATreeElement> controlGroupList, Set<CnATreeElement> personList) {
-        controlGroupList.retainAll(personList);
-        return controlGroupList;
-    }
-    
-    private void logElementSet(Set<CnATreeElement> elementSet) {
-        LOG.debug(createElementInformation(elementSet));
-    }
     
     public static String createElementInformation(Set<CnATreeElement> elementSet) {
         StringBuffer message = new StringBuffer();
@@ -251,56 +169,28 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         }
         return message.toString();
     }
-    
-    private List<CnATreeElement> get2ndLevelControlGroups(Integer orgId) {
-        StringBuffer hql = new StringBuffer("select distinct e from CnATreeElement e "); //$NON-NLS-1$
-        hql.append("inner join fetch e.entity as entity ");  //$NON-NLS-1$
-        hql.append("inner join fetch entity.typedPropertyLists as propertyList "); //$NON-NLS-1$
-        hql.append("inner join fetch propertyList.properties as props "); //$NON-NLS-1$        
-        hql.append("where e.objectType = ? and e.parent.parent.dbId = ?"); //$NON-NLS-1$ 
-        return getElementDao().findByQuery(hql.toString(),new Object[]{ControlGroup.TYPE_ID,orgId});
-       
-    }
-    
-    private List<CnATreeElement> getPersons(Integer orgId) {
-        DetachedCriteria crit = createDefaultCriteria();
-        crit.add(Restrictions.eq("objectType", PersonIso.TYPE_ID));
-        crit.add(Restrictions.eq("scopeId", orgId));
-        return getElementDao().findByCriteria(crit);
-    }
-    
-    private DetachedCriteria createDefaultCriteria() {
-        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
-        crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-        crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-        return crit;
-    }
-    
-    public IGraphService getGraphService() {
-        return graphService;
-    }
-
-    public void setGraphService(IGraphService graphService) {
-        this.graphService = graphService;
-    }
 
     public IAuthService getAuthService() {
         return authService;
     }
 
-
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
-
-
-    @Override
-    public IBaseDao<CnATreeElement, Integer> getElementDao() {
-        return elementDao;
+    
+    public ObjectFactory getProcessStarterFactory() {
+        return processStarterFactory;
     }
 
-    @Override
-    public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
-        this.elementDao = elementDao;
+    public void setProcessStarterFactory(ObjectFactory factory) {
+        this.processStarterFactory = factory;
+    }
+
+    public ObjectFactory getAssetScenarioRemoverFactory() {
+        return assetScenarioRemoverFactory;
+    }
+
+    public void setAssetScenarioRemoverFactory(ObjectFactory assetScenarioRemoverFactory) {
+        this.assetScenarioRemoverFactory = assetScenarioRemoverFactory;
     }
 }

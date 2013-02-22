@@ -37,7 +37,8 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
- *
+ * GsmServiceTaskDescriptionHandler is part of the GSM vulnerability tracking process.
+ * Process definition is: gsm-ism-execute.jpdl.xml
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

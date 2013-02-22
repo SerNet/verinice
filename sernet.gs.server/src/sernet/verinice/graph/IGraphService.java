@@ -26,7 +26,7 @@ import org.jgrapht.Graph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A service to load and analyse the element network of verinice
+ * A service to load and analyze the element network of verinice
  * with JGraphT.
  * 
  * JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms.
