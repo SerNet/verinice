@@ -55,8 +55,6 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
     
     private Integer rootElmt;
 
-    private List<List<String>> results;
-    
     public LoadReportSignificantISAQuestions(Integer root){
         this.rootElmt = root;
     }
@@ -66,7 +64,6 @@ public class LoadReportSignificantISAQuestions extends GenericCommand {
      */
     @Override
     public void execute() {
-        results = new ArrayList<List<String>>(0);
         for(SamtTopic topic : getSamtTopics(rootElmt)){
             ArrayList<String> result = new ArrayList<String>(0);
             result.add(topic.getTitle());

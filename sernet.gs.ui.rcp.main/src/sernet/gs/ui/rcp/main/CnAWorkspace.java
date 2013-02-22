@@ -275,7 +275,7 @@ public class CnAWorkspace {
 			String dbUrl = createTempImportDbUrl();
 			settings.put("url", dbUrl); //$NON-NLS-1$
 			settings.put("driver", PreferenceConstants.DB_DRIVER_DERBY); //$NON-NLS-1$
-			settings.put("dialect", PreferenceConstants.DB_DIALECT_derby); //$NON-NLS-1$
+			settings.put("dialect", PreferenceConstants.DB_DIALECT_DERBY); //$NON-NLS-1$
 		} else {
 			// direct import from ms sql server or desktop engine:
 			settings.put("driver", PreferenceConstants.GS_DB_DRIVER_JTDS); //$NON-NLS-1$

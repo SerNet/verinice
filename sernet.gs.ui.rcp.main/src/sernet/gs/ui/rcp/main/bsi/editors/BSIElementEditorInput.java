@@ -107,7 +107,7 @@ public class BSIElementEditorInput implements IEditorInput {
         }
         
         BSIElementEditorInput elementInput = (BSIElementEditorInput) input;
-        if (elementInput==null || elementInput.getCnAElement()==null) {
+        if (elementInput.getCnAElement()==null) {
             LOG.warn("Element in editor input is null.");
             return null;
         }

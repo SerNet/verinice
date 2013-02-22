@@ -37,7 +37,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 @SuppressWarnings("serial")
 public class UmsetzungSummary extends MassnahmenSummary {
 
-	private static final HibernateCallback hcb = new UmsetzungenSummaryCallback();
+	private static final HibernateCallback HCB = new UmsetzungenSummaryCallback();
 
 	public void execute() {
 		super.execute();
@@ -53,7 +53,7 @@ public class UmsetzungSummary extends MassnahmenSummary {
 		// List of Object[] array:
 		// index 0: property value
 		// index 1: count of occurence of the above value in the db
-		List<Object[]> list = (List<Object[]>) dao.findByCallback(hcb);
+		List<Object[]> list = (List<Object[]>) dao.findByCallback(HCB);
 
 		// Puts SQL result in a object structure the user of this class expects.  
 		for (Object[] element : list)

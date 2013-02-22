@@ -33,9 +33,9 @@ public class SubtypenZielobjekte {
 
     private static final Logger LOG = Logger.getLogger(SubtypenZielobjekte.class);
 
-    final int mappingListSize = 80;
+    private static final int MAPPING_LIST_SIZE = 80;
     
-    private List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(mappingListSize);
+    private List<BausteinVorschlag> mapping = new ArrayList<BausteinVorschlag>(MAPPING_LIST_SIZE);
 
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
 

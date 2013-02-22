@@ -169,10 +169,6 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private ISMViewFilter filterAction;
 	
-	private HideEmptyFilter hideEmptyFilter;
-	
-	private TypeParameter typeParameter;
-    
 	private MetaDropAdapter metaDropAdapter;
 
 	private ShowAccessControlEditAction accessControlEditAction;
@@ -380,8 +376,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 		collapseAllAction.setText(Messages.ISMView_10);
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 		
-		hideEmptyFilter = createHideEmptyFilter();
-		typeParameter = createTypeParameter();
+		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
+		TypeParameter typeParameter = createTypeParameter();
 		TagParameter tagParameter = new TagParameter();
         filterAction = new ISMViewFilter(viewer,
 				Messages.ISMView_12,

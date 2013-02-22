@@ -29,7 +29,7 @@ import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 
 public class BSIConfigurationServer implements IBSIConfig {
 
-	private static final Logger log = Logger.getLogger(BSIConfigurationServer.class);
+	private static final Logger LOG = Logger.getLogger(BSIConfigurationServer.class);
 
 	private Resource grundschutzKataloge;
 	
@@ -40,7 +40,7 @@ public class BSIConfigurationServer implements IBSIConfig {
 		try {
 			return grundschutzKataloge.getURL();
 		} catch (IOException e) {
-			log.error("accessing the URL for the Grundschutz catalog failed.");
+			LOG.error("accessing the URL for the Grundschutz catalog failed.");
 			throw new RuntimeException(e);
 		}
 	}
@@ -50,7 +50,7 @@ public class BSIConfigurationServer implements IBSIConfig {
 		try {
 			return datenschutzBaustein.getURL();
 		} catch (IOException e) {
-			log.error("accessing the URL for the Datenschutzbaustein catalog failed.");
+			LOG.error("accessing the URL for the Datenschutzbaustein catalog failed.");
 			throw new RuntimeException(e);
 		}
 	}

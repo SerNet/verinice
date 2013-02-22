@@ -50,14 +50,16 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
 
     @Override
     public void execute() {
-        if (ids == null || ids.length == 0 || ids[0] == null) {
-            return;
+        if(!resultInjectedFromCache){
+            if (ids == null || ids.length == 0 || ids[0] == null) {
+                return;
+            }
+
+            IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
+
+            list = dao.findByCallback(new Callback(ids));
+            HydratorUtil.hydrateElements(dao, list, false);
         }
-
-        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-
-        list = dao.findByCallback(new Callback(ids));
-        HydratorUtil.hydrateElements(dao, list, false);
     }
 
     public List<CnATreeElement> getElements() {
@@ -66,7 +68,7 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
 
     private static class Callback implements HibernateCallback, Serializable {
 
-        Integer[] ids;
+        private Integer[] ids;
 
         Callback(Integer[] ids) {
             this.ids = (ids != null) ? ids.clone() : null;

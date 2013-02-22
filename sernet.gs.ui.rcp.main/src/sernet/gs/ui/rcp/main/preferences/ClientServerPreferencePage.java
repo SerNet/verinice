@@ -75,14 +75,12 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		super.propertyChange(event);
-		if (event.getProperty().equals(FieldEditor.VALUE)) {
-			if (event.getSource() == operationMode ) {
-				newServerMode = (String) event.getNewValue();
-				boolean servermode = newServerMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
-				serverURI.setEnabled(servermode, getFieldEditorParent());
-			}
-		}
+	    super.propertyChange(event);
+	    if (event.getProperty().equals(FieldEditor.VALUE) && event.getSource() == operationMode ) {
+	        newServerMode = (String) event.getNewValue();
+	        boolean servermode = newServerMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
+	        serverURI.setEnabled(servermode, getFieldEditorParent());
+	    }
 	}
 
 	/**

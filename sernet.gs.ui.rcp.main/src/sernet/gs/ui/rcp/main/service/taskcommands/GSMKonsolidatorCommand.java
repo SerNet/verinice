@@ -43,11 +43,11 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     
     public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(BausteinUmsetzung.P_NAME, MassnahmenUmsetzung.P_SIEGEL);
     private List<String> propertyTypeBlacklist;
-    private transient static IBaseDao<CnATreeElement, Serializable> dao;
+    private static transient IBaseDao<CnATreeElement, Serializable> dao;
     private List<BausteinUmsetzung> selectedElements;
     private BausteinUmsetzung source;
-    protected String stationId;
-    List<CnATreeElement> changedElements;
+    private String stationId;
+    private List<CnATreeElement> changedElements;
 
     public GSMKonsolidatorCommand(List<BausteinUmsetzung> selectedElements, BausteinUmsetzung source) {
         this.selectedElements = selectedElements;
@@ -57,16 +57,17 @@ public class GSMKonsolidatorCommand extends ChangeLoggingCommand implements ICha
     }
 
     public void execute() {
-        IBaseDao<BausteinUmsetzung, Serializable> dao = getDaoFactory().getDAO(BausteinUmsetzung.class);
-        dao.reload(source, source.getDbId());
+        IBaseDao<BausteinUmsetzung, Serializable> internalDao = getDaoFactory().getDAO(BausteinUmsetzung.class);
+        internalDao.reload(source, source.getDbId());
 
         changedElements = new LinkedList<CnATreeElement>();
         // for every target:
         for (BausteinUmsetzung target : selectedElements) {
             // do not copy source onto itself:
-            if (source.equals(target))
+            if (source.equals(target)){
                 continue;
-            dao.reload(target, target.getDbId()); //anschauen was noch geladen ist!
+            }
+            internalDao.reload(target, target.getDbId()); //anschauen was noch geladen ist!
             // set values:
             target = (BausteinUmsetzung) getDao().findByUuid(target.getUuid(), RetrieveInfo.getPropertyChildrenInstance());
             source = (BausteinUmsetzung) getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyChildrenInstance());

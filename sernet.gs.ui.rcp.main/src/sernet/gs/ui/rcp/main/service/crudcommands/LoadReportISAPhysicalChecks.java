@@ -42,13 +42,13 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
 
     private List<List<String>> results;
     
-    private final static String REL_SAMT_INTERVIEW = "rel_interview_samt_topic_included";
+    private static final String REL_SAMT_INTERVIEW = "rel_interview_samt_topic_included";
     
-    private final static String INTERVIEW_SHOW_IN_REPORT = "interview_showInISAReport";
+    private static final String INTERVIEW_SHOW_IN_REPORT = "interview_showInISAReport";
     
-    private final static String INTERVIEW_AUDIT_ACTION_DESCRIPTION = "interview_audit_action_description";
+    private static final String INTERVIEW_AUDIT_ACTION_DESCRIPTION = "interview_audit_action_description";
 
-    public final static String[] COLUMNS = new String[]{
+    public static final String[] COLUMNS = new String[]{
                                             "TITLE",
                                             "DESCRIPTION"
     };

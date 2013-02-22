@@ -330,7 +330,7 @@ public class ExportDialog extends TitleAreaDialog {
     
     private String getDefaultFolder(){
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-         defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Export);
+         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_EXPORT);
          if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
              defaultFolder=defaultFolder+System.getProperty("file.separator"); 
          }
@@ -413,7 +413,7 @@ public class ExportDialog extends TitleAreaDialog {
         } else {
             String currentPath = setupDirPath();
             defaultFolder = currentPath;
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Export, currentPath);
+            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_EXPORT, currentPath);
             super.okPressed();
         }
     }

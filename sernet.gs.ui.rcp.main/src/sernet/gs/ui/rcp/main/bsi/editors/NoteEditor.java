@@ -55,8 +55,6 @@ public class NoteEditor extends EditorPart {
 	
 	private Note note;
 	
-	private Composite contentComp;
-	
 	private Text textNote;
 	
 	private ICommandService	commandService;
@@ -145,7 +143,7 @@ public class NoteEditor extends EditorPart {
         final int contentCompLayoutNumColumns = 2;
         final int gdTextHeightHint = 200;
         
-		contentComp = new Composite(parent, SWT.NULL);
+        Composite contentComp = new Composite(parent, SWT.NULL);
 		
 		GridData contentCompLD = new GridData();
 		contentCompLD.grabExcessHorizontalSpace = true;

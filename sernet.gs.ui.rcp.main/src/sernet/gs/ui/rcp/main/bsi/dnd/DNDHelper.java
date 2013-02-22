@@ -64,6 +64,11 @@ public class DNDHelper {
                                                              IGSModelElementTransfer.class
                                                 };
     
+    private static final String STD_ERR_MSG = "Error while casting dnd list";
+    private static final String ERR_MSG = "Error:";
+    
+    private DNDHelper(){}
+    
     public static List arrayToList(Object data){
         ArrayList<Object> list = new ArrayList<Object>();
         if(data instanceof Object[]){
@@ -92,11 +97,9 @@ public class DNDHelper {
         List<?> dest = null;
         Class<?> type = Object.class;
         for(Class<?> c : classes){
-            if(source.length > 0){
-                if(c.isInstance(source[0])){
-                    type = c;
-                    break;
-                }
+            if(source.length > 0 && c.isInstance(source[0])){
+                type = c;
+                break;
             }
         }
         dest = createListOfType(type);
@@ -107,15 +110,15 @@ public class DNDHelper {
                     m = dest.getClass().getDeclaredMethod("add", new Class[]{Object.class});
                     m.invoke(dest, type.cast(o));
                 } catch (SecurityException e) {
-                    LOG.error("Error while casting dnd list", e);
+                    LOG.error(STD_ERR_MSG, e);
                 } catch (NoSuchMethodException e) {
-                    LOG.error("Error while casting dnd list", e);
+                    LOG.error(STD_ERR_MSG, e);
                 } catch (IllegalArgumentException e) {
-                    LOG.error("Error while casting dnd list", e);
+                    LOG.error(STD_ERR_MSG, e);
                 } catch (IllegalAccessException e) {
-                    LOG.error("Error while casting dnd list", e);
+                    LOG.error(STD_ERR_MSG, e);
                 } catch (InvocationTargetException e) {
-                    LOG.error("Error while casting dnd list", e);
+                    LOG.error(STD_ERR_MSG, e);
                 }
             } else {
                 return new Object[0];
@@ -143,15 +146,15 @@ public class DNDHelper {
                     }
                 }
             } catch (SecurityException e) {
-                LOG.error("Error:", e);
+                LOG.error(ERR_MSG, e);
             } catch (NoSuchMethodException e) {
-                LOG.error("Error:", e);
+                LOG.error(ERR_MSG, e);
             } catch (IllegalArgumentException e) {
-                LOG.error("Error:", e);
+                LOG.error(ERR_MSG, e);
             } catch (IllegalAccessException e) {
-                LOG.error("Error:", e);
+                LOG.error(ERR_MSG, e);
             } catch (InvocationTargetException e) {
-                LOG.error("Error:", e);
+                LOG.error(ERR_MSG, e);
             }
             
         }

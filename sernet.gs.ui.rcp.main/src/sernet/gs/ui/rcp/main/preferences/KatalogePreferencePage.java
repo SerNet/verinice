@@ -47,7 +47,7 @@ import sernet.verinice.interfaces.IInternalServer;
  */
 public class KatalogePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	private static final Logger log = Logger.getLogger(KatalogePreferencePage.class);
+	private static final Logger LOG = Logger.getLogger(KatalogePreferencePage.class);
 
 	private FileFieldEditor zipfilePath;
 	private FileFieldEditor datenschutzZipPath;
@@ -115,13 +115,13 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 				try {
 					internalServer.setGSCatalogURL(new File(zipfilePath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
-					log.warn("GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
+					LOG.warn("GS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 				}
 			} else if (event.getSource() == datenschutzZipPath) {
 				try {
 					internalServer.setDSCatalogURL(new File(datenschutzZipPath.getStringValue()).toURI().toURL());
 				} catch (MalformedURLException e) {
-					log.warn("DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
+					LOG.warn("DS catalog zip file path is an invalid URL."); //$NON-NLS-1$
 				}
 			}
 		}

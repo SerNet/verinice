@@ -34,17 +34,17 @@ import sernet.verinice.iso27k.rcp.ISMView;
 public class Perspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.perspective";
 	
-	private final static Map<String, String> viewsRightIDs;
+	private static final Map<String, String> VIEWSRIGHTIDS;
 	
-	private final static float RATIO_CONTROL_FOLDER = 0.3f;
-	private final static float RATIO_MODEL_FOLDER = 0.4f;
-	private final static float RATIO_DETAILS_FOLDER = 0.5f;
+	private static final float RATIO_CONTROL_FOLDER = 0.3f;
+	private static final float RATIO_MODEL_FOLDER = 0.4f;
+	private static final float RATIO_DETAILS_FOLDER = 0.5f;
 	
 	static{
-	    viewsRightIDs = new HashMap<String, String>();
-	    viewsRightIDs.put(BSIMassnahmenView.ID, ActionRightIDs.BSIMASSNAHMEN);
-	    viewsRightIDs.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
-	    viewsRightIDs.put(BsiModelView.ID, ActionRightIDs.BSIMODELVIEW);
+	    VIEWSRIGHTIDS = new HashMap<String, String>();
+	    VIEWSRIGHTIDS.put(BSIMassnahmenView.ID, ActionRightIDs.BSIMASSNAHMEN);
+	    VIEWSRIGHTIDS.put(BrowserView.ID, ActionRightIDs.BSIBROWSER);
+	    VIEWSRIGHTIDS.put(BsiModelView.ID, ActionRightIDs.BSIMODELVIEW);
 	}
 
 	public void createInitialLayout(IPageLayout layout) {

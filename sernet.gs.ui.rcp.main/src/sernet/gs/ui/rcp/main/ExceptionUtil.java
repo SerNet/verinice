@@ -43,6 +43,8 @@ public class ExceptionUtil {
 
 	private static final Logger LOG = Logger.getLogger(ExceptionUtil.class);
 	
+	private ExceptionUtil(){}
+	
 	public static void log(Throwable e, final String msg) {
 		// log the error with log4j
 		LOG.error("An error occured: " + msg, e);
@@ -111,7 +113,7 @@ public class ExceptionUtil {
 		StringBuffer buf = new StringBuffer();
 		StackTraceElement[] stackTrace = e.getStackTrace();
 		for (StackTraceElement stackTraceElement : stackTrace) {
-			buf.append(stackTraceElement.toString() + "\n"); //$NON-NLS-1$
+			buf.append(stackTraceElement.toString()).append("\n"); //$NON-NLS-1$
 		}
 		return buf.toString();
 	}

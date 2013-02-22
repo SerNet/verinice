@@ -42,17 +42,15 @@ public class ImportDecorator extends LabelProvider implements ILightweightLabelD
      */
     @Override
     public void decorate(Object o, IDecoration decoration) {
-        if(o!=null && o instanceof CnATreeElement) {
+        if(o instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) o;
-            if(element.getSourceId()!=null) {
-                if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SHOW_ALIEN_DECORATOR)){
-                    decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
+            if(element.getSourceId()!=null && 
+                    Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SHOW_ALIEN_DECORATOR)){
+                decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
                 decoration.addSuffix( new StringBuilder().append(" [")
                         .append(((CnATreeElement) o).getSourceId())
                         .append("]").toString() );
-                }
             }
         }
     }
-
 }

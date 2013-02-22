@@ -45,8 +45,6 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
  */
 public class DatenbankPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    private static final Logger log = Logger.getLogger(DatenbankPreferencePage.class);
-    
     private RadioGroupFieldEditor dbDriver;
     private StringFieldEditor dialect;
     private StringFieldEditor url;
@@ -169,7 +167,7 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
 
     private void setDefaults(String newValue) {
         if (newValue.equals(PreferenceConstants.DB_DRIVER_DERBY)) {
-            dialect.setStringValue(PreferenceConstants.DB_DIALECT_derby);
+            dialect.setStringValue(PreferenceConstants.DB_DIALECT_DERBY);
 
             // replace backslashes
             // derby db url looks like this on windows: c:/Programme/Verinice...
@@ -180,12 +178,12 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
             user.setStringValue(""); //$NON-NLS-1$
             pass.setStringValue(""); //$NON-NLS-1$
         } else if (newValue.equals(PreferenceConstants.DB_DRIVER_POSTGRES)) {
-            dialect.setStringValue(PreferenceConstants.DB_DIALECT_postgres);
+            dialect.setStringValue(PreferenceConstants.DB_DIALECT_POSTGRE);
             url.setStringValue(PreferenceConstants.DB_URL_POSTGRES);
             user.setStringValue(""); //$NON-NLS-1$
             pass.setStringValue(""); //$NON-NLS-1$
         } else if (newValue.equals(PreferenceConstants.DB_DRIVER_MYSQL)) {
-            dialect.setStringValue(PreferenceConstants.DB_DIALECT_mysql);
+            dialect.setStringValue(PreferenceConstants.DB_DIALECT_MYSQL);
             url.setStringValue(PreferenceConstants.DB_URL_MYSQL);
             user.setStringValue(""); //$NON-NLS-1$
             pass.setStringValue(""); //$NON-NLS-1$

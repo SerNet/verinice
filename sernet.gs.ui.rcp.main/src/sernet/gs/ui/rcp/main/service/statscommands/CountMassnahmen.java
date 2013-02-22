@@ -34,16 +34,16 @@ import sernet.verinice.model.bsi.BSIModel;
 @SuppressWarnings("serial")
 public class CountMassnahmen extends GenericCommand {
 	
-	private static final Logger log = Logger.getLogger(CountMassnahmen.class);
+	private static final Logger LOG = Logger.getLogger(CountMassnahmen.class);
 
 	private int totalCount;
 	
-	private static final HibernateCallback hcb = new Callback();
+	private static final HibernateCallback HCB = new Callback();
 
 	@SuppressWarnings("unchecked")
 	public void execute() {
 		
-		List<Long> result = (List<Long>) getDaoFactory().getDAO(BSIModel.class).findByCallback(hcb);
+		List<Long> result = (List<Long>) getDaoFactory().getDAO(BSIModel.class).findByCallback(HCB);
 		
 		totalCount = result.get(0).intValue();
 	}
@@ -62,9 +62,9 @@ public class CountMassnahmen extends GenericCommand {
 					"select count(m)"
 					+ "from MassnahmenUmsetzung m ");
 			
-			if (log.isDebugEnabled())
-				log.debug("hql query: " + query.getQueryString());
-			
+			if (LOG.isDebugEnabled()){
+				LOG.debug("hql query: " + query.getQueryString());
+			}
 			return query.list();
 		}
 		

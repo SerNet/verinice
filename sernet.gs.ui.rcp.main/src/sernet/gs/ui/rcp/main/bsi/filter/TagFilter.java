@@ -28,7 +28,7 @@ public class TagFilter extends ViewerFilter {
 
     public static final String NO_TAG = Messages.TagFilter_0;
 
-    String[] pattern;
+    private String[] pattern;
     private StructuredViewer viewer;
     private boolean filterItVerbund;
 
@@ -45,10 +45,8 @@ public class TagFilter extends ViewerFilter {
 
         IBSIStrukturElement zielobjekt = (IBSIStrukturElement) element;
         for (String tag : pattern) {
-            if (tag.equals(NO_TAG)) {
-                if (zielobjekt.getTags().size() < 1) {
-                    return true;
-                }
+            if (tag.equals(NO_TAG) && zielobjekt.getTags().size() < 1) {
+                return true;
             }
 
             for (String zielTag : zielobjekt.getTags()) {
@@ -61,7 +59,7 @@ public class TagFilter extends ViewerFilter {
     }
 
     public String[] getPattern() {
-        return pattern;
+        return (pattern != null) ? pattern.clone() : null;
     }
 
     public void setPattern(String[] newPattern) {

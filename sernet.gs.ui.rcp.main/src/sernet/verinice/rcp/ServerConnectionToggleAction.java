@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.Workbench;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -81,7 +80,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
     
     private ServerConnectionToggleDialog dialog;
     
-    public ServerConnectionToggleAction(IWorkbenchWindow window) {
+    public ServerConnectionToggleAction() {
         if(ServerConnectionToggleDialog.isServerMode()) {
             setText(Messages.ServerConnectionToggleAction_0);
         }
@@ -186,7 +185,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
                 
                 if(ServerConnectionToggleDialog.isStandalone()) {
                     prefs.setValue(PreferenceConstants.VNSERVER_URI, dialog.getServerUrl());
-                };       
+                }       
                 
                 String newMode = PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER;
                 if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)) {

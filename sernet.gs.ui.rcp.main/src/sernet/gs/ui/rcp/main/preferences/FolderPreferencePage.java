@@ -55,9 +55,9 @@ public class FolderPreferencePage extends FieldEditorPreferencePage implements I
         Composite fep = getFieldEditorParent();
         
        
-        addField(new DirectoryFieldEditor(PreferenceConstants.Default_Folder_Export, Messages.getString("FolderPreferencePage.0"), fep));//$NON-NLS-1$
-        addField(new DirectoryFieldEditor(PreferenceConstants.Default_Folder_Import, Messages.getString("FolderPreferencePage.1"), fep)); //$NON-NLS-1$
-        addField(new DirectoryFieldEditor(PreferenceConstants.Default_Folder_Report, Messages.getString("FolderPreferencePage.2"), fep)); //$NON-NLS-1$
+        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_EXPORT, Messages.getString("FolderPreferencePage.0"), fep));//$NON-NLS-1$
+        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_IMPORT, Messages.getString("FolderPreferencePage.1"), fep)); //$NON-NLS-1$
+        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_REPORT, Messages.getString("FolderPreferencePage.2"), fep)); //$NON-NLS-1$
         
        
     }

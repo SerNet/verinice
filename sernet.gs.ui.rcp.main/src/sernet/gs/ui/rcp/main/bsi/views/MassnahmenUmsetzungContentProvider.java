@@ -65,7 +65,7 @@ import sernet.verinice.model.validation.CnAValidation;
  */
 class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 	
-	private static final Logger log = Logger.getLogger(MassnahmenUmsetzungContentProvider.class);
+	private static final Logger LOG = Logger.getLogger(MassnahmenUmsetzungContentProvider.class);
 
 	private static final int ADD     = 0;
 	private static final int UPDATE  = 1;
@@ -75,13 +75,13 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 	private TableViewer viewer;
 	private GenericMassnahmenView todoView;
 	
-	IBSIModelListener modelListener = new IBSIModelListener()
+	private IBSIModelListener modelListener = new IBSIModelListener()
 	{
 
 		public void childAdded(CnATreeElement category, CnATreeElement child) {
-			if (child instanceof BausteinUmsetzung && isOfInterest(child))
+			if (child instanceof BausteinUmsetzung && isOfInterest(child)){
 				reloadMeasures();
-			else if (child instanceof ITVerbund){
+			} else if (child instanceof ITVerbund){
 				todoView.compoundAdded((ITVerbund) child);
 			}
 		}
@@ -109,7 +109,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 				try {
 					if (!isOfInterest(child))
 					{
-						log.debug("MassnahmenUmsetzung is not of interest for view: " + child);
+						LOG.debug("MassnahmenUmsetzung is not of interest for view: " + child);
 						return;
 					}
 					Activator.inheritVeriniceContextState();
@@ -180,7 +180,6 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 			 * 
 			 * @see IModelLoadListener
 			 */
-            //reloadMeasures();
 		}
 
 		/* (non-Javadoc)
@@ -311,7 +310,7 @@ class MassnahmenUmsetzungContentProvider implements IStructuredContentProvider {
 		{
 			if (parent == null)
 			{
-				log.warn("Element with no IT-Verbund ancestor. Skipping ...");
+				LOG.warn("Element with no IT-Verbund ancestor. Skipping ...");
 				return false;
 			}
 			parent = Retriever.checkRetrieveParent(parent);

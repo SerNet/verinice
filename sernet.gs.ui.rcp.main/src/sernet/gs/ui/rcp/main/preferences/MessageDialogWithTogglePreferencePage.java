@@ -33,15 +33,7 @@ import sernet.verinice.iso27k.rcp.ISMView;
  */
 public class MessageDialogWithTogglePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    private BooleanFieldEditor infoDialogTransformCatalogItems;
-    private BooleanFieldEditor infoDialogCopy;
-    private BooleanFieldEditor infoDialogCut;
-    private BooleanFieldEditor infoDialogProcess;
-    private BooleanFieldEditor infoDialogLdapImport;
-    private BooleanFieldEditor infoDialogStatusDerivation;
-    private BooleanFieldEditor switchPerspectiveIsmView;
-    private BooleanFieldEditor switchPerspectiveCatalogView;
-    private BooleanFieldEditor showValidationReportWarning;
+
 
     
     public MessageDialogWithTogglePreferencePage(){
@@ -62,38 +54,38 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
      */
     @Override
     protected void createFieldEditors() {
-        infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogTransformCatalogItems);
 
-        infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogCopy);
 
-        infoDialogCut = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogCut = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogCut);
         
-        infoDialogProcess = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESSES_STARTED, Messages.getString("GeneralSettingsPage.InfoProcess"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogProcess = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESSES_STARTED, Messages.getString("GeneralSettingsPage.InfoProcess"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogProcess);
         
-        infoDialogLdapImport = new BooleanFieldEditor(PreferenceConstants.INFO_IMPORT_LDAP, Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogLdapImport = new BooleanFieldEditor(PreferenceConstants.INFO_IMPORT_LDAP, Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogLdapImport);
         
-        infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent()); //$NON-NLS-1$
         addField(infoDialogStatusDerivation);
         
-        switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
+        BooleanFieldEditor switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveIsmView);
 
-        switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
+        BooleanFieldEditor switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveCatalogView);
         
-        showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent());
+        BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent());
         addField(showValidationReportWarning);
     }
     

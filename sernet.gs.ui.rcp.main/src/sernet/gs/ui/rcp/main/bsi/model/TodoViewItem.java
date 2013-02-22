@@ -28,19 +28,19 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparable<TodoViewItem> {
 	
-	private static final Map<String, String> umsetzungImageMap = new Hashtable<String, String>();
+	private static final Map<String, String> UMSETZUNG_IMAGE_MAP = new Hashtable<String, String>();
 	
 	static {
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_MANAGED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-		umsetzungImageMap.put(MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_ESTABLISHED, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_MANAGED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_OPTIMIZING, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_PERFORMED, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+		UMSETZUNG_IMAGE_MAP.put(MassnahmenUmsetzung.P_UMSETZUNG_PREDICTABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
 	}
 	
 	private String titel;
@@ -67,13 +67,12 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	
 	public String getUmsetzungIcon() {
 		// ISO 27001
-		//return umsetzungImageMap.get(getStand());
 		// Grundschutz
-		return umsetzungImageMap.get(getUmsetzung());
+		return UMSETZUNG_IMAGE_MAP.get(getUmsetzung());
 	}
 
 	public Date getUmsetzungBis() {
-		return umsetzungBis;
+		return (umsetzungBis != null) ? (Date)umsetzungBis.clone() : null;
 	}
 
 	public String getUmsetzungDurch() {
@@ -97,7 +96,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	}
 
 	public void setUmsetzungBis(Date umsetzungBis) {
-		this.umsetzungBis = umsetzungBis;
+		this.umsetzungBis = (umsetzungBis != null) ? (Date)umsetzungBis.clone() : null;
 	}
 
 	public void setUmsetzungDurch(String umsetzungDurch) {
@@ -152,7 +151,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	}
 
 	public void setNaechsteRevision(Date naechsteRevision) {
-		this.naechsteRevision = naechsteRevision; 
+		this.naechsteRevision = (naechsteRevision != null) ? (Date)naechsteRevision.clone() : null; 
 	}
 
 	public void setRevisionDurch(String revisionDurch) {
@@ -164,7 +163,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	}
 
 	public Date getNaechsteRevision() {
-		return this.naechsteRevision;
+		return (this.naechsteRevision !=  null) ? (Date)this.naechsteRevision.clone() : null;
 	}
 
 	/* (non-Javadoc)

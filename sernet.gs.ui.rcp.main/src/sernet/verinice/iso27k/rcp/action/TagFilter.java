@@ -17,25 +17,23 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
-import org.eclipse.jface.viewers.StructuredViewer;
-
 import sernet.verinice.interfaces.IParameter;
 
 public class TagFilter implements IParameter {
     
-    String[] pattern;
+    private String[] pattern;
     private boolean filterOrgs;
 
-    public TagFilter(StructuredViewer viewer) {
+    public TagFilter() {
     }
 
     public String[] getPattern() {
-        return pattern;
+        return (pattern != null) ? pattern.clone() : null;
     }
 
     public void setPattern(String[] newPattern) {
         if (newPattern != null && newPattern.length > 0) {
-            pattern = (newPattern != null) ? newPattern.clone() : null;          
+            pattern = newPattern.clone();          
         } else {
             // deactivate
             pattern = null;      

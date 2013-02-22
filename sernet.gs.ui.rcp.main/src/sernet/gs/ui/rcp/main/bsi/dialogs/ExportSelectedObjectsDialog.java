@@ -143,7 +143,7 @@ public class ExportSelectedObjectsDialog extends TitleAreaDialog
 			public void widgetSelected(SelectionEvent e)
 			{
 			    IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-                String defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Export);
+                String defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_EXPORT);
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
 				dialog.setFilterExtensions(new String[]{ "*.xml" }); //$NON-NLS-1$
 				dialog.setFilterPath(defaultFolder);

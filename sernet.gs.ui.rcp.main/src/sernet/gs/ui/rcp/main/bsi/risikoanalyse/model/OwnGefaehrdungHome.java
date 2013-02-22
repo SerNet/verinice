@@ -22,11 +22,12 @@ import java.util.List;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.service.commands.SaveElement;
 
-public class OwnGefaehrdungHome {
+public final class OwnGefaehrdungHome {
 	
 	private ICommandService commandService;
 	private static OwnGefaehrdungHome instance;
@@ -36,22 +37,23 @@ public class OwnGefaehrdungHome {
 	}
 	
 	public synchronized static OwnGefaehrdungHome getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new OwnGefaehrdungHome();
+		}
 		return instance;
 	}
 	
-	public void save(OwnGefaehrdung gef) throws Exception {
+	public void save(OwnGefaehrdung gef) throws CommandException {
 		SaveElement command = new SaveElement(gef);
 		commandService.executeCommand(command);
 	}
 	
-	public void remove(OwnGefaehrdung gef) throws Exception {
+	public void remove(OwnGefaehrdung gef) throws CommandException {
 		RemoveGenericElement<OwnGefaehrdung> command = new RemoveGenericElement<OwnGefaehrdung>(gef);
 		commandService.executeCommand(command);
 	}
 	
-	public List<OwnGefaehrdung> loadAll() throws Exception {
+	public List<OwnGefaehrdung> loadAll() throws CommandException {
 		LoadGenericElementByType<OwnGefaehrdung> command
 			= new LoadGenericElementByType<OwnGefaehrdung>(OwnGefaehrdung.class);
 		command = commandService.executeCommand(command);

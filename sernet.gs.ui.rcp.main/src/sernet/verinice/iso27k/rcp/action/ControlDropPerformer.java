@@ -91,10 +91,9 @@ public class ControlDropPerformer extends ViewerDropAdapter implements DropPerfo
 	                if(CnAElementHome.getInstance().isNewChildAllowed(group)) {
 	                    ControlTransformOperation operation = new ControlTransformOperation(group, data);
 	                    // set target to current treeselection if it isnt already selected
-	                    if(viewer.getSelection() != target || viewer.getSelection() == null){
-	                        if(viewer.getSelection() instanceof TreeSelection){
-	                            viewer.setSelection(new StructuredSelection(target));
-	                        }
+	                    if((viewer.getSelection() != target || viewer.getSelection() == null) &&
+	                            viewer.getSelection() instanceof TreeSelection){
+	                        viewer.setSelection(new StructuredSelection(target));
 	                    }
 	                    IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 	                    progressService.run(true, true, operation);
@@ -170,7 +169,8 @@ public class ControlDropPerformer extends ViewerDropAdapter implements DropPerfo
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target + " result: " + valid); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return isActive = valid;
+		isActive = valid;
+		return isActive;
 	}
 
 	/**
@@ -198,7 +198,8 @@ public class ControlDropPerformer extends ViewerDropAdapter implements DropPerfo
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("No items in drag list"); //$NON-NLS-1$
 			}
-			return isActive = false;
+			isActive = false;
+			return isActive;
 		}
 
 		if (target instanceof Group) {
@@ -216,7 +217,8 @@ public class ControlDropPerformer extends ViewerDropAdapter implements DropPerfo
 				valid = isCorrectItemsForGroup(items, IItem.VULNERABILITY);
 			}
 		}
-		return isActive = valid;
+		isActive = valid;
+		return  isActive;
 	}
 
 	/**

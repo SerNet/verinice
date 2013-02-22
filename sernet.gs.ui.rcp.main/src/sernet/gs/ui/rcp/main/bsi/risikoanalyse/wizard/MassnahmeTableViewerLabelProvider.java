@@ -80,7 +80,6 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
         		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(massnahme);
                 return shorten(massnahme.getDescription());
             }
-            ;
         } else {
             MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
             switch (columnIndex) {
@@ -93,7 +92,6 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
             case 3:
                 return Messages.MassnahmeTableViewerLabelProvider_4;
             }
-            ;
         }
         return ""; //$NON-NLS-1$
     }

@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
-import java.util.Date;
 import java.util.List;
 
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -34,19 +33,17 @@ import sernet.verinice.model.common.ChangeLogEntry;
  *
  */
 // TODO implement notification service for clients
-public class ChangeLogWatcher {
+public final class ChangeLogWatcher {
 
-	private Date lastUpdate;
-	
 	private static ChangeLogWatcher instance;
 	
 	private ChangeLogWatcher() {
-		lastUpdate = null;
 	}
 	
 	public static synchronized ChangeLogWatcher getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new ChangeLogWatcher();
+		}
 		return instance;
 	}
 	

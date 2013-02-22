@@ -83,7 +83,7 @@ public class DescriptionPage extends WizardPage {
     
     private boolean overwriteTemplate = true;
     
-    private final int pageWidth = 600;
+    private static final int PAGE_WIDTH = 600;
     
     /**
      * @param elementTitle Title of affected element for the task
@@ -113,8 +113,8 @@ public class DescriptionPage extends WizardPage {
             object.setFont(newFont);
             GC gc = new GC(object);
             Point size = gc.textExtent(elementTitle);
-            if(size.x > pageWidth - pageWidthSubtrahend) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,pageWidth-pageWidthSubtrahend) + "..."; //$NON-NLS-1$
+            if(size.x > PAGE_WIDTH - pageWidthSubtrahend) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,PAGE_WIDTH-pageWidthSubtrahend) + "..."; //$NON-NLS-1$
             }
             object.setText(elementTitle);
         }

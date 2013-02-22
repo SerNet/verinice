@@ -44,7 +44,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 public class ClientPropertyPlaceholderConfigurer extends
 		PropertyPlaceholderConfigurer {
 	
-	private static final Logger log = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
+	private static final Logger LOG = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
 	
 	private static ServerModeAccessor serverModeAccessor = new RCPServerModeAccessor();
 	
@@ -55,11 +55,11 @@ public class ClientPropertyPlaceholderConfigurer extends
 		if (placeholder.equals("verinice.serverURL"))
 		{
 			String server = null;
-			if (isInternalServerMode())
+			if (isInternalServerMode()){
 				server = PreferenceConstants.VNSERVER_URI_INTERNAL;
-			else
+			} else {
 				server = correctServerURI(getServerURI());
-			
+			}
 			return server;
 		}
 		else if (placeholder.equals("verinice.model.configuration.class"))
@@ -79,7 +79,7 @@ public class ClientPropertyPlaceholderConfigurer extends
 				configurationClass = BSIConfigurationRemoteSource.class.getName();
 			}
 			
-			log.debug("using configuration class: " + configurationClass);
+			LOG.debug("using configuration class: " + configurationClass);
 			
 			return configurationClass;
 		}
@@ -110,14 +110,14 @@ public class ClientPropertyPlaceholderConfigurer extends
 	{
 		// Trailing slashes are a problem for the server. As such strip them away.
 		int i = uri.length() - 1;
-		while (i > 0 && uri.codePointAt(i) == '/')
+		while (i > 0 && uri.codePointAt(i) == '/'){
 			i--;
-
-		uri = uri.substring(0, i + 1); 
+		}
+		String returnedUri = uri.substring(0, i + 1); 
 		
-		log.debug("corrected server URI to: " + uri);
+		LOG.debug("corrected server URI to: " + uri);
 		
-		return uri;
+		return returnedUri;
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class ClientPropertyPlaceholderConfigurer extends
 	 */
 	private static class RCPServerModeAccessor implements ServerModeAccessor
 	{
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		private Preferences prefs = Activator.getDefault().getPluginPreferences();
 		
 		public boolean isInternalServerMode()
 		{

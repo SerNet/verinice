@@ -53,7 +53,7 @@ public class NewQmIssueDialog extends TitleAreaDialog {
     private static final String[] PRIORITY_LABEL_ARRAY = {Messages.NewQmIssueDialog_0,Messages.NewQmIssueDialog_1,Messages.NewQmIssueDialog_2};
     private static final int DEFAULT_PRIORITY_INDEX = 1;
     
-    private final int dialogWidth = 400;
+    private static final int DIALOG_WIDTH = 400;
     
     private String elementTitle;
     
@@ -103,8 +103,8 @@ public class NewQmIssueDialog extends TitleAreaDialog {
             object.setFont(newFont);
             GC gc = new GC(object);
             Point size = gc.textExtent(elementTitle);
-            if(size.x > dialogWidth - dialogWidthSubtrahend) {
-                elementTitle = trimTitleByWidthSize(gc,elementTitle,dialogWidth-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
+            if(size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
+                elementTitle = trimTitleByWidthSize(gc,elementTitle,DIALOG_WIDTH-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
             }
             object.setText(elementTitle);
         }
@@ -162,7 +162,7 @@ public class NewQmIssueDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         final int shellHeight = 450;
-        newShell.setSize(dialogWidth, shellHeight);
+        newShell.setSize(DIALOG_WIDTH, shellHeight);
         newShell.setText(Messages.NewQmIssueDialog_9);
     }
     

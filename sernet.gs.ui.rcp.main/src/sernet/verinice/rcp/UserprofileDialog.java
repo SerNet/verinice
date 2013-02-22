@@ -123,7 +123,8 @@ public class UserprofileDialog extends TitleAreaDialog {
         final int fourColCompCharHeight = 20;
         final int fourColCompNumColumns = 4;
         final int leftCompCharHeight = 40;
-        final int rightCompCharHeight = 40;
+        final int rightCompCharHeight = leftCompCharHeight;
+        final int rightButtonCompositeWidthHint = rightCompCharHeight;
         
         
         setTitle(Messages.UserprofileDialog_1);
@@ -204,7 +205,7 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         Composite rightButtonComposite = new Composite(fourColumnComposite, SWT.NONE);
         gridData = new GridData(SWT.CENTER, SWT.FILL, false, true);
-        gridData.widthHint = convertWidthInCharsToPixels(40);
+        gridData.widthHint = convertWidthInCharsToPixels(rightButtonCompositeWidthHint);
         rightButtonComposite.setLayoutData(gridData);
         gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
@@ -358,14 +359,14 @@ public class UserprofileDialog extends TitleAreaDialog {
         
         int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
-        TableViewer table = new TableViewer(parent, style | SWT.MULTI);
+        TableViewer internalTable = new TableViewer(parent, style | SWT.MULTI);
 
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
-        table.getControl().setLayoutData(gd);
+        internalTable.getControl().setLayoutData(gd);
 
-        table.setUseHashlookup(true);
+        internalTable.setUseHashlookup(true);
 
-        return table;
+        return internalTable;
     }
     
     private void createButtons(Composite parent) {

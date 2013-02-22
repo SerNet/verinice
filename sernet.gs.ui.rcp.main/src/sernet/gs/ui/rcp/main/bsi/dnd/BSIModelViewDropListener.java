@@ -66,7 +66,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
 
     private TreeViewer viewer;
 
-    private final static Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
+    private static final Logger LOG = Logger.getLogger(BSIModelViewDropListener.class);
 
     private boolean isActive = false;
 
@@ -83,14 +83,17 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     @Override
     public boolean performDrop(Object data) {
         Object toDrop = data;
+        Object selectedData = null;
         if(data == null){
             if(LOG.isDebugEnabled()){
                 LOG.debug("data is null - setting to selected Object");
             }
             
-            data = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
+            selectedData = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
+        } else {
+            selectedData = data;
         }
-        List items = DNDHelper.arrayToList(data);
+        List items = DNDHelper.arrayToList(selectedData);
         Object firstOne = items.get(0);
         if (toDrop != null && (toDrop instanceof Object[])) {
             Object[] o = (Object[])toDrop;

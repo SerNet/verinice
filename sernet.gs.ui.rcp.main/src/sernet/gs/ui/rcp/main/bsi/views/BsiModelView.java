@@ -136,7 +136,6 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private BSIModelViewFilterAction filterAction;
 
-	private TreeContentProvider contentProvider;
     private ElementManager elementManager;
 
 	private Action expandAllAction;
@@ -243,7 +242,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
-        contentProvider = new TreeContentProvider(elementManager);	
+	    TreeContentProvider contentProvider = new TreeContentProvider(elementManager);	
         viewer.setContentProvider(contentProvider);
                 
 		viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(), workbench.getDecoratorManager()));

@@ -67,20 +67,20 @@ public class LoadChildrenAndMassnahmen extends GenericCommand implements ILoadCh
 
 	private final Comparator<CnATreeElement> cnAComparator = new CnAComparator();
 	
-	private static final int massnahmenListSize = 20;
-	private static final int defaultListSize = 10;
+	private static final int MASSNAHMEN_LIST_SIZE = 20;
+	private static final int DEFAULT_LIST_SIZE = 10;
 	
-	private Set<TodoViewItem> massnahmen = new HashSet<TodoViewItem>(massnahmenListSize);
+	private Set<TodoViewItem> massnahmen = new HashSet<TodoViewItem>(MASSNAHMEN_LIST_SIZE);
 	
-	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(defaultListSize);
-	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(defaultListSize);
-    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(defaultListSize);
-    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(defaultListSize);
+	private List<CnATreeElement> gebaeudeList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> raumList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> clienteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> serverList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> netzList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> anwendungList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+	private List<CnATreeElement> personList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+    private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
+    private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
 	
 	private Set<UnresolvedItem> unresolvedItems = new HashSet<UnresolvedItem>();
 	

@@ -41,7 +41,7 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 	private transient Logger log = Logger
 			.getLogger(LoadReportControlGroups.class);
 
-	private Organization root_object;
+	private Organization rootObject;
 
 	private List<CnATreeElement> result = new ArrayList<CnATreeElement>();
 
@@ -81,10 +81,10 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 	        }
 	        Object o = command.getFound();
 	        if (o instanceof Organization) {
-	            root_object = (Organization) o;
+	            rootObject = (Organization) o;
 	        }
 
-	        Queue<ControlGroup> sortedResults = sortResults(root_object);
+	        Queue<ControlGroup> sortedResults = sortResults(rootObject);
 	        for (ControlGroup g : sortedResults) {
 	            if(!result.contains(g.getParent())){
 	                result.add(g.getParent());
@@ -102,10 +102,8 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 	            List<CnATreeElement> commandResults = elementLoader.getElements();
 	            ArrayList<ControlGroup> sortedList = new ArrayList<ControlGroup>(0);
 	            for(CnATreeElement c : commandResults){
-	                if(c instanceof ControlGroup){
-	                    if(!sortedList.contains((ControlGroup)c) && hasOnlyControlChildren((ControlGroup)c)){
-	                        sortedList.add((ControlGroup)c);
-	                    }
+	                if(c instanceof ControlGroup && !sortedList.contains((ControlGroup)c) && hasOnlyControlChildren((ControlGroup)c)){
+	                    sortedList.add((ControlGroup)c);
 	                }
 	            }
 	            Collections.sort(sortedList,new Comparator<ControlGroup>() {

@@ -158,17 +158,19 @@ public class XMLImportDialog extends Dialog {
     protected Control createDialogArea(Composite parent) {
         final int layoutNumColumns = 5;
         final int layoutVerticalSpacing = 15;
-        final int separatorHorizontalSpan = layoutNumColumns;
-        final int operationHorizontalSpan = separatorHorizontalSpan;
+        final int separatorHorizontalSpan = 5;
+        final int operationHorizontalSpan = 5;
         final int operationVerticalSpan = 3;
-        final int pbeNumColumns = operationVerticalSpan;
-        final int cryptGroupHorizontalSpan = operationHorizontalSpan;
+        final int pbeNumColumns = 3;
+        final int cryptGroupHorizontalSpan = 5;
         final int passwordWidthHint = 280;
-        final int certificateWidthHint = passwordWidthHint;
-        final int dataGroupHorizontalSpan = cryptGroupHorizontalSpan;
+        final int certificateWidthHint = 280;
+        final int dataGroupHorizontalSpan = 5;
         final int dataGroupNumColumns = 4;
-        final int dataIntroHorizontalSpan = dataGroupNumColumns;
-        final int dataPathHorizontalSpan = pbeNumColumns;
+        final int dataIntroHorizontalSpan = 4;
+        final int dataPathHorizontalSpan = 3;
+        final int privateKeyPathWidthHint = 280;
+        final int privateKeyPasswordWidthHint = 280;
         
         Button useDefaultFolderButton;
         
@@ -219,8 +221,7 @@ public class XMLImportDialog extends Dialog {
                 update = (e.getSource() instanceof Button) ? ((Button)(e.getSource())).getSelection() : update;
             }
         };
-        SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
-        Button updateCheck = new Button(operationGroup, SWT.CHECK);
+        Button updateCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
         updateCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label updateText = new Label(operationGroup, SWT.LEFT);
@@ -362,7 +363,7 @@ public class XMLImportDialog extends Dialog {
         
         final Text privateKeyPathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER );
         data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = privateKeyPathWidthHint;
         data.horizontalSpan = 2;
         data.horizontalAlignment = SWT.RIGHT;
         privateKeyPathField.setLayoutData(data);
@@ -405,7 +406,7 @@ public class XMLImportDialog extends Dialog {
         
         privateKeyPasswordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         data = new GridData();
-        data.widthHint = 280;
+        data.widthHint = privateKeyPasswordWidthHint;
         privateKeyPasswordField.setLayoutData(data); 
         // FocusListener is added to passwordField afterwards
         new Label(cryptGroup, SWT.NONE);
@@ -525,7 +526,7 @@ public class XMLImportDialog extends Dialog {
             }
             String currentPath = setupDirPath();
             defaultFolder = currentPath;
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Import, currentPath);
+            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_IMPORT, currentPath);
             pathText.setText(f.getPath());
         }
     }
@@ -711,7 +712,7 @@ public class XMLImportDialog extends Dialog {
     }
     private String getDefaultFolder(){
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Import);
+        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_IMPORT);
         if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
             defaultFolder=defaultFolder+System.getProperty("file.separator"); 
         }

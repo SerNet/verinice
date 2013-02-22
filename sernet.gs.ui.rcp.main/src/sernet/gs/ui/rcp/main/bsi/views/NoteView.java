@@ -74,8 +74,6 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.NoteView"; //$NON-NLS-1$
 
-    private Composite parent;
-
     private ExpandBar expandBar;
 
     private ISelectionListener selectionListener;
@@ -87,8 +85,6 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     private RightsEnabledAction addNoteAction;
 
     private IBSIModelListener modelListener;
-
-    private List<Note> noteList;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
@@ -108,7 +104,6 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
         
         final int expandBarSpacing = 4;
         
-        this.parent = parent;
         parent.setLayout(new FillLayout());
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
@@ -228,7 +223,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
         try {
             LoadNotes command = new LoadNotes(getCurrentCnaElement().getDbId());
             command = getCommandService().executeCommand(command);
-            noteList = command.getNoteList();
+            List<Note> noteList = command.getNoteList();
             if (noteList != null && noteList.size() > 0) {
                 for (final Note note : noteList) {
                     note.addListener(new Note.INoteChangedListener() {

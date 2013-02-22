@@ -58,7 +58,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				PreferenceConstants.DB_DRIVER_DERBY);
 		
 		store.setDefault(PreferenceConstants.DB_DIALECT,
-				PreferenceConstants.DB_DIALECT_derby);
+				PreferenceConstants.DB_DIALECT_DERBY);
 		
 		String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
 				.getInstance().getWorkdir().replaceAll("\\\\", "/") );

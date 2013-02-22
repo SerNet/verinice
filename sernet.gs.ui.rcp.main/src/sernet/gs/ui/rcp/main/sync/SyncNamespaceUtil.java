@@ -25,9 +25,9 @@ import org.jdom.Namespace;
 
 public class SyncNamespaceUtil
 {
-	public static Namespace SYNC_NS = Namespace.getNamespace( "sync", "http://www.sernet.de/sync/sync" );
-	public static Namespace DATA_NS = Namespace.getNamespace( "data", "http://www.sernet.de/sync/data" );
-	public static Namespace MAPPING_NS = Namespace.getNamespace( "map", "http://www.sernet.de/sync/mapping" );
+	public static final Namespace SYNC_NS = Namespace.getNamespace( "sync", "http://www.sernet.de/sync/sync" );
+	public static final Namespace DATA_NS = Namespace.getNamespace( "data", "http://www.sernet.de/sync/data" );
+	public static final Namespace MAPPING_NS = Namespace.getNamespace( "map", "http://www.sernet.de/sync/mapping" );
 	
 	public static SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
 	

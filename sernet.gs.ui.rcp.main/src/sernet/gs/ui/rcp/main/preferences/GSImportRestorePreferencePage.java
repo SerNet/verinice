@@ -188,28 +188,24 @@ public class GSImportRestorePreferencePage extends FieldEditorPreferencePage imp
     @Override
     public void propertyChange(PropertyChangeEvent event) {
         super.propertyChange(event);
-        if (event.getSource().equals(toDirField)) {
-            if (toDirField.getStringValue() != null && toDirField.getStringValue().length() > 0) {
+        if (event.getSource().equals(toDirField) && toDirField.getStringValue() != null && toDirField.getStringValue().length() > 0) {
 
-                String url = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
+            String url = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
 
-                if (showDirWarning && !(url.indexOf("localhost") > -1 || url.indexOf("127.0.0.1") > -1)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    showDirWarning = false;
-                    MessageDialog.openWarning(getShell(), Messages.getString("GSImportRestorePreferencePage.28"), Messages.getString("GSImportRestorePreferencePage.29")); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+            if (showDirWarning && !(url.indexOf("localhost") > -1 || url.indexOf("127.0.0.1") > -1)) { //$NON-NLS-1$ //$NON-NLS-2$
+                showDirWarning = false;
+                MessageDialog.openWarning(getShell(), Messages.getString("GSImportRestorePreferencePage.28"), Messages.getString("GSImportRestorePreferencePage.29")); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
         }
 
-        if (event.getSource().equals(this.gstoolDumpFile)) {
-            if (gstoolDumpFile.getStringValue() != null && gstoolDumpFile.getStringValue().length() > 0) {
+        if (event.getSource().equals(this.gstoolDumpFile) && gstoolDumpFile.getStringValue() != null && gstoolDumpFile.getStringValue().length() > 0) {
 
-                String url = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
+            String url = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.GS_DB_URL);
 
-                if (showWarning && !(url.indexOf("localhost") > -1 || url.indexOf("127.0.0.1") > -1)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    showWarning = false;
-                    MessageDialog.openWarning(getShell(), Messages.getString("GSImportRestorePreferencePage.32"), Messages.getString("GSImportRestorePreferencePage.33")); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+            if (showWarning && !(url.indexOf("localhost") > -1 || url.indexOf("127.0.0.1") > -1)) { //$NON-NLS-1$ //$NON-NLS-2$
+                showWarning = false;
+                MessageDialog.openWarning(getShell(), Messages.getString("GSImportRestorePreferencePage.32"), Messages.getString("GSImportRestorePreferencePage.33")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
 

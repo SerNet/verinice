@@ -198,7 +198,7 @@ public class EntitySelectionPage extends WizardPage{
 		        String outString = ""; //$NON-NLS-1$
 		        StringBuffer buffer = new StringBuffer();
 		        for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++){
-		        	buffer.append(selectedItems[loopIndex] + " "); //$NON-NLS-1$
+		        	buffer.append(selectedItems[loopIndex]).append(" "); //$NON-NLS-1$ //$NON-NLS-2$
 		        }
 		        outString = buffer.toString();
 		    }

@@ -39,7 +39,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
  */
 public class LoadMaturityRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadMaturityRadarChartData.class);
+    private transient Logger log = Logger.getLogger(LoadMaturityRadarChartData.class);
     
     public static final String[] COLUMNS = new String[] { 
         "CATEGORIES",
@@ -51,8 +51,8 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
     private Integer rootElmt;
     private Integer sgdbid;
     
-    private static final int thresholdValue = 3;
-    private static final int paddingValue = 4;
+    private static final int THRESHOLD_VALUE = 3;
+    private static final int PADDING_VALUE = 4;
 
     
     private List<List<String>> result;
@@ -71,10 +71,10 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
     }
     
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadMaturityRadarChartData.class);
+        if(log == null){
+            log = Logger.getLogger(LoadMaturityRadarChartData.class);
         }
-        return LOG;
+        return log;
     }
     
     /* (non-Javadoc)
@@ -133,8 +133,8 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
                     ArrayList<String> row = new ArrayList<String>();
                     row.add(entry.getKey());
                     row.add(String.valueOf(entry.getValue()));
-                    row.add(String.valueOf(thresholdValue));
-                    row.add(String.valueOf(paddingValue));
+                    row.add(String.valueOf(THRESHOLD_VALUE));
+                    row.add(String.valueOf(PADDING_VALUE));
                     row.trimToSize();
                     list.add(row);
                 }
@@ -176,8 +176,8 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
             this.result = (ArrayList<List<String>>)array[0];
             this.samtRootGroup = (ControlGroup)array[1];
             resultInjectedFromCache = true;
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if(getLog().isDebugEnabled()){
+                getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
         
@@ -188,9 +188,9 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
      */
     @Override
     public Object getCacheableResult() {
-        Object[] result = new Object[2];
-        result[0] = this.result;
-        result[1] = samtRootGroup;
-        return result;
+        Object[] cacheableResult = new Object[2];
+        cacheableResult[0] = this.result;
+        cacheableResult[1] = samtRootGroup;
+        return cacheableResult;
     }
 }

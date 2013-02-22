@@ -36,26 +36,17 @@ import sernet.gs.ui.rcp.main.Activator;
  */
 public class GeneralSettingsPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	private BooleanFieldEditor errorPopups;
-	private BooleanFieldEditor derbyWarning;
-    private BooleanFieldEditor linkToEditor;
-	private BooleanFieldEditor inputHelperHints;
 
-	private BooleanFieldEditor showAlienDecorator;
-
-	private BooleanFieldEditor showDBIDDecorator;
-	private BooleanFieldEditor useAutomaticValidation;
-	private BooleanFieldEditor useValidationGuiHints;
 	
-	private ComboFieldEditor encodingFieldEditor;
-	private static final String[][] encodingComboValues = new String[][]{
+
+	private static final String[][] ENCODING_COMBO_VALUES = new String[][]{
         new String[]{VeriniceCharset.CHARSET_UTF_8.displayName(),VeriniceCharset.CHARSET_UTF_8.name()},
         new String[]{VeriniceCharset.CHARSET_ISO_8859_15.displayName(),VeriniceCharset.CHARSET_ISO_8859_15.name()},
         new String[]{VeriniceCharset.CHARSET_WINDOWS_1252.displayName(),VeriniceCharset.CHARSET_WINDOWS_1252.name()}       
 	};
 	
-	private ComboFieldEditor thumbnailSizeEditor;	
-    private static final String[][] thumbnailSizeValues = new String[][]{
+	
+    private static final String[][] THUMBNAIL_SIZE_VALUES = new String[][]{
         new String[]{Messages.getString("GeneralSettingsPage.5"),"0"}, //$NON-NLS-1$ //$NON-NLS-2$
         new String[]{Messages.getString("GeneralSettingsPage.8"),"20"}, //$NON-NLS-1$ //$NON-NLS-2$
         new String[]{Messages.getString("GeneralSettingsPage.10"),"50"}, //$NON-NLS-1$ //$NON-NLS-2$
@@ -77,42 +68,42 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	 */
 	@Override
 	public void createFieldEditors() {
-		derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
+	    BooleanFieldEditor derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(derbyWarning);
 		
-		linkToEditor = new BooleanFieldEditor(PreferenceConstants.LINK_TO_EDITOR, Messages.getString("GeneralSettingsPage.4"),  //$NON-NLS-1$
+		BooleanFieldEditor linkToEditor = new BooleanFieldEditor(PreferenceConstants.LINK_TO_EDITOR, Messages.getString("GeneralSettingsPage.4"),  //$NON-NLS-1$
                 getFieldEditorParent());
         addField(linkToEditor);
 
-		errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
+        BooleanFieldEditor errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(errorPopups);
 
-		inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
+		BooleanFieldEditor inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inputHelperHints);
 
-		showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
+		BooleanFieldEditor showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showAlienDecorator);
 		
-		showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
+		BooleanFieldEditor showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
 		
-		useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
+		BooleanFieldEditor useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useValidationGuiHints);
 		
-		useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
+		BooleanFieldEditor useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
 		addField(useAutomaticValidation);
 		
-		encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
+		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
-				encodingComboValues, 
+				ENCODING_COMBO_VALUES, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);
         
-        thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
+        ComboFieldEditor thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
                 Messages.getString("GeneralSettingsPage.7"),  //$NON-NLS-1$
-                thumbnailSizeValues, 
+                THUMBNAIL_SIZE_VALUES, 
                 getFieldEditorParent());
         addField(thumbnailSizeEditor);
         

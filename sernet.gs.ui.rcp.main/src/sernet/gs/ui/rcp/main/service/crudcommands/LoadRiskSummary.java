@@ -51,7 +51,6 @@ public class LoadRiskSummary extends GenericCommand {
 	}
 	
 	public void execute() {
-	    int ciaTolerable;
 	    int ciaMax = 0;
 	    int probMax = 0;
 	    getLog().debug("LoadReportElements for root_object " + rootElement);
@@ -62,16 +61,15 @@ public class LoadRiskSummary extends GenericCommand {
 	    Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElement);
 	    switch (ciaChoice) {
         case 'c':
-            ciaTolerable = org.getSchutzbedarfProvider().getVertraulichkeit();
             ciaMax= org.getEntityType().getPropertyType(Asset.TYPE_ID + AssetValueService.CONFIDENTIALITY).getMaxValue();
             break;
         case 'i':
-            ciaTolerable =  org.getSchutzbedarfProvider().getIntegritaet();
             ciaMax= org.getEntityType().getPropertyType(Asset.TYPE_ID + AssetValueService.INTEGRITY).getMaxValue();
             break;
         case 'a':
-            ciaTolerable = org.getSchutzbedarfProvider().getVerfuegbarkeit();
             ciaMax= org.getEntityType().getPropertyType(Asset.TYPE_ID + AssetValueService.AVAILABILITY).getMaxValue();
+            break;
+        default:
             break;
         }
 	    matrix = new RiskMatrix(probMax, ciaMax);
@@ -90,7 +88,7 @@ public class LoadRiskSummary extends GenericCommand {
         populateMatrix(items);
 	}
 
-    private void populateMatrix(ArrayList<CnATreeElement> items) {
+    private void populateMatrix(List<CnATreeElement> items) {
         Integer risk =null;
         for (CnATreeElement cnATreeElement : items) {
           for (CnALink link: cnATreeElement.getLinksDown()) {
@@ -105,6 +103,8 @@ public class LoadRiskSummary extends GenericCommand {
                       break;
                   case 'a':
                       risk = link.getRiskAvailability();
+                      break;
+                  default:
                       break;
                   }
                   matrix.increaseCount(prob, risk);

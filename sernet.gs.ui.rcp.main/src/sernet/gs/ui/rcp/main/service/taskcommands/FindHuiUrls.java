@@ -46,7 +46,7 @@ public class FindHuiUrls extends GenericCommand {
 
     private static final long serialVersionUID = 3230058749744891441L;
 
-    private static final Logger log = Logger.getLogger(FindHuiUrls.class);
+    private Logger log = Logger.getLogger(FindHuiUrls.class);
 
 	private HibernateCallback hcb = new FindURLsCallback();
 
@@ -86,6 +86,13 @@ public class FindHuiUrls extends GenericCommand {
 	public List<HuiUrl> getList() {
 		return list;
 	}
+	
+	private Logger getLog(){
+	    if(log == null){
+	        log = Logger.getLogger(FindHuiUrls.class);
+	    }
+	    return log;
+	}
 
 	@SuppressWarnings("serial")
 	private class FindURLsCallback implements HibernateCallback, Serializable {
@@ -105,9 +112,9 @@ public class FindHuiUrls extends GenericCommand {
 					.addScalar("propertyvalue", Hibernate.STRING)
 					.setParameterList("types", allIDs, Hibernate.STRING);
 
-			if (log.isDebugEnabled())
-				log.debug("created statement: " + query.getQueryString());
-
+			if (getLog().isDebugEnabled()){
+				getLog().debug("created statement: " + query.getQueryString());
+			}
 			return (List<String>) query.list();
 		}
 

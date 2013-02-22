@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class Messages {
+public final class Messages {
     private static final String BUNDLE_NAME = "sernet.verinice.iso27k.rcp.action.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -43,7 +43,7 @@ public class Messages {
         }
     }
     
-    public static String getString(String key, Object... params  ) {; 
+    public static String getString(String key, Object... params  ) { 
         try {
             String pattern = RESOURCE_BUNDLE.getString(key);
             return MessageFormat.format(pattern, params);

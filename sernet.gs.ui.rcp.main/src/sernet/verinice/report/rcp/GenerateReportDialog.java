@@ -82,8 +82,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private List<CnATreeElement> scopes;
 
-    private List<String> scopeTitles;
-
     private Integer auditId=null;
 
     private String auditName=null;
@@ -266,7 +264,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         openReportButton.addSelectionListener(new SelectionAdapter() {
           public void widgetSelected(SelectionEvent event) {
             FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-            //dlg.setFilterNames(FILTER_NAMES);
             dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             String fn = dlg.open();
             if (fn != null) {
@@ -506,7 +503,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         
         scopes = new ArrayList<CnATreeElement>();
-        scopeTitles = new ArrayList<String>();
+
+        List<String> scopeTitles = new ArrayList<String>();
         
         scopes.addAll(loadScopes());
         scopes.addAll(loadITVerbuende());
@@ -593,7 +591,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             outputFileName = "unknown";
         }
         String scopeName = scopeCombo.getText().replaceAll("[^a-zA-Z]", "");
-        StringBuilder sb = new StringBuilder(outputFileName + "_" + scopeName);
+        StringBuilder sb = new StringBuilder(outputFileName).append("_").append(scopeName);
         if(chosenOutputFormat!=null) {
             sb.append(".").append(chosenOutputFormat.getFileSuffix());
         }
@@ -646,7 +644,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         String currentPath = setupDirPath();
         defaultFolder = currentPath;
-        Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.Default_Folder_Report, currentPath);
+        Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
         outputFile = new File(f);
         resetScopeCombo();
         super.okPressed();
@@ -775,7 +773,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
     private String getDefaultFolder(){
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-         defaultFolder = prefs.getString(PreferenceConstants.Default_Folder_Report);
+         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);
          if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
              defaultFolder=defaultFolder+System.getProperty("file.separator"); 
          }        

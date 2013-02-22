@@ -59,11 +59,9 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
 	
 	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
     
-    private Action linkWithEditorAction;
-
     private boolean linkingActive = true;
     
-    SerialiseBrowserLoadingListener serialiseListener;
+    private SerialiseBrowserLoadingListener serialiseListener;
 
 	public void createPartControl(Composite parent) {
 		GridLayout gl = new GridLayout(1, false);
@@ -79,7 +77,7 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
 			
 			browser.setUrl(defaultImage());
 
-			linkWithEditorAction = new Action(Messages.BrowserView_0, IAction.AS_CHECK_BOX) {
+		    Action linkWithEditorAction = new Action(Messages.BrowserView_0, IAction.AS_CHECK_BOX) {
 	            @Override
 	            public void run() {
 	                toggleLinking(isChecked());

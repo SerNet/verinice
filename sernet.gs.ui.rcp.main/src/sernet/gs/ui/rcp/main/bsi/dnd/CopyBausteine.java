@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -43,10 +42,6 @@ import sernet.verinice.rcp.IProgressRunnable;
  */
 public class CopyBausteine implements IProgressRunnable {
 
-	private static final Logger LOG = Logger.getLogger(CopyBausteine.class);
-
-	private IProgressObserver progressObserver;
-	
 	private CopyBausteineService service;
 	
 	private List<CnATreeElement> selectedElementList;
@@ -86,7 +81,7 @@ public class CopyBausteine implements IProgressRunnable {
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void run(IProgressMonitor monitor)  {	
-		progressObserver = new RcpProgressObserver(monitor);
+	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new CopyBausteineService(progressObserver,this.selectedElementList, elements);
 		service.run();
 	}

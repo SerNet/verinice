@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -31,8 +29,6 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadChildrenForExpansion extends GenericCommand {
 	
-	private static final Logger log = Logger.getLogger(LoadChildrenForExpansion.class);
-
 	private CnATreeElement parent;
 	private Integer dbId;
 

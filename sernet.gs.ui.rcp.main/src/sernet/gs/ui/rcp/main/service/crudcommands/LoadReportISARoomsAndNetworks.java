@@ -96,41 +96,40 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                 for(CnATreeElement c : cList){
                     if(c instanceof ControlGroup){
                         ControlGroup group = (ControlGroup)c;
-                        if(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY).equals("1")){
-                            if(group.getEntity().getSimpleValue("controlgroup_is_room").equals("1")){
-                                List<String> roomResult = new ArrayList<String>();
-                                // adding title
-                                roomResult.add(group.getTitle());
-                                // adding date of inspection
-                                roomResult.add(group.getEntity().getSimpleValue("controlgroup_isroom_dateofinspection"));
-                                // adding inspecteur and companions
-                                Map<CnATreeElement,CnALink> linkedPersonsMap = CnALink.getLinkedElements(group, PersonIso.TYPE_ID);
-                                StringBuilder inspectorBuilder = new StringBuilder();
-                                StringBuilder companionBuilder = new StringBuilder();
-                                for(Entry<CnATreeElement, CnALink> entry : linkedPersonsMap.entrySet()){
-                                    if(entry.getValue().getRelationId().equals("inspector")){
-                                        if(entry.getKey() instanceof PersonIso){
-                                            PersonIso inspector = (PersonIso)entry.getKey();
-                                            inspectorBuilder.append(inspector.getSurname() + ", " + inspector.getName());
-                                            inspectorBuilder.append("\n");
-                                        }
-                                    } else if(entry.getValue().getRelationId().equals("companion")){
-                                        PersonIso companion = (PersonIso)entry.getKey();
-                                        companionBuilder.append(companion.getSurname()+ ", " + companion.getName());
-                                        companionBuilder.append("\n");
+                        if(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY).equals("1") &&
+                                group.getEntity().getSimpleValue("controlgroup_is_room").equals("1")){
+                            List<String> roomResult = new ArrayList<String>();
+                            // adding title
+                            roomResult.add(group.getTitle());
+                            // adding date of inspection
+                            roomResult.add(group.getEntity().getSimpleValue("controlgroup_isroom_dateofinspection"));
+                            // adding inspecteur and companions
+                            Map<CnATreeElement,CnALink> linkedPersonsMap = CnALink.getLinkedElements(group, PersonIso.TYPE_ID);
+                            StringBuilder inspectorBuilder = new StringBuilder();
+                            StringBuilder companionBuilder = new StringBuilder();
+                            for(Entry<CnATreeElement, CnALink> entry : linkedPersonsMap.entrySet()){
+                                if(entry.getValue().getRelationId().equals("inspector")){
+                                    if(entry.getKey() instanceof PersonIso){
+                                        PersonIso inspector = (PersonIso)entry.getKey();
+                                        inspectorBuilder.append(inspector.getSurname() + ", " + inspector.getName());
+                                        inspectorBuilder.append("\n");
                                     }
+                                } else if(entry.getValue().getRelationId().equals("companion")){
+                                    PersonIso companion = (PersonIso)entry.getKey();
+                                    companionBuilder.append(companion.getSurname()+ ", " + companion.getName());
+                                    companionBuilder.append("\n");
                                 }
-                                roomResult.add(companionBuilder.toString());
-                                roomResult.add(inspectorBuilder.toString());
-                                roomResult.add(group.getEntity().getSimpleValue("controlgroup_isroom_categorisation"));
-                                if(Boolean.parseBoolean(group.getEntity().getSimpleValue("controlgroup_is_room_gotConcept"))){
-                                    roomResult.add("ein");
-                                } else {
-                                    roomResult.add("kein");
-                                }
-                                roomResult.add(String.valueOf(group.getDbId()));
-                                roomResults.add(roomResult);
                             }
+                            roomResult.add(companionBuilder.toString());
+                            roomResult.add(inspectorBuilder.toString());
+                            roomResult.add(group.getEntity().getSimpleValue("controlgroup_isroom_categorisation"));
+                            if(Boolean.parseBoolean(group.getEntity().getSimpleValue("controlgroup_is_room_gotConcept"))){
+                                roomResult.add("ein");
+                            } else {
+                                roomResult.add("kein");
+                            }
+                            roomResult.add(String.valueOf(group.getDbId()));
+                            roomResults.add(roomResult);
                         }
                     }
                 }

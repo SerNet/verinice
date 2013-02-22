@@ -37,16 +37,16 @@ import sernet.verinice.interfaces.bpm.IIsaQmProcess;
  */
 public abstract class CompleteHandlerRegistry {
 
-    private static final Map<String, ICompleteClientHandler> handler;
+    private static final Map<String, ICompleteClientHandler> HANDLER;
     
     /**
      * Register your handler here.
      * Key is [TASK_NAME].[TRANSITION_NAME] from jBPM process definition.
      */
     static {
-        handler = new Hashtable<String, ICompleteClientHandler>();
-        handler.put(IIsaQmProcess.TASK_IQM_SET_ASSIGNEE + "." + IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE, new SetAssigneeClientHandler());
-        handler.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, new NewQmIssueClientHandler());
+        HANDLER = new Hashtable<String, ICompleteClientHandler>();
+        HANDLER.put(IIsaQmProcess.TASK_IQM_SET_ASSIGNEE + "." + IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE, new SetAssigneeClientHandler());
+        HANDLER.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, new NewQmIssueClientHandler());
     }
     
     /**
@@ -57,7 +57,7 @@ public abstract class CompleteHandlerRegistry {
      * @return A handler or null if no handler is registered.
      */
     public static ICompleteClientHandler getHandler(String id) {
-        return handler.get(id);
+        return HANDLER.get(id);
     }
     
     /**
@@ -67,7 +67,7 @@ public abstract class CompleteHandlerRegistry {
      * @param handler A handler
      */
     public static void registerHandler(String id, ICompleteClientHandler handler) {
-        CompleteHandlerRegistry.handler.put(id,handler);
+        CompleteHandlerRegistry.HANDLER.put(id,handler);
     }
     
     /**
@@ -76,7 +76,7 @@ public abstract class CompleteHandlerRegistry {
      * @param id [TASK_NAME].[TRANSITION_NAME] from jBPM process definition
      */
     public static void removeHandler(String id) {
-        CompleteHandlerRegistry.handler.remove(id);
+        CompleteHandlerRegistry.HANDLER.remove(id);
     }
 
 }

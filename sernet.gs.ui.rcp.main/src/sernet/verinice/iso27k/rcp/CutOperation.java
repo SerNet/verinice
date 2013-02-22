@@ -21,7 +21,6 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -40,10 +39,6 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("restriction")
 public class CutOperation implements IRunnableWithProgress {
 
-	private static final Logger LOG = Logger.getLogger(CutOperation.class);
-
-	private IProgressObserver progressObserver;
-	
 	private CutService service;
 	
 	private CnATreeElement selectedGroup;
@@ -64,7 +59,7 @@ public class CutOperation implements IRunnableWithProgress {
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void run(IProgressMonitor monitor)  {	
-		progressObserver = new RcpProgressObserver(monitor);
+	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new CutService(progressObserver,this.selectedGroup, elements);
 		service.run();
 		changes = service.getElementChanges();

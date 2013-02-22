@@ -42,9 +42,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
 
     private static final Logger LOG = Logger.getLogger(RisikoMassnahmenUmsetzungDropListener.class);
-    
-    private GefaehrdungsUmsetzung parent;
-    private RisikoMassnahmenUmsetzung child;
+
     private TreeViewer viewer;
 
     /**
@@ -69,29 +67,30 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
      */
     @Override
     public boolean performDrop(Object data) {
-
+        
         if (LOG.isDebugEnabled()) {
             LOG.debug("performDrop...");
         }
         
         /* get the target object */
         Object receiver = getCurrentTarget();
-        
+        Object selectedData = null;
         if(data == null){
-            data = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
+            selectedData = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
+        } else {
+            selectedData = data;
         }
 
         /* get dropped elements */
-        for (Object toDrop : DNDHelper.arrayToList(data)) {
+        for (Object toDrop : DNDHelper.arrayToList(selectedData)) {
             try {
                 // class has already been validated at this point:
-                parent = (GefaehrdungsUmsetzung) receiver;
-                child = (RisikoMassnahmenUmsetzung) toDrop;
+                GefaehrdungsUmsetzung parent = (GefaehrdungsUmsetzung) receiver;
+                RisikoMassnahmenUmsetzung child = (RisikoMassnahmenUmsetzung) toDrop;
 
                 List<IGefaehrdungsBaumElement> children = parent.getGefaehrdungsBaumChildren();
 
-                if (child != null 
-                        && child instanceof RisikoMassnahmenUmsetzung 
+                if (child instanceof RisikoMassnahmenUmsetzung 
                         && parent instanceof GefaehrdungsUmsetzung 
                         && !(children.contains(child))) {
 
@@ -130,10 +129,9 @@ public class RisikoMassnahmenUmsetzungDropListener extends ViewerDropAdapter {
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
-        if (target == null || !(target instanceof GefaehrdungsUmsetzung)) {
+        if (!(target instanceof GefaehrdungsUmsetzung)) {
             return false;
-        } else {
-            return true;
-        }
+        } 
+        return true;
     }
 }

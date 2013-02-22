@@ -21,7 +21,6 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import sernet.verinice.iso27k.service.CopyService;
@@ -39,10 +38,6 @@ import sernet.verinice.rcp.IProgressRunnable;
  */
 public class CopyTreeElements implements IProgressRunnable {
 
-	private static final Logger LOG = Logger.getLogger(CopyTreeElements.class);
-
-	private IProgressObserver progressObserver;
-	
 	private IProgressTask service;
 	
 	private CnATreeElement selectedGroup;
@@ -63,7 +58,7 @@ public class CopyTreeElements implements IProgressRunnable {
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void run(IProgressMonitor monitor)  {	
-		progressObserver = new RcpProgressObserver(monitor);
+	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new CopyService(progressObserver,this.selectedGroup, elements);
 		service.run();
 		newElements = ((CopyService)service).getNewElements();

@@ -237,7 +237,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
         
-        serverConnectionToggleAction = new ServerConnectionToggleAction(window);
+        serverConnectionToggleAction = new ServerConnectionToggleAction();
         
         testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         introAction = ActionFactory.INTRO.create(window);

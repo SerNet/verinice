@@ -49,7 +49,7 @@ public class StrukturanalyseReport extends BsiReport
 
 	// this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
 	// TODO akoderman change marker interface to object composition: add adaptable interface for strukturelements to model classes
-	private static final String[] strukturElementTypes = new String[] {
+	private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] {
 		Anwendung.TYPE_ID,
 		BSIModel.TYPE_ID,
 		Client.TYPE_ID,
@@ -93,7 +93,7 @@ public class StrukturanalyseReport extends BsiReport
 	 * @return
 	 */
 	private boolean isStrukturElement(CnATreeElement child) {
-		for (String strukturType : strukturElementTypes) {
+		for (String strukturType : STRUKTUR_ELEMENT_TYPES) {
 			if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
 				return true;
 			}

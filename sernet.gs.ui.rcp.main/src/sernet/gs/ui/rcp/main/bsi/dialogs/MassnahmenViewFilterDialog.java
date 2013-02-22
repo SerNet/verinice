@@ -41,11 +41,7 @@ public class MassnahmenViewFilterDialog extends FilterDialog {
     public MassnahmenViewFilterDialog(Shell parent, String[] siegel, String suche, String[] schicht, boolean[] filterGefMn) {
         super(parent, null, siegel, schicht);
         this.suche = suche;
-        if(filterGefMn != null){
-            this.filterGefMn = (filterGefMn != null) ? filterGefMn.clone() : null;
-        } else {
-            this.filterGefMn = new boolean[] { false, false };
-        }
+        this.filterGefMn = (filterGefMn != null) ? filterGefMn.clone() : new boolean[] { false, false };
     }
 
     @Override

@@ -37,9 +37,9 @@ import sernet.verinice.model.iso27k.IncidentScenario;
  */
 public class LoadReportNotGreenScenarios extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportNotGreenScenarios.class);
+    private transient Logger log = Logger.getLogger(LoadReportNotGreenScenarios.class);
     
-    public static String[] COLUMNS = new String[]{"SCENARIO_NAME",
+    public static final String[] COLUMNS = new String[]{"SCENARIO_NAME",
                                                   "RISK_COLOUR",
                                                   "SCENARIO_DBID"};
     
@@ -72,38 +72,36 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
                 LoadReportElements scenarioLoader = new LoadReportElements(IncidentScenario.TYPE_ID, rootElmt, false);
                 scenarioLoader = getCommandService().executeCommand(scenarioLoader);
                 for(CnATreeElement e : scenarioLoader.getElements()){
-                    if(e instanceof IncidentScenario){
-                        if(!seenScenarios.containsKey(e.getUuid())){
-                            LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
-                            assetLoader = getCommandService().executeCommand(assetLoader);
-                            int riskColour = 0;
-                            for(CnATreeElement a : assetLoader.getElements()){
-                                a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
-                                char[] riskTypes = new char[]{'c', 'i', 'a'};
-                                for(int i = 0; i < riskTypes.length; i++){
-                                    int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i], probabilityType);
-                                    if(riskColour == 0){ // case of first iteration
-                                        riskColour = tc;
-                                    } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
-                                        riskColour = tc;
-                                    }
-                                    if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
-                                        break;
-                                    }
-
+                    if(e instanceof IncidentScenario && !seenScenarios.containsKey(e.getUuid())){
+                        LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, e.getDbId(), false, true);
+                        assetLoader = getCommandService().executeCommand(assetLoader);
+                        int riskColour = 0;
+                        for(CnATreeElement a : assetLoader.getElements()){
+                            a = (CnATreeElement)assetLoader.getDaoFactory().getDAO(CnATreeElement.class).initializeAndUnproxy(a);
+                            char[] riskTypes = new char[]{'c', 'i', 'a'};
+                            for(int i = 0; i < riskTypes.length; i++){
+                                int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i], probabilityType);
+                                if(riskColour == 0){ // case of first iteration
+                                    riskColour = tc;
+                                } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
+                                    riskColour = tc;
                                 }
                                 if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
                                     break;
                                 }
+
                             }
-                            if(riskColour != 0){
-                                ArrayList<String> result = new ArrayList<String>(0);
-                                result.add(e.getTitle());
-                                result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
-                                result.add(e.getDbId().toString());
-                                results.add(result);
-                                seenScenarios.put(e.getUuid(), 1);
+                            if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
+                                break;
                             }
+                        }
+                        if(riskColour != 0){
+                            ArrayList<String> result = new ArrayList<String>(0);
+                            result.add(e.getTitle());
+                            result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
+                            result.add(e.getDbId().toString());
+                            results.add(result);
+                            seenScenarios.put(e.getUuid(), 1);
                         }
                     }
                 }
@@ -115,10 +113,10 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
     }
     
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadReportNotGreenScenarios.class);
+        if(log == null){
+            log = Logger.getLogger(LoadReportNotGreenScenarios.class);
         }
-        return LOG;
+        return log;
     }
 
     public List<ArrayList<String>> getResult() {

@@ -80,9 +80,7 @@ public class ImportCreateBausteine extends GenericCommand {
     private String sourceId;
     private IBSIConfig bsiConfig;
 
-    private static final short BST_BEARBEITET_JA = 1;
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
-    private static final short BST_BEARBEITET_NEIN = 4;
 
     // umsetzungs patterns in verinice
     // leaving out "unbearbeitet" since this is the default:
@@ -175,8 +173,7 @@ public class ImportCreateBausteine extends GenericCommand {
             }
         }
 
-        if (baustein != null) {
-            if (refZobId == null) {
+        if (baustein != null && refZobId == null) {
                 CreateBaustein command = new CreateBaustein(element, baustein);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
@@ -187,7 +184,6 @@ public class ImportCreateBausteine extends GenericCommand {
                     transferMassnahmen(bausteinUmsetzung, list);
                 }
                 return bausteinUmsetzung;
-            }
         }
         return null;
     }
@@ -240,9 +236,9 @@ public class ImportCreateBausteine extends GenericCommand {
         return "";
     }
 
-    private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gst_status) {
+    private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gstStatus) {
         for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
-            if (UMSETZUNG_STATI_GST[i].equals(gst_status)) {
+            if (UMSETZUNG_STATI_GST[i].equals(gstStatus)) {
                 massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
                 return;
             }
@@ -253,7 +249,7 @@ public class ImportCreateBausteine extends GenericCommand {
         List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
         for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
             BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
-            if (vorlage != null) {
+            if (vorlage != null){
                 if (importUmsetzung) {
                     // copy umsetzung:
                     Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
@@ -272,12 +268,10 @@ public class ImportCreateBausteine extends GenericCommand {
                 // existiert,
                 // kann trotzdem der gesamte baustein auf entbehrlich gesetzt
                 // sein:
-                if (importUmsetzung) {
-                    if (list.iterator().hasNext()) {
-                        BausteineMassnahmenResult result = list.iterator().next();
-                        if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH) {
-                            massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
-                        }
+                if (importUmsetzung && list.iterator().hasNext()) {
+                    BausteineMassnahmenResult result = list.iterator().next();
+                    if (result.zoBst.getBearbeitetOrg() == BST_BEARBEITET_ENTBEHRLICH) {
+                        massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
                     }
                 }
             }

@@ -43,15 +43,12 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 	
 	private boolean isActive = false;
 	
-	private TreeViewer viewer = null;
-	
 	private static final Logger LOG = Logger.getLogger(BSIModelDropPerformer.class);
 	
 	private Object target = null;
 	
 	public BSIModelDropPerformer(TreeViewer viewer){
 		super(viewer);
-		this.viewer = viewer;
 	}
 
     @Override
@@ -132,7 +129,8 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("validateDrop, target: " + target + " result: " + valid); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return isActive = valid;
+		isActive = valid;
+		return isActive;
 	}
 	
 	/**
@@ -164,7 +162,8 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("No items in drag list"); //$NON-NLS-1$
 			}
-			return isActive = false;
+			isActive = false;
+			return isActive;
 		}
 
 		if (target instanceof Group) {
@@ -176,7 +175,8 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 				valid = isCorrectItemsForGroup(items, IncidentScenario.TYPE_ID);
 			}
 		}
-		return isActive = valid;
+		isActive = valid;
+		return isActive;
 	}
 	
 	

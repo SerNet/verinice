@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -46,7 +47,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
     private CnATreeElement cnaElement;
 
 
-    ArrayList<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen;
+    private List<RisikoMassnahmenUmsetzung> risikoMassnahmenUmsetzungen;
     
     /**
      * Constructor sets the needed data.
@@ -136,7 +137,7 @@ public class RisikoMassnahmenUmsetzungDragListener implements DragSourceListener
      * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
      */
     public void dragSetData(DragSourceEvent event) {
-        event.data = risikoMassnahmenUmsetzungen.toArray(new RisikoMassnahmenUmsetzung[risikoMassnahmenUmsetzungen.size()]);;
+        event.data = risikoMassnahmenUmsetzungen.toArray(new RisikoMassnahmenUmsetzung[risikoMassnahmenUmsetzungen.size()]);
     }
 
     /**

@@ -63,11 +63,11 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
         TableColumn checkboxColumn = new TableColumn(table, SWT.LEFT);
         checkboxColumn.setText(""); //$NON-NLS-1$
-        checkboxColumn.setWidth(35);
+        checkboxColumn.setWidth(checkboxColumnWidth);
 
         TableColumn tagColumn = new TableColumn(table, SWT.LEFT);
         tagColumn.setText(sernet.gs.ui.rcp.main.preferences.Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
-        tagColumn.setWidth(200);
+        tagColumn.setWidth(tagColumnWidth);
 
         viewer.setContentProvider(new ArrayContentProvider());
 

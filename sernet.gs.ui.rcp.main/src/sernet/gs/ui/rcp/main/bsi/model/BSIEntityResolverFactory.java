@@ -115,20 +115,18 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
     private void addPersonResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
-            if (propertyType.isReference()) {
-                if (propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
-                    typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(personResolver);
-                }
+            if (propertyType.isReference() &&
+                    propertyType.getReferencedEntityTypeId().equals(Person.TYPE_ID)) {
+                typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(personResolver);
             }
         }
     }
 
     private void addRoleResolverToTypes(HUITypeFactory typeFactory, EntityType entityType, List<PropertyType> propertyTypes) {
         for (PropertyType propertyType : propertyTypes) {
-            if (propertyType.isReference()) {
-                if (propertyType.getReferencedEntityTypeId().equals(Configuration.ROLE_TYPE_ID)) {
-                    typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(roleResolver);
-                }
+            if (propertyType.isReference() && 
+                    propertyType.getReferencedEntityTypeId().equals(Configuration.ROLE_TYPE_ID)) {
+                typeFactory.getPropertyType(entityType.getId(), propertyType.getId()).setReferenceResolver(roleResolver);
             }
         }
     }

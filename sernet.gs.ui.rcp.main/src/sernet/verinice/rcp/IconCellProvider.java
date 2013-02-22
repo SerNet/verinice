@@ -36,13 +36,13 @@ public class IconCellProvider extends ImageCellProvider {
     
     private int column;
     
-    private static final int columnAmount = 20;
+    private static final int COLUMN_AMOUNT = 20;
     
     /**
      * @param thumbnailSize
      */
     protected IconCellProvider(int column) {
-        super(columnAmount);
+        super(COLUMN_AMOUNT);
         this.column = column;
     }
 

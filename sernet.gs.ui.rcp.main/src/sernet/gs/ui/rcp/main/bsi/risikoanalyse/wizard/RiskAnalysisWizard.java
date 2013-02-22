@@ -65,10 +65,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     private boolean canFinish = false;
     private CnATreeElement cnaElement;
-    private ChooseGefaehrdungPage chooseGefaehrdungPage;
-    private EstimateGefaehrdungPage estimateGefaehrdungPage;
-    private RiskHandlingPage riskHandlingPage;
-    private AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage;
+
 
     /**
      * Element to save all relevant data in DB on completion of wizard. Also
@@ -188,16 +185,16 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     public void addPages() {
         setWindowTitle(Messages.RiskAnalysisWizard_3);
 
-        chooseGefaehrdungPage = new ChooseGefaehrdungPage();
+        ChooseGefaehrdungPage chooseGefaehrdungPage = new ChooseGefaehrdungPage();
         addPage(chooseGefaehrdungPage);
 
-        estimateGefaehrdungPage = new EstimateGefaehrdungPage();
+        EstimateGefaehrdungPage estimateGefaehrdungPage = new EstimateGefaehrdungPage();
         addPage(estimateGefaehrdungPage);
 
-        riskHandlingPage = new RiskHandlingPage();
+        RiskHandlingPage riskHandlingPage = new RiskHandlingPage();
         addPage(riskHandlingPage);
 
-        additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
+        AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
         addPage(additionalSecurityMeasuresPage);
     }
 

@@ -174,9 +174,10 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			BausteinUmsetzung sourceBst = (BausteinUmsetzung) DNDItems.getItems().get(0);
 			if (target instanceof BausteinUmsetzung) {
 				BausteinUmsetzung targetBst = (BausteinUmsetzung) target;
-				if (targetBst.getKapitel().equals(sourceBst.getKapitel()))
+				if (targetBst.getKapitel().equals(sourceBst.getKapitel())){
 					isActive=true;
 				    return isActive;
+				}
 			}
 			if (target instanceof IBSIStrukturElement) {
 			    isActive=true;
@@ -227,10 +228,9 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
         	return false;
         } else if (!(item instanceof IBSIStrukturElement || item instanceof IISO27kElement)){
         	return false;
-        } else if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie) {
-        	if (((LinkKategorie) target).getParent().equals(item)){ /* is same object */
+        } else if (item instanceof IBSIStrukturElement && target instanceof LinkKategorie &&
+        	((LinkKategorie) target).getParent().equals(item)){ /* is same object */
         		return false;
-        	}
         }
         return true;
     }
@@ -242,7 +242,8 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			return false;
         } else if (target instanceof IBSIStrukturKategorie){
 			return false;
-        } else return true;
+        } 
+        return true;
     }
 
 	/* (non-Javadoc)

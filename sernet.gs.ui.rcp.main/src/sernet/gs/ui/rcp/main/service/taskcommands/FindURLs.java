@@ -48,7 +48,7 @@ public class FindURLs extends GenericCommand {
 
 	private static final long serialVersionUID = 9207422070204886804L;
 
-	private static final Logger log = Logger.getLogger(FindURLs.class);
+	private Logger log = Logger.getLogger(FindURLs.class);
 
 	private DocumentLinkRoot root = new DocumentLinkRoot();
 
@@ -133,8 +133,8 @@ public class FindURLs extends GenericCommand {
 			sb.append("SELECT p.propertyValue,pl.entityId FROM PropertyList as pl INNER JOIN pl.properties as p ");
 			sb.append("WHERE p.propertyType IN (:types) ");
 			final String hql = sb.toString();
-			if (log.isDebugEnabled()) {
-				log.debug("hql: " + hql);
+			if (getLog().isDebugEnabled()) {
+				getLog().debug("hql: " + hql);
 			}
 			Query hqlQuery = session.createQuery(hql);
 			hqlQuery.setParameterList("types", types, Hibernate.STRING);
@@ -165,12 +165,19 @@ public class FindURLs extends GenericCommand {
 					+ "where elmt.entity.dbId in (:treeElementIds)")
 					.setParameterList("treeElementIds", treeElementIds);
 
-			if (log.isDebugEnabled())
-				log.debug("created statement: " + query.getQueryString());
-			
+			if (getLog().isDebugEnabled()){
+				getLog().debug("created statement: " + query.getQueryString());
+			}
 			return query.list();
 		}
 		
+	}
+	
+	private Logger getLog(){
+	    if(log == null){
+	        log = Logger.getLogger(FindURLs.class);
+	    }
+	    return log;
 	}
 
 }

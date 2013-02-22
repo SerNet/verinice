@@ -24,7 +24,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
 import sernet.verinice.service.commands.SaveElement;
 
-public class FinishedRiskAnalysisListsHome {
+public final class FinishedRiskAnalysisListsHome {
 	
 	
 	private static FinishedRiskAnalysisListsHome instance;
@@ -32,24 +32,25 @@ public class FinishedRiskAnalysisListsHome {
 	private FinishedRiskAnalysisListsHome() {
 	}
 	
-	public synchronized static FinishedRiskAnalysisListsHome getInstance() {
-		if (instance == null)
+	public static synchronized FinishedRiskAnalysisListsHome getInstance() {
+		if (instance == null){
 			instance = new FinishedRiskAnalysisListsHome();
+		}
 		return instance;
 	}
 	
-	public void saveNew(FinishedRiskAnalysisLists list) throws Exception {
+	public void saveNew(FinishedRiskAnalysisLists list) throws CommandException {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
 		ServiceFactory.lookupCommandService().executeCommand(command);
 	}
 
-	public FinishedRiskAnalysisLists update(FinishedRiskAnalysisLists list) throws Exception {
+	public FinishedRiskAnalysisLists update(FinishedRiskAnalysisLists list) throws CommandException {
 		SaveElement<FinishedRiskAnalysisLists> command = new SaveElement<FinishedRiskAnalysisLists>(list);
 		command = ServiceFactory.lookupCommandService().executeCommand(command);
 		return command.getElement();
 	}
 	
-	public void remove(FinishedRiskAnalysisLists list) throws Exception {
+	public void remove(FinishedRiskAnalysisLists list) throws CommandException {
 		RemoveGenericElement<FinishedRiskAnalysisLists> command = new RemoveGenericElement<FinishedRiskAnalysisLists>(list);
 		ServiceFactory.lookupCommandService().executeCommand(command);
 	}

@@ -40,7 +40,6 @@ import sernet.verinice.service.commands.UpdateElement;
 public class RelationDescriptionEditingSupport extends EditingSupport {
 
     static final Logger LOG = Logger.getLogger(RelationDescriptionEditingSupport.class);
-    private CellEditor textEditor;
     private IRelationTable view;
     private TableViewer viewer;
 
@@ -61,8 +60,7 @@ public class RelationDescriptionEditingSupport extends EditingSupport {
         if (!(element instanceof CnALink)){
             return null;
         }
-        textEditor = new TextCellEditor(viewer.getTable());
-        return textEditor;
+        return new TextCellEditor(viewer.getTable());
     }
 
     protected Object getValue(Object element) {
