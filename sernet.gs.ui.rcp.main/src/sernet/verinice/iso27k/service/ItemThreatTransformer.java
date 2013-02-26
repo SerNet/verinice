@@ -31,7 +31,7 @@ import sernet.verinice.model.iso27k.ThreatGroup;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @author koderman[at]sernet[dot]de
  */
-public class ItemThreatTransformer {
+public final class ItemThreatTransformer {
 
 	private ItemThreatTransformer(){}
     

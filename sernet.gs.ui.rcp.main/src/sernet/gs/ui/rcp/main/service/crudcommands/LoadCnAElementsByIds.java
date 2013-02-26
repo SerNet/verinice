@@ -30,7 +30,7 @@ public class LoadCnAElementsByIds<T extends CnATreeElement> extends GenericComma
 
 	private Class<T> clazz;
 	private List<Integer> dbIDs;
-	private ArrayList<T> foundItems;
+	private List<T> foundItems;
 
 
 	public LoadCnAElementsByIds(Class<T> clazz, List<Integer> dbIDs) {
@@ -48,7 +48,7 @@ public class LoadCnAElementsByIds<T extends CnATreeElement> extends GenericComma
 		}
 	}
 
-	public ArrayList<T> getFoundItems() {
+	public List<T> getFoundItems() {
 		return foundItems;
 	}
 

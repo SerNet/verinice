@@ -35,12 +35,12 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 /**
  *
  */
-public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
+public final class IBSIStrukturElementTransfer extends ByteArrayTransfer {
     
     private static final String TYPENAME_IBSIELEMENT = "bsiElement";
     private static final int TYPEID_ISBSIELEMENT = registerType(TYPENAME_IBSIELEMENT);
     
-    private static Logger LOG = Logger.getLogger(IBSIStrukturElementTransfer.class);
+    private static Logger log = Logger.getLogger(IBSIStrukturElementTransfer.class);
     
     private static IBSIStrukturElementTransfer instance = new IBSIStrukturElementTransfer();
     
@@ -67,7 +67,7 @@ public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))) {return;}
         if (isSupportedType(transferData)) {
             ArrayList<IBSIStrukturElement> elements = new ArrayList<IBSIStrukturElement>(0);
             if(data instanceof IBSIStrukturElement[]){
@@ -88,14 +88,14 @@ public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                LOG.error("Error while serializing object for dnd", e);
+                getLog().error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
+                        getLog().error("Error while closing stream", e);
                     }
                 }
             }
@@ -105,7 +105,7 @@ public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
     public Object nativeToJava(TransferData transferData){
         Object o = null;
         if(transferData == null){
-            LOG.error("transferData is null");
+            getLog().error("transferData is null");
         }
         if(isSupportedType(transferData)){
             byte[] bs = (byte[]) super.nativeToJava(transferData);
@@ -118,16 +118,16 @@ public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
                     bis.close();
                     in.close();
                 } catch (OptionalDataException e){
-                    LOG.error("Wrong data", e);
+                    getLog().error("Wrong data", e);
                 } catch (IOException e) {
-                    LOG.error("Error while transfering dnd object back to java", e);
+                    getLog().error("Error while transfering dnd object back to java", e);
                 } catch (ClassNotFoundException e) {
-                    LOG.error("Error while transfering dnd object back to java", e);
+                    getLog().error("Error while transfering dnd object back to java", e);
                 }
             } else {
-                LOG.error("bs is null");
+                getLog().error("bs is null");
                 if(transferData == null){
-                    LOG.error("transferData also");
+                    getLog().error("transferData also");
                 }
             }
         }
@@ -137,6 +137,13 @@ public class IBSIStrukturElementTransfer extends ByteArrayTransfer {
     private boolean validateData(Object data){
         return (data instanceof IBSIStrukturElement ||
                 data instanceof IBSIStrukturElement[]);
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(IBSIStrukturElementTransfer.class);
+        }
+        return log;
     }
 
 }

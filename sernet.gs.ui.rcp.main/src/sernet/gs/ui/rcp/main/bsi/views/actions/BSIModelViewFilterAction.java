@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.views.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -46,7 +45,7 @@ public class BSIModelViewFilterAction extends Action {
 	private TagFilter tagFilter;
 	
 
-	public BSIModelViewFilterAction(StructuredViewer viewer,
+	public BSIModelViewFilterAction(
 			String title,
 			MassnahmenUmsetzungFilter filter1,
 			MassnahmenSiegelFilter filter2,
@@ -80,9 +79,9 @@ public class BSIModelViewFilterAction extends Action {
 	            tagFilter.isFilterItVerbund());
 
 		
-		if (dialog.open() != InputDialog.OK)
+		if (dialog.open() != InputDialog.OK){
 			return;
-		
+		}
 		umsetzungFilter.setUmsetzungPattern(dialog.getUmsetzungSelection());
 		siegelFilter.setPattern(dialog.getSiegelSelection());
 		

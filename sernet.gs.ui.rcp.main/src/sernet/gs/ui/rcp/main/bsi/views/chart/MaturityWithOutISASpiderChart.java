@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -44,7 +44,7 @@ import sernet.verinice.model.iso27k.ControlGroup;
 
 public class MaturityWithOutISASpiderChart extends MaturitySpiderChart {
 
-	protected ControlGroup elmt;
+	private ControlGroup elmt;
 	
 	@Override
     protected Object createSpiderDataset() throws CommandException {
@@ -87,9 +87,9 @@ public class MaturityWithOutISASpiderChart extends MaturitySpiderChart {
      * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
     public JFreeChart createChart(CnATreeElement elmt) {
-        if (!(elmt instanceof ControlGroup))
+        if (!(elmt instanceof ControlGroup)){
             return null;
-
+        }
         this.elmt = (ControlGroup) elmt;
         try {
             return createSpiderChart(createSpiderDataset());

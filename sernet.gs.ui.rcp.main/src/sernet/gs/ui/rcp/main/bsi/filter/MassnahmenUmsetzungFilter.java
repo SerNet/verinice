@@ -73,8 +73,9 @@ public class MassnahmenUmsetzungFilter extends ViewerFilter {
 		
 		// else deactivate:
 		umsetzungPattern = null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	

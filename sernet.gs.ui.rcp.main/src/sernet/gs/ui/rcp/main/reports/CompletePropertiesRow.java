@@ -36,7 +36,7 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class CompletePropertiesRow implements IOOTableRow, ICnaItemRow {
 
-	List<String> columns = new ArrayList<String>();
+	private List<String> columns = new ArrayList<String>();
 	
 	public CompletePropertiesRow(CnATreeElement item) {
 		addAllProperties(item);
@@ -47,9 +47,9 @@ public class CompletePropertiesRow implements IOOTableRow, ICnaItemRow {
 	 * @return
 	 */
 	private void addAllProperties(CnATreeElement item) {
-		if (item.getEntityType() == null)
+		if (item.getEntityType() == null){
 			return;
-		
+		}
 		columns.add(item.getEntityType().getName());
 		columns.add(item.getUuid());
 		columns.add(item.getParent().getUuid());

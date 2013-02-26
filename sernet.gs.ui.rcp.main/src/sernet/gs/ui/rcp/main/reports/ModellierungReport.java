@@ -101,8 +101,8 @@ public class ModellierungReport extends BsiReport
 	}
 	
 	private final class ZielobjektListe {
-	    private final int zielObjekteListeSize = 5;
-		private List<CnATreeElement> zielobjekte = new ArrayList<CnATreeElement>(zielObjekteListeSize);
+	    private static final int ZIEL_OBJEKTE_LIST_SIZE = 5;
+		private List<CnATreeElement> zielobjekte = new ArrayList<CnATreeElement>(ZIEL_OBJEKTE_LIST_SIZE);
 		private BausteinUmsetzung bausteinUmsetzung;
 
 		public ZielobjektListe(BausteinUmsetzung umsetzung) {

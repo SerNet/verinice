@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import org.apache.log4j.Logger;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
@@ -31,7 +30,6 @@ public class OpenViewAction extends RightsEnabledAction {
 
     private final IWorkbenchWindow window;
     private final String viewId;
-    private Logger LOG = Logger.getLogger(OpenViewAction.class);
 
     public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc) {
         this.window = window;

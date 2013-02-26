@@ -30,7 +30,7 @@ public class LoadReportAllControls extends GenericCommand implements ICachedComm
 	
     private boolean resultInjectedFromCache = false;
     
-    private ArrayList<Control> listResult = null;
+    private List<Control> listResult = null;
 	
 	public LoadReportAllControls(Integer root){
 		rootElementId = root;

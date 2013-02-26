@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.reports;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import sernet.gs.ui.rcp.office.IOOTableRow;
@@ -38,15 +39,16 @@ public class AllItemsReport extends BsiReport
 		super(reportProperties);
 	}
 
-	private ArrayList<CnATreeElement> items;
+	private List<CnATreeElement> items;
 	
 	public String getTitle() {
 		return "[Export] Vollständiger Export aller Elemente";
 	}
 
-	public ArrayList<CnATreeElement> getItems() {
-		if (items != null)
+	public List<CnATreeElement> getItems() {
+		if (items != null){
 			return items;
+		}
 		items = new ArrayList<CnATreeElement>();
 		
 		ITVerbund verbund = getItverbund();
@@ -66,7 +68,7 @@ public class AllItemsReport extends BsiReport
 		}
 	}
 
-	public ArrayList<IOOTableRow> getReport(PropertySelection shownColumns) {
+	public List<IOOTableRow> getReport(PropertySelection shownColumns) {
 		ArrayList<IOOTableRow> rows = new ArrayList<IOOTableRow>();
 		
 			rows.add(new SimpleRow(IOOTableRow.ROW_STYLE_SUBHEADER, "Typ", "UUID", "Parent UUID", "Details"));

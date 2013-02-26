@@ -33,8 +33,9 @@ public class AttachDbFileTask {
 	}
 	
 	public void attachDBFile(String url, String user, String pass, String fileName, String newDbName) throws SQLException, ClassNotFoundException {
-		if (fileName == null || fileName.length() <1)
+		if (fileName == null || fileName.length() <1){
 			return;
+		}
 		vampire.attachFile(newDbName, fileName, url, user, pass);
 	}
 	

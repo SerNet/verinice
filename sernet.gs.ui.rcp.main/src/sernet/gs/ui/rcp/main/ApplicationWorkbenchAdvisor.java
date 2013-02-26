@@ -64,8 +64,9 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		Object proxyService = null;
 		if (bundle != null) {
 			ServiceReference ref = bundle.getBundleContext().getServiceReference(IProxyService.class.getName());
-			if (ref != null)
+			if (ref != null){
 				proxyService = bundle.getBundleContext().getService(ref);
+			}
 		}
 		if (proxyService == null) {
 			IDEWorkbenchPlugin.log("Proxy service could not be found."); //$NON-NLS-1$

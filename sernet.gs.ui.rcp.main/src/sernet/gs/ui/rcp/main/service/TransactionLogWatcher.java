@@ -63,10 +63,9 @@ public class TransactionLogWatcher {
 		// No need to do anything when the internal server is used as this
 		// means that there is only one user.
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
-		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER))
+		if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER)){
 			return;
-
-		// Logger.getLogger(this.getClass()).debug("Checking transaction log...");
+		}
 
 		try {
 			GetChangesSince command = new GetChangesSince(lastChecked, ChangeLogEntry.STATION_ID);

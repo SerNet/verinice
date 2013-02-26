@@ -172,8 +172,9 @@ public class ImportCreateBausteinReferences extends GenericCommand {
 
     private Baustein findBausteinForId(String id) {
         for (Baustein baustein : bausteine) {
-            if (baustein.getId().equals(id))
+            if (baustein.getId().equals(id)){
                 return baustein;
+            }
         }
         return null;
     }

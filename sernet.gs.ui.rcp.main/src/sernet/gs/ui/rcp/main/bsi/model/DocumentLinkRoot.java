@@ -38,8 +38,9 @@ public class DocumentLinkRoot implements Serializable {
 	public DocumentLink getDocumentLink(String name, String href) {
 		for (DocumentLink link : children) {
 			if (link.getName().equals(name)
-					&& link.getHref().equals(href))
+					&& link.getHref().equals(href)){
 				return link;
+			}
 		}
 		return null;
 	}

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -48,7 +49,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  */
 public class LoadReportRedYellowScenarioGroups extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportRedYellowScenarioGroups.class); 
+    private static transient Logger log = Logger.getLogger(LoadReportRedYellowScenarioGroups.class); 
 
     private Integer rootElmt;
     
@@ -123,7 +124,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
                                     if(!scenarioGroupColorMap.containsKey(parentUuid)){
                                         scenarioGroupColorMap.put(parentUuid, riskColor);
                                         if(riskColor == IRiskAnalysisService.RISK_COLOR_RED){
-                                            scenarioGroupColorMap = markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
+                                            scenarioGroupColorMap = (HashMap<String, Integer>)markParents(parent, scenarioGroupColorMap, cmnd3.getDaoFactory());
                                         }
                                     } else {
                                         if(!(scenarioGroupColorMap.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_RED)){
@@ -159,13 +160,15 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
                     case IRiskAnalysisService.RISK_COLOR_RED:
                         colourValue = "0red";
                         break;
+                    default:
+                        break;
                     }
                     result.add(colourValue);
                     result.add(groupLoader.getElement().getDbId().toString());
                     results.add(result);
                 }
             } catch (CommandException e){
-                LOG.error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
@@ -177,7 +180,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
      * @param daoFactory
      * @return
      */
-    private HashMap<String, Integer> markParents(CnATreeElement element, HashMap<String, Integer> currentMap, IDAOFactory daoFactory){
+    private Map<String, Integer> markParents(CnATreeElement element, Map<String, Integer> currentMap, IDAOFactory daoFactory){
         while(!(element instanceof Organization)){
             if(element instanceof IncidentScenarioGroup){
                 currentMap.put(element.getUuid(), IRiskAnalysisService.RISK_COLOR_RED);
@@ -227,6 +230,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
             break;
         case 'a':
             yellowNum = numOfYellowFields[2];
+            break;
+        default:
             break;
         }
         if(raService.getRiskColor(asset, scenario, riskType, yellowNum, scenarioProbType) == riskColour){
@@ -280,10 +285,10 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     }
     
     private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadReportRedYellowScenarioGroups.class);
+        if(log == null){
+            log = Logger.getLogger(LoadReportRedYellowScenarioGroups.class);
         }
-        return LOG;
+        return log;
     }
 
 

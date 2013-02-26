@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -47,13 +49,13 @@ public abstract class FilterDialog extends Dialog {
     
     private static final int DEFAULT_NUM_COLUMNS = 5;
 
-    private HashMap<String, Button> typeFieldsUmsetzung;
-    private HashMap<String, Button> typeFieldsSiegel;
-    private HashMap<String, Button> typeFieldsSchicht;
+    private Map<String, Button> typeFieldsUmsetzung;
+    private Map<String, Button> typeFieldsSiegel;
+    private Map<String, Button> typeFieldsSchicht;
 
-    private HashSet<String> selectedUmsetzungTypes;
-    private HashSet<String> selectedSiegelTypes;
-    private HashSet<String> selectedSchichtTypes;
+    private Set<String> selectedUmsetzungTypes;
+    private Set<String> selectedSiegelTypes;
+    private Set<String> selectedSchichtTypes;
 
     public FilterDialog(Shell parent, String[] umsetzung, String[] siegel, String[] schicht) {
         super(parent);

@@ -99,9 +99,9 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 	public void run() {
 		try {
 			boolean confirm = MessageDialog.openConfirm(window.getShell(), "Nachträglicher Notizimport", "Notizen werden aus der GSTOOL-Datenbank (siehe \"Bearbeiten\" -> \"Einstellungen\") in vorhandene IT-Verbünde angehängt. Fortfahren?");
-			if (!confirm)
+			if (!confirm){
 				return;
-			
+			}
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

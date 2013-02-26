@@ -35,12 +35,12 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 /**
  *
  */
-public class ISO27kGroupTransfer extends ByteArrayTransfer {
+public final class ISO27kGroupTransfer extends ByteArrayTransfer {
     
     private static final String TYPENAME_ISOGROUP = IISO27kGroup.class.getCanonicalName();
     private static final int TYPEID_ISOGROUP = registerType(TYPENAME_ISOGROUP);
     
-    private static Logger LOG = Logger.getLogger(ISO27kGroupTransfer.class);
+    private static Logger log = Logger.getLogger(ISO27kGroupTransfer.class);
     
     private static ISO27kGroupTransfer instance = new ISO27kGroupTransfer();
     
@@ -67,7 +67,7 @@ public class ISO27kGroupTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))) {return;}
         if (isSupportedType(transferData)) {
             ArrayList<IISO27kGroup> groups = new ArrayList<IISO27kGroup>(0);
             if(data instanceof IISO27kGroup[]){
@@ -88,14 +88,14 @@ public class ISO27kGroupTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                LOG.error("Error while serializing object for dnd", e);
+                getLog().error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
+                        getLog().error("Error while closing stream", e);
                     }
                 }
             }
@@ -114,11 +114,11 @@ public class ISO27kGroupTransfer extends ByteArrayTransfer {
                 bis.close();
                 in.close();
             } catch (OptionalDataException e){
-                LOG.error("Wrong data", e);
+                getLog().error("Wrong data", e);
             } catch (IOException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             } catch (ClassNotFoundException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             }
         }
         return o;
@@ -127,6 +127,13 @@ public class ISO27kGroupTransfer extends ByteArrayTransfer {
     private boolean validateData(Object data){
         return (data instanceof IISO27kGroup[]||
                 data instanceof IISO27kGroup);
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(ISO27kGroupTransfer.class);
+        }
+        return log;
     }
 
 }

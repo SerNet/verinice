@@ -23,7 +23,9 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
-public class ImportKostenUtil {
+public final class ImportKostenUtil {
+    
+    private ImportKostenUtil(){};
 
 	private static final String[] GS_ZEITEN = new String[] {
 		"Tag",
@@ -80,8 +82,9 @@ public class ImportKostenUtil {
 			if (zeit.getId().getZeiId().equals(zeiId)) {
 				String zeitname = zeit.getName();
 				for (int i = 0; i < GS_ZEITEN.length; i++) {
-					if (GS_ZEITEN[i].equals(zeitname))
+					if (GS_ZEITEN[i].equals(zeitname)){
 						return vnZeiten[i];
+					}
 				}
 			}
 		}

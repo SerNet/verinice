@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.jobs.Job;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class JobScheduler {
+public final class JobScheduler {
 	
 	
 	private static final Mutex INIT_MUTEX = new Mutex();

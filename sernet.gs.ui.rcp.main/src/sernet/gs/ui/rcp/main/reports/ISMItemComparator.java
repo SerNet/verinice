@@ -35,8 +35,9 @@ public class ISMItemComparator implements Comparator<CnATreeElement> {
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(CnATreeElement o1, CnATreeElement o2) {
-        if (o1 == null || o2 == null)
+        if (o1 == null || o2 == null){
             return 0;
+        }
         if (o1 instanceof IISO27kElement && o2 instanceof IISO27kElement ) {
             NumericStringComparator numericStringComparator = new NumericStringComparator();
             

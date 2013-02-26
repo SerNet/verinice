@@ -39,7 +39,7 @@ import sernet.verinice.interfaces.CommandException;
  *          2007) $ $LastChangedBy: koderman $
  * 
  */
-public class ExceptionUtil {
+public final class ExceptionUtil {
 
 	private static final Logger LOG = Logger.getLogger(ExceptionUtil.class);
 	

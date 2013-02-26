@@ -33,8 +33,6 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class LoadOrganizations extends GenericCommand {
 
-	private final Comparator<Organization> orgComparator = new OrgSorter();
-	
 	private List<Organization> organizationList;
 	
 	/* (non-Javadoc)

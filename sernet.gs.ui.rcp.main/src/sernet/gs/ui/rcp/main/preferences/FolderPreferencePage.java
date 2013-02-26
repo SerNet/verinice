@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -36,9 +35,6 @@ import sernet.gs.ui.rcp.main.Activator;
  */
 
 public class FolderPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
-    
-    private static final Logger LOG = Logger.getLogger(FolderPreferencePage.class);
-    
     
     public FolderPreferencePage() {
         super(GRID);

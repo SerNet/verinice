@@ -74,7 +74,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     private FinishedRiskAnalysis finishedRiskAnalysis = null;
 
     /* list of all Gefaehrdungen - ChooseGefaehrungPage_OK */
-    private ArrayList<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
+    private List<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
 
     /*
      * list of all own Gefaehrdungen of type OwnGefaehrdung -
@@ -83,7 +83,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
 
     /* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-    private ArrayList<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
+    private List<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 
     // Are we editing a previous Risk Analysis?
     private boolean previousAnalysis = false;
@@ -204,7 +204,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * @param newAssociatedGefaehrdungen
      *            ArrayList of Gefaehrdungen
      */
-    public void setAssociatedGefaehrdungen(ArrayList<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
+    public void setAssociatedGefaehrdungen(List<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
         finishedRiskLists.setAssociatedGefaehrdungen(newAssociatedGefaehrdungen);
     }
 
@@ -305,7 +305,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * @param newAllGefaehrdungen
      *            ArrayList of all Gefaehrdungen
      */
-    public void setAllGefaehrdungen(ArrayList<Gefaehrdung> newAllGefaehrdungen) {
+    public void setAllGefaehrdungen(List<Gefaehrdung> newAllGefaehrdungen) {
         allGefaehrdungen = newAllGefaehrdungen;
     }
 
@@ -315,7 +315,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * 
      * @return ArrayList of all Gefaehrdungen
      */
-    public ArrayList<Gefaehrdung> getAllGefaehrdungen() {
+    public List<Gefaehrdung> getAllGefaehrdungen() {
         return allGefaehrdungen;
     }
 
@@ -325,7 +325,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * @param newAllOwnGefaehrdungen
      *            List of own Gefaehrdungen
      */
-    public void setAllOwnGefaehrdungen(ArrayList<OwnGefaehrdung> newAllOwnGefaehrdungen) {
+    public void setAllOwnGefaehrdungen(List<OwnGefaehrdung> newAllOwnGefaehrdungen) {
         allOwnGefaehrdungen = newAllOwnGefaehrdungen;
     }
 
@@ -422,7 +422,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * 
      * @return ArrayList of all Massnahmen of type MassnahmenUmsetzung
      */
-    public ArrayList<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
+    public List<MassnahmenUmsetzung> getAllMassnahmenUmsetzungen() {
         return allMassnahmenUmsetzungen;
     }
 
@@ -437,7 +437,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      * @param newAllMassnahmenUmsetzungen
      *            the allMassnahmenUmsetzungen to set
      */
-    public void setAllMassnahmenUmsetzungen(ArrayList<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
+    public void setAllMassnahmenUmsetzungen(List<MassnahmenUmsetzung> newAllMassnahmenUmsetzungen) {
         allMassnahmenUmsetzungen = newAllMassnahmenUmsetzungen;
     }
 

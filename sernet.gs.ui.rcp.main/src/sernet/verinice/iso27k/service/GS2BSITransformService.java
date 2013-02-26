@@ -50,7 +50,7 @@ public class GS2BSITransformService {
 	
 	private IProgressObserver progressObserver;
 
-	private Logger LOG = null;
+	private Logger log = null;
 	
 	private int numberOfControls;
 	
@@ -68,12 +68,10 @@ public class GS2BSITransformService {
 	
 	private boolean isScenario = false;
 	
-	private Object data;
-	
 	public GS2BSITransformService(IProgressObserver progressObserver,
 			IModelUpdater modelUpdater, Group selectedGroup, Object data) {
 		this.progressObserver = progressObserver;
-		LOG = Logger.getLogger(GS2BSITransformService.class);
+		log = Logger.getLogger(GS2BSITransformService.class);
 		itemList = new ArrayList<Object>(0);
 		if(data instanceof Object[]){
 		    Object[] o = (Object[]) data;
@@ -99,7 +97,7 @@ public class GS2BSITransformService {
 				insertItem(progressObserver, selectedGroup, o);
 			}
 		} catch (Exception e){
-			LOG.error("Error while transforming GS element to ISM element", e);
+			getLog().error("Error while transforming GS element to ISM element", e);
 		}
 	}
 	
@@ -110,7 +108,7 @@ public class GS2BSITransformService {
 	 */
 	private void insertItem(IProgressObserver monitor, Group group, Object item) {
 		if(monitor.isCanceled()) {
-			LOG.warn("Transforming canceled. " + numberProcessed + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			getLog().warn("Transforming canceled. " + numberProcessed + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
 		List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
@@ -158,7 +156,7 @@ public class GS2BSITransformService {
 			            }
 			        }
 			    } catch (Exception e) {
-			        LOG.error("Error while transforming baustein", e);
+			        getLog().error("Error while transforming baustein", e);
 			    }
 			}
 
@@ -171,14 +169,13 @@ public class GS2BSITransformService {
 	    boolean errorOccured = false;
         if(elements.size() > 0) {
             for(CnATreeElement e : elements){
-                monitor.setTaskName(getText(numberOfControls,numberProcessed,e.getTitle()));
+                monitor.setTaskName(getText(numberProcessed,e.getTitle()));
                 if(e.getParent().canContain(e)){
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
                     }
                 } else {
-//                   throw new ItemTransformException("Error while transforming massnahme into control"); //$NON-NLS-1$
-                    LOG.warn("trying to drop an item into a group that is unable to accept this type of items");
+                    getLog().warn("trying to drop an item into a group that is unable to accept this type of items");
                     errorOccured = true;
                 }   
                 if(!errorOccured){
@@ -192,7 +189,7 @@ public class GS2BSITransformService {
                         }
                         command = getCommandService().executeCommand(command);
                     } catch (CommandException ce) {
-                        LOG.error("Error while inserting control", ce); //$NON-NLS-1$
+                        getLog().error("Error while inserting control", ce); //$NON-NLS-1$
                         throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
                     }
                     e = (CnATreeElement) command.getElement();
@@ -205,7 +202,7 @@ public class GS2BSITransformService {
                         c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
                         e.setParent(c2.getElement());
                     } catch (CommandException e1) {
-                        LOG.error("Error while loading element", e1);
+                        getLog().error("Error while loading element", e1);
                     }
                     CnATreeElement parent =  e.getParent();
                     parent.addChild(e);
@@ -219,11 +216,10 @@ public class GS2BSITransformService {
 	}
 	
 	/**
-	 * @param n
 	 * @param i
 	 * @param title
 	 */
-	private String getText(int n, int i, String title) {
+	private String getText(int i, String title) {
 		return Messages.getString("GS2BSITransformService.1", i, title); //$NON-NLS-1$
 	}
 	
@@ -234,7 +230,7 @@ public class GS2BSITransformService {
 			String description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(), m.getStand());
 			c.setDescription(description);
 		} catch (GSServiceException e) {
-			LOG.error("Error while transforming massnahme into control", e);
+			getLog().error("Error while transforming massnahme into control", e);
 		}
 		return c;
 	}
@@ -279,5 +275,12 @@ public class GS2BSITransformService {
 
 	private ICommandService createCommandServive() {
 		return ServiceFactory.lookupCommandService();
+	}
+	
+	private Logger getLog(){
+	    if(log == null){
+	        log = Logger.getLogger(GS2BSITransformService.class);
+	    }
+	    return log;
 	}
 }

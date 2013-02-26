@@ -35,12 +35,12 @@ import sernet.verinice.service.iso27k.Item;
 /**
  *
  */
-public class ItemTransfer extends ByteArrayTransfer {
+public final class ItemTransfer extends ByteArrayTransfer {
     
     private static final String TYPENAME_ITEMELEMENT = Item.class.getCanonicalName();
     private static final int TYPEID_ITEMELEMENT = registerType(TYPENAME_ITEMELEMENT);
     
-    private static Logger LOG = Logger.getLogger(ItemTransfer.class);
+    private static Logger log = Logger.getLogger(ItemTransfer.class);
     
     private static ItemTransfer instance = new ItemTransfer();
     
@@ -67,7 +67,7 @@ public class ItemTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))) {return;}
         if (isSupportedType(transferData)) {
             ArrayList<Item> elements = new ArrayList<Item>(0);
             if(data instanceof Item[]){
@@ -88,14 +88,14 @@ public class ItemTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                LOG.error("Error while serializing object for dnd", e);
+                getLog().error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
+                        getLog().error("Error while closing stream", e);
                     }
                 }
             }
@@ -105,7 +105,7 @@ public class ItemTransfer extends ByteArrayTransfer {
     public Object nativeToJava(TransferData transferData){
         Object o = null;
         if(transferData == null){
-            LOG.error("transferData is null");
+            getLog().error("transferData is null");
         }
         if(isSupportedType(transferData)){
             byte[] bs = (byte[]) super.nativeToJava(transferData);
@@ -118,16 +118,16 @@ public class ItemTransfer extends ByteArrayTransfer {
                     bis.close();
                     in.close();
                 } catch (OptionalDataException e){
-                    LOG.error("Wrong data", e);
+                    getLog().error("Wrong data", e);
                 } catch (IOException e) {
-                    LOG.error("Error while transfering dnd object back to java", e);
+                    getLog().error("Error while transfering dnd object back to java", e);
                 } catch (ClassNotFoundException e) {
-                    LOG.error("Error while transfering dnd object back to java", e);
+                    getLog().error("Error while transfering dnd object back to java", e);
                 }
             } else {
-                LOG.error("bs is null");
+                getLog().error("bs is null");
                 if(transferData == null){
-                    LOG.error("transferData also");
+                    getLog().error("transferData also");
                 }
             }
         }
@@ -135,10 +135,14 @@ public class ItemTransfer extends ByteArrayTransfer {
     }
     
     private boolean validateData(Object data){
-        boolean one = data instanceof Item;
-        boolean two = data instanceof Item[];
-        boolean three = one || two;
-        return three;
+        return data instanceof Item || data instanceof Item[];
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(ItemTransfer.class);
+        }
+        return log;
     }
 
 }

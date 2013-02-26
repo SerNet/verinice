@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import org.apache.log4j.Logger;
-
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -37,7 +35,6 @@ import sernet.verinice.model.iso27k.IISRControl;
  *
  */
 public class ControlMaturityService {
-    private static final Logger LOG = Logger.getLogger(ControlMaturityService.class);
     
     private int type = 0;
     
@@ -105,8 +102,9 @@ public class ControlMaturityService {
     
     public Double getMaturityByWeight(ControlGroup cg) {
         double result =0;
-        if (getWeights(cg) != 0)
+        if (getWeights(cg) != 0){
             result = ((double)getWeightedMaturity(cg)) / ((double)getWeights(cg));
+        }
         return result;
     }
 
@@ -133,8 +131,7 @@ public class ControlMaturityService {
      * @return
      */
     public Integer getWeightedMaturity(IControl contr) {
-        int value = getMaturity(contr) * contr.getWeight2();
-        return value;
+        return getMaturity(contr) * contr.getWeight2();
     }
     
     public Double getMaturityByWeight(IControl contr) {

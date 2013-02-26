@@ -34,7 +34,7 @@ import sernet.verinice.interfaces.IBaseDao;
 public class FastLoadCnAElementsByIds extends GenericCommand {
 
 	private List<Integer> dbIDs;
-	private ArrayList<Entity> foundItems;
+	private List<Entity> foundItems;
 
 
 	public FastLoadCnAElementsByIds(List<Integer> dbIDs) {
@@ -65,7 +65,7 @@ public class FastLoadCnAElementsByIds extends GenericCommand {
 		}
 	}
 
-	public ArrayList<Entity> getFoundItems() {
+	public List<Entity> getFoundItems() {
 		return foundItems;
 	}
 

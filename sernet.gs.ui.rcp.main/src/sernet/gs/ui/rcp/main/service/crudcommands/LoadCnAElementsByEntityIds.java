@@ -44,8 +44,9 @@ public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends Generi
 		this.klass = klass;
 		this.ids = ids;
 		
-		if (ids.isEmpty())
+		if (ids.isEmpty()){
 			throw new IllegalArgumentException("There must be at least one id available.");
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,7 +62,7 @@ public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends Generi
 
 	private static class Callback implements HibernateCallback
 	{
-		Collection<Integer> ids;
+		private Collection<Integer> ids;
 		
 		Callback(Collection<Integer> ids)
 		{

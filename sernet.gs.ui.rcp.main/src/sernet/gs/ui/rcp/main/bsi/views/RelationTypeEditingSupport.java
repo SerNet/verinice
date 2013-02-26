@@ -43,7 +43,6 @@ import sernet.verinice.model.common.CnALink;
  */
 public class RelationTypeEditingSupport extends EditingSupport {
 
-	private CellEditor dropDownEditor;
 	private IRelationTable view;
 	private TableViewer viewer;
 
@@ -86,7 +85,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 						link.getDependant().getEntityType().getId(),
 						link.getDependency().getEntityType().getId());
 		Set<String> names = new HashSet<String>();
-		Set<String> IDs = new HashSet<String>();
+		Set<String> ids = new HashSet<String>();
 
 		for (HuiRelation huiRelation : possibleRelations) {
 			String id = huiRelation.getId();
@@ -94,7 +93,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
 					.getName()
 					: huiRelation.getReversename();
 			names.add(name);
-			IDs.add(id);
+			ids.add(id);
 		}
 
 		String[] currentLinkTypeNames = (String[]) names

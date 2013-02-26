@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -28,7 +29,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
 public class PerspectiveDS implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.dsperspective";
 	
-    public static final HashMap<String, String> VIEWS_RIGHT_IDS;
+    public static final Map<String, String> VIEWS_RIGHT_IDS;
     
     static{
         VIEWS_RIGHT_IDS = new HashMap<String, String>();

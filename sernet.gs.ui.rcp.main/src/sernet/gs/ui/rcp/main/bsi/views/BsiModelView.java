@@ -455,7 +455,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 		BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
 		
-		filterAction = new BSIModelViewFilterAction(viewer, Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer), new LebenszyklusPropertyFilter(viewer), new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter, new TagFilter(viewer));
+		filterAction = new BSIModelViewFilterAction(Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer), new LebenszyklusPropertyFilter(viewer), new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter, new TagFilter(viewer));
 
 		expandAllAction = new Action() {
 			@Override

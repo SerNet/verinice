@@ -92,9 +92,9 @@ public class CompletedStepsSummary extends MassnahmenSummary {
 					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG)
 					.setParameterList("p2values", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
 			
-			if (log.isDebugEnabled())
+			if (log.isDebugEnabled()){
 				log.debug("generated query:" + query.getQueryString());
-					
+			}
 			return query.list();
 		}
 		

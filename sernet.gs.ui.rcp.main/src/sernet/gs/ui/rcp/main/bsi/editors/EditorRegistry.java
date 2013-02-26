@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.ui.IEditorPart;
 
@@ -31,15 +32,16 @@ import org.eclipse.ui.IEditorPart;
  * @author koderman[at]sernet[dot]de
  *
  */
-public class EditorRegistry {
+public final class EditorRegistry {
 	private static EditorRegistry instance;
-	private HashMap<String, IEditorPart> openEditors = new HashMap<String, IEditorPart>();
+	private Map<String, IEditorPart> openEditors = new HashMap<String, IEditorPart>();
 	
 	private EditorRegistry() {}
 	
 	public static EditorRegistry getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new EditorRegistry();
+		}
 		return instance;
 	}
 	

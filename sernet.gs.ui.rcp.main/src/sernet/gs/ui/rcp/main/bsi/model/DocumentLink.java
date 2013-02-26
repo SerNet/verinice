@@ -46,8 +46,9 @@ public class DocumentLink implements Serializable {
 	}
 	
 	public void addChild(DocumentReference child) {
-		if (children.add(child))
+		if (children.add(child)){
 			child.setParent(this);
+		}
 	}
 	
 	public Set<DocumentReference> getChildren() {

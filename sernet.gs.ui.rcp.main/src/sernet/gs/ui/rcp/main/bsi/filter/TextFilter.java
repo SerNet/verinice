@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
  */
 public abstract class TextFilter extends ViewerFilter {
 
-	protected Pattern regex;
+	private Pattern regex;
 	private String suche;
 	private StructuredViewer viewer;
 
@@ -54,9 +54,9 @@ public abstract class TextFilter extends ViewerFilter {
 		if (newPattern != null && newPattern.length() > 0) {
 			suche = newPattern;
 			regex = Pattern.compile(suche, Pattern.CASE_INSENSITIVE);
-			if (active)
+			if (active){
 				viewer.refresh();
-			else {
+			} else {
 				viewer.addFilter(this);
 				active = true;
 			}
@@ -66,8 +66,13 @@ public abstract class TextFilter extends ViewerFilter {
 		// else deactivate:
 		suche = null;
 		regex=null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
+
+    public Pattern getRegex() {
+        return regex;
+    }
 
 }

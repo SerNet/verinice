@@ -260,8 +260,9 @@ public final class EditorFactory {
 	}
 
 	public static EditorFactory getInstance() {
-		if (instance == null)
+		if (instance == null){
 			instance = new EditorFactory();
+		}
 		return instance;
 	}
 

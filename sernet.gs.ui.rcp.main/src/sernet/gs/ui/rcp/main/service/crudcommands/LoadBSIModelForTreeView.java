@@ -46,20 +46,11 @@ public class LoadBSIModelForTreeView extends GenericCommand implements INoAccess
 	}
 
 	private void hydrate(CnATreeElement element) {
-		if (element == null)
+		if (element == null){
 			return;
-		
+		}
 		HydratorUtil.hydrateElement(getDaoFactory().getDAOforTypedElement(element), element, true);
-		
-//		Set<CnATreeElement> children = element.getChildren();
-//		for (CnATreeElement child : children) {
-//			if ((!includingMassnahmen) && child instanceof BausteinUmsetzung) {
-//				// next element:
-//				continue;
-//			}
-//			
-//			hydrate(child);
-//		}
+
 	}
 
 	public BSIModel getModel() {

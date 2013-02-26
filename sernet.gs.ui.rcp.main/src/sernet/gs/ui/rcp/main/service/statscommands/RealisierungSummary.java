@@ -104,9 +104,9 @@ public class RealisierungSummary extends GenericCommand {
 					.setString("p1type", MassnahmenUmsetzung.P_UMSETZUNGBIS)
 					.setString("p2type", MassnahmenUmsetzung.P_UMSETZUNG);
 			
-			if (log.isDebugEnabled())
+			if (log.isDebugEnabled()){
 				log.debug("generated query: " + query.getQueryString());
-					
+			}
 			return query.list();
 		}
 		

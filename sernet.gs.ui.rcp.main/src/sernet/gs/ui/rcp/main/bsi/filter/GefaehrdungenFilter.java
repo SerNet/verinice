@@ -35,16 +35,16 @@ public class GefaehrdungenFilter extends ViewerFilter {
 	}
 
 	public boolean[] getPattern() {
-		return pattern;
+		return (pattern != null) ? pattern.clone() : null;
 	}
 
 	public void setPattern(boolean[] newPattern) {
 		boolean active = pattern != null;
 		if (newPattern != null && newPattern.length > 0) {
 			pattern = newPattern.clone();
-			if (active)
+			if (active){
 				viewer.refresh();
-			else {
+			} else {
 				viewer.addFilter(this);
 				active = true;
 			}
@@ -53,8 +53,9 @@ public class GefaehrdungenFilter extends ViewerFilter {
 		
 		// else deactivate:
 		pattern = null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	
@@ -71,7 +72,4 @@ public class GefaehrdungenFilter extends ViewerFilter {
 		return true;
 	}
 	
-//	public boolean isFilterProperty(Object element, String property) {
-//		return true;
-//	}
 }

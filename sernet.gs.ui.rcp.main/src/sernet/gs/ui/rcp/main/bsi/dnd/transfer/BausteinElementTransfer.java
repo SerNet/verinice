@@ -35,12 +35,12 @@ import sernet.gs.model.Baustein;
 /**
  *
  */
-public class BausteinElementTransfer extends ByteArrayTransfer {
+public final class BausteinElementTransfer extends ByteArrayTransfer {
 
     private static final String TYPENAME_BAUSTEINELEMENT = Baustein.TYPE_ID;
     private static final int TYPEID_BAUSTEINELEMENT = registerType(TYPENAME_BAUSTEINELEMENT);
     
-    private static Logger LOG = Logger.getLogger(BausteinElementTransfer.class);
+    private static Logger log = Logger.getLogger(BausteinElementTransfer.class);
     
     private static BausteinElementTransfer instance = new BausteinElementTransfer();
     
@@ -67,7 +67,7 @@ public class BausteinElementTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))) {return;}
         if (isSupportedType(transferData)) {
             ArrayList<Baustein> bausteine = new ArrayList<Baustein>(0);
             if(data instanceof Baustein[]){
@@ -88,14 +88,14 @@ public class BausteinElementTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                LOG.error("Error while serializing object for dnd", e);
+                getLog().error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
+                        getLog().error("Error while closing stream", e);
                     }
                 }
             }
@@ -114,11 +114,11 @@ public class BausteinElementTransfer extends ByteArrayTransfer {
                 bis.close();
                 in.close();
             } catch (OptionalDataException e){
-                LOG.error("Wrong data", e);
+                getLog().error("Wrong data", e);
             } catch (IOException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             } catch (ClassNotFoundException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             }
         }
         return o;
@@ -127,6 +127,13 @@ public class BausteinElementTransfer extends ByteArrayTransfer {
     private boolean validateData(Object data){
         return (data instanceof Baustein[]||
                 data instanceof Baustein);
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(BausteinElementTransfer.class);
+        }
+        return log;
     }
     
 }

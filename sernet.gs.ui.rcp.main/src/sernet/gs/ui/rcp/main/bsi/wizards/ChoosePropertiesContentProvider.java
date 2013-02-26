@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -34,10 +33,7 @@ import sernet.hui.common.connect.PropertyType;
 
 public class ChoosePropertiesContentProvider implements ITreeContentProvider {
 	
-	private CheckboxTreeViewer viewer;
-
-	public ChoosePropertiesContentProvider(CheckboxTreeViewer viewer) {
-		this.viewer = viewer;
+	public ChoosePropertiesContentProvider() {
 	}
 
 	public Object[] getChildren(Object element) {
@@ -88,7 +84,6 @@ public class ChoosePropertiesContentProvider implements ITreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		this.viewer = (CheckboxTreeViewer) viewer;
 		(new ThreadSafeViewerUpdate((TreeViewer) viewer)).refresh();
 	}
 	

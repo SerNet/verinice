@@ -44,7 +44,7 @@ import sernet.verinice.service.iso27k.Item;
 /**
  *
  */
-public class DNDHelper {
+public final class DNDHelper {
     
     private static final Logger LOG = Logger.getLogger(DNDHelper.class);
     

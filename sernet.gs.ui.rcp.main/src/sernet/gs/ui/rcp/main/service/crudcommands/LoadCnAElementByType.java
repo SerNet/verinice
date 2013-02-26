@@ -45,8 +45,9 @@ public class LoadCnAElementByType<T extends CnATreeElement> extends GenericComma
 	public void execute() {
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
 		elements = dao.findAll();
-		if (hydrateElements)
+		if (hydrateElements){
 			HydratorUtil.hydrateElements(dao, elements, false);
+		}
 	}
 
 	public List<T> getElements() {

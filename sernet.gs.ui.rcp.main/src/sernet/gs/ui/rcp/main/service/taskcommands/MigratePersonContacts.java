@@ -67,7 +67,6 @@ public class MigratePersonContacts extends GenericCommand {
 								newPropTypeID);
 				entity.createNewProperty(newType, personToLink.getEntity()
 						.getDbId().toString());
-				// entityDao.persist(entity);
 			}
 		}
 	}
@@ -75,8 +74,9 @@ public class MigratePersonContacts extends GenericCommand {
 	private Person findPerson(String personName) {
 		List<Person> all = personDao.findAll();
 		for (Person person : all) {
-			if (person.getTitle().equals(personName))
+			if (person.getTitle().equals(personName)){
 				return person;
+			}
 		}
 		return null;
 	}

@@ -483,7 +483,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		viewerGefaehrdung.setInput(baum);
 		viewerGefaehrdung.expandAll();
 
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>)((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
 
 		/* map a domain model object into multiple images and text labels */
 		viewerMassnahme.setLabelProvider(new MassnahmeTableViewerLabelProvider());
@@ -543,7 +543,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	 */
 	private void deleteRisikoMassnahmenUmsetzung(RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung) {
 
-		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
+		ArrayList<MassnahmenUmsetzung> arrListMassnahmenUmsetzungen = (ArrayList<MassnahmenUmsetzung>)((RiskAnalysisWizard) getWizard()).getAllMassnahmenUmsetzungen();
 
 		try {
 			/* delete from List of MassnahmenUmsetzungen */

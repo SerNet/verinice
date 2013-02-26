@@ -19,12 +19,9 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
@@ -38,8 +35,7 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class LoadReportSamtTopicISADetails extends GenericCommand implements ICachedCommand{
     
-    private static final Logger LOG = Logger.getLogger(LoadReportSamtTopicISADetails.class);
-    private static final Pattern REMOVE_TAGS = Pattern.compile("<.+?>");
+    private static transient Logger log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";	
     private static final String SAMT_TOPIC_ISA_FINDINGS = "samt_topic_audit_findings";
     
@@ -86,10 +82,8 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
 
                         list.add(st.getEntity().getSimpleValue(SAMT_TOPIC_ISA_FINDINGS)); // add findings
 
-                        PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, SamtTopic.PROP_MATURITY);
                         list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(SamtTopic.PROP_MATURITY)))); // add maturity
 
-                        type = HitroUtil.getInstance().getTypeFactory().getPropertyType(SamtTopic.TYPE_ID, PROP_SAMT_RISK);
                         list.add(String.valueOf(Integer.parseInt(st.getEntity().getValue(PROP_SAMT_RISK)))); // add risk    
 
                         list.add(String.valueOf(st.getDbId())); // add dbid
@@ -100,7 +94,7 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
                 }
 
             } catch (CommandException e) {
-                LOG.error("");
+                getLog().error("");
             }
         }
     }
@@ -130,8 +124,8 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -142,5 +136,12 @@ public class LoadReportSamtTopicISADetails extends GenericCommand implements ICa
     @Override
     public Object getCacheableResult() {
         return this.result;
+    }
+    
+    private Logger getLog(){
+        if(log == null){
+            log = Logger.getLogger(LoadReportSamtTopicISADetails.class);
+        }
+        return log;
     }
 }

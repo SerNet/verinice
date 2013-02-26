@@ -424,7 +424,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
      */
     private void initContents() {
         wizard = ((RiskAnalysisWizard) getWizard());
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = wizard.getAllGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>)wizard.getAllGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
@@ -507,7 +507,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
      *            the (Own)Gefaehrdung to delete
      */
     private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>)((RiskAnalysisWizard) getWizard()).getAllGefaehrdungen();
         List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
         List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllOwnGefaehrdungen();
 

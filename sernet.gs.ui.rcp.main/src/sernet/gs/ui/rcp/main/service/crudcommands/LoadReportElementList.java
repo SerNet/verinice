@@ -33,7 +33,7 @@ public class LoadReportElementList extends GenericCommand implements ICachedComm
 
 	private String typeId;
     private Integer rootElement;
-    private ArrayList<CnATreeElement> elements;
+    private List<CnATreeElement> elements;
     
     private boolean resultInjectedFromCache = false;
     

@@ -37,7 +37,6 @@ public class UmsetzungDurchFilter extends ViewerFilter {
 
 	private StructuredViewer viewer;
 	private String pattern=null;
-	private String propertyType;
 	protected Pattern regex;
 
 	/**
@@ -70,8 +69,9 @@ public class UmsetzungDurchFilter extends ViewerFilter {
 		// else deactivate:
 		pattern = null;
 		regex=null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	

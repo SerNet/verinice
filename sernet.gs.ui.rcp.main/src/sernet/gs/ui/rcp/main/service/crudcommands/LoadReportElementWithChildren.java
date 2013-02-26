@@ -3,6 +3,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +22,7 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
 
 	private String filterchildrenByTypeID;
     private Integer rootElement;
-    ArrayList<CnATreeElement> result;
+    private List<CnATreeElement> result;
     
     private transient Logger log = Logger.getLogger(LoadReportElementWithChildren.class);
     
@@ -69,9 +70,9 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
 
         result = new ArrayList<CnATreeElement>();
         
-        if (filterchildrenByTypeID == null)
+        if (filterchildrenByTypeID == null){
             result.addAll(root.getChildren());
-        else {
+        } else {
             for (CnATreeElement child: root.getChildren()) {
                 if (child.getTypeId().equals(filterchildrenByTypeID)) {
                     result.add(child);
@@ -102,7 +103,7 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
     /**
      * @return the result
      */
-    public ArrayList<CnATreeElement> getResult() {
+    public List<CnATreeElement> getResult() {
         return result;
     }
 

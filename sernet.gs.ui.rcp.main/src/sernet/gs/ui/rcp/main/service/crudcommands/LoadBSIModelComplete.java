@@ -32,9 +32,9 @@ public class LoadBSIModelComplete extends GenericCommand {
 	}
 
 	private void hydrate(CnATreeElement element) {
-		if (element == null)
+		if (element == null){
 			return;
-		
+		}
 		HydratorUtil.hydrateElement(getDaoFactory().getDAOforTypedElement(element), 
 				element, true);
 		

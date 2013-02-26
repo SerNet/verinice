@@ -36,10 +36,11 @@ public class BSIModelElementFilter extends ViewerFilter {
 	}
 
 	public Set<Class<?>> getFilteredClasses() {
-		if (filteredClasses == null)
+		if (filteredClasses == null){
 			return new HashSet<Class<?>>();
-		else
+		} else {
 			return new HashSet<Class<?>>(filteredClasses);
+		}
 	}
 
 	public void setFilteredClasses(Set<Class<?>> newFilteredClasses) {
@@ -47,9 +48,9 @@ public class BSIModelElementFilter extends ViewerFilter {
 		if (newFilteredClasses != null && !newFilteredClasses.isEmpty()) {
 			filteredClasses = newFilteredClasses;
 			
-			if (active)
+			if (active){
 				viewer.refresh();
-			else {
+			} else {
 				viewer.addFilter(this);
 				active = true;
 			}
@@ -57,8 +58,9 @@ public class BSIModelElementFilter extends ViewerFilter {
 		else
 		{
 			filteredClasses = null;
-			if (active)
+			if (active){
 				viewer.removeFilter(this);
+			}
 		}
 	}
 	

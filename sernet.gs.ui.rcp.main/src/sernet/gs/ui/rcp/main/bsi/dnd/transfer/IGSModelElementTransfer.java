@@ -35,12 +35,12 @@ import sernet.gs.model.IGSModel;
 /**
  *
  */
-public class IGSModelElementTransfer extends ByteArrayTransfer {
+public final class IGSModelElementTransfer extends ByteArrayTransfer {
 
     private static final String TYPENAME_IGSMODELELEMENT = "igsModelElement";
     private static final int TYPEID_IGSMODELELEMENT = registerType(TYPENAME_IGSMODELELEMENT);
     
-    private static Logger LOG = Logger.getLogger(IGSModelElementTransfer.class);
+    private static Logger log = Logger.getLogger(IGSModelElementTransfer.class);
     
     private static IGSModelElementTransfer instance = new IGSModelElementTransfer();
     
@@ -67,7 +67,7 @@ public class IGSModelElementTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) return;
+        if (data == null || !(validateData(data))) {return;}
         if (isSupportedType(transferData)) {
             ArrayList<IGSModel> igsElements = new ArrayList<IGSModel>(0);
             if(data instanceof IGSModel[]){
@@ -88,14 +88,14 @@ public class IGSModelElementTransfer extends ByteArrayTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                LOG.error("Error while serializing object for dnd", e);
+                getLog().error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
+                        getLog().error("Error while closing stream", e);
                     }
                 }
             }
@@ -114,11 +114,11 @@ public class IGSModelElementTransfer extends ByteArrayTransfer {
                 bis.close();
                 in.close();
             } catch (OptionalDataException e){
-                LOG.error("Wrong data", e);
+                getLog().error("Wrong data", e);
             } catch (IOException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             } catch (ClassNotFoundException e) {
-                LOG.error("Error while transfering dnd object back to java", e);
+                getLog().error("Error while transfering dnd object back to java", e);
             }
         }
         return o;
@@ -127,6 +127,13 @@ public class IGSModelElementTransfer extends ByteArrayTransfer {
     private boolean validateData(Object data){
         return (data instanceof IGSModel[]||
                 data instanceof IGSModel);
+    }
+
+    private static Logger getLog() {
+        if(log == null){
+            log = Logger.getLogger(IGSModelElementTransfer.class);
+        }
+        return log;
     }
 
 }

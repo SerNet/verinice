@@ -59,8 +59,9 @@ public class PropertyHeadersRow implements IOOTableRow, ICnaItemRow {
 	}
 
 	public int getNumColumns() {
-		if (properties == null)
+		if (properties == null){
 			return 0;
+		}
 		return properties.size();
 	}
 	

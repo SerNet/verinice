@@ -12,6 +12,7 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Preferences;
@@ -120,7 +121,7 @@ public class VeriniceAuthenticator extends NetAuthenticator {
 	private X509Certificate getNextCertificate(String host) throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, IOException {
 		LinkedList<X509Certificate> certs = certMap.get(host);
 		if (certs == null) {
-			certs = getCertificates();
+			certs = (LinkedList<X509Certificate>)getCertificates();
 			certMap.put(host, certs);
 		}
 		
@@ -142,7 +143,7 @@ public class VeriniceAuthenticator extends NetAuthenticator {
 	 * @throws NoSuchAlgorithmException
 	 * @throws IOException
 	 */
-	private LinkedList<X509Certificate> getCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, IOException {
+	private List<X509Certificate> getCertificates() throws KeyStoreException, NoSuchProviderException, CertificateException, NoSuchAlgorithmException, IOException {
 		LinkedList<X509Certificate> certs = new LinkedList<X509Certificate>();
 
 		KeyStore ks = KeyStore.getInstance("verinice-ks", VeriniceSecurityProvider.NAME);

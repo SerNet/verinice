@@ -35,8 +35,11 @@ import sernet.verinice.model.common.CnATreeElement;
  * $LastChangedBy$
  *
  */
-public class Konsolidator {
+public final class Konsolidator {
 
+    // hide default constructor
+    private Konsolidator(){}
+    
 	/**
 	 * Copy values for all Massnahmen from one BausteinUmsetzung to another.
 	 * 
@@ -46,8 +49,9 @@ public class Konsolidator {
 	 */
 	public static List<CnATreeElement> konsolidiereMassnahmen(BausteinUmsetzung source,
 			BausteinUmsetzung target) {
-		if (!source.getKapitel().equals(target.getKapitel()))
+		if (!source.getKapitel().equals(target.getKapitel())){
 			return Collections.emptyList();
+		}
 		List<CnATreeElement> changedElements = new LinkedList<CnATreeElement>();
 		
 		for (MassnahmenUmsetzung mn: target.getMassnahmenUmsetzungen()) {

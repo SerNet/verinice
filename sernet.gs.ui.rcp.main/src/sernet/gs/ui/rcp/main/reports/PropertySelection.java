@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Which properties of an item should be output as columns?
@@ -31,7 +32,7 @@ import java.util.List;
  *
  */
 public class PropertySelection implements Serializable {
-	HashMap<String, List<String>> shownPropertyTypes;
+	private Map<String, List<String>> shownPropertyTypes;
 	
 	public PropertySelection() {
 		this.shownPropertyTypes = new HashMap<String, List<String>>();
@@ -49,18 +50,8 @@ public class PropertySelection implements Serializable {
 			properties = new ArrayList<String>();
 			shownPropertyTypes.put(entityTypeId, properties);
 		}
-		if (! properties.contains(propertyTypeId))
+		if (! properties.contains(propertyTypeId)){
 			properties.add(propertyTypeId);
+		}
 	}
-	
-//	//  remove debug method
-//	public void printall() {
-//		for (String key : shownPropertyTypes.keySet()) {
-//			for (String value : shownPropertyTypes.get(key)) {
-//				System.out.println(value);
-//			}
-//		}
-//	}
-	
-	
 }

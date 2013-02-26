@@ -79,11 +79,12 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
     private IReferenceResolver cnalinkresolver;
 
     private static final Logger LOG = Logger.getLogger(BSIEntityResolverFactory.class);
+    private static final String STD_ERR_MSG = "Error while loading data";
     
     private static IReferenceResolver roleResolver;
     private static IReferenceResolver personResolver;
     private static IUrlResolver urlresolver;
-
+    
     public void createResolvers(HUITypeFactory typeFactory) {
         createPersonResolver();
         createRoleResolver();
@@ -157,7 +158,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                     result = command.getList();
 
                 } catch (Exception e) {
-                    LOG.error("Error while loading data", e); //$NON-NLS-1$
+                    LOG.error(STD_ERR_MSG, e); //$NON-NLS-1$
                 }
 
                 return result;
@@ -238,8 +239,9 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         inputElmt = loadElementByEntityUuid(entityUuid);
                         CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(referencedEntityType, inputElmt);
                         
-                        if (dialog.open() != Window.OK)
+                        if (dialog.open() != Window.OK){
                             return;
+                        }
                         List<CnATreeElement> linkTargets = dialog.getSelectedElements();
                         
                         // this method also fires events for added links:
@@ -287,7 +289,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     } catch (Exception e) {
                     	LOG.error("Error while loading element", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
                     }
                     return result;
                 }
@@ -317,7 +319,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     } catch (Exception e) {
                     	LOG.error("Error while loading elements", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
                     }
                     return result;
 
@@ -365,7 +367,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     } catch (Exception e) {
                     	LOG.error("Error while loading roles", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
                     }
                     return result;
                 }
@@ -379,7 +381,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         ServiceFactory.lookupCommandService().executeCommand(command);
                     } catch (CommandException e) {
                     	LOG.error("Error while saving elements", e); //$NON-NLS-1$
-                        throw new RuntimeCommandException("Error while loading data", e); //$NON-NLS-1$
+                        throw new RuntimeCommandException(STD_ERR_MSG, e); //$NON-NLS-1$
                     }
                 }
 

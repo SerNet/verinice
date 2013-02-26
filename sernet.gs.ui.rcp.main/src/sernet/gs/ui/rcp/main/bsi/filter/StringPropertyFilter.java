@@ -72,8 +72,9 @@ public class StringPropertyFilter extends ViewerFilter {
 		// else deactivate:
 		pattern = null;
 		regex=null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	

@@ -1,6 +1,5 @@
 package sernet.verinice.rcp;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -13,8 +12,6 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
  * 
  */
 public class OwnModulDecorator extends LabelProvider implements ILightweightLabelDecorator {
-
-    private static final Logger LOG = Logger.getLogger(OwnModulDecorator.class);
 
     public static final String IMAGE_PATH = "overlays/owned_ovr.gif";
 

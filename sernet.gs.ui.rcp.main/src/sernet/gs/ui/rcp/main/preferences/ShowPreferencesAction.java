@@ -38,7 +38,6 @@ public class ShowPreferencesAction extends Action {
 		setId(ID);
 		setText(Messages.getString("ShowPreferencesAction.1")); //$NON-NLS-1$
 		this.prefPage = showPage;
-		//setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.TOOL));
 	}
 	
 	/**
@@ -48,7 +47,6 @@ public class ShowPreferencesAction extends Action {
 		super();
 		setId(ID);
 		setText(Messages.getString("ShowPreferencesAction.1")); //$NON-NLS-1$
-		//setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.TOOL));
 	}
 	
 	public void run() {
@@ -61,10 +59,11 @@ public class ShowPreferencesAction extends Action {
 			if (nodes[i].getId().equals("org.eclipse.ui.preferencePages.Workbench")) {
 				IPreferenceNode[] subNodes = nodes[i].getSubNodes();
 				for (IPreferenceNode subNode : subNodes) {
-					if (!subNode.getId().equals("org.eclipse.ui.net.NetPreferences"))
+					if (!subNode.getId().equals("org.eclipse.ui.net.NetPreferences")){
 						nodes[i].remove(subNode.getId());
-					else
+					} else {
 						manager.addToRoot(subNode);
+					}
 					manager.remove(nodes[i]);
 				}
 			}
@@ -84,9 +83,9 @@ public class ShowPreferencesAction extends Action {
 		final PreferenceDialog dialog = new PreferenceDialog(
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), manager);
 		
-		if (prefPage != null)
+		if (prefPage != null){
 			dialog.setSelectedNode(prefPage);
-
+		}
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 			public void run() {
 				

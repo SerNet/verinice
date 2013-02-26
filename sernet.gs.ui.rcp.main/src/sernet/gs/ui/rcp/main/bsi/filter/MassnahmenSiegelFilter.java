@@ -65,8 +65,9 @@ public class MassnahmenSiegelFilter extends ViewerFilter {
 		
 		// else deactivate:
 		siegelPattern = null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	

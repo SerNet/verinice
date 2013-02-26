@@ -8,7 +8,6 @@ public class ServiceComponent {
     private IEncryptionService encryptionService;
 
     private IReportService reportService;
-
     
     private static ServiceComponent instance;
     

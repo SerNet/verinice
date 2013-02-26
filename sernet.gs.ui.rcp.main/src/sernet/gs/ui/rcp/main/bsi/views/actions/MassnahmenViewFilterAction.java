@@ -66,9 +66,9 @@ public class MassnahmenViewFilterAction extends Action {
 				schichtFilter.getPattern(),
 				gefFilter.getPattern());
 		
-		if (dialog.open() != InputDialog.OK)
+		if (dialog.open() != InputDialog.OK){
 			return;
-		
+		}
 		siegelFilter.setPattern(dialog.getSiegelSelection());
 		suchFilter.setPattern(dialog.getSuche());
 		schichtFilter.setPattern(dialog.getSchichtSelection());

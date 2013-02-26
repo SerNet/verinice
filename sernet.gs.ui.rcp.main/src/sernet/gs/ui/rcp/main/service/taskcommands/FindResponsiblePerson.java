@@ -66,9 +66,9 @@ public class FindResponsiblePerson extends GenericCommand {
 	private List<Person> getLinkedPersonsByRoles() {
 		PropertyList roles = umsetzung.getEntity().getProperties(field);
 		List<Person> result = new ArrayList<Person>();
-		if (roles.getProperties() == null || roles.getProperties().size() == 0 )
+		if (roles.getProperties() == null || roles.getProperties().size() == 0 ){
 			return result;
-		
+		}
 		// search tree upward for linked persons:
 		Set<Property> rolesToSearch = new HashSet<Property>();
 		rolesToSearch.addAll(roles.getProperties());

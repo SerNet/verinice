@@ -41,7 +41,7 @@ import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class CnAElementBuilder {
+public final class CnAElementBuilder {
 	private static CnAElementBuilder instance;
 	
 	private static final Logger LOG = Logger.getLogger(CnAElementBuilder.class);

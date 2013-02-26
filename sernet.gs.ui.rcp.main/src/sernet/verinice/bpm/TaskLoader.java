@@ -22,8 +22,6 @@ package sernet.verinice.bpm;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.bpm.rcp.TaskChangeRegistry;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -42,8 +40,6 @@ import sernet.verinice.model.bpm.TaskParameter;
  */
 public class TaskLoader {
 
-    private static final Logger LOG = Logger.getLogger(TaskLoader.class);
-    
     private ITaskService taskService;
     
     private Date lastChecked = null;

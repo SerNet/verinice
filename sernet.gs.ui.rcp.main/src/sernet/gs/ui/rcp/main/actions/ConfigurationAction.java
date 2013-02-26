@@ -35,7 +35,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
@@ -72,13 +71,11 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration"; //$NON-NLS-1$
 
-	private static final String[] ALLOWED_ROLES = new String[] { ApplicationRoles.ROLE_ADMIN };
-
 	private Configuration configuration;
 
 	private IWorkbenchPart targetPart;
 	
-	ICommandService commandService;
+	private ICommandService commandService;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;

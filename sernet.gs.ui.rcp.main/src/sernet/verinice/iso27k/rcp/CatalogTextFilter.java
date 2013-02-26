@@ -44,14 +44,14 @@ public class CatalogTextFilter extends TextFilter {
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		boolean match = true;
-		if (regex!=null) {
+		if (getRegex()!=null) {
 			IItem item = (IItem) element;
 			if(item.getName()!=null) {
-				Matcher matcherName = regex.matcher(item.getName());
+				Matcher matcherName = getRegex().matcher(item.getName());
 				match = matcherName.find();
 			}
 			if(item.getDescription()!=null) {
-				Matcher matcherDesc = regex.matcher(item.getDescription());
+				Matcher matcherDesc = getRegex().matcher(item.getDescription());
 				match = match || matcherDesc.find();
 			}
 			

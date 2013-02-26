@@ -150,8 +150,9 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
         if (selectedControlgroup != null) {
             String title = selectedControlgroup.getTitle();
             boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.2"), title)); //$NON-NLS-1$ //$NON-NLS-2$
-            if (!confirm)
+            if (!confirm){
                 return;
+            }
             try {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

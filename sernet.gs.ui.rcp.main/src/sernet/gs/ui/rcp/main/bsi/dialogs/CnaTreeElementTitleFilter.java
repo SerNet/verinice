@@ -47,11 +47,11 @@ public class CnaTreeElementTitleFilter extends TextFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (!(element instanceof CnATreeElement) || regex == null)
+        if (!(element instanceof CnATreeElement) || getRegex() == null){
             return true;
-        
+        }
         CnATreeElement elmt = (CnATreeElement) element;
-        Matcher matcher = regex.matcher(elmt.getTitle());
+        Matcher matcher = getRegex().matcher(elmt.getTitle());
         return matcher.find();
     }
 

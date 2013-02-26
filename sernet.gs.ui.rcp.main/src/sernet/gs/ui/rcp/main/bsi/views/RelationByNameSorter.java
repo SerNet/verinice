@@ -30,7 +30,6 @@ import sernet.verinice.model.common.CnALink;
  */
 public class RelationByNameSorter extends ViewerSorter {
 	
-	private String sorterProperty;
 	private IRelationTable view;
     private String[] sorterProperties;
 

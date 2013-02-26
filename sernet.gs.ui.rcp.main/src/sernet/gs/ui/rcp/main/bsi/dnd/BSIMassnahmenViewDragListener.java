@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -35,8 +34,6 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 public class BSIMassnahmenViewDragListener implements DragSourceListener {
 
 	private TreeViewer viewer;
-
-	private static transient Logger LOG = Logger.getLogger(BSIMassnahmenViewDragListener.class);
 
 	public BSIMassnahmenViewDragListener(TreeViewer viewer) {
 		this.viewer = viewer;

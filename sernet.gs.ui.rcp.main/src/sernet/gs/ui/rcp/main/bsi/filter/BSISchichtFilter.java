@@ -67,8 +67,9 @@ public class BSISchichtFilter extends ViewerFilter {
 		
 		// else deactivate:
 		pattern = null;
-		if (active)
+		if (active){
 			viewer.removeFilter(this);
+		}
 	}
 	
 	

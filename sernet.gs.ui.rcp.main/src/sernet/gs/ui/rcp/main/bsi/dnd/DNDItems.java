@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("unchecked")
-public class DNDItems {
+public final class DNDItems {
 	// TODO use system DND, (dragsource and droptarget)
     
     private DNDItems(){}

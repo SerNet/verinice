@@ -36,7 +36,7 @@ public final class OwnGefaehrdungHome {
 		commandService = ServiceFactory.lookupCommandService();
 	}
 	
-	public synchronized static OwnGefaehrdungHome getInstance() {
+	public static synchronized OwnGefaehrdungHome getInstance() {
 		if (instance == null){
 			instance = new OwnGefaehrdungHome();
 		}
