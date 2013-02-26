@@ -43,8 +43,9 @@ public class SonstigeITKategorie extends CnATreeElement
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof SonstIT)
+		if (obj instanceof SonstIT){
 			return true;
+		}
 		return false;
 	}
 }

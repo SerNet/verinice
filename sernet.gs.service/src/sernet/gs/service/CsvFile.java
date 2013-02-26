@@ -32,11 +32,11 @@ import org.apache.commons.io.FileUtils;
  */
 public class CsvFile implements Serializable{
 	
-    public final static Charset CHARSET_DEFAULT = VeriniceCharset.CHARSET_UTF_8;
+    public static final Charset CHARSET_DEFAULT = VeriniceCharset.CHARSET_UTF_8;
 	
-    String filePath;
+    private String filePath;
 	
-	byte[] fileContent;
+	private byte[] fileContent;
 	
 	public CsvFile(InputStream is) throws IOException {
 	    this(is,CHARSET_DEFAULT);
@@ -80,11 +80,11 @@ public class CsvFile implements Serializable{
 	}
 	
 	public byte[] getFileContent() {
-		return fileContent;
+		return (fileContent != null) ? fileContent.clone() : null;
 	}
 
 	public final void setFileContent(byte[] fileContent) {
-		this.fileContent = fileContent;
+		this.fileContent = (fileContent != null) ? fileContent.clone() : null;
 	}
 
 	public void setFilePath(String filePath) {

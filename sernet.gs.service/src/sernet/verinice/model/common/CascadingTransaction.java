@@ -55,14 +55,14 @@ public class CascadingTransaction {
 	 * @throws TransactionAbortedException if this transaction was aborted by one of the participants
 	 */
 	public synchronized boolean enter(CnATreeElement obj) throws TransactionAbortedException {
-		if (aborted) // cannot enter aborted transaction:
+		if (aborted){ // cannot enter aborted transaction:
 			throw new TransactionAbortedException();
-		
+		}
 		// keep track of entered objects:
 		visited.add(obj);
-		if (this.initiator != null)
+		if (this.initiator != null){
 			return false;
-		
+		}
 		// create new transaction:
 		this.initiator = obj;
 		aborted = false;
@@ -82,7 +82,7 @@ public class CascadingTransaction {
 		return loop;
 	}
 	
-	public void abort() {
+	public synchronized void abort() {
 		this.aborted = true;
 	}
 	
@@ -97,9 +97,9 @@ public class CascadingTransaction {
 	 * @return
 	 */
 	public synchronized boolean end(CnATreeElement o) {
-		if (!o.equals(initiator))
+		if (!o.equals(initiator)){
 			return false;
-		
+		}
 		visited = new HashSet<CnATreeElement>();
 		initiator = null;
 		aborted = false;

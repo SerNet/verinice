@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -72,8 +71,8 @@ public class MapEntityValues extends GenericCommand {
     public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props, Class<?>[] classes2, boolean addDbId) {
         this.typeID = typeID;
         this.inputIDs =inputIDs;
-        this.propertyTypes = props;
-        this.classes = classes2;
+        this.propertyTypes = (props != null) ? props.clone() : null;
+        this.classes = (classes2 != null) ? classes2.clone() : null;
         this.addDbId = addDbId;
     }
 

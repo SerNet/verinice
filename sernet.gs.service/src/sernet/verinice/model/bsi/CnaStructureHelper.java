@@ -29,16 +29,22 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
  *
  */
 public final class CnaStructureHelper {
+    
+    private CnaStructureHelper(){}
 
 	public static boolean canContain(Object obj) {
-		if (obj instanceof BausteinUmsetzung)
+		if (obj instanceof BausteinUmsetzung){
 			return true;
-		if (obj instanceof Baustein)
+		}
+		if (obj instanceof Baustein){
 			return true;
-		if (obj instanceof LinkKategorie)
+		}
+		if (obj instanceof LinkKategorie){
 			return true;
-		if (obj instanceof FinishedRiskAnalysis)
+		}
+		if (obj instanceof FinishedRiskAnalysis){
 			return true;
+		}
 		return false;
 	}
 }

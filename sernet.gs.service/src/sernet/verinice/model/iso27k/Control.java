@@ -160,12 +160,13 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	public static String getImplementation(Entity entity) {
 	    PropertyList properties = entity.getProperties(PROP_IMPL);
 	    if (properties == null || properties.getProperties() == null
-	            || properties.getProperties().size() < 1)
+	            || properties.getProperties().size() < 1){
 	        return IMPLEMENTED_NOTEDITED;
-	    
+	    }
 	    Property property = properties.getProperty(0);
-	    if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+	    if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")){ //$NON-NLS-1$
 	        return property.getPropertyValue();
+	    }
 	    return IMPLEMENTED_NOTEDITED;
 	}
 	

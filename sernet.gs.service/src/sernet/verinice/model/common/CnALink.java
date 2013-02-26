@@ -106,8 +106,9 @@ public class CnALink implements Serializable, ITypedElement {
         
         Set<CnALink> linksUp = elmt.getLinksUp();
         for (CnALink cnALink : linksUp) {
-            if (cnALink.getDependant().getTypeId().equals(typeId))
+            if (cnALink.getDependant().getTypeId().equals(typeId)){
                 result.put(cnALink.getDependant(), cnALink);
+            }
         }
         return result;
     }

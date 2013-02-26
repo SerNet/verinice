@@ -42,9 +42,9 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_C = Messages.GefaehrdungsUmsetzung_6;
     public static final String GEFAEHRDUNG_ALTERNATIVE_TEXT_D = Messages.GefaehrdungsUmsetzung_7;
 
-    public static final String[] ALTERNATIVEN = { GEFAEHRDUNG_ALTERNATIVE_A, GEFAEHRDUNG_ALTERNATIVE_B, GEFAEHRDUNG_ALTERNATIVE_C, GEFAEHRDUNG_ALTERNATIVE_D, };
+    private static final String[] ALTERNATIVEN = { GEFAEHRDUNG_ALTERNATIVE_A, GEFAEHRDUNG_ALTERNATIVE_B, GEFAEHRDUNG_ALTERNATIVE_C, GEFAEHRDUNG_ALTERNATIVE_D, };
 
-    public static final String[] ALTERNATIVEN_TEXT = { GEFAEHRDUNG_ALTERNATIVE_TEXT_A, GEFAEHRDUNG_ALTERNATIVE_TEXT_B, GEFAEHRDUNG_ALTERNATIVE_TEXT_C, GEFAEHRDUNG_ALTERNATIVE_TEXT_D, };
+    private static final String[] ALTERNATIVEN_TEXT = { GEFAEHRDUNG_ALTERNATIVE_TEXT_A, GEFAEHRDUNG_ALTERNATIVE_TEXT_B, GEFAEHRDUNG_ALTERNATIVE_TEXT_C, GEFAEHRDUNG_ALTERNATIVE_TEXT_D, };
 
     public static final String TYPE_ID = "gefaehrdungsumsetzung"; //$NON-NLS-1$
 
@@ -247,5 +247,9 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     @Override
     public String getDescription() {
         return getEntity().getSimpleValue(PROP_DESCRIPTION);
+    }
+
+    public static String[] getAlternativenText() {
+        return ALTERNATIVEN_TEXT;
     }
 }

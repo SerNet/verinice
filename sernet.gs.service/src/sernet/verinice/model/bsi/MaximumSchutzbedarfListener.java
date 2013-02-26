@@ -18,9 +18,6 @@
 package sernet.verinice.model.bsi;
 
 import java.io.Serializable;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
 
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -47,8 +44,9 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 	public void determineIntegritaet(CascadingTransaction ta)
 			throws TransactionAbortedException {
-		if (hasBeenVisited(ta))
+		if (hasBeenVisited(ta)){
 			return;
+		}
 		ta.enter(sbTarget);
 
 		// get protection level from upward links:
@@ -62,16 +60,17 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 				int value = upwardElmt.getSchutzbedarfProvider()
 						.getIntegritaet();
-				if (value > highestValue)
+				if (value > highestValue){
 					highestValue = value;
+				}
 			}
 		}
 		
 		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getIntegritaetDescription()))
+				.getIntegritaetDescription())){
 			return;
-		
+		}
 		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
 	}
 
@@ -88,8 +87,9 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 	public void determineVerfuegbarkeit(CascadingTransaction ta)
 			throws TransactionAbortedException {
-		if (hasBeenVisited(ta))
+		if (hasBeenVisited(ta)){
 			return;
+		}
 		ta.enter(sbTarget);
 
 
@@ -105,24 +105,26 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 				int value = upwardElmt.getSchutzbedarfProvider()
 						.getVerfuegbarkeit();
-				if (value > highestValue)
+				if (value > highestValue){
 					highestValue = value;
+				}
 			}
 		}
 
 		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getVerfuegbarkeitDescription()))
+				.getVerfuegbarkeitDescription())){
 			return;
-		
+		}
 		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
 	}
 
 	public void determineVertraulichkeit(CascadingTransaction ta)
 			throws TransactionAbortedException {
 
-		if (hasBeenVisited(ta))
+		if (hasBeenVisited(ta)){
 			return;
+		}
 		ta.enter(sbTarget);
 
 		// otherwise get protection level from upward links:
@@ -137,15 +139,16 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 				int value = upwardElmt.getSchutzbedarfProvider()
 						.getVertraulichkeit();
-				if (value > highestValue)
+				if (value > highestValue){
 					highestValue = value;
+				}
 			}
 		}
 		// if we dont use the maximum principle, keep current level:
 		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getVertraulichkeitDescription()))
+				.getVertraulichkeitDescription())){
 			return;
-		
+		}
 		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
 
 	}

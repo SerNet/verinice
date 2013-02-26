@@ -48,8 +48,9 @@ public class ImportBsiGroup extends CnATreeElement implements IBSIStrukturElemen
 
 	@Override
     public boolean canContain(Object obj) {
-        if (obj instanceof ITVerbund )
+        if (obj instanceof ITVerbund ){
             return true;
+        }
         return false;
     }
     

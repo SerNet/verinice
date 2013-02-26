@@ -43,8 +43,9 @@ public class ServerKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Server)
+		if (obj instanceof Server){
 			return true;
+		}
 		return false;
 	}
 }

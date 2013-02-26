@@ -33,9 +33,9 @@ public class LoadBSIModel extends GenericCommand implements INoAccessControl {
 	
 	public void execute() {
 		List<BSIModel> models = getDaoFactory().getDAO(BSIModel.class).findAll();
-		if (models != null && models.size()>0)
+		if (models != null && models.size()>0){
 			model = models.get(0);
-		
+		}
 		// TODO rschuster: What about extra BSIModels? Should we remove them?
 	}
 

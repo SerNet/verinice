@@ -37,6 +37,8 @@ public class Anwendung extends CnATreeElement
 	implements IBSIStrukturElement {
 	
     private transient Logger log = Logger.getLogger(Anwendung.class);
+    
+    private static final int SCHICHT = 5;
 
     public Logger getLog() {
         if (log == null) {
@@ -86,7 +88,7 @@ public class Anwendung extends CnATreeElement
 
 
 	public int getSchicht() {
-		return 5;
+		return SCHICHT;
 	}
 
 	public String getKuerzel() {
@@ -146,8 +148,9 @@ public class Anwendung extends CnATreeElement
 
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof IDatenschutzElement)
+		if (obj instanceof IDatenschutzElement){
 			return true;
+		}
 		return CnaStructureHelper.canContain(obj);
 	}
 

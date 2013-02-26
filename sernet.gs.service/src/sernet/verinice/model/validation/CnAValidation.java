@@ -183,28 +183,37 @@ public class CnAValidation implements Serializable, Comparable<CnAValidation>, I
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         CnAValidation other = (CnAValidation) obj;
         if (elmtDbId == null) {
-            if (other.elmtDbId != null)
+            if (other.elmtDbId != null){
                 return false;
-        } else if (!elmtDbId.equals(other.elmtDbId))
+            }
+        } else if (!elmtDbId.equals(other.elmtDbId)){
             return false;
+        }
         if (hintId == null) {
-            if (other.hintId != null)
+            if (other.hintId != null){
                 return false;
-        } else if (!hintId.equals(other.hintId))
+            }
+        } else if (!hintId.equals(other.hintId)){
             return false;
+        }
         if (propertyId == null) {
-            if (other.propertyId != null)
+            if (other.propertyId != null){
                 return false;
-        } else if (!propertyId.equals(other.propertyId))
+            }
+        } else if (!propertyId.equals(other.propertyId)){
             return false;
+        }
         return true;
     }
     

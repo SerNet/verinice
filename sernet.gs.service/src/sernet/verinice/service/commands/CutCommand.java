@@ -183,7 +183,7 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         // save old parent
         UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
         command.setLogChanges(false);
-        command = getCommandService().executeCommand(command);
+        getCommandService().executeCommand(command);
         ElementChange delete = new ElementChange(element, ChangeLogEntry.TYPE_DELETE);
         elementChanges.add(delete);
         

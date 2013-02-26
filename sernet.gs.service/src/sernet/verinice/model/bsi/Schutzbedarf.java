@@ -27,9 +27,9 @@ public abstract class Schutzbedarf {
 	public static final String VERFUEGBARKEIT 		= "_verfuegbarkeit"; //$NON-NLS-1$
 	public static final String INTEGRITAET 		= "_integritaet"; //$NON-NLS-1$
 	
-	private static Pattern pat_vertraulichkeit = Pattern.compile(".*" + VERTRAULICHKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
-	private static Pattern pat_verfuegbarkeit = Pattern.compile(".*" + VERFUEGBARKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
-	private static Pattern pat_integritaet = Pattern.compile(".*" + INTEGRITAET + "$"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Pattern patVertraulichkeit = Pattern.compile(".*" + VERTRAULICHKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Pattern patVerfuegbarkeit = Pattern.compile(".*" + VERFUEGBARKEIT + "$"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static Pattern patIntegritaet = Pattern.compile(".*" + INTEGRITAET + "$"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final String VERTRAULICHKEIT_BEGRUENDUNG	= "_vertraulichkeit_begruendung"; //$NON-NLS-1$
 	public static final String VERFUEGBARKEIT_BEGRUENDUNG	= "_verfuegbarkeit_begruendung"; //$NON-NLS-1$
@@ -53,10 +53,12 @@ public abstract class Schutzbedarf {
 	
 	
 	public static int toInt(String option) {
-		if (option.indexOf(SUFFIX_SEHRHOCH) > -1)
+		if (option.indexOf(SUFFIX_SEHRHOCH) > -1){
 			return SEHRHOCH;
-		if (option.indexOf(SUFFIX_HOCH) > -1)
+		}
+		if (option.indexOf(SUFFIX_HOCH) > -1){
 			return HOCH;
+		}
 		return NORMAL;
 	}
 	
@@ -65,20 +67,20 @@ public abstract class Schutzbedarf {
 	}
 
 	public static boolean isVerfuegbarkeit(Property prop) {
-		return pat_verfuegbarkeit.matcher(prop.getPropertyTypeID()).matches();
+		return patVerfuegbarkeit.matcher(prop.getPropertyTypeID()).matches();
 	}
 	
 	public static boolean isVertraulichkeit(Property prop) {
-		return pat_vertraulichkeit.matcher(prop.getPropertyTypeID()).matches();
+		return patVertraulichkeit.matcher(prop.getPropertyTypeID()).matches();
 	}
 	
 	public static boolean isIntegritaet(Property prop) {
-		return pat_integritaet.matcher(prop.getPropertyTypeID()).matches();
+		return patIntegritaet.matcher(prop.getPropertyTypeID()).matches();
 	}
 
-	public static String toOption(String type_id, String schutzbedarf, int level) {
+	public static String toOption(String typeId, String schutzbedarf, int level) {
 		StringBuffer buf = new StringBuffer();
-		buf.append(type_id);
+		buf.append(typeId);
 		buf.append(schutzbedarf);
 		buf.append(getLevel(level));
 		return buf.toString();

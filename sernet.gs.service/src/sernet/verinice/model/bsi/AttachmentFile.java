@@ -34,7 +34,7 @@ import sernet.hui.common.connect.ITypedElement;
 @SuppressWarnings("serial")
 public class AttachmentFile implements Serializable, ITypedElement {
 
-	Integer dbId;
+	private Integer dbId;
 	
 
 	private byte[] fileData;
@@ -56,11 +56,11 @@ public class AttachmentFile implements Serializable, ITypedElement {
 	
 	
 	public byte[] getFileData() {
-		return fileData;
+		return (fileData != null) ? fileData.clone() : null;
 	}
 
 	public void setFileData(byte[] fileData) {
-		this.fileData = fileData;
+		this.fileData = (fileData != null) ? fileData.clone() : null;
 	}
 	
 
@@ -94,18 +94,23 @@ public class AttachmentFile implements Serializable, ITypedElement {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         AttachmentFile other = (AttachmentFile) obj;
         if (dbId == null) {
-            if (other.dbId != null)
+            if (other.dbId != null){
                 return false;
-        } else if (!dbId.equals(other.dbId))
+            }
+        } else if (!dbId.equals(other.dbId)){
             return false;
+        }
         return true;
     }
     

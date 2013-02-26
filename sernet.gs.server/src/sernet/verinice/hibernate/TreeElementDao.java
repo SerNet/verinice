@@ -133,7 +133,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         } else {
             criteria.add(Restrictions.eq("dbId", id));
         }
-        configureCriteria(criteria, ri);
+        configureCriteria(criteria, ri0);
 
         return loadByCriteria(criteria);
     }

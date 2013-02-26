@@ -55,7 +55,7 @@ public class ExportThread extends NotifyingThread {
 
     private static final Logger LOG = Logger.getLogger(ExportThread.class);
     
-    private static final Object lock = new Object();
+    private static final Object LOCK = new Object();
     
     private Cache cache = null;
     
@@ -125,7 +125,6 @@ public class ExportThread extends NotifyingThread {
      * @return List<Element>
      * @throws CommandException 
      */
-    //private void export(List<SyncObject> list, CnATreeElement element, Set<EntityType> exportedEntityTypes, Set<String> exportedTypes) throws CommandException {  
     public void export() throws CommandException {
         CnATreeElement element = transaction.getElement();
         if (LOG.isDebugEnabled()) {
@@ -199,9 +198,9 @@ public class ExportThread extends NotifyingThread {
     
     private CnATreeElement hydrate(CnATreeElement element)
     { 
-        if (element == null)
+        if (element == null){
             return element;
-        
+        }
         CnATreeElement elementFromCache = getElementFromCache(element);
         if(elementFromCache!=null) {
             return elementFromCache;
@@ -223,7 +222,7 @@ public class ExportThread extends NotifyingThread {
     
     private CnATreeElement getElementFromCache(CnATreeElement element) {
         CnATreeElement fromCache = null;
-        synchronized (lock) {
+        synchronized (LOCK) {
             if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
                 Element cachedElement = getCache().get(element.getUuid());
                 if(cachedElement!=null) {
@@ -240,7 +239,7 @@ public class ExportThread extends NotifyingThread {
     }
 
     private void cacheElement(CnATreeElement element) {
-        synchronized (lock) {
+        synchronized (LOCK) {
             if(Status.STATUS_ALIVE.equals(cache.getStatus())) {
                 getCache().put(new Element(element.getUuid(), element));
             } else {

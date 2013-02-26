@@ -50,9 +50,9 @@ public class Item implements IItem {
 		return log;
 	}
 	
-	protected String name;
+	private String name;
 	
-	protected String description;
+	private String description;
 	
 	private String numberString;
 
@@ -74,7 +74,7 @@ public class Item implements IItem {
 	 * tree map to store and sort the items
 	 * key is the number of child in this item
 	 */
-	protected SortedMap<Integer, IItem> itemMap;
+	private SortedMap<Integer, IItem> itemMap;
 
 	private boolean maturityLevelSupport = false;
 
@@ -291,18 +291,23 @@ public class Item implements IItem {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		Item other = (Item) obj;
 		if (numberString == null) {
-			if (other.numberString != null)
+			if (other.numberString != null){
 				return false;
-		} else if (!numberString.equals(other.numberString))
+			}
+		} else if (!numberString.equals(other.numberString)){
 			return false;
+		}
 		return true;
 	}
 

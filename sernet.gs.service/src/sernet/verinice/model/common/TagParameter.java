@@ -21,17 +21,17 @@ import sernet.verinice.interfaces.IParameter;
 
 public class TagParameter implements IParameter {
     
-    String[] pattern;
+    private String[] pattern;
     private boolean filterOrgs;
 
 
     public String[] getPattern() {
-        return pattern;
+        return (pattern != null) ? pattern.clone() : null;
     }
 
     public void setPattern(String[] newPattern) {
         if (newPattern != null && newPattern.length > 0) {
-            pattern = newPattern;          
+            pattern = newPattern.clone();          
         } else {
             // deactivate
             pattern = null;      

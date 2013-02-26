@@ -104,13 +104,14 @@ public class Gefaehrdung implements IGSModel {
 	 * @return
 	 */
 	public int getKapitelValue() {
+	    final int absValueFactor = 1000;
 		int absvalue = 0;
 		Matcher m = kapitelPattern.matcher(getId());
 		if (m.find()) {
 			try {
 				 int whole = Integer.parseInt(m.group(1));
 				 int radix = Integer.parseInt(m.group(2));
-				 absvalue = whole * 1000 + radix;
+				 absvalue = whole * absValueFactor + radix;
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass())
 					.error("Kapitelnummer der Gefaehrdung ist kein Float.", e);
@@ -163,16 +164,21 @@ public class Gefaehrdung implements IGSModel {
 	}
 
 	public static int kategorieAsInt(String kategorie) {
-		if (kategorie.indexOf(KAT_MATCH_HOEHERE_GEWALT) != -1)
+		if (kategorie.indexOf(KAT_MATCH_HOEHERE_GEWALT) != -1){
 			return KAT_HOEHERE_GEWALT;
-		if (kategorie.indexOf(KAT_MATCH_MENSCH) != -1)
+		}
+		if (kategorie.indexOf(KAT_MATCH_MENSCH) != -1){
 			return KAT_MENSCH;
-		if (kategorie.indexOf(KAT_MATCH_ORG_MANGEL) != -1)
+		}
+		if (kategorie.indexOf(KAT_MATCH_ORG_MANGEL) != -1){
 			return KAT_ORG_MANGEL;
-		if (kategorie.indexOf(KAT_MATCH_TECHNIK) != -1)
+		}
+		if (kategorie.indexOf(KAT_MATCH_TECHNIK) != -1){
 			return KAT_TECHNIK;
-		if (kategorie.indexOf(KAT_MATCH_VORSATZ) != -1)
+		}
+		if (kategorie.indexOf(KAT_MATCH_VORSATZ) != -1){
 			return KAT_VORSATZ;
+		}
 		return KAT_UNDEF;
 		
 	}

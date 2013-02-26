@@ -243,6 +243,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
     
     private void exportChildren(final ExportTransaction transaction) throws CommandException {      
+        final int timeOutFactor = 40;
         CnATreeElement element = transaction.getElement();
         Set<CnATreeElement> children = element.getChildren();
         
@@ -270,7 +271,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             taskExecutor.execute(thread);
         }
         
-        awaitTermination(transactionList.size() * 40);
+        awaitTermination(transactionList.size() * timeOutFactor);
         
         if (getLog().isDebugEnabled() && transactionList.size()>0) {
             getLog().debug(transactionList.size() + " export threads finished.");
@@ -328,6 +329,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      * @param timeout in seconds
      */
     private void awaitTermination(int timeout) {
+        final int secondsUntilTimeOut = 60;
         taskExecutor.shutdown();
         try {
             // Wait a while for existing tasks to terminate
@@ -335,7 +337,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 getLog().error("Export executer timeout reached: " + timeout + "s. Terminating execution now.");
                 taskExecutor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
-                if (!taskExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
+                if (!taskExecutor.awaitTermination(secondsUntilTimeOut, TimeUnit.SECONDS)) {
                     getLog().error("Export executer did not terminate.");
                 }
             }
@@ -480,7 +482,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
 	public byte[] getResult() {
-		return result; 
+		return (result != null) ? result.clone() : null; 
 	}
 	
 	@Override
@@ -499,8 +501,11 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
  	}
 	
 	private Cache createCache() {
+	    final int maxElementsInMemory = 20000;
+	    final int timeToLiveSeconds = 1800;
+	    final int timeToIdleSeconds = timeToLiveSeconds;
 	    cacheId = UUID.randomUUID().toString();
-        cache = new Cache(cacheId, 20000, false, false, 1800, 1800);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         getManager().addCache(cache);
         return cache;
 	}

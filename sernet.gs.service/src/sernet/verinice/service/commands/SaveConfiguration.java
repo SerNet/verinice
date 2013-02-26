@@ -138,7 +138,7 @@ public class SaveConfiguration<T extends Configuration> extends GenericCommand i
 					boolean doubleUsername = false;
 					
 					// reload entity because in some causes new entities alredy exists in db 
-					Entity entity = getEntityDao().findByUuid(element.getEntity().getUuid(), new RetrieveInfo());
+					getEntityDao().findByUuid(element.getEntity().getUuid(), new RetrieveInfo());
 					usernamePropertyList = element.getEntity().getProperties(Configuration.PROP_USERNAME);
 					
 					checkDoubles: for (Object t : resultList) {

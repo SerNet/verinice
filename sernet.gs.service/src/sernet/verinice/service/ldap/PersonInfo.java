@@ -102,18 +102,23 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo>{
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		PersonInfo other = (PersonInfo) obj;
 		if (person == null) {
-			if (other.person != null)
+			if (other.person != null){
 				return false;
-		} else if (!person.equals(other.person))
+			}
+		} else if (!person.equals(other.person)){
 			return false;
+		}
 		return true;
 	}
 	

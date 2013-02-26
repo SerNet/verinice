@@ -44,8 +44,9 @@ public class ClientsKategorie extends CnATreeElement
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Client)
+		if (obj instanceof Client){
 			return true;
+		}
 		return false;
 	}
 }

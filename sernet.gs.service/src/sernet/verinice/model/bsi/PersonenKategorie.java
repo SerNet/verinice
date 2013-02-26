@@ -44,8 +44,9 @@ public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKat
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Person)
+		if (obj instanceof Person){
 			return true;
+		}
 		return false;
 	}
 }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -108,17 +109,17 @@ public class LoadUnifyMapping extends GenericCommand {
     }
     
     private List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) {
-        List<UnifyMapping> mappings = new ArrayList<UnifyMapping>(sourceMap.size());      
-        for (String title : sourceMap.keySet()) {
-            CnATreeElement source = sourceMap.get(title);
+        List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());      
+        for(Entry<String, CnATreeElement> entry : sourceMap.entrySet()){
+            CnATreeElement source = sourceMap.get(entry.getKey());
             UnifyMapping mapping = new UnifyMapping(new UnifyElement(source.getUuid(), source.getTitle())); 
-            CnATreeElement destination = destinationMap.get(title);
+            CnATreeElement destination = destinationMap.get(entry.getKey());
             if(destination!=null) {
                 mapping.setDestinationElement(new UnifyElement(destination.getUuid(), destination.getTitle()));
             }
-            mappings.add(mapping);
+            internalMappings.add(mapping);
         }
-        return mappings;
+        return internalMappings;
     }
 
     /**

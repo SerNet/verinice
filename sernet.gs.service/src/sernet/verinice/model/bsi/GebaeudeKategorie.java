@@ -43,8 +43,9 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Gebaeude)
+		if (obj instanceof Gebaeude){
 			return true;
+		}
 		return false;
 	}
 	

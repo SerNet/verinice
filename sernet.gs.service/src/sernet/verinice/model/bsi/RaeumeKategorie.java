@@ -43,8 +43,9 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Raum)
+		if (obj instanceof Raum){
 			return true;
+		}
 		return false;
 	}
 }

@@ -188,7 +188,7 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 
     @Override
 	public int hashCode() {
-		if(dbId!=null) {
+		if(getDbId()!=null) {
 			return super.hashCode();
 		}
 		final int prime = 31;
@@ -199,7 +199,7 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 
 	@Override
 	public boolean equals(Object obj) {
-		if(dbId!=null && obj!=null && (obj instanceof Addition) && ((Addition)obj).getDbId()!=null) {
+		if(getDbId()!=null && obj!=null && (obj instanceof Addition) && ((Addition)obj).getDbId()!=null) {
 			return super.equals(obj);
 		}
 		if (this == obj){

@@ -43,8 +43,9 @@ public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof TelefonKomponente)
+		if (obj instanceof TelefonKomponente){
 			return true;
+		}
 		return false;
 	}
 }

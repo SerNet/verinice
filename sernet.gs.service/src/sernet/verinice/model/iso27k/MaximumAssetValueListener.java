@@ -36,6 +36,8 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumAssetValueListener.class);
     
     private CnATreeElement sbTarget;
+    
+    private static final String STRING_CONNECTOR_FOR = " for ";
      
     public MaximumAssetValueListener(CnATreeElement item) {
         this.sbTarget = item;
@@ -71,13 +73,13 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getSchutzbedarfProvider().isCalculatedIntegrity()) {
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Integrity is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Integrity is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum integrity " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum integrity " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
     }
@@ -113,13 +115,13 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getSchutzbedarfProvider().isCalculatedAvailability()) {
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Availability is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Availability is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum availability " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum availability " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
     }
@@ -127,8 +129,9 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
     public void determineVertraulichkeit(CascadingTransaction ta)
             throws TransactionAbortedException {
 
-        if (hasBeenVisited(ta))
+        if (hasBeenVisited(ta)){
             return;
+        }
         ta.enter(sbTarget);
         
         if (LOG_INHERIT.isDebug()) {
@@ -154,13 +157,13 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         // if we dont use the maximum principle, keep current level:
         if (!sbTarget.getSchutzbedarfProvider().isCalculatedConfidentiality()) {   
             if (LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info("Confidentiality is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                LOG_INHERIT.info("Confidentiality is set manually: " + sbTarget.getSchutzbedarfProvider().getIntegritaet() + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         
         if (LOG_INHERIT.isInfo()) {
-            LOG_INHERIT.info("Setting maximum confidentiality " + highestValue + " for " + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+            LOG_INHERIT.info("Setting maximum confidentiality " + highestValue + STRING_CONNECTOR_FOR + sbTarget.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
 

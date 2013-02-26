@@ -22,7 +22,6 @@ import java.util.List;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -63,13 +62,14 @@ public class LoadConfiguration extends GenericCommand {
 		List<Configuration> queryResult;
 		if (person == null) {
 			queryResult = (List<Configuration>) dao.findByQuery(QUERY_NULL, new Object[] {});
-		} else
+		} else {
 			queryResult = (List<Configuration>) dao.findByQuery(QUERY, new Object[] {person.getUuid()});
-		
+		}
 		if (queryResult != null && queryResult.size()>0) {
 			configuration = (Configuration) queryResult.get(0);
-			if (hydrateElement)
+			if (hydrateElement){
 				HydratorUtil.hydrateElement(dao, configuration, false);
+			}
 		}
 		
 	}

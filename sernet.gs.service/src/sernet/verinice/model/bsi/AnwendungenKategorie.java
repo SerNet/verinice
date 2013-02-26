@@ -45,8 +45,9 @@ public class AnwendungenKategorie extends CnATreeElement
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof Anwendung)
+		if (obj instanceof Anwendung){
 			return true;
+		}
 		return false;
 	}
 	

@@ -142,9 +142,9 @@ public class Configuration implements Serializable, ITypedElement {
 	
 	public void deleteRole(String string) {
 		// cannot delete the special user role:
-		if (string.equals(getUser()))
+		if (string.equals(getUser())){
 			return;
-		
+		}
 		
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
 		entity.remove(type, string);
@@ -227,9 +227,9 @@ public class Configuration implements Serializable, ITypedElement {
 	
 	public int getNotificationExpirationDays() {
 		String s = entity.getSimpleValue(PROP_NOTIFICATION_EXPIRATION_DAYS);
-		if (s != null && s.length() > 0)
+		if (s != null && s.length() > 0){
 			return Integer.parseInt(s);
-		
+		}
 		// No value set, then say there is no limit.
 		return 0;
 	}
@@ -286,9 +286,9 @@ public class Configuration implements Serializable, ITypedElement {
 	
 	public int getAuditorNotificationExpirationDays() {
 		String s = entity.getSimpleValue(PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS);
-		if (s != null && s.length() > 0)
+		if (s != null && s.length() > 0){
 			return Integer.parseInt(s);
-		
+		}
 		// No value set, then say there is no limit.
 		return 0;
 	}
@@ -361,9 +361,9 @@ public class Configuration implements Serializable, ITypedElement {
 	private boolean isRawPropertyValueEqual(String propertyType, String expected)
 	{
 		Property p = entity.getProperties(propertyType).getProperty(0);
-		if (p != null)
+		if (p != null){
 			return expected.equals(p.getPropertyValue());
-		
+		}
 		return false;
 	}
 

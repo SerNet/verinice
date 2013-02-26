@@ -35,11 +35,8 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
-import sernet.verinice.service.commands.SyncDeleteCommand;
-import sernet.verinice.service.commands.SyncInsertUpdateCommand;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
@@ -103,7 +100,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      */
     public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {     
         this.parameter = parameter;    
-        this.syncRequestSerialized = syncRequestSerialized;
+        this.syncRequestSerialized = (syncRequestSerialized != null) ? syncRequestSerialized.clone() : null;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 

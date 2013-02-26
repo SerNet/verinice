@@ -18,7 +18,6 @@
 package sernet.verinice.model.bsi;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import sernet.gs.model.Baustein;
 import sernet.hui.common.connect.Entity;
@@ -74,8 +73,9 @@ public class ITVerbund extends CnATreeElement
 	public CnATreeElement getCategory(String id) {
 		for (CnATreeElement category : getChildren()) {
 			if (category.getTypeId() != null
-					&& category.getTypeId().equals(id))
+					&& category.getTypeId().equals(id)){
 				return (CnATreeElement) category;
+			}
 		}
 		return null;
 	}
@@ -104,8 +104,9 @@ public class ITVerbund extends CnATreeElement
 				|| obj instanceof ServerKategorie
 				|| obj instanceof TKKategorie
 				|| obj instanceof FinishedRiskAnalysis
-				)
+				){
 			return true;
+		}
 		return false;
 	}
 

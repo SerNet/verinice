@@ -30,7 +30,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.INoAccessControl;
@@ -86,9 +85,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             // load element from DB:
             this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 
-            if (element instanceof Person || element instanceof PersonIso)
+            if (element instanceof Person || element instanceof PersonIso){
                 removeConfiguration(element);
-
+            }
             int listsDbId = 0;
             if (element instanceof GefaehrdungsUmsetzung) {
                 listsDbId = element.getParent().getDbId();

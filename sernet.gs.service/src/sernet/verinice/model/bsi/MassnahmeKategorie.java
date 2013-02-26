@@ -47,8 +47,9 @@ public class MassnahmeKategorie extends CnATreeElement implements IBSIStrukturKa
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof MassnahmenUmsetzung)
+		if (obj instanceof MassnahmenUmsetzung){
 			return true;
+		}
 		return false;
 	}
 }

@@ -176,7 +176,7 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 			if (this == obj){
 				return true;
 			}
-			if (obj == null || !(obj instanceof Permission)){
+			if (!(obj instanceof Permission)){
 				return false;
 			}
 			Permission other = (Permission) obj;

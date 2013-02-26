@@ -41,9 +41,9 @@ public class Addition implements Serializable, ITypedElement {
     
 	private transient CopyOnWriteArraySet<INoteChangedListener>  listeners;
 	
-	Integer dbId;
+	private Integer dbId;
 
-	Integer cnATreeElementId;
+	private Integer cnATreeElementId;
 	
 	private String extId;
 
@@ -51,7 +51,7 @@ public class Addition implements Serializable, ITypedElement {
 	
 	private transient String cnAElementTitel;
 	
-	Entity entity;
+	private Entity entity;
 
 
 	public Addition() {
@@ -127,19 +127,24 @@ public class Addition implements Serializable, ITypedElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
+		}
 		// FIXME ak this will not work when comparing proxies: 
-		if (getClass() != obj.getClass())
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		Addition other = (Addition) obj;
 		if (dbId == null) {
-			if (other.dbId != null)
+			if (other.dbId != null){
 				return false;
-		} else if (!dbId.equals(other.dbId))
+			}
+		} else if (!dbId.equals(other.dbId)){
 			return false;
+		}
 		return true;
 	}
 
@@ -150,7 +155,7 @@ public class Addition implements Serializable, ITypedElement {
 	}
 	
 	public interface INoteChangedListener {
-		public void noteChanged();
+		void noteChanged();
 	}
 	
 	public CopyOnWriteArraySet<INoteChangedListener> getListener() {

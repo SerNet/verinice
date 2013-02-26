@@ -43,8 +43,9 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof NetzKomponente )
+		if (obj instanceof NetzKomponente ){
 			return true;
+		}
 		return false;
 	}
 }

@@ -165,8 +165,9 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	 */
 	private String getVerantwortliche(String field) {
 		String assignedPerson = getEntity().getSimpleValue(field);
-		if (assignedPerson != null && assignedPerson.length() > 0)
+		if (assignedPerson != null && assignedPerson.length() > 0){
 			return assignedPerson;
+		}
 		return ""; //$NON-NLS-1$
 	}
 	
@@ -259,8 +260,9 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
         }       
 		if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0) {
     		Property property = properties.getProperty(0);
-    		if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")) //$NON-NLS-1$
+    		if (property != null && property.getPropertyValue()!=null && !property.getPropertyValue().equals("")){ //$NON-NLS-1$
     		    umsetzung = property.getPropertyValue();
+    		}
 		}
 		return umsetzung;
 	}
@@ -289,8 +291,9 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	}
 	
 	public String getErlaeuterung() {
-		if (getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0) == null)
+		if (getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0) == null){
 			return null;
+		}
 		return getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0).getPropertyValue();
 	}
 	
@@ -357,8 +360,9 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
 	public boolean isCompleted() {
 		if (getUmsetzung().equals(P_UMSETZUNG_JA)
-				|| getUmsetzung().equals(P_UMSETZUNG_ENTBEHRLICH))
+				|| getUmsetzung().equals(P_UMSETZUNG_ENTBEHRLICH)){
 			return true;
+		}
 		return false;
 	}
 

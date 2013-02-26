@@ -52,11 +52,13 @@ import de.sernet.sync.data.SyncLink;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ExportFactory {
+public final class ExportFactory {
     
     private static final Logger LOG = Logger.getLogger(ExportFactory.class);
     
     private static final int BUFFER = 2048;
+    
+    private ExportFactory(){}
     
     /**
      * Creates a SyncLink instance out of a {@link CnALink} instance.
@@ -106,7 +108,7 @@ public class ExportFactory {
             if(propertyType==null) {
                 LOG.warn("Property type not found in SNCA.xml: " + propertyTypeId + ", typeId: " + typeId);
             }
-            if( propertyType==null || (propertyType!=null && propertyType.isReportable())) {
+            if( propertyType==null || propertyType.isReportable()) {
                 SyncAttribute syncAttribute = new SyncAttribute();
                 // Add <syncAttribute> to this <syncObject>:
                 syncAttribute.setName(propertyTypeId);
@@ -145,8 +147,9 @@ public class ExportFactory {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         while (true) {
             int nRead = in.read(data, 0, data.length);
-            if (nRead <= 0)
+            if (nRead <= 0){
               break;
+            }
             zipOut.write(data, 0, nRead);
         }
         in.close();

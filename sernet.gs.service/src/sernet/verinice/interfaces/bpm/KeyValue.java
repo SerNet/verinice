@@ -20,13 +20,12 @@
 package sernet.verinice.interfaces.bpm;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 public class KeyValue implements Serializable,Comparable<KeyValue> {
     
-    String key;
+    private String key;
     
-    String value;
+    private String value;
 
     public KeyValue(String key, String value) {
         super();
@@ -60,18 +59,23 @@ public class KeyValue implements Serializable,Comparable<KeyValue> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         KeyValue other = (KeyValue) obj;
         if (key == null) {
-            if (other.key != null)
+            if (other.key != null){
                 return false;
-        } else if (!key.equals(other.key))
+            }
+        } else if (!key.equals(other.key)){
             return false;
+        }
         return true;
     }
 

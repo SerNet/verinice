@@ -18,6 +18,7 @@
 package sernet.verinice.service.commands;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -94,9 +95,9 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 public class CnATypeMapper {
-    private static HashMap<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
+    private static Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
     
-    private static HashMap<String, String> descriptionPropertyMap = new HashMap<String, String>();
+    private static Map<String, String> descriptionPropertyMap = new HashMap<String, String>();
 
   
 
@@ -189,7 +190,7 @@ public class CnATypeMapper {
     
  // this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
     // TODO akoderman change marker interface to object composition: add adaptable interface for strukturelements to model classes
-    public static final String[] strukturElementTypes = new String[] {
+    private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] {
         Anwendung.TYPE_ID,
         BSIModel.TYPE_ID,
         Client.TYPE_ID,
@@ -203,7 +204,7 @@ public class CnATypeMapper {
         TelefonKomponente.TYPE_ID
     };
 
-    public static final String[] iIso27kElementTypes = new String[] {
+    private static final String[] IISO27K_ELEMENT_TYPES = new String[] {
         ResponseGroup.TYPE_ID,
         ExceptionGroup.TYPE_ID,
         VulnerabilityGroup.TYPE_ID,
@@ -229,9 +230,10 @@ public class CnATypeMapper {
      * @return
      */
     public boolean isStrukturElement(CnATreeElement child) {
-        for (String strukturType : strukturElementTypes) {
-            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType))
+        for (String strukturType : STRUKTUR_ELEMENT_TYPES) {
+            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
                 return true;
+            }
         }
         return false;
     }
@@ -241,9 +243,10 @@ public class CnATypeMapper {
      * @return
      */
     public boolean isIiso27kElement(CnATreeElement child) {
-        for (String strukturType : iIso27kElementTypes) {
-            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType))
+        for (String strukturType : IISO27K_ELEMENT_TYPES) {
+            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
                 return true;
+            }
         }
         return false;
     }

@@ -84,7 +84,7 @@ public class TaskInformation implements ITask, Serializable {
     public TaskInformation(String name, Date createDate) {
         super();
         this.name = name;
-        this.createDate = createDate;
+        this.createDate = (createDate != null)  ? (Date)createDate.clone() : null;
     }
 
     public String getId() {
@@ -107,19 +107,19 @@ public class TaskInformation implements ITask, Serializable {
      * @see sernet.verinice.interfaces.bpm.ITask#getCreateDate()
      */
     public Date getCreateDate() {
-        return createDate;
+        return (this.createDate != null) ? (Date)this.createDate.clone() : null;
     }
 
     public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+        this.createDate = (createDate != null) ? (Date)createDate.clone() : null;
     }
 
     public Date getDueDate() {
-        return dueDate;
+        return (this.dueDate != null) ? (Date)this.dueDate.clone() : null;
     }
 
     public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+        this.dueDate = (dueDate != null) ? (Date)dueDate.clone() : null;
     }
 
     /* (non-Javadoc)
@@ -307,18 +307,23 @@ public class TaskInformation implements ITask, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj){
             return true;
-        if (obj == null)
+        }
+        if (obj == null){
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()){
             return false;
+        }
         TaskInformation other = (TaskInformation) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null){
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)){
             return false;
+        }
         return true;
     }
 

@@ -66,8 +66,9 @@ public class Note extends Addition implements Serializable{
 	}
 	
 	public EntityType getEntityType() {
-		if (subEntityType == null)
+		if (subEntityType == null){
 			subEntityType = getTypeFactory().getEntityType(getTypeId());
+		}
 		return subEntityType;
 	}
 
@@ -80,31 +81,38 @@ public class Note extends Addition implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cnATreeElementId == null) ? 0 : cnATreeElementId.hashCode());
-		result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+		result = prime * result + ((getCnATreeElementId() == null) ? 0 : getCnATreeElementId().hashCode());
+		result = prime * result + ((getDbId() == null) ? 0 : getDbId().hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
+		}
 		// FIXME ak this will not work when comparing proxies: 
-		if (getClass() != obj.getClass())
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		Note other = (Note) obj;
-		if (cnATreeElementId == null) {
-			if (other.cnATreeElementId != null)
+		if (getCnATreeElementId() == null) {
+			if (other.getCnATreeElementId() != null){
 				return false;
-		} else if (!cnATreeElementId.equals(other.cnATreeElementId))
+			}
+		} else if (!getCnATreeElementId().equals(other.getCnATreeElementId())){
 			return false;
-		if (dbId == null) {
-			if (other.dbId != null)
+		}
+		if (getDbId() == null) {
+			if (other.getDbId() != null){
 				return false;
-		} else if (!dbId.equals(other.dbId))
+			}
+		} else if (!getDbId().equals(other.getDbId())){
 			return false;
+		}
 		return true;
 	}
 

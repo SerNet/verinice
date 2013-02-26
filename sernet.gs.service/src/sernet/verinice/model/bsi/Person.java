@@ -86,52 +86,55 @@ implements IBSIStrukturElement {
 	
 	@Override
 	public String getTitle() {
-		if (getEntity() == null)
+		if (getEntity() == null){
 			return ""; //$NON-NLS-1$
-		
+		}
 		return getTitel(getEntity());
 	}
 	
 	public static String getTitel(Entity entity) {
-		if (entity == null)
+		if (entity == null){
 			return ""; //$NON-NLS-1$
-		
+		}
 		StringBuffer buff = new StringBuffer();
 		buff.append(entity.getSimpleValue(P_VORNAME));
-		if (buff.length() > 0)
+		if (buff.length() > 0){
 			buff.append(" "); //$NON-NLS-1$
+		}
 		buff.append( entity.getSimpleValue(P_NAME));
 		
 		String rollen = getRollen(entity);
-		if (rollen.length() > 0)
+		if (rollen.length() > 0){
 			buff.append(" [" + rollen + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		
+		}
 		return buff.toString();
 	}
 	
 	public String getFullName() {
-		if (getEntity() == null)
+		if (getEntity() == null){
 			return ""; //$NON-NLS-1$
-		
+		}
 		StringBuffer buff = new StringBuffer();
 		buff.append(getEntity().getSimpleValue(P_VORNAME));
-		if (buff.length() > 0)
+		if (buff.length() > 0){
 			buff.append(" "); //$NON-NLS-1$
+		}
 		buff.append( getEntity().getSimpleValue(P_NAME));
 		
 		return buff.toString();
 	}
 	
 	private String getRollen() {
-		if (getEntity() == null)
+		if (getEntity() == null){
 			return ""; //$NON-NLS-1$
+		}
 		return getRollen(getEntity());
 	}
 	
 	private static String getRollen(Entity entity) {
-		if (entity == null)
+		if (entity == null){
 			return ""; //$NON-NLS-1$
-		
+		}
 		StringBuffer buf = new StringBuffer();
 		PropertyList propertyList = entity.getProperties(P_ROLLEN);
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(TYPE_ID, P_ROLLEN);
@@ -144,8 +147,9 @@ implements IBSIStrukturElement {
 			Property prop = (Property) iter.next();
 			String rolle = type.getOption(prop.getPropertyValue()).getName();
 			buf.append(rolle);
-			if (iter.hasNext())
+			if (iter.hasNext()){
 				buf.append(", "); //$NON-NLS-1$
+			}
 		}
 		return buf.toString();
 	}
@@ -173,8 +177,9 @@ implements IBSIStrukturElement {
 	}
 
 	public boolean hasRole(Property role) {
-		if (getRollen().indexOf(role.getPropertyValue()) > -1)
+		if (getRollen().indexOf(role.getPropertyValue()) > -1){
 			return true;
+		}
 		return false;
 	}
 
