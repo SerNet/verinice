@@ -369,7 +369,6 @@
       <plugin id="sernet.verinice.oda.driver.designer"/>
       <plugin id="sernet.verinice.report.service"/>
       <plugin id="sernet.verinice.samt.service"/>
-      <plugin id="sernet.verinice.report.designer.log4j.fragment"/>
    </plugins>
 
    <configurations>
