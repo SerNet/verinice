@@ -70,9 +70,11 @@ public class CommonsExecuter extends CommonsHttpInvokerRequestExecutor {
      * This method is configured as Spring init-method in veriniceclient.xml
      */
     public void init() {
+        final int maxConPerHost = 5;
+        final int maxTotalCon = 20;
         MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
-        connectionManager.getParams().setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, 5);
-        connectionManager.getParams().setMaxTotalConnections(20);
+        connectionManager.getParams().setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, maxConPerHost);
+        connectionManager.getParams().setMaxTotalConnections(maxTotalCon);
         connectionManager.getParams().setConnectionTimeout(getConnectionTimeout()); //set connection timeout (how long it takes to connect to remote host)
         connectionManager.getParams().setSoTimeout(getReadTimeout()); 
         HttpClient httpClient = new HttpClient(connectionManager);

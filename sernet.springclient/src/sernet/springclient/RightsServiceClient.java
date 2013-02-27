@@ -253,12 +253,12 @@ public class RightsServiceClient implements IRightsServiceClient{
     }
     
     private Profiles loadProfileMap() {
-        Profiles profiles_ = getRightsServiceExecuter().getProfiles();   
+        Profiles internalProfiles = getRightsServiceExecuter().getProfiles();   
         profileMap = new HashMap<String, Profile>();
-        for (Profile profile : profiles_.getProfile()) {
+        for (Profile profile : internalProfiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
         }
-        return profiles_;
+        return internalProfiles;
     }
 
     public boolean isBlacklist() {

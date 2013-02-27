@@ -114,9 +114,12 @@ public class CommandCacheClient implements ICommandCacheClient {
     }
     
     private Cache createCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 600;
+        final int timeToIdleSeconds = 500;
         globalCacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        globalCache = new Cache(globalCacheId, 20000, false, false, 600, 500);
+        globalCache = new Cache(globalCacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         manager.addCache(globalCache);
         if(getLog().isDebugEnabled()){
             getLog().debug("Global Report Cache created! Storing cache in:\t" + manager.getDiskStorePath());

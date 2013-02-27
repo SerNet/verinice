@@ -110,8 +110,8 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	
 	public synchronized void closeBeanFactory() {
 		if (beanFactory != null) {
-			AbstractApplicationContext ctx_ = (AbstractApplicationContext) beanFactory;
-			ctx_.close();
+			AbstractApplicationContext internalCtx = (AbstractApplicationContext) beanFactory;
+			internalCtx.close();
 			beanFactory = null;
 		}
 	}
