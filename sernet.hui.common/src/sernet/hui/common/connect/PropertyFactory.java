@@ -25,7 +25,7 @@ package sernet.hui.common.connect;
 
 
 
-public class PropertyFactory {
+public final class PropertyFactory {
     
     private PropertyFactory(){};
 

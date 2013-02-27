@@ -174,7 +174,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    try {
 	        date = new Date(Long.valueOf(getValue(propertyType)));
 	    } catch (NumberFormatException t) {
-            log.error("Error while returning date for property: " + propertyType, t);
+            getLog().error("Error while returning date for property: " + propertyType, t);
         }
 	    return date;
 	}
@@ -487,7 +487,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 				typedPropertyLists.put(prop.getPropertyTypeID(), typeList);
 			}
 		} catch (AssertException e) {
-			Logger.getLogger(Entity.class).error(e);
+			getLog().error(e);
 		}
     }
     

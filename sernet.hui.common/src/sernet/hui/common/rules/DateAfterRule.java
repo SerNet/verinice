@@ -45,7 +45,7 @@ public class DateAfterRule implements IValidationRule {
      */
     @Override
     public boolean validate(String userInput, String[] params) {
-        String input = (userInput != null) ? new String(userInput) : null;
+        String input = userInput;
         Long millis = null;
         try{
             millis = Long.parseLong(input);

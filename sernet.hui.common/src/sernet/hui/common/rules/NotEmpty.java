@@ -43,12 +43,12 @@ public class NotEmpty implements IValidationRule {
      */
     @Override
     public void init(String[] params, String hint) {
-        String hint_internal = (hint != null) ? new String(hint) : null;
+        String hintInternal = hint;
         if(params != null && params.length == 1){
-            hint_internal = params[0];
+            hintInternal = params[0];
         }
-        if(hint_internal != null && !hint_internal.equals("")){
-            this.hint = hint_internal;
+        if(hintInternal != null && !hintInternal.equals("")){
+            this.hint = hintInternal;
         }
         else {
             this.hint = Messages.NotEmptyDefaultHint;

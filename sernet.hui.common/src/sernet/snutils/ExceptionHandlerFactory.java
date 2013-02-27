@@ -23,7 +23,9 @@ import org.apache.log4j.Logger;
 /**
  * @author prack
  */
-public class ExceptionHandlerFactory {
+public final class ExceptionHandlerFactory {
+    
+    private ExceptionHandlerFactory(){}
     
 	private static IExceptionHandler defaultHandler = new IExceptionHandler()
 			{

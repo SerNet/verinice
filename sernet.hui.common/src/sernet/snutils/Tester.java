@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * 
  * @version $Id: Tester.java,v 1.2 2006/01/03 17:01:03 aprack Exp $
  */
-public class Tester {
+public final class Tester {
     
     private Tester(){};
 

@@ -61,6 +61,16 @@ public class HUITypeFactory {
     private static final Logger LOG = Logger.getLogger(HUITypeFactory.class);
 
     public static final String HUI_CONFIGURATION_FILE = "SNCA.xml";
+    
+    private static final String ATTRIBUTE_NAME = "name";
+    private static final String ATTRIBUTE_ID = "id";
+    private static final String ATTRIBUTE_REVERSENAME = "reversename";
+    private static final String ATTRIBUTE_TOOLTIP = "tooltip";
+    private static final String ATTRIBUTE_TAGS = "tags";
+    private static final String ATTRIBUTE_DEFAULTVALUE = "defaultValue";
+    private static final String ATTRIBUTE_REQUIRED = "required";
+    private static final String ATTRIBUTE_VALUE = "value";
+    private static final String BOOLEAN_TRUE = "true";
 
     private static Document doc;
     
@@ -99,7 +109,6 @@ public class HUITypeFactory {
         if (xmlFile == null) {
             throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }
-
         if (xmlFile.getProtocol().equals("http") || xmlFile.getProtocol().equals("ftp")) {
             try {
                 xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
@@ -170,13 +179,13 @@ public class HUITypeFactory {
 
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
-            String id = entityEl.getAttribute("id");
+            String id = entityEl.getAttribute(ATTRIBUTE_ID);
             entityObj.setId(id);
 
             // labels are loaded from SNCAMessages (resource bundles)
-            entityObj.setName(getMessage(id, entityEl.getAttribute("name")));
+            entityObj.setName(getMessage(id, entityEl.getAttribute(ATTRIBUTE_NAME)));
 
-            this.allEntities.put(entityEl.getAttribute("id"), entityObj);
+            this.allEntities.put(entityEl.getAttribute(ATTRIBUTE_ID), entityObj);
             readChildElements(entityObj, null);
         }
     }
@@ -223,18 +232,18 @@ public class HUITypeFactory {
             }
             Element child = (Element) nodes.item(i);
             if (child.getTagName().equals("huiproperty")) {
-                PropertyType type = readPropertyType(child.getAttribute("id"));
+                PropertyType type = readPropertyType(child.getAttribute(ATTRIBUTE_ID));
                 if (propGroup != null) {
                     propGroup.addPropertyType(type);
                 } else {
                     entityType.addPropertyType(type);
                 }
             } else if (child.getTagName().equals("huipropertygroup")) {
-                PropertyGroup group = readPropertyGroup(child.getAttribute("id"));
+                PropertyGroup group = readPropertyGroup(child.getAttribute(ATTRIBUTE_ID));
                 entityType.addPropertyGroup(group);
                 readChildElements(entityType, group);
             } else if (child.getTagName().equals("huirelation")) {
-                HuiRelation relation = new HuiRelation(child.getAttribute("id"));
+                HuiRelation relation = new HuiRelation(child.getAttribute(ATTRIBUTE_ID));
                 readRelation(child, entityType.getId(), relation);
                 entityType.addRelation(relation);
             }
@@ -246,12 +255,12 @@ public class HUITypeFactory {
      * @param relation
      */
     private void readRelation(Element child, String sourceTypeId, HuiRelation relation) {
-        final String id = child.getAttribute("id");
+        final String id = child.getAttribute(ATTRIBUTE_ID);
         // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
         // key is: [id]_name, [id]_reversename, [id]_tooltip 
-        relation.setName(getMessage(getKey(id,"name"), child.getAttribute("name"), false));
-        relation.setReversename(getMessage(getKey(id,"reversename"), child.getAttribute("reversename"), false));
-        relation.setTooltip(getMessage(getKey(id,"tooltip"), child.getAttribute("tooltip"), true));
+        relation.setName(getMessage(getKey(id,ATTRIBUTE_NAME), child.getAttribute(ATTRIBUTE_NAME), false));
+        relation.setReversename(getMessage(getKey(id,ATTRIBUTE_REVERSENAME), child.getAttribute(ATTRIBUTE_REVERSENAME), false));
+        relation.setTooltip(getMessage(getKey(id,ATTRIBUTE_TOOLTIP), child.getAttribute(ATTRIBUTE_TOOLTIP), true));
         
         relation.setTo(child.getAttribute("to"));
         relation.setFrom(sourceTypeId);
@@ -281,20 +290,20 @@ public class HUITypeFactory {
 
         // name and tooltip are loaded from SNCAMessages (resource bundles)
         // key is: [id]_name, [id]_tooltip 
-        propObj.setName(getMessage(id, prop.getAttribute("name")));
-        propObj.setTooltiptext(getMessage(getKey(id, "tooltip"), prop.getAttribute("tooltip"), true));
+        propObj.setName(getMessage(id, prop.getAttribute(ATTRIBUTE_NAME)));
+        propObj.setTooltiptext(getMessage(getKey(id, ATTRIBUTE_TOOLTIP), prop.getAttribute(ATTRIBUTE_TOOLTIP), true));
 
-        propObj.setTags(prop.getAttribute("tags"));
-        addToTagList(prop.getAttribute("tags"));
+        propObj.setTags(prop.getAttribute(ATTRIBUTE_TAGS));
+        addToTagList(prop.getAttribute(ATTRIBUTE_TAGS));
 
         propObj.setInputType(prop.getAttribute("inputtype"));
-        propObj.setCrudButtons(prop.getAttribute("crudButtons").equals("true"));
-        propObj.setRequired(prop.getAttribute("required").equals("true"));
-        propObj.setInitialFocus(prop.getAttribute("focus").equals("true"));
-        propObj.setEditable(prop.getAttribute("editable").equals("true"));
-        propObj.setVisible(prop.getAttribute("visible").equals("true"));
-        propObj.setURL(prop.getAttribute("isURL").equals("true"));
-        propObj.setReportable(prop.getAttribute("report").equals("true"));
+        propObj.setCrudButtons(prop.getAttribute("crudButtons").equals(BOOLEAN_TRUE));
+        propObj.setRequired(prop.getAttribute(ATTRIBUTE_REQUIRED).equals(BOOLEAN_TRUE));
+        propObj.setInitialFocus(prop.getAttribute("focus").equals(BOOLEAN_TRUE));
+        propObj.setEditable(prop.getAttribute("editable").equals(BOOLEAN_TRUE));
+        propObj.setVisible(prop.getAttribute("visible").equals(BOOLEAN_TRUE));
+        propObj.setURL(prop.getAttribute("isURL").equals(BOOLEAN_TRUE));
+        propObj.setReportable(prop.getAttribute("report").equals(BOOLEAN_TRUE));
         propObj.setTextRows(prop.getAttribute("textrows"));
         propObj.setReferencedEntityType(readReferencedEntityId(prop));
         propObj.setReferencedCnaLinkType(readReferencedCnaLinkType(prop));
@@ -305,17 +314,17 @@ public class HUITypeFactory {
         if (propObj.isNumericSelect()) {
             propObj.setNumericMin(prop.getAttribute("min"));
             propObj.setNumericMax(prop.getAttribute("max"));
-            propObj.setNumericDefault(prop.getAttribute("defaultValue"));
+            propObj.setNumericDefault(prop.getAttribute(ATTRIBUTE_DEFAULTVALUE));
         }
         
         if (propObj.isBooleanSelect()) {
             propObj.setNumericMin("0");
             propObj.setNumericMax("1");
-            propObj.setNumericDefault(prop.getAttribute("defaultValue"));
+            propObj.setNumericDefault(prop.getAttribute(ATTRIBUTE_DEFAULTVALUE));
         }
 
         // the shortcut to set a "NotEmpty" validator:
-        if (prop.getAttribute("required").equals("true")) {
+        if (prop.getAttribute(ATTRIBUTE_REQUIRED).equals(BOOLEAN_TRUE)) {
             propObj.addValidator(new NotEmpty());
         }
         // add additional validations
@@ -348,8 +357,8 @@ public class HUITypeFactory {
         if (tags == null || tags.length()<1){
             return;
         }
-        tags = tags.replaceAll("\\s+", "");
-        String[] individualTags = tags.split(",");
+        String newTags = tags.replaceAll("\\s+", "");
+        String[] individualTags = newTags.split(",");
         allTags.addAll(Arrays.asList(individualTags));
     }
     
@@ -376,10 +385,10 @@ public class HUITypeFactory {
         }
 
         PropertyGroup groupObj = new PropertyGroup();
-        groupObj.setId(group.getAttribute("id"));
-        groupObj.setName( getMessage(id, group.getAttribute("name")) );
-        groupObj.setTags(group.getAttribute("tags"));
-        addToTagList(group.getAttribute("tags"));
+        groupObj.setId(group.getAttribute(ATTRIBUTE_ID));
+        groupObj.setName( getMessage(id, group.getAttribute(ATTRIBUTE_NAME)) );
+        groupObj.setTags(group.getAttribute(ATTRIBUTE_TAGS));
+        addToTagList(group.getAttribute(ATTRIBUTE_TAGS));
 
         groupObj.setDependencies(readDependencies(group));
         return groupObj;
@@ -399,7 +408,7 @@ public class HUITypeFactory {
             Element child = (Element) nodes.item(i);
             if (child.getTagName().equals("depends")) {
                 String option = child.getAttribute("option");
-                String value = child.getAttribute("value");
+                String value = child.getAttribute(ATTRIBUTE_VALUE);
                 boolean inverse = Boolean.TRUE.toString().equals(child.getAttribute("inverse"));
                 depends.add(new DependsType(option, value, inverse));
             }
@@ -456,31 +465,31 @@ public class HUITypeFactory {
             Element paramNode = (Element) paramNodeList.item(i);
             params[i] = paramNode.getTextContent();
             if(rule.isMultiLanguage()) {
-                params[i] = getMessage(paramNode.getAttribute("id"), params[i]);
+                params[i] = getMessage(paramNode.getAttribute(ATTRIBUTE_ID), params[i]);
             }
             // TODO read rules from file
         }
         return params;
     }
 
-    private ArrayList getOptionsForPropertyType(String id) {
+    private List getOptionsForPropertyType(String id) {
         Element prop = doc.getElementById(id);
         NodeList values = prop.getElementsByTagName("option");
         ArrayList possibleValues = new ArrayList(values.getLength());
         for (int i = 0; i < values.getLength(); ++i) {
             Element value = (Element) values.item(i);
             PropertyOption dv = new PropertyOption();
-            final String idOption = value.getAttribute("id");
+            final String idOption = value.getAttribute(ATTRIBUTE_ID);
             dv.setId(idOption);
             // name is loaded from SNCAMessages (resource bundles)
-            dv.setName(getMessage(idOption, value.getAttribute("name")));
+            dv.setName(getMessage(idOption, value.getAttribute(ATTRIBUTE_NAME)));
             
-            if (value.getAttribute("value") != null && value.getAttribute("value").length()>0) {
+            if (value.getAttribute(ATTRIBUTE_VALUE) != null && value.getAttribute(ATTRIBUTE_VALUE).length()>0) {
 			    try {
-			        dv.setValue( Integer.parseInt(value.getAttribute("value")) );
+			        dv.setValue( Integer.parseInt(value.getAttribute(ATTRIBUTE_VALUE)) );
 			    } catch (Exception e) {
 			        if (LOG.isDebugEnabled()) {
-			            LOG.debug("Not a valid number for option " + value.getAttribute("value"));
+			            LOG.debug("Not a valid number for option " + value.getAttribute(ATTRIBUTE_VALUE));
 			        }
 			        dv.setValue(null);
 			    }
@@ -500,8 +509,8 @@ public class HUITypeFactory {
             return null;
         }
         PropertyOption dv = new PropertyOption();
-        dv.setId(value.getAttribute("id"));
-        dv.setName(value.getAttribute("name"));
+        dv.setId(value.getAttribute(ATTRIBUTE_ID));
+        dv.setName(value.getAttribute(ATTRIBUTE_NAME));
         return dv;
     }
 

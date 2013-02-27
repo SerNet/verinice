@@ -76,43 +76,43 @@ public final class VeriniceContext {
 	public static final String SYNC_SERVICE = "syncService";
 
 	/** Key for accessing the <code>HUITypeFactory</code> instance. */
-	public final static String HUI_TYPE_FACTORY = "huiTypeFactory";
+	public static final String HUI_TYPE_FACTORY = "huiTypeFactory";
 
-	public final static String HITRO_UTIL = "hitroUtil";
+	public static final String HITRO_UTIL = "hitroUtil";
 
-	public final static String GS_SCRAPER_UTIL = "gsScraperUtil";
+	public static final String GS_SCRAPER_UTIL = "gsScraperUtil";
 	
-	public final static String COMMAND_SERVICE = "commandService";
+	public static final String COMMAND_SERVICE = "commandService";
 	
-	public final static String WEB_SERVICE_CLIENT = "webServiceClient";
+	public static final String WEB_SERVICE_CLIENT = "webServiceClient";
 	
-	public final static String AUTH_SERVICE = "authService";
+	public static final String AUTH_SERVICE = "authService";
 	
-	public final static String TASK_SERVICE = "taskService";
+	public static final String TASK_SERVICE = "taskService";
 
-    public final static String PROCESS_SERVICE_ISA = "processServiceIsa";
+    public static final String PROCESS_SERVICE_ISA = "processServiceIsa";
 
-    public final static String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
+    public static final String ISA_CONTROL_FLOW_SERVICE = "isaControlFlowService";
 
-    public final static String ISA_QM_SERVICE = "isaQmService";
+    public static final String ISA_QM_SERVICE = "isaQmService";
 
-    public final static String INDIVIDUAL_SERVICE = "individualService";
+    public static final String INDIVIDUAL_SERVICE = "individualService";
 
-    public final static String GSM_SERVICE = "gsmService";
+    public static final String GSM_SERVICE = "gsmService";
     
-    public final static String RIGHTS_SERVICE = "rightsService";
+    public static final String RIGHTS_SERVICE = "rightsService";
     
-    public final static String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
+    public static final String RIGHTS_SERVER_HANDLER = "rightsServerHandler";
     
-    public final static String REMIND_SERVICE = "remindService";
+    public static final String REMIND_SERVICE = "remindService";
     
-    public final static String JBPM_PROCESS_ENGINE = "processEngine";
+    public static final String JBPM_PROCESS_ENGINE = "processEngine";
     
-    public final static String VALIDATION_SERVICE = "validationService";
+    public static final String VALIDATION_SERVICE = "validationService";
     
-    public final static String COMMAND_CACHE_SERVICE = "commandCacheClient";
+    public static final String COMMAND_CACHE_SERVICE = "commandCacheClient";
     
-    private static String server_url = null;
+    private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
 
@@ -254,11 +254,11 @@ public final class VeriniceContext {
 	}
 	
 	public static String getServerUrl() {
-	    return server_url;
+	    return serverUrl;
 	}
 	
-	public static void setServerUrl(String serverUrl) {
-        server_url = serverUrl;
+	public static void setServerUrl(String url) {
+        serverUrl = url;
     }
 
 	/** Abstraction of the state of a {@link VeriniceContext}.

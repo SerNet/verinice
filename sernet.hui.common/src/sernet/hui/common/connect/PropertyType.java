@@ -92,7 +92,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 
 	private boolean required = false;
 
-	private ArrayList options = new ArrayList();
+	private List options = new ArrayList();
 
 	private String tooltiptext = "";
 
@@ -204,7 +204,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 * @return Returns the predefinedValues.
 	 */
 	@Override
-    public ArrayList<IMLPropertyOption> getOptions() {
+    public List<IMLPropertyOption> getOptions() {
 		return options;
 	}
 
@@ -234,7 +234,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 * @param predefinedValues
 	 *            The predefinedValues to set.
 	 */
-	public void setPredefinedValues(ArrayList predefinedValues) {
+	public void setPredefinedValues(List predefinedValues) {
 		this.options = predefinedValues;
 	}
 
@@ -553,13 +553,13 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 	 */
 	@Override
 	public int compareTo(PropertyType o) {
-		final int LESS = -1;
-		final int EQUAL = 0;
-		final int GREATER = 1;
-		int result = LESS;
+		final int less = -1;
+		final int equal = 0;
+		final int greater = 1;
+		int result = less;
 		if(o!=null) {
 			if(getName()==null) {
-				result = (o.getName()==null) ? EQUAL : GREATER;
+				result = (o.getName()==null) ? equal : greater;
 			} else if(o.getName()!=null) {
 				result = this.getName().compareTo(o.getName());
 			}
