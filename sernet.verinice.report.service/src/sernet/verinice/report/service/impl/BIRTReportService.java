@@ -65,8 +65,14 @@ public class BIRTReportService {
     private IReportRunnable design;
     
     private IResourceLocator resourceLocator;
+    
+    private static final String COULD_NOT_OPEN_DESIGN_ERR = "Could not open report design: ";
+    
+    private static final int MILLIS_PER_SECOND = 1000;
 
 	public BIRTReportService() {
+        final int logMaxBackupIndex = 10;
+        final int logRollingSize = 3000000; // equals 3MB
 		EngineConfig config = new EngineConfig();
 		
 		// Custom resource locator which tries to retrieve resources for the reports
@@ -128,8 +134,8 @@ public class BIRTReportService {
 		    String logFile = pref.substring(pref.lastIndexOf(File.separator) + 1);
 		    config.setLogConfig(logDir, Level.parse(driver.getLogLvl()));
 		    config.setLogFile(logFile);
-		    config.setLogMaxBackupIndex(10);
-		    config.setLogRollingSize(3000000); // equals 3MB
+		    config.setLogMaxBackupIndex(logMaxBackupIndex);
+		    config.setLogRollingSize(logRollingSize); // equals 3MB
 		    if(log.isDebugEnabled()){
 		        log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir + "\tLogLvl:\t" + driver.getLogLvl());
 		    }
@@ -157,10 +163,10 @@ public class BIRTReportService {
 			design = engine.openReportDesign(null, rptDesignURL.openStream(), map);
 			task = engine.createRunAndRenderTask(design);
 		} catch (EngineException e) {
-			log.error("Could not open report design: ", e);
+			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
-			log.error("Could not open report design: ", e);
+			log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
 			throw new IllegalStateException(e);
 		}
 		// use client default locale
@@ -184,10 +190,10 @@ public class BIRTReportService {
             runTask = engine.createRunTask(design);
             runTask.setReportDocument(rptDocumentURL.toString());
         } catch (EngineException e){
-            log.error("Could not open report design: ", e);
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
             throw new IllegalStateException(e);            
         } catch (IOException e) {
-            log.error("Could not open report design: ", e);
+            log.error(COULD_NOT_OPEN_DESIGN_ERR, e);
             throw new IllegalStateException(e);
         }
         
@@ -225,8 +231,8 @@ public class BIRTReportService {
 		
 		IRunTask task = null;
 		try {
-			IReportRunnable design_ = engine.openReportDesign(null, rptDesignURL.openStream(), map);
-			task = engine.createRunTask(design_);
+			IReportRunnable design0 = engine.openReportDesign(null, rptDesignURL.openStream(), map);
+			task = engine.createRunTask(design0);
 		} catch (EngineException e) {
 		    log.error("Could not open report design: ", e);
 			throw new IllegalStateException(e);
@@ -308,6 +314,7 @@ public class BIRTReportService {
 	@SuppressWarnings("unchecked")
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
+
 	    setUseReportCache(options.useReportCache());
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
@@ -329,7 +336,7 @@ public class BIRTReportService {
 		    long startTime = System.currentTimeMillis();
 			task.run();
 			if(log.isDebugEnabled()){
-			    long duration = (System.currentTimeMillis() - startTime) / 1000;
+			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
 		} catch (EngineException e) {
@@ -360,7 +367,7 @@ public class BIRTReportService {
             long startTime = System.currentTimeMillis();
             task.run();
             if(log.isDebugEnabled()){
-                long duration = (System.currentTimeMillis() - startTime) / 1000;
+                long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
                 log.debug("RunTask lasts " + duration + " seconds");
             }
         } catch(EngineException e){

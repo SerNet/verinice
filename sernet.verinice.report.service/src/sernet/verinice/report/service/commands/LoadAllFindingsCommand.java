@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,16 +73,16 @@ public class LoadAllFindingsCommand extends GenericCommand {
     private static final String SAMT_PERSON_INCHARGE_PROPERTY = "rel_samttopic_person-iso_resp";
     public static final String SAMT_MEASURE_PROPERTY = "samt_topic_controlnote";
 
-    private static HashMap<Integer, Object[][]> computedData = new HashMap<Integer, Object[][]>();
+    private static Map<Integer, Object[][]> computedData = new HashMap<Integer, Object[][]>();
 
     public LoadAllFindingsCommand(int id) {
-        int id_ = -1;
+        int id0 = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);
             chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
-            id_ = Integer.parseInt(chapterIdString);
+            id0 = Integer.parseInt(chapterIdString);
         }
-        this.id = (id_ > -1) ? id_ : id;
+        this.id = (id0 > -1) ? id0 : id;
         log = Logger.getLogger(LoadAllFindingsCommand.class);
     }
 
@@ -108,8 +109,9 @@ public class LoadAllFindingsCommand extends GenericCommand {
     }
 
     private Object[][] generateResultEntry(ControlGroup group) {
+        final int defaultResultSize = 8;
         Set<SamtTopic> allTopics = getAllSamtTopicChildren(group);
-        Object[][] retVal = new Object[allTopics.size()][8];
+        Object[][] retVal = new Object[allTopics.size()][defaultResultSize];
         Iterator<SamtTopic> iter = allTopics.iterator();
         int count = 0;
         while (iter.hasNext()) {
@@ -177,9 +179,12 @@ public class LoadAllFindingsCommand extends GenericCommand {
     }
 
     private Cache createCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 600;
+        final int timeToIdleSeconds = 500;
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         manager.addCache(cache);
         return cache;
     }

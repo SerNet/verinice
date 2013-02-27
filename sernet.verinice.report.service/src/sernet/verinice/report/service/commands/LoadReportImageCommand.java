@@ -57,13 +57,17 @@ public class LoadReportImageCommand extends GenericCommand {
 
 	@Override
 	public void execute() {
-		BufferedImage image = new BufferedImage(320, 240,
+	    final int imageWidth = 320;
+	    final int imageHeight = 240;
+	    final int stringPosX = 5;
+	    final int stringPosY = 30;
+		BufferedImage image = new BufferedImage(imageWidth, imageHeight,
 				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = (Graphics2D) image.getGraphics();
 		g2d.setBackground(Color.RED);
 		g2d.setColor(Color.WHITE);
-		g2d.clearRect(0, 0, 320, 240);
-		g2d.drawString(String.format("ReportImage: '%s'", imageKey), 5, 30);
+		g2d.clearRect(0, 0, imageWidth, imageHeight);
+		g2d.drawString(String.format("ReportImage: '%s'", imageKey), stringPosX, stringPosY);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(image, "jpeg", bos);

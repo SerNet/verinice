@@ -60,7 +60,7 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
     }
     
     public LoadISAQuestionRadarChartData(String root){
-        this(new Integer(Integer.parseInt(root)));
+        this(Integer.valueOf(Integer.parseInt(root)));
     }
     
     /* (non-Javadoc)
@@ -130,13 +130,11 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
      * @return
      */
     public Integer getWeightedMaturity(IControl contr) {
-        int value = getMaturity(contr) * contr.getWeight2();
-        return value;
+        return getMaturity(contr) * contr.getWeight2();
     }
     
     public Double getMaturityByWeight(IControl contr) {
-        double result = ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
-        return result;
+        return ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
     }
     
     public int getMaturity(IControl control) {
@@ -144,12 +142,14 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
     }
     
     private String adjustTitle(String title){
-        if(TocHelper2.getStringDisplaySize(title) > 50){
+        final int maxTitleSize = 50;
+        final int halfMaxTitleSize = 25;
+        if(TocHelper2.getStringDisplaySize(title) > maxTitleSize){
             StringBuilder sb = new StringBuilder();
             StringTokenizer tokenizer = new StringTokenizer(title); // space is one of the standard delimiters
             while(tokenizer.hasMoreElements()){
                 sb.append(tokenizer.nextToken());
-                if(TocHelper2.getStringDisplaySize(title) > 25){
+                if(TocHelper2.getStringDisplaySize(title) > halfMaxTitleSize){
                     sb.append("\n");
                 } else {
                     sb.append(" ");

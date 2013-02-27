@@ -131,8 +131,8 @@ public final class TocHelper2 {
     }
     
     public static void addTocEntry(String entryTitle, Integer pageNumber){
-        String entryTitle_ = removeTags(entryTitle);
-        TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle_, pageNumber);
+        String entryTitle0 = removeTags(entryTitle);
+        TocEntry<String, Integer> entry = new TocEntry<String, Integer>(entryTitle0, pageNumber);
         int entryNumberToPut = tocEntryCount;
         for(Entry<Integer, TocEntry<String, Integer>> mapEntry : tocMap.entrySet()){
             if(mapEntry.getValue().getTitle().equals(entry.getTitle())){
@@ -167,7 +167,7 @@ public final class TocHelper2 {
             String title = (entry != null) ? entry.getTitle() : null;
             Integer page = (entry != null) ? entry.getPageNumber() : null;
             lotEntryLine[0] = (title != null) ? title : "dummyTitle";
-            lotEntryLine[1] = String.valueOf((page != null) ? page.intValue() : "dummyPage");
+            lotEntryLine[1] = (page != null) ? page.toString() : "dummyPage";
         }
         return lotEntryLine;
     }
@@ -179,7 +179,7 @@ public final class TocHelper2 {
             String title = (entry != null) ? entry.getTitle() : null;
             Integer page = (entry != null) ? entry.getPageNumber() : null;
             lofEntryLine[0] = (title != null) ? title : "dummyTitle";
-            lofEntryLine[1] = String.valueOf((page != null) ? page.intValue() : "dummyPage");
+            lofEntryLine[1] = (page != null) ? page.toString() : "dummyPage";
         }
         return lofEntryLine;        
     }
@@ -214,7 +214,7 @@ public final class TocHelper2 {
             int entryNumberToPut = listOfFiguresEntryCount;
             String entryToPut = figureName.trim();
             for(Entry<Integer, TocEntry<String, Integer>> mapEntry : loFMap.entrySet()){
-                String entryTitle = figureName.substring(figureName.indexOf(":") + 1).trim();
+                String entryTitle = figureName.substring(figureName.indexOf(':') + 1).trim();
                 String mapEntryTitle = mapEntry.getValue().getTitle().substring(mapEntry.getValue().getTitle().indexOf(":") + 1).trim();
                 if(entryTitle.equals(mapEntryTitle)){
                     String preFix = mapEntry.getValue().getTitle().substring(0, mapEntry.getValue().getTitle().indexOf(":") + 1);
@@ -229,11 +229,12 @@ public final class TocHelper2 {
     }
     
     public static void addTocEntry(String entryTitle, int indent, Integer pageNumber){
+        final int maxChNrLength = 6;// longest entry should be something like : 1.2.3. ( which equals 6 characters)
         StringBuilder sb = new StringBuilder();
         String chapterNumber = null;
-        String entryTitle_ = removeTags(entryTitle);
-        if(entryTitle_.contains(" ")){
-            String sub = entryTitle_.substring(0, entryTitle_.indexOf(' '));
+        String entryTitle0 = removeTags(entryTitle);
+        if(entryTitle0.contains(" ")){
+            String sub = entryTitle0.substring(0, entryTitle0.indexOf(' '));
             Pattern pattern  = Pattern.compile("\\d+.\\d*.*\\d*.*");
             Matcher m = pattern.matcher(sub);
             if(m.matches()){
@@ -245,21 +246,22 @@ public final class TocHelper2 {
                     }
                 }
                 // add padding to ensure same intervall from number to text on every entry
-                while(chapterNumber.length() < 6){ // longest entry should be something like : 1.2.3. ( which equals 6 characters)
+                while(chapterNumber.length() < maxChNrLength){ 
                     chapterNumber = chapterNumber + " ";
                 }
             }
         }
         if(chapterNumber != null){
             sb.append(String.valueOf(chapterNumber));
-            entryTitle = entryTitle.substring(entryTitle.indexOf(' ')).trim();
+            entryTitle0 = entryTitle.substring(entryTitle.indexOf(' ')).trim();
         }
-        sb.append(entryTitle);
+        sb.append(entryTitle0);
         addTocEntry(sb.toString(), pageNumber);
     }
     
     public static void checkTocEntryLength(String entry){
-        if(engineIteration < 3 && entry.length() > maxTocEntryLength){
+        final int maxTocEngineIteration = 3;
+        if(engineIteration < maxTocEngineIteration && entry.length() > maxTocEntryLength){
             maxTocEntryLength = getStringDisplaySize(entry);
         }
     }
@@ -351,8 +353,9 @@ public final class TocHelper2 {
    }
    
    public static int getStringDisplaySize(String input){
+       final int fontSize = 10;
        BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-       Font font = new Font("Arial", Font.PLAIN, 10); 
+       Font font = new Font("Arial", Font.PLAIN, fontSize); 
        FontMetrics fm = bi.getGraphics().getFontMetrics(font);
        return fm.stringWidth(input);
    }

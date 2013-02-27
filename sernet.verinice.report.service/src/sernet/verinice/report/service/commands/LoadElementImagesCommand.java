@@ -177,13 +177,15 @@ public class LoadElementImagesCommand extends GenericCommand {
     }
 
     private byte[] processImageData(AttachmentFile attachmentFile) throws IOException {
+        final int degrees90 = 90;
+        final int defaultByteArraySize = 1000;
         InputStream in = new ByteArrayInputStream(attachmentFile.getFileData());
         BufferedImage bImage = ImageIO.read(in);
         ByteArrayOutputStream baos = null;
         
         BufferedImage rotatedImage = null; 
         if(bImage.getHeight() > bImage.getWidth()){ 
-            rotatedImage = rotateImage(bImage, 90);
+            rotatedImage = rotateImage(bImage, degrees90);
         }
         BufferedImage imageToWorkWith = null;
         if(rotatedImage != null){
@@ -194,7 +196,7 @@ public class LoadElementImagesCommand extends GenericCommand {
         if (imageToWorkWith.getWidth() > MAX_IMAGE_WIDTH || imageToWorkWith.getHeight() > MAX_IMAGE_HEIGHT) {
             Image image = imageToWorkWith.getScaledInstance(MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT, BufferedImage.SCALE_DEFAULT);
 
-            baos = new ByteArrayOutputStream(1000);
+            baos = new ByteArrayOutputStream(defaultByteArraySize);
             if (image instanceof BufferedImage) {
                 imageToWorkWith = (BufferedImage) image;
             } else {
@@ -211,12 +213,13 @@ public class LoadElementImagesCommand extends GenericCommand {
     }
     
     private void setDummyImage(){
+        final int defaultByteArraySize = 4096;
     	URL url = getClass().getResource("onewhitepixel.jpg");
     	InputStream is = null;
     	ByteArrayOutputStream bais = new ByteArrayOutputStream();
     	try{
     		is = url.openStream();
-    		byte[] byteChunk = new byte[4096];
+    		byte[] byteChunk = new byte[defaultByteArraySize];
     		int i = 0;
     		while((i = is.read(byteChunk)) > 0){
     			bais.write(byteChunk, 0, i);
@@ -252,9 +255,12 @@ public class LoadElementImagesCommand extends GenericCommand {
     }
 
     private Cache createCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 600;
+        final int timeToIdleSeconds = 500;
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         manager.addCache(cache);
         return cache;
     }

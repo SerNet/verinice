@@ -45,6 +45,7 @@ public class SamtReportType implements IReportType {
 	}
 
 	public void createReport(IReportOptions reportOptions) {
+	    final int iterations = 3;
 		BIRTReportService brs = new BIRTReportService();
 		
 		URL reportDesign = SamtReportType.class.getResource("samt-report.rptdesign"); //$NON-NLS-1$
@@ -58,7 +59,7 @@ public class SamtReportType implements IReportType {
 		{
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
 			// In a SAMT report the 4th result set is the one that is of interest.
-			brs.extract(task, reportOptions, 3);
+			brs.extract(task, reportOptions, iterations);
 		}
 	}
 

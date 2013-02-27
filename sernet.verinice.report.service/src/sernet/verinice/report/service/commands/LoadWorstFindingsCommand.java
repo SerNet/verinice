@@ -67,13 +67,13 @@ public class LoadWorstFindingsCommand extends GenericCommand {
     
     public LoadWorstFindingsCommand(int id) {
         log = Logger.getLogger(LoadWorstFindingsCommand.class);
-        int id_ = -1;
+        int id0 = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);
             chapterIdString = chapterIdString.substring(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID).length());
-            id = Integer.parseInt(chapterIdString);
-        }
-        this.id = (id > -1) ? id_ : id;
+            id0 = Integer.parseInt(chapterIdString);
+        } 
+        this.id = (id0 > -1) ? id0 : id;
     }
 
     public Object[][] getResult() {
@@ -100,6 +100,9 @@ public class LoadWorstFindingsCommand extends GenericCommand {
 
     @Override
     public void execute() {
+        final int maxDevStart = -2;
+        final int maxRiskStart = -2;
+        final int defaultResultSize = 6;
         ControlGroup group = null;
         if (getCache().get(id) != null) {
             group = (ControlGroup) getCache().get(id).getValue();
@@ -114,8 +117,8 @@ public class LoadWorstFindingsCommand extends GenericCommand {
             }
 
         }
-        int maxDev = -2; // minimum value is -1
-        int maxRisk = -2; // minimum value is -1
+        int maxDev = maxDevStart; // minimum value is -1
+        int maxRisk = maxRiskStart; // minimum value is -1
         List<SamtTopic> worstTopics = new ArrayList<SamtTopic>();
         Set<SamtTopic> allSamtTopics = getAllSamtTopicChildren(group);
         for (SamtTopic topic : allSamtTopics) {
@@ -145,7 +148,7 @@ public class LoadWorstFindingsCommand extends GenericCommand {
                 }
             }
         }
-        result = arrayList.toArray(new Object[arrayList.size()][6]);
+        result = arrayList.toArray(new Object[arrayList.size()][defaultResultSize]);
     }
 
     private Cache getCache() {
@@ -158,9 +161,12 @@ public class LoadWorstFindingsCommand extends GenericCommand {
     }
 
     private Cache createCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 600;
+        final int timeToIdleSeconds = 500;
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         manager.addCache(cache);
         return cache;
     }

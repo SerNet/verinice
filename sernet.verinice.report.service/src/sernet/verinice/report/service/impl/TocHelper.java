@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * @author Robert Schuster <r.schuster@tarent.de>
  * 
  */
-public class TocHelper {
+public final class TocHelper {
 	/* TODO: Things to make this work better
 	 * - BIRT has built-in support for objects persisting report generation runs. Use that and make
 	 * this class not a bunch of static methods

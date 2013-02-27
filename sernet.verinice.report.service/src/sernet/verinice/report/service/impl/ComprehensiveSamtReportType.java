@@ -45,13 +45,14 @@ public class ComprehensiveSamtReportType implements IReportType {
     }
 
 	public void createReport(IReportOptions reportOptions) {
+	    final int iterations = 3;
 		BIRTReportService brs = new BIRTReportService();
 		URL reportDesign = ComprehensiveSamtReportType.class.getResource("comprehensive-samt-report.rptdesign"); //$NON-NLS-1$
 		
 		if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
 		{
 			IRunAndRenderTask task = brs.createTask(reportDesign);
-			for(int i = 0; i < 3; i++){
+			for(int i = 0; i < iterations; i++){
 			    brs.render(task, reportOptions);
 			}
 		}
@@ -59,7 +60,7 @@ public class ComprehensiveSamtReportType implements IReportType {
 		{
 			IDataExtractionTask task = brs.createExtractionTask(reportDesign);
 			// In a comprehensive SAMT report the 4th result set is the one that is of interest.
-			brs.extract(task, reportOptions, 3);
+			brs.extract(task, reportOptions, iterations);
 		}
 	}
 

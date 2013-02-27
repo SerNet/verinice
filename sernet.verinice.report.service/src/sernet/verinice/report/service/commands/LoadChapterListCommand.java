@@ -151,6 +151,7 @@ public class LoadChapterListCommand extends GenericCommand {
     }
 
     private List<Object[]> computeChapters(Integer id) {
+        final int dummyDBID = -10;
         List<Object[]> values = new ArrayList<Object[]>(0);
         if (!rootObject.isChildrenLoaded()) {
             loadChildren(rootObject);
@@ -193,7 +194,7 @@ public class LoadChapterListCommand extends GenericCommand {
         } else if (id == -5) {
             ControlGroup headlineGroup = new ControlGroup();
             headlineGroup.setTitel(rootObject.getTitle() + " Overview");
-            headlineGroup.setDbId(-10);
+            headlineGroup.setDbId(dummyDBID);
             values.add(createValueEntry(headlineGroup));
             for (CnATreeElement e : rootObject.getChildren()) {
                 if (e instanceof ControlGroup) { // rootControlGroup
@@ -273,7 +274,7 @@ public class LoadChapterListCommand extends GenericCommand {
                 if (ce instanceof ControlGroup) {
                     ControlGroup g = (ControlGroup) ce;
                     if(g.getEntity().getValue(OVERVIEW_PROPERTY).equals(String.valueOf(OVERVIEW_PROPERTY_TARGET))){
-                        String placeHolderIdString = String.valueOf(PLACEHOLDER_CONTROLGROUP_ID) + String.valueOf(g.getDbId());
+                        String placeHolderIdString = PLACEHOLDER_CONTROLGROUP_ID.toString() + g.getDbId();
                         placeHolderGroup.setDbId(Integer.parseInt(placeHolderIdString));
                         if(!g.isChildrenLoaded()){
                             g = (ControlGroup)loadChildren(g);
@@ -367,9 +368,12 @@ public class LoadChapterListCommand extends GenericCommand {
     }
 
     private Cache createCache() {
+        final int maxElementsInMemory = 20000;
+        final int timeToLiveSeconds = 600;
+        final int timeToIdleSeconds = 500;
         cacheId = UUID.randomUUID().toString();
         manager = CacheManager.create();
-        cache = new Cache(cacheId, 20000, false, false, 600, 500);
+        cache = new Cache(cacheId, maxElementsInMemory, false, false, timeToLiveSeconds, timeToIdleSeconds);
         manager.addCache(cache);
         return cache;
     }
