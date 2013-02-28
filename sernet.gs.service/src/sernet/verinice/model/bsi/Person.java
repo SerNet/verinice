@@ -185,7 +185,7 @@ implements IBSIStrukturElement {
 
 	public boolean addRole(String name) {
 		PropertyType propertyType = getEntityType().getPropertyType(P_ROLLEN);
-		ArrayList<IMLPropertyOption> options = propertyType.getOptions();
+		ArrayList<IMLPropertyOption> options = (ArrayList<IMLPropertyOption>)propertyType.getOptions();
 		for (IMLPropertyOption option : options) {
 			if (option.getName().equals(name)) {
 				getEntity().createNewProperty(propertyType, option.getId());

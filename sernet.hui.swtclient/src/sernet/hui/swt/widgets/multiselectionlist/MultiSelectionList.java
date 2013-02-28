@@ -164,7 +164,7 @@ public class MultiSelectionList {
 				}
 
 				private void unselectOthers(IMLPropertyOption option) {
-					ArrayList<IMLPropertyOption> opts = type.getOptions();
+					ArrayList<IMLPropertyOption> opts = (ArrayList<IMLPropertyOption>)type.getOptions();
 					Iterator<IMLPropertyOption> iterator = opts.iterator();
 					while (iterator.hasNext())
 					{
