@@ -41,4 +41,6 @@ public interface IGsmIsmExecuteProzess extends IGenericProcess {
     String VAR_RISK_VALUE = "GSM_ISM_RISK_VALUE";
     
     String TASK_EXECUTE = "gsm.ism.execute.task.execute";
+    
+    String TRANS_COMPLETE = "gsm.ism.execute.trans.complete";
 }

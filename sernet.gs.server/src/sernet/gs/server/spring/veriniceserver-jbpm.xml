@@ -118,6 +118,7 @@
             <set>
                 <value>icf.trans.reminderDeadline</value>
                 <value>indi.trans.reminderDeadline</value>
+                <value>gsm.ism.execute.trans.reminder</value>
             </set>
         </property>
         <!-- Add task complete handler here -->

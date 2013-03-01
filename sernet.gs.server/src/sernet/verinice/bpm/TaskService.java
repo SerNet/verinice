@@ -45,6 +45,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
@@ -104,6 +105,7 @@ public class TaskService implements ITaskService {
         DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_EXECUTE,IIndividualProcess.TRANS_COMPLETE);
         DEFAULT_OUTCOMES.put(IIndividualProcess.TASK_NOT_RESPOSIBLE,IIndividualProcess.TRANS_ASSIGNED);
         
+        DEFAULT_OUTCOMES.put(IGsmIsmExecuteProzess.TASK_EXECUTE,IGsmIsmExecuteProzess.TRANS_COMPLETE);
     }
     
     private ProcessEngine processEngine;
