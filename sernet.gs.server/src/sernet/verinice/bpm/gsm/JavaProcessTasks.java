@@ -28,7 +28,6 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.BaseJavaProcessTasks;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.IGsmService;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Java activity class for GSM vulnerability tracking process.
@@ -49,25 +48,22 @@ public class JavaProcessTasks extends BaseJavaProcessTasks {
      */
     public void deleteAssetScenarioLinks(String executionId) {
         Map<String, Object> processVars = loadVariablesForProcess(executionId);
-        Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_SET);
+                
+        Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET);
         if(!(value instanceof Set<?>)) {
-            LOG.error("Process variable " + IGsmIsmExecuteProzess.VAR_ELEMENT_SET + " is not a Set. This is nasty...");
+            LOG.error("Process variable " + IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET + " is not a Set. This is nasty...");
             return;
         }
         @SuppressWarnings("unchecked")
-        Set<CnATreeElement> elementSet = (Set<CnATreeElement>) value; 
-        deleteAssetScenarioLinks(elementSet);
-        if (LOG.isDebugEnabled()) {
-            String info = GsmService.createElementInformation(elementSet);
-            LOG.debug("Execution-id: " + executionId + ", Info: " + info);
-        }
+        Set<String> elementUuidSet = (Set<String>) value; 
+        deleteAssetScenarioLinks(elementUuidSet);
     }
 
-    private void deleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {
+    private void deleteAssetScenarioLinks(Set<String> elementUuidSet) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleting links from assets to scenario...");
         }
-        getGsmService().deleteAssetScenarioLinks(elementSet);    
+        getGsmService().deleteAssetScenarioLinks(elementUuidSet);    
     }
     
     protected IGsmService getGsmService() {

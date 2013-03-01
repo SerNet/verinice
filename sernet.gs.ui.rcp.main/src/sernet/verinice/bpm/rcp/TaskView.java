@@ -20,10 +20,12 @@
 package sernet.verinice.bpm.rcp;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,7 +47,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -61,8 +62,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
+import sernet.gs.service.IThreadCompleteListener;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
@@ -105,6 +108,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     static final Logger LOG = Logger.getLogger(TaskView.class);
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
+    
+    private static final long TIMEOUT_LOAD_TASKS_MINUTES = 2;
 
     private TreeViewer treeViewer;
     
@@ -135,6 +140,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     private IModelLoadListener modelLoadListener;
 
     private ITaskListener taskListener;
+    
+    private ExecutorService executer = Executors.newFixedThreadPool(1);
 
     /*
      * (non-Javadoc)
@@ -188,8 +195,13 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                     // nothing to do
                 }
                 @Override
-                public void loaded(BSIModel model) {
-                    initData();
+                public void loaded(BSIModel model) {                
+                    Display.getDefault().syncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                            initData();
+                        }
+                    });                
                 }
                 @Override
                 public void loaded(ISO27KModel model) {
@@ -211,23 +223,24 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
             }
         });
     }
-
+    
     void loadTasks() {
+        loadTasks(true);
+    }
+
+    void loadTasks(boolean showProgress) {
         TaskParameter param = new TaskParameter();
         param.setAllUser(!onlyMyTasks);
         if(taskFilterAction!=null) {
             param.setProcessKey(taskFilterAction.getProcessKey());
             param.setTaskId(taskFilterAction.getTaskId());
         }
-        List<ITask> taskList = Collections.emptyList();
-        final LoadTaskJob job = new LoadTaskJob(param);  
-        
-        BusyIndicator.showWhile(null, new Runnable() {          
-            @Override
-            public void run() {
-                job.loadTasks();
-            }
-        });
+        final LoadTaskJob job = new LoadTaskJob(param);         
+        if(showProgress) {
+            loadTasksAndShowProgress(job);
+        } else {
+            loadTasksInBackground(job);
+        }
         
         Display.getDefault().syncExec(new Runnable(){
             @Override
@@ -235,9 +248,36 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
                 getInfoPanel().setText("");                          
             }
         });
-        taskList = job.getTaskList();
-        
-        RefreshTaskView refresh = new RefreshTaskView(taskList, getViewer());
+    }
+
+    /**
+     * @param job
+     */
+    private void loadTasksInBackground(final LoadTaskJob job) {  
+        job.addListener(new IThreadCompleteListener() {            
+            @Override
+            public void notifyOfThreadComplete(Thread thread) {
+                final RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), getViewer());
+                Display.getDefault().asyncExec(new Runnable(){
+                    @Override
+                    public void run() {
+                        refresh.refresh();                         
+                    }
+                });                           
+            }
+        });
+        executer.execute(job);     
+    }
+
+    private void loadTasksAndShowProgress(final LoadTaskJob job) {
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+        try {
+            progressService.run(true, false, job);      
+        } catch (Exception e) {
+            LOG.error("Error while loading tasks.",e); //$NON-NLS-1$
+            ExceptionUtil.log(e, "Error while loading tasks."); 
+        }       
+        RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), getViewer());
         refresh.refresh();
     }
     
@@ -438,7 +478,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
             @Override
             public void newTasks() {
-                loadTasks();
+                Display.getDefault().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadTasks(false);
+                    }
+                });              
             }
         };
         TaskChangeRegistry.addTaskChangeListener(taskListener);
@@ -479,7 +524,27 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
     public void dispose() {
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         TaskChangeRegistry.removeTaskChangeListener(taskListener);
+        shutdownAndAwaitTermination(executer);
         super.dispose();
+    }
+    
+    private void shutdownAndAwaitTermination(ExecutorService executer) {
+        executer.shutdown(); // Disable new tasks from being submitted
+        try {
+            // Wait a while for existing tasks to terminate
+            if (!executer.awaitTermination(30, TimeUnit.SECONDS)) {
+                executer.shutdownNow(); // Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!executer.awaitTermination(30, TimeUnit.SECONDS)) {
+                    LOG.error("Task loader (ExecutorService) shutdown failed.");
+                }
+            }
+        } catch (InterruptedException ie) {
+            // (Re-)Cancel if current thread also interrupted
+            executer.shutdownNow();
+            // Preserve interrupt status
+            Thread.currentThread().interrupt();
+        }
     }
     
     /**

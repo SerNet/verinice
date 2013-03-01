@@ -33,6 +33,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.verinice.graph.IGraphService;
 import sernet.verinice.hibernate.HibernateDao;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -64,28 +65,41 @@ public class GsmAssetScenarioRemover {
     
     private HibernateDao<CnALink, CnALink.Id> linkDao;
     
+    private IBaseDao<CnATreeElement, Integer> elementDao;
+    
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
      */
-    public int deleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {  
+    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleting links from assets to scenario...");
         }
-        if(elementSet==null || elementSet.isEmpty()) {
+        if(elementUuidSet==null || elementUuidSet.isEmpty()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No elements found.");
             }
             return 0;
         }
+        
+        List<CnATreeElement> elementList = loadElementSet(elementUuidSet);
+        
         // elements of gsm process are *all* from one scope
-        int orgId = elementSet.iterator().next().getScopeId();
+        int orgId = elementList.iterator().next().getScopeId();
         initGraph(orgId);
-        DeleteAssetScenarioLinks hibernateCallback = new DeleteAssetScenarioLinks(elementSet);      
+        DeleteAssetScenarioLinks hibernateCallback = new DeleteAssetScenarioLinks(elementList);      
         Integer numberOfDeletedLinks = (Integer) getLinkDao().executeCallback(hibernateCallback);   
         return numberOfDeletedLinks;
     }
     
+    /**
+     * @param elementUuidSet
+     * @return
+     */
+    private List<CnATreeElement> loadElementSet(Set<String> elementUuidSet) {
+        return getElementDao().findByCallback(new LoadElements(elementUuidSet)); 
+    }
+
     private void initGraph(Integer orgId) {
         try {          
             getGraphService().setTypeIds(typeIds);
@@ -113,15 +127,47 @@ public class GsmAssetScenarioRemover {
         this.linkDao = linkDao;
     }
     
+    public IBaseDao<CnATreeElement, Integer> getElementDao() {
+        return elementDao;
+    }
+
+    public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
+        this.elementDao = elementDao;
+    }
+    
+    class LoadElements implements HibernateCallback {
+        
+        private final String hql = "from CnATreeElement element where element.uuid in (:uuidList)";
+        
+        private Set<String> elementUuidSet;
+        
+        /**
+         * @param elementUuidSet
+         */
+        public LoadElements(Set<String> elementUuidSet) {
+            this.elementUuidSet = elementUuidSet;
+        }
+
+        /* (non-Javadoc)
+         * @see org.springframework.orm.hibernate3.HibernateCallback#doInHibernate(org.hibernate.Session)
+         */
+        @Override
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            Query query =  session.createQuery(hql);
+            query.setParameterList("uuidList", this.elementUuidSet);
+            return query.list();
+        }
+    }
+
     class DeleteAssetScenarioLinks implements HibernateCallback {
 
         private final String hql = "delete from CnALink link where link.id.typeId = :linkTypeId and link.id.dependencyId = :assetDbId and link.id.dependantId in (:scenarioIds)";
         
-        private Set<CnATreeElement> elementSet;
+        private List<CnATreeElement> elementList;
 
-        public DeleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {
+        public DeleteAssetScenarioLinks(List<CnATreeElement> elementList) {
             super();
-            this.elementSet = elementSet;
+            this.elementList = elementList;
         }
 
         /* (non-Javadoc)
@@ -134,7 +180,7 @@ public class GsmAssetScenarioRemover {
             
             List<CnATreeElement> processAssets = new LinkedList<CnATreeElement>();
             List<CnATreeElement> processScenarios = new LinkedList<CnATreeElement>();
-            for (CnATreeElement element : elementSet) {
+            for (CnATreeElement element : elementList) {
                 if(Asset.TYPE_ID.equals(element.getTypeId())) {
                     processAssets.add(element);
                 }

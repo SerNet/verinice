@@ -28,11 +28,17 @@ public interface IGsmIsmExecuteProzess extends IGenericProcess {
     
     String KEY = "gsm-ism-execute";
     
-    String VAR_ELEMENT_SET = "GSM_ISM_ELEMENT_SET";
+    String VAR_ELEMENT_UUID_SET = "GSM_ISM_ELEMENT_SET";
 
     String VAR_ASSIGNEE_DISPLAY_NAME = "GSM_ISM_ASSIGNEE_DISPLAY_NAME"; 
 
     String VAR_CONTROL_GROUP_TITLE = "GSM_ISM_CONTROL_GROUP_TITLE";
+
+    String VAR_CONTROL_DESCRIPTION = "GSM_ISM_CONTROL_DESCRIPTION";
+    
+    String VAR_ASSET_DESCRIPTION_LIST = "GSM_ISM_ASSET_DESCRIPTION_LIST";
+    
+    String VAR_RISK_VALUE = "GSM_ISM_RISK_VALUE";
     
     String TASK_EXECUTE = "gsm.ism.execute.task.execute";
 }

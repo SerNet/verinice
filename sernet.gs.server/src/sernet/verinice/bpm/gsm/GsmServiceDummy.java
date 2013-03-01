@@ -25,7 +25,6 @@ import java.util.Set;
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Dummy implementation for standalone mode.
@@ -76,7 +75,7 @@ public class GsmServiceDummy implements IGsmService {
      * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
      */
     @Override
-    public int deleteAssetScenarioLinks(Set<CnATreeElement> elementSet) {
+    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {
         return 0;
     } 
 

@@ -29,6 +29,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -83,7 +84,12 @@ final class CompleteTaskAction extends Action {
                         }
                         
                         CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, NLS.bind(Messages.CompleteTaskAction_4, number));                   
-                        CompleteTaskAction.this.taskView.loadTasks();
+                        Display.getDefault().asyncExec(new Runnable(){
+                            @Override
+                            public void run() {
+                                CompleteTaskAction.this.taskView.loadTasks();                         
+                            }
+                        });                  
                     }
                 });          
         } catch (Exception t) {

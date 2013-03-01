@@ -36,7 +36,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
@@ -68,10 +67,6 @@ public class GroupByTags extends GenericCommand {
         }
         return log;
     }
-    
-    private static final String GSM_PREFIX = "gsm_";
-
-    private static final String TAG_SUFFIX = "_tag";
 
     private String groupUuid;
 
@@ -134,8 +129,9 @@ public class GroupByTags extends GenericCommand {
             if (isGroup(child)) {
                 existingChildrenGroups.put(child.getTitle(), child);
             } else {
-                List<String> childTagList = new ArrayList<String>(TagHelper.getTags(child.getEntity().getSimpleValue(generateTagPropertyName(child.getTypeId()))));
-                childTagList.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateGsmTagPropertyName(child.getTypeId()))));
+                List<String> childTagList = new ArrayList<String>(LoadTagsOfGroupElements.getTagList(child));
+                childTagList.addAll(LoadTagsOfGroupElements.getGsmTagList(child));
+                childTagList.addAll(LoadTagsOfGroupElements.getGsmIsmTagList(child));            
                 Collections.sort(childTagList);
                 for (String childTag : childTagList) {
                     if(tags.contains(childTag)) {
@@ -183,21 +179,13 @@ public class GroupByTags extends GenericCommand {
         return saveCommand.getNewElement();
     }
 
-    private String generateTagPropertyName(String typeId) {
-        return new StringBuilder(typeId).append(TAG_SUFFIX).toString();
-    }
-    
-    private String generateGsmTagPropertyName(String typeId) {
-        return new StringBuilder(GSM_PREFIX).append(typeId).append(TAG_SUFFIX).toString();
-    }
-
     public Set<String> getTags() {
         return tags;
     }
 
     public IBaseDao<CnATreeElement, Serializable> getElementDao() {
         if (elementDao == null) {
-            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
+            elementDao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return elementDao;
     }

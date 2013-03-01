@@ -23,15 +23,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
+import sernet.gs.service.NotifyingThread;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 
-final class LoadTaskJob implements IRunnableWithProgress {      
+final class LoadTaskJob extends NotifyingThread implements IRunnableWithProgress { 
+    
+    private static final Logger LOG = Logger.getLogger(LoadTaskJob.class);
+    
     private ITaskParameter param;       
     private List<ITask> taskList;
 
@@ -40,15 +45,32 @@ final class LoadTaskJob implements IRunnableWithProgress {
         this.param = param;
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         loadTasks();
     }
     
+    /* (non-Javadoc)
+     * @see sernet.gs.service.NotifyingThread#doRun()
+     */
+    @Override
+    public void doRun() {
+        loadTasks();      
+    }
+    
     public void loadTasks() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading tasks...");
+        }
         Activator.inheritVeriniceContextState();
         taskList = ServiceFactory.lookupTaskService().getTaskList(param);
-        Collections.sort(taskList);
+        Collections.sort(taskList);  
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Tasks loading finished.");
+        }
     }
     
     public List<ITask> getTaskList() {

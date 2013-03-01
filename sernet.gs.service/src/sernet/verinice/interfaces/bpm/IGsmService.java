@@ -21,8 +21,6 @@ package sernet.verinice.interfaces.bpm;
 
 import java.util.Set;
 
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
  * Process service interface to manage Greenbone vulnerabilities.
  * Process definition is: gsm-ism-execute.jpdl.xml
@@ -33,6 +31,6 @@ public interface IGsmService extends IProcessServiceGeneric {
 
     IProcessStartInformation startProcessesForOrganization(Integer orgId);
     
-    int deleteAssetScenarioLinks(Set<CnATreeElement> elementSet);
+    int deleteAssetScenarioLinks(Set<String> elementUuidSet);
 }
 

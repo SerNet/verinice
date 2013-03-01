@@ -106,6 +106,14 @@ public class LinkBean {
     }
     
     private void doInit() throws CommandException {
+        CnATreeElement element = getElement();
+        if(element==null) {
+            // (sometimes) his is not an error, GSM workflow tasks doesn't have an element
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Element is null. Can not init link bean.");
+            }
+            return;
+        }
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDownProperties(true);
         ri.setLinksUpProperties(true);

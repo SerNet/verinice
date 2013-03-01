@@ -98,7 +98,8 @@
     <bean id="gsmAssetScenarioRemover" class="sernet.verinice.bpm.gsm.GsmAssetScenarioRemover" scope="prototype">
         <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />  
-        <property name="linkDao" ref="cnaLinkDao" />
+        <property name="linkDao" ref="cnaLinkDao" /> 
+        <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->

@@ -95,7 +95,7 @@ public class TaskBean {
         Collections.sort(taskList);
         for (ITask task : taskList) {
             String controlTitle = task.getControlTitle();
-            if(controlTitle.length()>MAX_TITLE_LENGTH) {
+            if(controlTitle!=null && controlTitle.length()>MAX_TITLE_LENGTH) {
                 task.setControlTitle(controlTitle.substring(0, MAX_TITLE_LENGTH-1) + "...");
             }
         }

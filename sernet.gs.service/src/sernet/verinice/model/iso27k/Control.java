@@ -64,8 +64,9 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     public static final String PROP_EFFECTIVENESS_INTEGRITY="control_effectiveness_integrity" ;
     public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability"; 
     public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
+    public static final String PROP_GSM_ISM_CONTROL_DESCRIPTION = "gsm_ism_control_description";
     public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso"; 
-    public static final String REL_CONTROL_INCSCEN = "rel_control_incscen";
+    public static final String REL_CONTROL_INCSCEN = "rel_control_incscen"; 
 	
    
 	/**
@@ -247,6 +248,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	
 	public String getFeedbackNote() {
 	    return getEntity().getSimpleValue(PROP_FEEDBACK_NOTE);
+    }
+	
+    public String getGsmDescription() {
+        return getEntity().getSimpleValue(PROP_GSM_ISM_CONTROL_DESCRIPTION);
     }
 
     /* (non-Javadoc)

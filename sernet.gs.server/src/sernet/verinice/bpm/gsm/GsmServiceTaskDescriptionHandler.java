@@ -19,11 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -32,9 +30,6 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
  * GsmServiceTaskDescriptionHandler is part of the GSM vulnerability tracking process.
@@ -79,31 +74,20 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
     }
     
     @SuppressWarnings("unchecked")
-    private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars) {
+    private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars) { 
         Map<String, Object> templateVars = new Hashtable<String, Object>();
-        Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_SET);
-        if(!(value instanceof Set<?>)) {
-            LOG.error("Process variable " + IGsmIsmExecuteProzess.VAR_ELEMENT_SET + " is not a Set. This is nasty...");
-        } else {
-            Set<CnATreeElement> elementSet = (Set<CnATreeElement>) value;
-            templateVars.put(Asset.TYPE_ID, getElementsAsTemplateVar(Asset.TYPE_ID, elementSet));
-            templateVars.put(IncidentScenario.TYPE_ID, getElementsAsTemplateVar(IncidentScenario.TYPE_ID, elementSet));
-        } 
+         
+        templateVars.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, processVars.get(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST));
+        templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION));           
+        templateVars.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, processVars.get(IGsmIsmExecuteProzess.VAR_RISK_VALUE));                             
+        
         templateVars.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, processVars.get(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME));   
         templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE));
         return templateVars;
     }
 
-    private Set<String> getElementsAsTemplateVar(String typeId, Set<CnATreeElement> elementSet) {
-        Set<String> elementTitles = new HashSet<String>();
-        for (CnATreeElement element : elementSet) {
-            if(element.getTypeId().equals(typeId)) {
-                elementTitles.add(element.getTitle());
-            }
-        }
-        return elementTitles;
-    }
-
+    
+    
     /**
      * Returns the bundle/jar relative path to the velocity email template.
      * First a localized template is search by the default locale of the java vm.

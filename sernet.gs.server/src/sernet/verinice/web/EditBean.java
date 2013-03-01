@@ -193,8 +193,8 @@ public class EditBean {
                 }
             }   
         } else {
-            LOG.error("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
-            Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"elementNotFound"));
+            // (sometimes) his is not an error, GSM workflow tasks doesn't have an element
+            LOG.info("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
         }
         
     }

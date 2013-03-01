@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -38,6 +39,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class LoadTagsOfGroupElements extends GenericCommand {
 
     private static final String GSM_PREFIX = "gsm_";
+    
+    private static final String GSM_ISM_PREFIX = "gsm_ism_";
     
     private static final String TAG_SUFFIX = "_tag";
     
@@ -66,19 +69,32 @@ public class LoadTagsOfGroupElements extends GenericCommand {
         CnATreeElement group = getElementDao().findByUuid(this.groupUuid, ri);
         if(group!=null) {
             for (CnATreeElement child : group.getChildren()) {
-                tagSet.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateTagPropertyName(child.getTypeId()))));
-                tagSet.addAll(TagHelper.getTags(child.getEntity().getSimpleValue(generateGsmTagPropertyName(child.getTypeId()))));
+                tagSet.addAll(LoadTagsOfGroupElements.getTagList(child));            
+                tagSet.addAll(LoadTagsOfGroupElements.getGsmTagList(child));                         
+                tagSet.addAll(LoadTagsOfGroupElements.getGsmIsmTagList(child));
             }
         }
     }
-    
-    private String generateTagPropertyName(String typeId) {
+
+    public static Collection<String> getTagList(CnATreeElement child) {
+        return TagHelper.getTags(child.getEntity().getSimpleValue(LoadTagsOfGroupElements.generateTagPropertyName(child.getTypeId())));
+    }
+    private static String generateTagPropertyName(String typeId) {
         return new StringBuilder(typeId).append(TAG_SUFFIX).toString();
     }
 
-    
-    private String generateGsmTagPropertyName(String typeId) {
+    public static Collection<String> getGsmTagList(CnATreeElement child) {
+        return TagHelper.getTags(child.getEntity().getSimpleValue(LoadTagsOfGroupElements.generateGsmTagPropertyName(child.getTypeId())));
+    }
+    private static String generateGsmTagPropertyName(String typeId) {
         return new StringBuilder(GSM_PREFIX).append(typeId).append(TAG_SUFFIX).toString();
+    }
+    
+    public static Collection<String> getGsmIsmTagList(CnATreeElement child) {
+        return TagHelper.getTags(child.getEntity().getSimpleValue(LoadTagsOfGroupElements.generateGsmTagIsmPropertyName(child.getTypeId())));
+    }
+    private static String generateGsmTagIsmPropertyName(String typeId) {
+        return new StringBuilder(GSM_ISM_PREFIX).append(typeId).append(TAG_SUFFIX).toString();
     }
 
     /**
@@ -90,7 +106,7 @@ public class LoadTagsOfGroupElements extends GenericCommand {
 
     public IBaseDao<CnATreeElement, Serializable> getElementDao() {
         if(elementDao==null) {
-            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);      
+            elementDao = getDaoFactory().getDAO(CnATreeElement.class);      
         }
         return elementDao;
     }

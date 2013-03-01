@@ -187,7 +187,7 @@ public class TaskService implements ITaskService {
         taskList = new ArrayList<ITask>();
         Task task=null;
         for (Iterator iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
-            Object object = (Object) iterator.next();
+            Object object = iterator.next();
             if(object instanceof Task ) {
                 task = (Task) object;
             }
@@ -364,6 +364,7 @@ public class TaskService implements ITaskService {
         return Messages.getString(processKey);
     }
 
+    @Override
     public String loadTaskDescription(String taskId, Map<String, Object> processVars) {
         ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
         if(handler==null) {
@@ -372,6 +373,7 @@ public class TaskService implements ITaskService {
         return handler.loadDescription(taskId, processVars);
     }
     
+    @Override
     public String loadTaskTitle(String taskId, Map<String, Object> varMap) {
         ITaskDescriptionHandler handler = getDescriptionHandler().get(taskId);
         if(handler==null) {
@@ -430,8 +432,12 @@ public class TaskService implements ITaskService {
      * @return
      */
     private void mapControl(TaskInformation taskInformation, Map<String, Object> varMap) {
-        String uuidControl = (String) varMap.get(IGenericProcess.VAR_UUID);            
-        taskInformation.setUuid(uuidControl);  
+        String uuidControl = (String) varMap.get(IGenericProcess.VAR_UUID);       
+        taskInformation.setUuid(uuidControl);
+        taskInformation.setControlTitle("no object");
+        if(uuidControl==null) {
+            return;
+        }
         RetrieveInfo ri = new RetrieveInfo();
         ri.setProperties(true);
         CnATreeElement element = getElementDao().findByUuid(uuidControl, ri);
@@ -478,6 +484,7 @@ public class TaskService implements ITaskService {
         completeTask(taskId,(Map<String, Object>)null);
     }
     
+    @Override
     public void completeTask(String taskId, Map<String, Object> parameter) {
         Task task = getTaskService().getTask(taskId);
         if(task!=null) {
@@ -612,6 +619,7 @@ public class TaskService implements ITaskService {
         getTaskService().setVariables(taskId, param);
     }
     
+    @Override
     public Map<String, Object> getVariables(String taskId) {
         Map<String, Object> variables = new HashMap<String, Object>();
         Set<String> names = getTaskService().getVariableNames(taskId);
