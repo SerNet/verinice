@@ -133,30 +133,33 @@ public class ImportTask {
         // a classloader from a Hibernate class. This classloader is able to
         // resolve
         // Hibernate classes and can be used successfully by Antlr to access.
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        ClassLoader classLoader = Hibernate.class.getClassLoader();
-        Thread.currentThread().setContextClassLoader(classLoader);
+        try{ 
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            ClassLoader classLoader = Hibernate.class.getClassLoader();
+            Thread.currentThread().setContextClassLoader(classLoader);
 
-        Preferences prefs = Activator.getDefault().getPluginPreferences();
-        String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
-        if (sourceDbUrl.indexOf("odbc") > -1) {
-            copyMDBToTempDB(sourceDbUrl);
+            Preferences prefs = Activator.getDefault().getPluginPreferences();
+            String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+            if (sourceDbUrl.indexOf("odbc") > -1) {
+                copyMDBToTempDB(sourceDbUrl);
+            }
+
+            this.monitor = monitor;
+            File conf = new File(CnAWorkspace.getInstance().getConfDir() + File.separator + "hibernate-vampire.cfg.xml");
+            vampire = new GSVampire(conf.getAbsolutePath());
+
+            zeiten = vampire.findZeiteinheitenTxtAll();
+
+            transferData = new TransferData(vampire, importRollen);
+            importZielobjekte();
+
+            // Set back the original context class loader.
+            Thread.currentThread().setContextClassLoader(cl);
+
+            CnAElementFactory.getInstance().reloadModelFromDatabase();
+        } catch (GSImportException e){
+            ExceptionUtil.log(e, e.getMessage());
         }
-
-        this.monitor = monitor;
-        File conf = new File(CnAWorkspace.getInstance().getConfDir() + File.separator + "hibernate-vampire.cfg.xml");
-        vampire = new GSVampire(conf.getAbsolutePath());
-
-        zeiten = vampire.findZeiteinheitenTxtAll();
-
-        transferData = new TransferData(vampire, importRollen);
-        importZielobjekte();
-
-        // Set back the original context class loader.
-        Thread.currentThread().setContextClassLoader(cl);
-
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
-
     }
 
     private void copyMDBToTempDB(String sourceDbUrl) {
@@ -230,16 +233,20 @@ public class ImportTask {
         // create all found ITVerbund first
         List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
         for (ZielobjektTypeResult result : zielobjekte) {
-            if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(result.type, result.subtype))) {
-                ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
-                neueVerbuende.add(itverbund);
-                monitor.worked(1);
+            try{
+                if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(result.type, result.subtype))) {
+                    ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
+                    neueVerbuende.add(itverbund);
+                    monitor.worked(1);
 
-                // save element for later:
-                alleZielobjekte.put(result.zielobjekt, itverbund);
+                    // save element for later:
+                    alleZielobjekte.put(result.zielobjekt, itverbund);
 
-                transferData.transfer(itverbund, result);
-                createBausteine(sourceId, itverbund, result.zielobjekt);
+                    transferData.transfer(itverbund, result);
+                    createBausteine(sourceId, itverbund, result.zielobjekt);
+                }
+            } catch (GSImportException e){
+                throw e;
             }
         }
 
@@ -250,7 +257,10 @@ public class ImportTask {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("GSTOOL type id " + result.type + " : " + result.subtype + " was translated to: " + typeId);
             }
-            CnATreeElement element = CnAElementBuilder.getInstance().buildAndSave(neueVerbuende.get(0), typeId);
+            CnATreeElement element = null;
+            if(neueVerbuende.size() > 0){
+                element = CnAElementBuilder.getInstance().buildAndSave(neueVerbuende.get(0), typeId);
+            }
             if (element != null) {
                 // save element for later:
                 alleZielobjekte.put(result.zielobjekt, element);

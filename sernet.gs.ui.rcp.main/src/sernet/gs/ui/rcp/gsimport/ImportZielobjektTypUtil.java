@@ -44,6 +44,7 @@ public abstract class ImportZielobjektTypUtil {
 		GS_TYPES.put("Netz", NetzKomponente.TYPE_ID);
 		GS_TYPES.put("IT-Verbund", ITVerbund.TYPE_ID);
 		GS_TYPES.put("Gebäude", Gebaeude.TYPE_ID);
+		GS_TYPES.put("Informationsverbund", ITVerbund.TYPE_ID);
 
 		GS_ITSYSTEM_SUBTYPES.put("allgemeiner Client/PC]",		 Client.TYPE_ID);
 		GS_ITSYSTEM_SUBTYPES.put("[allgemeiner Laptop]",		 Client.TYPE_ID);
@@ -162,12 +163,17 @@ public abstract class ImportZielobjektTypUtil {
 		 GS_ITSYSTEM_SUBTYPES.put("Active Directory", Anwendung.TYPE_ID );
 		 GS_ITSYSTEM_SUBTYPES.put("Samba", Anwendung.TYPE_ID );
 		 GS_ITSYSTEM_SUBTYPES.put("[Mitarbeiterin/Mitarbeiter]", Person.TYPE_ID );
+		 GS_ITSYSTEM_SUBTYPES.put("[allgemeiner Informationsverbund]", ITVerbund.TYPE_ID);
 	}
 
-	public static String translateZielobjektType(String zoTypeName, String zoSubtypeName) {
+	public static String translateZielobjektType(String zoTypeName, String zoSubtypeName) throws GSImportException{
 		String type = GS_TYPES.get(zoTypeName);
 		if (type == null){
 			type = GS_ITSYSTEM_SUBTYPES.get(zoSubtypeName);
+		}
+		if(type == null){
+		    // TODO i8ln this
+		    throw new GSImportException("Internes Mapping für den Typ\n " + zoTypeName + " (Subtyp: " + zoSubtypeName + ")\n nicht gefunden"); //NON-NLS-$1
 		}
 		return type;
 	}
