@@ -59,7 +59,10 @@ Eclipse IDE:
  
  - check out all projects from trunk except target-platform
  
- - check out target-platform/eclipse-3.5.2-rcp-sdk
+ - check out target-platform/verinice-tp-eclipse-3.7
+ 
+ - add the target-platform to eclipse: select Window -> Preferences -> Plugin-in development
+   -> Target Platform
  
  - close all projects (important)
 
