@@ -24,7 +24,7 @@ Apache Tomcat:
  - get a recent release of Apache Tomcat 6.0 and unpack the tar.gz file
     somewhere (note where this is, we need it at a later point)
  
- - Tomcat 6.0 is available from: http://tomcat.apache.org/
+ - Tomcat 6.0.x is available from: http://tomcat.apache.org/
 
 PostgreSQL:
 -----------
@@ -41,14 +41,14 @@ Eclipse IDE:
  - install the Java "Plug-In Development Environment"  and Eclipse Java EE Developer Tools
     (if not already part of your Eclipse installation)
  
- - Eclipse 3.5: additionally install 'JST Server Adapters'
+ - Eclipse 3.x: additionally install 'JST Server Adapters'
  
  - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 6.0
     environment by pointing at the directory where you unpacked Apache Tomcat
     Make sure to name it "tomcat-6" !
  
  - use the svn repository explorer and add the repository
-    http://www.verinice.org/svnroot (if you have write access, use svn+ssh:// instead)
+    http://svn.verinice.org/svnroot/ (if you have write access, use svn+ssh:// instead)
     (you can specify TRUNK, BRANCHES and TAGS as the respective trunk, branches
      and tags folder)
  
@@ -63,7 +63,7 @@ Eclipse IDE:
  
  - close all projects (important)
 
-  - Eclipse 3.5:
+  - Eclipse 3.x:
     - go to Window/Preferences/Plug-In Development/Target Platform/
     - click 'Add' and 'Nothing: Start with an empty target definition'
     - click on 'Add' and choose directory 'target-platform/eclipse-3.5.2-rcp-sdk' as location
