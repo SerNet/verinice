@@ -34,6 +34,8 @@ PostgreSQL:
 Eclipse IDE:
 ------------
  
+ - Install Eclipse 3.x (newest version of the Eclipse 3 "branch")
+ 
  - install the a Subversion Eclipse plugin (Subversive/Subclipse) and the
     appropriate connector (i.e. from update repository: http://subclipse.tigris.org/update_1.6.x)
     If  you cannot authenticate using svn+ssh, use SVNKIT (Preferences, SVN) and a private SSH key.
@@ -41,7 +43,7 @@ Eclipse IDE:
  - install the Java "Plug-In Development Environment"  and Eclipse Java EE Developer Tools
     (if not already part of your Eclipse installation)
  
- - Eclipse 3.x: additionally install 'JST Server Adapters'
+ - additionally install 'JST Server Adapters'
  
  - go to Window/Preferences/Server/Runtime Environment and add a Tomcat 6.0
     environment by pointing at the directory where you unpacked Apache Tomcat
@@ -61,15 +63,12 @@ Eclipse IDE:
  
  - check out target-platform/verinice-tp-eclipse-3.7
  
- - add the target-platform to eclipse: select Window -> Preferences -> Plugin-in development
-   -> Target Platform
- 
  - close all projects (important)
 
-  - Eclipse 3.x:
+ - Target-Platform:
     - go to Window/Preferences/Plug-In Development/Target Platform/
     - click 'Add' and 'Nothing: Start with an empty target definition'
-    - click on 'Add' and choose directory 'target-platform/eclipse-3.5.2-rcp-sdk' as location
+    - click on 'Add' and choose directory 'target-platform/verinice-tp-eclipse-3.7' as location
     - activate new target platform
  
  - open all projects, do a refresh on all projects
