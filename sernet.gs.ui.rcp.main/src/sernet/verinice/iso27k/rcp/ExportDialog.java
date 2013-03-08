@@ -63,6 +63,8 @@ public class ExportDialog extends TitleAreaDialog {
 
     private static final String[] EXTENSION_ARRAY = new String[] {VeriniceArchive.EXTENSION_VERINICE_ARCHIVE,ExportAction.EXTENSION_XML};
     
+    private static final String DEFAULT_ORGANIZATION_TITLE = "organization";
+    
     /**
      * Indicates if the output should be encrypted.
      */
@@ -80,7 +82,7 @@ public class ExportDialog extends TitleAreaDialog {
     private String defaultFolder;
     private Button useDefaultFolderButton;
     private boolean useDefaultFolder = true;
-    private String organizationTitle;
+    private String organizationTitle = DEFAULT_ORGANIZATION_TITLE;
     
     // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
     private int format = SyncParameter.EXPORT_FORMAT_DEFAULT;
@@ -143,7 +145,16 @@ public class ExportDialog extends TitleAreaDialog {
         
         try {
             organizationWidget = new OrganizationWidget(composite, selection, selectedElement);
-            organizationTitle = organizationWidget.getSelectedElement().getTitle().replaceAll("[^a-zA-Z]", "");
+            String title = null;
+            if(organizationWidget.getSelectedElement()!=null) {
+                title = organizationWidget.getSelectedElement().getTitle();
+            }
+            if(title!=null) {
+                organizationTitle = title.replaceAll("[^a-zA-Z]", "");
+            } else {
+                organizationTitle = DEFAULT_ORGANIZATION_TITLE;
+            }
+            
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
@@ -390,6 +401,7 @@ public class ExportDialog extends TitleAreaDialog {
      * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
+    @Override
     protected void okPressed() {
         StringBuilder sb = new StringBuilder();
         if (filePath == null || filePath.isEmpty()) {
