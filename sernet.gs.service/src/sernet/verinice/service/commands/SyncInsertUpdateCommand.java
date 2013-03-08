@@ -228,10 +228,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
                 }
-                if(parent==null) {
-                    // Org. or IT-Verbund was found
-                    parent = elementInDB.getParent();
-                }
+                // use current parent from DB instead the parent from xml/vna 
+                parent = elementInDB.getParent();
+                
                 if(parameter.isIntegrate()) {
                     elementInDB.setSourceId(null);
                     elementInDB.setExtId(null);
