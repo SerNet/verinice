@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -103,7 +104,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         }
         
         if (LOG.isInfoEnabled()) {
-            LOG.info( information.getNumber() + " tasks created");
+            LOG.info( information.getNumber() + " tasks created"); //$NON-NLS-1$
         }
 
         return information;
@@ -115,7 +116,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     @Override
     public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting links from assets to scenario...");
+            LOG.debug("Deleting links from assets to scenario..."); //$NON-NLS-1$
         }
         
         // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
@@ -139,11 +140,11 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
             map.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, person.getTitle());
             loginNameAssignee = getProcessDao().loadUsername(person.getUuid());
             if(loginNameAssignee==null) {
-                LOG.error("Can't determine username of person (there is probably no account): " + person.getTitle());
+                LOG.error("Can't determine username of person (there is probably no account): " + person.getTitle()); //$NON-NLS-1$
             }
         }
         if(loginNameAssignee==null) {
-            LOG.warn("Username of assignee not found. Using currently logged in person as assignee.");
+            LOG.warn("Username of assignee not found. Using currently logged in person as assignee."); //$NON-NLS-1$
             loginNameAssignee = getAuthService().getUsername();
         }       
         map.put(IGenericProcess.VAR_ASSIGNEE_NAME, loginNameAssignee);
@@ -151,11 +152,6 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         if(processParameter.getControlGroup()!=null) {
             map.put(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE, processParameter.getControlGroup().getTitle());
         }
-        
-        // TODO dm - VAR_ELEMENT_SET muss umgewandelt werden in ein UUID-Set
-        // TODO dm - Die Asset Titel muessen beim Erzeugen des Prozesses als Set<String> gespeichert werden 
-        // TODO dm - Der Titel des 1. Controls muss beim Erzeugen des Prozesses als String gespeichert werden 
-        // TODO dm - Der Risk-Value muss beim Erzeugen des Prozesses als int gespeichert werden         
         
         final Set<CnATreeElement> elementSet = processParameter.getElementSet();
         map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET, convertToUuidSet(elementSet));     
@@ -202,11 +198,53 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
                 return ((Control)element).getGsmDescription();
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
     
+    /**
+     * Calculate the risk value of a process.
+     * 
+     * Highest CVSS value of incidentScenario: HIGHEST_CVSS
+     * Number of assets: NUMBER_OF_ASSETS
+     * 
+     * RISK_VALUE = HIGHEST_CVSS * NUMBER_OF_ASSETS
+     * 
+     * RISK_VALUE is rounded and has two digits to the right of the decimal point.
+     * HIGHEST_CVSS is null (no CVSS is set at all): RISK_VALUE = "not determinable
+     * Number of assets is 0: RISK_VALUE = 0.00
+     * 
+     * @param elementSet Elements of process
+     * @return risk value of a process
+     */
     private String getRiskValue(Set<CnATreeElement> elementSet) {
-        return "unbekannt";
+        int numberOfAssets = 0;
+        Double highestCvss = null;
+        for (CnATreeElement element : elementSet) {
+            if(Asset.TYPE_ID.equals(element.getTypeId())) {
+                numberOfAssets++;
+            }
+            if(IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
+                IncidentScenario scenario = (IncidentScenario) element;
+                highestCvss = getCvssIfItIsHigher(scenario, highestCvss);
+            }
+        }
+        String riskValue = Messages.getString("GsmService.5"); //$NON-NLS-1$
+        if(highestCvss!=null) {
+            Double riskValueDouble = highestCvss * numberOfAssets;
+            DecimalFormat formatterAndRounder = new DecimalFormat("###.##"); //$NON-NLS-1$
+            riskValue = formatterAndRounder.format(riskValueDouble);
+        }
+        return riskValue;
+    }
+
+    private Double getCvssIfItIsHigher(IncidentScenario scenario, Double highestCvss) {
+        Double cvss = scenario.getGsmCvss();
+        if(cvss!=null) {
+            if(highestCvss==null || cvss.compareTo(highestCvss)>0) {
+                highestCvss = cvss;
+            }
+        }
+        return highestCvss;
     }
 
     public static String createElementInformation(Set<CnATreeElement> elementSet) {
@@ -220,10 +258,10 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     
     public static String createElementInformation(Set<CnATreeElement> elementSet, String typeId) {
         StringBuffer message = new StringBuffer();
-        message.append("\n** ").append(typeId).append("\n");
+        message.append("\n** ").append(typeId).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
         for (CnATreeElement element : elementSet) {
             if(element.getTypeId().equals(typeId)) {
-                message.append(element.getTitle()).append("\n");
+                message.append(element.getTitle()).append("\n"); //$NON-NLS-1$
             }
         }
         return message.toString();

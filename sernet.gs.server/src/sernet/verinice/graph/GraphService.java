@@ -19,9 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.graph;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,11 +66,9 @@ public class GraphService implements IGraphService {
     
     private Graph<CnATreeElement, Edge> graph;
     
-    private Integer scopeId;
-    
-    private String[] typeIds;
-    
     private String[] relationIds;
+    
+    private List<IGraphElementLoader> loaderList;
     
     private TreeElementDao<CnATreeElement, Long> cnaTreeElementDao;
     
@@ -77,7 +76,6 @@ public class GraphService implements IGraphService {
     
     private Map<String, CnATreeElement> uuidMap = new Hashtable<String, CnATreeElement>();
 
-    private IElementFilter elementFilter;
    
     @Override
     public void create() {
@@ -93,17 +91,10 @@ public class GraphService implements IGraphService {
     }
     
     private void loadVerticesAndRelatives() {
-        DetachedCriteria crit = createDefaultCriteria();
-        if(getScopeId()!=null) {
-            crit.add(Restrictions.eq("scopeId", getScopeId()));
-        }
-        if(getTypeIds()!=null) {
-            crit.add(Restrictions.in("objectType", getTypeIds()));
-        }
-        List<CnATreeElement> elementList = getCnaTreeElementDao().findByCriteria(crit);
-        elementList = filterElements(elementList);
-        if (LOG.isInfoEnabled()) {
-            LOG.info(elementList.size() + " relevant objects found");
+        List<CnATreeElement> elementList = new LinkedList<CnATreeElement>();
+        for (IGraphElementLoader loader : getLoaderList()) {
+            loader.setCnaTreeElementDao(getCnaTreeElementDao());
+            elementList.addAll(loader.loadElements());
         }
         for (CnATreeElement element : elementList) {
             graph.addVertex(element);
@@ -122,19 +113,6 @@ public class GraphService implements IGraphService {
                 }
             }
         }
-    }
-    
-    private List<CnATreeElement> filterElements(List<CnATreeElement> elementList) {
-        if(getElementFilter()==null) {
-            return elementList;
-        }
-        List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>();
-        for (CnATreeElement element : elementList) {
-            if(getElementFilter().check(element)) {
-                filteredList.add(element);
-            }
-        }
-        return filteredList;
     }
 
     private void loadLinks() {
@@ -174,6 +152,9 @@ public class GraphService implements IGraphService {
      */
     @Override
     public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String typeId) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Returning link targets of elment: " + source.getTitle() + ", link type is: " + typeId);
+        }
         Set<Edge> edgeList = getGraph().edgesOf(source);
         Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
         for (Edge edge : edgeList) {
@@ -185,45 +166,10 @@ public class GraphService implements IGraphService {
         }
         return linkTargets;
     }
-  
-    private DetachedCriteria createDefaultCriteria() {
-        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
-        crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-        crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return crit;
-    }
-    
-    public IElementFilter getElementFilter() {
-        return elementFilter;
-    }
-
-    @Override
-    public void setElementFilter(IElementFilter elementFilter) {
-        this.elementFilter = elementFilter;
-    }
 
     @Override
     public Graph<CnATreeElement, Edge> getGraph() {
         return graph;
-    }
-
-    public Integer getScopeId() {
-        return scopeId;
-    }
-
-    @Override
-    public void setScopeId(Integer scopeId) {
-        this.scopeId = scopeId;
-    }
-    
-    public String[] getTypeIds() {
-        return (typeIds != null) ? typeIds.clone() : null;
-    }
-
-    @Override
-    public void setTypeIds(String[] typeIds) {
-        this.typeIds = (typeIds != null) ? typeIds.clone() : null;
     }
 
     public String[] getRelationIds() {
@@ -251,6 +197,22 @@ public class GraphService implements IGraphService {
         this.cnaLinkDao = cnaLinkDao;
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.graph.IGraphService#setLoader(sernet.verinice.graph.IGraphElementLoader[])
+     */
+    @Override
+    public void setLoader(IGraphElementLoader... loaderArray) {
+        loaderList = Arrays.asList(loaderArray);       
+    }
+    
+    public List<IGraphElementLoader> getLoaderList() {
+        return loaderList;
+    }
+
+    public void setLoaderList(List<IGraphElementLoader> loaderList) {
+        this.loaderList = loaderList;
+    }
+
     private void logStatistics() {
         if(graph!=null) {
             LOG.debug("Number vertices: " + graph.vertexSet().size());
@@ -295,5 +257,7 @@ public class GraphService implements IGraphService {
     private void logRuntime(String message, long starttime) {
         LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
     }
+
+
   
 }

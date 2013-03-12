@@ -44,14 +44,16 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IGraphService {
-
-    void setScopeId(Integer scopeId);
-
-    void setTypeIds(String[] typeIds);
     
     void setRelationIds(String[] relationIds);
     
-    void setElementFilter(IElementFilter elementFilter);
+    /**
+     * Sets one or more IGraphElementLoader
+     * Element-loaders loads elements which are part of the graph. 
+     * 
+     * @param loader One or more IGraphElementLoader
+     */
+    void setLoader(IGraphElementLoader... loader);
     
     /**
      * Initializes and creates the JGraphT graph.
@@ -84,4 +86,6 @@ public interface IGraphService {
      * @return A set of target elements
      */
     Set<CnATreeElement> getLinkTargets(CnATreeElement source, String typeId);
+
+
 }

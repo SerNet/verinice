@@ -30,6 +30,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.graph.Edge;
+import sernet.verinice.graph.GraphElementLoader;
+import sernet.verinice.graph.IGraphElementLoader;
 import sernet.verinice.graph.IGraphService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -63,8 +65,7 @@ public class GsmProcessParameterCreater {
         AssetGroup.TYPE_ID,
         Control.TYPE_ID,
         ControlGroup.TYPE_ID,
-        IncidentScenario.TYPE_ID,
-        PersonIso.TYPE_ID};
+        IncidentScenario.TYPE_ID};
 
     private static final String[] relationIds = {Control.REL_CONTROL_INCSCEN,
         AssetGroup.REL_PERSON_ISO,
@@ -86,6 +87,7 @@ public class GsmProcessParameterCreater {
      * @return A list of parameters to create a GSM-process
      */
     public List<GsmServiceParameter> createProcessParameterForOrganization(Integer orgId) {
+        
         initGraph(orgId);
       
         List<CnATreeElement> controlGroupList = get2ndLevelControlGroups(orgId);
@@ -116,11 +118,18 @@ public class GsmProcessParameterCreater {
     }
     
     private void initGraph(Integer orgId) {
-        try {          
-            getGraphService().setTypeIds(typeIds);
+        try { 
+            IGraphElementLoader loader1 = new GraphElementLoader();
+            loader1.setTypeIds(typeIds);
+            loader1.setScopeId(orgId);
+            loader1.setElementFilter(new TopElementFilter(orgId));
+            
+            IGraphElementLoader loader2 = new GraphElementLoader();
+            loader2.setTypeIds(new String[]{PersonIso.TYPE_ID});
+           
+            getGraphService().setLoader(loader1, loader2);
+            
             getGraphService().setRelationIds(relationIds);
-            getGraphService().setElementFilter(new TopElementFilter(orgId));
-            getGraphService().setScopeId(orgId);
             getGraphService().create();          
         } catch(Exception e) {
             LOG.error("Error while initialization", e);
@@ -140,7 +149,7 @@ public class GsmProcessParameterCreater {
     private List<CnATreeElement> getPersons(Integer orgId) {
         DetachedCriteria crit = createDefaultCriteria();
         crit.add(Restrictions.eq("objectType", PersonIso.TYPE_ID));
-        crit.add(Restrictions.eq("scopeId", orgId));
+        //crit.add(Restrictions.eq("scopeId", orgId));
         return getElementDao().findByCriteria(crit);
     }
     

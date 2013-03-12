@@ -31,6 +31,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.verinice.graph.GraphElementLoader;
+import sernet.verinice.graph.IGraphElementLoader;
 import sernet.verinice.graph.IGraphService;
 import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.IBaseDao;
@@ -101,10 +103,14 @@ public class GsmAssetScenarioRemover {
     }
 
     private void initGraph(Integer orgId) {
-        try {          
-            getGraphService().setTypeIds(typeIds);
+        try {
+            IGraphElementLoader loader = new GraphElementLoader();
+            loader.setTypeIds(typeIds);
+            loader.setScopeId(orgId);
+            
+            getGraphService().setLoader(loader);
+            
             getGraphService().setRelationIds(relationIds);
-            getGraphService().setScopeId(orgId);
             getGraphService().create();          
         } catch(Exception e) {
             LOG.error("Error while initialization", e);
