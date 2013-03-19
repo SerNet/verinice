@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,9 +103,10 @@ public class GsmProcessParameterCreater {
         for (CnATreeElement controlGroup : controlGroupList) {           
             for (CnATreeElement person : personList) {
                 GsmServiceParameter parameter = new GsmServiceParameter(controlGroup, person);
-                Set<CnATreeElement> elements = getAllElements(controlGroup, person);
-                if(!elements.isEmpty()) {
-                    parameter.setElementSet(elements);
+                Set<CnATreeElement> elementSet = getAllElements(controlGroup, person);
+                if(!elementSet.isEmpty()) {
+                    parameter.setElementSet(elementSet);
+                    parameter.setRiskValue(getRiskValue(elementSet));
                     parameterList.add(parameter);
                 }
             }
@@ -115,6 +117,58 @@ public class GsmProcessParameterCreater {
         }
 
         return parameterList;
+    }
+    
+    /**
+     * Calculate the risk value of a process.
+     * 
+     * CVSS value of incidentScenario: CVSS
+     * Number of assets linked to incidentScenario: NUMBER_OF_LINKED_ASSETS
+     * 
+     * RISK_VALUE = [[CVSS_1 * NUMBER_OF_LINKED_ASSETS_1] + [CVSS_2 * NUMBER_OF_LINKED_ASSETS_2] + ...]
+     * 
+     * RISK_VALUE is rounded and has two digits to the right of the decimal point.
+     * All CVSS are null (no CVSS is set at all): RISK_VALUE = "not determinable"
+     * Total number of linked assets is 0: RISK_VALUE = 0
+     * 
+     * @param elementSet Elements of process
+     * @return risk value of a process
+     */
+    private String getRiskValue(Set<CnATreeElement> elementSet) {
+        Double riskValueDouble = null;
+        for (CnATreeElement element : elementSet) {
+            if(IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
+                Double currentValue = getRiskValue(element, elementSet);
+                if(riskValueDouble==null) {
+                    riskValueDouble = currentValue;
+                } else {
+                    riskValueDouble += currentValue;
+                }             
+            }
+        }
+        String riskValue = Messages.getString("GsmService.5"); //$NON-NLS-1$
+        if(riskValueDouble!=null) {
+            DecimalFormat formatterAndRounder = new DecimalFormat("###.##"); //$NON-NLS-1$
+            riskValue = formatterAndRounder.format(riskValueDouble);
+        }
+        return riskValue;
+    }
+
+    private Double getRiskValue(CnATreeElement element, Set<CnATreeElement> processElementSet) {
+        Double riskValue = null;
+        IncidentScenario scenario = (IncidentScenario) element;
+        Double cvss = scenario.getGsmCvss();
+        if(cvss!=null) {
+            Set<CnATreeElement> allAssetList = getGraphService().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);      
+            int numberOfLinkedAssets = 0;
+            for (CnATreeElement linkedAsset : allAssetList) {
+                if(processElementSet.contains(linkedAsset)) {
+                    numberOfLinkedAssets++;
+                }
+            }
+            riskValue = cvss * numberOfLinkedAssets;
+        }
+        return riskValue;
     }
     
     private void initGraph(Integer orgId) {

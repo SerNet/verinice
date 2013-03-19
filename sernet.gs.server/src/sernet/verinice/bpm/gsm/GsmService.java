@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
-import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -84,6 +84,22 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     public void testStartProcess(Integer orgId) {
         startProcessesForOrganization(orgId);
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+     */
+    @Override
+    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Deleting links from assets to scenario..."); //$NON-NLS-1$
+        }
+        
+        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
+        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
+        GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
+        Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementUuidSet); 
+        return numberOfDeletedLinks;
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IGsmService#startProcess(java.lang.Integer)
@@ -108,22 +124,6 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         }
 
         return information;
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
-     */
-    @Override
-    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting links from assets to scenario..."); //$NON-NLS-1$
-        }
-        
-        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
-        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
-        GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
-        Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementUuidSet); 
-        return numberOfDeletedLinks;
     }
 
     private void startProcess(GsmServiceParameter processParameter) {
@@ -157,7 +157,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET, convertToUuidSet(elementSet));     
         map.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, createAssetDescriptionList(elementSet));     
         map.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, getFirstControlDescription(elementSet));      
-        map.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, getRiskValue(elementSet));
+        map.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, processParameter.getRiskValue());
         
         return map;
     }
@@ -185,6 +185,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
                 elementTitles.add(element.getTitle());
             }
         }
+        Collections.sort(elementTitles);
         return elementTitles;
     }
     
@@ -199,52 +200,6 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
             }
         }
         return ""; //$NON-NLS-1$
-    }
-    
-    /**
-     * Calculate the risk value of a process.
-     * 
-     * Highest CVSS value of incidentScenario: HIGHEST_CVSS
-     * Number of assets: NUMBER_OF_ASSETS
-     * 
-     * RISK_VALUE = HIGHEST_CVSS * NUMBER_OF_ASSETS
-     * 
-     * RISK_VALUE is rounded and has two digits to the right of the decimal point.
-     * HIGHEST_CVSS is null (no CVSS is set at all): RISK_VALUE = "not determinable
-     * Number of assets is 0: RISK_VALUE = 0.00
-     * 
-     * @param elementSet Elements of process
-     * @return risk value of a process
-     */
-    private String getRiskValue(Set<CnATreeElement> elementSet) {
-        int numberOfAssets = 0;
-        Double highestCvss = null;
-        for (CnATreeElement element : elementSet) {
-            if(Asset.TYPE_ID.equals(element.getTypeId())) {
-                numberOfAssets++;
-            }
-            if(IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
-                IncidentScenario scenario = (IncidentScenario) element;
-                highestCvss = getCvssIfItIsHigher(scenario, highestCvss);
-            }
-        }
-        String riskValue = Messages.getString("GsmService.5"); //$NON-NLS-1$
-        if(highestCvss!=null) {
-            Double riskValueDouble = highestCvss * numberOfAssets;
-            DecimalFormat formatterAndRounder = new DecimalFormat("###.##"); //$NON-NLS-1$
-            riskValue = formatterAndRounder.format(riskValueDouble);
-        }
-        return riskValue;
-    }
-
-    private Double getCvssIfItIsHigher(IncidentScenario scenario, Double highestCvss) {
-        Double cvss = scenario.getGsmCvss();
-        if(cvss!=null) {
-            if(highestCvss==null || cvss.compareTo(highestCvss)>0) {
-                highestCvss = cvss;
-            }
-        }
-        return highestCvss;
     }
 
     public static String createElementInformation(Set<CnATreeElement> elementSet) {

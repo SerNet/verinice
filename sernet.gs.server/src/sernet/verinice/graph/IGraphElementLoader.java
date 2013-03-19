@@ -25,19 +25,44 @@ import sernet.verinice.hibernate.TreeElementDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * IGraphElementLoader loads elements for {@link GraphService}.
+ * You can add one or more loader to GraphService.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IGraphElementLoader {
 
+    /**
+     * If this parameter is set only elements of one one scope / organization
+     * are loaded.
+     * 
+     * @param scopeId Scope-id / organization db-id
+     */
     void setScopeId(Integer scopeId);
     
+    /**
+     * If this parameter is set only elements with specified type-id
+     * are loaded.
+     * 
+     * @param typeIds Type-ids such as Asset.TYPE_ID or Control.TYPE_ID
+     */
     void setTypeIds(String[] typeIds);
     
+    /**
+     * If this parameter is set. Elements are filtered 
+     * by an IElementFilter
+     * 
+     * @param elementFilter An element filter
+     */
     void setElementFilter(IElementFilter elementFilter);
     
     void setCnaTreeElementDao(TreeElementDao<CnATreeElement, Long> cnaTreeElementDao); 
     
+    /**
+     * Loads and returns the elements specified by parameters
+     * and element filter.
+     * 
+     * @return A list of elements
+     */
     List<CnATreeElement> loadElements();
 }

@@ -47,11 +47,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms.
  * 
- * Call one of the filter methods to configure which elements are loaded by the service:
- *  setScopeId(Integer scopeId)
- *  setTypeIds(String[] typeIds)
- *  setRelationIds(String[] relationIds)
- *  setElementFilter(IElementFilter elementFilter)
+ * Use {@link IGraphElementLoader} to configure which elements are loaded by the service.
+ * 
+ * To configure link types use method: setRelationIds(String[] relationIds).
  *  
  *  You have to call "create()" to initialize the service.
  *  After that you can start to use the service.

@@ -36,6 +36,8 @@ public class GsmServiceParameter implements Serializable {
     private CnATreeElement person;
     
     private Set<CnATreeElement> elementSet;
+    
+    private String riskValue;
 
     public GsmServiceParameter() {
         super();
@@ -73,6 +75,14 @@ public class GsmServiceParameter implements Serializable {
 
     public void setElementSet(Set<CnATreeElement> elementSet) {
         this.elementSet = elementSet;
+    }
+
+    public String getRiskValue() {
+        return riskValue;
+    }
+
+    public void setRiskValue(String riskValue) {
+        this.riskValue = riskValue;
     }
     
     
