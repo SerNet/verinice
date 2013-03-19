@@ -100,6 +100,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public static final String P_LETZTEREVISIONDURCH_OLD = "mnums_letzterevisiondurch"; //$NON-NLS-1$
 
 	private static final String P_ENCODING = "mnums_encoding";
+	
+	public static final String MNUMS_RELATION_ID = "rel_person_mnums";//$NON-NLS-1$
 
 
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$

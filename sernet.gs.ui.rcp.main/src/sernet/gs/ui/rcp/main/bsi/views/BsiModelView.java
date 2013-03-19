@@ -65,6 +65,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
+import sernet.gs.ui.rcp.main.actions.AssignResponsiblePersonAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
@@ -159,6 +160,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	private BausteinZuordnungAction bausteinZuordnungAction;
 	
 	private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
+	
+	private AssignResponsiblePersonAction assignResponsiblePersonAction;
 	
 	private IModelLoadListener modelLoadListener;
 
@@ -324,6 +327,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		manager.add(gsmbasicsecuritycheckAction);
 		manager.add(bausteinZuordnungAction);
 		manager.add(gsmbausteinZuordnungAction);
+		manager.add(assignResponsiblePersonAction);
 		
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
@@ -430,6 +434,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 		
 		gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(getViewSite().getWorkbenchWindow());
+		
+		assignResponsiblePersonAction = new AssignResponsiblePersonAction(getViewSite().getWorkbenchWindow(),Messages.BsiModelView_20);
 		
 
 		doubleClickAction = new Action() {

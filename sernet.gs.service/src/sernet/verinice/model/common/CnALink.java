@@ -214,6 +214,10 @@ public class CnALink implements Serializable, ITypedElement {
         public Integer getDependencyId() {
             return dependencyId;
         }
+        
+        public String getTypeId() {
+            return typeId;
+        }
 
         public boolean equals(Object o) {
 			if (o instanceof Id) {

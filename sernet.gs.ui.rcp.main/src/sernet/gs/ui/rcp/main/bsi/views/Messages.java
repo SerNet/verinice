@@ -92,6 +92,8 @@ public final class Messages extends NLS {
     
     public static String BsiModelView_19;
     
+    public static String BsiModelView_20;
+       
 	public static String BsiModelView_2;
 
 	public static String BsiModelView_3;

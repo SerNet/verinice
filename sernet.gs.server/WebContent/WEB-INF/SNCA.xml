@@ -2139,7 +2139,7 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 			id="mnums_verantwortlichums"
             editable="false"
-            visible="false"
+            visible="true"
 			name="Verantw. Umsetzung" />
 		<huiproperty
 				id="mnums_name"
