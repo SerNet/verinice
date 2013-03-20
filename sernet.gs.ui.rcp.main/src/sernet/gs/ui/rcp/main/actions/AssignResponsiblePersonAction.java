@@ -59,15 +59,14 @@ import sernet.verinice.service.commands.CreateLink;
  * 
  */
 public class AssignResponsiblePersonAction extends RightsEnabledAction implements ISelectionListener {
-    
 
     public static final String ID = "sernet.gs.ui.rcp.main.actions.assignresponsiblepersonaction"; //$NON-NLS-1$
 
     private static final Logger LOG = Logger.getLogger(AssignResponsiblePersonAction.class);
     private final IWorkbenchWindow window;
     private boolean serverIsRunning = true;
-   
-  public AssignResponsiblePersonAction(IWorkbenchWindow window, String label) {
+
+    public AssignResponsiblePersonAction(IWorkbenchWindow window, String label) {
         this.window = window;
         setText(label);
         setId(ID);
@@ -92,18 +91,19 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         }
     }
 
-  public void run () {
+    @Override
+    public void run() {
         Activator.inheritVeriniceContextState();
         final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;
         }
-        try{
+        try {
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 dorun(o);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             LOG.error("Error while command", e);
         }
     }
@@ -113,12 +113,11 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @throws CommandException
      */
     private void dorun(Object o) throws CommandException {
-        if(o instanceof MassnahmenUmsetzung) {
+        if (o instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung elmt = (MassnahmenUmsetzung) o;
-            MassnahmenUmsetzung   massnahme = getMassnahme(elmt);
+            MassnahmenUmsetzung massnahme = getMassnahme(elmt);
             PropertyList umsetzungDurch = massnahme.getUmsetzungDurchLink();
             createReallyRelation(massnahme, umsetzungDurch);
-
         }
     }
 
@@ -128,25 +127,38 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @throws CommandException
      */
     private void createReallyRelation(MassnahmenUmsetzung massnahme, PropertyList umsetzungDurch) throws CommandException {
-        if(umsetzungDurch != null ){
-            List<Integer> ids = getProperties(umsetzungDurch);
-            List<Person> personen = getPersonen(ids);
-            Set<CnALink> links = getLinks(massnahme);
-            if(!links.isEmpty() &&  links != null){
-                for(CnALink link : links){
-                    if((link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID))){   
-                        for(Person person : personen){
-                            if(!link.getDependant().getDbId().equals(person.getDbId())){
-                                createLink(massnahme, person,MassnahmenUmsetzung.MNUMS_RELATION_ID);    
-
+        if (umsetzungDurch != null) {
+            List<Integer> umsetzungDurchDbIds = getProperties(umsetzungDurch);
+            List<Person> personenUmsetzungDurch = getPersonsForDbIds(umsetzungDurchDbIds);
+            Set<CnALink> allLinks = massnahme.getLinksUp();
+            if (!allLinks.isEmpty() && allLinks != null) {
+                
+                
+                for (CnALink link : allLinks) {
+                    if ((link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID))) {
+                        for (Person person : personenUmsetzungDurch) {
+                            // TODO JH: hier ist ein Denkfehler drin
+                            /*
+                               Es gibt schon 2 CnALink mit der type_id MassnahmenUmsetzung.MNUMS_RELATION_ID gibt
+                               CnALink 1 verknuepft die richtige Person
+                               CnALink 2 verknuepft andere Person
+                               
+                               Fuer CnALink 2 wird createLinl aufgerufen, 
+                               obwohl CnALink 1 die richtige Person verknuepft
+                            */
+                            if (!link.getDependant().getDbId().equals(person.getDbId())) {                             
+                                createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
                             }
                         }
                     }
                 }
-            }
-            else{
-                for(Person person : personen){
-                    createLink(massnahme, person,MassnahmenUmsetzung.MNUMS_RELATION_ID);     
+            } else {
+                for (Person person : personenUmsetzungDurch) {
+                    // TODO JH: hier muss geprüft werden, ob CnALinks vorhanden sind oder nicht
+                    /*
+                       "if (!allLinks.isEmpty() && allLinks != null) {" ist falsch und muss weg.
+                    */
+                    createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
                 }
             }
         }
@@ -157,9 +169,9 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @param person
      * @throws CommandException
      */
-    private void createLink(MassnahmenUmsetzung massnahme, Person person,String typeId) throws CommandException {
+    private void createLink(MassnahmenUmsetzung massnahme, Person person, String typeId) throws CommandException {
         CreateLink createLinkcommand = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-         createLinkcommand = ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
+        createLinkcommand = ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
     }
 
     /**
@@ -170,8 +182,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         List<Property> props;
         props = umsetzungDurch.getProperties();
         List<Integer> ids = new ArrayList<Integer>(props.size());
-        for (Property p : props)
-        {
+        for (Property p : props) {
             ids.add(Integer.valueOf(p.getPropertyValue()));
         }
         return ids;
@@ -182,45 +193,45 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @return
      * @throws CommandException
      */
-    private List<Person> getPersonen(List<Integer> ids) throws CommandException {
+    private List<Person> getPersonsForDbIds(List<Integer> ids) throws CommandException {
         LoadCnAElementsByEntityIds<Person> personListe = new LoadCnAElementsByEntityIds<Person>(Person.class, ids);
-          personListe = ServiceFactory.lookupCommandService().executeCommand(personListe);
-          List<Person> personen = personListe.getElements();
+        personListe = ServiceFactory.lookupCommandService().executeCommand(personListe);
+        List<Person> personen = personListe.getElements();
         return personen;
     }
 
-   private Set<CnALink> getLinks(MassnahmenUmsetzung massnahme){
-       Set<CnALink> linksUp =  massnahme.getLinksUp();
-       return linksUp;
-   }
-   
-   private MassnahmenUmsetzung getMassnahme(MassnahmenUmsetzung massnahme){
-       LoadMassnahmeById command = new LoadMassnahmeById(massnahme.getDbId());
-       try {
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-    } catch (CommandException ce) {
-        LOG.error("Error while get modul", ce);
+    private MassnahmenUmsetzung getMassnahme(MassnahmenUmsetzung massnahme) {
+        LoadMassnahmeById command = new LoadMassnahmeById(massnahme.getDbId());
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+        } catch (CommandException ce) {
+            LOG.error("Error while get modul", ce);
+        }
+        massnahme = command.getElmt();
+
+        return massnahme;
     }
-       massnahme = command.getElmt();
 
-
-       return massnahme;
-   }
-    
-      
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+     * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-  public void selectionChanged(IWorkbenchPart part, ISelection input) {
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection input) {
         // TODO Auto-generated method stub
         if (serverIsRunning) {
-            setEnabled(checkRights());  
+            setEnabled(checkRights());
             if (input instanceof IStructuredSelection) {
-                IStructuredSelection selection = (IStructuredSelection) input;   
+                IStructuredSelection selection = (IStructuredSelection) input;
                 for (Iterator iter = selection.iterator(); iter.hasNext();) {
-                    Object element = iter.next(); 
-                    if(!(element instanceof CnATreeElement)){
-                        //if (!(element instanceof ITVerbund) || !(element instanceof Server) || !(element instanceof BausteinUmsetzung) || !(element instanceof MassnahmenUmsetzung)) {
+                    Object element = iter.next();
+                    if (!(element instanceof CnATreeElement)) {
+                        // if (!(element instanceof ITVerbund) || !(element
+                        // instanceof Server) || !(element instanceof
+                        // BausteinUmsetzung) || !(element instanceof
+                        // MassnahmenUmsetzung)) {
                         setEnabled(false);
                         return;
                     }
@@ -230,10 +241,8 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                 }
                 return;
             }
-              setEnabled(false);
+            setEnabled(false);
         }
     }
-        
-     
+
 }
-   
