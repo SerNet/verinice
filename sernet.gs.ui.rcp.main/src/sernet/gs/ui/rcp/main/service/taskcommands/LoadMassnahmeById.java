@@ -20,63 +20,51 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.model.bsi.CnaStructureHelper;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * 
+ * 
  * @author Julia Haas <jh[at]sernet[dot]de>
- *
  */
 @SuppressWarnings("serial")
-public class LoadMassnahmeById  extends GenericCommand  {
-    
-    /**
-     * 
-     */
+public class LoadMassnahmeById extends GenericCommand {
 
-    private static final Logger LOG = Logger.getLogger(LoadMassnahmeById.class);
-    private Integer dbId; 
+    // Logger for commands, NEVER use log, use getLog() instead
+    private transient Logger log = Logger.getLogger(LoadMassnahmeById.class);
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadMassnahmeById.class);
+        }
+        return log;
+    }
+
+    private Integer dbId;
     private MassnahmenUmsetzung massnahme;
 
-    
     public LoadMassnahmeById(Integer dbId) {
-       this.dbId=dbId;   
+        this.dbId = dbId;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
+    @Override
     public void execute() {
-        
-            
-            IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
-            RetrieveInfo ri = RetrieveInfo.getPropertyInstance().setProperties(true).setLinksUp(true).setLinksDownProperties(true).setLinksDown(true).setLinksUpProperties(true).setParent(true);
-            massnahme = dao.retrieve(dbId, ri);
+        IBaseDao<MassnahmenUmsetzung, Serializable> dao = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance().setProperties(true).setLinksUp(true).setLinksDownProperties(true).setLinksDown(true).setLinksUpProperties(true).setParent(true);
+        massnahme = dao.retrieve(dbId, ri);
     }
-                
-    
+
     public MassnahmenUmsetzung getElmt() {
         return massnahme;
     }
-} 
+}
