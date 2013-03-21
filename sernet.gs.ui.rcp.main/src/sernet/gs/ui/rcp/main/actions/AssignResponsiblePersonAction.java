@@ -25,6 +25,7 @@ package sernet.gs.ui.rcp.main.actions;
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -127,39 +128,45 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @throws CommandException
      */
     private void createReallyRelation(MassnahmenUmsetzung massnahme, PropertyList umsetzungDurch) throws CommandException {
+        List<Integer> dependantIds = new ArrayList<Integer>();
+        Set<CnALink> linkedPersons = new HashSet<CnALink>();
         if (umsetzungDurch != null) {
             List<Integer> umsetzungDurchDbIds = getProperties(umsetzungDurch);
             List<Person> personenUmsetzungDurch = getPersonsForDbIds(umsetzungDurchDbIds);
             Set<CnALink> allLinks = massnahme.getLinksUp();
-            if (!allLinks.isEmpty() && allLinks != null) {
-                
-                
-                for (CnALink link : allLinks) {
-                    if ((link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID))) {
-                        for (Person person : personenUmsetzungDurch) {
-                            // TODO JH: hier ist ein Denkfehler drin
-                            /*
-                               Es gibt schon 2 CnALink mit der type_id MassnahmenUmsetzung.MNUMS_RELATION_ID gibt
-                               CnALink 1 verknuepft die richtige Person
-                               CnALink 2 verknuepft andere Person
-                               
-                               Fuer CnALink 2 wird createLinl aufgerufen, 
-                               obwohl CnALink 1 die richtige Person verknuepft
-                            */
-                            if (!link.getDependant().getDbId().equals(person.getDbId())) {                             
-                                createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-                            }
-                        }
+            for(CnALink link : allLinks){
+                if(link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)){
+                    linkedPersons.add(link);
+                }
+            }
+            getlinkedPerson(massnahme, dependantIds, personenUmsetzungDurch, linkedPersons);
+        }
+    }
+
+    /**
+     * @param massnahme
+     * @param dependantIds
+     * @param personenUmsetzungDurch
+     * @param allLinks
+     * @throws CommandException
+     */
+    private void getlinkedPerson(MassnahmenUmsetzung massnahme, List<Integer> dependantIds, List<Person> personenUmsetzungDurch, Set<CnALink> linkedPersons) throws CommandException {
+        for (Person person : personenUmsetzungDurch) {
+            if (linkedPersons != null && !linkedPersons.isEmpty()) {
+                for (CnALink link : linkedPersons) {
+                    Integer dependantId = link.getDependant().getDbId();
+                    if(!dependantIds.contains(dependantId)){
+                    dependantIds.add(dependantId);          
                     }
                 }
-            } else {
-                for (Person person : personenUmsetzungDurch) {
-                    // TODO JH: hier muss geprüft werden, ob CnALinks vorhanden sind oder nicht
-                    /*
-                       "if (!allLinks.isEmpty() && allLinks != null) {" ist falsch und muss weg.
-                    */
+                if(!dependantIds.contains(person.getDbId())){
                     createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
                 }
+                else{
+                }   
+                
+            }else {
+                createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
             }
         }
     }
@@ -171,7 +178,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      */
     private void createLink(MassnahmenUmsetzung massnahme, Person person, String typeId) throws CommandException {
         CreateLink createLinkcommand = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-        createLinkcommand = ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
+        ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
     }
 
     /**
