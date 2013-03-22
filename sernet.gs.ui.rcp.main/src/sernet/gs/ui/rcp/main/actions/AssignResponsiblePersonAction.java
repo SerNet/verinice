@@ -128,7 +128,6 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @throws CommandException
      */
     private void createReallyRelation(MassnahmenUmsetzung massnahme, PropertyList umsetzungDurch) throws CommandException {
-        List<Integer> dependantIds = new ArrayList<Integer>();
         Set<CnALink> linkedPersons = new HashSet<CnALink>();
         if (umsetzungDurch != null) {
             List<Integer> umsetzungDurchDbIds = getProperties(umsetzungDurch);
@@ -139,7 +138,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                     linkedPersons.add(link);
                 }
             }
-            getlinkedPerson(massnahme, dependantIds, personenUmsetzungDurch, linkedPersons);
+            getlinkedPerson(massnahme, personenUmsetzungDurch, linkedPersons);
         }
     }
 
@@ -150,22 +149,21 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      * @param allLinks
      * @throws CommandException
      */
-    private void getlinkedPerson(MassnahmenUmsetzung massnahme, List<Integer> dependantIds, List<Person> personenUmsetzungDurch, Set<CnALink> linkedPersons) throws CommandException {
+    private void getlinkedPerson(MassnahmenUmsetzung massnahme, List<Person> personenUmsetzungDurch, Set<CnALink> linkedPersons) throws CommandException {
         for (Person person : personenUmsetzungDurch) {
-            if (linkedPersons != null && !linkedPersons.isEmpty()) {
+            boolean createLink = (linkedPersons == null || linkedPersons.isEmpty());
+            if (!createLink) {
+                createLink = true;
                 for (CnALink link : linkedPersons) {
+                    // ist der link schon vorhanden ?   
                     Integer dependantId = link.getDependant().getDbId();
-                    if(!dependantIds.contains(dependantId)){
-                    dependantIds.add(dependantId);          
+                    if(person.getDbId()==dependantId) {
+                        createLink = false;
+                        break;
                     }
-                }
-                if(!dependantIds.contains(person.getDbId())){
-                    createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-                }
-                else{
-                }   
-                
-            }else {
+                }                               
+            }          
+            if(createLink) {
                 createLink(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
             }
         }
