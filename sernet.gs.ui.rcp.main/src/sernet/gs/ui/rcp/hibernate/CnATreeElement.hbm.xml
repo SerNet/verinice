@@ -96,7 +96,7 @@
 			<cache usage="read-write" />
 			
 			<key column="DEPENDANT_ID" />
-			<one-to-many class="CnALink"/>
+			<one-to-many class="CnALink" not-found="ignore"/>
 		</set>
 		
 		<set name="linksUp"
@@ -106,7 +106,7 @@
 			<cache usage="read-write" />
 			
 			<key column="DEPENDENCY_ID"  />
-			<one-to-many class="CnALink"/>
+			<one-to-many class="CnALink" not-found="ignore"/>
 		</set>
         
         <set name="files"
