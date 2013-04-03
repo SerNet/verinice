@@ -1,6 +1,11 @@
 <ehcache>
 
-    <!-- Sets the path to the directory where cache .data files are created.
+    <!-- Ehcache configuration for Second-Level-Caching of Hibernate
+    
+         Hibernate documentation: http://www.hibernate.org/docs
+         Ehcache documentation: http://ehcache.org/documentation
+    
+         Sets the path to the directory where cache .data files are created.
 
          If the path is a Java System Property it is replaced by
          its value in the running VM.
@@ -9,6 +14,7 @@
          user.home - User's home directory
          user.dir - User's current working directory
          java.io.tmpdir - Default temp file path -->
+         
     <diskStore path="java.io.tmpdir"/>
 
 
@@ -20,10 +26,14 @@
         maxInMemory       - Sets the maximum number of objects that will be created in memory
         eternal           - Sets whether elements are eternal. If eternal,  timeouts are ignored and the element
                             is never expired.
-        timeToIdleSeconds - Sets the time to idle for an element before it expires. Is only used
-                            if the element is not eternal. Idle time is now - last accessed time
-        timeToLiveSeconds - Sets the time to live for an element before it expires. Is only used
-                            if the element is not eternal. TTL is now - creation time
+        timeToIdleSeconds - The maximum number of seconds an element can exist in the cache without 
+                            being accessed. The element expires at this limit and will no 
+                            longer be returned from the cache. The default value is 0, 
+                            which means no TTI eviction takes place (infinite lifetime).
+        timeToLiveSeconds - The maximum number of seconds an element can exist in the cache 
+                            regardless of use. The element expires at this limit and 
+                            will no longer be returned from the cache. The default value is 0, 
+                            which means no TTL eviction takes place (infinite lifetime).
         overflowToDisk    - Sets whether elements can overflow to disk when the in-memory cache
                             has reached the maxInMemory limit.
 
@@ -36,7 +46,7 @@
         overflowToDisk="false"
         />
 
-    <!--Predefined caches.  Add your cache configuration settings here.
+    <!-- Predefined caches.  Add your cache configuration settings here.
         If you do not have a configuration for your cache a WARNING will be issued when the
         CacheManager starts
 
@@ -46,10 +56,14 @@
         maxInMemory       - Sets the maximum number of objects that will be created in memory
         eternal           - Sets whether elements are eternal. If eternal,  timeouts are ignored and the element
                             is never expired.
-        timeToIdleSeconds - Sets the time to idle for an element before it expires. Is only used
-                            if the element is not eternal. Idle time is now - last accessed time
-        timeToLiveSeconds - Sets the time to live for an element before it expires. Is only used
-                            if the element is not eternal. TTL is now - creation time
+        timeToIdleSeconds - The maximum number of seconds an element can exist in the cache without 
+                            being accessed. The element expires at this limit and will no 
+                            longer be returned from the cache. The default value is 0, 
+                            which means no TTI eviction takes place (infinite lifetime).
+        timeToLiveSeconds - The maximum number of seconds an element can exist in the cache 
+                            regardless of use. The element expires at this limit and 
+                            will no longer be returned from the cache. The default value is 0, 
+                            which means no TTL eviction takes place (infinite lifetime).
         overflowToDisk    - Sets whether elements can overflow to disk when the in-memory cache
                             has reached the maxInMemory limit.
 
@@ -58,77 +72,77 @@
     <!-- Place configuration for your caches following -->
 
         <cache name="sernet.hui.common.connect.Entity"
-			maxElementsInMemory="100000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			maxElementsInMemory="10000"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		
 		 <cache name="sernet.hui.common.connect.Entity.typedPropertyLists"
 			maxElementsInMemory="100000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList"
 			maxElementsInMemory="100000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.hui.common.connect.PropertyList.properties"
 			maxElementsInMemory="100000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 
 		 <cache name="sernet.verinice.model.common.CnALink"
 			maxElementsInMemory="10000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 
 		 <cache name="sernet.verinice.model.common.CnATreeElement"
 			maxElementsInMemory="10000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.verinice.model.common.CnATreeElement.children"
 			maxElementsInMemory="10000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.verinice.model.common.CnATreeElement.linksDown"
 			maxElementsInMemory="10000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		 <cache name="sernet.verinice.model.common.CnATreeElement.linksUp"
 			maxElementsInMemory="10000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		
 		 <cache name="sernet.verinice.model.common.Permission"
-			maxElementsInMemory="100000"
-			eternal="true"
-			timeToIdleSeconds="0"
-			timeToLiveSeconds="0"
+			maxElementsInMemory="10000"
+			eternal="false"
+			timeToIdleSeconds="14400"
+			timeToLiveSeconds="28800"
 			overflowToDisk="false"
 		/>
 		
