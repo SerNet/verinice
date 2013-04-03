@@ -4596,10 +4596,38 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <data id="1476">
-                            <property name="fontWeight">normal</property>
+                        <data id="1957">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
+                            <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable("personLink", this.value);]]></method>
                             <property name="resultSetColumn">anwendung_benutzer_link</property>
                         </data>
+                        <text id="1958">
+                            <property name="fontWeight">normal</property>
+                            <method name="onRender"><![CDATA[importPackage(Packages.java.lang);
+importPackage(Packages.java.util);
+importPackage(Packages.sernet.verinice.report.service.impl);
+
+text = reportContext.getPersistentGlobalVariable("personLink");
+st = new StringTokenizer(text,",", false);
+sb = new StringBuilder();
+while(st.hasMoreTokens()){
+	token = st.nextToken().trim();
+	TocHelper2.log("Token: " + token);
+	sb.append(token);
+	if(st.hasMoreTokens()){
+		sb.append("\n");
+	}
+}
+if(sb.length() == 0){
+	sb.append(text);
+}
+this.text = sb.toString();]]></method>
+                        </text>
                     </cell>
                     <cell id="1474">
                         <property name="borderLeftColor">#000000</property>

@@ -204,6 +204,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 						result.append(resolvedReference.getName());
 					}
 				}
+				if(propertyList.getProperties().indexOf(reference) != propertyList.getProperties().size() - 1){
+				    result.append(", ");
+				}
 			}
 			return result.toString();
 		} else if (type.isCnaLinkReference()) {
