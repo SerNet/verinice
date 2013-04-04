@@ -144,7 +144,14 @@
 			timeToIdleSeconds="14400"
 			timeToLiveSeconds="28800"
 			overflowToDisk="false"
-		/>
+		/>    
+        <!-- maxElementsInMemory is to 100 only because some files are big -->
+        <cache name="sernet.verinice.model.common.CnATreeElement.files"
+            maxElementsInMemory="100"
+            eternal="false"
+            timeToIdleSeconds="14400"
+            timeToLiveSeconds="28800"
+            overflowToDisk="false" />
 		
 
 </ehcache>
