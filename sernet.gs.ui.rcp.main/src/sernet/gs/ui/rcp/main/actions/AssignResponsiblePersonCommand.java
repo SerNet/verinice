@@ -24,6 +24,7 @@ package sernet.gs.ui.rcp.main.actions;
  *
  */
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,8 +32,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
@@ -61,6 +60,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
         return log;
     }
     private Object o;
+    private Integer anzahlMassnahmen;
     public AssignResponsiblePersonCommand(Object o) {
         this.o = o;
     }
@@ -72,15 +72,18 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
     @Override
     public void execute() {
       
-        // TODO Auto-generated method stub
         if (o instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung elmt = (MassnahmenUmsetzung) o;
             MassnahmenUmsetzung massnahme = getMassnahme(elmt);
             PropertyList umsetzungDurch = massnahme.getUmsetzungDurchLink();
             try {
+                if (umsetzungDurch != null) {
                 createRelation(massnahme, umsetzungDurch);
+                }else{
+                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "InfoRmation", Messages.AssignResponsiblePersonAction_4);
+                }
             } catch (CommandException e) {
-               log.error("Error while create relation", e);
+               log.error("Error while execute create relation", e);
             }
         }
     }
@@ -93,8 +96,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
     private void createRelation(MassnahmenUmsetzung massnahme, PropertyList umsetzungDurch) throws CommandException {
         Set<CnALink> linkedPersons = new HashSet<CnALink>();
         if (umsetzungDurch != null) {
-            List<Integer> umsetzungDurchDbIds = getProperties(umsetzungDurch);
-            List<Person> personenUmsetzungDurch = getPersonsForDbIds(umsetzungDurchDbIds);
+            List<Person> personenUmsetzungDurch = getPersonsForDbIds(massnahme);
             Set<CnALink> allLinks = massnahme.getLinksUp();
             for (CnALink link : allLinks) {
                 if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
@@ -102,7 +104,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
                 }
             }
             createLinks(massnahme, personenUmsetzungDurch, linkedPersons);
-        }      
+        }
     }
 
     /**
@@ -140,30 +142,40 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
         ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
     }
     
-    /**
-     * @param umsetzungDurch
-     * @return
-     */
-    private List<Integer> getProperties(PropertyList umsetzungDurch) {
-        List<Property> props;
-        props = umsetzungDurch.getProperties();
-        List<Integer> ids = new ArrayList<Integer>(props.size());
-        for (Property p : props) {
-            ids.add(Integer.valueOf(p.getPropertyValue()));
+    
+    private List<Person> getPersonsForDbIds(MassnahmenUmsetzung mu) throws CommandException {
+        String field = MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK;
+        PropertyList pl = mu.getEntity().getProperties(field);
+        List<Property> props = null; 
+            
+        if (pl != null){
+            props = pl.getProperties();
         }
-        return ids;
+        if (props != null && !props.isEmpty())
+        {
+            List<Integer> ids = new ArrayList<Integer>(props.size());
+            for (Property p : props)
+            {
+                ids.add(Integer.valueOf(p.getPropertyValue()));
+            }
+            
+            LoadCnAElementsByEntityIds<Person> le = new LoadCnAElementsByEntityIds<Person>(Person.class, ids);
+            try
+            {
+                le = getCommandService().executeCommand(le);
+            }
+            catch (CommandException ce)
+            {
+                getLog().error("Error while executing command: LoadCnAElementsByEntityIds", ce);
+                throw new RuntimeException("Error while executing command: LoadCnAElementsByEntityIds", ce);
+            }
+            
+            return le.getElements();
+        }
+        
+        return Collections.emptyList();
     }
-    /**
-     * @param ids
-     * @return
-     * @throws CommandException
-     */
-    private List<Person> getPersonsForDbIds(List<Integer> ids) throws CommandException {
-        LoadCnAElementsByEntityIds<Person> personListe = new LoadCnAElementsByEntityIds<Person>(Person.class, ids);
-        personListe = ServiceFactory.lookupCommandService().executeCommand(personListe);
-        List<Person> personen = personListe.getElements();
-        return personen;
-    }
+    
     
     private MassnahmenUmsetzung getMassnahme(MassnahmenUmsetzung massnahme) {
         LoadMassnahmeById command = new LoadMassnahmeById(massnahme.getDbId());
@@ -176,7 +188,9 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
 
         return massnahme;
     }
-    
-    
+  
+   public Integer getMassnahmenanzahl(){
+       return anzahlMassnahmen;
+   }
     
  }

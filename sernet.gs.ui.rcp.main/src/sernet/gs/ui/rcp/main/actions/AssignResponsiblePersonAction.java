@@ -98,7 +98,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
             return;
         }
         final List<CnATreeElement> elementList = createList(selection.toList());
-
+      
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 @SuppressWarnings("restriction")
@@ -107,6 +107,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                     try {
                         Activator.inheritVeriniceContextState();
                         monitor.beginTask(Messages.AssignResponsiblePersonAction_2, selection.size());
+
                         for (Iterator iter = elementList.iterator(); iter.hasNext();) {
                             sel = iter.next();
                             MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) sel;
@@ -115,7 +116,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                             ServiceFactory.lookupCommandService().executeCommand(command);
                             monitor.worked(1);
                         }
-                        showInfoMessage(selection.size());
+                        showInfoMessage(elementList.size());
                     } catch (Exception e) {
                         LOG.error("Error while command", e);
                     }
@@ -143,12 +144,12 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         return insertList;
     }
     
-    private void showInfoMessage(final Integer size){
+    private void showInfoMessage(final Integer anzahl){
         Display.getDefault().asyncExec(new Runnable() {
              @Override
              public void run() {
                  // code der in der GUI laufen soll 
-                 MessageDialog.openInformation(window.getShell(), "Info", size + " " + Messages.AssignResponsiblePersonAction_2);
+                 MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_2);
              }
          });
          }   
