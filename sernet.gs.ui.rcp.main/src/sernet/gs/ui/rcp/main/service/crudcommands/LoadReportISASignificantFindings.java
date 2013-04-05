@@ -33,7 +33,7 @@ import sernet.verinice.model.iso27k.Finding;
  */
 public class LoadReportISASignificantFindings extends GenericCommand implements ICachedCommand{
     
-    private Logger log = Logger.getLogger(LoadReportISASignificantFindings.class);
+    private transient Logger log = Logger.getLogger(LoadReportISASignificantFindings.class);
     
     private static final String SHOW_FINDING_IN_REPORT = "finding_showInISAReport";
     private static final String FINDING_DESCRIPTION = "finding_desc";

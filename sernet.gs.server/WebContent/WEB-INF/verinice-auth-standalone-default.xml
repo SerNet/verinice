@@ -80,6 +80,7 @@
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
 	        <action id="cnavalidation" />
+	        <action id="showallfiles" />
         </profile>
     </profiles>
     <userprofiles>

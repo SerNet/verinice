@@ -28,7 +28,6 @@ import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.validation.CnAValidationView;
 
 public class Iso27kPerspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.verinice.iso27k.rcp.Iso27kPerspective";
@@ -60,7 +59,6 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, folderRatio, editorArea);
 		folder.addView(FileView.ID);
 		folder.addPlaceholder(NoteView.ID + ":*");
-		folder.addView(CnAValidationView.ID);
 		
 		layout.getViewLayout(CatalogView.ID).setCloseable(true);
 		layout.getViewLayout(ISMView.ID).setCloseable(true);

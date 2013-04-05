@@ -35,20 +35,13 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
     
     public RightsEnabledAction(String rightID){
         this.setRightID(rightID);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
+        setEnabledViaRightID();
+    }
+    
+    public RightsEnabledAction(String rightID, String text, int style){
+        super(text, style);
+        this.setRightID(rightID);
+        setEnabledViaRightID();
     }
     
     public RightsEnabledAction(){
@@ -99,6 +92,23 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
 
     public void setOrgRelated(boolean orgRelated) {
         this.orgRelatedCheck = orgRelated;
+    }
+    
+    private void setEnabledViaRightID() {
+        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener(){
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if(e.isStarted()){
+                        setEnabled(checkRights());
+                    }
+                }
+
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            setEnabled(checkRights());
+        }
     }
     
     

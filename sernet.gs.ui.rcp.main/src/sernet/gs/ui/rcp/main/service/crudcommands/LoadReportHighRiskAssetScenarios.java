@@ -97,6 +97,14 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                                     impactI = reducedImpact[1];
                                     impactA = reducedImpact[2];
                                 }
+                                
+                                boolean isCRelevant = false;
+                                boolean isIRelevant = false;
+                                boolean isARelevant = false;
+                                
+                                isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
+                                isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
+                                isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 
                                 String scenProbType = "";
                                 switch(riskType){
@@ -115,9 +123,9 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                                 }
 
                                 Integer probability = scenario.getNumericProperty(scenProbType);            
-                                Integer riskC = impactC + probability;
-                                Integer riskI = impactI + probability;
-                                Integer riskA = impactA + probability;
+                                Integer riskC = (isCRelevant) ? impactC + probability : Integer.valueOf(0);
+                                Integer riskI = (isIRelevant) ? impactI + probability : Integer.valueOf(0);
+                                Integer riskA = (isARelevant) ? impactA + probability : Integer.valueOf(0);
 
                                 char[] cia = new char[]{'c', 'i', 'a'};
                                 boolean isRedRisk = false;

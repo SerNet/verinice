@@ -25,7 +25,8 @@
             "accesscontrol"
             "editprofile"
             "taskdelete"
-            "taskshowall" -->
+            "taskshowall"
+            "showallfiles" -->
         <action id="addbsielement" />
         <action id="addcatalog" />
         <action id="addfile" />
@@ -91,7 +92,8 @@
             "taskshowall"
             "addismorg"
             "additverbund"
-            "xmlimport" -->
+            "xmlimport" 
+            "showallfiles"-->
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -150,7 +152,8 @@
         <!-- missing actions: 
         	"addismorg"
         	"additverbund"
-        	"xmlimport"/> -->
+        	"xmlimport"
+        	"showallfiles" -->
            	<action id="accesscontrol" />
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
@@ -273,6 +276,7 @@
             <action id="unify" />
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
+	        <action id="showallfiles" />
         </profile>
     </profiles>
     <userprofiles>

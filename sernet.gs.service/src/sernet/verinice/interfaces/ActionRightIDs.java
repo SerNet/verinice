@@ -91,6 +91,7 @@ public class ActionRightIDs {
     public static final String GROUP_BY_TAG = "groupbytag";
     public static final String CREATE_INDIVIDUAL_TASKS = "createindividualtasks";
     public static final String CNAVALIDATION = "cnavalidation";
+    public static final String SHOWALLFILES = "showallfiles";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

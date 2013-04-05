@@ -559,7 +559,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         openAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW));
         openAction.setEnabled(false);
 
-        toggleLinkAction = new Action(Messages.FileView_24, SWT.TOGGLE) {
+        toggleLinkAction = new RightsEnabledAction(ActionRightIDs.SHOWALLFILES, Messages.FileView_24, SWT.TOGGLE){
             public void run() {
                 isLinkingActive = !isLinkingActive;
                 toggleLinkAction.setChecked(isLinkingActive());
@@ -567,7 +567,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
             }
         };
         toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-        toggleLinkAction.setChecked(isLinkingActive());
+        toggleLinkAction.setChecked(false);
     }
 
     private void openFile() {
