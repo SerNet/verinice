@@ -6952,27 +6952,32 @@ for (CnATreeElement process : processes) {
 				}
 				
 				cMinuend = 2; // seems to be the right choice in any case, please recheck
-
-				if((probability + impactC) > toleratedC){
-					cRedCount++;
-				} else if((probability + impactC) >= (toleratedC - cMinuend) &amp;&amp; (probability + impactC) < toleratedC){
-					cYellowCount++;
-				} else if((probability + impactC +2) < toleratedC){
-					cGreenCount++;
-				} 
-				if((probability + impactI) > toleratedI){
-					iRedCount++;
-				} else if((probability + impactI) > (toleratedI - 4) &amp;&amp; (probability + impactI) < toleratedI){
-					iYellowCount++;
-				} else if((probability + impactI + 3) < toleratedI){
-					iGreenCount++;
+				if(isCRelevant){
+					if((probability + impactC) > toleratedC){
+						cRedCount++;
+					} else if((probability + impactC) >= (toleratedC - cMinuend) &amp;&amp; (probability + impactC) < toleratedC){
+						cYellowCount++;
+					} else if((probability + impactC +2) < toleratedC){
+						cGreenCount++;
+					}
 				}
-				if((probability + impactA) > toleratedA){
-					aRedCount++;
-				} else if((probability + impactA) > (toleratedA - 3) &amp;&amp; (probability + impactA) <= toleratedA){	
-					aYellowCount++;
-				} else if((probability + impactA +2) < toleratedA){
-					aGreenCount++;
+				if(isIRelevant){ 
+					if((probability + impactI) > toleratedI){
+						iRedCount++;
+					} else if((probability + impactI) > (toleratedI - 4) &amp;&amp; (probability + impactI) < toleratedI){
+						iYellowCount++;
+					} else if((probability + impactI + 3) < toleratedI){
+						iGreenCount++;
+					}
+				}
+				if(isARelevant){
+					if((probability + impactA) > toleratedA){
+						aRedCount++;
+					} else if((probability + impactA) > (toleratedA - 3) &amp;&amp; (probability + impactA) <= toleratedA){	
+						aYellowCount++;
+					} else if((probability + impactA +2) < toleratedA){
+						aGreenCount++;
+					}
 				}
        			 } // scenario iteration end
 		} // asset iteration end

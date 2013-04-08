@@ -255,6 +255,9 @@ public final class TocHelper2 {
             sb.append(String.valueOf(chapterNumber));
             entryTitle0 = entryTitle.substring(entryTitle.indexOf(' ')).trim();
         }
+        for(int i = 0; i < indent; i++){
+            sb.append("\t");
+        }
         sb.append(entryTitle0);
         addTocEntry(sb.toString(), pageNumber);
     }

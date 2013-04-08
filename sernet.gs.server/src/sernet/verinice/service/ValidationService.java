@@ -29,6 +29,7 @@ import org.hibernate.Hibernate;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.ServerInitializer;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadScopeElementsById;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -57,6 +58,9 @@ public class ValidationService implements IValidationService {
     private HibernateDao<CnAValidation, Long> cnaValidationDAO;
     private HibernateDao<CnATreeElement, Long> cnaTreeElementDAO;
     
+    // values from CnAValidation.hbm.xml
+    private static final int MAXLENGTH_DBSTRING = 250;
+    
     private HUITypeFactory huiTypeFactory;
     
     private static final String VALIDATION_SQL_SELECT_BASE = "from sernet.verinice.model.validation.CnAValidation validation where";
@@ -70,7 +74,7 @@ public class ValidationService implements IValidationService {
         if(elmt == null){
             throw new RuntimeCommandException("validated element not existent");
         }
-
+        ServerInitializer.inheritVeriniceContextState();
         HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<PropertyType, List<String>>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
         if(eType != null){
@@ -94,11 +98,11 @@ public class ValidationService implements IValidationService {
     private void createCnAValidationObject(CnATreeElement elmt, Entry<PropertyType, List<String>> entry, String hint) {
         CnAValidation validation = new CnAValidation();
         validation.setElmtDbId(elmt.getDbId());
-        validation.setPropertyId(entry.getKey().getId());
-        validation.setHintId(hint);
-        validation.setElmtTitle(elmt.getTitle());
+        validation.setPropertyId(truncateString(entry.getKey().getId(), MAXLENGTH_DBSTRING));
+        validation.setHintId(truncateString(hint, MAXLENGTH_DBSTRING));
+        validation.setElmtTitle(truncateString(elmt.getTitle(), MAXLENGTH_DBSTRING));
         validation.setScopeId(elmt.getScopeId());
-        validation.setElementType(elmt.getTypeId());
+        validation.setElementType(truncateString(elmt.getTypeId(), MAXLENGTH_DBSTRING));
         if(!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint, elmt.getScopeId())){
             getCnaValidationDAO().saveOrUpdate(validation);
         }
@@ -349,7 +353,7 @@ public class ValidationService implements IValidationService {
     @Override
     public void updateValidations(Integer scopeId, Integer elmtDbId,  String title) {
         for(CnAValidation validation : getValidations(scopeId, elmtDbId)){
-            validation.setElmtTitle(title);
+            validation.setElmtTitle(truncateString(title, MAXLENGTH_DBSTRING));
             getCnaValidationDAO().saveOrUpdate(validation); 
         }
     }
@@ -426,6 +430,22 @@ public class ValidationService implements IValidationService {
         LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true).setChildren(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationsForSubTree(elementLoader.getElement());
+    }
+    
+    private String truncateString(String input, int maxLength){
+        String output;
+        int dotAmount = 3;
+        if(input.length() >= maxLength){
+            StringBuilder sb = new StringBuilder();
+            sb.append(input.substring(0, maxLength - dotAmount));
+            for(int i = 0; i < dotAmount; i++){
+                sb.append(".");
+            }
+            output = sb.toString();
+        } else {
+            output = input;
+        }
+        return output;
     }
 }
 
