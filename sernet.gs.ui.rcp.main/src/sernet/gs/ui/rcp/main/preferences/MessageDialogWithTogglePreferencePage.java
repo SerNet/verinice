@@ -85,8 +85,11 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 getFieldEditorParent());
         addField(switchPerspectiveCatalogView);
         
-        BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent());
+        BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent()); //$NON-NLS-1$
         addField(showValidationReportWarning);
+        
+        BooleanFieldEditor showValidationGsmProcessWarning = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESS_VALIDATE, Messages.getString("GeneralSettingsPage.ShowValidationProcessWarning"), getFieldEditorParent()); //$NON-NLS-1$
+        addField(showValidationGsmProcessWarning);
     }
     
     @Override

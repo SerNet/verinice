@@ -39,20 +39,7 @@ import sernet.gs.ui.rcp.main.Activator;
  */
 public class InfoDialogWithShowToggle extends MessageDialogWithToggle {
 
-	/**
-	 * @param parentShell
-	 * @param dialogTitle
-	 * @param image
-	 * @param message
-	 * @param dialogImageType
-	 * @param dialogButtonLabels
-	 * @param defaultIndex
-	 * @param toggleMessage
-	 * @param toggleState
-	 * 
-	 * @see MessageDialogWithToggle
-	 */
-	public InfoDialogWithShowToggle(Shell parentShell, String dialogTitle, Image image, String message, int dialogImageType, String[] dialogButtonLabels, int defaultIndex, String toggleMessage, boolean toggleState) {
+	private InfoDialogWithShowToggle(Shell parentShell, String dialogTitle, Image image, String message, int dialogImageType, String[] dialogButtonLabels, int defaultIndex, String toggleMessage, boolean toggleState) {
 		super(parentShell, dialogTitle, image, message, dialogImageType, dialogButtonLabels, defaultIndex, toggleMessage, toggleState);
 	}
 	
@@ -69,6 +56,20 @@ public class InfoDialogWithShowToggle extends MessageDialogWithToggle {
 				Activator.getDefault().getPreferenceStore(), 
 				key);
 	}
+	
+	public static InfoDialogWithShowToggle openYesNoCancelQuestion(
+            String title, 
+            String message, 
+            String toggleMessage,
+            String key) {
+        return InfoDialogWithShowToggle.openYesNoCancelQuestion(
+                PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+                title, 
+                message, 
+                toggleMessage,
+                Activator.getDefault().getPreferenceStore(), 
+                key);
+    }
 	
 	public static InfoDialogWithShowToggle openInformation(
 			Shell parent,
@@ -101,9 +102,43 @@ public class InfoDialogWithShowToggle extends MessageDialogWithToggle {
         return dialog;
     }
 	
+	   public static InfoDialogWithShowToggle openYesNoCancelQuestion(
+	            Shell parent,
+	            String title, 
+	            String message, 
+	            String toggleMessage, 
+	            IPreferenceStore store, 
+	            String key) {
+	        InfoDialogWithShowToggle dialog = new InfoDialogWithShowToggle(
+	                parent,
+	                title, 
+	                null, // accept the default window icon
+	                message, 
+	                QUESTION_WITH_CANCEL,
+	                new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL }, 
+                    0, // YES_LABEL is the default (first entry of array)
+	                toggleMessage, 
+	                false);
+	        dialog.setPrefStore(store);
+	        dialog.setPrefKey(key);
+	        boolean open = true;
+	        if(dialog.getPrefStore() != null 
+	           && dialog.getPrefKey() != null
+	           && dialog.getPrefStore().contains(dialog.getPrefKey()) ) {
+	            open = !dialog.getPrefStore().getBoolean(dialog.getPrefKey());
+	        }
+	        if(open) {
+	            dialog.open();
+	        } else {
+	            dialog.setReturnCode(IDialogConstants.YES_ID);
+	        }
+	        return dialog;
+	    }
+	
 	 /**
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
+    @Override
     protected void buttonPressed(int buttonId) {
         super.buttonPressed(buttonId);
 

@@ -29,12 +29,16 @@ import org.apache.log4j.Logger;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.graph.Edge;
 import sernet.verinice.graph.GraphElementLoader;
 import sernet.verinice.graph.IGraphElementLoader;
 import sernet.verinice.graph.IGraphService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -71,6 +75,23 @@ public class GsmProcessParameterCreater {
     private static final String[] relationIds = {Control.REL_CONTROL_INCSCEN,
         AssetGroup.REL_PERSON_ISO,
         IncidentScenario.REL_INCSCEN_ASSET};
+   
+    /*
+     * Configure this in veriniceserver-jbpm.xml
+     * Process with risk value below lowPriorityRiskLimit: priority low
+     * Process with risk value above lowPriorityRiskLimit: priority normal
+     */
+    private int lowPriorityRiskLimit;
+    public static final int LOW_PRIORITY_RISK_LIMIT_DEFAULT = 100;
+    
+    /*
+     * Configure this in veriniceserver-jbpm.xml
+     * Process with risk value below normalPriorityRiskLimit: priority normal
+     * Process with risk value above normalPriorityRiskLimit: priority high
+     */
+    private int normalPriorityRiskLimit;
+    public static final int NORMAL_PRIORITY_RISK_LIMIT_DEFAULT = 500;
+    
     
     /**
      * Every instance of GsmProcessStarter has an exclusive instance of a IGraphService
@@ -79,6 +100,8 @@ public class GsmProcessParameterCreater {
     private IGraphService graphService;
     
     private IBaseDao<CnATreeElement, Integer> elementDao;
+    
+    private IDao<ExecutionImpl, Long> jbpmExecutionDao;
 
     /**
      * Creates a list of parameters for the creation of
@@ -92,7 +115,7 @@ public class GsmProcessParameterCreater {
         initGraph(orgId);
       
         List<CnATreeElement> controlGroupList = get2ndLevelControlGroups(orgId);
-        List<CnATreeElement> personList = getPersons(orgId);
+        List<CnATreeElement> personList = getPersons();
         
         if (LOG.isInfoEnabled()) {
             LOG.info( controlGroupList.size() + " control groups");
@@ -102,11 +125,13 @@ public class GsmProcessParameterCreater {
         List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
         for (CnATreeElement controlGroup : controlGroupList) {           
             for (CnATreeElement person : personList) {
-                GsmServiceParameter parameter = new GsmServiceParameter(controlGroup, person);
-                Set<CnATreeElement> elementSet = getAllElements(controlGroup, person);
-                if(!elementSet.isEmpty()) {
-                    parameter.setElementSet(elementSet);
-                    parameter.setRiskValue(getRiskValue(elementSet));
+                if(processExists(person, controlGroup)) {
+                    continue;
+                }
+                GsmServiceParameter parameter = createParameter(person, controlGroup);
+                if(parameter!=null) {
+                    List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{orgId});
+                    parameter.setUuidOrg(uuidList.get(0));
                     parameterList.add(parameter);
                 }
             }
@@ -118,7 +143,42 @@ public class GsmProcessParameterCreater {
 
         return parameterList;
     }
+
+    private GsmServiceParameter createParameter(CnATreeElement person, CnATreeElement controlGroup) {
+        GsmServiceParameter parameter = null;
+        Set<CnATreeElement> elementSet = getAllElements(controlGroup, person);
+        if(!elementSet.isEmpty()) {
+            parameter = new GsmServiceParameter(controlGroup, person);
+            parameter.setElementSet(elementSet);
+            Double riskValueDouble = getRiskValue(elementSet);
+            parameter.setRiskValue(convertRiskValueToString(riskValueDouble));
+            parameter.setPriority(convertRiskValueToPriority(riskValueDouble));
+        }
+        return parameter;
+    }
     
+    /**
+     * Returns true if there is a process for a person and a control-group,
+     * false if not.
+     * 
+     * @param person A person
+     * @param controlGroup A control-group 
+     * @return true if there is a process, fasle if not
+     */
+    private boolean processExists(CnATreeElement person, CnATreeElement controlGroup) {
+        String value = GsmService.createProcessId(person,controlGroup);
+        List<?> processDbIdsList = searchProcessByVariable(IGenericProcess.VAR_PROCESS_ID, value);
+        return !processDbIdsList.isEmpty();
+    }
+
+    private List<?> searchProcessByVariable(String key, String value) {        
+        DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
+        DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
+        variableCrit.add(Restrictions.eq("key", key));
+        variableCrit.add(Restrictions.eq("string", value));
+        return getJbpmExecutionDao().findByCriteria(executionCrit);
+    }
+
     /**
      * Calculate the risk value of a process.
      * 
@@ -134,7 +194,7 @@ public class GsmProcessParameterCreater {
      * @param elementSet Elements of process
      * @return risk value of a process
      */
-    private String getRiskValue(Set<CnATreeElement> elementSet) {
+    private Double getRiskValue(Set<CnATreeElement> elementSet) {
         Double riskValueDouble = null;
         for (CnATreeElement element : elementSet) {
             if(IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
@@ -146,12 +206,29 @@ public class GsmProcessParameterCreater {
                 }             
             }
         }
+        return riskValueDouble;
+    }
+    
+    private String convertRiskValueToString(Double riskValueDouble) {
         String riskValue = Messages.getString("GsmService.5"); //$NON-NLS-1$
         if(riskValueDouble!=null) {
             DecimalFormat formatterAndRounder = new DecimalFormat("###.##"); //$NON-NLS-1$
             riskValue = formatterAndRounder.format(riskValueDouble);
         }
         return riskValue;
+    }
+    
+    private String convertRiskValueToPriority(Double riskValueDouble) {
+        String priority = ITask.PRIO_NORMAL;
+        if(riskValueDouble!=null) {
+            priority = ITask.PRIO_LOW;
+            if(riskValueDouble.doubleValue() > getNormalPriorityRiskLimit()) {
+                priority = ITask.PRIO_HIGH;
+            } else if(riskValueDouble.doubleValue() > getLowPriorityRiskLimit()) {
+                priority = ITask.PRIO_NORMAL;              
+            }
+        }
+        return priority;
     }
 
     private Double getRiskValue(CnATreeElement element, Set<CnATreeElement> processElementSet) {
@@ -200,10 +277,9 @@ public class GsmProcessParameterCreater {
        
     }
     
-    private List<CnATreeElement> getPersons(Integer orgId) {
+    private List<CnATreeElement> getPersons() {
         DetachedCriteria crit = createDefaultCriteria();
         crit.add(Restrictions.eq("objectType", PersonIso.TYPE_ID));
-        //crit.add(Restrictions.eq("scopeId", orgId));
         return getElementDao().findByCriteria(crit);
     }
     
@@ -278,6 +354,22 @@ public class GsmProcessParameterCreater {
         LOG.debug(GsmService.createElementInformation(elementSet));
     }
 
+    public int getLowPriorityRiskLimit() {
+        return lowPriorityRiskLimit;
+    }
+
+    public void setLowPriorityRiskLimit(int lowPriorityRiskLimit) {
+        this.lowPriorityRiskLimit = lowPriorityRiskLimit;
+    }
+
+    public int getNormalPriorityRiskLimit() {
+        return normalPriorityRiskLimit;
+    }
+
+    public void setNormalPriorityRiskLimit(int normalPriorityRiskLimit) {
+        this.normalPriorityRiskLimit = normalPriorityRiskLimit;
+    }
+
     public IGraphService getGraphService() {
         return graphService;
     }
@@ -292,5 +384,13 @@ public class GsmProcessParameterCreater {
 
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
+    }
+
+    public IDao<ExecutionImpl, Long> getJbpmExecutionDao() {
+        return jbpmExecutionDao;
+    }
+
+    public void setJbpmExecutionDao(IDao<ExecutionImpl, Long> jbpmExecutionDao) {
+        this.jbpmExecutionDao = jbpmExecutionDao;
     }
 }

@@ -70,7 +70,23 @@ public interface IGraphService {
     Graph<CnATreeElement, Edge> getGraph();
     
     /**
+     * Returns all elements
+     * 
+     * @return All elements
+     */
+    Set<CnATreeElement> getElements();
+    
+    /**
+     * Returns all elements of type "typeId".
+     * 
+     * @param typeId Type of returned elements
+     * @return All elements of type "typeId".
+     */
+    Set<CnATreeElement> getElements(String typeId);
+    
+    /**
      * Returns all link targets of an source element.
+     * If there are no link targets, an empty list is returned.
      * 
      * @param source Source element
      * @return A set of target elements
@@ -80,6 +96,7 @@ public interface IGraphService {
     /**
      * Returns link targets of an source element.
      * Returned links are of type "typeId".
+     * If there are no link targets of this type, an empty list is returned.
      * 
      * @param source Source element
      * @param typeId Type of returned links

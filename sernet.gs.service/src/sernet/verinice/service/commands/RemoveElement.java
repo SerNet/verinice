@@ -80,11 +80,19 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
+    @Override
     public void execute() {
         try {
             // load element from DB:
             this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 
+            if(this.element==null) {
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Element was not found in db. Type-Id: " + typeId + ", Db-Id: " + elementId);
+                }
+                return;
+            }
+            
             if (element instanceof Person || element instanceof PersonIso){
                 removeConfiguration(element);
             }
@@ -106,7 +114,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 if (cat != null) {
                     Set<CnATreeElement> personen = cat.getChildren();
                     for (CnATreeElement elmt : personen) {
-                        removeConfiguration((Person) elmt);
+                        removeConfiguration(elmt);
                     }
                 }
             }
@@ -213,6 +221,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
      * ()
      */
+    @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_DELETE;
     }
@@ -223,6 +232,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangedElements()
      */
+    @Override
     public List<CnATreeElement> getChangedElements() {
         ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
         result.add(element);
@@ -236,6 +246,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
      * ()
      */
+    @Override
     public String getStationId() {
         return stationId;
     }

@@ -28,6 +28,8 @@ import java.util.Set;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IGsmService extends IProcessServiceGeneric {
+    
+    IGsmValidationResult validateOrganization(Integer orgId);
 
     IProcessStartInformation startProcessesForOrganization(Integer orgId);
     

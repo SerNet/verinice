@@ -30,8 +30,17 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.gsm.messages"; //$NON-NLS-1$
     public static String StartGsmExecuteProcess_0;
     public static String StartGsmExecuteProcess_1;
+    public static String StartGsmExecuteProcess_10;
+    public static String StartGsmExecuteProcess_11;
+    public static String StartGsmExecuteProcess_12;
+    public static String StartGsmExecuteProcess_19;
     public static String StartGsmExecuteProcess_2;
     public static String StartGsmExecuteProcess_3;
+    public static String StartGsmExecuteProcess_4;
+    public static String StartGsmExecuteProcess_5;
+    public static String StartGsmExecuteProcess_7;
+    public static String StartGsmExecuteProcess_8;
+    public static String StartGsmExecuteProcess_9;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

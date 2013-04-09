@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.IGsmService;
+import sernet.verinice.interfaces.bpm.IGsmValidationResult;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
 
@@ -40,6 +41,15 @@ public class GsmServiceDummy implements IGsmService {
     public String findProcessDefinitionId(String processDefinitionKey) {
         return null;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#validateOrganization(java.lang.Integer)
+     */
+    @Override
+    public IGsmValidationResult validateOrganization(Integer orgId) {
+        // TODO Auto-generated method stub
+        return null;
+    } 
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
@@ -77,7 +87,7 @@ public class GsmServiceDummy implements IGsmService {
     @Override
     public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {
         return 0;
-    } 
+    }
 
 
 }

@@ -35,6 +35,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
 import sernet.verinice.interfaces.bpm.IGsmService;
+import sernet.verinice.interfaces.bpm.IGsmValidationResult;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.common.CnATreeElement;
@@ -54,6 +55,12 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     private static final Logger LOG = Logger.getLogger(GsmService.class);
     
     private IAuthService authService;
+    
+    /**
+     * Factory to create GsmProcessValidator instances
+     * configured in veriniceserver-jbpm.xml
+     */
+    private ObjectFactory processValidatorFactory;
     
     /**
      * Factory to create GsmProcessStarter instances
@@ -86,19 +93,16 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     }
     
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#validateOrganization(java.lang.Integer)
      */
     @Override
-    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleting links from assets to scenario..."); //$NON-NLS-1$
-        }
-        
-        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
+    public IGsmValidationResult validateOrganization(Integer orgId) {
+        // creates a new (prototype) instances of the GsmProcessValidator spring bean
         // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
-        GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
-        Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementUuidSet); 
-        return numberOfDeletedLinks;
+        GsmProcessValidator processValidator = (GsmProcessValidator) processValidatorFactory.getObject();
+        IGsmValidationResult result = processValidator.validateOrganization(orgId);
+        
+        return result;
     }
 
     /* (non-Javadoc)
@@ -125,6 +129,22 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
         return information;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+     */
+    @Override
+    public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Deleting links from assets to scenario..."); //$NON-NLS-1$
+        }
+        
+        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
+        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
+        GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
+        Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementUuidSet); 
+        return numberOfDeletedLinks;
+    }
 
     private void startProcess(GsmServiceParameter processParameter) {
         Map<String, Object> parameterMap = createParameterMap(processParameter);
@@ -133,8 +153,10 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
     private Map<String, Object> createParameterMap(GsmServiceParameter processParameter) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String loginNameAssignee = null;
         
+        map.put(IGenericProcess.VAR_PROCESS_ID, processParameter.getProcessId());     
+        
+        String loginNameAssignee = null;     
         final CnATreeElement person = processParameter.getPerson();
         if(person!=null) {
             map.put(IGsmIsmExecuteProzess.VAR_ASSIGNEE_DISPLAY_NAME, person.getTitle());
@@ -157,7 +179,10 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         map.put(IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET, convertToUuidSet(elementSet));     
         map.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, createAssetDescriptionList(elementSet));     
         map.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, getFirstControlDescription(elementSet));      
+        map.put(IGenericProcess.VAR_UUID, getAssetGroupUuid(elementSet));
+        map.put(IGenericProcess.VAR_AUDIT_UUID, processParameter.getUuidOrg());    
         map.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, processParameter.getRiskValue());
+        map.put(IGenericProcess.VAR_PRIORITY, processParameter.getPriority());     
         
         return map;
     }
@@ -189,10 +214,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         return elementTitles;
     }
     
-    /**
-     * @param elementSet Elements of process
-     * @return GSM-description of first control
-     */
+
     private String getFirstControlDescription(Set<CnATreeElement> elementSet) {
         for (CnATreeElement element : elementSet) {
             if(Control.TYPE_ID.equals(element.getTypeId())) {
@@ -200,6 +222,21 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
             }
         }
         return ""; //$NON-NLS-1$
+    }
+    
+    /**
+     * Returns the UUID from the *first* AssetGroup in a set of elements.
+     * 
+     * @param elementSet Elements of process
+     * @return UUID from the *first* AssetGroup or null if there is AssetGroup
+     */
+    private Object getAssetGroupUuid(Set<CnATreeElement> elementSet) {
+        for (CnATreeElement element : elementSet) {
+            if(AssetGroup.TYPE_ID.equals(element.getTypeId())) {
+                return ((AssetGroup)element).getUuid();
+            }
+        }
+        return null;
     }
 
     public static String createElementInformation(Set<CnATreeElement> elementSet) {
@@ -209,6 +246,15 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         message.append(createElementInformation(elementSet, IncidentScenario.TYPE_ID));
         message.append(createElementInformation(elementSet, Control.TYPE_ID));
         return message.toString();
+    }
+    
+    /**
+     * @param person A person
+     * @param controlGroup A control group
+     * @return P=<UUID_PERSON>;CG=<UUID_CONTROL_GROUP>
+     */
+    public static String createProcessId(CnATreeElement person, CnATreeElement controlGroup) {
+        return new StringBuilder().append("P=").append(person.getUuid()).append(";CG=").append(controlGroup.getUuid()).toString();
     }
     
     public static String createElementInformation(Set<CnATreeElement> elementSet, String typeId) {
@@ -230,6 +276,14 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         this.authService = authService;
     }
     
+    public ObjectFactory getProcessValidatorFactory() {
+        return processValidatorFactory;
+    }
+
+    public void setProcessValidatorFactory(ObjectFactory processValidatorFactory) {
+        this.processValidatorFactory = processValidatorFactory;
+    }
+
     public ObjectFactory getProcessStarterFactory() {
         return processStarterFactory;
     }
@@ -245,4 +299,5 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     public void setAssetScenarioRemoverFactory(ObjectFactory assetScenarioRemoverFactory) {
         this.assetScenarioRemoverFactory = assetScenarioRemoverFactory;
     }
+
 }

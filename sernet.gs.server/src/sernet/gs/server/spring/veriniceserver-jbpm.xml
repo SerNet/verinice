@@ -72,6 +72,14 @@
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="processDao" ref="processDao" /> 
         
+        <property name="processValidatorFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmProcessValidator" />
+                </property>
+            </bean>
+        </property>
+        
         <property name="processStarterFactory">
             <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
                 <property name="targetBeanName">
@@ -89,10 +97,21 @@
         </property>          
     </bean>
     
+    <bean id="gsmProcessValidator" class="sernet.verinice.bpm.gsm.GsmProcessValidator" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />
+    </bean>
+    
     <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.GsmProcessParameterCreater" scope="prototype">
         <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="elementDao" ref="cnaTreeElementDao" />
+        <!-- Process with risk value below lowPriorityRiskLimit: priority low -->
+        <!-- Process with risk value above lowPriorityRiskLimit: priority normal -->
+        <property name="lowPriorityRiskLimit" value="100" />
+        <!-- Process with risk value above normalPriorityRiskLimit: priority high -->
+        <property name="normalPriorityRiskLimit" value="1000" />
     </bean>
     
     <bean id="gsmAssetScenarioRemover" class="sernet.verinice.bpm.gsm.GsmAssetScenarioRemover" scope="prototype">

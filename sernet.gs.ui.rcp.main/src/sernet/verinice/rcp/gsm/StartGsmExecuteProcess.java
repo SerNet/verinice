@@ -21,13 +21,17 @@ package sernet.verinice.rcp.gsm;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -42,6 +46,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.rcp.TaskChangeRegistry;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.interfaces.bpm.IGsmValidationResult;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
@@ -63,6 +68,8 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     
     private Boolean isActive = null;
 
+    private String validationMessage = Messages.StartGsmExecuteProcess_10;
+    
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -78,13 +85,24 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     public void run(IAction action) {
         try {
             if(orgId!=null) {
-                startProcess();
+                boolean startProcess = true;
+                boolean validateProcess = !Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.INFO_PROCESS_VALIDATE);
+                if(validateProcess) {
+                    startProcess = (IDialogConstants.YES_ID == validateOrganization());
+                }
+                if(startProcess) {
+                    startProcess();
+                    if(numberOfProcess > 0) {
+                        TaskChangeRegistry.tasksAdded();
+                    }
+                }
             }
         } catch( Exception e) {
-            LOG.error("Error while starting individual task.", e); //$NON-NLS-1$
+            LOG.error("Error while creating process.",e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.StartGsmExecuteProcess_3);
         }
     }
-
+    
     private void startProcess() {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
         try {
@@ -95,11 +113,15 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
                     IProcessStartInformation info = ServiceFactory.lookupGsmService().startProcessesForOrganization(orgId);
                     numberOfProcess = info.getNumber();                
                 }
-            });           
+            }); 
+            String message = Messages.bind(Messages.StartGsmExecuteProcess_1, numberOfProcess);
+            if(numberOfProcess==0) {
+                message = Messages.StartGsmExecuteProcess_19;
+            }
             InfoDialogWithShowToggle.openInformation(
                     Messages.StartGsmExecuteProcess_0,  
-                    Messages.bind(Messages.StartGsmExecuteProcess_1, numberOfProcess),
-                    Messages.StartGsmExecuteProcess_2,
+                    message,
+                    Messages.StartGsmExecuteProcess_4,
                     PreferenceConstants.INFO_PROCESSES_STARTED);
             if(numberOfProcess > 0) {
                 TaskChangeRegistry.tasksAdded();
@@ -109,6 +131,84 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
             ExceptionUtil.log(t, Messages.StartGsmExecuteProcess_3); 
         }
     } 
+    
+    private int validateOrganization() throws InvocationTargetException, InterruptedException {
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();    
+        progressService.run(true, true, new IRunnableWithProgress() {  
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                Activator.inheritVeriniceContextState();
+                IGsmValidationResult validationResult = ServiceFactory.lookupGsmService().validateOrganization(orgId);
+                validationMessage = createValidationMessage(validationResult);               
+            }
+        });           
+        MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openYesNoCancelQuestion(
+                Messages.StartGsmExecuteProcess_0,  
+                validationMessage,
+                Messages.StartGsmExecuteProcess_2,
+                PreferenceConstants.INFO_PROCESS_VALIDATE);
+        return dialog.getReturnCode();                    
+    }
+
+    /**
+     * @param validationResult
+     * @return
+     */
+    protected String createValidationMessage(IGsmValidationResult validationResult) {
+        StringBuilder sb = new StringBuilder();
+        List<String> assetGroupNames = validationResult.getAssetGroupsWithoutLinkedPerson();
+        List<String> ungroupedAssets = validationResult.getUngroupedAssets();
+        List<String> ungroupedControls = validationResult.getUngroupedControls();
+        
+        if(assetGroupNames.isEmpty() && ungroupedAssets.isEmpty() && ungroupedControls.isEmpty()) {
+            sb.append(Messages.StartGsmExecuteProcess_11);
+        } else {
+            sb.append(Messages.StartGsmExecuteProcess_12);
+            sb.append("\n\n"); //$NON-NLS-1$
+        }
+               
+        
+        if(!assetGroupNames.isEmpty()) {           
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_9, assetGroupNames.size(), createList(assetGroupNames)));
+            sb.append("\n\n"); //$NON-NLS-1$
+        }      
+        if(!ungroupedAssets.isEmpty()) {
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_8, ungroupedAssets.size(), createList(ungroupedAssets)));
+            sb.append("\n\n"); //$NON-NLS-1$
+        }       
+        if(!ungroupedControls.isEmpty()) {                     
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_7, ungroupedControls.size(), createList(ungroupedControls)));
+        }
+        
+        sb.append("\n\n"); //$NON-NLS-1$
+        sb.append(Messages.StartGsmExecuteProcess_5);
+        return sb.toString();
+    }
+
+    private String createList(List<String> assetGroupNames) {
+        return createList(assetGroupNames, 10);
+    }
+    
+    private String createList(List<String> assetGroupNames, Integer limit) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        int n=1;
+        for (String name : assetGroupNames) {         
+            if(!first) {
+                sb.append(", ");                  //$NON-NLS-1$
+            } 
+            first = false;
+            
+            if(limit!=null && limit<n) {
+                sb.append("..."); //$NON-NLS-1$
+                break;
+            }
+            
+            sb.append(name);         
+            n++;
+        }
+        return sb.toString();
+    }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
@@ -162,7 +262,4 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     public void setRightID(String rightID) {
     }
     
-   
 }
-
-

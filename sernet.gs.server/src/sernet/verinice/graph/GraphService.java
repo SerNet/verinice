@@ -88,6 +88,10 @@ public class GraphService implements IGraphService {
         logRuntime("create, runtime: ", time);
     }
     
+    /**
+     * Loads all vertices and adds them to the graph.
+     * An edge for each children is added if the child is part of the graph.
+     */
     private void loadVerticesAndRelatives() {
         List<CnATreeElement> elementList = new LinkedList<CnATreeElement>();
         for (IGraphElementLoader loader : getLoaderList()) {
@@ -105,9 +109,13 @@ public class GraphService implements IGraphService {
             Set<CnATreeElement> children = parent.getChildren();
             for (CnATreeElement child : children) {
                 CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
-                graph.addEdge(parent, childWithProperties, new Edge(parent, childWithProperties));
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
+                if(childWithProperties!=null) {
+                    graph.addEdge(parent, childWithProperties, new Edge(parent, childWithProperties));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
+                    }
+                } else if (LOG.isDebugEnabled()) {
+                    LOG.debug("No Edge added, child was not found. Child type / uuid: " + child.getTypeId() + " / " + child.getUuid() + ", Parent is: " + parent.getTitle() );
                 }
             }
         }
@@ -137,6 +145,35 @@ public class GraphService implements IGraphService {
         }
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.graph.IGraphService#getElements()
+     */
+    @Override
+    public Set<CnATreeElement> getElements() {
+        return getGraph().vertexSet();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.graph.IGraphService#getElements(java.lang.String)
+     */
+    @Override
+    public Set<CnATreeElement> getElements(String typeId) {
+        HashSet<CnATreeElement> elements = new HashSet<CnATreeElement>();
+        Set<CnATreeElement> allElements = getElements();
+        
+        if(typeId==null || allElements==null) {
+            return elements;
+        }
+        
+        for (CnATreeElement element : allElements) {
+            if(typeId.equals(element.getTypeId())){
+                elements.add(element);
+            }
+        }       
+        return elements;
+    }
+    
+       
     /* (non-Javadoc)
      * @see sernet.verinice.graph.IGraphService#getLinkTargets(sernet.verinice.model.common.CnATreeElement)
      */
@@ -255,7 +292,6 @@ public class GraphService implements IGraphService {
     private void logRuntime(String message, long starttime) {
         LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
     }
-
 
   
 }
