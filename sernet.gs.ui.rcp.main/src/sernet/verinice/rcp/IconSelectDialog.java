@@ -76,7 +76,7 @@ public class IconSelectDialog extends Dialog {
 
     private static final Logger LOG = Logger.getLogger(IconSelectDialog.class);
     
-    public static final String ICON_DIRECTORY = "tree-icons";
+    public static final String ICON_DIRECTORY = "tree-icons"; //$NON-NLS-1$
     
     private static final FileFilter ICON_FILE_FILTER = new IconFileFilter();
 
@@ -117,20 +117,22 @@ public class IconSelectDialog extends Dialog {
         try {
             for (URL inconUrl : inconUrlArray) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Icon dir: " + inconUrl);
+                    LOG.debug("Icon dir: " + inconUrl); //$NON-NLS-1$
                 }
                 URL realFileUrl = FileLocator.toFileURL(inconUrl);
                 File baseDir = new File(FileLocator.resolve(realFileUrl).toURI());
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Icon dir (file system): " + baseDir.getPath());
+                    LOG.debug("Icon dir (file system): " + baseDir.getPath()); //$NON-NLS-1$
                 }
                 String[] directories = baseDir.list(DirectoryFileFilter.INSTANCE);
                 for (String dir : directories) {
-                    dirComboModel.add(new IconPathDescriptor(dir, baseDir.getPath() + File.separator + dir));
+                    if(!dir.startsWith(".")) { //$NON-NLS-1$
+                        dirComboModel.add(new IconPathDescriptor(dir, baseDir.getPath() + File.separator + dir));
+                    }
                 }
             }
         } catch (Exception e) {
-            LOG.error("Error while reading icon directory: " + ICON_DIRECTORY, e);
+            LOG.error("Error while reading icon directory: " + ICON_DIRECTORY, e); //$NON-NLS-1$
             return;
         }
 
@@ -161,7 +163,7 @@ public class IconSelectDialog extends Dialog {
         Composite comp = (Composite) super.createDialogArea(parent);
 
         Label dirLabel = new Label(comp, SWT.NONE);
-        dirLabel.setText("Directory");
+        dirLabel.setText(Messages.IconSelectDialog_5);
         dirCombo = new Combo(comp, SWT.VERTICAL | SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY);
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         dirCombo.setLayoutData(gd);
@@ -176,7 +178,7 @@ public class IconSelectDialog extends Dialog {
         showComboValues();
 
         Group group = new Group(comp, SWT.NONE);
-        group.setText("Select icon");
+        group.setText(Messages.IconSelectDialog_6);
         GridLayout groupOrganizationLayout = new GridLayout(1, true);
         group.setLayout(groupOrganizationLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -189,7 +191,7 @@ public class IconSelectDialog extends Dialog {
         group.layout();
 
         final Button defaultCheckbox = new Button(comp, SWT.CHECK);
-        defaultCheckbox.setText("Show default icon instead");
+        defaultCheckbox.setText(Messages.IconSelectDialog_7);
         defaultCheckbox.setSelection(false);
         defaultCheckbox.addSelectionListener(new SelectionListener() {
             @Override
@@ -279,7 +281,7 @@ public class IconSelectDialog extends Dialog {
                 if (cell != null) {
                     selectedPath = getRelativePath(((IconDescriptor[]) cell.getElement())[cell.getColumnIndex()].getPath());
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("Icon: " + selectedPath);
+                        LOG.debug("Icon: " + selectedPath); //$NON-NLS-1$
                     }
                 }
 
@@ -302,7 +304,7 @@ public class IconSelectDialog extends Dialog {
             directory = dirComboModel.getSelectedObject();
             loadIcons(directory.getPath());
         } else {
-            loadIcons(ICON_DIRECTORY + "silk");
+            loadIcons(ICON_DIRECTORY + "silk"); //$NON-NLS-1$
         }
     }
 
@@ -315,7 +317,7 @@ public class IconSelectDialog extends Dialog {
         if (path.contains(ICON_DIRECTORY)) {
             relative = path.substring(path.indexOf(ICON_DIRECTORY));
         }
-        if(relative.contains("\\")) {
+        if(relative.contains("\\")) { //$NON-NLS-1$
             relative = relative.replace('\\', '/');
         }
         return relative;
@@ -335,11 +337,15 @@ public class IconSelectDialog extends Dialog {
     public boolean isDefaultIcon() {
         return defaultIcon;
     }
+    
+    public boolean isSomethingSelected() {
+        return defaultIcon || getSelectedPath()!=null;
+    }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText("Icon");
+        newShell.setText(Messages.IconSelectDialog_11);
         newShell.setSize(SIZE_Y, SIZE_X);
 
         // open the window right under the mouse pointer:
@@ -356,7 +362,7 @@ class IconFileFilter implements FileFilter {
         boolean accept = false;
         if(file!=null && file.getName()!=null) {
             String filename = file.getName().toLowerCase();
-            accept = filename.endsWith("gif") || filename.endsWith("png");
+            accept = filename.endsWith("gif") || filename.endsWith("png"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return accept;
     }

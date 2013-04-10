@@ -80,13 +80,13 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
     public void run(IAction arg0) {
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
-            if(Dialog.OK==dialog.open()) {
-                WorkspaceJob importJob = new WorkspaceJob("Change icons") {
+            if(Dialog.OK==dialog.open() && dialog.isSomethingSelected()) {
+                WorkspaceJob importJob = new WorkspaceJob(Messages.IconSelectAction_0) {
                     @Override
                     public IStatus runInWorkspace(final IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
                         try {
-                            monitor.setTaskName("Changing icons...");
+                            monitor.setTaskName(Messages.IconSelectAction_1);
                             String iconPath = dialog.getSelectedPath();
                             if(dialog.isDefaultIcon()) {
                                 iconPath = null;
@@ -96,7 +96,7 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
                             }
                         } catch (Exception e) {
                             LOG.error("Error while changing icons.", e); //$NON-NLS-1$
-                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", "Error while changing icons", e);
+                            status = new Status(IStatus.ERROR, "sernet.verinice.rcp", Messages.IconSelectAction_3, e); //$NON-NLS-1$
                         }
                         return status;
                     }
@@ -104,7 +104,7 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
                 JobScheduler.scheduleJob(importJob, iSchedulingRule);
             }
         } catch (Exception e) {
-            LOG.error("Error while changing icon.", e);
+            LOG.error(Messages.IconSelectAction_4, e);
         }
     }
 
