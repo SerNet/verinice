@@ -85,10 +85,12 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
     private IWorkbenchPart targetPart;
 
+    @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
     }
 
+    @Override
     public void run(IAction action) {
         try {
             Activator.inheritVeriniceContextState();
@@ -130,6 +132,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
             }
 
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Object sel = null;
                     try {
@@ -147,7 +150,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                                 }
 
                                 CnATreeElement el = (CnATreeElement) sel;
-                                monitor.setTaskName(NLS.bind(Messages.DeleteActionDelegate_14, el.getTitle()));
+                                monitor.setTaskName(Messages.DeleteActionDelegate_14);
 
                                 CnAElementHome.getInstance().remove(el);
                                 // notify all listeners:
@@ -238,6 +241,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
         }
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
         boolean allowed = ((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(ActionRightIDs.DELETEITEM);
         // Realizes that the action to delete an element is greyed out,
@@ -292,7 +296,7 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
     private CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
         LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
-        element = ((LoadChildrenForExpansion) command).getElementWithChildren();
+        element = command.getElementWithChildren();
         element.setChildrenLoaded(true);
         return element;
     }
