@@ -4325,7 +4325,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="incident_scenario" id="rel_control_incscen" 
         	name="reduces probability of " reversename="probability reduced by" tooltip=""/>
 		<huirelation to="control" id="rel_control_control"
-        	name="details" reversename="is detailed by" tooltip="" />
+        	name="details" reversename="detailed by" tooltip="" />
       
         <huirelation to="person-iso" id="rel_control_person-iso"
             name="assignee" reversename="is responsible for" tooltip="" />
