@@ -7515,13 +7515,13 @@ columns(cols);</value>
                         <property name="borderRightWidth">thin</property>
                         <property name="textAlign">left</property>
                         <label id="1347">
-                            <text-property name="text">netzkomponente_kritikalitaet</text-property>
+                            <text-property name="text">Kritikalität</text-property>
                         </label>
                     </cell>
                     <cell id="1155">
                         <property name="textAlign">left</property>
                         <label id="1349">
-                            <text-property name="text">netzkomponente_extnetz</text-property>
+                            <text-property name="text">Extern. Netz</text-property>
                         </label>
                     </cell>
                 </row>
