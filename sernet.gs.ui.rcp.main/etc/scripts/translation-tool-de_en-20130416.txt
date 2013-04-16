@@ -873,10 +873,10 @@ File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/messages_de.properties
   Same    -> IconSelectDialog_11
 
 File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/gsm/messages_de.properties
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_0
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_3
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_1
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_2
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_0
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_3
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_1
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_2
 
 File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/group/messages_de.properties
   Same    -> GroupByTagDialog_2
@@ -975,10 +975,10 @@ File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/messages_de.properties
   Same    -> IconSelectDialog_11
 
 File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/gsm/messages_de.properties
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_0
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_3
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_1
-  EINGEPFLEGT DURCH DM AM 20130409 -> Missing -> StartGsmExecuteProcess_2
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_0
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_3
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_1
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_2
 
 File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/group/messages_de.properties
   Same    -> GroupByTagDialog_2
