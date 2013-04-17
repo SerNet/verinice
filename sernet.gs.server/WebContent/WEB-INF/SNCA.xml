@@ -2965,24 +2965,6 @@ the value between <param></param> will be used directly if no string is found fo
             name="Sonstige"
         />
         
-        <!-- 2012-12-13 ak@sernet.de The following options have been removed due to QM review: 
-        <option
-            id="dv_herkunft_1"
-            name="Formular"
-        />
-        <option
-            id="dv_herkunft_2"
-            name="Webseite"
-        />
-        <option
-            id="dv_herkunft_3"
-            name="Lst.-Karte"
-        />
-        <option
-            id="dv_herkunft_5"
-            name="Software"
-        />
-        -->
         
         </huiproperty>
         <huiproperty
@@ -5743,6 +5725,8 @@ the value between <param></param> will be used directly if no string is found fo
 					id="process_value_comment" />
 		</huipropertygroup>
         
+<!-- xxx -->       
+         
         
         
         <huipropertygroup tags="Privacy" id="process_va_group" name="Verfahrensangaben"> 
