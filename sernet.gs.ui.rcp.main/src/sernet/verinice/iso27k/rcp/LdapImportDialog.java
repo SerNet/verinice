@@ -165,7 +165,17 @@ public class LdapImportDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = SWT.RIGHT;
 		gridData.horizontalSpan = 2;
 		buttonAdd.setLayoutData(gridData);
+		buttonAdd.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                loadLdapUser();
+            }
 
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        });
+		
 		createViewer(containerRoles);
 		
 		buttonRemove = new Button(containerRoles, SWT.PUSH | SWT.BORDER);

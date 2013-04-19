@@ -25,6 +25,7 @@ import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
@@ -43,6 +44,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class BasicAuthenticationService implements IAuthService {
     
+    private BasicProcessingFilterEntryPoint entryPoint;
     private String guestUser = "";
     private String adminUsername;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -53,6 +55,13 @@ public class BasicAuthenticationService implements IAuthService {
      */
     public void setGuestUser(String guestUser) {
         this.guestUser = guestUser;
+    }
+    
+    /**
+     * @param entryPoint the entryPoint to set
+     */
+    public void setEntryPoint(BasicProcessingFilterEntryPoint entryPoint) {
+        this.entryPoint = entryPoint;
     }
 
     /* (non-Javadoc)
@@ -91,6 +100,7 @@ public class BasicAuthenticationService implements IAuthService {
     
     }
 
+    @Override
     public String getAdminUsername() {
         return adminUsername;
     }
@@ -165,6 +175,7 @@ public class BasicAuthenticationService implements IAuthService {
     /**
      * @return the handlingPasswords
      */
+    @Override
     public boolean isHandlingPasswords() {
         return handlingPasswords;
     }
