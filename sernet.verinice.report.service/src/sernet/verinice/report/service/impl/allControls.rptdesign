@@ -17,6 +17,7 @@
             <simple-property-list name="defaultValue">
                 <value type="constant">-1</value>
             </simple-property-list>
+            <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
             <structure name="format">
@@ -49,19 +50,9 @@
                     <text-property name="heading">control_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">control_selected</property>
-                    <text-property name="displayName">control_selected</text-property>
-                    <text-property name="heading">control_selected</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">control_tag</property>
                     <text-property name="displayName">control_tag</text-property>
                     <text-property name="heading">control_tag</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">control_reason_for_selection</property>
-                    <text-property name="displayName">control_reason_for_selection</text-property>
-                    <text-property name="heading">control_reason_for_selection</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_desc</property>
@@ -87,6 +78,31 @@
                     <property name="columnName">control_implby</property>
                     <text-property name="displayName">control_implby</text-property>
                     <text-property name="heading">control_implby</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_selected</property>
+                    <text-property name="displayName">control_selected</text-property>
+                    <text-property name="heading">control_selected</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">control_reason_for_selection</property>
+                    <text-property name="displayName">control_reason_for_selection</text-property>
+                    <text-property name="heading">control_reason_for_selection</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_control_description</property>
+                    <text-property name="displayName">gsm_ism_control_description</text-property>
+                    <text-property name="heading">gsm_ism_control_description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_control_tag</property>
+                    <text-property name="displayName">gsm_ism_control_tag</text-property>
+                    <text-property name="heading">gsm_ism_control_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gsm_ism_control_cpe</property>
+                    <text-property name="displayName">gsm_ism_control_cpe</text-property>
+                    <text-property name="heading">gsm_ism_control_cpe</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">control_effectiveness_confidentiality</property>
@@ -289,6 +305,7 @@
                     <text-property name="heading">control_feedback_date</text-property>
                 </structure>
             </list-property>
+            <list-property name="filter"/>
             <list-property name="parameters">
                 <structure>
                     <property name="name">root_object</property>
@@ -322,241 +339,256 @@
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">control_selected</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
                         <property name="name">control_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
-                        <property name="name">control_reason_for_selection</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
+                        <property name="position">5</property>
                         <property name="name">control_desc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">6</property>
                         <property name="name">control_implemented</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">7</property>
                         <property name="name">control_implemented_explanation</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">8</property>
                         <property name="name">control_implemented_objective</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">9</property>
                         <property name="name">control_implby</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
+                        <property name="position">10</property>
+                        <property name="name">control_selected</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">control_reason_for_selection</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
                         <property name="position">12</property>
-                        <property name="name">control_effectiveness_confidentiality</property>
+                        <property name="name">gsm_ism_control_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">control_effectiveness_integrity</property>
+                        <property name="name">gsm_ism_control_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">control_effectiveness_availability</property>
+                        <property name="name">gsm_ism_control_cpe</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">control_eff_probability</property>
+                        <property name="name">control_effectiveness_confidentiality</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">control_effectiveness_explanation2</property>
+                        <property name="name">control_effectiveness_integrity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">control_maturity</property>
+                        <property name="name">control_effectiveness_availability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">control_weight</property>
+                        <property name="name">control_eff_probability</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">control_ownweight</property>
+                        <property name="name">control_effectiveness_explanation2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">control_min1</property>
+                        <property name="name">control_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">control_min2</property>
+                        <property name="name">control_weight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">control_maturity_comment</property>
+                        <property name="name">control_ownweight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
-                        <property name="name">control_maturity_duedate</property>
+                        <property name="name">control_min1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">control_isr_maturity</property>
+                        <property name="name">control_min2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
-                        <property name="name">control_isr_quantity_of_maturity</property>
+                        <property name="name">control_maturity_comment</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">control_isr_note_external</property>
+                        <property name="name">control_maturity_duedate</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">control_isr_note_internal</property>
+                        <property name="name">control_isr_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">control_lastrev</property>
+                        <property name="name">control_isr_quantity_of_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">control_revision_notes</property>
+                        <property name="name">control_isr_note_external</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">control_nextrev</property>
+                        <property name="name">control_isr_note_internal</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
-                        <property name="name">control_kosten_currency</property>
+                        <property name="name">control_lastrev</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">32</property>
-                        <property name="name">control_kosten_ptfix</property>
+                        <property name="name">control_revision_notes</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
-                        <property name="name">control_kosten_ptvar</property>
+                        <property name="name">control_nextrev</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">34</property>
-                        <property name="name">control_kosten_ptperiod</property>
+                        <property name="name">control_kosten_currency</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">35</property>
-                        <property name="name">control_kosten_sachfix</property>
+                        <property name="name">control_kosten_ptfix</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">36</property>
-                        <property name="name">control_kosten_sachvar</property>
+                        <property name="name">control_kosten_ptvar</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">37</property>
-                        <property name="name">control_kosten_sachperiod</property>
+                        <property name="name">control_kosten_ptperiod</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">38</property>
-                        <property name="name">control_isa_audit_findings</property>
+                        <property name="name">control_kosten_sachfix</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">39</property>
-                        <property name="name">control_isa_maturity</property>
+                        <property name="name">control_kosten_sachvar</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">40</property>
-                        <property name="name">control_isa_weight</property>
+                        <property name="name">control_kosten_sachperiod</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">41</property>
-                        <property name="name">control_isa_ownweight</property>
+                        <property name="name">control_isa_audit_findings</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">42</property>
-                        <property name="name">control_isa_min1</property>
+                        <property name="name">control_isa_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">43</property>
-                        <property name="name">control_isa_min2</property>
+                        <property name="name">control_isa_weight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">44</property>
-                        <property name="name">control_isa_externalnote</property>
+                        <property name="name">control_isa_ownweight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">45</property>
-                        <property name="name">control_isa_internalnote</property>
+                        <property name="name">control_isa_min1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">46</property>
-                        <property name="name">control_isa_audit_ra</property>
+                        <property name="name">control_isa_min2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">47</property>
-                        <property name="name">control_isa_audit_devi</property>
+                        <property name="name">control_isa_externalnote</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">48</property>
-                        <property name="name">control_isa_audit_compluntil</property>
+                        <property name="name">control_isa_internalnote</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">49</property>
-                        <property name="name">control_isa_isaauditnote</property>
+                        <property name="name">control_isa_audit_ra</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">50</property>
-                        <property name="name">control_feedback_note</property>
+                        <property name="name">control_isa_audit_devi</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">51</property>
+                        <property name="name">control_isa_audit_compluntil</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">52</property>
+                        <property name="name">control_isa_isaauditnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">53</property>
+                        <property name="name">control_feedback_note</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">54</property>
                         <property name="name">control_feedback_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -587,335 +619,356 @@
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">control_selected</property>
-                    <property name="nativeName">control_selected</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
                     <property name="name">control_tag</property>
                     <property name="nativeName">control_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
-                    <property name="name">control_reason_for_selection</property>
-                    <property name="nativeName">control_reason_for_selection</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
+                    <property name="position">5</property>
                     <property name="name">control_desc</property>
                     <property name="nativeName">control_desc</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">6</property>
                     <property name="name">control_implemented</property>
                     <property name="nativeName">control_implemented</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">7</property>
                     <property name="name">control_implemented_explanation</property>
                     <property name="nativeName">control_implemented_explanation</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">8</property>
                     <property name="name">control_implemented_objective</property>
                     <property name="nativeName">control_implemented_objective</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">9</property>
                     <property name="name">control_implby</property>
                     <property name="nativeName">control_implby</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
+                    <property name="position">10</property>
+                    <property name="name">control_selected</property>
+                    <property name="nativeName">control_selected</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">control_reason_for_selection</property>
+                    <property name="nativeName">control_reason_for_selection</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
                     <property name="position">12</property>
+                    <property name="name">gsm_ism_control_description</property>
+                    <property name="nativeName">gsm_ism_control_description</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">gsm_ism_control_tag</property>
+                    <property name="nativeName">gsm_ism_control_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">gsm_ism_control_cpe</property>
+                    <property name="nativeName">gsm_ism_control_cpe</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
                     <property name="name">control_effectiveness_confidentiality</property>
                     <property name="nativeName">control_effectiveness_confidentiality</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
                     <property name="name">control_effectiveness_integrity</property>
                     <property name="nativeName">control_effectiveness_integrity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">17</property>
                     <property name="name">control_effectiveness_availability</property>
                     <property name="nativeName">control_effectiveness_availability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">18</property>
                     <property name="name">control_eff_probability</property>
                     <property name="nativeName">control_eff_probability</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">19</property>
                     <property name="name">control_effectiveness_explanation2</property>
                     <property name="nativeName">control_effectiveness_explanation2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">20</property>
                     <property name="name">control_maturity</property>
                     <property name="nativeName">control_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">21</property>
                     <property name="name">control_weight</property>
                     <property name="nativeName">control_weight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">22</property>
                     <property name="name">control_ownweight</property>
                     <property name="nativeName">control_ownweight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">23</property>
                     <property name="name">control_min1</property>
                     <property name="nativeName">control_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">24</property>
                     <property name="name">control_min2</property>
                     <property name="nativeName">control_min2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">25</property>
                     <property name="name">control_maturity_comment</property>
                     <property name="nativeName">control_maturity_comment</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">26</property>
                     <property name="name">control_maturity_duedate</property>
                     <property name="nativeName">control_maturity_duedate</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">27</property>
                     <property name="name">control_isr_maturity</property>
                     <property name="nativeName">control_isr_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">28</property>
                     <property name="name">control_isr_quantity_of_maturity</property>
                     <property name="nativeName">control_isr_quantity_of_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">29</property>
                     <property name="name">control_isr_note_external</property>
                     <property name="nativeName">control_isr_note_external</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">30</property>
                     <property name="name">control_isr_note_internal</property>
                     <property name="nativeName">control_isr_note_internal</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">31</property>
                     <property name="name">control_lastrev</property>
                     <property name="nativeName">control_lastrev</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">32</property>
                     <property name="name">control_revision_notes</property>
                     <property name="nativeName">control_revision_notes</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">33</property>
                     <property name="name">control_nextrev</property>
                     <property name="nativeName">control_nextrev</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
+                    <property name="position">34</property>
                     <property name="name">control_kosten_currency</property>
                     <property name="nativeName">control_kosten_currency</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
+                    <property name="position">35</property>
                     <property name="name">control_kosten_ptfix</property>
                     <property name="nativeName">control_kosten_ptfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
+                    <property name="position">36</property>
                     <property name="name">control_kosten_ptvar</property>
                     <property name="nativeName">control_kosten_ptvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">34</property>
+                    <property name="position">37</property>
                     <property name="name">control_kosten_ptperiod</property>
                     <property name="nativeName">control_kosten_ptperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">35</property>
+                    <property name="position">38</property>
                     <property name="name">control_kosten_sachfix</property>
                     <property name="nativeName">control_kosten_sachfix</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">36</property>
+                    <property name="position">39</property>
                     <property name="name">control_kosten_sachvar</property>
                     <property name="nativeName">control_kosten_sachvar</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">37</property>
+                    <property name="position">40</property>
                     <property name="name">control_kosten_sachperiod</property>
                     <property name="nativeName">control_kosten_sachperiod</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">38</property>
+                    <property name="position">41</property>
                     <property name="name">control_isa_audit_findings</property>
                     <property name="nativeName">control_isa_audit_findings</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">39</property>
+                    <property name="position">42</property>
                     <property name="name">control_isa_maturity</property>
                     <property name="nativeName">control_isa_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">40</property>
+                    <property name="position">43</property>
                     <property name="name">control_isa_weight</property>
                     <property name="nativeName">control_isa_weight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">41</property>
+                    <property name="position">44</property>
                     <property name="name">control_isa_ownweight</property>
                     <property name="nativeName">control_isa_ownweight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">42</property>
+                    <property name="position">45</property>
                     <property name="name">control_isa_min1</property>
                     <property name="nativeName">control_isa_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">43</property>
+                    <property name="position">46</property>
                     <property name="name">control_isa_min2</property>
                     <property name="nativeName">control_isa_min2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">44</property>
+                    <property name="position">47</property>
                     <property name="name">control_isa_externalnote</property>
                     <property name="nativeName">control_isa_externalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">45</property>
+                    <property name="position">48</property>
                     <property name="name">control_isa_internalnote</property>
                     <property name="nativeName">control_isa_internalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">46</property>
+                    <property name="position">49</property>
                     <property name="name">control_isa_audit_ra</property>
                     <property name="nativeName">control_isa_audit_ra</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">47</property>
+                    <property name="position">50</property>
                     <property name="name">control_isa_audit_devi</property>
                     <property name="nativeName">control_isa_audit_devi</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">48</property>
+                    <property name="position">51</property>
                     <property name="name">control_isa_audit_compluntil</property>
                     <property name="nativeName">control_isa_audit_compluntil</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">49</property>
+                    <property name="position">52</property>
                     <property name="name">control_isa_isaauditnote</property>
                     <property name="nativeName">control_isa_isaauditnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">50</property>
+                    <property name="position">53</property>
                     <property name="name">control_feedback_note</property>
                     <property name="nativeName">control_feedback_note</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">51</property>
+                    <property name="position">54</property>
                     <property name="name">control_feedback_date</property>
                     <property name="nativeName">control_feedback_date</property>
                     <property name="dataType">javaObject</property>
@@ -925,7 +978,7 @@
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.model.iso27k.Control;
-
+import java.lang.Integer;
 
 objects="control";
 
@@ -936,9 +989,12 @@ myroot = _inpv.get("root_object");
 if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
+if(root == null){
+	root = Integer.valueOf(-1);
+}
 
 cols = helper.getAllPropertyTypes(objects);
-c2 = new LoadReportAllControls(root);
+c2 = new LoadReportAllControls(new Integer(root));
 elements = helper.execute(c2).getResult();
 return helper.map(
 	elements,
@@ -2023,6 +2079,14 @@ columns(cols);</value>
         <table id="1216">
             <property name="width">7.78125in</property>
             <property name="dataSet">Controls</property>
+            <list-property name="paramBindings">
+                <structure>
+                    <property name="paramName">root_object</property>
+                    <simple-property-list name="expression">
+                        <value type="javascript">-1</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">control_abbr</property>
@@ -2327,9 +2391,6 @@ columns(cols);</value>
                         </label>
                     </cell>
                     <cell id="1266">
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
                         <label id="1271">
                             <property name="fontWeight">bold</property>
                             <property name="textAlign">left</property>
