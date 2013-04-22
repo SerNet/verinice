@@ -218,19 +218,22 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		return true;
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    @Override
-    public int compareTo(Attachment o) {
-        int result = 1; // this is greater
-        if(o!=null && o.getTitel()!=null && this.getTitel()!=null) {
-            result = this.getTitel().compareTo(o.getTitel());
-        } else {
-            result = 0;
-        }
-        return result;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Attachment o) {
+	    int result = 1; // this is greater
+	    if(o!=null && o.getTitel()!=null) {
+	        if(this.getTitel()!=null) {
+	            result = this.getTitel().compareTo(o.getTitel());
+	        } else {
+	            result = 0;
+	        }
+	    }
+	    return result;
+	}
+
 
     public static String[] getDocumentMimeTypes() {
         return (DOCUMENT_MIME_TYPES != null) ? DOCUMENT_MIME_TYPES.clone() : null;
