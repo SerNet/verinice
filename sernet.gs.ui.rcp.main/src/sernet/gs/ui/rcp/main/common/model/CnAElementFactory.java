@@ -1107,7 +1107,7 @@ public final class CnAElementFactory {
 		}
 	}
 
-	public BSIModel loadOrCreateModel(IProgress monitor) throws MalformedURLException, CommandException {
+	public BSIModel loadOrCreateModel(IProgress monitor) throws MalformedURLException, CommandException, CnATreeElementBuildException {
 		if (!dbHome.isOpen()) {
 			dbHome.open(monitor);
 		}
@@ -1127,14 +1127,11 @@ public final class CnAElementFactory {
 		monitor.setTaskName(Messages.getString("CnAElementFactory.4")); //$NON-NLS-1$
 		loadedModel = new BSIModel();
 
-		ITVerbund verbund = new ITVerbund(loadedModel);
-		loadedModel.addChild(verbund);
-
-		verbund.createNewCategories();
-
 		createBausteinVorschlaege();
 
 		loadedModel = dbHome.save(loadedModel);
+		ITVerbund verbund = (ITVerbund)CnAElementFactory.getInstance().saveNew(loadedModel, ITVerbund.TYPE_ID, null);
+		loadedModel.addChild(verbund);
 
 		fireLoad();
 		return loadedModel;
