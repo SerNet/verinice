@@ -6541,7 +6541,7 @@ the value between <param></param> will be used directly if no string is found fo
                
           <huiproperty 
             id="samt_topic_name" 
-            editable="false" 
+            editable="true" 
             required="true"
             tags="VDA_ISA_Audit"
             />
