@@ -5641,25 +5641,25 @@ the value between <param></param> will be used directly if no string is found fo
             
         </huipropertygroup>
             
-     <huipropertygroup tags="Business_Impact" id="process_value_group" name="Business Impact">
+     <huipropertygroup tags="Risk" id="process_value_group" name="Business Impact">
 		<huiproperty
-					tags="Business_Impact" id="process_value_method_confidentiality"
+					tags="Risk" id="process_value_method_confidentiality"
 					name="Deduce Confidentiality"
 					inputtype="booleanoption"  >
 				</huiproperty>	
 		<huiproperty
-					tags="Business_Impact" id="process_value_method_integrity"
+					tags="Risk" id="process_value_method_integrity"
 					name="Deduce Integrity"
 					inputtype="booleanoption"  >
 				</huiproperty>	
 		<huiproperty
-					tags="Business_Impact" id="process_value_method_availability"
+					tags="Risk" id="process_value_method_availability"
 					name="Deduce Availability"
 					inputtype="booleanoption"  >
 		</huiproperty>	
 	
 		<huiproperty
-					tags="Business_Impact" id="process_value_confidentiality"
+					tags="Risk" id="process_value_confidentiality"
 					name="Confidentiality"
 					inputtype="numericoption" min="0" max="3">
                     <depends option="process_value_method_confidentiality" value="0"/>
@@ -5682,7 +5682,7 @@ the value between <param></param> will be used directly if no string is found fo
 				</huiproperty>
 				
 				<huiproperty
-					tags="Business_Impact" id="process_value_integrity"
+					tags="Risk" id="process_value_integrity"
 					name="Integrity"
 					inputtype="numericoption"  min="0" max="2" >
                     <depends option="process_value_method_integrity" value="0"/>
@@ -5698,7 +5698,7 @@ the value between <param></param> will be used directly if no string is found fo
 				</huiproperty>
 				
 				<huiproperty
-					tags="Business_Impact" id="process_value_availability"
+					tags="Risk" id="process_value_availability"
 					name="Availability"
 					inputtype="numericoption"  min="0" max="4" >
                     <depends option="process_value_method_availability" value="0"/>
@@ -5720,7 +5720,7 @@ the value between <param></param> will be used directly if no string is found fo
 				</huiproperty>
 				
 				<huiproperty
-					tags="Business_Impact" name="Explanation"
+					tags="Risk" name="Explanation"
 					inputtype="text"
 					id="process_value_comment" />
 		</huipropertygroup>
