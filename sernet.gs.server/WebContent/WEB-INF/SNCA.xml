@@ -4254,7 +4254,7 @@ the value between <param></param> will be used directly if no string is found fo
         id="controlgroup" >
         <huiproperty
             name="Title"
-            id="controlgroup_name" required="true" tags="VDA_ISA_Audit"/>
+            id="controlgroup_name" required="true"/>
             
         <huirelation to="person-iso" id="controlgroup_room_inspector" 
         	name="inspector" reversename="is inspector of" tooltip="Person is inspector of this room."/>
