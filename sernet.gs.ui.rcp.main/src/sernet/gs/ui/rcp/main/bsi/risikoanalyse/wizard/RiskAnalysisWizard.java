@@ -142,7 +142,9 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      *            the current workbench
      * @param selection
      *            the current object selection
+     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      */
+    @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         try {
             if (finishedRiskAnalysis == null) {
@@ -196,16 +198,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
         AdditionalSecurityMeasuresPage additionalSecurityMeasuresPage = new AdditionalSecurityMeasuresPage();
         addPage(additionalSecurityMeasuresPage);
-    }
-
-    /**
-     * Sets the List of Gefaehrdungen associated to the chosen IT-system.
-     * 
-     * @param newAssociatedGefaehrdungen
-     *            ArrayList of Gefaehrdungen
-     */
-    public void setAssociatedGefaehrdungen(List<GefaehrdungsUmsetzung> newAssociatedGefaehrdungen) {
-        finishedRiskLists.setAssociatedGefaehrdungen(newAssociatedGefaehrdungen);
     }
 
     /**
@@ -281,7 +273,10 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
         try {
             LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-            this.finishedRiskLists.getAssociatedGefaehrdungen().addAll(command.getAssociatedGefaehrdungen());
+            List<GefaehrdungsUmsetzung> associatedGefaehrdungen = command.getAssociatedGefaehrdungen();
+            for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
+                this.finishedRiskLists.addAssociatedGefahr(gefaehrdung);
+            }
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_5);
         }

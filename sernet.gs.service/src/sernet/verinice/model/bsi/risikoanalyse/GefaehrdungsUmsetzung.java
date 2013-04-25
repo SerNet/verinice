@@ -79,20 +79,6 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
 
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof GefaehrdungsUmsetzung)) {
-            return false;
-        }
-        GefaehrdungsUmsetzung gef2 = (GefaehrdungsUmsetzung) obj;
-
-        if (gef2.getDbId() == null || getDbId() == null) {
-            return super.equals(obj);
-        }
-
-        return gef2.getDbId().equals(getDbId());
-    }
-
     protected GefaehrdungsUmsetzung() {
         // hibernate constructor
     }

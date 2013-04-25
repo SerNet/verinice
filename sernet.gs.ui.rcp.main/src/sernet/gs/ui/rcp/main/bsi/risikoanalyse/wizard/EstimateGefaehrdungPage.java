@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -48,7 +49,6 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.PositiveEstimateGefaehrdung;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
@@ -61,6 +61,8 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  */
 public class EstimateGefaehrdungPage extends WizardPage {
 
+    private static final Logger LOG = Logger.getLogger(EstimateGefaehrdungPage.class);
+    
     private TableColumn checkboxColumn;
     private TableColumn imageColumn;
     private TableColumn numberColumn;
@@ -86,6 +88,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
      * @param parent
      *            the parent Composite
      */
+    @Override
     public void createControl(Composite parent) {
         
         final int checkboxColumnWidth = 35;
@@ -140,28 +143,34 @@ public class EstimateGefaehrdungPage extends WizardPage {
             /**
              * Notifies of a change to the checked state of an element.
              */
+            @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 RiskAnalysisWizard internalWizard = ((RiskAnalysisWizard) getWizard());
                 GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
 
+                Integer raListDbId = internalWizard.getFinishedRiskAnalysisLists().getDbId();
                 if (event.getChecked()) {
                     /* checkbox set */
 
                     try {
-                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(internalWizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
+                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        internalWizard.setFinishedRiskLists(command.getLists());
+                        internalWizard.setFinishedRiskLists(command.getRaList());
                     } catch (Exception e) {
+                        LOG.error("Error while selecting", e);
                         ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_8);
                     }
 
                 } else {
                     try {
                         /* checkbox unset */
-                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(internalWizard.getFinishedRiskAnalysisLists().getDbId(), gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
+                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, internalWizard.getFinishedRiskAnalysis());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        internalWizard.setFinishedRiskLists(command.getLists());
-                    } catch (CommandException e) {
+                        if(command.getLists()!=null) {
+                            internalWizard.setFinishedRiskLists(command.getLists());
+                        }
+                    } catch (Exception e) {
+                        LOG.error("Error while deselecting", e);
                         ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_9);
                     }
 
@@ -257,6 +266,7 @@ public class EstimateGefaehrdungPage extends WizardPage {
              * @param event
              *            event containing information about the selection
              */
+            @Override
             public void modifyText(ModifyEvent event) {
                 Text text = (Text) event.widget;
                 if (text.getText().length() > 0) {

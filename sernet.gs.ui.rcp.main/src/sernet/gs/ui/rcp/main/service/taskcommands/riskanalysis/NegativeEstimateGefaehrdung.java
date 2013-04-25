@@ -17,77 +17,97 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
+import java.io.Serializable;
+
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
+import sernet.verinice.model.common.Permission;
 
 /**
- * Mark a threat as "not OK", which means it has to be taken care of
- * in a later step of risk analysis.
+ * Mark a threat as "not OK", which means it has to be taken care of in a later
+ * step of risk analysis.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
 public class NegativeEstimateGefaehrdung extends GenericCommand {
 
-	private Integer listsDbId;
-	private GefaehrdungsUmsetzung gefaehrdungsUmsetzung;
-	private CnATreeElement finishedRiskAnalysis;
-	private FinishedRiskAnalysisLists lists;
+    private Integer listsDbId;
+    private GefaehrdungsUmsetzung gefaehrdungsUmsetzung;
+    private CnATreeElement finishedRiskAnalysis;
+    private FinishedRiskAnalysisLists raList;
 
-	/**
-	 * @param dbId
-	 * @param gefaehrdungsUmsetzung
-	 * @param finishedRiskAnalysis
-	 */
-	public NegativeEstimateGefaehrdung(Integer dbId,
-			GefaehrdungsUmsetzung gefaehrdungsUmsetzung,
-			CnATreeElement finishedRiskAnalysis) {
-		this.finishedRiskAnalysis = finishedRiskAnalysis;
-		this.gefaehrdungsUmsetzung = gefaehrdungsUmsetzung;
-		this.listsDbId = dbId;
-	}
+    /**
+     * @param dbId
+     * @param gefaehrdungsUmsetzung
+     * @param finishedRiskAnalysis
+     */
+    public NegativeEstimateGefaehrdung(Integer dbId, GefaehrdungsUmsetzung gefaehrdungsUmsetzung, CnATreeElement finishedRiskAnalysis) {
+        this.finishedRiskAnalysis = finishedRiskAnalysis;
+        this.gefaehrdungsUmsetzung = gefaehrdungsUmsetzung;
+        this.listsDbId = dbId;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		// attach objects:
-		lists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class)
-			.findById(listsDbId);
-	
-		getDaoFactory().getDAOforTypedElement(finishedRiskAnalysis)
-			.reload(finishedRiskAnalysis, finishedRiskAnalysis.getDbId());
-		
-		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung)
-			.merge(gefaehrdungsUmsetzung);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    @Override
+    public void execute() {
+        // attach objects:
+        raList = getFinishedRiskAnalysisListsDao().findById(listsDbId);      
+        getElementDao().reload(finishedRiskAnalysis, finishedRiskAnalysis.getDbId());
+        
+        CnATreeElement gefaehrdungsUmsetzungDb =  getElementDao().findByUuid(gefaehrdungsUmsetzung.getUuid(), null);
+        if(gefaehrdungsUmsetzungDb!=null) {
+            gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) gefaehrdungsUmsetzungDb;
+        } else {
+            gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, finishedRiskAnalysis.getPermissions()));
+        }
+        
+        gefaehrdungsUmsetzung.setOkay(true);
+        finishedRiskAnalysis.addChild(gefaehrdungsUmsetzung);
+        gefaehrdungsUmsetzung.setParentAndScope(finishedRiskAnalysis);
+        gefaehrdungsUmsetzung.setOkay(false);
+        
+        raList.addGefaehrdungsUmsetzung(gefaehrdungsUmsetzung);
+    }
 
-		finishedRiskAnalysis.addChild(gefaehrdungsUmsetzung);
-		gefaehrdungsUmsetzung.setParentAndScope(finishedRiskAnalysis);
-		gefaehrdungsUmsetzung.setOkay(false);
-		lists.getAllGefaehrdungsUmsetzungen().add(gefaehrdungsUmsetzung);
-		
-	}
+    public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
+        return gefaehrdungsUmsetzung;
+    }
 
-	public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
-		return gefaehrdungsUmsetzung;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+     */
+    @Override
+    public void clear() {
+        finishedRiskAnalysis = null;
+        HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), raList);
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
-	 */
-	@Override
-	public void clear() {
-		finishedRiskAnalysis = null;
-		HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), lists);
-	
-	}
+    }
 
-	public FinishedRiskAnalysisLists getLists() {
-		return lists;
-	}
+    public FinishedRiskAnalysisLists getRaList() {
+        return raList;
+    }
+    
+    private IBaseDao<FinishedRiskAnalysisLists, Serializable> getFinishedRiskAnalysisListsDao() {
+        return getDaoFactory().getDAO(FinishedRiskAnalysisLists.class);
+    }
+    
+    private IBaseDao<GefaehrdungsUmsetzung, Serializable> getGefaehrdungsUmsetzungDao() {
+        return getDaoFactory().getDAO(GefaehrdungsUmsetzung.class);
+    }
+    
+    private IBaseDao<CnATreeElement, Serializable> getElementDao() {
+        return getDaoFactory().getDAO(CnATreeElement.class);
+    }
 }

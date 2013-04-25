@@ -29,7 +29,11 @@
 			insert="false"
 			update="false"/>
 		
-		<property name="uuid"/>
+		<property
+			name="uuid"
+			not-null="true"
+			unique="true"
+		/>
 		
 		<property name="extId"/>
 		

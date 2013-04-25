@@ -19,6 +19,8 @@
 		
 		<property
 			name="uuid"
+			not-null="true"
+			unique="true"
 		/>
 
 

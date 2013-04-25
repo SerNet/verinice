@@ -59,6 +59,7 @@ public class FinishedRiskAnalysisLists implements Serializable, ITypedElement {
 	 /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
@@ -80,10 +81,34 @@ public class FinishedRiskAnalysisLists implements Serializable, ITypedElement {
 	public List<GefaehrdungsUmsetzung> getAllGefaehrdungsUmsetzungen() {
 		return allGefaehrdungsUmsetzungen;
 	}
+	
+	/**
+	 * Adds a gefaehrdung to the list of all gefaehrdungen
+	 * if gefaehrdung not already exits.
+	 * 
+	 * @param gefaehrdung
+	 */
+	public void addGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdung) {
+	    if(!allGefaehrdungsUmsetzungen.contains(gefaehrdung)) {
+	        allGefaehrdungsUmsetzungen.add(gefaehrdung);
+	    }
+	}
 
 	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
 		return associatedGefaehrdungen;
 	}
+	
+	/**
+     * Adds a gefaehrdung to the list of all gefaehrdungen
+     * if gefaehrdung not already exits.
+     * 
+     * @param gefaehrdung
+     */
+    public void addAssociatedGefahr(GefaehrdungsUmsetzung gefaehrdung) {
+        if(!associatedGefaehrdungen.contains(gefaehrdung)) {
+            associatedGefaehrdungen.add(gefaehrdung);
+        }
+    }
 	
 
 	public List<GefaehrdungsUmsetzung> getNotOKGefaehrdungsUmsetzungen() {
