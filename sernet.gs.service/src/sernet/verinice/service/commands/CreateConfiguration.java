@@ -33,15 +33,16 @@ public class CreateConfiguration extends GenericCommand {
 		this.person = elmt;
 	}
 
-	public void execute() {
+	@Override
+    public void execute() {
 	    configuration = new Configuration();
         if (person == null){
             throw new RuntimeCommandException("Default Konfiguration wurde bereits gesetzt.");
         }
         configuration.setPerson(person);
-        configuration.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);
+        configuration.addRole(IRightsService.USERDEFAULTGROUPNAME);
         configuration.setAdminUser(false);
-        configuration.setScopeOnly(true);
+        configuration.setScopeOnly(false);
         configuration.setWebUser(true);
         configuration.setRcpUser(true);       
        
