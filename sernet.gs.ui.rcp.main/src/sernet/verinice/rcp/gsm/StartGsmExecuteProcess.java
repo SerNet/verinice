@@ -252,7 +252,7 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
      */
     @Override
     public String getRightID() {
-        return ActionRightIDs.CREATE_INDIVIDUAL_TASKS;
+        return ActionRightIDs.CREATE_GREENBONE_TASKS;
     }
 
     /* (non-Javadoc)

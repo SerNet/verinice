@@ -161,7 +161,7 @@ public final class CnAElementHome {
 
     public <T extends CnATreeElement> T save(T element) throws CommandException {
         if (log.isDebugEnabled()) {
-            log.debug("Saving new element: " + element); //$NON-NLS-1$
+            log.debug("Saving new element, uuid " + element.getUuid()); //$NON-NLS-1$
         }
         SaveElement<T> saveCommand = new SaveElement<T>(element);
         saveCommand = getCommandService().executeCommand(saveCommand);
@@ -218,7 +218,9 @@ public final class CnAElementHome {
     }
 
     public BausteinUmsetzung save(CnATreeElement container, Baustein baustein) throws CommandException {
-        log.debug("Creating new element in " + container); //$NON-NLS-1$
+        if (log.isDebugEnabled()) {
+            log.debug("Creating new element, parent uuid: " + container.getUuid()); //$NON-NLS-1$
+        }
         CreateBaustein saveCommand = new CreateBaustein(container, baustein);
         saveCommand = getCommandService().executeCommand(saveCommand);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
@@ -228,14 +230,18 @@ public final class CnAElementHome {
     }
 
     public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged) throws CommandException {
-        log.debug("Saving new link from " + dropTarget + " to " + dragged); //$NON-NLS-1$ //$NON-NLS-2$
+        if (log.isDebugEnabled()) {
+            log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid()); //$NON-NLS-1$ //$NON-NLS-2$
+        }
         CreateLink command = new CreateLink(dropTarget, dragged);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
 
     public CnALink createLink(CnATreeElement dropTarget, CnATreeElement dragged, String typeId, String comment) throws CommandException {
-        log.debug("Saving new link from " + dropTarget + " to " + dragged + "of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if (log.isDebugEnabled()) {
+            log.debug("Saving new link from " + dropTarget.getUuid() + " to " + dragged.getUuid() + " of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
         CreateLink command = new CreateLink(dropTarget, dragged, typeId, comment);
         command = getCommandService().executeCommand(command);
 
@@ -243,7 +249,10 @@ public final class CnAElementHome {
     }
 
     public void remove(CnATreeElement element) throws CommandException {
-        log.debug("Deleting " + element.getTitle()); //$NON-NLS-1$
+        if (log.isDebugEnabled()) {
+            log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
+        }
+        
         RemoveElement command = new RemoveElement(element);
         deleteValidations(element);
         getCommandService().executeCommand(command);
@@ -270,7 +279,7 @@ public final class CnAElementHome {
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
             validateElement(command.getElement());
         }
-        return (CnATreeElement) command.getElement(); 
+        return command.getElement(); 
     }
 
     public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {
@@ -476,6 +485,7 @@ public final class CnAElementHome {
         }
         
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 Activator.inheritVeriniceContextState();
                 List<CnALink> newLinks = new ArrayList<CnALink>();

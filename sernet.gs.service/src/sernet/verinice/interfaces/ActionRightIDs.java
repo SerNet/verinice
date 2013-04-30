@@ -48,7 +48,10 @@ public class ActionRightIDs {
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
-    public static final String CHANGEICON = "changeicon";   
+    public static final String CHANGEICON = "changeicon";
+    public static final String CNAVALIDATION = "cnavalidation";
+    public static final String CREATE_GREENBONE_TASKS = "creategreenbonetasks";
+    public static final String CREATE_INDIVIDUAL_TASKS = "createindividualtasks";
     public static final String CREATEISATASKS = "createisatasks";
     public static final String DELETECATALOG = "deletecatalog";
     public static final String DELETEFILE = "deletefile";
@@ -61,6 +64,7 @@ public class ActionRightIDs {
     public static final String FILES = "files";
     public static final String GENERATEORGREPORT = "generateorgreport";
     public static final String GENERATEAUDITREPORT = "generateauditreport";
+    public static final String GROUP_BY_TAG = "groupbytag";
     public static final String GSNOTESIMPORT = "gsnotesimport";
     public static final String GSTOOLIMPORT = "gstoolimport";
     public static final String IMPORTCSV = "importcsv";
@@ -76,6 +80,7 @@ public class ActionRightIDs {
     public static final String RELATIONS = "relations";
     public static final String RISKANALYSIS = "riskanalysis";
     public static final String SAMTVIEW = "samtview";
+    public static final String SHOWALLFILES = "showallfiles";
     public static final String SHOWCHARTVIEW = "showchartview";
     public static final String SHOWPREFERENCES = "showpreferences";
     public static final String SIMPLEAUDITVIEW = "simpleauditview";
@@ -88,10 +93,6 @@ public class ActionRightIDs {
     public static final String UNIFY = "unify";
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
-    public static final String GROUP_BY_TAG = "groupbytag";
-    public static final String CREATE_INDIVIDUAL_TASKS = "createindividualtasks";
-    public static final String CNAVALIDATION = "cnavalidation";
-    public static final String SHOWALLFILES = "showallfiles";
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

@@ -175,6 +175,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	    return getImplementation(getEntity());
     }
 	
+	public void setImplementation(String state) {
+	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPL), state);
+    }
+	
 	
 	public static boolean isImplemented(Entity entity) {
 	    return getImplementation(entity).equals(IMPLEMENTED_YES);
