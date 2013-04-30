@@ -39,6 +39,8 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
@@ -55,9 +57,9 @@ public class GsmAssetScenarioRemover {
 
     private static final Logger LOG = Logger.getLogger(GsmAssetScenarioRemover.class);
     
-    private static final String[] typeIds = {Asset.TYPE_ID, IncidentScenario.TYPE_ID};
+    private static final String[] typeIds = {Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID};
 
-    private static final String[] relationIds = {IncidentScenario.REL_INCSCEN_ASSET};
+    private static final String[] relationIds = {IncidentScenario.REL_INCSCEN_ASSET, Control.REL_CONTROL_INCSCEN};
     
     /**
      * Every instance of GsmProcessStarter has an exclusive instance of a IGraphService
@@ -70,7 +72,14 @@ public class GsmAssetScenarioRemover {
     private IBaseDao<CnATreeElement, Integer> elementDao;
     
     
-    /* (non-Javadoc)
+    /**
+     * Deletes all links between assets and scenarios for one process.
+     * Method is called when a task is finished.
+     * 
+     * After deleting the links. State of controls is updated.
+     * If scenarios a has no more links to assets control state is implemented: yes.
+     * If there are any links left state is implemented: partly.
+     * 
      * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
      */
     public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {  
@@ -167,25 +176,16 @@ public class GsmAssetScenarioRemover {
 
     class DeleteAssetScenarioLinks implements HibernateCallback {
 
-        private final String hql = "delete from CnALink link where link.id.typeId = :linkTypeId and link.id.dependencyId = :assetDbId and link.id.dependantId in (:scenarioIds)";
+        private final String hql = "delete from CnALink link where link.id.typeId = :linkTypeId and link.id.dependencyId in (:assetIds) and link.id.dependantId = :scenarioDbId";
+        private Query query;
         
-        private List<CnATreeElement> elementList;
+        private List<CnATreeElement> processAssets = new LinkedList<CnATreeElement>();
+        private List<CnATreeElement> processScenarios = new LinkedList<CnATreeElement>();
 
         public DeleteAssetScenarioLinks(List<CnATreeElement> elementList) {
             super();
-            this.elementList = elementList;
-        }
-
-        /* (non-Javadoc)
-         * @see org.springframework.orm.hibernate3.HibernateCallback#doInHibernate(org.hibernate.Session)
-         */
-        @Override
-        public Object doInHibernate(Session session) throws HibernateException, SQLException {
-            int numberOfDeletedLinks = 0;        
-            Query query =  session.createQuery(hql);
-            
-            List<CnATreeElement> processAssets = new LinkedList<CnATreeElement>();
-            List<CnATreeElement> processScenarios = new LinkedList<CnATreeElement>();
+            processAssets = new LinkedList<CnATreeElement>();
+            processScenarios = new LinkedList<CnATreeElement>();
             for (CnATreeElement element : elementList) {
                 if(Asset.TYPE_ID.equals(element.getTypeId())) {
                     processAssets.add(element);
@@ -194,35 +194,96 @@ public class GsmAssetScenarioRemover {
                     processScenarios.add(element);
                 }              
             }
+        }
+
+        /* (non-Javadoc)
+         * @see org.springframework.orm.hibernate3.HibernateCallback#doInHibernate(org.hibernate.Session)
+         */
+        @Override
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            int numberOfDeletedLinks = 0;        
+            query = session.createQuery(hql);
             
-            for (CnATreeElement asset : processAssets) {
-                // get all scenarios linked to the asset
-                Set<CnATreeElement> allLinkedScenarios = getGraphService().getLinkTargets(asset, IncidentScenario.REL_INCSCEN_ASSET);
-                // use all scenarios which are linked and in the process
-                int result = deleteAssetScenarioLinks(query, asset, createIntersection(allLinkedScenarios,processScenarios));
-                numberOfDeletedLinks += result;              
-            }
+            for (CnATreeElement scenario : processScenarios) {
+                numberOfDeletedLinks += handleScenario(scenario);
+            }          
             
             return numberOfDeletedLinks;           
         }
 
-        private int deleteAssetScenarioLinks(Query query, CnATreeElement asset, Set<CnATreeElement> scenarios) {
-            if(asset==null || scenarios==null || scenarios.isEmpty()) {
+        private int handleScenario(CnATreeElement scenario) {
+            // get all assets linked to the scenario
+            Set<CnATreeElement> allLinkedAssets = getGraphService().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);
+            int numberOfAllLinkedAssets = allLinkedAssets.size();
+            // use all assets which are linked and in the process
+            Set<CnATreeElement> processLinkedAssets = createIntersection(allLinkedAssets,processAssets);
+            int numberOfProcessLinkedAssets = processLinkedAssets.size();
+            int numberOfDeletedLinks = deleteAssetScenarioLinks(query, scenario, processLinkedAssets);
+            // Update control state              
+            Set<CnATreeElement> linkedControls = getGraphService().getLinkTargets(scenario,Control.REL_CONTROL_INCSCEN);
+            String state = determineState(numberOfProcessLinkedAssets,numberOfAllLinkedAssets);
+            updateControlState(linkedControls, state);
+            return numberOfDeletedLinks;
+        }
+
+        private int deleteAssetScenarioLinks(Query query, CnATreeElement scenario, Set<CnATreeElement> assets) {
+            if(scenario==null || assets==null || assets.isEmpty()) {
                 return 0;
             }
             if (LOG.isDebugEnabled()) {
-                logParameter(asset, scenarios);
+                logParameter(scenario, assets);
             }
             
-            List<Integer> scenarioIdList = new ArrayList<Integer>();
-            for (CnATreeElement element : scenarios) {
-                scenarioIdList.add(element.getDbId());
+            List<Integer> assetIdList = new ArrayList<Integer>();
+            for (CnATreeElement asset : assets) {
+                assetIdList.add(asset.getDbId());
             }
             query.setParameter("linkTypeId", IncidentScenario.REL_INCSCEN_ASSET);
-            query.setParameter("assetDbId", asset.getDbId());
-            query.setParameterList("scenarioIds", scenarioIdList);
+            query.setParameter("scenarioDbId", scenario.getDbId());
+            query.setParameterList("assetIds", assetIdList);
             int result = query.executeUpdate();
             return result;
+        }
+         
+        /**
+         * Determines the implementation state of an control by assets linked to
+         * it (via a scenario).
+         * 
+         * If all linked assets are part of this process, state is IControl.IMPLEMENTED_YES,
+         * otherwise is  IControl.IMPLEMENTED_PARTLY.
+         * 
+         * @param processLinkedAssets Number of assets linked to one control (via a scenario) which are part of this process
+         * @param allLinkedAssets Number of assets linked to one control via a scenario
+         * @return Implementation state of an control: IControl.IMPLEMENTED_PARTLY or IControl.IMPLEMENTED_YES
+         */
+        private String determineState(int numberOfProcessLinkedAssets, int numberOfAllLinkedAssets) {
+            String state = IControl.IMPLEMENTED_PARTLY;
+            if(numberOfAllLinkedAssets==0 || (numberOfAllLinkedAssets==numberOfProcessLinkedAssets)) {
+                state = IControl.IMPLEMENTED_YES;
+            }
+            return state;
+        }
+
+        /**
+         * @param linkedControls
+         * @param b
+         */
+        private void updateControlState(Set<CnATreeElement> linkedControls, String state) {
+           if(linkedControls==null || linkedControls.isEmpty()) {
+               if (LOG.isDebugEnabled()) {
+                   LOG.debug("No control found. Can not update state.");
+               }
+               return;
+           }
+           if(linkedControls.size()>1) {
+               if (LOG.isDebugEnabled()) {
+                   LOG.debug("More than one control linked to scenarion. Can not update state.");
+               }
+               return;
+           }
+           Control control = (Control) linkedControls.iterator().next();
+           control.setImplementation(state);
+           getElementDao().saveOrUpdate(control);
         }
         
         private void logParameter(CnATreeElement asset, Set<CnATreeElement> scenarios) {

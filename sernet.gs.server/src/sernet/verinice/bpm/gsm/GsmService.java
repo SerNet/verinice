@@ -73,7 +73,6 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
      * configured in veriniceserver-jbpm.xml
      */
     private ObjectFactory assetScenarioRemoverFactory;
-    
 
     public GsmService() {
         super();
@@ -130,7 +129,12 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         return information;
     }
     
-    /* (non-Javadoc)
+    /**
+     * Deletes all links between assets and scenarios in elementUuidSet.
+     * ElementUuidSet contains all elements of one process.
+     * Method is called when a task is finished.
+     * 
+     * @param elementUuidSet Uuids of all elements in one process
      * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
      */
     @Override
@@ -216,12 +220,16 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
     
 
     private String getFirstControlDescription(Set<CnATreeElement> elementSet) {
+        String description = Messages.getString("GsmService.0"); //$NON-NLS-1$
         for (CnATreeElement element : elementSet) {
             if(Control.TYPE_ID.equals(element.getTypeId())) {
-                return ((Control)element).getGsmDescription();
+                String current = ((Control)element).getGsmDescription();
+                if(current!=null && !current.isEmpty()) {
+                    description = current;
+                }
             }
         }
-        return ""; //$NON-NLS-1$
+        return description; 
     }
     
     /**
@@ -254,7 +262,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
      * @return P=<UUID_PERSON>;CG=<UUID_CONTROL_GROUP>
      */
     public static String createProcessId(CnATreeElement person, CnATreeElement controlGroup) {
-        return new StringBuilder().append("P=").append(person.getUuid()).append(";CG=").append(controlGroup.getUuid()).toString();
+        return new StringBuilder().append("P=").append(person.getUuid()).append(";CG=").append(controlGroup.getUuid()).toString(); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     public static String createElementInformation(Set<CnATreeElement> elementSet, String typeId) {

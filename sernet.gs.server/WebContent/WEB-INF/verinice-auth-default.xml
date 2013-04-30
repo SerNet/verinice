@@ -46,6 +46,7 @@
         <action id="bulkedit" />
         <action id="changeicon" />
         <action id="cnavalidation" />
+        <action id="creategreenbonetasks" />
         <action id="createindividualtasks" />
         <action id="createisatasks" />
         <action id="deletecatalog" />
@@ -112,6 +113,7 @@
 	        <action id="bulkedit" />
             <action id="changeicon" />
 	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />
@@ -174,6 +176,7 @@
 	        <action id="bulkedit" />
             <action id="changeicon" />
 	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />
@@ -237,6 +240,7 @@
 	        <action id="bulkedit" />
             <action id="changeicon" />
 	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
 	        <action id="createisatasks" />
 	        <action id="deletecatalog" />

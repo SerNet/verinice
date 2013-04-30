@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -75,7 +75,7 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
     
     @SuppressWarnings("unchecked")
     private Map<String, Object> convertProcessVarsToTemplateVars(Map<String, Object> processVars) { 
-        Map<String, Object> templateVars = new Hashtable<String, Object>();
+        Map<String, Object> templateVars = new HashMap<String, Object>();
          
         templateVars.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, processVars.get(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST));
         templateVars.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION));           

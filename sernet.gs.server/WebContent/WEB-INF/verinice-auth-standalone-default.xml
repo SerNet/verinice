@@ -21,6 +21,7 @@
             <!-- missing actions:
             	"accountsettings"
             	"accesscontrol"
+                "creategreenbonetasks"
                 "createindividualtasks"
                 "createisatasks"
 	            "editprofile"

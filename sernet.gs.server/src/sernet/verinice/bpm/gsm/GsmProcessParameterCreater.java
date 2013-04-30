@@ -20,12 +20,14 @@
 package sernet.verinice.bpm.gsm;
 
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -267,16 +269,21 @@ public class GsmProcessParameterCreater {
         }
     }
     
+    @SuppressWarnings("unchecked")
     private List<CnATreeElement> get2ndLevelControlGroups(Integer orgId) {
-        StringBuffer hql = new StringBuffer("select distinct e from CnATreeElement e "); //$NON-NLS-1$
-        hql.append("inner join fetch e.entity as entity ");  //$NON-NLS-1$
-        hql.append("inner join fetch entity.typedPropertyLists as propertyList "); //$NON-NLS-1$
-        hql.append("inner join fetch propertyList.properties as props "); //$NON-NLS-1$        
+        StringBuffer hql = new StringBuffer("select e.dbId from CnATreeElement e "); //$NON-NLS-1$      
         hql.append("where e.objectType = ? and e.parent.parent.dbId = ?"); //$NON-NLS-1$ 
-        return getElementDao().findByQuery(hql.toString(),new Object[]{ControlGroup.TYPE_ID,orgId});
-       
+        List<Integer> dbIdResult = getElementDao().findByQuery(hql.toString(),new Object[]{ControlGroup.TYPE_ID,orgId});
+        if(dbIdResult==null || dbIdResult.isEmpty()) {
+            return Collections.emptyList();
+        }
+        DetachedCriteria crit = createDefaultCriteria();
+        Integer[] dbIdArray = dbIdResult.toArray(new Integer[dbIdResult.size()]);
+        crit.add(Restrictions.in("dbId", dbIdArray));
+        return getElementDao().findByCriteria(crit);   
     }
     
+    @SuppressWarnings("unchecked")
     private List<CnATreeElement> getPersons() {
         DetachedCriteria crit = createDefaultCriteria();
         crit.add(Restrictions.eq("objectType", PersonIso.TYPE_ID));
@@ -287,6 +294,7 @@ public class GsmProcessParameterCreater {
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return crit;
     }
     
@@ -393,4 +401,5 @@ public class GsmProcessParameterCreater {
     public void setJbpmExecutionDao(IDao<ExecutionImpl, Long> jbpmExecutionDao) {
         this.jbpmExecutionDao = jbpmExecutionDao;
     }
+
 }

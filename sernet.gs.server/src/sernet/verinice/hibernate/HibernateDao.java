@@ -95,6 +95,14 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
     public List<T> findByQuery(String hqlQuery, Object[] params) {
         return getHibernateTemplate().find(hqlQuery, params);
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String, java.lang.Object[])
+     */
+    @Override
+    public List<T> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
+        return getHibernateTemplate().findByNamedParam(hqlQuery, paramNames, paramValues);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IDao#merge(java.lang.Object)
@@ -112,6 +120,7 @@ public class HibernateDao<T, ID extends Serializable> extends HibernateDaoSuppor
         getHibernateTemplate().saveOrUpdate(entity);
     }
     
+    @Override
     public <E> E initializeAndUnproxy(E entity) {
         if (entity == null) {
             throw new NullPointerException("Entity passed for initialization is null");
