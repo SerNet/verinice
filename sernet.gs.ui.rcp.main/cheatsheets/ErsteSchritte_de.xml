@@ -14,24 +14,25 @@
 
 	<item
 		title="Grundschutz Kataloge downloaden">
-
+<!--
 	<action 
 			pluginId="sernet.gs.ui.rcp.main"
 			class="sernet.gs.ui.rcp.main.bsi.actions.DownloadBsiCataloguesAction"
 			confirm="true"/>
+			-->
 		<description>
 			Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge
 			downloaden.
 			<br/>
 			<br/>
-			Gehen Sie auf die verinice Webseite in den Bereich "Download".
+			Gehen Sie auf die verinice-Webseite in den Bereich "Download".
 			<br/>
 			Adresse: <b>http://www.verinice.org/download</b>
 			<br/>
 			<br/>
-			Wechseln Sie in den Abschnitt "Kataloge und mehr" und laden Sie folgende Datei herunter:
+			Wechseln Sie in den Abschnitt "Kataloge und mehr" und laden Sie die folgende Datei herunter:
 			<br/>
-			<b>IT-Grundschutz-Kataloge, 12. Ergänzungslieferung (ZIP ca. 11 MB)</b>
+			<b>IT-Grundschutz-Kataloge, 12. Ergänzungslieferung (ZIP ca. 10 MB)</b>
 			<br/>
 			<br/>
 			Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
@@ -46,29 +47,29 @@
 			 -->
 	<description>
 		Nun müssen Sie einstellen, wo sich der gespeicherte Download der
-		Grundschutz Kataloge befindet.
+		Grundschutz-Kataloge befindet.
 		<br/>
 		<br/>
-		Öffnen Sie die Einstellungen über das Menü "Bearbeiten" -> "Einstellungen...".
+		Öffnen Sie die Einstellungen über das Menü "Bearbeiten  >  Einstellungen...". 
 		<br/>
 		<br/>
-		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie den korrekten Pfad zur heruntergeladenen ZIP Datei ein.
+		Öffnen Sie die Seite mit dem Namen "BSI IT-Grundschutz". Stellen Sie den korrekten Pfad zur heruntergeladenen ZIP-Datei ein.
 		<br/>
 		<br/>
-		Schließen Sie dann die Einstellungen mit "OK".
+		Übernehmen Sie dann die Einstellungen mit "OK".
 	</description>
 	</item>
 
 	<item title="Kataloge werden geladen">
 	<description>
-	Die Grundschutz Kataloge wurden nun aus der ZIP-Datei geladen. Sobald der
-	Parser mit seiner Arbeit fertig ist, erscheinen alle Bausteine im Fenster
+	Die Grundschutz-Kataloge werden nun im Hintergrund aus der ZIP-Datei geladen. Sobald der
+	Parser mit seiner Arbeit fertig ist, erscheinen alle Bausteine im View
 	"IT-Grundschutz".
 	<br/><br/>
-	 Wenn Sie nun einen Baustein oder eine Maßnahme anklicken, können Sie den Inhalt im Browserfenster nachlesen.
+	 Wenn Sie nun einen Baustein oder eine Maßnahme anklicken, wird der Inhalt im Browser-View angezeigt.
 	</description>
 	<onCompletion>
-	Sehr gut! Wenn Sie weitermachen möchten, finden Sie weitere Spickzettel im Hilfemenü.
+	Sehr gut! Wenn Sie weitermachen möchten, finden Sie weitere Spickzettel im Hilfemenü. Der hiernach folgende Spickzettel trägt den Namen "Strukturanalyse". 
 	</onCompletion>
 	
 	</item>

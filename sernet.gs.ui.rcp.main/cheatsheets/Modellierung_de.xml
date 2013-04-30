@@ -19,10 +19,10 @@
 	
 	<item title="Zuordnen eines Bausteins">
 		<description>
-		Suchen Sie in der Ansicht "IT-Grundschutz" den Baustein 3.101 "Allgemeiner Server".
+		Suchen Sie im View "IT-Grundschutz" den Baustein 3.101 "Allgemeiner Server".
 		<br/><br/>
-		Klicken und ziehen Sie den Baustein mit der linken Maustaste rüber ins Fenster 
-		"GS-Modell" und lassen Sie ihn auf dem "Buchhaltungssystem" fallen.
+		Klicken und ziehen Sie den Baustein mit der linken Maustaste rüber in den View 
+		"Grundschutz Modell" und lassen Sie ihn auf dem "Buchhaltungssystem" fallen.
 		</description>
 	</item>
 	
@@ -34,14 +34,14 @@
 		ein. Später erfassen Sie hier ihre Interviewpartner zur Feststellung des
 		Umsetzungsstatus.
 		<br/><br/>
-		Schließen Sie den Baustein (Strg-W).
+		Schließen Sie den Baustein (Strg+W).
 		</description>
 	</item>
 	
 	<item title="Maßnahmen">
 		<description>
 		Klappen Sie den Baustein auf. Es werden die umzusetzenden Maßnahmen angezeigt.
-		Sie können diese Ansicht filtern, indem Sie im Fenstermenü den Button "Filtern"
+		Sie können diese Ansicht filtern, indem Sie im Fenstermenü den Button "Filter..."
 		auswählen. So können Sie sich z.B. nur die Maßnahmen der Stufe A 
 		oder nur die Maßnahmen für die Notfallvorsorge anzeigen lassen.
 		<br/><br/>
@@ -65,24 +65,20 @@
 	
 	<item title="Zuordnen mehrere Bausteine 2">
 		<description>
-		Kopieren Sie die gewählten Bausteine in die Zwischenablage: Rechtsklick -> "Kopieren".
-		<br/><br/>
-		Wählen Sie dann im Fenster "GS-Modell" den übergeordneten IT-Verbund aus. Fügen Sie 
-		die Bausteine ein: Rechtsklick -> "Einfügen".
+		Verschieben Sie durch Drag and Drop die ausgewählten Bausteine auf das IT-Verbund-Zielobejkt. Diese werde somit übergeordnet modelliert. 
 		</description>
 
 	</item>
 	
 	<item title="Bausteine Suchen">
 	<description>
-	Sie suchen Bausteine, die sich mit dem Thema "Drucker" befassen. Klicken Sie im Fenster 
-	"IT-Grundschutz" auf den Button "Filtern". Geben Sie als Suchbegriff "Drucker" ein.
+	Sie suchen Bausteine, die sich mit dem Thema "Drucker" befassen? Klicken Sie im View 
+	"IT-Grundschutz" auf den Button "Filter...". Geben Sie als Suchbegriff "Drucker" ein.
 	<br/><br/>
-	Als Ergebnis sehen Sie die Bausteine B 1.9 "Hard- und Software Management" und B 5.1 "Peer 
-	to Peer Dienste", die eine Maßnahme, bzw. eine Gefährdung zum Thema Drucker enthalten.
+	Als Ergebnis sehen Sie nun ausschließlich die relevanten Bausteine angezeigt.  
 	</description>
 		<onCompletion>
-		Sehr gut. Sie wissen nun, wie Sie ihren IT-Verbund modellieren können. Wenn Sie möchten, fahren sie mit dem Spickzettel "Basis-Sicherheitscheck" fort.
+		Sehr gut. Sie wissen nun, wie Sie Ihren IT-Verbund modellieren können. Wenn Sie möchten, fahren Sie mit dem Spickzettel "Basis-Sicherheitscheck" fort.
 		</onCompletion>
 	</item>
 	

@@ -32,7 +32,7 @@ public class ShowISMPerspectiveIntroAction extends ShowPerspectiveIntroAction {
      */
     @Override
     public String getCheatSheetId() {
-        return "sernet.gs.ui.rcp.main.cheatsheet1";
+        return "sernet.verinice.iso27k.cheatsheet1";
     }
 
     /* (non-Javadoc)

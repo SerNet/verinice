@@ -4,43 +4,34 @@
 	<intro 
 		>
 		<description>
-		So erzeugen Sie die nötigen Referenzdokumente.
+		So erzeugen Sie die nötigen Referenzdokumente!
 		</description>
 	</intro>
 
 	<item title="Reports">
 		<description>
-		Mit Verinice können Sie alle nötigen Referenzdokumente erzeugen, die für ein Audit benötigt 
-		werden. Die Dokumente können als PDF, HTML, für Microsoft Office, OpenOffice oder LibreOffice
+		Mit verinice können Sie alle nötigen Referenzdokumente erzeugen, die für ein Audit benötigt 
+		werden. Die Dokumente können in den Formaten PDF, HTML, Microsoft Office oder OpenOffice/LibreOffice
 		erzeugt werden.
-		</description>
-	</item>
-	
-	<item title="Vorlagen">
-		<description>
-		Den Pfad zu den Vorlagen lassen Sie am besten unangetastet. Wenn Sie wollen, 
-		können Sie später die Vorlagen an ihr Unternehmen anpassen.
-		<br/><br/>
-		Schließen Sie die Einstellungen mit "OK".
 		</description>
 	</item>
 	
 	<item title="Report auswählen">
 		<description>
-		Wählen Sie im Menü: "Bearbeiten", "Report erstellen". Wählen Sie aus der Liste den Report
-		"Basis-Sicherheitscheck", wählen Sie ein Ausgabeformat, einen Dateinamen und gehen Sie weiter.
+		Wählen Sie im Menü: "Datei > "Report erzeugen...". Wählen Sie in Feld "Report auswählen" aus der Liste den Report
+		"BSI IT-Grundschutz: A.4 Basis-Sicherheitscheck". Wählen Sie ein Ausgabeformat, einen Dateinamen und gehen Sie weiter.
 		</description>
 	</item>
 	
 	<item title="Report wird erzeugt">
 		<description>
-		Der Report wird erzeugt. Je nach Größe der Datenbank, kann die Erzeugung einige Minuten dauern.
+		Der Report wird erzeugt, was üblicherweise einige Sekunden dauert. Je nach Größe der Datenbank kann die Erzeugung aber auch einige Minuten dauern.
+		Schauen Sie sich den Report an, den Sie gerade erzeugt haben. 
 		</description>
 		<onCompletion>
-	    Fertig. Probieren Sie noch aus, auch einige andere Reports zu generieren.
+	    Fertig! Probieren Sie noch aus, auch einige andere Reports zu generieren.
 		</onCompletion>
 	</item>
-	
 	
 	
 </cheatsheet>

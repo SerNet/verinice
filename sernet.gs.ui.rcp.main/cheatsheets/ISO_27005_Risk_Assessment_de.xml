@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet
+      title="Risko-Management basierend auf ISO 27005">
+	<intro>
+		<description>
+Dieses Tutorial zeigt Ihnen, wie Sie eine Risikobewertung auf Basis internationalen 
+Norm ISO 27005 mit verinice erstellen können.		
+		</description>
+	</intro>
+ <item
+       title="In die ISM-Perspektive wechseln">
+    <description>
+    Zunächst müssen Sie in die ISM-Perspektive wechseln, wenn Sie das nicht bereits getan haben. 
+    Wählen Sie dazu im Menü: "Ansicht > Zeige Perspektive... > ISM Perspektive".
+    </description>
+ </item>
+ <item
+       title="Erstellen einer Organisation">
+    <description>
+       Erstellen Sie ein neues Organisations-Objekt, indem Sie auf den Button  
+       "Neue Organisation hinzufügen..." im ISM-View klicken. Es sieht aus wie ein 
+       leeres Blatt mit einem gelben Stern in der oberen rechten Ecke.
+<br/><br/>
+       Doppelklicken Sie auf das Organisations-Objekt. Ändern Sie den Namen in "Meine Organisation". 
+       Stellen Sie die "Risiko Akzeptanz" jeweils auf "3" für die Vertraulichkeit, Integrität und 
+       Verfügbarkeit. Speichern Sie Ihre Änderungen, indem Sie auf "Datei > Speichern" klicken  
+       oder oder die Tastenkombination Strg + S verwenden.
+<br/><br/>
+       Blättern Sie nach unten im Editor-View und lesen Sie sich die Definitionen 
+       für die Business-Impact-Klassifizierung durch. Sie müssen diese ändern, damit diese auf 
+       Ihre Organisation zutreffen. 
+    </description>
+ </item>
+ <item
+       title="Erzeugen eines neuen Assets">
+    <description>
+       Klappen Sie das Organisations-Objekt auf. Klicken Sie rechts auf die "Assets"-Kategorie. 
+       Wählen Sie "Neues Asset...". Geben Sie als Namen "Mail-Server" ein.  
+       Verändern Sie die "Art des Assets" in "Physisch". Speichern Sie durch Drücken von Strg+S.
+    </description>
+ </item>
+ <item
+       title="Erstellen eines Prozesses">
+    <description>
+       Klicken Sie auf "Prozesse" mit der rechten Maustaste. Wählen Sie "Neuer Prozess...". 
+Geben Sie "Marketing" als Titel ein und wählen bei den Business-Impact-Werten folgendes aus: 
+"Vertraulichkeit: 0 Offen", "Integrität: 1 Mittel" und "Verfügbarkeit: 2 Hoch". Speichern 
+Sie durch Drücken von Strg + S.
+ <br/><br/>
+       Verknüpfen Sie das Asset mit dem Prozess. Ein Weg, dies zu tun, ist im 
+       Editor-View über "Verknüpfungen" zu gehen. Wählen Sie dort "Asset" 
+       und klicken Sie anschließend "Hinzufügen...". Wählen Sie das Asset aus und klicken Sie auf
+       "OK". Im Linkmaker-Bereich sehen Sie nun die neue Verknüpfung und deren Art.
+    </description>
+ </item>
+ <item
+       title="Erstellen einer Schwachstelle">
+    <description>
+       Klicken Sie mit der rechten Maustaste auf "Schwachstelle" die im Organisations-Baum und
+       wählen Sie "Neue Schwachstelle..." aus. Geben Sie "Remote Exploit" als Titel ein und setzen 
+       die "Einstufung der Schwachstelle" auf "1: Niedrig". Speichern Sie durch Drücken von Strg+S.
+    </description>
+ </item>
+ <item
+       title="Erstellen einer neuen Bedrohung">
+    <description>
+       Analog verfahren Sie mit einer neuen "Bedrohung" im ISM-View. 
+       Geben Sie "Externe Angreifer" als Titel ein. 
+       Setzen Sie die "Bedrohungshäufigkeit" auf "2: Monatlich". Speichern Sie durch Drücken von Strg+S.   
+    </description>
+ </item>
+<item
+       title="Erstellen eines Szenarios">
+    <description>
+    Bisher haben Sie separate Objekte erstellt, sie aber noch nicht verbunden sind.
+        Um ein tatsächliches Risiko-Szenario zu erstellen, müssen Sie die Bedrohung und die 
+        Schwachstelle miteinander verbinden. Ziehen sie per Drag'n'Drop die beiden Objekte aufeinander. 
+        verinice fragt Sie dann automatisch, ob Sie daraus ein Szenario erstellen wollen. Bestätigen 
+        Sie dies mit "Ja". Das neue Szenario erscheint nun im ISM-View.
+    </description>
+ </item>
+ <item
+       title="Verknüpfen von Szenarien und Assets">
+    <description>
+    Jetzt müssen Sie das Szenario mit dem Mail-Server verbinden, um zu dokumentieren, dass der Server von diesem 
+    Szenario betroffen ist. Machen Sie das in gewohnter Art per Drag'n'Drop über den Linkmaker (unten) 
+    im Editor-View. Die neue Verknüpfung erscheint automatisch zusätzlich im Verknüpfungs-View. 
+    </description>
+ </item>
+ <item
+       title="Ausführen der Risikoberechnung">
+    <description>
+        WICHTIG!: Die Level der Bedrohung werden nur aktualisiert, wenn Sie
+        wählen Sie den Button "Risikoanalyse durchführen" betätigen. Diesen Button 
+        finden Sie in der oberen Button-Leiste - bitte betätigen Sie ihn.
+    </description>
+ </item>
+ <item
+       title="Nachprüfen der Risikowerte">
+    <description>
+       Rufen Sie das Assert mit Doppelklick auf. Nun sehen Sie, dass das Asset die 
+       Business-Impact-Werte vom Prozess vererbt wurden. In der Verknüpfungs-Übersicht 
+	      sehen Sie weiterhin die Verknüpfung zum Szenario. Das Risiko für die Grundwerte 
+	      Vertraulichkeit, Integrität und Verfügbarkeit (CIA) wird jeweils separat berechnet.
+    </description>
+ </item>
+ <item
+       title="Erstellen eines zweiten Szenarios">
+    <description>
+    Sie können Szenarien auch direkt anlegen. Klicken Sie rechts auf die Gruppe "Szenarios" 
+    und wählen "Neues Szenario...". Entfernen Sie in dem Fall den Haken bei 
+    "Ableiten aus Bedr./Schwachst.", da jetzt keine Ableitung stattfinden kann. 
+ <br/><br/>
+Wenn Sie verinice.PRO kaufen sollten, erhalten Sie einen umfangreichen Katalog von Szenarien
+mit Beziehungen zu passenden Bedrohungen und Schwachstellen, die auch im Anhang der ISO 27005 enthalten sind.
+    </description>
+ </item>
+ <item
+       title="Feinabstimmung der Risikoanalyse">
+    <description>
+    Standardmäßig wird für ein Szenario angenommen, dass alle drei Grundwerte betroffen sind 
+    (Vertraulichkeit, Integrität und Verfügbarkeit). Sie können die Feinabstimmung durch
+        Deaktivieren einiger der Kontrollkästchen im der Editor-View für das betreffende Szenario vornehmen.
+        Eine Überflutung wirkt sich z.B. auf die Verfügbarkeit aus, aber nicht auf die Vertraulichkeit und Integrität.    
+    </description>
+ </item>
+ <item
+       title="Erzeigen eines Risiko-Menagement-Reports">
+    <description>
+    Klicken Sie im Menü auf "Datei > Report erzeugen...". Wählen Sie folgenden Report aus: 
+        "ISM: Risiko Management Ergebnisse". Wählen Sie dann noch die 
+        Organisation(Geltungsbereich), das Ausgebeformat (z.B. "PDF") und den Ort der Ausgabedatei aus.
+        Klicken Sie auf "OK". Sie können jetzt den erstellten Bericht mit jedem PDF-Betrachter öffnen.
+    </description>
+ </item>
+ <item
+       title="Risiko-Behandlung">
+    <description>
+      Nun sollten wir etwas gegen die identifizierten Risiken tun. Erstellen Sie ein neues Control. 
+      Nennen Sie es "Patch Management". Setzen Sie es bei "Implementiert" auf "Ja". 
+      Blättern Sie nach unten zu "Control-Level" und dort wählen Sie bei "Wahrscheinlichkeit des Szenarios" "Reduziert 1 Stufe". 
+      Speichern Sie durch Drücken von Strg+S.
+    </description>
+ </item>
+ <item
+       title="Anwenden von Controls">
+    <description>
+    Verknüpfen Sie nun das Control mit dem Szenario. Die Verknpüfungs-Art sollte wie folgt lauten: 
+    "reduziert Wahrscheinlichkeit von". Damit wird deutlich, dass das Control dem Eintreten des Szenarios
+    entgegenwirkt. 
+    <br/><br/>
+    Controls können auf Szenarien oder auf Assets angewandt werden. Das Control wirkt dadurch 
+    jeweils bei den Assets oder vermindert die Auswirkung von Szenarien, die Auswirkung auf viele 
+    Assets gleichzeitig haben können. 
+    <br/><br/>
+    Wenn Sie auf das Szenario in der Liste doppelt anklicken, sehen Sie alle Beziehungen
+    im Verknüpfungs-View. Führen Sie nun nochmal eine Risikoanaylse durch und schauen Sie sich die
+    neuen Risiko-Werte an.  
+    </description>
+ </item>
+ <item
+       title="Danke!">
+    <description>
+    Danke für die Verwendung von verinice für Ihre Informations-Risiko-Bewertung.
+        Wenn Sie weitere Fragen haben oder professionelle Unterstützung brauchen, helfen wir Ihnen gerne! 
+        Kontaktinformationen finden Sie auf unserer Website unter http://verinice.org
+    </description>
+ </item>
+</cheatsheet>
