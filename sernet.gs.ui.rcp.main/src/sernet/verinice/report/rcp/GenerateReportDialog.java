@@ -377,7 +377,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		openFileButton.addSelectionListener(new SelectionAdapter() {
 		    public void widgetSelected(SelectionEvent event) {
 		        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
+		        if(useDefaultFolder){
 		        dlg.setFilterPath(defaultFolder + textFile.getText());
+		        }else{
+		            dlg.setFilterPath(System.getProperty("user.home")+textFile.getText());
+		        }
 		        ArrayList<String> extensionList = new ArrayList<String>();
 		        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
 		            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
@@ -405,14 +409,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
         useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
         
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
+            public void widgetSelected(SelectionEvent e) {
                 useDefaultFolder = ((Button)e.getSource()).getSelection();
             }
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                widgetDefaultSelected(e);
-
-            }
+           
         });
 		
         Group groupCache = new Group(composite, SWT.NULL);
@@ -590,7 +590,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         if(outputFileName == null || outputFileName.equals("")){
             outputFileName = "unknown";
         }
-        String scopeName = scopeCombo.getText().replaceAll("[^a-zA-Z]", "");
+        String scopeName = convertToFileName(scopeCombo.getText());
         StringBuilder sb = new StringBuilder(outputFileName).append("_").append(scopeName);
         if(chosenOutputFormat!=null) {
             sb.append(".").append(chosenOutputFormat.getFileSuffix());
@@ -644,7 +644,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         String currentPath = setupDirPath();
         defaultFolder = currentPath;
+        if(useDefaultFolder){
         Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
+        }
         outputFile = new File(f);
         resetScopeCombo();
         super.okPressed();
@@ -724,17 +726,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return compoundLoader.getElements();
     }
     
-    public static String convertToFileName(String label) {
+    private static String convertToFileName(String label) {
         String filename = ""; //$NON-NLS-1$
         if(label!=null) {
             filename = label.replace(' ', '_');
-            filename = filename.replace("ä", "ae"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ü", "ue"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ö", "oe"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ä", "Ae"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ü", "Ue"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ö", "Oe"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ß", "ss"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ä", "\u00E4"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ü", "\u00FC"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ö", "\u00F6"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ä", "\u00C4"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ü", "\u00DC"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ö", "\u00D6"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
