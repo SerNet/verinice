@@ -6955,28 +6955,34 @@ for (CnATreeElement process : processes) {
 				if(isCRelevant){
 					if((probability + impactC) > toleratedC){
 						cRedCount++;
-					} else if((probability + impactC) >= (toleratedC - cMinuend) &amp;&amp; (probability + impactC) < toleratedC){
-						cYellowCount++;
+					//} else if((probability + impactC) >= (toleratedC - cMinuend) &amp;&amp; (probability + impactC) < toleratedC){ 
+					//	cYellowCount++;
 					} else if((probability + impactC +2) < toleratedC){
 						cGreenCount++;
+					} else {
+						cYellowCount++;
 					}
 				}
 				if(isIRelevant){ 
 					if((probability + impactI) > toleratedI){
 						iRedCount++;
-					} else if((probability + impactI) > (toleratedI - 4) &amp;&amp; (probability + impactI) < toleratedI){
-						iYellowCount++;
+					//} else if((probability + impactI) > (toleratedI - 4) &amp;&amp; (probability + impactI) < toleratedI){
+					//	iYellowCount++;
 					} else if((probability + impactI + 3) < toleratedI){
 						iGreenCount++;
+					} else {
+						iYellowCount++;
 					}
 				}
 				if(isARelevant){
 					if((probability + impactA) > toleratedA){
 						aRedCount++;
-					} else if((probability + impactA) > (toleratedA - 3) &amp;&amp; (probability + impactA) <= toleratedA){	
-						aYellowCount++;
+					//} else if((probability + impactA) > (toleratedA - 3) &amp;&amp; (probability + impactA) <= toleratedA){	
+					//	aYellowCount++;
 					} else if((probability + impactA +2) < toleratedA){
 						aGreenCount++;
+					} else {
+						aYellowCount++;
 					}
 				}
        			 } // scenario iteration end
