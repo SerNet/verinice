@@ -71,12 +71,6 @@
             name="%perspective.name"
             icon="icons/vda.png">
       </perspective>
-      <perspective
-            class="sernet.verinice.samt.audit.rcp.AuditPerspective"
-            id="sernet.verinice.samt.audit.rcp.AuditPerspective"
-            name="%perspective.name.0"
-            icon="icons/audit.png">
-      </perspective>
    </extension>
    <extension point="org.eclipse.ui.menus">
    	  <menuContribution locationURI="popup:sernet.verinice.samt.rcp.views.SimpleAuditView?after=additions">
