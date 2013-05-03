@@ -185,8 +185,10 @@ public class ExportThread extends NotifyingThread {
              * Save source id to re-import element later
              */
             if(isReImport()) {
-                // TODO: what happens if source id already set?
                 element.setSourceId(getSourceId());
+                if(element.getExtId()==null) {
+                    element.setExtId(extId);
+                }
                 getDao().merge(element);
                 getChangedElementList().add(element);
             }

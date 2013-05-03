@@ -95,11 +95,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	    EntityType type = getTypeFactory().getEntityType(getEntity().getEntityType());
         getEntity().setSimpleValue(type.getPropertyType(propTypeId), Integer.toString(value));
 	}
-
-	public void setextId(String extId)
-	{
-	    this.extId = extId;
-	}
 	
 	private static final String ENTITY_TITLE = "ENTITY_";
 
@@ -212,10 +207,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public CnATreeElement[] getChildrenAsArray() {
-		return (CnATreeElement[]) children.toArray(new CnATreeElement[children.size()]);
+		return children.toArray(new CnATreeElement[children.size()]);
 	}
 
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
+	@Override
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
 			getModelChangeListener().childAdded(category, child);
 	}
 	
@@ -225,11 +221,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 * @param category
 	 * @param child
 	 */
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
+	@Override
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
 			getModelChangeListener().childRemoved(category, child);
 	}
 
-	public void childChanged(CnATreeElement child) {
+	@Override
+    public void childChanged(CnATreeElement child) {
 			// child changed:
 			getModelChangeListener().childChanged(child);
 	}
@@ -316,6 +314,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.scopeId = scopeId;
     }
 
+    @Override
     public abstract String getTypeId();
 
 	public String getObjectType() {
@@ -429,15 +428,18 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		linksDown.add(link);
 	}
 	
-	public void linkChanged(CnALink old, CnALink link, Object source) {
+	@Override
+    public void linkChanged(CnALink old, CnALink link, Object source) {
 		getModelChangeListener().linkChanged(old, link, source);
 	}
 	
-	public void linkRemoved(CnALink link) {
+	@Override
+    public void linkRemoved(CnALink link) {
 		getModelChangeListener().linkRemoved(link);
 	}
 	
-	public void linkAdded(CnALink link) {
+	@Override
+    public void linkAdded(CnALink link) {
 		getModelChangeListener().linkAdded(link);
 	}
 
@@ -455,11 +457,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	/**
 	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
 	 */
-	public void modelRefresh() {
+	@Deprecated
+    @Override
+    public void modelRefresh() {
 		modelRefresh(null);
 	}
 
-	public void modelRefresh(Object source) {
+	@Override
+    public void modelRefresh(Object source) {
 		getModelChangeListener().modelRefresh(null);
 	}
 
@@ -469,19 +474,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public ILinkChangeListener getLinkChangeListener() {
 		return new ILinkChangeListener() {
-			public void determineIntegritaet(CascadingTransaction ta)
+			@Override
+            public void determineIntegritaet(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 				
 			}
 
-			public void determineVerfuegbarkeit(CascadingTransaction ta)
+			@Override
+            public void determineVerfuegbarkeit(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 				
 			}
 
-			public void determineVertraulichkeit(CascadingTransaction ta)
+			@Override
+            public void determineVertraulichkeit(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 				
@@ -558,7 +566,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
                 // or group.typeId == childTypeId
                 ((Arrays.binarySearch(((IISO27kGroup)cnATreeElement).getChildTypes(), childTypeId)>-1
                    || ((IISO27kGroup)cnATreeElement).getTypeId().equals(childTypeId)))) {
-                    group = (CnATreeElement) cnATreeElement;
+                    group = cnATreeElement;
                     break;
             }
         }
@@ -639,23 +647,28 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.files = files;
     }
 
+    @Override
     public void databaseChildAdded(CnATreeElement child) {
 		getModelChangeListener().databaseChildAdded(child);
 	}
 	
-	public void databaseChildChanged(CnATreeElement child) {
+	@Override
+    public void databaseChildChanged(CnATreeElement child) {
 		getModelChangeListener().databaseChildChanged(child);
 	}
 	
-	public void databaseChildRemoved(CnATreeElement child) {
+	@Override
+    public void databaseChildRemoved(CnATreeElement child) {
 		getModelChangeListener().databaseChildRemoved(child);
 	}
 
-	public void databaseChildRemoved(ChangeLogEntry entry) {
+	@Override
+    public void databaseChildRemoved(ChangeLogEntry entry) {
 		getModelChangeListener().databaseChildRemoved(entry);
 	}
 	
-	public void modelReload(BSIModel newModel) {
+	@Override
+    public void modelReload(BSIModel newModel) {
 		getModelChangeListener().modelReload(newModel);
 	}
 
