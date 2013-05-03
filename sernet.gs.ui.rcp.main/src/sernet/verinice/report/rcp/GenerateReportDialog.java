@@ -182,7 +182,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         final int marginWidth = 10;
         final int defaultColNr = 3;
         
-        getDefaultFolder();
+        initDefaultFolder();
         
         if(useCase != null){
             filterReportTypes();
@@ -262,7 +262,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         openReportButton = new Button(reportGroup, SWT.PUSH);
         openReportButton.setText(Messages.GenerateReportDialog_3);
         openReportButton.addSelectionListener(new SelectionAdapter() {
-          public void widgetSelected(SelectionEvent event) {
+          @Override
+        public void widgetSelected(SelectionEvent event) {
             FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
             dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             String fn = dlg.open();
@@ -295,10 +296,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
         scopeCombo.setLayoutData(gridDatascopeCombo);
         
         scopeCombo.addSelectionListener(new SelectionListener() {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
                 int s = scopeCombo.getSelectionIndex();
@@ -375,13 +378,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		openFileButton = new Button(groupFile, SWT.PUSH);
 		openFileButton.setText(Messages.GenerateReportDialog_11);
 		openFileButton.addSelectionListener(new SelectionAdapter() {
-		    public void widgetSelected(SelectionEvent event) {
+		    @Override
+            public void widgetSelected(SelectionEvent event) {
 		        FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-		        if(useDefaultFolder){
-		        dlg.setFilterPath(defaultFolder + textFile.getText());
-		        }else{
-		            dlg.setFilterPath(System.getProperty("user.home")+textFile.getText());
+		        
+		        if(isFilePath()) {
+		            dlg.setFilterPath(getOldFolderPath());
+		        } else {
+		            dlg.setFilterPath(defaultFolder);
 		        }
+		        		      
 		        ArrayList<String> extensionList = new ArrayList<String>();
 		        if(chosenOutputFormat!=null && chosenOutputFormat.getFileSuffix()!=null) {
 		            extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
@@ -458,6 +464,22 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		frame.pack(); 
 		return frame;
 	}
+    
+    boolean isFilePath() {
+        return textFile!=null && textFile.getText()!=null && !textFile.getText().isEmpty();
+    }
+
+    private String getOldFolderPath() {
+        return getFolderFromPath(textFile.getText());
+    }
+    
+    private String getFolderFromPath(String path) {
+        String returnPath = null;
+        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
+            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar)+1);
+        }
+        return returnPath;
+    }
 
 
     /**
@@ -643,9 +665,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
 
         String currentPath = setupDirPath();
-        defaultFolder = currentPath;
         if(useDefaultFolder){
-        Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
+            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
         }
         outputFile = new File(f);
         resetScopeCombo();
@@ -770,15 +791,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
     public boolean getUseReportCache(){
         return useCache;
     }
-    public boolean getUseDefaultFolder(){
-        return useDefaultFolder;
-    }
-    private String getDefaultFolder(){
+
+    private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);
-         if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
-             defaultFolder=defaultFolder+System.getProperty("file.separator"); 
-         }        
-        return defaultFolder; 
+        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);
+        if (defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))) {
+            defaultFolder = defaultFolder + System.getProperty("file.separator");
+        }
+        if (defaultFolder == null || defaultFolder.isEmpty()) {
+            defaultFolder = System.getProperty("user.home");
+        }
+        return defaultFolder;
     }
 }

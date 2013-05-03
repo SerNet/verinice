@@ -69,7 +69,7 @@ public class ExportDialog extends TitleAreaDialog {
      * Indicates if the output should be encrypted.
      */
     private boolean encryptOutput = false;
-    private boolean reImport = true;
+    private boolean reImport = false;
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
     private String filePath;
@@ -81,7 +81,7 @@ public class ExportDialog extends TitleAreaDialog {
     private Text txtLocation;
     private String defaultFolder;
     private Button useDefaultFolderButton;
-    private boolean useDefaultFolder;
+    private boolean useDefaultFolder = true;
     private String organizationTitle = DEFAULT_ORGANIZATION_TITLE;
     
     // ExportCommand.EXPORT_FORMAT_VERINICE_ARCHIV or ExportCommand.EXPORT_FORMAT_XML_PURE 
@@ -128,7 +128,7 @@ public class ExportDialog extends TitleAreaDialog {
         final int udfbHorizontalSpan = reimportChechboxHorizontalSpan;
         final int encryptionCheckboxHorizontalSpan = udfbHorizontalSpan;
         
-        getDefaultFolder();
+        initDefaultFolder();
         
         /*
          * Dialog title, message and layout:
@@ -146,16 +146,7 @@ public class ExportDialog extends TitleAreaDialog {
         
         try {
             organizationWidget = new OrganizationWidget(composite, selection, selectedElement);
-            String title = null;
-            if(organizationWidget.getSelectedElement()!=null) {
-                title = organizationWidget.getSelectedElement().getTitle();
-            }
-            if(title!=null) {
-                organizationTitle = convertToFileName(title);
-                //organizationTitle = title.replaceAll("[^a-zA-Z]", ""); //hier ist es das  Umlaute-Problem, die werden ersetzt und nicht ordentlich ausgeschrieben!!!
-            } else {
-                organizationTitle = DEFAULT_ORGANIZATION_TITLE;
-            }
+            setOrgTitle();
             
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
@@ -168,8 +159,13 @@ public class ExportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 Button checkbox = (Button) e.getSource();
                 if(checkbox.getSelection()) {
+                    setOrgTitle();
                     if(txtLocation!=null) {
-                        filePath = defaultFolder + organizationTitle + getDefaultExtension();
+                        if(isFilepath()) {
+                            filePath = getFolderFromPath(txtLocation.getText()) + organizationTitle + getDefaultExtension();
+                        } else {                  
+                            filePath = defaultFolder + organizationTitle + getDefaultExtension();
+                        }
                         txtLocation.setText(filePath);
                     }
                     setSourceId(organizationWidget.getSelectedElement());
@@ -198,7 +194,7 @@ public class ExportDialog extends TitleAreaDialog {
             gd = new GridData();
             gd.horizontalSpan = reimportChechboxHorizontalSpan;
             reImportCheckbox.setLayoutData(gd);
-            reImportCheckbox.setSelection(true);
+            reImportCheckbox.setSelection(reImport);
             reImportCheckbox.setEnabled(true);
             reImportCheckbox.addSelectionListener(new SelectionAdapter() {
                 @Override
@@ -278,20 +274,20 @@ public class ExportDialog extends TitleAreaDialog {
                 public void widgetSelected(SelectionEvent e) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
                     dialog.setText(Messages.SamtExportDialog_3);
-                    if(txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty()) {                 
-                        try {
-                            //set default folder for exports which could set 
-                            if(useDefaultFolder){
-                            dialog.setFilterPath(defaultFolder);
-                            }else{
-                                dialog.setFilterPath(System.getProperty("user.home"));
-                            }
+                    if(isFilepath()) {                 
+                        try {   
+                            dialog.setFilterPath(getFolderFromPath(txtLocation.getText()));
                             dialog.setFileName(getFileNameFromPath(txtLocation.getText()));                      
                         } catch (Exception e1) {
-                            LOG.warn(Messages.ExportDialog_1, e1);
+                            LOG.debug(Messages.ExportDialog_1, e1);
                             dialog.setFileName(""); //$NON-NLS-1$
                         }
-                    }             
+                    } else {
+                        //set default folder for exports which could set 
+                        if(useDefaultFolder){
+                            dialog.setFilterPath(defaultFolder);
+                        }
+                    }
                     dialog.setFilterExtensions(new String[] {
                             "*"+EXTENSION_ARRAY[0], //$NON-NLS-1$
                             "*"+EXTENSION_ARRAY[1] }); //$NON-NLS-1$          
@@ -313,11 +309,12 @@ public class ExportDialog extends TitleAreaDialog {
                         filePath = ""; //$NON-NLS-1$
                     }
                 }
+
                 });
                 
                 useDefaultFolderButton = new Button(sourceIdComposite, SWT.CHECK);
                 useDefaultFolderButton.setText(Messages.ExportDialog_3);
-                useDefaultFolderButton.setSelection(true);
+                useDefaultFolderButton.setSelection(useDefaultFolder);
                 useDefaultFolderButton.setEnabled(true);
                 GridData  useDefaultFolderButtonGridData = new GridData();
                 useDefaultFolderButtonGridData.horizontalSpan = udfbHorizontalSpan;
@@ -325,7 +322,7 @@ public class ExportDialog extends TitleAreaDialog {
                 useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
 
                     @Override
-                    public void widgetDefaultSelected(SelectionEvent e) {
+                    public void widgetSelected(SelectionEvent e) {
                         Button checkBox = (Button) e.getSource();
                         useDefaultFolder = checkBox.getSelection();
                     }
@@ -341,14 +338,34 @@ public class ExportDialog extends TitleAreaDialog {
         composite.pack();     
         return composite;
     }
+
+    private void setOrgTitle() {
+        String title = null;
+        if(organizationWidget.getSelectedElement()!=null) {
+            title = organizationWidget.getSelectedElement().getTitle();
+        }
+        if(title!=null) {
+            organizationTitle = convertToFileName(title);
+            //organizationTitle = title.replaceAll("[^a-zA-Z]", ""); //hier ist es das  Umlaute-Problem, die werden ersetzt und nicht ordentlich ausgeschrieben!!!
+        } else {
+            organizationTitle = DEFAULT_ORGANIZATION_TITLE;
+        }
+    }
     
-    private String getDefaultFolder(){
+    private boolean isFilepath() {
+        return txtLocation!=null && txtLocation.getText()!=null && !txtLocation.getText().isEmpty();
+    }
+    
+    private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_EXPORT);
-         if(defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))){
-             defaultFolder=defaultFolder+System.getProperty("file.separator"); 
-         }
-        return defaultFolder; 
+        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_EXPORT);
+        if (defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))) {
+            defaultFolder = defaultFolder + System.getProperty("file.separator");
+        }
+        if(defaultFolder==null || defaultFolder.isEmpty()) {
+            defaultFolder = System.getProperty("user.home");
+        }
+        return defaultFolder;
     }
     
     protected String setupDirPath(){
@@ -395,6 +412,14 @@ public class ExportDialog extends TitleAreaDialog {
             returnPath = path.substring(path.lastIndexOf(File.separatorChar)+1);
         } else {
             returnPath = path;
+        }
+        return returnPath;
+    }
+	
+	private String getFolderFromPath(String path) {
+        String returnPath = null;
+        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
+            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar)+1);
         }
         return returnPath;
     }
@@ -448,9 +473,8 @@ public class ExportDialog extends TitleAreaDialog {
             setMessage(sb.toString(), IMessageProvider.ERROR);
         } else {
             String currentPath = setupDirPath();
-            defaultFolder = currentPath;
             if(useDefaultFolder){
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_EXPORT, currentPath);
+                Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_EXPORT, currentPath);
             }
             super.okPressed();
         }
