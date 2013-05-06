@@ -794,12 +794,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);
-        if (defaultFolder != null && !defaultFolder.isEmpty() && !defaultFolder.endsWith(System.getProperty("file.separator"))) {
-            defaultFolder = defaultFolder + System.getProperty("file.separator");
-        }
+        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);    
         if (defaultFolder == null || defaultFolder.isEmpty()) {
             defaultFolder = System.getProperty("user.home");
+        }
+        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) {
+            defaultFolder = defaultFolder + System.getProperty("file.separator");
         }
         return defaultFolder;
     }
