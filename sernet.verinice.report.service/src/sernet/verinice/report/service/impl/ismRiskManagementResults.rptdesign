@@ -7120,6 +7120,11 @@ columns(cols);</value>
                     <text-property name="displayName">colorValue</text-property>
                     <text-property name="heading">colorValue</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">numberOfRisks</property>
+                    <text-property name="displayName">numberOfRisks</text-property>
+                    <text-property name="heading">numberOfRisks</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -7147,6 +7152,11 @@ columns(cols);</value>
                         <property name="name">colorValue</property>
                         <property name="dataType">javaObject</property>
                     </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">numberOfRisks</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -7162,6 +7172,13 @@ columns(cols);</value>
                     <property name="position">2</property>
                     <property name="name">colorValue</property>
                     <property name="nativeName">colorValue</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">numberOfRisks</property>
+                    <property name="nativeName">numberOfRisks</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -7208,6 +7225,9 @@ for (CnATreeElement process : processes) {
                 assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
 		assets = helper.execute(assetLoader).getElements();
 		for (CnATreeElement asset : assets) {
+			// scenarioCounters 
+			amountRedScens = 0;
+			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
         		  raService = new RiskAnalysisServiceImpl();
@@ -7233,13 +7253,14 @@ for (CnATreeElement process : processes) {
 
 				if(riskC > toleratedC || riskI > toleratedI || riskA > toleratedA){
 					isRedRisk = true;
-					break;
+					amountRedScens = amountRedScens + 1;
 				} else if(riskC < (toleratedC - yellowCompareValueC + 1) &amp;&amp;
 							riskI < (toleratedI - yellowCompareValueI + 1) &amp;&amp;
 							riskA < (toleratedA - yellowCompareValueA + 1)){
 								// do nothing // equals green
 				} else {
 					isYellowRisk = true;
+					amountYellowScens = amountYellowScens + 1;
 				}
        			 } // scenario iteration end
 
@@ -7249,10 +7270,12 @@ for (CnATreeElement process : processes) {
 			result = new ArrayList(0);
 			result.add(asset.getTitle());
 			result.add("red");
+			result.add(String.valueOf(amountRedScens));
 		} else if(isYellowRisk){
 			result = new ArrayList(0);
 			result.add(asset.getTitle());
 			result.add("yellow");
+			result.add(String.valueOf(amountYellowScens));
 		}
 		if(result != null &amp;&amp; !results.contains(result)){
 			results.add(result);
@@ -8353,7 +8376,8 @@ return results;
 
 cols = new String[]{
 				"name",
-				"colorValue"
+				"colorValue",
+				"numberOfRisks"
 };
 inParameters(new String[] { "root_object" });
 columns(cols);</value>
@@ -9225,6 +9249,11 @@ columns(new String[]{"execute"});</value>
                     <text-property name="displayName">colorValue</text-property>
                     <text-property name="heading">colorValue</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">numberOfScenarios</property>
+                    <text-property name="displayName">numberOfScenarios</text-property>
+                    <text-property name="heading">numberOfScenarios</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -9252,6 +9281,11 @@ columns(new String[]{"execute"});</value>
                         <property name="name">colorValue</property>
                         <property name="dataType">javaObject</property>
                     </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">numberOfScenarios</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -9267,6 +9301,13 @@ columns(new String[]{"execute"});</value>
                     <property name="position">2</property>
                     <property name="name">colorValue</property>
                     <property name="nativeName">colorValue</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">numberOfScenarios</property>
+                    <property name="nativeName">numberOfScenarios</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -9315,7 +9356,8 @@ for (CnATreeElement process : processes) {
                 assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
 		assets = helper.execute(assetLoader).getElements();
 		for (CnATreeElement asset : assets) {
-
+			amountRedScens = 0;
+			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
         		  raService = new RiskAnalysisServiceImpl();
@@ -9350,13 +9392,14 @@ for (CnATreeElement process : processes) {
 
 				if(riskC > toleratedC || riskI > toleratedI || riskA > toleratedA){
 					isRedRisk = true;
-					break;
+					amountRedScens = amountRedScens + 1;
 				} else if(riskC < (toleratedC - yellowCompareValueC + 1) &amp;&amp;
 							riskI < (toleratedI - yellowCompareValueI + 1) &amp;&amp;
 							riskA < (toleratedA - yellowCompareValueA + 1)){
 								// do nothing // equals green
 				} else {
 					isYellowRisk = true;
+					amountYellowScens = amountYellowScens + 1;
 				}
        			 } // scenario iteration end
 
@@ -9366,10 +9409,12 @@ for (CnATreeElement process : processes) {
 			result = new ArrayList(0);
 			result.add(asset.getTitle());
 			result.add("red");
+			result.add(String.valueOf(amountRedScens));
 		} else if(isYellowRisk){
 			result = new ArrayList(0);
 			result.add(asset.getTitle());
 			result.add("yellow");
+			result.add(String.valueOf(amountYellowScens));
 		}
 		if(result != null &amp;&amp; !results.contains(result)){
 			results.add(result);
@@ -10470,7 +10515,8 @@ return results;
 
 cols = new String[]{
 				"name",
-				"colorValue"
+				"colorValue",
+				"numberOfScenarios"
 };
 inParameters(new String[] { "root_object" });
 columns(cols);</value>
@@ -13837,6 +13883,12 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <expression name="expression" type="javascript">dataSetRow["colorValue"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
+                            <structure>
+                                <property name="name">numberOfRisks</property>
+                                <text-property name="displayName">numberOfRisks</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["numberOfRisks"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
                         </list-property>
                         <list-property name="sort">
                             <structure>
@@ -13897,6 +13949,10 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                             <property name="style">bg_red</property>
                                         </structure>
                                     </list-property>
+                                    <data id="3230">
+                                        <property name="textAlign">center</property>
+                                        <property name="resultSetColumn">numberOfRisks</property>
+                                    </data>
                                 </cell>
                             </row>
                         </detail>
@@ -13931,6 +13987,12 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <property name="name">colorValue</property>
                                 <text-property name="displayName">colorValue</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["colorValue"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">numberOfScenarios</property>
+                                <text-property name="displayName">numberOfScenarios</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["numberOfScenarios"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
@@ -13993,6 +14055,10 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                             <property name="style">bg_red</property>
                                         </structure>
                                     </list-property>
+                                    <data id="3231">
+                                        <property name="textAlign">center</property>
+                                        <property name="resultSetColumn">numberOfScenarios</property>
+                                    </data>
                                 </cell>
                             </row>
                         </detail>
