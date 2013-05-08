@@ -1291,22 +1291,6 @@
         <cheatsheet
               category="sernet.gs.ui.rcp.main.cheatSheets3"
               composite="false"
-              contentFile="%cheatsheets.content.17"
-              id="sernet.verinice.iso27k.cheatsheet2"
-              name="%cheatsheets.17">
-           <description>%cheatsheets.description.17</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets3"
-              composite="false"
-              contentFile="%cheatsheets.content.18"
-              id="sernet.verinice.iso27k.cheatsheet3"
-              name="%cheatsheets.18">
-           <description>%cheatsheets.description.18</description>
-        </cheatsheet>
-        <cheatsheet
-              category="sernet.gs.ui.rcp.main.cheatSheets3"
-              composite="false"
               contentFile="%cheatsheets.content.19"
               id="sernet.verinice.iso27k.cheatsheet_27005"
               name="Risk Management according to ISO 27005">

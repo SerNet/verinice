@@ -52,11 +52,14 @@
 		</description>
 	</item>
 	<item title="Herzlichen Dank">
-		<onCompletion>
+		<description>
 		Das war es! Wenn Sie nöchten, können Sie uns Ihre Erfahrungen und 
 		Verbesserungsvorschläge zu den Tutorials oder zu verinice allgemein mailen: verinice@sernet.de
 		<br/><br/>
-		Das verinice-Team bedankt sich bei Ihnen für die Wahl von verinice. 
+		Das verinice-Team bedankt sich bei Ihnen für die Wahl von verinice. 			
+		</description>
+		<onCompletion>
+
 		</onCompletion>
 	</item>
 	
