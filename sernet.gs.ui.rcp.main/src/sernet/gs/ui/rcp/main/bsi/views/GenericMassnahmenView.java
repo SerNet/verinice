@@ -689,7 +689,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	/**
 	 * Loads the MassnahmenUmsetzung instances for the given IT-Verbund.
 	 * 
-	 * <p>Qunabu.com Polish Netlabel
+	 * <p>
 	 * This method is called when the user choses an IT-Verbund and when the
 	 * content provider decides that all data has to be reloaded.
 	 * </p>
