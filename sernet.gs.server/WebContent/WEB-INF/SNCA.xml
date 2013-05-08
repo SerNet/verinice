@@ -5479,6 +5479,9 @@ the value between <param></param> will be used directly if no string is found fo
 
   	<huirelation to="asset" id="rel_process_asset"
         	name="depends on" reversename="necessary for" tooltip="This process needs this asset to function." />
+        	
+        <huirelation to="process" id="rel_process_process"
+        	name="depends on" reversename="necessary for" tooltip="This process needs this process to function." />
 
         <huiproperty
             name="Title"
