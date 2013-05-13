@@ -1,11 +1,9 @@
 ## Don't add white space
-<b>Application</b>: ${GSM_ISM_CONTROL_GROUP_TITLE}<table width="100%"><tr><td width="50%"><b>Assets</b>:<br/>
-#foreach( $element in $asset )
-$element<br/>
-#end</td><td width="50%"><b>Vulnerabilities</b>:<br/>
-#foreach( $element in $incident_scenario )
-$element<br/>
+<b>Application</b>: ${GSM_ISM_CONTROL_GROUP_TITLE}
+<b>RRisk value:</b> ${GSM_ISM_RISK_VALUE}<br/>
+<b>Description:</b>
+${GSM_ISM_CONTROL_DESCRIPTION}<br/>
+<b>Assets:</b>
+#foreach( $element in $GSM_ISM_ASSET_DESCRIPTION_LIST )
+$element
 #end
-</td>
-</tr>
-</table>
