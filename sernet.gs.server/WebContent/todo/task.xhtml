@@ -18,7 +18,7 @@
 				<div class="csc-header csc-header-n1" style="height:40px;">
 					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
 				</div>
-				<div style="margin-bottom:6px;">
+				<div style="margin-bottom:6px;width:500px;">
 					<p:outputPanel id="completePanel">
 						<ui:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
 					    	<p:commandButton id="complete" 
@@ -35,7 +35,7 @@
 					<table style="margin-top: 8px">
 						<tr>
 					 		<td>
-					 			<p:selectOneMenu id="audit" value="#{task.selectedAuditName}" style="margin-right: 10px">	
+					 			<p:selectOneMenu id="audit" value="#{task.selectedAuditName}" style="width:175px;margin-right:10px;">	
 									 <f:selectItem itemLabel="#{msgTask['selectIsa']}" itemValue="" /> 
 									 <f:selectItems value="#{task.auditNameList}" var="name" itemLabel="#{name}" itemValue="#{name}"/>
 									 <p:ajax update=":tableForm:taskTable,:editForm" event="change" listener="#{task.selectAudit}" process="audit"/>
@@ -74,10 +74,10 @@
 					rowKey="#{item.id}"
 					selection="#{task.selectedTask}" 
 					selectionMode="single"
-					scrollHeight="450" 
+					scrollHeight="400" 
 					scrollable="true"
 					resizableColumns="true"
-					style="width: 500px">
+					style="width:500px;height:100%;">
 					<p:ajax event="rowSelect" 
 						listener="#{task.openTask}"
 						oncomplete="loadLinks();"   

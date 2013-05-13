@@ -331,6 +331,8 @@ h1+a:visited {
 	border-radius: 6px 6px 6px 6px;
 	margin-top: 5px;
 	padding: 3px;
+	max-height: 150px;
+	overflow: auto;
 }
 
 .ui-inputfield, .ui-widget-content .ui-inputfield, .ui-widget-header .ui-inputfield {
