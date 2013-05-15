@@ -21,13 +21,11 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  *
@@ -41,7 +39,7 @@ public class LoadPersonForLogin extends GenericCommand {
             "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
             "inner join propertyList.properties as props " + //$NON-NLS-1$
             "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ?"; //$NON-NLS-1$
+            "and props.propertyValue like ? escape '\\'"; //$NON-NLS-1$
     
     private String login;
     private CnATreeElement person;
@@ -58,11 +56,12 @@ public class LoadPersonForLogin extends GenericCommand {
      */
     @Override
     public void execute() {
-        Object[] params = new Object[]{Configuration.PROP_USERNAME,login};        
+        String escaped = login.replace("\\", "\\\\");
+        Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped};        
         List<Integer> configurationList = getConfigurationDao().findByQuery(HQL,params);
         Integer dbId = null;
         if (configurationList != null && configurationList.size() == 1) {
-            dbId = (Integer) configurationList.get(0);
+            dbId = configurationList.get(0);
             loadPerson(dbId);
         }
     }

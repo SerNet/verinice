@@ -100,7 +100,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      */
     public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {     
         this.parameter = parameter;    
-        this.syncRequestSerialized = (syncRequestSerialized != null) ? syncRequestSerialized.clone() : null;
+        this.syncRequestSerialized = syncRequestSerialized;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 

@@ -49,6 +49,7 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
@@ -77,12 +78,14 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 	
 	private ICommandService commandService;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	@Override
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
 	
 
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
 	public void run(IAction action) {
 	    if(!checkRights()) {
 	        return;
@@ -132,7 +135,8 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 
 		try {
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				@Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					Activator.inheritVeriniceContextState();
 					try {
 						final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(),dialog.getPassword2());
@@ -161,7 +165,8 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 						LOG.debug("stacktrace: ", e); //$NON-NLS-1$
 					}
 					Display.getDefault().syncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),messageTitle, userMessage);
 						}
 					});
@@ -189,7 +194,9 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 		boolean updated = false;
 		final String oldName = configuration.getUser();
 		if(isNewName(oldName,name) && (newPassword==null || newPassword.isEmpty())) {
-			throw new PasswordException(Messages.ConfigurationAction_9);
+		    if(getAuthService().isHandlingPasswords()) {	    
+		        throw new PasswordException(Messages.ConfigurationAction_9);
+		    }
 		}	
 		configuration.setUser(name);
 		if(newPassword!=null && !newPassword.isEmpty()) {
@@ -216,7 +223,12 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 		return result;
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+    public IAuthService getAuthService() {
+        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+    }
+
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
 		if (action.isEnabled()) {
 			// Conditions for availability of this action:
 			// - Database connection must be open (Implicitly assumes that login

@@ -191,6 +191,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                 model.put(TEMPLATE_REPLY_TO,getReplyTo());
                 MimeMessagePreparator preparator = new MimeMessagePreparator() {
                     
+                    @Override
                     public void prepare(MimeMessage mimeMessage) throws MessagingException {
                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                        message.setTo(getEmail());
@@ -262,10 +263,11 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
             "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
             "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? " + //$NON-NLS-1$
+            "and props.propertyValue like ? escape '\\'" + //$NON-NLS-1$
             "and emailprops.propertyType = ?";          //$NON-NLS-1$
             
-            Object[] params = new Object[]{Configuration.PROP_USERNAME,name,Configuration.PROP_NOTIFICATION_EMAIL};        
+            String escaped = name.replace("\\", "\\\\");
+            Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_NOTIFICATION_EMAIL};        
             List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {

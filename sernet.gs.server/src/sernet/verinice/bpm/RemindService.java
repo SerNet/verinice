@@ -69,9 +69,11 @@ public class RemindService implements IRemindService {
     /* (non-Javadoc)
      * @see sernet.verinice.bpm.IRemindService#sendEmail(java.util.Map)
      */
+    @Override
     @SuppressWarnings("restriction")
     public void sendEmail(final Map<String,String> parameter, final boolean html) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            @Override
             public void prepare(MimeMessage mimeMessage) throws MessagingException {
                parameter.put(TEMPLATE_URL, getUrl());
                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
@@ -96,6 +98,7 @@ public class RemindService implements IRemindService {
     /* (non-Javadoc)
      * @see sernet.verinice.bpm.IRemindService#loadUserData(java.lang.String)
      */
+    @Override
     public Map<String,String> loadUserData(String name) throws MissingParameterException {
         Map<String,String> model = new HashMap<String,String>();
         if (name != null) {
@@ -107,10 +110,11 @@ public class RemindService implements IRemindService {
             "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
             "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
             "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? " + //$NON-NLS-1$
+            "and props.propertyValue like ? escape '\\'" + //$NON-NLS-1$
             "and emailprops.propertyType = ?";          //$NON-NLS-1$
             
-            Object[] params = new Object[]{Configuration.PROP_USERNAME,name,Configuration.PROP_NOTIFICATION_EMAIL};        
+            String escaped = name.replace("\\", "\\\\");
+            Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_NOTIFICATION_EMAIL};        
             List<Object[]> configurationList = getConfigurationDao().findByQuery(hql,params);
             Integer dbId = null;
             if (configurationList != null && configurationList.size() == 1) {
@@ -154,6 +158,7 @@ public class RemindService implements IRemindService {
         
     }
     
+    @Override
     public CnATreeElement retrieveElement(String uuid, RetrieveInfo ri) {
         return getElementDao().findByUuid(uuid, ri);
     }

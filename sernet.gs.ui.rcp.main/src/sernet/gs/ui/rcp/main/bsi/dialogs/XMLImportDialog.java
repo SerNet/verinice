@@ -608,7 +608,8 @@ public class XMLImportDialog extends Dialog {
                     new SyncParameter(insert, update, delete, integrate, format), 
                     fileData);    
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-
+            // clear memory
+            fileData = null;
         } catch (PasswordException  e) {
             LOG.warn("Wrong password while decrypting import file."); //$NON-NLS-1$
             if (LOG.isDebugEnabled()) {
