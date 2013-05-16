@@ -65,7 +65,7 @@ public class AssignHandler extends AbstractHandler {
                 Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
                 
                 CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, PersonIso.TYPE_ID, null);
-                
+                dialog.setShowScopeCheckbox(false);
                 if (dialog.open() == Window.OK) {
                     Set<String> taskIdSet = new HashSet<String>();
                     for (Iterator iterator = ((IStructuredSelection)selection).iterator(); iterator.hasNext();) {
