@@ -24,45 +24,57 @@ import java.util.List;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
- * Loads all elements for a given entity type id and hydrates their titles so they can be displayed in a list.
+ * Loads all elements for a given entity type id and hydrates their titles so
+ * they can be displayed in a list.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * 
  */
+@SuppressWarnings("serial")
 public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
-	private String id;
+    private String typeId;   
+    private Integer scopeId;
 
-	private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
-	
-	private static final String QUERY = "from CnATreeElement elmt " +
-		"where elmt.entity.entityType = ?"; 
+    private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
-	public LoadCnAElementByEntityTypeId( String id) {
-		this.id = id;
-	}
+    private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
+    		"join fetch elmt.entity as entity " +
+    		"join fetch entity.typedPropertyLists as propertyList " +
+    		"join fetch propertyList.properties as props " +
+    		"where elmt.entity.entityType = ? "; //$NON-NLS-1$
+    private static final String SCOPE = "and elmt.scopeId = ? "; //$NON-NLS-1$
 
-	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-		list = dao.findByQuery(QUERY, new Object[] {id});
-		
-		// hydrate titles and abbreviations
-		for (CnATreeElement elmt : list) {
-		    elmt.getTitle();
-		    if (elmt instanceof IISO27kElement) {
-		        ((IISO27kElement)elmt).getAbbreviation();
-		    }
-		}
-	}
+    public LoadCnAElementByEntityTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+    
+    public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId) {
+        this.typeId = typeId;
+        this.scopeId = scopeId;
+    }
 
-	public List<CnATreeElement> getElements() {
-		return list;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute() {
+        Object[] parameter;
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+        StringBuilder sb = new StringBuilder(QUERY);
+        if(scopeId!=null) {
+            sb.append(SCOPE);
+            parameter = new Object[] { typeId, scopeId };
+        } else {
+            parameter = new Object[] { typeId };
+        }
+        
+        list = dao.findByQuery(sb.toString(), parameter);
+    }    
 
+    public List<CnATreeElement> getElements() {
+        return list;
+    }
 
 }

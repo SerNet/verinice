@@ -63,7 +63,6 @@ import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityTypeId;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementsForScope;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -179,6 +178,7 @@ public class ElementSelectionComponent {
         column1.getColumn().setWidth(column1Width);
         column1.getColumn().setResizable(false);
         column1.setLabelProvider(new CellLabelProvider() {
+            @Override
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder){
                     return;
@@ -196,6 +196,7 @@ public class ElementSelectionComponent {
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setWidth(column2Width);
         column2.setLabelProvider(new CellLabelProvider() {
+            @Override
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder) {
                     cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
@@ -209,6 +210,7 @@ public class ElementSelectionComponent {
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
         viewer.setSorter(new ViewerSorter() {
+            @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
                 CnATreeElement elmt1 = (CnATreeElement) e1;
                 CnATreeElement elmt2 = (CnATreeElement) e2;
@@ -280,7 +282,7 @@ public class ElementSelectionComponent {
             }
         }
         
-        sb.append(((CnATreeElement)elmt).getTitle());
+        sb.append(elmt.getTitle());
         return sb.toString();
     }
     
@@ -331,6 +333,7 @@ public class ElementSelectionComponent {
 
     private void loadAndSelectElements(final CnATreeElement selected, final List<CnATreeElement> list) {
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 if (list !=null){
                     viewer.setInput(list);
@@ -345,15 +348,13 @@ public class ElementSelectionComponent {
     }
 
     private void scopeAndElmntDpntElmntSlctn(final CnATreeElement selected) throws CommandException {
+        LoadCnAElementByEntityTypeId command;
         if (scopeOnly && inputElmt!=null) {
-            LoadElementsForScope command = new LoadElementsForScope(entityType, inputElmt.getDbId());
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            loadAndSelectElements(selected, command.getElements());
-            
+            command = new LoadCnAElementByEntityTypeId(entityType, inputElmt.getScopeId());    
         } else {
-            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(entityType);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            loadAndSelectElements(selected, command.getElements());
+            command = new LoadCnAElementByEntityTypeId(entityType);
         }
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        loadAndSelectElements(selected, command.getElements());
     }
 }
