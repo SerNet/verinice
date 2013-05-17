@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hitro-UI Common
+Bundle-SymbolicName: sernet.hui.common
+Bundle-Version: 1.1.1.qualifier
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Export-Package: sernet.hui.common,
+ sernet.hui.common.connect,
+ sernet.hui.common.multiselectionlist,
+ sernet.hui.common.rules,
+ sernet.snutils
+Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
+ org.eclipse.core.commands;bundle-version="3.5.0",
+ org.springframework.core;bundle-version="2.5.6"
+Import-Package: org.eclipse.osgi.util

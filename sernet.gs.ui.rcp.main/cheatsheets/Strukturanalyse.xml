@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Protection Levels">
+
+
+	<intro 
+		>
+		<description>
+			Since you're reading this in English, we assume that you wish to use the ISM perspective. 
+			This tutorial is designed especially for the "IT Baseline Protection (IT-Grundschutz)" standard of the German BSI which is usually not used in English. 
+			<br/>
+			<br/>
+			Please proceed with the tutorials from the section "3 ISO2700 Instructions" which are designed to explain the usage of verinice for the ISO 27001 standard. 
+		</description>
+	</intro>
+	
+<item title="Tutorials">
+		<description>
+		To proceed with the English-relevant part, please click on the menu "Help > Tutorials ...". 
+		</description>
+	</item>
+
+
+</cheatsheet>

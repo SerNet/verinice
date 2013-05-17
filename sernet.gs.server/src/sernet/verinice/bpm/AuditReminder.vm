@@ -1,0 +1,27 @@
+## Default/English email template for tasks notification
+## Notification properties: veriniceserver-plain.properties
+## Notification configuration: veriniceserver-plain.xml, veriniceserver-jbpm.xml
+## Notifications are send as plain text, don't use HTML.
+## Save this file UTF-8 encoded.
+##
+## Notifications service sets variables:
+## ${address}: Mr, Mrs or if not set Mrs/Mr
+## ${name}: Surname
+## ${n}: Number of new tasks
+## ${url}: Url to task site of verinice.WEB
+## ${email}: Recipient 
+## ${emailFrom}: Sender
+## ${replyTo}: reply to email
+##
+Dear ${address} ${name},
+
+one of your verinice audits starts soon:
+${elementTitle}
+
+You will find a list with all your task here:
+${url}
+
+[This e-mail has been automatically generated.]
+
+verinice is a tool for managing information security.
+http://www.verinice.org/en/

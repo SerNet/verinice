@@ -1,0 +1,76 @@
+# NEVER edit this file. Use veriniceserver-plain.properties.local (or
+# veriniceserver-plain.properties) instead.
+#
+# This configuration file is the default configuration for the verinice.PRO server.
+#
+# Note: Properties within this file will be be overridden by files:
+# veriniceserver-plain.properties and
+# veriniceserver-plain.properties.local
+ 
+# Default location value of the resource specifying the SNCA.xml file
+snca.resource=/WEB-INF/SNCA.xml
+
+# Location of the hibernate configuration for PostgreSQL / MySQL:
+hibernate.config.resource=classpath:/server_hibernate.cfg.xml
+
+# Location of the hibernate configuration for Oracle
+#hibernate.config.resource=classpath:/server_hibernate_oracle.cfg.xml
+
+# Connection settings for PostgreSQL
+# Please adjust host, port, database name, user and pass according to your database.
+jdbc.driverClass=org.postgresql.Driver
+jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb
+jdbc.username=verinice
+jdbc.password=verinice
+
+# The password entered here must be in the form of a HTTP digest "A1" hash.
+# To create one using for instance Apache's 'htdigest' tool, type:
+# "htdigest -c hash.txt <realm> <user>"
+# Options:
+# <realm>: the same realm configured as entry point (see above), i.e. "VeriniceServer"
+# <user>: the adminuser name given above, i.e. "admin" 
+#
+# Copy the hash you find in hash.txt as value below.
+admin.username=admin
+# default value for development only: "geheim" for default NOCOMPANY realm -->
+admin.password=578c27deb7d7607cc77f76a64b1086c0
+
+# Configure your HTTP digest realm and nonce key here.
+# If you don't know what this is: the realm is used to salt user passwords and for authentication
+# and should be a value unique to your server. It will be visible to clients, so they know 
+# for what service they are authenticating. It makes sense to include your company name
+# or similar in the realm.
+# The nonce key is used to create temporary session keys between server and client. It should
+# be a value unique to your server and preferably be kept secret. It will not be visible
+# to any client.
+# If you are really paranoid, decrease the validity of the nonce key (i.e. to 5 seconds).
+# If you are concerned about performance, increase the value of the nonce key (i.e. to 600 seconds).
+veriniceserver.realm=Verinice Server NO-COMPANY - CHANGETHIS
+veriniceserver.key=mysecretkey-CHANGETHIS
+veriniceserver.nonceValiditySeconds=300
+
+# Location of the catalogue files. The filenames denote a Java resource path.
+# By default put the catalogue files into
+veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el12_html_de.zip
+veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
+
+
+# Access credentials of the mail server that should be used to send email notifications.
+veriniceserver.notification.smtp.host=localhost
+veriniceserver.notification.smtp.port=10025
+veriniceserver.notification.smtp.username=
+veriniceserver.notification.smtp.password=
+# The notification.enabled property controls whether the email notificationfeature is
+# active or not. Possible values are 'false' and 'true' (default is 'false').
+veriniceserver.notification.enabled=true
+
+# Time of day at which the verinice server starts processing the email notifications. 
+veriniceserver.notification.hour=03
+veriniceserver.notification.minute=35
+veriniceserver.notification.email.from=donotreply@verinice.invalid
+veriniceserver.notification.email.replyto=donotreply@verinice.invalid
+veriniceserver.notification.email.dateformat=dd.MM.yyyy
+
+# This link is included in notification mails for users, adapt to your actual hostname and domain:
+veriniceserver.notification.email.linkto=http://verinice.local.example/veriniceserver/todo.jsf

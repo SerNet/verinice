@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="gsm-ism-execute" name="Greenbone ISM Execute Task" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>Workflow to manage Greenbone vulnerabilities resolutions.</description>
+   
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
+   
+   <start g="452,43,80,40" name="start">
+      <transition to="gsm.ism.execute.task.execute"/>
+   </start>
+   
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="362,161,227,52" name="gsm.ism.execute.task.execute">
+      <transition g="7,-15" name="gsm.ism.execute.trans.complete" to="java.deleteAssetScenarioLinks"/>
+      <transition g="369,238;179,238:-104,8" name="gsm.ism.execute.trans.reminder" to="java.sendReminder">
+        <timer duedate="2 days"/>
+      </transition>
+   </task>
+   
+   <java class="sernet.verinice.bpm.Reminder" g="17,173,170,34" method="sendEmailWithoutElement" name="java.sendReminder">
+      <arg><object expr="#{execution.id}"/></arg>
+      <arg><object expr="gsm.ism.execute.task.execute"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <transition g="185,141;372,139:" to="gsm.ism.execute.task.execute"/>
+   </java>
+   
+   <java class="sernet.verinice.bpm.gsm.JavaProcessTasks" g="349,302,253,37" method="deleteAssetScenarioLinks" name="java.deleteAssetScenarioLinks">
+      <arg><object expr="#{execution.id}"/></arg>
+      <transition to="end"/>
+   </java>
+   
+   <end g="452,393,80,40" name="end"/>
+
+</process>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!--
+	All configuration options for the verinice server are available in the
+	veriniceserver-plain.properties .
+	
+	(Note: The OSGi-based internal server does not need manual configuration.)
+ -->
+
+	<!--
+Spring configuration of application components.
+
+This variant:
+	Wiring command service for direct database access using hibernate on veriniceserver.
+
+-->
+
+	<!-- BEGIN Server settings ========================================================================= -->
+
+	<bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
+		<property name="workObjects" ref="workObjects" />
+		<property name="hibernateCommandService" ref="hibernateCommandService" />
+	</bean>
+
+	<!-- Server configuration properties and initialization -->
+
+	<!--
+	The following section initializes beans which are needed by the
+ 	commands (e.g. LoadBausteine et al) as well as various other classes.
+ 	
+ 	The beans are configured for use in the verinice server (the client
+ 	uses the same classes but in a different configuration) and are made
+ 	available via the VeriniceContext class (look it up for further details).
+    -->
+
+	<bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil" >
+		<property name="model">
+			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
+				<constructor-arg>
+					<bean class="sernet.gs.ui.rcp.main.connect.BSIConfigurationServer">
+						<property name="grundschutzKataloge" value="${veriniceserver.grundschutzKataloge}" />
+						<property name="datenschutzBaustein" value="${veriniceserver.datenschutzBaustein}" />
+					</bean>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
+		<constructor-arg value="${snca.resource}" />
+	</bean>
+
+	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
+		init-method="initForServer">
+		<property name="typeFactory" ref="huiTypeFactory" />
+		<property name="entityResolverFactory">
+			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
+		</property>
+	</bean>
+
+	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
+	<property name="map">
+			<map>
+				<entry key="gsScraperUtil" value-ref="gsScraperUtil" />
+				<entry key="hitroUtil" value-ref="hitroUtil" />
+				<entry key="huiTypeFactory" value-ref="huiTypeFactory" />
+				<entry key="commandService" value-ref="commandService" />
+				<entry key="authService" value-ref="authService" />
+                <entry key="taskService" value-ref="taskService" />
+                <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
+                <entry key="remindService" value-ref="remindService" />
+                <entry key="isaQmService" value-ref="isaQmService" />
+                <entry key="gsmService" value-ref="gsmService" />
+                <entry key="processEngine" value-ref="processEngine" />
+                <entry key="validationService" value-ref="validationService" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!-- c3p0 config parameter: http://www.mchange.com/projects/c3p0/index.html -->
+		<property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="10" />
+		<property name="initialPoolSize" value="10" />
+		<property name="maxPoolSize" value="60" />
+		<property name="acquireIncrement" value="5" />
+		<property name="maxStatements" value="100" />
+		<property name="checkoutTimeout" value="10000" />
+		<property name="idleConnectionTestPeriod" value="180" />
+        <property name="numHelperThreads" value="6" />
+	</bean>
+
+	<bean id="sessionFactory" depends-on="schemaCreator" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+
+		<property name="hibernateProperties">
+			<value>hibernate.dialect=${jdbc.hibernate.dialect}</value>
+		</property>
+
+		<property name="dataSource" ref="dataSource" />
+
+		<property name="configLocation">
+			<value>${hibernate.config.resource}</value>
+		</property>
+
+	</bean>
+
+    <!-- Updates database to a new version if necessary -->
+    <!-- Is called before Hibernate sessionFactory is created -->
+	<bean id="schemaCreator" class="sernet.gs.server.SchemaCreator">
+		<property name="dataSource" ref="dataSource" />
+        <property name="dbUpdate97To98" ref="dbUpdate97To98" />
+        <property name="dbUpdate98To99" ref="dbUpdate98To99" />
+	</bean>
+    
+    <bean id="dbUpdate97To98" class="sernet.gs.server.DbUpdate97To98">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="dbUpdate98To99" class="sernet.gs.server.DbUpdate98To99">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+
+	<bean id="daoFactory" class="sernet.verinice.service.DAOFactory">
+		<property name="propertyListDao" ref="propertyListDao" />
+		<property name="propertyDao" ref="propertyDao" />
+		<property name="entityDao" ref="entityDao" />
+		<property name="cnaLinkDao" ref="cnaLinkDao" />
+        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />
+		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
+		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />
+		<property name="configurationDao" ref="configurationDao" />
+		<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao" />
+		<property name="changeLogEntryDAO" ref="changeLogEntryDAO" />
+		<property name="permissionDAO" ref="permissionDAO" />
+		<property name="additionDAO" ref="additionDAO" />
+		<property name="noteDAO" ref="noteDAO" />
+		<property name="attachmentDao" ref="attachmentDao" />
+		<property name="attachmentFileDAO" ref="attachmentFileDAO" />
+
+		<!-- DAOs for subclasses of CnATreeElement: -->
+		<property name="anwendungDAO" ref="anwendungDAO" />
+		<property name="anwendungenKategorieDAO" ref="anwendungenKategorieDAO" />
+		<property name="bausteinUmsetzungDAO" ref="bausteinUmsetzungDAO" />
+		<property name="BSIModelDAO" ref="BSIModelDAO" />
+		<property name="clientDAO" ref="clientDAO" />
+		<property name="clientsKategorieDAO" ref="clientsKategorieDAO" />
+		<property name="datenverarbeitungDAO" ref="datenverarbeitungDAO" />
+		<property name="finishedRiskAnalysisDAO" ref="finishedRiskAnalysisDAO" />
+		<property name="gebaeudeDAO" ref="gebaeudeDAO" />
+		<property name="gebaeudeKategorieDAO" ref="gebaeudeKategorieDAO" />
+		<property name="gefaehrdungsUmsetzungDAO" ref="gefaehrdungsUmsetzungDAO" />
+		<property name="ITVerbundDAO" ref="ITVerbundDAO" />
+		<property name="massnahmenUmsetzungDAO" ref="massnahmenUmsetzungDAO" />
+		<property name="netzKomponenteDAO" ref="netzKomponenteDAO" />
+		<property name="NKKategorieDAO" ref="NKKategorieDAO" />
+		<property name="personDAO" ref="personDAO" />
+		<property name="personengruppenDAO" ref="personengruppenDAO" />
+		<property name="personenKategorieDAO" ref="personenKategorieDAO" />
+		<property name="raeumeKategorieDAO" ref="raeumeKategorieDAO" />
+		<property name="raumDAO" ref="raumDAO" />
+		<property name="serverDAO" ref="serverDAO" />
+		<property name="serverKategorieDAO" ref="serverKategorieDAO" />
+		<property name="sonstigeITKategorieDAO" ref="sonstigeITKategorieDAO" />
+		<property name="sonstITDAO" ref="sonstITDAO" />
+		<property name="stellungnahmeDSBDAO" ref="stellungnahmeDSBDAO" />
+		<property name="telefonKomponenteDAO" ref="telefonKomponenteDAO" />
+		<property name="TKKategorieDAO" ref="TKKategorieDAO" />
+		<property name="verantwortlicheStelleDAO" ref="verantwortlicheStelleDAO" />
+		<property name="verarbeitungsangabenDAO" ref="verarbeitungsangabenDAO" />
+		<property name="zweckbestimmungDAO" ref="zweckbestimmungDAO" />
+		<property name="risikoMassnahmeDAO" ref="risikoMassnahmeDAO" />
+		<property name="ownGefaehrdungDAO" ref="ownGefaehrdungDAO" />
+		<!-- ISO 27000 Daos -->
+		<property name="ISO27KModelDAO" ref="ISO27KModelDAO" />
+		<property name="organizationDAO" ref="organizationDAO" />
+		<property name="assetGroupDAO" ref="assetGroupDAO" />
+		<property name="assetDAO" ref="assetDAO" />
+		<property name="controlGroupDAO" ref="controlGroupDAO" />
+		<property name="controlDAO" ref="controlDAO" />
+		<property name="auditGroupDAO" ref="auditGroupDAO" />
+		<property name="auditDAO" ref="auditDAO" />
+		<property name="exceptionGroupDAO" ref="exceptionGroupDAO" />
+		<property name="exceptionDAO" ref="exceptionDAO" />
+		<property name="personGroupDAO" ref="personGroupDAO" />
+		<property name="personIsoDAO" ref="personIsoDAO" />
+		<property name="requirementGroupDAO" ref="requirementGroupDAO" />
+		<property name="requirementDAO" ref="requirementDAO" />	
+		<property name="incidentGroupDAO" ref="incidentGroupDAO" />
+		<property name="incidentDAO" ref="incidentDAO" />
+		<property name="incidentScenarioGroupDAO" ref="incidentScenarioGroupDAO" />
+		<property name="incidentScenarioDAO" ref="incidentScenarioDAO" />
+		<property name="responseGroupDAO" ref="responseGroupDAO" />
+		<property name="responseDAO" ref="responseDAO" />
+		<property name="threatGroupDAO" ref="threatGroupDAO" />
+		<property name="threatDAO" ref="threatDAO" />
+		<property name="vulnerabilityGroupDAO" ref="vulnerabilityGroupDAO" />
+		<property name="vulnerabilityDAO" ref="vulnerabilityDAO" />
+		<property name="documentGroupDAO" ref="documentGroupDAO" />
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="evidenceGroupDAO" ref="evidenceGroupDAO" />
+		<property name="evidenceDAO" ref="evidenceDAO" />
+		<property name="interviewGroupDAO" ref="interviewGroupDAO" />
+		<property name="interviewDAO" ref="interviewDAO" />
+		<property name="findingGroupDAO" ref="findingGroupDAO" />
+		<property name="findingDAO" ref="findingDAO" />
+		<property name="processGroupDAO" ref="processGroupDAO" />
+		<property name="processDAO" ref="processDAO" />
+		<property name="recordGroupDAO" ref="recordGroupDAO" />
+		<property name="recordDAO" ref="recordDAO" />
+        <!-- Self Assessment (SAMT) Daos -->
+        <property name="samtTopicDAO" ref="samtTopicDAO" />   
+
+        <!-- Miscellaneous DAOs -->
+        <property name="importIsoDAO" ref="importIsoDAO" /> 
+        <property name="importBsiDAO" ref="importBsiDAO" />   
+        <property name="elementEntityDao" ref="elementEntityDao" />  
+	</bean>
+
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="baseTxProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+		<property name="transactionManager" ref="txManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="serverExceptionHandler" class="sernet.gs.server.ServerExceptionHandler" />
+
+	<bean id="hibernateCommandService" class="sernet.verinice.service.HibernateCommandService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="exceptionHandler" ref="serverExceptionHandler" />
+		<property name="authService" ref="authService" />
+		<property name="ldapService" ref="ldapService" />
+        <property name="configurationService" ref="configurationService" />
+        <property name="rightsServerHandler" ref="rightsServerHandler" />
+	</bean>
+    
+	<bean id="commandService" parent="baseTxProxy">
+		<property name="target" ref="hibernateCommandService" />
+		<property name="transactionAttributes">
+			<props merge="true">
+				<prop key="executeCommand">PROPAGATION_REQUIRED,-sernet.gs.ui.rcp.main.service.commands.UsernameExistsException,-sernet.verinice.interfaces.CommandException</prop>
+			</props>
+		</property>
+	</bean>
+
+    
+    <bean id="configurationServiceImpl" class="sernet.verinice.service.ConfigurationService">
+        <property name="configurationDao" ref="configurationDao" />
+		<property name="authService" ref="authService" />
+    </bean>
+    
+    
+    <bean id="configurationService" parent="baseTxProxy">
+        <property name="target" ref="configurationServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="loadUserData">PROPAGATION_SUPPORTS,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="rightsServiceMessages" class="sernet.verinice.service.AuthMessageSource">
+        <property name="basename">
+            <value>/WEB-INF/verinice-auth-messages</value>
+        </property>
+    </bean>
+    
+    <bean id="validationService" class="sernet.verinice.service.ValidationService">
+    	<property name="commandService" ref="commandService" />
+    	<property name="cnaValidationDAO" ref="cnaValidationDAO" />
+    	<property name="cnaTreeElementDAO" ref="cnaTreeElementDao"></property>
+    	<property name="huiTypeFactory" ref="huiTypeFactory" />
+    </bean>
+    
+    <!-- A service to load and analyse the element network of verinice with JGraphT. -->
+    <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
+    <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
+        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+        <property name="cnaLinkDao" ref="cnaLinkDao" />
+    </bean>
+
+	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
+	<!--<import resource="veriniceserver-debug.xml"/>-->
+
+</beans>

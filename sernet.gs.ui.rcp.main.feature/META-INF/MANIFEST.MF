@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Feature Plug-in
+Bundle-SymbolicName: sernet.gs.ui.rcp.main.feature
+Bundle-Version: 1.1.1.qualifier
+Require-Bundle: org.springframework.osgi.extender;bundle-version="1.2.0",
+ org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
