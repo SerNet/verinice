@@ -15,11 +15,16 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -61,6 +66,7 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
     @Override
     public void execute() {
         Object[] parameter;
+        
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
         StringBuilder sb = new StringBuilder(QUERY);
         if(scopeId!=null) {
@@ -70,7 +76,16 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
             parameter = new Object[] { typeId };
         }
         
-        list = dao.findByQuery(sb.toString(), parameter);
+        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);      
+        crit.setFetchMode("entity", FetchMode.JOIN);
+        crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+        crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        crit.add(Restrictions.eq("objectType", typeId));
+        if(scopeId!=null) {
+            crit.add(Restrictions.eq("scopeId", scopeId));
+        }
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        list = dao.findByCriteria(crit);
     }    
 
     public List<CnATreeElement> getElements() {
