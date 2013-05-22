@@ -62,7 +62,7 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public IOutputFormat[] getOutputFormats() {
-        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat(), new ODTOutputFormat(), new ODSOutputFormat() };
+        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new WordOutputFormat(), new ODTOutputFormat() };
     }
 
     /* (non-Javadoc)
