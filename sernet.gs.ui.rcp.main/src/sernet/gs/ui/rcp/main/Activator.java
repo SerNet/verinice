@@ -254,18 +254,47 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private void checkPKCS11Support(Preferences prefs) {
         // May replace the JDK's built-in security settings
-        try {
-            String osName = System.getProperty("os.name"); //$NON-NLS-1$
-            String osArch = System.getProperty("os.arch"); //$NON-NLS-1$
-            if (!(osName.toLowerCase().contains("win") && osArch.contains("64"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                VeriniceSecurityProvider.register(prefs); // this fails on a
-                                                          // win7/64 system
+        try { 
+            if (!isWin64() || isAtLeastJava8() ) {             
+                VeriniceSecurityProvider.register(prefs); // this fails on a win7/64 system
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("verinice security provider registered.");
+                }
             } else {
                 LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available"); //$NON-NLS-1$
             }
+            
         } catch (Exception e) {
             LOG.error("Error while registering verinice security provider.", e); //$NON-NLS-1$
         }
+    }
+    
+    private boolean isAtLeastJava8() {
+        String javaVersion = System.getProperty("java.version");
+        boolean result = false;
+        // version String should look like "1.4.2_10"
+        if (javaVersion.indexOf("1.8.") != -1) { //$NON-NLS-1$ 
+            result = true;
+        }
+        if (javaVersion.indexOf("1.9.") != -1) { //$NON-NLS-1$ 
+            result = true;
+        }
+        if (javaVersion.indexOf("2.0.") != -1) { //$NON-NLS-1$ 
+            result = true;
+        }
+        if (javaVersion.indexOf("8.0.") != -1) { //$NON-NLS-1$ 
+            result = true;
+        }
+        if (javaVersion.indexOf("1.10.") != -1) { //$NON-NLS-1$ 
+            result = true;
+        }
+        return result;
+    }
+
+    private boolean isWin64() {
+        String osName = System.getProperty("os.name"); //$NON-NLS-1$
+        String osArch = System.getProperty("os.arch"); //$NON-NLS-1$
+        return osName.toLowerCase().contains("win") && osArch.contains("64"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private void setGSDSCatalog(Preferences prefs) {

@@ -5,7 +5,8 @@ Bundle-SymbolicName: sernet.springclient
 Bundle-Version: 1.2.2.qualifier
 Bundle-Activator: sernet.springclient.SpringClientPlugin
 Bundle-ClassPath: .
-Export-Package: sernet.springclient;
+Export-Package: org.springframework.core,
+ sernet.springclient;
   uses:="org.eclipse.jface.resource,
    org.eclipse.ui.plugin,
    org.osgi.framework,
