@@ -36,5 +36,7 @@ public interface ICommandCacheClient extends ICommandService {
     public boolean isEnabled();
     
     public void resetCache();
+    
+    public void setUseCache(boolean useCache);
 
 }

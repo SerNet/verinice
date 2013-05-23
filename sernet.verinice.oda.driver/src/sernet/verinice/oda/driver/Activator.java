@@ -31,6 +31,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
+import sernet.verinice.oda.driver.preferences.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -50,8 +51,6 @@ public class Activator extends AbstractUIPlugin {
 	private ServiceTracker mainTracker;
 	
 	private ServiceTracker commandServiceTracker;
-	
-	private boolean useReportCache = true;
 	
 	/**
 	 * The constructor
@@ -123,15 +122,10 @@ public class Activator extends AbstractUIPlugin {
 	
 	public ICommandService getCommandService()
 	{
-	    if(useReportCache){
+	    if(getPreferenceStore().getBoolean(PreferenceConstants.REPORT_USE_CACHE)){
 	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
 	    } else {
 	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 	    }
 	}
-	
-	public void setUseReportCache(boolean useReportCache){
-	    this.useReportCache = useReportCache;
-	}
-
 }

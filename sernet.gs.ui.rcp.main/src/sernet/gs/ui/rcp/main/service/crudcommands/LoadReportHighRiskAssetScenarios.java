@@ -33,6 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Process;
 
 /**
  *
@@ -53,6 +54,7 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
     public static final String[] COLUMNS = new String[]{
                                     "assetName",
                                     "scenarioName",
+                                    "processName",
                                     "riskC",
                                     "riskI",
                                     "riskA",
@@ -74,96 +76,83 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
         if(!resultInjectedFromCache){
             results = new ArrayList<List<String>>(0);
             try{
-                LoadReportElements assetLoader = new LoadReportElements(Asset.TYPE_ID, root);
-                assetLoader = getCommandService().executeCommand(assetLoader);
-                for(CnATreeElement ae : assetLoader.getElements()){
-                    if(ae.getTypeId().equals(Asset.TYPE_ID)){
-                        Asset asset = (Asset)ae;
+                LoadReportElements processLoader = new LoadReportElements(Process.TYPE_ID, root, true);
+                processLoader = getCommandService().executeCommand(processLoader);
+                for(CnATreeElement pr : processLoader.getElements()){
+                    LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, pr.getDbId());
+                    assetLoader = getCommandService().executeCommand(assetLoader);
+                    for(CnATreeElement ae : assetLoader.getElements()){
+                        Asset asset = (Asset)Retriever.retrieveElement(ae, new RetrieveInfo().setProperties(true));
                         LoadReportLinkedElements scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
                         scenarioLoader = getCommandService().executeCommand(scenarioLoader);
                         for(CnATreeElement se : scenarioLoader.getElements()){
-                            se = Retriever.retrieveElement(se, new RetrieveInfo().setProperties(true));
-                            if(se.getTypeId().equals(IncidentScenario.TYPE_ID)){
-                                IncidentScenario scenario = (IncidentScenario)se;
-                                AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-                                RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+                            IncidentScenario scenario = (IncidentScenario)Retriever.retrieveElement(se, new RetrieveInfo().setProperties(true));
+                            AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+                            RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
 
-                                Integer impactC = valueAdapter.getVertraulichkeit();
-                                Integer impactI = valueAdapter.getIntegritaet();
-                                Integer impactA = valueAdapter.getVerfuegbarkeit();
-                                Integer[] reducedImpact = raService.applyControlsToImpact(riskType, (CnATreeElement)asset, impactC, impactI, impactA);
-                                if (reducedImpact != null) {
-                                    impactC = reducedImpact[0];
-                                    impactI = reducedImpact[1];
-                                    impactA = reducedImpact[2];
-                                }
-                                
-                                boolean isCRelevant = false;
-                                boolean isIRelevant = false;
-                                boolean isARelevant = false;
-                                
-                                isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
-                                isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
-                                isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
-
-                                String scenProbType = "";
-                                switch(riskType){
-                                case IRiskAnalysisService.RISK_PRE_CONTROLS:
-                                    scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
-                                    break;
-                                case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
-                                    scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS;
-                                    break;
-                                case IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS:
-                                    scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS;
-                                    break;
-                                default:
-                                    scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
-                                    break;
-                                }
-
-                                Integer probability = scenario.getNumericProperty(scenProbType);            
-                                Integer riskC = (isCRelevant) ? impactC + probability : Integer.valueOf(0);
-                                Integer riskI = (isIRelevant) ? impactI + probability : Integer.valueOf(0);
-                                Integer riskA = (isARelevant) ? impactA + probability : Integer.valueOf(0);
-
-                                char[] cia = new char[]{'c', 'i', 'a'};
-                                boolean isRedRisk = false;
-                                boolean isYellowRisk = false;
-                                for(char c : cia){
-                                    int yellowFields = 0;
-                                    if(c == 'i'){
-                                        yellowFields = fourYellowFields;
-                                    } else {
-                                        yellowFields = threeYellowFields;
-                                    }
-                                    int riskColor = raService.getRiskColor(asset, scenario, c, yellowFields, scenProbType);
-                                    if(!isRedRisk && riskColor == IRiskAnalysisService.RISK_COLOR_RED){
-                                        isRedRisk = true;
-                                        break;
-                                    } else if(!isYellowRisk && riskColor == IRiskAnalysisService.RISK_COLOR_YELLOW){
-                                        isYellowRisk = true;
-                                    }
-
-                                }
-
-                                if(isRedRisk || isYellowRisk){  
-                                    ArrayList<String> row = new ArrayList<String>(0);
-                                    row.add(asset.getTitle());
-                                    row.add(scenario.getTitle());
-                                    row.add(String.valueOf(riskC));
-                                    row.add(String.valueOf(riskI));
-                                    row.add(String.valueOf(riskA));
-                                    if(isRedRisk){
-                                        row.add("red");
-                                    } else if(isYellowRisk){
-                                        row.add("yellow");
-                                    }
-                                    results.add(row);
-                                }
-                                scenario = null;
-                                se = null;
+                            Integer impactC = valueAdapter.getVertraulichkeit();
+                            Integer impactI = valueAdapter.getIntegritaet();
+                            Integer impactA = valueAdapter.getVerfuegbarkeit();
+                            Integer[] reducedImpact = raService.applyControlsToImpact(riskType, (CnATreeElement)asset, impactC, impactI, impactA);
+                            if (reducedImpact != null) {
+                                impactC = reducedImpact[0];
+                                impactI = reducedImpact[1];
+                                impactA = reducedImpact[2];
                             }
+
+                            boolean isCRelevant = false;
+                            boolean isIRelevant = false;
+                            boolean isARelevant = false;
+
+                            isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
+                            isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
+                            isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
+
+                            String scenProbType = "";
+                            scenProbType = getScenPropType();
+
+                            Integer probability = scenario.getNumericProperty(scenProbType);            
+                            Integer riskC = (isCRelevant) ? impactC + probability : Integer.valueOf(0);
+                            Integer riskI = (isIRelevant) ? impactI + probability : Integer.valueOf(0);
+                            Integer riskA = (isARelevant) ? impactA + probability : Integer.valueOf(0);
+
+                            char[] cia = new char[]{'c', 'i', 'a'};
+                            boolean isRedRisk = false;
+                            boolean isYellowRisk = false;
+                            for(char c : cia){
+                                int yellowFields = 0;
+                                if(c == 'i'){
+                                    yellowFields = fourYellowFields;
+                                } else {
+                                    yellowFields = threeYellowFields;
+                                }
+                                int riskColor = raService.getRiskColor(asset, scenario, c, yellowFields, scenProbType);
+                                if(!isRedRisk && riskColor == IRiskAnalysisService.RISK_COLOR_RED){
+                                    isRedRisk = true;
+                                    break;
+                                } else if(!isYellowRisk && riskColor == IRiskAnalysisService.RISK_COLOR_YELLOW){
+                                    isYellowRisk = true;
+                                }
+
+                            }
+
+                            if(isRedRisk || isYellowRisk){  
+                                ArrayList<String> row = new ArrayList<String>(0);
+                                row.add(asset.getTitle());
+                                row.add(scenario.getTitle());
+                                row.add(pr.getTitle());
+                                row.add(String.valueOf(riskC));
+                                row.add(String.valueOf(riskI));
+                                row.add(String.valueOf(riskA));
+                                if(isRedRisk){
+                                    row.add("red");
+                                } else if(isYellowRisk){
+                                    row.add("yellow");
+                                }
+                                results.add(row);
+                            }
+                            scenario = null;
+                            se = null;
                         }
                         scenarioLoader = null;
                         ae = null;
@@ -174,6 +163,25 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                 getLog().error("Error while executing command", e);
             }
         }
+    }
+
+    private String getScenPropType() {
+        String scenProbType;
+        switch(riskType){
+        case IRiskAnalysisService.RISK_PRE_CONTROLS:
+            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
+            break;
+        case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
+            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS;
+            break;
+        case IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS:
+            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS;
+            break;
+        default:
+            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
+            break;
+        }
+        return scenProbType;
     }
 
     public List<List<String>> getResults() {

@@ -84,6 +84,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	    if(!checkRights()){
 	        return;
 	    }
+	    
 	    try {
 	        if(!isContextMenuCall() || rootObjects == null || rootObjects.size() == 0){
 	            dialog = new GenerateReportDialog(shell);
@@ -106,7 +107,6 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
                     public Integer getRootElement() {return rootElmt; }
                     public Integer[] getRootElements(){return rootElmts;}
                     public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
-                    public Boolean useReportCache(){return dialog.getUseReportCache();}
     			};
     			if(dialog.getRootElement() != null){
     				ro.setRootElement(dialog.getRootElement());

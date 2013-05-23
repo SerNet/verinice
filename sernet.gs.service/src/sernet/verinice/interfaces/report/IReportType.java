@@ -74,4 +74,5 @@ public interface IReportType {
 	 * @return
 	 */
 	String getUseCaseID();
+	
 }

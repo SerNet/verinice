@@ -28,5 +28,6 @@ public class PreferenceConstants {
     public static final String REPORT_LOGGING_ENABLED = "report_logging_enabled";
     public static final String REPORT_LOGGING_LVL = "report_logging_lvl";
     public static final String REPORT_LOG_FILE = "report_log_file";
+    public static final String REPORT_USE_CACHE = "report_use_cache";
 
 }

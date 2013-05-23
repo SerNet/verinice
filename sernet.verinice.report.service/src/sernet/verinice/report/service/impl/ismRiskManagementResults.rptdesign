@@ -10686,6 +10686,11 @@ columns(cols);</value>
                     <text-property name="heading">scenarioName</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">processName</property>
+                    <text-property name="displayName">processName</text-property>
+                    <text-property name="heading">processName</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">riskC</property>
                     <text-property name="displayName">riskC</text-property>
                     <text-property name="heading">riskC</text-property>
@@ -10734,21 +10739,26 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">riskC</property>
+                        <property name="name">processName</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">riskI</property>
+                        <property name="name">riskC</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">riskA</property>
+                        <property name="name">riskI</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
+                        <property name="name">riskA</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
                         <property name="name">colourValue</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -10772,27 +10782,34 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">3</property>
+                    <property name="name">processName</property>
+                    <property name="nativeName">processName</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
                     <property name="name">riskC</property>
                     <property name="nativeName">riskC</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">riskI</property>
                     <property name="nativeName">riskI</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">riskA</property>
                     <property name="nativeName">riskA</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">colourValue</property>
                     <property name="nativeName">colourValue</property>
                     <property name="dataType">javaObject</property>
@@ -20708,7 +20725,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             </row>
             <row id="3209">
                 <cell id="3210">
-                    <table id="3165">
+                    <table id="3306">
                         <property name="dataSet">highRiskAssetScenarioCombos</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -20721,6 +20738,12 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <property name="name">scenarioName</property>
                                 <text-property name="displayName">scenarioName</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["scenarioName"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">processName</property>
+                                <text-property name="displayName">processName</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["processName"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
@@ -20754,135 +20777,154 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <property name="direction">asc</property>
                                 <property name="strength">-1</property>
                             </structure>
+                            <structure>
+                                <expression name="key" type="javascript">row["scenarioName"]</expression>
+                                <property name="direction">asc</property>
+                                <property name="strength">-1</property>
+                            </structure>
                         </list-property>
-                        <column id="3199"/>
-                        <column id="3200"/>
-                        <column id="3201"/>
-                        <column id="3202"/>
-                        <column id="3203"/>
-                        <column id="3204"/>
+                        <column id="3328"/>
+                        <column id="3329"/>
+                        <column id="3330"/>
+                        <column id="3331"/>
+                        <column id="3332"/>
+                        <column id="3333"/>
+                        <column id="3346"/>
                         <header>
-                            <row id="3166">
-                                <cell id="3167">
-                                    <label id="3168">
+                            <row id="3307">
+                                <cell id="3308">
+                                    <label id="3348">
+                                        <text-property name="text">Process</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="3309">
+                                    <label id="3334">
                                         <text-property name="text">Asset</text-property>
                                     </label>
                                 </cell>
-                                <cell id="3169">
-                                    <label id="3170">
+                                <cell id="3310">
+                                    <label id="3335">
                                         <text-property name="text">Scenario</text-property>
                                     </label>
                                 </cell>
-                                <cell id="3171">
-                                    <label id="3172">
-                                        <text-property name="text">Confidentiality</text-property>
+                                <cell id="3311">
+                                    <label id="3336">
+                                        <text-property name="text">C</text-property>
                                     </label>
                                 </cell>
-                                <cell id="3173">
-                                    <label id="3174">
-                                        <text-property name="text">Integrity</text-property>
+                                <cell id="3312">
+                                    <label id="3337">
+                                        <text-property name="text">I</text-property>
                                     </label>
                                 </cell>
-                                <cell id="3175">
-                                    <label id="3176">
-                                        <text-property name="text">Availability</text-property>
+                                <cell id="3313">
+                                    <label id="3342">
+                                        <text-property name="text">A</text-property>
                                     </label>
                                 </cell>
-                                <cell id="3177">
-                                    <label id="3178">
+                                <cell id="3343">
+                                    <label id="3347">
                                         <text-property name="text">Overall</text-property>
                                     </label>
                                 </cell>
                             </row>
                         </header>
-                        <group id="3214">
+                        <group id="3367">
+                            <property name="groupName">processes</property>
+                            <expression name="keyExpr" type="javascript">row["processName"]</expression>
+                            <structure name="toc">
+                                <expression name="expressionValue" type="javascript">row["processName"]</expression>
+                            </structure>
+                            <property name="hideDetail">false</property>
+                            <header>
+                                <row id="3368">
+                                    <cell id="3369">
+                                        <data id="3384">
+                                            <property name="resultSetColumn">processName</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="3370"/>
+                                    <cell id="3371"/>
+                                    <cell id="3372"/>
+                                    <cell id="3373"/>
+                                    <cell id="3374"/>
+                                    <cell id="3375"/>
+                                </row>
+                            </header>
+                        </group>
+                        <group id="3385">
                             <property name="groupName">Assets</property>
                             <expression name="keyExpr" type="javascript">row["assetName"]</expression>
                             <structure name="toc">
                                 <expression name="expressionValue" type="javascript">row["assetName"]</expression>
                             </structure>
                             <property name="hideDetail">false</property>
-                            <list-property name="sort">
-                                <structure>
-                                    <expression name="key" type="javascript">row["colourValue"]</expression>
-                                    <property name="direction">asc</property>
-                                    <property name="strength">-1</property>
-                                </structure>
-                            </list-property>
                             <header>
-                                <row id="3215">
-                                    <property name="borderBottomColor">#000000</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#000000</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#000000</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#000000</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <cell id="3216">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <data id="3229">
+                                <row id="3386">
+                                    <cell id="3387"/>
+                                    <cell id="3388">
+                                        <data id="3402">
                                             <property name="resultSetColumn">assetName</property>
                                         </data>
                                     </cell>
-                                    <cell id="3217">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="3218">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="3219">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="3220">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="3221">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
+                                    <cell id="3389"/>
+                                    <cell id="3390"/>
+                                    <cell id="3391"/>
+                                    <cell id="3392"/>
+                                    <cell id="3393"/>
                                 </row>
                             </header>
                         </group>
                         <detail>
-                            <row id="3179">
-                                <cell id="3180"/>
-                                <cell id="3182">
-                                    <data id="3183">
+                            <row id="3314">
+                                <property name="borderBottomColor">white</property>
+                                <cell id="3315">
+                                    <property name="borderBottomColor">white</property>
+                                    <property name="borderBottomStyle">none</property>
+                                    <property name="borderBottomWidth">0pt</property>
+                                    <property name="borderLeftColor">white</property>
+                                    <property name="borderLeftStyle">none</property>
+                                    <property name="borderLeftWidth">0pt</property>
+                                    <property name="borderRightColor">white</property>
+                                    <property name="borderRightStyle">none</property>
+                                    <property name="borderRightWidth">0pt</property>
+                                    <property name="borderTopColor">white</property>
+                                    <property name="borderTopStyle">none</property>
+                                    <property name="borderTopWidth">0pt</property>
+                                </cell>
+                                <cell id="3316">
+                                    <property name="borderBottomColor">white</property>
+                                    <property name="borderBottomStyle">none</property>
+                                    <property name="borderBottomWidth">0pt</property>
+                                    <property name="borderLeftColor">white</property>
+                                    <property name="borderLeftStyle">none</property>
+                                    <property name="borderLeftWidth">0pt</property>
+                                    <property name="borderRightStyle">none</property>
+                                    <property name="borderRightWidth">0pt</property>
+                                    <property name="borderTopStyle">none</property>
+                                    <property name="borderTopWidth">0pt</property>
+                                </cell>
+                                <cell id="3317">
+                                    <data id="3403">
                                         <property name="resultSetColumn">scenarioName</property>
                                     </data>
                                 </cell>
-                                <cell id="3184">
-                                    <data id="3185">
+                                <cell id="3318">
+                                    <data id="3404">
                                         <property name="resultSetColumn">riskC</property>
                                     </data>
                                 </cell>
-                                <cell id="3186">
-                                    <data id="3187">
+                                <cell id="3319">
+                                    <data id="3405">
                                         <property name="resultSetColumn">riskI</property>
                                     </data>
                                 </cell>
-                                <cell id="3188">
-                                    <data id="3189">
+                                <cell id="3320">
+                                    <data id="3406">
                                         <property name="resultSetColumn">riskA</property>
                                     </data>
                                 </cell>
-                                <cell id="3190">
+                                <cell id="3344">
                                     <list-property name="highlightRules">
                                         <structure>
                                             <property name="operator">eq</property>

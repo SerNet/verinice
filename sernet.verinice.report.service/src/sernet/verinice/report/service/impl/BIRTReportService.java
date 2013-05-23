@@ -274,7 +274,6 @@ public class BIRTReportService {
 	@SuppressWarnings("unchecked")
 	public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex)
 	{
-	    setUseReportCache(options.useReportCache());
 		IDataExtractionOption extractionOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTExtractionOptions();
 		try {
 			extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
@@ -315,7 +314,6 @@ public class BIRTReportService {
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
 
-	    setUseReportCache(options.useReportCache());
 		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
@@ -349,8 +347,6 @@ public class BIRTReportService {
 	}
 	
 	public void run(IRunTask task, IReportOptions options){
-	    
-	    setUseReportCache(options.useReportCache());
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
         if(options.getRootElement() != null){
             task.getAppContext().put(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME, options.getRootElement());
@@ -378,7 +374,6 @@ public class BIRTReportService {
 	
 	public void render(IRenderTask task, IReportOptions options){
 	    IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
-	    setUseReportCache(options.useReportCache());
 	    renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
 	    if(options.getRootElement() != null){
@@ -409,10 +404,4 @@ public class BIRTReportService {
 	        destroyEngine();
 	    }
 	}
-	
-	private void setUseReportCache(boolean useReportCache){
-	       VeriniceOdaDriver driver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
-	       driver.setUseReportCache(useReportCache);
-	}
-
 }

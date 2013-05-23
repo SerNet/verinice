@@ -64,7 +64,6 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
                     public void setRootElements(Integer[] rootElements){ rootElmts = rootElements;}
                     public Integer getRootElement() {return rootElmt; }
                     public Integer[] getRootElements() {return rootElmts;}
-                    public Boolean useReportCache() {return dialog.getUseReportCache();}
                 };
                 if(dialog.getRootElement() != null){
                 	ro.setRootElement(dialog.getRootElement());

@@ -57,6 +57,4 @@ public interface IReportOptions {
      */
     Integer[] getRootElements();
     
-    Boolean useReportCache();
-	
 }

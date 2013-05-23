@@ -181,4 +181,12 @@ public class CommandCacheClient implements ICommandCacheClient {
         getLog().debug("################end Cache Stats###################");
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandCacheClient#setUseCache(boolean)
+     */
+    @Override
+    public void setUseCache(boolean useCache) {
+        
+    }
+
 }

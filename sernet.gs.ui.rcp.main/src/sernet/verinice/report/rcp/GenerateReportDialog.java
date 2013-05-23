@@ -39,6 +39,8 @@ import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandCacheClient;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.validation.IValidationService;
@@ -432,27 +434,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gridLabelFile.grabExcessHorizontalSpace = true;
         gridLabelFile.minimumWidth = dataScopeMinimumWidth;
         
-        Button useCacheButton = new Button(groupCache, SWT.CHECK);
-        useCacheButton.setText(Messages.GenerateReportDialog_25);
-		useCacheButton.setSelection(true);
-	    GridData  useCacheButtonGridData = new GridData();
-	    useCacheButtonGridData.horizontalSpan = 2;
-	    useCacheButtonGridData.grabExcessHorizontalSpace = true;
-	    useCacheButtonGridData.horizontalAlignment = GridData.FILL;
-	    useCacheButtonGridData.verticalAlignment = SWT.RIGHT;
-	    useCacheButton.setLayoutData(useCacheButtonGridData);
-	    useCacheButton.addSelectionListener(new SelectionListener() {
-            
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                useCache = ((Button)e.getSource()).getSelection();
-            }
-            
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
+        createCacheResetButton(groupCache);
 	    
 		openFileButton.setEnabled(FILENAME_MANUAL);
 		
@@ -788,10 +770,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         this.isContextMenuCall = isContextMenuCall;
     }
     
-    public boolean getUseReportCache(){
-        return useCache;
-    }
-
     private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);    
@@ -802,5 +780,29 @@ public class GenerateReportDialog extends TitleAreaDialog {
             defaultFolder = defaultFolder + System.getProperty("file.separator");
         }
         return defaultFolder;
+    }
+    
+    private void createCacheResetButton(Control parent){
+        Button button = new Button((Composite) parent, SWT.PUSH);
+        button.setText(Messages.GenerateReportDialog_27); //$NON-NLS-1$
+        button.setLayoutData(new GridData(GridData.END, GridData.BEGINNING, true, true));
+        button.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(MessageDialog.openConfirm(getShell(), Messages.GenerateReportDialog_28, Messages.GenerateReportDialog_29)){
+                    ICommandCacheClient commandCacheClient = (ICommandCacheClient)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
+                    commandCacheClient.resetCache();
+                } else {
+                    return;
+                }
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+            
+        });
     }
 }
