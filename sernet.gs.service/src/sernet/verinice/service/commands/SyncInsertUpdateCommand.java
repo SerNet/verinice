@@ -22,7 +22,6 @@ package sernet.verinice.service.commands;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,7 +52,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
-import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.IVeriniceArchive;
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncFile;
@@ -71,7 +70,7 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings({ "serial", "restriction" })
+@SuppressWarnings({ "serial"})
 public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
@@ -362,7 +361,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @param clazz
      * @return
      */
-    private <T> IBaseDao<T, Serializable>  getDao(Class clazz) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private <T> IBaseDao<T, Serializable> getDao(Class clazz) {
         IBaseDao<T, Serializable> dao = daoMap.get(clazz);
         if(dao==null) {
             dao = getDaoFactory().getDAO(clazz);
@@ -371,6 +371,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return dao;
     }
     
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
         // get constructor with parent-parameter and create new object:
@@ -464,26 +465,23 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @throws IOException
      * @throws CommandException
      */
-    public void importFileData(byte[] zipFileData) throws IOException, CommandException {
-        List<String> fileNameList = new ArrayList<String>(attachmentMap.keySet());
-        // Next call might result in out-of-memory trouble
-        // because all attachment data from zipFileData
-        // is stored in one map.
-        // In case of out of memory exceptions
-        // call this method in for loop.
-        Map<String, byte[]> fileDataMap = VeriniceArchive.extractZipEntries(zipFileData, fileNameList);
-        
-        for (String fileName : fileNameList) {
-            Attachment attachment = attachmentMap.get(fileName);
-            IBaseDao<AttachmentFile, Serializable> dao = getDao(AttachmentFile.class);
+    public void importFileData(IVeriniceArchive veriniceArchive) throws IOException, CommandException {
+        SaveAttachment saveFileCommand = new SaveAttachment();
+        IBaseDao<AttachmentFile, Serializable> dao = getDao(AttachmentFile.class);
+        for (String fileName : attachmentMap.keySet()) {
+            Attachment attachment = attachmentMap.get(fileName);       
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
-            attachmentFile.setFileData(fileDataMap.get(fileName));
-            fileDataMap.remove(fileName);
-            SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-            saveFileCommand = getCommandService().executeCommand(saveFileCommand);
-            saveFileCommand.clear();
-        }
-        fileDataMap.clear();     
+            attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
+            if(attachmentFile.getFileData()!=null) {
+                saveFileCommand.setElement(attachmentFile);
+                saveFileCommand = getCommandService().executeCommand(saveFileCommand);
+                saveFileCommand.clear();
+                dao.flush();
+                dao.clear();
+            } else {
+                log.warn("File was not imported. No file data: " + fileName);
+            }
+        }  
     }
 
     /**

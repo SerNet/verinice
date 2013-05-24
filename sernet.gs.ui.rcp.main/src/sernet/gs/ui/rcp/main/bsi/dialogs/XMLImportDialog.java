@@ -588,11 +588,13 @@ public class XMLImportDialog extends Dialog {
 
     private void doImport() {
         Activator.inheritVeriniceContextState();
-
+        SyncParameter parameter = new SyncParameter(insert, update, delete, integrate, format);
+        byte[] fileData = null;
+        
         SyncCommand command;
-        try {
-            byte[] fileData =  FileUtils.readFileToByteArray(dataFile);
-            if (selectedEncryptionMethod!=null) {           
+        try {                            
+            if (selectedEncryptionMethod!=null) {
+                fileData =  FileUtils.readFileToByteArray(dataFile);
                 IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
                     fileData = service.decrypt(fileData, password.toCharArray());                   
@@ -602,11 +604,17 @@ public class XMLImportDialog extends Dialog {
                 }
                 // data is encrypted, guess format
                 format = guessFormat(fileData);
-            }         
-            
-            command = new SyncCommand(
-                    new SyncParameter(insert, update, delete, integrate, format), 
-                    fileData);    
+                parameter.setFormat(format);
+                command = new SyncCommand(parameter, fileData); 
+            } else {
+                if(Activator.getDefault().isStandalone()) {
+                    String path = dataFile.getPath();                
+                    command = new SyncCommand(parameter, path);
+                } else {
+                    fileData =  FileUtils.readFileToByteArray(dataFile);
+                    command = new SyncCommand(parameter, fileData); 
+                }
+            }    
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             // clear memory
             fileData = null;

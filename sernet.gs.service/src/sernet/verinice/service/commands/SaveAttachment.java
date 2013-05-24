@@ -36,7 +36,14 @@ public class SaveAttachment extends SaveElement<AttachmentFile> {
 		super(element);
 	}
 	
-	/* (non-Javadoc)
+	/**
+     * 
+     */
+    public SaveAttachment() {
+        super();
+    }
+
+    /* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.crudcommands.SaveElement#clear()
 	 */
 	@Override

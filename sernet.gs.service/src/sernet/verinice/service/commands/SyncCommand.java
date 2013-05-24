@@ -21,8 +21,8 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,20 +31,20 @@ import java.util.Set;
 
 import javax.xml.bind.JAXB;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.sync.IVeriniceArchive;
+import sernet.verinice.service.sync.PureXml;
 import sernet.verinice.service.sync.VeriniceArchive;
-import de.sernet.sync.data.SyncData;
-import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
@@ -57,20 +57,16 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         }
         return log;
     }
-
-    private String sourceId;
+    
+    private String path;
+    
+    private byte[] fileData;
 
     private transient IAuthService authService;
 
     private String stationId;
 
     private SyncParameter parameter;
-
-    private byte[] syncRequestSerialized;
-
-    private transient SyncData syncData;
-
-    private transient SyncMapping syncMapping;
 
     private int inserted, updated, deleted;
 
@@ -80,7 +76,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
 
     private Set<CnATreeElement> elementSet = null;
     
-    private transient VeriniceArchive veriniceArchive;
+    private transient IVeriniceArchive veriniceArchive = null;
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -99,8 +95,14 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      * @param syncRequestSerialized
      */
     public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {     
-        this.parameter = parameter;    
-        this.syncRequestSerialized = syncRequestSerialized;
+        this.parameter = parameter;
+        this.fileData = syncRequestSerialized;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+    
+    public SyncCommand(SyncParameter parameter, String path) {     
+        this.parameter = parameter;
+        this.path = path;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -123,7 +125,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         JAXB.marshal(sr, bos);
 
-        this.syncRequestSerialized = bos.toByteArray();
+        this.fileData = bos.toByteArray();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -133,39 +135,53 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      * @param sr SyncRequest
      */
     public SyncCommand(SyncRequest sr) {
-        this.sourceId = sr.getSourceId();      
-        this.syncData = sr.getSyncData();
-        this.syncMapping = sr.getSyncMapping();
-        this.syncRequestSerialized = null;
+        veriniceArchive = new PureXml();
+        this.veriniceArchive.setSourceId(sr.getSourceId());      
+        this.veriniceArchive.setSyncData(sr.getSyncData());
+        this.veriniceArchive.setSyncMapping(sr.getSyncMapping());
         this.stationId = ChangeLogEntry.STATION_ID;
         this.parameter = new SyncParameter(sr.isInsert(), sr.isUpdate(), sr.isDelete(), false,  SyncParameter.EXPORT_FORMAT_XML_PURE);
     }
 
     @Override
     public void execute() {
-        
-        long start = 0;
-        if (getLog().isInfoEnabled()) {
-           start = System.currentTimeMillis();
-        }
-        
-        getDataFromRequest();
-        
-        SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(
-        		sourceId, 
-        		syncData, 
-        		syncMapping,
-        		getAuthService().getUsername(),
-        		parameter,
-        		errors);
-
         try {
-            cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
-            if(isVeriniceArchive()) {
-                cmdInsertUpdate.importFileData(syncRequestSerialized);
+            long start = 0;
+            if (getLog().isInfoEnabled()) {
+                start = System.currentTimeMillis();
             }
-            // clear memory
-            syncRequestSerialized = null;
+            
+            if(path!=null && fileData==null) {
+                fileData =  FileUtils.readFileToByteArray(new File(path));
+            }
+    
+            if (veriniceArchive == null) {
+                loadVeriniceArchive(fileData);
+                fileData = null;
+            }
+    
+            SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(veriniceArchive.getSourceId(), veriniceArchive.getSyncData(), veriniceArchive.getSyncMapping(), getAuthService().getUsername(), parameter, errors);           
+            cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
+            if (isVeriniceArchive()) {
+                cmdInsertUpdate.importFileData(veriniceArchive);
+            }
+            
+    
+            importRootObject = new HashSet<CnATreeElement>(cmdInsertUpdate.getContainerMap().values());
+            elementSet = cmdInsertUpdate.getElementSet();
+    
+            inserted += cmdInsertUpdate.getInserted();
+            updated += cmdInsertUpdate.getUpdated();
+    
+            if (parameter.isDelete()) {
+                SyncDeleteCommand cmdDelete = new SyncDeleteCommand(veriniceArchive.getSourceId(), veriniceArchive.getSyncData(), errors);
+                cmdDelete = getCommandService().executeCommand(cmdDelete);
+                deleted += cmdDelete.getDeleted();
+            }
+            if (getLog().isInfoEnabled()) {
+                long time = System.currentTimeMillis() - start;
+                getLog().info("Runtime: " + time + " ms");
+            }
         } catch (RuntimeException e) {
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
@@ -175,57 +191,22 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
             errors.add("Insert/Update failed.");
             throw new RuntimeCommandException(e);
         }
-
-        importRootObject = new HashSet<CnATreeElement>(cmdInsertUpdate.getContainerMap().values());
-        elementSet = cmdInsertUpdate.getElementSet();
-
-        inserted += cmdInsertUpdate.getInserted();
-        updated += cmdInsertUpdate.getUpdated();
-
-        if (parameter.isDelete()) {
-            SyncDeleteCommand cmdDelete = new SyncDeleteCommand(sourceId, syncData, errors);
-
-            try {
-                cmdDelete = getCommandService().executeCommand(cmdDelete);
-            } catch (CommandException e) {
-                errors.add("Delete failed.");
-                return;
+        finally {
+            if(veriniceArchive!=null) {
+                veriniceArchive.clear();
             }
-
-            deleted += cmdDelete.getDeleted();
         }
-        if (getLog().isInfoEnabled()) {
-            long time = System.currentTimeMillis() - start;
-            getLog().info("Runtime: " + time +" ms");
-         }
 
     }
 
-    private SyncRequest getDataFromRequest() {
-        byte[] xmlData = null;
+    private void loadVeriniceArchive(byte[] syncRequestSerialized) {
         if(isVeriniceArchive()) {
-            veriniceArchive = new VeriniceArchive(syncRequestSerialized);
-            xmlData = veriniceArchive.getVeriniceXml();
+            veriniceArchive = new VeriniceArchive(syncRequestSerialized);          
         }
         if(SyncParameter.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
-            xmlData = syncRequestSerialized;
+            veriniceArchive = new PureXml(syncRequestSerialized);          
         }
-        
-        SyncRequest sr = null;
-        if( xmlData!=null) {
-            if (getLog().isDebugEnabled()) {
-                String xml = new String(xmlData,VeriniceCharset.CHARSET_UTF_8);
-                getLog().debug("### Importing data begin ###");
-                getLog().debug(xml);
-                getLog().debug("### Importing data end ####");
-            }
-       
-            sr = JAXB.unmarshal(new ByteArrayInputStream(xmlData), SyncRequest.class);
-            sourceId = sr.getSourceId();
-            syncData = sr.getSyncData();
-            syncMapping = sr.getSyncMapping();
-        }
-        return sr;
+        logXml();
     }
 
     public int getInserted() {
@@ -320,6 +301,17 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     
     private boolean isVeriniceArchive() {
         return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
+    }
+    
+    private void logXml() {
+        if (getLog().isDebugEnabled()) {
+            if( veriniceArchive.getVeriniceXml()!=null) {          
+                String xml = new String(veriniceArchive.getVeriniceXml(),VeriniceCharset.CHARSET_UTF_8);
+                getLog().debug("### Importing data begin ###");
+                getLog().debug(xml);
+                getLog().debug("### Importing data end ####");                  
+            }
+        }
     }
 
 }
