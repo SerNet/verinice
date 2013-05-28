@@ -482,7 +482,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
 
 	public byte[] getResult() {
-		return (result != null) ? result.clone() : null; 
+		return result; 
 	}
 	
 	@Override

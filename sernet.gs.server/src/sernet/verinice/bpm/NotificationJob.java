@@ -263,7 +263,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
             "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
             "inner join propertyList2.properties as emailprops " + //$NON-NLS-1$
             "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? escape '\\'" + //$NON-NLS-1$
+            "and props.propertyValue like ? " + //$NON-NLS-1$
             "and emailprops.propertyType = ?";          //$NON-NLS-1$
             
             String escaped = name.replace("\\", "\\\\");

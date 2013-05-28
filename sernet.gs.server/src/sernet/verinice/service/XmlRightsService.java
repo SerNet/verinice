@@ -397,7 +397,7 @@ public class XmlRightsService implements IRightsService {
                 "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
                 "inner join propertyList2.properties as roleprops " + //$NON-NLS-1$
                 "where props.propertyType = ? " + //$NON-NLS-1$
-                "and props.propertyValue like ? escape '\\'" + //$NON-NLS-1$
+                "and props.propertyValue like ? " + //$NON-NLS-1$
                 "and roleprops.propertyType = ?"; //$NON-NLS-1$
         String escaped = username.replace("\\", "\\\\");
         Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_ROLES};        

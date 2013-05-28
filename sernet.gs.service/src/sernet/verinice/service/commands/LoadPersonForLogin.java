@@ -39,7 +39,7 @@ public class LoadPersonForLogin extends GenericCommand {
             "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
             "inner join propertyList.properties as props " + //$NON-NLS-1$
             "where props.propertyType = ? " + //$NON-NLS-1$
-            "and props.propertyValue like ? escape '\\'"; //$NON-NLS-1$
+            "and props.propertyValue like ? "; //$NON-NLS-1$
     
     private String login;
     private CnATreeElement person;
