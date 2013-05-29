@@ -74,9 +74,6 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
-
-    private static final int FLUSH_LEVEL = 50;
-    
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(SyncInsertUpdateCommand.class);
@@ -85,13 +82,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
     
     private transient Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
-
     public Logger getLogrt() {
         if (logrt == null) {
             logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
         }
         return logrt;
     }
+    
+    private static final int FLUSH_LEVEL = 50;
 
     private String sourceId;
     private boolean sourceIdExists;
@@ -181,13 +179,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             getLog().error("Exception while importing", e);
             throw new RuntimeCommandException(e);
         }
-    }
-
-    /**
-     * 
-     */
-    private void finalizeDaos() {
-        daoMap.clear();
     }
 
     private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
@@ -317,16 +308,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      
             merged++;
             if(merged % FLUSH_LEVEL == 0 ) {
-               long flushstart = 0;
-               if (getLogrt().isDebugEnabled()) {
-                   flushstart = System.currentTimeMillis();
-               }
-               dao.flush();
-               dao.clear();
-               if (getLogrt().isDebugEnabled()) {
-                   long time = System.currentTimeMillis() - flushstart;
-                   getLogrt().debug("Flushed, runtime: " + time + " ms");
-               }
+               flushAndClearDao(dao);
             }
         } // if( null != ... )
 
@@ -339,11 +321,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
         
         if (getLogrt().isDebugEnabled()) {
-            long cur = System.currentTimeMillis();
-            long time = cur - start;
-            long globalTime = cur - globalStart;
-            long a = Math.round((globalTime*1.0)/merged);
-            getLogrt().debug("Element " + merged + ": " + time + "ms, ave.: " + a);
+            logRuntime(start);
         }
         // Handle all the child objects.
         for (SyncObject child : so.getChildren()) {
@@ -742,6 +720,31 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 	
 	private boolean isVeriniceArchive() {
         return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
+    }
+	
+	private void finalizeDaos() {
+        daoMap.clear();
+    }
+	
+	private void flushAndClearDao(IBaseDao<CnATreeElement, Serializable> dao) {
+        long flushstart = 0;
+           if (getLogrt().isDebugEnabled()) {
+               flushstart = System.currentTimeMillis();
+           }
+           dao.flush();
+           dao.clear();
+           if (getLogrt().isDebugEnabled()) {
+               long time = System.currentTimeMillis() - flushstart;
+               getLogrt().debug("Flushed, runtime: " + time + " ms");
+           }
+    }
+	
+	private void logRuntime(long start) {
+        long cur = System.currentTimeMillis();
+        long time = cur - start;
+        long globalTime = cur - globalStart;
+        long a = Math.round((globalTime*1.0)/merged);
+        getLogrt().debug("Element " + merged + ": " + time + "ms, ave.: " + a);
     }
 	
 	/**

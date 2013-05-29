@@ -31,10 +31,8 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
@@ -68,6 +66,8 @@ public class LoadAttachmentFile extends GenericCommand {
 
 	private Integer dbId;
 	
+	private boolean flush = false;
+	
 	private AttachmentFile attachmentFile;
 	
 	// For images only, null means no scaling
@@ -75,22 +75,32 @@ public class LoadAttachmentFile extends GenericCommand {
 	private Integer scaleSize;
 
 	public LoadAttachmentFile(Integer dbId) {
-		super();
-		this.dbId = dbId;
+		this(dbId,false);	
 	}
+	
+	public LoadAttachmentFile(Integer dbId, boolean flush) {
+        super();
+        this.dbId = dbId;
+        this.flush = flush;
+    }
 	
 	public LoadAttachmentFile(Integer dbId, Integer scaleSize) {
         this(dbId);
         this.scaleSize = scaleSize;
     }
 
-	public void execute() {
+	@Override
+    public void execute() {
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("executing, id is: " + getDbId() + "...");
 		}
 		if(getDbId()!=null) {
 			IBaseDao<AttachmentFile, Serializable> dao = getDaoFactory().getDAO(AttachmentFile.class);		
-			setAttachmentFile(dao.retrieve(getDbId(),null));		
+			setAttachmentFile(dao.retrieve(getDbId(),null));	
+			if(flush) {
+			    dao.flush();
+                dao.clear();
+			}
 			if(scaleSize!=null) {
 			    // clear dao otherwise scaled image is saved
 			    dao.clear();
@@ -176,7 +186,7 @@ public class LoadAttachmentFile extends GenericCommand {
         while (iter.hasNext()) {
             ImageReader reader = null;
             try {
-                reader = (ImageReader)iter.next();
+                reader = iter.next();
                 ImageReadParam param = reader.getDefaultReadParam();
                 reader.setInput(in, true, true);
                 Iterator<ImageTypeSpecifier> imageTypes = reader.getImageTypes(0);

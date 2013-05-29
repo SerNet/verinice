@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.Statistics;
 import net.sf.ehcache.Status;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.IThreadCompleteListener;
@@ -69,7 +71,7 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.sync.SyncRequest;
 
 /**
- * Creates an XML representation of the given list of
+ * Creates an VNA or XML representation for the given list of
  * CnATreeElements.
  * 
  * ExportCommand uses multiple threads to load data. Default number of threads is 3.
@@ -114,7 +116,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private Map<Class,Class> entityClassBlackList;
 	
     // Result fields
-	private byte[] result;	
+	private byte[] result;
+	private String filePath;
     private List<CnATreeElement> changedElements;
     private String stationId;
     
@@ -131,21 +134,31 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient ExecutorService taskExecutor;
  
     public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport) {
-        new ExportCommand(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT);
+        this(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT, null);
     }
     
 	public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport, Integer exportFormat) {
-		this.elements = elements;
-		this.sourceId = sourceId;
-		this.reImport = reImport;
-		if(exportFormat!=null) {
-		    this.exportFormat = exportFormat;
-		} else {
-		    this.exportFormat = SyncParameter.EXPORT_FORMAT_DEFAULT;
-		}
-		this.attachmentSet = new HashSet<Attachment>();    
-        this.stationId = ChangeLogEntry.STATION_ID;
+	    this(elements, sourceId, reImport, exportFormat, null);
 	}
+	
+	public ExportCommand( 
+	        List<CnATreeElement> elements, 
+	        String sourceId, 
+	        boolean reImport, 
+	        Integer exportFormat,
+	        String filePath) {
+        this.elements = elements;
+        this.sourceId = sourceId;
+        this.reImport = reImport;
+        if(exportFormat!=null) {
+            this.exportFormat = exportFormat;
+        } else {
+            this.exportFormat = SyncParameter.EXPORT_FORMAT_DEFAULT;
+        }
+        this.filePath = filePath;
+        this.attachmentSet = new HashSet<Attachment>();    
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
 	
 	private void createFields() {
         this.changedElements = new LinkedList<CnATreeElement>();
@@ -168,6 +181,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     		    result = createVeriniceArchive();
     		} else {
     		    result = xmlData;
+    		}
+    		if(filePath!=null) {
+    		    FileUtils.writeByteArrayToFile(new File(filePath), result);
+    		    result = null;
     		}
 	    } catch (RuntimeException re) {
             getLog().error("Runtime exception while exporting", re);
@@ -203,26 +220,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		ExportTransaction exportTransaction = new ExportTransaction();
 	
 		for( CnATreeElement element : elements ) {	
-		    exportTransaction.setElement(element);
-		    
-		    ExportThread thread = new ExportThread(exportTransaction);
-            configureThread(thread);
-	        thread.export();
-	        getValuesFromThread(thread);
-		    
-			exportChildren(exportTransaction);
+		    exportTransaction.setElement(element);		    
+		    exportElement(exportTransaction);
 			syncData.getSyncObject().add(exportTransaction.getTarget());
 		}
 		
-		for(CnALink link : linkSet) {
-		    CnATreeElement dependant  = link.getDependant();
-		    dependant = getFromCache(dependant);
-		    link.setDependant(dependant);
-		    CnATreeElement dependency  = link.getDependency();
-		    dependency = getFromCache(dependency);
-		    link.setDependency(dependency);
-		    ExportFactory.transform(link, syncData.getSyncLink());
-		}
+		exportLinks(syncData);
 		
 		if (getLog().isDebugEnabled()) {
             Statistics s = getCache().getStatistics();
@@ -235,11 +238,30 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		SyncRequest syncRequest = new SyncRequest();
         syncRequest.setSourceId(sourceId);
         syncRequest.setSyncData(syncData);
-        syncRequest.setSyncMapping(syncMapping);
-		
+        syncRequest.setSyncMapping(syncMapping);		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ExportFactory.marshal(syncRequest, bos);
 		return bos.toByteArray();
+    }
+
+    private void exportElement(ExportTransaction exportTransaction) throws CommandException {
+        ExportThread thread = new ExportThread(exportTransaction);
+        configureThread(thread);
+        thread.export();
+        getValuesFromThread(thread);     
+        exportChildren(exportTransaction);
+    }
+
+    private void exportLinks(SyncData syncData) {
+        for(CnALink link : linkSet) {
+		    CnATreeElement dependant  = link.getDependant();
+		    dependant = getFromCache(dependant);
+		    link.setDependant(dependant);
+		    CnATreeElement dependency  = link.getDependency();
+		    dependency = getFromCache(dependency);
+		    link.setDependency(dependency);
+		    ExportFactory.transform(link, syncData.getSyncLink());
+		}
     }
     
     private void exportChildren(final ExportTransaction transaction) throws CommandException {      
@@ -307,12 +329,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, StreamFactory.getReadmeAsStream());
                      
             for (Attachment attachment : getAttachmentSet()) {
-                LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());      
+                LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), true);      
                 command = getCommandService().executeCommand(command);
                 if(command.getAttachmentFile()!=null && command.getAttachmentFile().getFileData()!=null) {
                     ExportFactory.createZipEntry(zipOut, ExportFactory.createZipFileName(attachment), command.getAttachmentFile().getFileData());                  
                 }
-                
+                command.setAttachmentFile(null);            
             }
             
             zipOut.close();
@@ -485,7 +507,15 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		return result; 
 	}
 	
-	@Override
+	public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    @Override
     protected void finalize() throws Throwable {
 	    CacheManager.getInstance().shutdown();
 	    super.finalize();

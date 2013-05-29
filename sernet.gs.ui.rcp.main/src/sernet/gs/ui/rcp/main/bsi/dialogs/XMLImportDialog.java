@@ -1,5 +1,20 @@
-//Neu hinzugefÃ¼gt vom Projektteam: XML import
-
+/*******************************************************************************
+ * Copyright (c) 2009 Projektteam HFU
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU Lesser General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU Lesser General Public License for more details.
+ *     You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Projektteam HFU
+ ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
@@ -54,8 +69,10 @@ import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
+ * Dialog to import VNA or XML files.
  * 
  * @author: Projektteam HFU
+ * @author: Daniel Murygin 
  */
 public class XMLImportDialog extends Dialog {
 
@@ -479,7 +496,6 @@ public class XMLImportDialog extends Dialog {
             }
         });
         
-
         useDefaultFolder = true;
         SelectionAdapter useDefaultFolderListener = new SelectionAdapter() {
             @Override
@@ -490,8 +506,7 @@ public class XMLImportDialog extends Dialog {
         
         Button useDefaultFolderButton = SWTElementFactory.generateCheckboxButton(container, Messages.XMLImportDialog_38, true, useDefaultFolderListener);
         useDefaultFolderButton.setLayoutData(new GridData(GridData.FILL, SWT.RIGHT, true, false, 2, 1));
-            
-        
+                 
         SelectionAdapter dataBrowseListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -501,9 +516,6 @@ public class XMLImportDialog extends Dialog {
         
         final Button dataBrowse = SWTElementFactory.generatePushButton(dataGroup, Messages.XMLImportDialog_14, null, dataBrowseListener);
         dataBrowse.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-        
-        
-        
         
         // prevent passwordtextfield from gaining focus automatically
         // which happens in osx client, and causes wrong default radio selection (bug 341)
@@ -627,7 +639,11 @@ public class XMLImportDialog extends Dialog {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+        
+        updateModelAndValidate(command);
+    }
 
+    private void updateModelAndValidate(SyncCommand command) {
         Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
         final Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);

@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,20 +84,17 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	
 	private static final Logger LOG = Logger.getLogger(ExportAction.class);
 	
-	public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$
-	
-	public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$
-    
+	public static final String EXTENSION_XML = ".xml"; //$NON-NLS-1$	
+	public static final String EXTENSION_PASSWORD_ENCRPTION = ".pcr"; //$NON-NLS-1$  
     public static final String EXTENSION_CERTIFICATE_ENCRPTION = ".ccr"; //$NON-NLS-1$
    
+    private ExportDialog dialog;
 	private EncryptionDialog encDialog;
 	
 	private String filePath;
 	
-	private char[] password = null;
-	
-	private File x509CertificateFile = null;
-	
+	private char[] password = null;	
+	private File x509CertificateFile = null;	
 	private String keyAlias = null;
 	
 	private static ISchedulingRule iSchedulingRule = new Mutex();
@@ -107,23 +102,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	private ITreeSelection selection;
 	
 	private boolean serverIsRunning = true;
-	
-	 /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-     */
-    @Override
-    public void init(IViewPart view) {
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-     */
-    @Override
-    public void init(IWorkbenchWindow window) {
-        
-    }
 	
     @Override
     public void init(final IAction action){
@@ -145,6 +123,21 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
+     */
+    @Override
+    public void init(IViewPart view) {
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+     */
+    @Override
+    public void init(IWorkbenchWindow window) {
+        
+    }
+    
 	/*
 	 * @see
 	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
@@ -152,24 +145,10 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	 */
     @Override
     public void run(IAction action) {
-		final ExportDialog dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
-		if( dialog.open() == Dialog.OK )
-		{	     
+		dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
+		if( dialog.open() == Dialog.OK ) {	     
 		    if(dialog.getEncryptOutput()) {
-                encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
-                if (encDialog.open() == Window.OK) {
-                    EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
-                    switch (encMethod) {
-                    case PASSWORD:
-                    	password = encDialog.getEnteredPassword();
-                    	break;
-                    case X509_CERTIFICATE:
-                        x509CertificateFile = encDialog.getSelectedX509CertificateFile();
-                        break;
-                    case PKCS11_KEY:
-                    	keyAlias = encDialog.getSelectedKeyAlias();
-                    }
-                } else {
+                if(Window.CANCEL == openEncryptionDialog()) {
                     return;
                 }
             }
@@ -187,14 +166,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                     IStatus status = Status.OK_STATUS;
                     try {
                         monitor.beginTask(NLS.bind(Messages.getString("ExportAction_4"), new Object[] {dialog.getFilePath()}), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        export( dialog.getSelectedElementSet(),
-                        		filePath,
-                        		dialog.getReImport(),
-                        		dialog.getSourceId(),
-                        		password,
-                        		x509CertificateFile,
-                        		keyAlias,
-                        		dialog.getFormat());                    
+                        export();                    
                     } catch (Exception e) {
                         LOG.error("Error while exporting data.", e); //$NON-NLS-1$
                         status= new Status(Status.ERROR, "sernet.verinice.samt.rcp", "Error while exporting data.",e); 
@@ -209,34 +181,32 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
                 }
             };
             exportJob.addJobChangeListener(new ExportJobChangeListener(Display.getDefault().getActiveShell(),filePath,dialog.getSelectedElement().getTitle()));
-            JobScheduler.scheduleJob(exportJob,iSchedulingRule);
-            
+            JobScheduler.scheduleJob(exportJob,iSchedulingRule);          
 		}
 	}
     
-    private void export(
-            Set<CnATreeElement> elementSet, 
-            String path, 
-            boolean reImport, 
-            String sourceId, 
-            char[] exportPassword, 
-            File x509CertificateFile,
-            String keyAlias,
-            int fileFormat) {
+    private void export() {          
         String internalSourceId = null;
         final int uuidStringLength = 6;
-        if(elementSet!=null && elementSet.size()>0) {
-        	if(sourceId==null || sourceId.isEmpty()) {
+        if(getElementSet()!=null && getElementSet().size()>0) {
+        	if(getSourceId()==null || getSourceId().isEmpty()) {
         		// if source id is not set by user the first 6 char. of an uuid is used
         		internalSourceId = UUID.randomUUID().toString().substring(0, uuidStringLength);
         	} else {
-        	    internalSourceId = sourceId;
+        	    internalSourceId = getSourceId();
         	}
             Activator.inheritVeriniceContextState();
-            ExportCommand exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(elementSet), internalSourceId, reImport, fileFormat);
-        	try {
+            ExportCommand exportCommand;
+            if(Activator.getDefault().isStandalone() && !isEncryption()) {
+                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()), internalSourceId, isReImport(), getFileFormat(), filePath);
+            } else {
+                exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()), internalSourceId, isReImport(), getFileFormat());
+            }
+            try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
-        		FileUtils.writeByteArrayToFile(new File(path), encrypt(exportCommand.getResult(),exportPassword, keyAlias));
+        		if(exportCommand.getResult()!=null) {
+        		    FileUtils.writeByteArrayToFile(new File(filePath), encrypt(exportCommand.getResult()));
+        		}
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
         		throw new IllegalStateException(e);
@@ -258,20 +228,28 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             }
         }
     }
+    
+    private int openEncryptionDialog() {
+        encDialog = new EncryptionDialog(Display.getDefault().getActiveShell());
+        if (encDialog.open() == Window.OK) {
+            EncryptionMethod encMethod = encDialog.getSelectedEncryptionMethod();
+            switch (encMethod) {
+            case PASSWORD:
+                password = encDialog.getEnteredPassword();
+                break;
+            case X509_CERTIFICATE:
+                x509CertificateFile = encDialog.getSelectedX509CertificateFile();
+                break;
+            case PKCS11_KEY:
+                keyAlias = encDialog.getSelectedKeyAlias();
+            }
+            return Window.OK;
+        } else {
+            return Window.CANCEL;
+        }
+    }
 	
-
-    /**
-     * @param result
-     * @param password2
-     * @param x509CertificateFile2
-     * @return
-     * @throws IOException 
-     * @throws EncryptionException 
-     * @throws CertificateException 
-     * @throws CertificateExpiredException 
-     * @throws CertificateNotYetValidException 
-     */
-    private byte[] encrypt(byte[] result, char[] password, String keyAlias) throws CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
         byte[] returnResult;
         if (keyAlias != null) {
@@ -282,8 +260,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
             returnResult = service.encrypt(result, x509CertificateFile);
         } else {
             returnResult = result;
-        }
-        
+        }      
         return returnResult;
     }
 
@@ -305,12 +282,8 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         return os;
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
-     * .IAction, org.eclipse.jface.viewers.ISelection)
+    /* (non-Javadoc) 
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -351,7 +324,27 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         }
         return returnedPath;
     }
+    
+    private Set<CnATreeElement> getElementSet() {
+        return dialog.getSelectedElementSet();
+    }
+    
+    private boolean isReImport() {
+        return dialog.getReImport();
+    }
+    
+    private boolean isEncryption() {
+        return dialog.getEncryptOutput();
+    }
+    
+    private String getSourceId() {
+        return dialog.getSourceId();
+    }
 
+    private int getFileFormat() {
+        return dialog.getFormat();
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
@@ -377,5 +370,4 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     public void setRightID(String rightID) {
         // DO NOTHING          
     }
-
 }
