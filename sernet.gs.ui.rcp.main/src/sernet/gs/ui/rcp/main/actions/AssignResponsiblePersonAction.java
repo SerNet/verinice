@@ -25,9 +25,7 @@ package sernet.gs.ui.rcp.main.actions;
  */
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,7 +33,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -50,7 +47,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
@@ -97,26 +93,18 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         if (selection == null) {
             return;
         }
-        final List<CnATreeElement> elementList = createList(selection.toList());
-      
+
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                 @SuppressWarnings("restriction")
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Object sel = null;
                     try {
                         Activator.inheritVeriniceContextState();
-                        monitor.beginTask(Messages.AssignResponsiblePersonAction_2, selection.size());
 
-                        for (Iterator iter = elementList.iterator(); iter.hasNext();) {
-                            sel = iter.next();
-                            MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) sel;
-                            monitor.setTaskName(NLS.bind(Messages.AssignResponsiblePersonAction_3, massnahme.getTitle()));
-                            AssignResponsiblePersonCommand command = new AssignResponsiblePersonCommand(massnahme);
-                            ServiceFactory.lookupCommandService().executeCommand(command);
-                            monitor.worked(1);
-                        }
-                        showInfoMessage(elementList.size());
+                        AssignResponsiblePersonCommand command = new AssignResponsiblePersonCommand(selection.toList());
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+
+                        showInfoMessage(command.getchanedElements().size());
                     } catch (Exception e) {
                         LOG.error("Error while command", e);
                     }
@@ -130,29 +118,14 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         }
     }
 
-  
-
-    protected List<CnATreeElement> createList(List elementList) {
-    
-        List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
-        for (Object sel : elementList) {
-            if (sel instanceof MassnahmenUmsetzung) {
-                insertList.add((CnATreeElement)sel);
-             
-            }
-        }
-        return insertList;
-    }
-    
-    private void showInfoMessage(final Integer anzahl){
+    private void showInfoMessage(final Integer anzahl) {
         Display.getDefault().asyncExec(new Runnable() {
-             @Override
-             public void run() {
-                 // code der in der GUI laufen soll 
-                 MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_2);
-             }
-         });
-         }   
+            @Override
+            public void run() {
+                MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_2);
+            }
+        });
+    }
 
     /*
      * (non-Javadoc)
@@ -162,14 +135,13 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        // TODO Auto-generated method stub
         if (serverIsRunning) {
             setEnabled(checkRights());
             if (input instanceof IStructuredSelection) {
                 IStructuredSelection selection = (IStructuredSelection) input;
                 for (Iterator iter = selection.iterator(); iter.hasNext();) {
                     Object element = iter.next();
-                    if (!(element instanceof CnATreeElement)) {
+                    if (!(element instanceof MassnahmenUmsetzung)) {
                         setEnabled(false);
                         return;
                     }

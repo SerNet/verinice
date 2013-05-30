@@ -23,23 +23,23 @@ package sernet.gs.ui.rcp.main.actions;
  * @author Julia Haas <jh[at]sernet[dot]de>
  *
  */
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementsByEntityIds;
-import sernet.gs.ui.rcp.main.service.taskcommands.LoadMassnahmeById;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
@@ -47,64 +47,84 @@ import sernet.verinice.service.commands.CreateLink;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
- *
+ * 
  */
 @SuppressWarnings("serial")
-public class AssignResponsiblePersonCommand extends GenericCommand{
+public class AssignResponsiblePersonCommand extends GenericCommand {
     public static final String ID = "sernet.gs.ui.rcp.main.actions.assignresponsiblecommand"; //$NON-NLS-1$
     private transient Logger log = Logger.getLogger(AssignResponsiblePersonCommand.class);
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(AssignResponsiblePersonCommand.class);
         }
         return log;
     }
-    private Object o;
-    private Integer anzahlMassnahmen;
-    public AssignResponsiblePersonCommand(Object o) {
-        this.o = o;
+
+    private List<MassnahmenUmsetzung> selectedElements;
+    private List<MassnahmenUmsetzung> changedElements;
+
+    public AssignResponsiblePersonCommand(List<MassnahmenUmsetzung> selectMassnahmen) {
+        this.selectedElements = selectMassnahmen;
     }
-   
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-      
-        if (o instanceof MassnahmenUmsetzung) {
-            MassnahmenUmsetzung elmt = (MassnahmenUmsetzung) o;
-            MassnahmenUmsetzung massnahme = getMassnahme(elmt);
-            PropertyList umsetzungDurch = massnahme.getUmsetzungDurchLink();
-            try {
-                if (umsetzungDurch != null) {
-                createRelation(massnahme, umsetzungDurch);
-                }else{
-                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "InfoRmation", Messages.AssignResponsiblePersonAction_4);
-                }
-            } catch (CommandException e) {
-               log.error("Error while execute create relation", e);
-            }
+        changedElements = new LinkedList<MassnahmenUmsetzung>();
+        IBaseDao<MassnahmenUmsetzung, Serializable> massnahmeDAO = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
+        for (MassnahmenUmsetzung massnahme : selectedElements) {
+            massnahme = massnahmeDAO.findById(massnahme.getDbId());
+            checkRelations(massnahme);
         }
     }
-    
+
     /**
      * @param massnahme
      * @param umsetzungDurch
      * @throws CommandException
      */
-    private void createRelation(MassnahmenUmsetzung massnahme, PropertyList umsetzungDurch) throws CommandException {
+    private void checkRelations(MassnahmenUmsetzung massnahme) {
         Set<CnALink> linkedPersons = new HashSet<CnALink>();
-        if (umsetzungDurch != null) {
-            List<Person> personenUmsetzungDurch = getPersonsForDbIds(massnahme);
-            Set<CnALink> allLinks = massnahme.getLinksUp();
-            for (CnALink link : allLinks) {
-                if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
-                    linkedPersons.add(link);
+        try {
+            List<Person> personenUmsetzungDurch = getPersonsbyProperty(massnahme);
+            Set<Property> rolesToSearch = findRole(massnahme);
+            if (personenUmsetzungDurch != null && !personenUmsetzungDurch.isEmpty()) {
+                for (Property role : rolesToSearch) {
+                    for (Person person : personenUmsetzungDurch) {
+                        if (person.hasRole(role)) {
+                            Set<CnALink> allLinks = massnahme.getLinksUp();
+                            for (CnALink link : allLinks) {
+                                if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
+                                    linkedPersons.add(link);
+                                }
+                            }
+                            createLinks(massnahme, person, linkedPersons);
+                        }
+                    }
                 }
+            } else {
+                findLinkedPersons(massnahme);
             }
-            createLinks(massnahme, personenUmsetzungDurch, linkedPersons);
+        } catch (CommandException ce) {
+            log.error("Error while creating relation", ce);
         }
+
+    }
+
+    /**
+     * @param massnahme
+     * @return
+     */
+    private Set<Property> findRole(MassnahmenUmsetzung massnahme) {
+        PropertyList rolen = massnahme.getEntity().getProperties(MassnahmenUmsetzung.P_VERANTWORTLICHE_ROLLEN_UMSETZUNG);
+        Set<Property> rolesToSearch = new HashSet<Property>();
+        rolesToSearch.addAll(rolen.getProperties());
+        return rolesToSearch;
     }
 
     /**
@@ -113,84 +133,89 @@ public class AssignResponsiblePersonCommand extends GenericCommand{
      * @param linkedPersons
      * @throws CommandException
      */
-    private void createLinks(MassnahmenUmsetzung massnahme, List<Person> personenUmsetzungDurch, Set<CnALink> linkedPersons) throws CommandException {
-        for (Person person : personenUmsetzungDurch) {
-            boolean createLink = (linkedPersons == null || linkedPersons.isEmpty());
-            if (!createLink) {
-                createLink = true;
-                for (CnALink link : linkedPersons) {
-                    // ist der link schon vorhanden ?
-                    Integer dependantId = link.getDependant().getDbId();
-                    if (person.getDbId() == dependantId) {
-                        createLink = false;
-                        break;
-                    }
+    private void createLinks(MassnahmenUmsetzung massnahme, Person person, Set<CnALink> linkedPersons) throws CommandException {
+        boolean createLink = (linkedPersons == null || linkedPersons.isEmpty());
+        if (!createLink) {
+            createLink = true;
+            for (CnALink link : linkedPersons) {
+                // ist der link schon vorhanden ?
+                Integer dependantId = link.getDependant().getDbId();
+                if (person.getDbId() == dependantId) {
+                    createLink = false;
+                    break;
                 }
             }
-            if (createLink) {
-                createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-            }
+        }
+        if (createLink) {
+            createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
         }
     }
+
     /**
      * @param massnahme
      * @param person
      * @throws CommandException
      */
-    private void createLinkCommand(MassnahmenUmsetzung massnahme, Person person, String typeId) throws CommandException {
-        CreateLink createLinkcommand = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-        ServiceFactory.lookupCommandService().executeCommand(createLinkcommand);
+    private CnALink createLinkCommand(MassnahmenUmsetzung massnahme, Person person, String typeId) throws CommandException {
+        CreateLink command = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
+        ServiceFactory.lookupCommandService().executeCommand(command);
+        changedElements.add(massnahme);
+        return command.getLink();
     }
-    
-    
-    private List<Person> getPersonsForDbIds(MassnahmenUmsetzung mu) throws CommandException {
+
+    private List<Person> getPersonsbyProperty(MassnahmenUmsetzung mu) throws CommandException {
         String field = MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK;
         PropertyList pl = mu.getEntity().getProperties(field);
-        List<Property> props = null; 
-            
-        if (pl != null){
+        List<Property> props = null;
+
+        if (pl != null) {
             props = pl.getProperties();
         }
-        if (props != null && !props.isEmpty())
-        {
+        if (props != null && !props.isEmpty()) {
             List<Integer> ids = new ArrayList<Integer>(props.size());
-            for (Property p : props)
-            {
+            for (Property p : props) {
                 ids.add(Integer.valueOf(p.getPropertyValue()));
             }
-            
+
             LoadCnAElementsByEntityIds<Person> le = new LoadCnAElementsByEntityIds<Person>(Person.class, ids);
-            try
-            {
+            try {
                 le = getCommandService().executeCommand(le);
-            }
-            catch (CommandException ce)
-            {
+            } catch (CommandException ce) {
                 getLog().error("Error while executing command: LoadCnAElementsByEntityIds", ce);
                 throw new RuntimeException("Error while executing command: LoadCnAElementsByEntityIds", ce);
             }
-            
+
             return le.getElements();
         }
-        
+
         return Collections.emptyList();
     }
-    
-    
-    private MassnahmenUmsetzung getMassnahme(MassnahmenUmsetzung massnahme) {
-        LoadMassnahmeById command = new LoadMassnahmeById(massnahme.getDbId());
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-        } catch (CommandException ce) {
-            log.error("Error while get modul", ce);
-        }
-        massnahme = command.getElmt();
 
-        return massnahme;
+    private void findLinkedPersons(MassnahmenUmsetzung massnahme) {
+        IBaseDao<Person, Serializable> personDAO = getDaoFactory().getDAO(Person.class);
+        try {
+            Set<CnALink> modulResponseLinks = massnahme.getParent().getLinksUp();
+            if (modulResponseLinks == null || modulResponseLinks.isEmpty()) {
+                modulResponseLinks = massnahme.getParent().getParent().getLinksUp();
+            }
+            for (CnALink plink : modulResponseLinks) {
+                if (plink.getDependant().getTypeId().equals(Person.TYPE_ID)) {
+                    Person person = personDAO.findById(plink.getDependant().getDbId());
+                    Set<Property> rolesToSearch = findRole(massnahme);
+                    for (Property role : rolesToSearch) {
+                        if (person.hasRole(role)) {
+                            createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error while searching relations", e);
+        }
     }
-  
-   public Integer getMassnahmenanzahl(){
-       return anzahlMassnahmen;
-   }
-    
- }
+
+    public List<MassnahmenUmsetzung> getchanedElements() {
+        return changedElements;
+    }
+
+}
