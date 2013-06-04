@@ -469,6 +469,10 @@ public interface IDAOFactory {
     
     void setAttachmentDao(IAttachmentDao attachmentDao);
     
+    IFinishedRiskAnalysisListsDao getFinishedRiskAnalysisListsDao();
+    
+    void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
+    
 	@SuppressWarnings("unchecked")
 	/**
 	 *  Tries to find a DAO by class.

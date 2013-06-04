@@ -579,6 +579,10 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
+    <bean id="finishedRiskAnalysisListsDao" class="sernet.verinice.hibernate.FinishedRiskAnalysisListsDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
 	<!-- END dao definitions ============================================================================ -->
 
 </beans>

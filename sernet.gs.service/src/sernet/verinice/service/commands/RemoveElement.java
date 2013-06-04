@@ -32,6 +32,7 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
@@ -59,7 +60,6 @@ import sernet.verinice.model.iso27k.PersonIso;
 public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, INoAccessControl {
 
     private transient Logger log = Logger.getLogger(RemoveElement.class);
-
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(RemoveElement.class);
@@ -67,10 +67,14 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         return log;
     }
     
+    private transient IFinishedRiskAnalysisListsDao raListDao;
+    
     private T element;
     private String stationId;
     private Integer elementId;
     private String typeId;
+    
+   
 
     public RemoveElement(T element) {
         // only transfer id of element to keep footprint small:
@@ -105,6 +109,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             element = (T) dao.findById(element.getDbId());
 
             if (element instanceof ITVerbund) {
+                removeAllRiskAnalyses();
+                
                 CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
 
                 // A defect in the application allowed that ITVerbund instances
@@ -121,7 +127,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
             if (element instanceof FinishedRiskAnalysis) {
                 FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
-                remove(analysis);
+                removeRiskAnalysis(analysis);
             }
 
             if (element instanceof GefaehrdungsUmsetzung) {
@@ -142,8 +148,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof FinishedRiskAnalysis) {
-                    RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(children[i]);
-                    getCommandService().executeCommand(command);
+                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
                 }
             }
 
@@ -161,21 +166,24 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
-     */
-    @Override
-    public void clear() {
-        element = null;
+    private void removeAllRiskAnalyses() throws CommandException {
+        LoadRiskAnalyses loadRiskAnalyses = new LoadRiskAnalyses(element.getDbId());
+        loadRiskAnalyses = getCommandService().executeCommand(loadRiskAnalyses);
+        List<FinishedRiskAnalysis> raList = loadRiskAnalyses.getRaList();
+        for (FinishedRiskAnalysis finishedRiskAnalysis : raList) {
+            removeRiskAnalysis(finishedRiskAnalysis);
+        }
     }
 
-    /**
-     * @param analysis
-     * @throws CommandException
-     */
-    private void remove(FinishedRiskAnalysis analysis) throws CommandException {
+    private void removeRiskAnalysis(FinishedRiskAnalysis finishedRiskAnalysis) throws CommandException {
+        removeChildren(finishedRiskAnalysis);
+        List<FinishedRiskAnalysisLists> list = getRaListDao().findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+        for (FinishedRiskAnalysisLists ra : list) {
+            getRaListDao().delete(ra);
+        }
+    }
+
+    private void removeChildren(FinishedRiskAnalysis analysis) throws CommandException {
         Set<CnATreeElement> children = analysis.getChildren();
         for (CnATreeElement child : children) {
             if (child instanceof GefaehrdungsUmsetzung) {
@@ -205,32 +213,31 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         if (conf != null) {
             IBaseDao<Configuration, Serializable> confDAO = getDaoFactory().getDAO(Configuration.class);
             confDAO.delete(conf);
-
             // When a Configuration instance got deleted the server needs to
             // update
             // its cached role map. This is done here.
             getCommandService().discardUserData();
         }
-
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+     */
+    @Override
+    public void clear() {
+        element = null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
-     * ()
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_DELETE;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
-     * getChangedElements()
+    /* (non-Javadoc)
+     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
@@ -239,16 +246,19 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
-     * ()
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
      */
     @Override
     public String getStationId() {
         return stationId;
     }
 
+    
+    public IFinishedRiskAnalysisListsDao getRaListDao() {
+        if(raListDao==null) {
+            raListDao = getDaoFactory().getFinishedRiskAnalysisListsDao();      
+        }
+        return raListDao;
+    }
 }
