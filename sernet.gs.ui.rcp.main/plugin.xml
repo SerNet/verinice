@@ -358,12 +358,23 @@
 		   menubarPath="content"
 		   tooltip="%action.tooltip">
 		   <enablement>
+		      <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
+		   </enablement>
+		</action>   
+		<action
+		   class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegateBsi"
+		   enablesFor="+"
+		   icon="icons/16-em-cross.png"
+		   id="sernet.gs.ui.rcp.main.bsi.deleteaction"
+		   label="%action.label"
+		   menubarPath="content"
+		   tooltip="%action.tooltip">
+		   <enablement>
 		      <or>
 		   	     <objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
-		   	     <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
 		   	     <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 		      </or>
 		   </enablement>

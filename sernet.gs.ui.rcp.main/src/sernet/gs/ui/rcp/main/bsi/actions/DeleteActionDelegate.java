@@ -1,19 +1,21 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
+ * Copyright (c) 2013 Daniel Murygin.
+ *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
+ * This program is distributed in the hope that it will be useful,    
  * but WITHOUT ANY WARRANTY; without even the implied warranty 
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
@@ -21,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,7 +39,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -55,41 +55,24 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.IISO27kRoot;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
- * Delete items on user request.
- * 
- * @author akoderman[at]sernet[dot]de
- * 
+ *
+ *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class DeleteActionDelegate implements IObjectActionDelegate {
 
     private static final Logger LOG = Logger.getLogger(DeleteActionDelegate.class);
     
-    private static final String DEFAULT_ERR_MSG = "Error while deleting element.";
-
-    private IWorkbenchPart targetPart;
-
-    @Override
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        this.targetPart = targetPart;
-    }
-
+    protected static final String DEFAULT_ERR_MSG = "Error while deleting element.";
+    
+    protected IWorkbenchPart targetPart;
+    
     @Override
     public void run(IAction action) {
         try {
@@ -101,102 +84,9 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
                 return;
             }
 
-            // ask twice if IT verbund
-            boolean goahead = true;
-            final List<CnATreeElement> deleteList = createList(selection.toList());
-            Iterator iterator = deleteList.iterator();
-            Object object;
-            while (iterator.hasNext()) {
-                object = iterator.next();
-                if (object instanceof ITVerbund || object instanceof IISO27kRoot) {
-                    if (!goahead) {
-                        return;
-                    }
+            final List<CnATreeElement> deleteList = createList(selection.toList());       
 
-                    String title = Messages.DeleteActionDelegate_3;
-                    String message = Messages.DeleteActionDelegate_4;
-                    if (object instanceof ITVerbund) {
-                        title = Messages.DeleteActionDelegate_5;
-                        message = NLS.bind(Messages.DeleteActionDelegate_6, ((ITVerbund) object).getTitle());
-                    }
-                    if (object instanceof IISO27kRoot) {
-                        title = Messages.DeleteActionDelegate_8;
-                        message = NLS.bind(Messages.DeleteActionDelegate_9, ((IISO27kRoot) object).getTitle());
-                    }
-
-                    if (!MessageDialog.openQuestion((Shell) targetPart.getAdapter(Shell.class), title, message)) {
-                        goahead = false;
-                        return;
-                    }
-                }
-            }
-
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Object sel = null;
-                    try {
-                        Activator.inheritVeriniceContextState();
-                        monitor.beginTask(Messages.DeleteActionDelegate_11, selection.size());
-                        for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
-                            sel = iter.next();
-
-                            if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof MassnahmenUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement || sel instanceof ImportIsoGroup) {
-
-                                // do not delete last ITVerbund:
-                                if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-                                    ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12), Messages.DeleteActionDelegate_13);
-                                    return;
-                                }
-
-                                CnATreeElement el = (CnATreeElement) sel;
-                                monitor.setTaskName(Messages.DeleteActionDelegate_14);
-
-                                CnAElementHome.getInstance().remove(el);
-                                // notify all listeners:
-                                CnAElementFactory.getModel(el).databaseChildRemoved(el);
-                                monitor.worked(1);
-                            }
-                        }
-                    } catch (DataIntegrityViolationException dive) {
-                        // try solving exception by deleting configuration /
-                        // riskanalysis first
-                        final CnATreeElement el = (CnATreeElement) sel;
-                        Display.getDefault().asyncExec(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                try {
-                                    GenericCommand command = null;
-                                    if (el.getClass().getPackage().getName().contains("model.bsi")) {
-                                        iterateThroughGroup(el);
-                                    }
-                                    if (determineConfiguration(el)) {
-                                        if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.DeleteActionDelegate_0, Messages.DeleteActionDelegate_18)) {
-                                            command = new PrepareObjectWithAccountDataForDeletion(el);
-                                            command = ServiceFactory.lookupCommandService().executeCommand(command);
-                                        } else {
-                                            return;
-                                        }                                    
-                                    }
-                                    removeElement(el);
-                                } catch (CommandException e) {
-                                    LOG.error(DEFAULT_ERR_MSG, e);
-                                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
-                                } catch (DataIntegrityViolationException de) {
-                                    LOG.error(DEFAULT_ERR_MSG, de);
-                                } catch (Exception e) {
-                                    LOG.error(DEFAULT_ERR_MSG, e);
-                                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
-                                }
-                            }
-                        });
-                    } catch (Exception e) {
-                        LOG.error(DEFAULT_ERR_MSG, e);
-                        ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
-                    }
-                }
-            });
+            doDelete(deleteList);
         } catch (InvocationTargetException e) {
             LOG.error(DEFAULT_ERR_MSG, e);
             ExceptionUtil.log(e.getCause(), Messages.DeleteActionDelegate_16);
@@ -208,20 +98,50 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }
     }
+    
+    protected void doDelete(final List<CnATreeElement> deleteList) throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                Object sel = null;
+                try {
+                    Activator.inheritVeriniceContextState();
+                    monitor.beginTask(Messages.DeleteActionDelegate_11, deleteList.size());
+                    for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
+                        sel = iter.next();
 
-    protected List<CnATreeElement> createList(List elementList) {
+                        CnATreeElement el = (CnATreeElement) sel;
+                        monitor.setTaskName(Messages.DeleteActionDelegate_14);
+
+                        removeElement(el);
+                        monitor.worked(1);
+                    }
+                } catch (DataIntegrityViolationException dive) {
+                    deleteElementWithAccountAsync((CnATreeElement) sel);
+                } catch (Exception e) {
+                    LOG.error(DEFAULT_ERR_MSG, e);
+                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                }
+            }
+        });
+    }
+    
+    protected List<CnATreeElement> createList(List<CnATreeElement> elementList) {
         List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
         List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
         int depth = 0;
-        int removed = 0;
-        for (Object sel : elementList) {
-            if (sel instanceof IBSIStrukturElement || sel instanceof BausteinUmsetzung || sel instanceof MassnahmenUmsetzung || sel instanceof FinishedRiskAnalysis || sel instanceof GefaehrdungsUmsetzung || sel instanceof ITVerbund || sel instanceof IISO27kRoot || sel instanceof IISO27kElement || sel instanceof ImportIsoGroup) {
-                createList((CnATreeElement) sel, tempList, insertList, depth, removed);
+        int removed = 0;  
+        if(elementList.size()>1) {
+            for (CnATreeElement element : elementList) {
+                createList(element, tempList, insertList, depth, removed);       
             }
+        } else {
+            // add last element
+            insertList.add(elementList.get(0));
         }
         return insertList;
     }
-
+    
     private void createList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
         if (!tempList.contains(element)) {
             tempList.add(element);
@@ -240,103 +160,45 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
             removed++;
         }
     }
-
-    @Override
-    public void selectionChanged(IAction action, ISelection selection) {
-        boolean allowed = ((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(ActionRightIDs.DELETEITEM);
-        // Realizes that the action to delete an element is greyed out,
-        // when there is no right to do so.
-        Object sel = ((IStructuredSelection) selection).getFirstElement();
-        if (sel instanceof CnATreeElement) {
-            CnATreeElement element = (CnATreeElement) sel;
-            boolean b = CnAElementHome.getInstance().isDeleteAllowed(element);
-
-            // Only change state when it is enabled, since we do not want to
-            // trash the enablement settings of plugin.xml
-            if (action.isEnabled()) {
-                action.setEnabled(b & allowed);
-            }
-        }
-    }
-
-    private void removeElement(CnATreeElement elementToRemove) {
-        try {
-            if (!elementToRemove.isChildrenLoaded()) {
-                elementToRemove = loadChildren(elementToRemove);
-            }
-            if (elementToRemove instanceof FinishedRiskAnalysis) {
-                RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true);
-                LoadElementByUuid<FinishedRiskAnalysis> command = new LoadElementByUuid<FinishedRiskAnalysis>(elementToRemove.getUuid(), info);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                elementToRemove = command.getElement();
-            }
-            CnAElementHome.getInstance().remove(elementToRemove);
-            CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
-        } catch (Exception e) {
-            LOG.error("Error while deleting risk analysis", e);
-        }
-    }
-
-    private void iterateThroughGroup(CnATreeElement element) throws CommandException {
-        if (!element.isChildrenLoaded()) {
-            element = loadChildren(element);
-        }
-        if (canContainRiskAnalysis(element)) {
-            freeBSIElement(element);
-        }
-        for (CnATreeElement child : element.getChildren()) {
-            if (canContainRiskAnalysis(child)) {
-                freeBSIElement(child);
-            } else {
-                iterateThroughGroup(child);
-            }
-        }
-    }
-
-    private CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
-        LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        element = command.getElementWithChildren();
-        element.setChildrenLoaded(true);
-        return element;
-    }
-
-    private boolean canContainRiskAnalysis(CnATreeElement element) {
-        return (element instanceof IBSIStrukturElement);
-    }
-
-    private void freeBSIElement(CnATreeElement element) throws CommandException {
-        if (element instanceof FinishedRiskAnalysis) {
-            removeGefaehrdungen((FinishedRiskAnalysis) element);
-            removeElement(element);
-        } else {
-            if (!element.isChildrenLoaded()) {
-                element = loadChildren(element);
-            }
-            for (CnATreeElement child : element.getChildren()) {
-                if (child instanceof FinishedRiskAnalysis) {
-                    removeGefaehrdungen((FinishedRiskAnalysis) child);
-                    removeElement(child);
+    
+    protected void deleteElementWithAccountAsync(final CnATreeElement element) {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    deleteElementWithAccount(element);
+                } catch (CommandException e) {
+                    LOG.error(DEFAULT_ERR_MSG, e);
+                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                } catch (DataIntegrityViolationException de) {
+                    LOG.error(DEFAULT_ERR_MSG, de);
+                } catch (Exception e) {
+                    LOG.error(DEFAULT_ERR_MSG, e);
+                    ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                 }
             }
-        }
+        });
     }
-
-    private void removeGefaehrdungen(FinishedRiskAnalysis analysis) throws CommandException {
-        RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true).setProperties(true);
-        LoadElementByUuid<FinishedRiskAnalysis> command = new LoadElementByUuid<FinishedRiskAnalysis>(analysis.getUuid(), info);
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        analysis = command.getElement();
-        Set<CnATreeElement> children = analysis.getChildren();
-        for (CnATreeElement child : children) {
-            if (child instanceof GefaehrdungsUmsetzung) {
-                GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
-                removeElement(gef);
-            }
+    
+    protected void deleteElementWithAccount(final CnATreeElement element) throws CommandException {
+        GenericCommand command = null;
+        if (loadConfiguration(element)) {
+            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.DeleteActionDelegate_0, Messages.DeleteActionDelegate_18)) {
+                command = new PrepareObjectWithAccountDataForDeletion(element);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+            } else {
+                return;
+            }                                    
         }
+        removeElement(element);
     }
-
-    private boolean determineConfiguration(CnATreeElement elmt) {
+    
+    protected void removeElement(CnATreeElement elementToRemove) throws CommandException {     
+        CnAElementHome.getInstance().remove(elementToRemove);
+        CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
+    }
+    
+    protected boolean loadConfiguration(CnATreeElement elmt) {
         String[] types = new String[] { Person.TYPE_ID, PersonIso.TYPE_ID };
         ICommandService service = ServiceFactory.lookupCommandService();
         for (String type : types) {
@@ -357,4 +219,42 @@ public class DeleteActionDelegate implements IObjectActionDelegate {
 
         return false;
     }
+    
+    protected CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
+        LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        element = command.getElementWithChildren();
+        element.setChildrenLoaded(true);
+        return element;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+        boolean allowed = ((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(ActionRightIDs.DELETEITEM);
+        // Realizes that the action to delete an element is greyed out,
+        // when there is no right to do so.
+        Object sel = ((IStructuredSelection) selection).getFirstElement();
+        if (sel instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) sel;
+            boolean b = CnAElementHome.getInstance().isDeleteAllowed(element);
+
+            // Only change state when it is enabled, since we do not want to
+            // trash the enablement settings of plugin.xml
+            if (action.isEnabled()) {
+                action.setEnabled(b & allowed);
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+     */
+    @Override
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
+
 }
