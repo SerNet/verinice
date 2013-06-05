@@ -34,7 +34,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUmsetzung {
 
 	public static final String TYPE_ID = "mnums"; //$NON-NLS-1$
-
+	public static final String HIBERNATE_TYPE_ID = "massnahmen-umsetzung"; //$NON-NLS-1$
+	
 	public static final String P_KAPITEL = "mnums_id"; //$NON-NLS-1$
 	public static final String P_NAME = "mnums_name"; //$NON-NLS-1$
 	public static final String P_SIEGEL = "mnums_siegel"; //$NON-NLS-1$
@@ -156,7 +157,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		getEntity().setSimpleValue(type, status);
 	}
 
-	public char getStufe() {
+	@Override
+    public char getStufe() {
 		return getEntity().getSimpleValue(P_SIEGEL).length() > 0 ? getEntity()
 				.getSimpleValue(P_SIEGEL).charAt(0) : ' ';
 	}
@@ -177,7 +179,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		return getVerantwortliche(P_INITIIERUNGDURCH_LINK);
 	}
 	
-	public String  getUmsetzungDurch( ) {
+	@Override
+    public String  getUmsetzungDurch( ) {
 		return getVerantwortliche(P_UMSETZUNGDURCH_LINK);
 	}
 	
@@ -253,7 +256,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		return TYPE_ID;
 	}
 
-	public String getUmsetzung() {
+	@Override
+    public String getUmsetzung() {
 	    String umsetzung = P_UMSETZUNG_UNBEARBEITET;
 	    PropertyList properties = null;
         Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
@@ -269,7 +273,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		return umsetzung;
 	}
 
-	public Date getUmsetzungBis() {
+	@Override
+    public Date getUmsetzungBis() {
 	    PropertyList propertyList = null;
 	    Date date = null;
         Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
@@ -305,7 +310,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		}
 	}
 	
-	public Date getNaechsteRevision() {
+	@Override
+    public Date getNaechsteRevision() {
         PropertyList propertyList = null;
         Date date = null;
         Map<String,PropertyList> map = getEntity().getTypedPropertyLists();
@@ -322,11 +328,13 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
         return date;
     }
 
-	public String getRevisionDurch() {
+	@Override
+    public String getRevisionDurch() {
 		return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH_LINK);
 	}
 
-	public String getUrl() {
+	@Override
+    public String getUrl() {
 		return getEntity().getSimpleValue(P_URL);
 	}
 
@@ -334,7 +342,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		getEntity().setSimpleValue(getEntityType().getPropertyType(P_URL), url2);
 	}
 
-	public String getStand() {
+	@Override
+    public String getStand() {
 		return getEntity().getSimpleValue(P_STAND);
 	}
 
@@ -382,7 +391,8 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		}
 	}
 
-	public String getParentTitle() {
+	@Override
+    public String getParentTitle() {
 		return getParent().getParent().getTitle();
 	}
 	public String getDescription() {

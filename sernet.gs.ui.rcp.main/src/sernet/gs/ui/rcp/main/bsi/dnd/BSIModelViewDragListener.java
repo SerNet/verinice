@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
@@ -44,18 +45,30 @@ public class BSIModelViewDragListener implements DragSourceListener {
 		this.viewer = viewer;
 	}
 
-	public void dragFinished(DragSourceEvent event) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
+	 */
+	@Override
+    public void dragFinished(DragSourceEvent event) {
 		// do nothing
 	}
 
-	public void dragSetData(DragSourceEvent event) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
+	 */
+	@Override
+    public void dragSetData(DragSourceEvent event) {
 	    IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 	    if(validateDrag(event)){
 	        event.data = DNDHelper.castDataArray(selection.toArray());
 	    }
 	}
 
-	public void dragStart(DragSourceEvent event) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
+	 */
+	@Override
+    public void dragStart(DragSourceEvent event) {
 		IStructuredSelection selection = ((IStructuredSelection)viewer.getSelection());
 		if(selection==null) {
 			event.doit = false;
@@ -66,10 +79,8 @@ public class BSIModelViewDragListener implements DragSourceListener {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object o = iter.next();
 			selectionList.add(o);
-			if (!(o instanceof BausteinUmsetzung
-				  || o instanceof IBSIStrukturElement
-				  || o instanceof IISO27kElement)
-				  || o instanceof ITVerbund) {
+			if (!(o instanceof BausteinUmsetzung || o instanceof IBSIStrukturElement || o instanceof IISO27kElement || o instanceof IMassnahmeUmsetzung)
+				 || o instanceof ITVerbund) {
 				event.doit = false;
 				return;	
 			}
@@ -77,8 +88,13 @@ public class BSIModelViewDragListener implements DragSourceListener {
 		event.doit = true;
 	}
 	
+	/**
+	 * @param event
+	 * @return
+	 */
 	private boolean validateDrag(DragSourceEvent event){
         return (BausteinElementTransfer.getInstance().isSupportedType(event.dataType)
+                || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
                 || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
                 || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
                 || ISO27kElementTransfer.getInstance().isSupportedType(event.dataType)

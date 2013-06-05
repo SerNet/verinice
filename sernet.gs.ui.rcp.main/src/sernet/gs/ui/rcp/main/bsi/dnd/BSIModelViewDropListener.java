@@ -54,6 +54,7 @@ import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -112,7 +113,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     }
                 }
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
-            } else if(firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement)) {
+            } else if(firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
                 ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
@@ -130,7 +131,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     @Override
     public void drop(DropTargetEvent event){
         LOG.debug("entered drop(DropTargetEvent event)");
-        target = (CnATreeElement) determineTarget(event);
+        target = determineTarget(event);
         super.drop(event);
     }
     
@@ -182,6 +183,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
+    @Override
     public boolean checkRights() {
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
@@ -190,6 +192,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
+    @Override
     public String getRightID() {
         return ActionRightIDs.TREEDND;
     }
@@ -197,6 +200,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
      */
+    @Override
     public void setRightID(String rightID) {
         // nothing
     }

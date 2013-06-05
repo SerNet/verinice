@@ -47,10 +47,7 @@ public class LinkDropper {
 		}
 		try {
 			// close all editors first:
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /*
-																									 * ask
-																									 * save
-																									 */);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
 
 			Job dropJob = new Job(Messages.getString("LinkDropper.0")) { //$NON-NLS-1$
 				@Override

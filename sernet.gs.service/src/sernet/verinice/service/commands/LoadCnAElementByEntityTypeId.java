@@ -28,6 +28,7 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -54,10 +55,13 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
     private static final String SCOPE = "and elmt.scopeId = ? "; //$NON-NLS-1$
 
     public LoadCnAElementByEntityTypeId(String typeId) {
-        this.typeId = typeId;
+        this(typeId, null);
     }
     
     public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId) {
+        if(MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
+            typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
+        }
         this.typeId = typeId;
         this.scopeId = scopeId;
     }
