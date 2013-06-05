@@ -21,6 +21,7 @@ package sernet.verinice.rcp;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,8 +120,11 @@ public class IconSelectDialog extends Dialog {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir: " + inconUrl); //$NON-NLS-1$
                 }
+                
                 URL realFileUrl = FileLocator.toFileURL(inconUrl);
-                File baseDir = new File(FileLocator.resolve(realFileUrl).toURI());
+                String urlString = realFileUrl.toExternalForm();
+                urlString = urlString.replaceAll(" ","%20"); 
+                File baseDir = new File(URI.create(urlString));
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Icon dir (file system): " + baseDir.getPath()); //$NON-NLS-1$
                 }
