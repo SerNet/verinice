@@ -63,6 +63,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
 
     private List<MassnahmenUmsetzung> selectedElements;
     private List<MassnahmenUmsetzung> changedElements;
+    private LinkedList<CnALink> linkedElements;
 
     public AssignResponsiblePersonCommand(List<MassnahmenUmsetzung> selectMassnahmen) {
         this.selectedElements = selectMassnahmen;
@@ -76,6 +77,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
     @Override
     public void execute() {
         changedElements = new LinkedList<MassnahmenUmsetzung>();
+        linkedElements = new LinkedList<CnALink>();
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmeDAO = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
         for (MassnahmenUmsetzung massnahme : selectedElements) {
             massnahme = massnahmeDAO.findById(massnahme.getDbId());
@@ -93,27 +95,48 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         try {
             List<Person> personenUmsetzungDurch = getPersonsbyProperty(massnahme);
             Set<Property> rolesToSearch = findRole(massnahme);
+
             if (personenUmsetzungDurch != null && !personenUmsetzungDurch.isEmpty()) {
-                for (Property role : rolesToSearch) {
-                    for (Person person : personenUmsetzungDurch) {
-                        if (person.hasRole(role)) {
-                            Set<CnALink> allLinks = massnahme.getLinksUp();
-                            for (CnALink link : allLinks) {
-                                if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
-                                    linkedPersons.add(link);
-                                }
-                            }
-                            createLinks(massnahme, person, linkedPersons);
-                        }
-                    }
+                for (Person person : personenUmsetzungDurch) {
+                    assignPerson(massnahme, linkedPersons, rolesToSearch, person);
                 }
             } else {
-                findLinkedPersons(massnahme);
+                findLinkedPersonsUpTree(massnahme, linkedPersons, rolesToSearch);
             }
+
         } catch (CommandException ce) {
             log.error("Error while creating relation", ce);
         }
+    }
 
+    /**
+     * @param massnahme
+     * @param linkedPersons
+     * @param rolesToSearch
+     * @param person
+     * @throws CommandException
+     */
+    private void assignPerson(MassnahmenUmsetzung massnahme, Set<CnALink> linkedPersons, Set<Property> rolesToSearch, Person person) throws CommandException {
+        Set<CnALink> allLinks = massnahme.getLinksUp();
+        if (allLinks == null || allLinks.isEmpty()) {
+            allLinks = massnahme.getParent().getParent().getLinksUp();
+        }
+        for (CnALink link : allLinks) {
+            if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
+                linkedPersons.add(link);
+                linkedElements.add(link);
+            }
+        }
+        for (Property role : rolesToSearch) {
+            String BSIRole = role.getPropertyValue().replaceAll("\u00A0", "");
+            String[] personRollen = person.getRollen().split(",\\s*", person.getRollen().length());
+            for (int split2 = 0; split2 < personRollen.length; split2++) {
+                String personRolle = personRollen[split2];
+                if (BSIRole.equals(personRolle)) {
+                    createLinks(massnahme, person, linkedPersons);
+                }
+            }
+        }
     }
 
     /**
@@ -191,21 +214,16 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         return Collections.emptyList();
     }
 
-    private void findLinkedPersons(MassnahmenUmsetzung massnahme) {
+    private void findLinkedPersonsUpTree(MassnahmenUmsetzung massnahme, Set<CnALink> linkedPersons, Set<Property> rolesToSearch) {
         IBaseDao<Person, Serializable> personDAO = getDaoFactory().getDAO(Person.class);
         try {
             Set<CnALink> modulResponseLinks = massnahme.getParent().getLinksUp();
             if (modulResponseLinks == null || modulResponseLinks.isEmpty()) {
                 modulResponseLinks = massnahme.getParent().getParent().getLinksUp();
-            }
-            for (CnALink plink : modulResponseLinks) {
-                if (plink.getDependant().getTypeId().equals(Person.TYPE_ID)) {
-                    Person person = personDAO.findById(plink.getDependant().getDbId());
-                    Set<Property> rolesToSearch = findRole(massnahme);
-                    for (Property role : rolesToSearch) {
-                        if (person.hasRole(role)) {
-                            createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
-                        }
+                for (CnALink plink : modulResponseLinks) {
+                    if (plink.getDependant().getTypeId().equals(Person.TYPE_ID)) {
+                        Person person = personDAO.findById(plink.getDependant().getDbId());
+                        assignPerson(massnahme, linkedPersons, rolesToSearch, person);
                     }
                 }
             }
@@ -216,6 +234,10 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
 
     public List<MassnahmenUmsetzung> getchanedElements() {
         return changedElements;
+    }
+
+    public LinkedList<CnALink> getlinkedElements() {
+        return linkedElements;
     }
 
 }

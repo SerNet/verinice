@@ -95,8 +95,7 @@ public class Messages extends NLS {
     public static String UpdateManualAction_2;
     public static String AssignResponsiblePersonAction_1;
     public static String AssignResponsiblePersonAction_2;
-    public static String AssignResponsiblePersonAction_3;
-    public static String AssignResponsiblePersonAction_4;
+    
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

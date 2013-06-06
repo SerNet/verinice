@@ -103,8 +103,12 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
 
                         AssignResponsiblePersonCommand command = new AssignResponsiblePersonCommand(selection.toList());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-
-                        showInfoMessage(command.getchanedElements().size());
+                        if(command.getchanedElements().size() != 0){
+                            showInfoMessage(command.getchanedElements().size());
+                        }
+                        else{
+                            showAnotherInfoMessage(command.getlinkedElements().size());
+                        }
                     } catch (Exception e) {
                         LOG.error("Error while command", e);
                     }
@@ -126,7 +130,17 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
             }
         });
     }
+    
+    private void showAnotherInfoMessage(final Integer anzahl) {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_1);
+            }
+        });
+    }
 
+    
     /*
      * (non-Javadoc)
      * 
