@@ -33,6 +33,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -104,9 +105,9 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                         AssignResponsiblePersonCommand command = new AssignResponsiblePersonCommand(selection.toList());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         if(command.getchanedElements().size() != 0){
-                            showInfoMessage(command.getchanedElements().size());
+                            showInfoMessage(command.getchanedElements().size(), selection.toList().size());
                         }
-                        else{
+                        if(command.getlinkedElements().size() != 0){
                             showAnotherInfoMessage(command.getlinkedElements().size());
                         }
                     } catch (Exception e) {
@@ -121,21 +122,21 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
             LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
+    
+    private void showInfoMessage(final Integer differenz, final Integer summe) {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openInformation(window.getShell(), "Info", NLS.bind(Messages.AssignResponsiblePersonAction_1, differenz, summe));//$NON-NLS-1$
+            }
+        });
+    }
 
-    private void showInfoMessage(final Integer anzahl) {
+   private void showAnotherInfoMessage(final Integer anzahl) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
                 MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_2);
-            }
-        });
-    }
-    
-    private void showAnotherInfoMessage(final Integer anzahl) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openInformation(window.getShell(), "Info", anzahl + " " + Messages.AssignResponsiblePersonAction_1);
             }
         });
     }

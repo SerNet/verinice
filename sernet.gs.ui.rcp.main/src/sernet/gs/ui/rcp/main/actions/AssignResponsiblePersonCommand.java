@@ -62,8 +62,8 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
     }
 
     private List<MassnahmenUmsetzung> selectedElements;
-    private List<MassnahmenUmsetzung> changedElements;
-    private LinkedList<CnALink> linkedElements;
+    private Set<MassnahmenUmsetzung> changedElements;
+    private Set<CnALink> linkedElements;
 
     public AssignResponsiblePersonCommand(List<MassnahmenUmsetzung> selectMassnahmen) {
         this.selectedElements = selectMassnahmen;
@@ -76,8 +76,8 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
      */
     @Override
     public void execute() {
-        changedElements = new LinkedList<MassnahmenUmsetzung>();
-        linkedElements = new LinkedList<CnALink>();
+        changedElements = new HashSet<MassnahmenUmsetzung>();
+        linkedElements = new HashSet<CnALink>();
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmeDAO = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
         for (MassnahmenUmsetzung massnahme : selectedElements) {
             massnahme = massnahmeDAO.findById(massnahme.getDbId());
@@ -180,6 +180,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
      * @throws CommandException
      */
     private CnALink createLinkCommand(MassnahmenUmsetzung massnahme, Person person, String typeId) throws CommandException {
+        @SuppressWarnings("unchecked")
         CreateLink command = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
         ServiceFactory.lookupCommandService().executeCommand(command);
         changedElements.add(massnahme);
@@ -232,11 +233,11 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         }
     }
 
-    public List<MassnahmenUmsetzung> getchanedElements() {
+    public Set<MassnahmenUmsetzung> getchanedElements() {
         return changedElements;
     }
 
-    public LinkedList<CnALink> getlinkedElements() {
+    public Set<CnALink> getlinkedElements() {
         return linkedElements;
     }
 
