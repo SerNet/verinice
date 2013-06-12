@@ -128,15 +128,10 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
             }
         }
         for (Property role : rolesToSearch) {
-            String BSIRole = role.getPropertyValue().replaceAll("\u00A0", "");
-            String[] personRollen = person.getRollen().split(",\\s*", person.getRollen().length());
-            for (int split2 = 0; split2 < personRollen.length; split2++) {
-                String personRolle = personRollen[split2];
-                if (BSIRole.equals(personRolle)) {
+            if(person.hasRole(role)){
                     createLinks(massnahme, person, linkedPersons);
                 }
             }
-        }
     }
 
     /**

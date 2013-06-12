@@ -124,7 +124,7 @@ implements IBSIStrukturElement {
 		return buff.toString();
 	}
 	
-	public String getRollen() {
+	private String getRollen() {
 		if (getEntity() == null){
 			return ""; //$NON-NLS-1$
 		}
