@@ -19,7 +19,7 @@
 		<echo message="${equinox.launcher.jar}"/>
 		<echo message="${repository}"/>
 		<echo message="${destination}"/>
-		<java jar="${equinox.launcher.jar}" fork="true" failonerror="true" >
+		<java jar="${equinox.launcher.jar}" fork="true" failonerror="true" outputproperty="${buckminster.output.root}/director.out.log" errorproperty="${buckminster.output.root}/director.err.log" >
 			<arg value="-application"/>
 			<arg value="org.eclipse.equinox.p2.director"/>
 			<arg value="-artifactRepository"/>
