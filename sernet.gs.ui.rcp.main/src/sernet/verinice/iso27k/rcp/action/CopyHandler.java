@@ -52,7 +52,8 @@ public class CopyHandler extends RightsEnabledHandler {
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
 	    changeSelection(HandlerUtil.getCurrentSelection(event));
 		CnPItems.clearCutItems();
 		CnPItems.clearCopyItems();
@@ -60,7 +61,6 @@ public class CopyHandler extends RightsEnabledHandler {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void changeSelection(ISelection selection) {
 		try {
 			selectedElementList.clear();

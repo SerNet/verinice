@@ -100,7 +100,8 @@ public class PasteHandler extends AbstractHandler {
                 }
 				if(CnAElementHome.getInstance().isNewChildAllowed(target)) {
 					if(!CnPItems.getCopyItems().isEmpty()) {
-						copy(target,CnPItems.getCopyItems());
+						copy(target,CnPItems.getCopyItems(), CnPItems.isCopyLinks());
+						CnPItems.setCopyLinks(false);
 					} else if(!CnPItems.getCutItems().isEmpty()) {
 						cut(target,CnPItems.getCutItems());
 					}
@@ -150,9 +151,9 @@ public class PasteHandler extends AbstractHandler {
         return target;
     }
 
-    private void copy(final CnATreeElement target, List copyList) throws InvocationTargetException, InterruptedException {
+    private void copy(final CnATreeElement target, List copyList, boolean copyLinks) throws InvocationTargetException, InterruptedException {
 		if(copyList!=null && !copyList.isEmpty()) {
-			IProgressRunnable operation = createOperation(target, copyList);
+			IProgressRunnable operation = createOperation(target, copyList, copyLinks);
 			if(operation!=null) {
 				IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 				progressService.run(true, true, operation);
@@ -263,13 +264,14 @@ public class PasteHandler extends AbstractHandler {
 	/**
      * @param target
      * @param copyList
+	 * @param copyLinks 
      * @return
      */
-    private IProgressRunnable createOperation(CnATreeElement target, List copyList) {
+    private IProgressRunnable createOperation(CnATreeElement target, List copyList, boolean copyLinks) {
         IProgressRunnable operation = null;
         if(copyList!=null && !copyList.isEmpty()) {
             if(copyList.get(0) instanceof CnATreeElement) { 
-                operation = new CopyTreeElements(target,copyList);  
+                operation = new CopyTreeElements(target,copyList, copyLinks);  
             }
             if(copyList.get(0) instanceof Baustein) {
                 operation = new CopyBausteine(target,copyList);

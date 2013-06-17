@@ -30,6 +30,8 @@ public class CnPItems {
 	
 	private static List copyItems = new ArrayList();
 	
+	private static boolean copyLinks = false;
+	
 	private static List cutItems = new ArrayList();
 
 	public static void setCopyItems(List items) {
@@ -50,7 +52,15 @@ public class CnPItems {
 		return copyItems;
 	}
 	
-	public static List getCutItems() {
+	public static boolean isCopyLinks() {
+        return copyLinks;
+    }
+
+    public static void setCopyLinks(boolean copyLinks) {
+        CnPItems.copyLinks = copyLinks;
+    }
+
+    public static List getCutItems() {
 		return cutItems;
 	}
 

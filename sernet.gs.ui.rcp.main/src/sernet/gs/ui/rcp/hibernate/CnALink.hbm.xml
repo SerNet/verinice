@@ -43,8 +43,7 @@
 			column="DEPENDENCY_ID"
 			not-null="true"
 			insert="false"
-			update="false"
-			fetch="join"/>
+			update="false"/>
 			
 		
 	</class>

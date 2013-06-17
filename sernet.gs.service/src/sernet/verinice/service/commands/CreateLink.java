@@ -47,18 +47,35 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
         return log;
     }
 
-    private U dependant;
-    private V dependency;
+    private CnATreeElement dependant;
+    private CnATreeElement dependency;
+    private String dependantUuid;
+    private String dependencyUuid;
     private CnALink link;
     private String relationId;
     private String comment;
 
+    public CreateLink(String dependantUuid, String dependencyUuid) {
+        this(dependantUuid, dependencyUuid, "", "");
+    }
+    
     public CreateLink(U dependant, V dependency) {
         this(dependant, dependency, "", "");
+    }
+    
+    public CreateLink(String dependantUuid, String dependencyUuid, String relationId) {
+        this(dependantUuid, dependencyUuid, relationId, "");
     }
 
     public CreateLink(U dependant, V dependency, String relationId) {
         this(dependant, dependency, relationId, "");
+    }
+    
+    public CreateLink(String dependantUuid, String dependencyUuid, String relationId, String comment) {
+        this.dependantUuid = dependantUuid;
+        this.dependencyUuid = dependencyUuid;
+        this.relationId = relationId;
+        this.comment = comment;
     }
 
     public CreateLink(U dependant, V dependancy, String relationId, String comment) {
@@ -70,21 +87,23 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
 
     @Override
     public void execute() {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
-        }
         try {
             IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-            IBaseDao<U, Serializable> dependantDao = getDaoFactory().getDAO(dependant.getTypeId());
-            IBaseDao<V, Serializable> dependencyDao = getDaoFactory().getDAO(dependency.getTypeId());
+            IBaseDao<CnATreeElement, Serializable> dependantDao = getDaoFactory().getDAO(CnATreeElement.class);
+            IBaseDao<CnATreeElement, Serializable> dependencyDao = getDaoFactory().getDAO(CnATreeElement.class);
 
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            ri.setLinksUp(true);
-            dependency = dependencyDao.findByUuid(dependency.getUuid(), ri);
+            ri.setLinksUp(true);      
+            dependency = dependencyDao.findByUuid(getDependencyUuid(), ri);          
+            
             ri = RetrieveInfo.getPropertyInstance();
-            ri.setLinksDown(true);
-            dependant = dependantDao.findByUuid(dependant.getUuid(), ri);
+            ri.setLinksDown(true);  
+            dependant = dependantDao.findByUuid(getDependantUuid(), ri);
 
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
+            }
+            
             link = new CnALink(dependant, dependency, relationId, comment);
 
             linkDao.merge(link, true);
@@ -96,6 +115,22 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
             throw new RuntimeException("Error while creating link", e);
         }
 
+    }
+
+    private String getDependantUuid() {
+        if(dependantUuid!=null) {
+            return dependantUuid;
+        } else {
+            return dependant.getUuid();
+        }
+    }
+
+    private String getDependencyUuid() {
+        if(dependencyUuid!=null) {
+            return dependencyUuid;
+        } else {
+            return dependency.getUuid();
+        }
     }
 
     public CnALink getLink() {
