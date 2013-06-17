@@ -155,8 +155,7 @@
             restorable="true">
       </view> 
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
+   <extension point="org.eclipse.ui.commands">
       <command
             name="%command.name"
             categoryId="sernet.gs.ui.rcp.commands"
@@ -200,9 +199,27 @@
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.copywithlinks"
+            id="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+            name="%command.name.copywithlinks">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.4"
             id="sernet.verinice.iso27k.rcp.commands.paste"
             name="%command.name.6">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.new"
+            id="org.eclipse.ui.newWizard"
+            name="%command.name.new">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newGroup"
+            id="sernet.verinice.iso27k.rcp.commands.newGroup"
+            name="%command.name.newGroup">
       </command>
       <command
       		categoryId="sernet.gs.ui.rcp.commands"
@@ -262,8 +279,15 @@
       <key
             commandId="sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="CTRL+R">
-      </key>
+            sequence="CTRL+R" />
+      <key
+            commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+SHIFT+C" />
+       <key
+            commandId="sernet.verinice.iso27k.rcp.commands.newGroup"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+SHIFT+N" />
    </extension>
    <extension
          id="product"
@@ -273,7 +297,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.6.2 Beta - Codename 'Constructa' &#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2012&#x0A;&#x0A;Visit our homepage: http://www.verinice.org&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;r.schuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;Sebastian Engel 			&lt;s.engel@tarent.de&gt;&#x0A;Markus Joos				&lt;markus.joos@t-online.de&gt;&#x0A;Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@hs-furtwangen.de&gt;&#x0A;Christian Ganzmann 		&lt;christian.ganzmann@hs-furtwangen.de&gt;&#x0A;Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;&#x0A;Sebastian Hagedorn 			&lt;sh@sernet.de&gt;&#x0A;Johannes Stillig 			&lt;js@sernet.de&gt;&#x0A;Christian Eschenlohr 			&lt;christian.eschenlohr@leoni.com&gt;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						http://www.blackbit.de&#x0A;Icons by Axialis Team						http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North				&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder				http://www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten."/>
+               value="SerNet verinice 1.6.3 Beta - Codename 'Constructa' &#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2012&#x0A;&#x0A;Visit our homepage: http://www.verinice.org&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;r.schuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;Sebastian Engel 			&lt;s.engel@tarent.de&gt;&#x0A;Markus Joos				&lt;markus.joos@t-online.de&gt;&#x0A;Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@hs-furtwangen.de&gt;&#x0A;Christian Ganzmann 		&lt;christian.ganzmann@hs-furtwangen.de&gt;&#x0A;Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;&#x0A;Sebastian Hagedorn 			&lt;sh@sernet.de&gt;&#x0A;Johannes Stillig 			&lt;js@sernet.de&gt;&#x0A;Christian Eschenlohr 			&lt;christian.eschenlohr@leoni.com&gt;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						http://www.blackbit.de&#x0A;Icons by Axialis Team						http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North				&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder				http://www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten."/>
          <property
                name="windowImages"
                value="icons/window16.gif,icons/window32.gif"/>
@@ -305,30 +329,6 @@
       </perspectiveExtension>
    </extension>
    <extension point="org.eclipse.ui.popupMenus">
-      <!-- ISO27000 actions -->
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.iso27k.rcp.action.assetcontrib"
-            objectClass="sernet.verinice.model.iso27k.Group">
-         <action
-               class="sernet.verinice.iso27k.rcp.action.AddElement"
-               enablesFor="1"
-               icon="icons/generic_element_new.png"
-               id="sernet.verinice.iso27k.rcp.action.AddElement"
-               label="%action.label.15"
-               menubarPath="content"
-               style="push"
-               tooltip="%action.tooltip.15"/>
-         <action
-               class="sernet.verinice.iso27k.rcp.action.AddGroup"
-               enablesFor="1"
-               icon="icons/generic_elements_new.png"
-               id="sernet.verinice.iso27k.rcp.action.AddGroup"
-               label="%action.label.16"
-               menubarPath="content"
-               style="push"
-               tooltip="%action.tooltip.16"/>
-      </objectContribution>
       <objectContribution 
          adaptable="false"
          id="sernet.gs.ui.rcp.main.elementcontrib"
@@ -349,36 +349,6 @@
 		      </or>
 		   </enablement>
 		</action>
-		<action
-		   class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegate"
-		   enablesFor="+"
-		   icon="icons/16-em-cross.png"
-		   id="sernet.gs.ui.rcp.main.bsi.deleteaction"
-		   label="%action.label"
-		   menubarPath="content"
-		   tooltip="%action.tooltip">
-		   <enablement>
-		      <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
-		   </enablement>
-		</action>   
-		<action
-		   class="sernet.gs.ui.rcp.main.bsi.actions.DeleteActionDelegateBsi"
-		   enablesFor="+"
-		   icon="icons/16-em-cross.png"
-		   id="sernet.gs.ui.rcp.main.bsi.deleteaction"
-		   label="%action.label"
-		   menubarPath="content"
-		   tooltip="%action.tooltip">
-		   <enablement>
-		      <or>
-		   	     <objectClass name="sernet.verinice.model.bsi.IBSIStrukturElement"/>
-		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
-		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"/>
-		   	     <objectClass name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"/>
-		   	     <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
-		      </or>
-		   </enablement>
-		</action>        
       </objectContribution>  
       <objectContribution
             adaptable="false"
@@ -391,12 +361,9 @@
                    id="sernet.gs.ui.rcp.main.bsi.deletelinkaction"
                    label="%action.label.1"
                    menubarPath="content"
-                   tooltip="%action.tooltip.1">
-              
-             </action>
-            
-      </objectContribution>
-      
+                   tooltip="%action.tooltip.1">            
+             </action>         
+      </objectContribution>    
           <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.categorycontrib"
@@ -413,8 +380,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.gebaeudecontrib"
-            objectClass="sernet.verinice.model.bsi.GebaeudeKategorie">
-        
+            objectClass="sernet.verinice.model.bsi.GebaeudeKategorie">    
          <action
                class="sernet.gs.ui.rcp.main.bsi.actions.AddGebaudeActionDelegate"
                enablesFor="+"
@@ -423,10 +389,8 @@
                label="%action.label.2"
                menubarPath="content"
                style="push"
-               tooltip="%action.tooltip.2"/>
-        
-      </objectContribution>
-     
+               tooltip="%action.tooltip.2"/>       
+      </objectContribution>    
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.personcontrib"
@@ -979,6 +943,56 @@
 		</objectContribution>  
    </extension>
    <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=content">	  
+   	  	 <command
+               commandId="sernet.verinice.iso27k.rcp.commands.newGroup"
+               disabledIcon="icons/generic_element_new.png"
+               icon="icons/generic_element_new.png"
+               label="%command.label.newGroup">        
+         	<visibleWhen>
+    			<iterate operator="and">
+             		<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
+	               	</not>            
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+	               	</not>
+             	</iterate>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
+   	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=content">	  
+   	  	 <command
+               commandId="org.eclipse.ui.newWizard"
+               disabledIcon="icons/generic_element_new.png"
+               icon="icons/generic_element_new.png"
+               label="%command.label.new">
+         	<visibleWhen>
+    			<iterate operator="and">
+             		<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
+	               	</not>            
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+	               	</not>
+	                <not>
+	                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+	               	</not>
+             	</iterate>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
@@ -991,10 +1005,20 @@
                icon="icons/copy.png"
                label="%command.label.0"/>
          <command
+               commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.copywithlinks"/>
+         <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
                label="%command.label.1"/>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               disabledIcon="icons/16-em-cross.png"
+               icon="icons/16-em-cross.png"
+               label="%command.label.delete"/>
       </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
          <command
@@ -1050,11 +1074,23 @@
                label="%command.label.3"
                tooltip="%command.tooltip.0"/>
          <command
+               commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.copywithlinks"
+               tooltip="%command.tooltip.copywithlinks"/>
+         <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
                label="%command.label.4"
                tooltip="%command.tooltip.1"/>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               disabledIcon="icons/16-em-cross.png"
+               icon="icons/16-em-cross.png"
+               label="%command.label.delete"
+               tooltip="%command.tooltip.delete"/>
       </menuContribution>
       <menuContribution
         locationURI="menu:sernet.verinice.iso27k.rcp.CatalogView?after=additions">
@@ -1437,8 +1473,7 @@
       </viewContribution>
    </extension>
    <extension point="org.eclipse.ui.handlers">
-      <handler
-            class="sernet.verinice.iso27k.rcp.action.CopyHandler"
+      <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
             commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
          	<with variable="activePartId">
@@ -1449,8 +1484,18 @@
     		</with>
          </activeWhen>
       </handler>
-      <handler
-            class="sernet.verinice.iso27k.rcp.action.CutHandler"
+      <handler class="sernet.verinice.iso27k.rcp.action.CopyWithLinksHandler"
+            commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks">
+         <activeWhen>
+         	<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       			</or>
+    		</with>
+         </activeWhen>
+      </handler>
+      <handler class="sernet.verinice.iso27k.rcp.action.CutHandler"
             commandId="org.eclipse.ui.edit.cut">
          <activeWhen>
      		<with variable="activePartId">
@@ -1461,8 +1506,62 @@
     		</with>
          </activeWhen>
       </handler>
-      <handler
-            class="sernet.verinice.iso27k.rcp.action.PasteHandler"
+      <handler class="sernet.gs.ui.rcp.main.bsi.actions.DeleteHandler"
+            commandId="org.eclipse.ui.edit.delete">
+         <activeWhen>
+     		<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       			</or>
+    		</with>
+         </activeWhen>
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <test property="sernet.verinice.iso27k.model.isWritable"/>            
+	                </iterate>
+            	</with>
+		 </enabledWhen>
+      </handler>     
+      <handler class="sernet.verinice.iso27k.rcp.action.AddElementHandler"
+            commandId="org.eclipse.ui.newWizard">
+         <activeWhen>
+         	<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       			</or>
+    		</with> 		     
+         </activeWhen> 
+         <enabledWhen>
+        	<with variable="selection">
+                <iterate operator="and">
+                	<instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+                    <test property="sernet.verinice.iso27k.model.isWritable"/>            
+                </iterate>
+        	</with>
+		 </enabledWhen>
+      </handler>  
+      <handler class="sernet.verinice.iso27k.rcp.action.AddGroupHandler"
+            commandId="sernet.verinice.iso27k.rcp.commands.newGroup">
+         <activeWhen>
+         	<with variable="activePartId">
+     			<or>
+       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+       			</or>
+    		</with>
+         </activeWhen> 
+         <enabledWhen>
+        	<with variable="selection">
+                <iterate operator="and">
+                	<instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+                    <test property="sernet.verinice.iso27k.model.isWritable"/>            
+                </iterate>
+        	</with>
+		 </enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.iso27k.rcp.action.PasteHandler"
             commandId="org.eclipse.ui.edit.paste">
          <activeWhen>
          	<with variable="activePartId">
@@ -1482,8 +1581,7 @@
             	</with>
 		 </enabledWhen>
       </handler>
-      <handler
-            class="sernet.verinice.iso27k.rcp.action.CharsetHandler"
+      <handler class="sernet.verinice.iso27k.rcp.action.CharsetHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.charset">
       	 <activeWhen>
      		<with variable="activePartId">
@@ -1491,8 +1589,7 @@
     		</with>
          </activeWhen>
       </handler>
-      <handler
-            class="sernet.verinice.rcp.unify.UnifyHandler"
+      <handler class="sernet.verinice.rcp.unify.UnifyHandler"
             commandId="sernet.verinice.rcp.unify">
          <activeWhen>
     		 <iterate operator="or">
@@ -1505,8 +1602,7 @@
             </with>
 		 </enabledWhen>
       </handler>
-      <handler
-            class="sernet.verinice.rcp.group.GroupByTagHandler"
+      <handler class="sernet.verinice.rcp.group.GroupByTagHandler"
             commandId="sernet.verinice.rcp.group">
          <activeWhen>
     		 <iterate operator="and">
@@ -1561,6 +1657,12 @@
 	         type="sernet.verinice.model.common.CnATreeElement"
 	         namespace="sernet.verinice.iso27k.model"
 	         properties="canContain" />
+	   <propertyTester
+	         id="sernet.verinice.iso27k.rcp.action.WritingPermissionTester"
+	         class="sernet.verinice.iso27k.rcp.action.WritingPermissionTester"
+	         type="sernet.verinice.model.common.CnATreeElement"
+	         namespace="sernet.verinice.iso27k.model"
+	         properties="isWritable" />
    </extension>
    <extension
          point="org.eclipse.ui.startup">

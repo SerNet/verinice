@@ -145,6 +145,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction pasteAction;
 
+    private IWorkbenchAction deleteAction;
+    
     private ShowBulkEditAction bulkEditAction;
 
     private ShowAccessControlEditAction accessControlEditAction;
@@ -205,6 +207,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeAction = ActionFactory.CLOSE.create(window);
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
+        deleteAction = ActionFactory.DELETE.create(window);
         openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
