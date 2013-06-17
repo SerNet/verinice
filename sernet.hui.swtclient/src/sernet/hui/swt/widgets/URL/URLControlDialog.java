@@ -81,7 +81,7 @@ public class URLControlDialog extends Dialog {
 		Label label1 = new Label(container, SWT.NONE);
 		label1.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
 				false, false, 1, 1));
-		label1.setText("Name");
+		label1.setText(Messages.getString("URLControlDialog.0")); //$NON-NLS-1$
 		
 		nameText = new Text(container, SWT.BORDER);
 		nameText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,		
@@ -91,7 +91,7 @@ public class URLControlDialog extends Dialog {
 		Label label2 = new Label(container, SWT.NONE);
 		label2.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
 				false, false, 1, 1));
-		label2.setText("Link");
+		label2.setText(Messages.getString("URLControlDialog.1")); //$NON-NLS-1$
 		
 		hrefText = new Text(container, SWT.BORDER);
 		hrefText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
@@ -101,7 +101,7 @@ public class URLControlDialog extends Dialog {
 		Label label3 = new Label(container, SWT.NONE);
 		label3.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER,
 				false, false, 1, 1));
-		label3.setText("Auswahl");
+		label3.setText(Messages.getString("URLControlDialog.2")); //$NON-NLS-1$
 		
 		combo = new Combo(container, SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
@@ -142,7 +142,7 @@ public class URLControlDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Link Eigenschaften");
+		newShell.setText(Messages.getString("URLControlDialog.3")); //$NON-NLS-1$
 	}
 
 	public String getHref() {
