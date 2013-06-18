@@ -274,10 +274,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	public void setSimpleValue(PropertyType type, String value) {
 		PropertyList list = typedPropertyLists.get(type.getId());
 		if (list == null || list.getProperties().size() == 0) {
-			createNewProperty(type, value.replaceAll("\u00A0", ""));
+			createNewProperty(type, value);
 		}
 		else {
-				list.getProperty(0).setPropertyValue(value.replaceAll("\u00A0", ""));
+				list.getProperty(0).setPropertyValue(value);
 		}
 	}
 	

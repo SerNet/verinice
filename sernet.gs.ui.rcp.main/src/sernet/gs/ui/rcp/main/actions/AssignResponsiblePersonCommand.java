@@ -40,6 +40,7 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
@@ -62,7 +63,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
     }
 
     private List<MassnahmenUmsetzung> selectedElements;
-    private Set<MassnahmenUmsetzung> changedElements;
+    private Set<CnALink> changedElements;
     private Set<CnALink> linkedElements;
 
     public AssignResponsiblePersonCommand(List<MassnahmenUmsetzung> selectMassnahmen) {
@@ -76,7 +77,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
      */
     @Override
     public void execute() {
-        changedElements = new HashSet<MassnahmenUmsetzung>();
+        changedElements = new HashSet<CnALink>();
         linkedElements = new HashSet<CnALink>();
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmeDAO = getDaoFactory().getDAO(MassnahmenUmsetzung.class);
         for (MassnahmenUmsetzung massnahme : selectedElements) {
@@ -95,6 +96,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         try {
             List<Person> personenUmsetzungDurch = getPersonsbyProperty(massnahme);
             Set<Property> rolesToSearch = findRole(massnahme);
+            
 
             if (personenUmsetzungDurch != null && !personenUmsetzungDurch.isEmpty()) {
                 for (Person person : personenUmsetzungDurch) {
@@ -128,7 +130,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
             }
         }
         for (Property role : rolesToSearch) {
-            if(person.hasRole(role)){
+                    if(person.hasRole(role)){
                     createLinks(massnahme, person, linkedPersons);
                 }
             }
@@ -144,7 +146,8 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         rolesToSearch.addAll(rolen.getProperties());
         return rolesToSearch;
     }
-
+    
+   
     /**
      * @param massnahme
      * @param personenUmsetzungDurch
@@ -178,7 +181,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         @SuppressWarnings("unchecked")
         CreateLink command = new CreateLink(person, massnahme, MassnahmenUmsetzung.MNUMS_RELATION_ID);
         ServiceFactory.lookupCommandService().executeCommand(command);
-        changedElements.add(massnahme);
+        changedElements.add(command.getLink());
         return command.getLink();
     }
 
@@ -228,7 +231,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         }
     }
 
-    public Set<MassnahmenUmsetzung> getchanedElements() {
+    public Set<CnALink> getchanedElements() {
         return changedElements;
     }
 

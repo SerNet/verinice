@@ -104,10 +104,10 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
 
                         AssignResponsiblePersonCommand command = new AssignResponsiblePersonCommand(selection.toList());
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        if(command.getchanedElements().size() != 0){
+                        if(command.getchanedElements().size() > 0){
                             showInfoMessage(command.getchanedElements().size(), selection.toList().size());
                         }
-                        if(command.getlinkedElements().size() != 0){
+                        if(command.getlinkedElements().size() == 0){
                             showAnotherInfoMessage(command.getlinkedElements().size());
                         }
                     } catch (Exception e) {

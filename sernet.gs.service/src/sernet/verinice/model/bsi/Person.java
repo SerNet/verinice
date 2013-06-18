@@ -177,7 +177,7 @@ implements IBSIStrukturElement {
 	}
 
 	public boolean hasRole(Property role) {
-		if (getRollen().indexOf(role.getPropertyValue()) > -1){
+		if (getRollen().indexOf(role.getPropertyValue().replaceAll("\u00A0", "")) > -1){
 			return true;
 		}
 		return false;
