@@ -39,71 +39,84 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 
 /**
- * If file attachment is an image ImageCellProvider loads an scaled instance 
- * of this image an displays is in a table cell.
+ * If file attachment is an image ImageCellProvider loads an scaled instance of
+ * this image an displays is in a table cell.
  * 
  * Once an image is loaded it is cached by EHCache.
- *
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
-    
+
     private static final Logger LOG = Logger.getLogger(ImageCellProvider.class);
-    
+
     public static final Object EMPTY_CACHE_ELEMENT = new Object();
-    
+
     private int thumbSize;
     private ICommandService commandService;
-    
+
     protected ImageCellProvider(int thumbnailSize) {
         this.thumbSize = thumbnailSize;
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.OwnerDrawLabelProvider#paint(org.eclipse.swt.widgets.Event, java.lang.Object)
+     */
     @Override
-    protected void paint(Event event, Object element){
-       long start = System.currentTimeMillis();   
-       if(thumbSize>0) {
-           Image img = getImage(element);      
-           if (LOG.isDebugEnabled()) {
-               LOG.debug("get image: " + (System.currentTimeMillis() - start));
-           }
-           if(img!=null) {         
-               int imgWidth = img.getBounds().width;
-               int imgHeight = img.getBounds().height;
-               Rectangle tableItemBounds = ((TableItem) event.item).getBounds(event.index);
-               int cellWidth = tableItemBounds.width;
-               int cellHeight = tableItemBounds.height;
-               cellWidth /= 2;
-               cellWidth -= imgWidth / 2;
-               cellHeight /= 2;
-               cellHeight -= imgHeight / 2;
-               int x = (cellWidth > 0 ? tableItemBounds.x + cellWidth : tableItemBounds.x);
-               int y = cellHeight > 0 ? tableItemBounds.y + cellHeight : tableItemBounds.y;
-               event.gc.drawImage(img, 0, 0, imgWidth, imgHeight, x, y, imgWidth, imgHeight);         
+    protected void paint(Event event, Object element) {
+        long start = System.currentTimeMillis();
+        if (thumbSize > 0) {
+            Image img = getImage(element);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("get image: " + (System.currentTimeMillis() - start));
             }
-       }
+            if (img != null) {
+                int imgWidth = img.getBounds().width;
+                int imgHeight = img.getBounds().height;
+                Rectangle tableItemBounds = ((TableItem) event.item).getBounds(event.index);
+                int cellWidth = tableItemBounds.width;
+                int cellHeight = tableItemBounds.height;
+                cellWidth /= 2;
+                cellWidth -= imgWidth / 2;
+                cellHeight /= 2;
+                cellHeight -= imgHeight / 2;
+                int x = (cellWidth > 0 ? tableItemBounds.x + cellWidth : tableItemBounds.x);
+                int y = cellHeight > 0 ? tableItemBounds.y + cellHeight : tableItemBounds.y;
+                event.gc.drawImage(img, 0, 0, imgWidth, imgHeight, x, y, imgWidth, imgHeight);
+                // dispose image to free System Resources and prevent 
+                // "org.eclipse.swt.SWTError: No more handles"
+                img.dispose();
+            }        
+        }
         if (LOG.isDebugEnabled()) {
             LOG.debug("paint: " + (System.currentTimeMillis() - start));
         }
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.OwnerDrawLabelProvider#measure(org.eclipse.swt.widgets.Event, java.lang.Object)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.OwnerDrawLabelProvider#measure(org.eclipse.
+     * swt.widgets.Event, java.lang.Object)
      */
     @Override
-    protected void measure(Event arg0, Object arg1) {}
-    
+    protected void measure(Event arg0, Object arg1) {
+    }
+
     protected abstract Image getImage(Object element);
-    
+
     protected byte[] loadFileData(Attachment attachment) {
-        if(Arrays.asList(Attachment.getImageMimeTypes()).contains(attachment.getMimeType())) {
+        if (Arrays.asList(Attachment.getImageMimeTypes()).contains(attachment.getMimeType())) {
             try {
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), thumbSize);
                 command = getCommandService().executeCommand(command);
                 AttachmentFile attachmentFile = command.getAttachmentFile();
-                if(attachmentFile!=null) {                    
-                  return attachmentFile.getFileData();
-                } 
+                if (attachmentFile != null) {
+                    return attachmentFile.getFileData();
+                }
             } catch (Exception e) {
                 LOG.error("Error while loading attachment", e); //$NON-NLS-1$
                 ExceptionUtil.log(e, Messages.FileView_27);
@@ -111,13 +124,13 @@ public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
         }
         return null;
     }
-    
+
     protected Image createImage(byte[] fileData) {
-        if(fileData==null) {
+        if (fileData == null) {
             return null;
         }
         try {
-            return new Image(FileView.getDisplay(),new ByteArrayInputStream(fileData));
+            return new Image(FileView.getDisplay(), new ByteArrayInputStream(fileData));
         } catch (Exception e) {
             LOG.error("Error while creating SWT image", e);
             return null;
@@ -142,5 +155,15 @@ public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
     }
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
 }
