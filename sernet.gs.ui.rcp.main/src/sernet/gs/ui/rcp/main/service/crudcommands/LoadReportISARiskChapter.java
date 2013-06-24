@@ -77,11 +77,17 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         this.groupCache = new HashSet<String>(0);
         this.samtCache = new HashSet<String>(0);
         this.resultTopics = new ArrayList<SamtTopic>(0);
+        
     }
     
     public LoadReportISARiskChapter(Integer root, Integer rootSG){
         this(root);
         this.rootSgGroup = rootSG;
+    }
+    
+    public LoadReportISARiskChapter(Integer root, String rootSG){
+        this(root);
+        this.rootSgGroup = Integer.valueOf(rootSG);
     }
     
     
@@ -168,7 +174,8 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
         for(int i = 0; i < unsortedKeyList.size(); i++){
             String key = unsortedKeyList.get(i);
             List<String> tmpList = transformArrayToList(results.get(key)); 
-            tmpList.add(key);
+            // key is chaptername, shorten that
+            tmpList.add(shortenChapterNameLabelString(key));
             result.add(tmpList);
         }
         result.trimToSize();
@@ -197,9 +204,40 @@ public class LoadReportISARiskChapter extends GenericCommand implements ICachedC
             if(result == null){
                 result = "";
             }
+            
             list.add(result);
         }
         return list;
+    }
+    
+    public String shortenChapterNameLabelString(String chapterName){
+        
+        StringBuilder sb = new StringBuilder();
+        if(chapterName.contains(" ")){
+            String number = chapterName.substring(0, chapterName.indexOf(" "));
+            try{
+                Integer.parseInt(number);
+                sb.append(number);
+            } catch (NumberFormatException e) {
+                log.warn("Chaptername does not contain a number");
+                if(chapterName.length() > 5){
+                    sb.append(chapterName.substring(0, 5));
+                    sb.append("...");
+                } else {
+                    sb.append(chapterName);
+                }
+            }
+        } else {
+            if(sb.length() == 0){
+                if(chapterName.length() > 5){
+                    sb.append(chapterName.substring(0, 5));
+                    sb.append("...");
+                } else {
+                    sb.append(chapterName);
+                }
+            }
+        }
+        return sb.toString();
     }
     
     public List<SamtTopic> getSamtTopics(){

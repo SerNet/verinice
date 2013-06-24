@@ -2,9 +2,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -51,9 +49,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     
     private boolean doUpLinksAlso = true;
     
-    //for statistical use only
-    private Map<String, Integer> linkTypeIdMap;
-    
     public LoadReportLinkedElements(String typeId, Integer rootElement, boolean goDeep) {
 	    this.typeId = typeId;
 	    this.rootElement = rootElement;
@@ -69,9 +64,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     }
         
     public void execute() {
-        if(linkTypeIdMap == null){
-            linkTypeIdMap = new HashMap<String, Integer>(0);
-        }
         if(!resultInjectedFromCache){
             LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
             try {
@@ -106,12 +98,6 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
      */
     private List<CnATreeElement> getLinkedElements(CascadingTransaction ta, CnATreeElement root, List<CnATreeElement> result, boolean doUpLinksAlso) {
         // FIXME externalize strings in SNCA.xml!
-        String identifier = root.getTypeId() + "->" + typeId;
-        if(!linkTypeIdMap.containsKey(identifier)){
-            linkTypeIdMap.put(identifier, Integer.valueOf(1));
-        } else {
-            linkTypeIdMap.put(identifier, linkTypeIdMap.get(identifier) + 1);
-        }
         for (CnALink link : root.getLinksDown()) {
             if (link.getDependency().getTypeId().equals(this.typeId) &&
                     !ta.hasBeenVisited(link.getDependency())) {
