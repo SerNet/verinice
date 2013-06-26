@@ -48,6 +48,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.service.commands.AssignResponsiblePersonCommand;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
@@ -107,7 +108,10 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
                         if(command.getchanedElements().size() > 0){
                             showInfoMessage(command.getchanedElements().size(), selection.toList().size());
                         }
-                        if(command.getlinkedElements().size() == 0){
+                        else{
+                            showMessage();
+                        }
+                        if(command.getlinkedElements().size() > 0){
                             showAnotherInfoMessage(command.getlinkedElements().size());
                         }
                     } catch (Exception e) {
@@ -140,6 +144,15 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
             }
         });
     }
+   
+   private void showMessage() {
+       Display.getDefault().asyncExec(new Runnable() {
+           @Override
+           public void run() {
+               MessageDialog.openInformation(window.getShell(), "Info", Messages.AssignResponsiblePersonAction_3);
+           }
+       });
+   }
 
     
     /*
