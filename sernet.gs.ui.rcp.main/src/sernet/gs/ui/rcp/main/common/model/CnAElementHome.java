@@ -210,6 +210,7 @@ public final class CnAElementHome {
             log.debug("Creating new instance of " + clazz.getName() + " in " + container + " with title: " + title); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         CreateElement<T> saveCommand = new CreateElement<T>(container, clazz, title);
+        saveCommand.setInheritAuditPermissions(true);
         saveCommand = getCommandService().executeCommand(saveCommand);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
             validateElement(saveCommand.getNewElement());
