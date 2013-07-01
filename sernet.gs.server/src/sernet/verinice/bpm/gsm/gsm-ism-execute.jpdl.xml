@@ -9,10 +9,10 @@
       <transition to="gsm.ism.execute.task.execute"/>
    </start>
    
-   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="362,161,227,52" name="gsm.ism.execute.task.execute">
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="8 days" g="362,161,227,52" name="gsm.ism.execute.task.execute">
       <transition g="7,-15" name="gsm.ism.execute.trans.complete" to="java.deleteAssetScenarioLinks"/>
       <transition g="369,238;179,238:-104,8" name="gsm.ism.execute.trans.reminder" to="java.sendReminder">
-        <timer duedate="2 days"/>
+        <timer duedate="7 days"/>
       </transition>
    </task>
    
