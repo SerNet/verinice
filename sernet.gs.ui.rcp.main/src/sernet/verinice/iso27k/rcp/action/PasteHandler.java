@@ -101,7 +101,6 @@ public class PasteHandler extends AbstractHandler {
 				if(CnAElementHome.getInstance().isNewChildAllowed(target)) {
 					if(!CnPItems.getCopyItems().isEmpty()) {
 						copy(target,CnPItems.getCopyItems(), CnPItems.isCopyLinks());
-						CnPItems.setCopyLinks(false);
 					} else if(!CnPItems.getCutItems().isEmpty()) {
 						cut(target,CnPItems.getCutItems());
 					}

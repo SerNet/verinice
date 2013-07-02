@@ -35,8 +35,9 @@ public class CopyWithLinksHandler extends CopyHandler {
 	 */
 	@Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-		CnPItems.setCopyLinks(true);
-		return super.execute(event);
+	    Object result = super.execute(event);
+	    CnPItems.setCopyLinks(true);
+		return result;
 	}
 
 }
