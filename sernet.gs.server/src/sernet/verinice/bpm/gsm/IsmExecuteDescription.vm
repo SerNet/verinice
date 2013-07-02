@@ -1,6 +1,6 @@
 ## Don't add white space
 <b>Application</b>: ${GSM_ISM_CONTROL_GROUP_TITLE}
-<b>RRisk value:</b> ${GSM_ISM_RISK_VALUE}<br/>
+<b>Risk value:</b> ${GSM_ISM_RISK_VALUE}<br/>
 <b>Description:</b>
 ${GSM_ISM_CONTROL_DESCRIPTION}<br/>
 <b>Assets:</b>
