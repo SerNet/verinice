@@ -24,15 +24,14 @@ import org.eclipse.core.expressions.PropertyTester;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Audit;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class WritingPermissionTester extends PropertyTester {
+public class DeletePermissionTester extends PropertyTester {
 
-	private static final Logger LOG = Logger.getLogger(WritingPermissionTester.class);
+	private static final Logger LOG = Logger.getLogger(DeletePermissionTester.class);
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
@@ -40,15 +39,9 @@ public class WritingPermissionTester extends PropertyTester {
 	@Override
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		CnATreeElement selectedElement = (CnATreeElement) receiver;
-        boolean allowed = true;  
-        if(selectedElement instanceof Audit) {
-            allowed = false;
-        }
-        if(allowed) {
-            allowed = CnAElementHome.getInstance().isNewChildAllowed(selectedElement);           
-        }	
+        boolean allowed = CnAElementHome.getInstance().isNewChildAllowed(selectedElement);           
         if (LOG.isDebugEnabled()) {
-            LOG.debug("WritingPermission for " + selectedElement + ": " + allowed);
+            LOG.debug("DeletePermission for " + selectedElement + ": " + allowed);
         }
 		return allowed;
 	}

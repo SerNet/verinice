@@ -446,13 +446,7 @@ public final class CnAElementHome {
     
             if (roles == null) {
                 LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
-                try {
-                    lcuc = getCommandService().executeCommand(lcuc);
-                } catch (CommandException e) {
-                    ExceptionUtil.log(e, Messages.getString("CnAElementHome.2")); //$NON-NLS-1$
-                    return false;
-                }
-    
+                lcuc = getCommandService().executeCommand(lcuc);
                 Configuration c = lcuc.getConfiguration();
     
                 // No configuration for the current user (anymore?). Then nothing is

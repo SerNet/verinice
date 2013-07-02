@@ -18,6 +18,8 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -47,7 +49,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.commands.DeriveStatusCommand;
@@ -69,7 +70,7 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     
     private boolean serverIsRunning = true;
     
-    private ControlGroup selectedControlgroup;
+    private List<ControlGroup> selectedGroups;
     
     private int samtCount = 0;
     
@@ -147,14 +148,15 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
 
     @Override
     public void run(IAction action) {
-        if (selectedControlgroup != null) {
-            String title = selectedControlgroup.getTitle();
+        if (selectedGroups != null && !selectedGroups.isEmpty()) {
+            String title = selectedGroups.get(0).getTitle();
             boolean confirm = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.getString("DeriveStatus.1"), NLS.bind(Messages.getString("DeriveStatus.2"), title)); //$NON-NLS-1$ //$NON-NLS-2$
             if (!confirm){
                 return;
             }
             try {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                    @Override
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.getString("DeriveStatus.3"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         derivateStatus();
@@ -171,13 +173,23 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     }
 
     private void derivateStatus() {
-        Activator.inheritVeriniceContextState();
-        DeriveStatusCommand command = new DeriveStatusCommand(selectedControlgroup);
         try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            updateModel(command.getChangedElements());
-            samtCount = command.getSamtTopicCount();
-            measureCount = command.getMeasureCount();
+            Activator.inheritVeriniceContextState();
+            samtCount = 0;
+            measureCount = 0;
+            boolean update = false;
+            for (ControlGroup group : selectedGroups) {
+                DeriveStatusCommand command = new DeriveStatusCommand(group);          
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                if(!command.getChangedElements().isEmpty()) {
+                    update = true;
+                }
+                samtCount += command.getSamtTopicCount();
+                measureCount += command.getMeasureCount();
+            }  
+            if(update) {
+                updateModel();
+            }
         } catch (CommandException e) {
             LOG.error("Error while derivating status.", e); //$NON-NLS-1$
             throw new RuntimeException(e);
@@ -196,18 +208,20 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
         if (serverIsRunning) {
             action.setEnabled(checkRights());
         }
+        selectedGroups = new LinkedList<ControlGroup>();
         if (selection instanceof ITreeSelection) {
             ITreeSelection treeSelection = (ITreeSelection) selection;
-            Object selectedElement = treeSelection.getFirstElement();
-            if (selectedElement instanceof ControlGroup) {
-                selectedControlgroup = (ControlGroup) selectedElement;
+            for (Iterator<Object> iterator = treeSelection.iterator(); iterator.hasNext();) {
+                Object selected = iterator.next();
+                if (selected instanceof ControlGroup) {
+                    selectedGroups.add((ControlGroup) selected);
+                }
             }
+            
         }
     }
 
-    private void updateModel(List<CnATreeElement> changedElementList) {
-        if (changedElementList != null && !changedElementList.isEmpty()) {
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-        }
+    private void updateModel() {
+        CnAElementFactory.getInstance().reloadModelFromDatabase();
     }
 }

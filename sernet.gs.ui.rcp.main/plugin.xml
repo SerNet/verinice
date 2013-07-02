@@ -779,7 +779,7 @@
 		 </menu>
          <action
                class="sernet.verinice.iso27k.rcp.action.DeriveStatusAction"
-               enablesFor="1"
+               enablesFor="1+"
                icon="icons/derive.gif"
                id="sernet.verinice.iso27k.rcp.action.DeriveStatusAction.menu"
                label="%action.label.28"
@@ -1520,7 +1520,7 @@
             	<with variable="selection">
 	                <iterate operator="and">
 	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
-	                    <test property="sernet.verinice.iso27k.model.isWritable"/>            
+	                    <test property="sernet.verinice.iso27k.model.isDeletable"/>            
 	                </iterate>
             	</with>
 		 </enabledWhen>
@@ -1663,6 +1663,12 @@
 	         type="sernet.verinice.model.common.CnATreeElement"
 	         namespace="sernet.verinice.iso27k.model"
 	         properties="isWritable" />
+	   <propertyTester
+	         id="sernet.verinice.iso27k.rcp.action.DeletePermissionTester"
+	         class="sernet.verinice.iso27k.rcp.action.DeletePermissionTester"
+	         type="sernet.verinice.model.common.CnATreeElement"
+	         namespace="sernet.verinice.iso27k.model"
+	         properties="isDeletable" />
    </extension>
    <extension
          point="org.eclipse.ui.startup">

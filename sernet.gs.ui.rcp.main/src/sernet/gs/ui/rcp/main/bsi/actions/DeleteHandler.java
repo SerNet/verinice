@@ -48,8 +48,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -279,19 +277,21 @@ public class DeleteHandler extends RightsEnabledHandler {
 
 
     public void changeSelection(ISelection selection) {
-        boolean allowed = ((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(ActionRightIDs.DELETEITEM);
+        boolean allowed = checkRights();
+        boolean isWriteAllowed = true;
+        
         // Realizes that the action to delete an element is greyed out,
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
-        if (sel instanceof CnATreeElement) {
+        if (allowed && sel instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) sel;
-            boolean b = CnAElementHome.getInstance().isDeleteAllowed(element);
-
-            // Only change state when it is enabled, since we do not want to
-            // trash the enablement settings of plugin.xml
-            if (this.isEnabled()) {
-                this.setEnabled(b & allowed);
-            }
+            isWriteAllowed = CnAElementHome.getInstance().isDeleteAllowed(element);         
+        }
+        
+        // Only change state when it is enabled, since we do not want to
+        // trash the enablement settings of plugin.xml
+        if (this.isEnabled()) {
+            this.setEnabled(isWriteAllowed & allowed);
         }
     }
     

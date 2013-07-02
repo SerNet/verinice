@@ -65,10 +65,12 @@ implements IBSIStrukturElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(P_NAME), getTypeFactory().getMessage(TYPE_ID));
     }
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
@@ -76,11 +78,13 @@ implements IBSIStrukturElement {
 		
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 0;
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 	    // empty, otherwise title get scrambled while copying, bug 264
 	}
 	
@@ -177,9 +181,14 @@ implements IBSIStrukturElement {
 	}
 
 	public boolean hasRole(Property role) {
-		if (getRollen().indexOf(role.getPropertyValue().replaceAll("\u00A0", "")) > -1){
-			return true;
-		}
+	    String value = role.getPropertyValue();
+	    if(value!=null) {
+	        value = value.replaceAll("\u00A0", "");
+	        if (getRollen().indexOf(value) > -1){
+	            return true;
+	        }
+	    }
+		
 		return false;
 	}
 

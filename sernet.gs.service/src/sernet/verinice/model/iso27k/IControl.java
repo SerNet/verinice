@@ -36,6 +36,19 @@ public interface IControl {
     static final int IMPLEMENTED_NOTEDITED_NUMERIC = -2;
     static final int IMPLEMENTED_NA_NUMERIC = -1;
 
+    // 0,4,5 only here for future use
+    public static final String TAG_MATURITY_LVL_0 = "ISA_MATLVL_0";
+
+    public static final String TAG_MATURITY_LVL_1 = "ISA_MATLVL_1";
+
+    public static final String TAG_MATURITY_LVL_2 = "ISA_MATLVL_2";
+
+    public static final String TAG_MATURITY_LVL_3 = "ISA_MATLVL_3";
+
+    public static final String TAG_MATURITY_LVL_4 = "ISA_MATLVL_4";
+
+    public static final String TAG_MATURITY_LVL_5 = "ISA_MATLVL_5";
+
     
     
     

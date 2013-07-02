@@ -158,6 +158,20 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
         return getEntity().getSimpleValue(PROP_IMPL_EXPLANATION);
     }
 	
+	public int getMaturityValueByTag(){
+        int maturity = -1;
+        for(String tag : this.getTags()){
+            if(tag.equals(IControl.TAG_MATURITY_LVL_1)){
+                maturity = 1;
+            } else if (tag.equals(IControl.TAG_MATURITY_LVL_2)){
+                maturity = 2;
+            } else if (tag.equals(IControl.TAG_MATURITY_LVL_3)){
+                maturity = 3;
+            }
+        }
+        return maturity;
+    }
+	
 	public static String getImplementation(Entity entity) {
 	    PropertyList properties = entity.getProperties(PROP_IMPL);
 	    if (properties == null || properties.getProperties() == null
@@ -188,6 +202,10 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     public boolean isImplemented() {
 	    return getImplementation().equals(IMPLEMENTED_YES);
 	}
+	
+	 public boolean isImplementationNotEdited() {
+	        return getImplementation().equals(IMPLEMENTED_NOTEDITED);
+	    }
 
 	/**
 	 * Returns the used weight.
