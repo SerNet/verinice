@@ -91,7 +91,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		return super.merge(entity, fireChange);
 	}
 
-	public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
+	@Override
+    public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
 	    if (log.isDebugEnabled()) {
             log.debug("Checking rights for entity: " + entity + " and username: " + username);
         } 
@@ -108,7 +109,9 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         if(!hasAdminRole(roleArray)) {	    
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < roleArray.length; i++) {
-                sb.append("'").append(roleArray[i]).append("'");
+                String name = roleArray[i];
+                String escaped = name.replace("\\", "\\\\");
+                sb.append("'").append(escaped).append("'");
                 if(i<roleArray.length-1) {
                     sb.append(",");
                 }           
@@ -168,7 +171,8 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
     /**
 	 * @param entity
 	 */
-	public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
+	@Override
+    public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
 	    checkRights(entity, getAuthService().getUsername());
 	}
 
