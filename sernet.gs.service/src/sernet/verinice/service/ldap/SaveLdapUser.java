@@ -15,7 +15,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -220,12 +219,20 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 			criteria.add(Restrictions.like("propertyValue", username));
 			IBaseDao<Property, Integer> dao = getDaoFactory().getDAO(Property.TYPE_ID);
 			List<Property>resultList = dao.findByCriteria(criteria);
-			if(resultList!=null && !resultList.isEmpty()) {
-				if (getLog().isDebugEnabled()) {
-					getLog().debug("Username exists: " + username);
-				}
-				throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
+			
+			if(resultList!=null && !resultList.isEmpty()) {			
+				for (Property property : resultList) {
+				    // check again to exclude name which start with the same characters
+				    if ( username.equals(property.getPropertyValue()) ) {
+				        if (getLog().isDebugEnabled()) {
+		                    getLog().debug("Username exists: " + username);
+		                }
+				        throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
+				    }
+                }
+				
 			}
+
 		}
 	}
 	
