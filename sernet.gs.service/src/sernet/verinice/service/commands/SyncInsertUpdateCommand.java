@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
@@ -380,9 +381,17 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
     
     private void addPermissions(/*not final*/ CnATreeElement element) {
-        HashSet<Permission> newperms = new HashSet<Permission>();
-        newperms.add(Permission.createPermission(element, authService.getUsername(), true, true));
-        element.setPermissions(newperms);
+        String userName = authService.getUsername();
+        addPermissions(element, userName);
+    }
+
+    private void addPermissions(CnATreeElement element, String userName) {
+        Set<Permission> permission = element.getPermissions();
+        if(permission==null) {
+            permission = new HashSet<Permission>();
+        }
+        permission.add(Permission.createPermission(element, userName, true, true));
+        element.setPermissions(permission);
         for (CnATreeElement child : element.getChildren()) {
             addPermissions(child);
         }
@@ -644,15 +653,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             handleCreateContainerException(e);
         }
         BSIModel model = cmdLoadModel.getModel();
-        ImportBsiGroup holder = null;
+        ImportBsiGroup importGroup = null;
         try {
-            holder = new ImportBsiGroup(model);
-            addPermissions(holder);
-            getDao(ImportBsiGroup.class).saveOrUpdate(holder);
+            importGroup = new ImportBsiGroup(model);
+            addPermissions(importGroup);
+            addPermissions(importGroup,IRightsService.USERDEFAULTGROUPNAME);
+            getDao(ImportBsiGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e) {
             handleCreateContainerException(e);
         }
-        return holder;
+        return importGroup;
     }
     
     private CnATreeElement createIsoContainer() {
@@ -663,15 +673,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             handleCreateContainerException(e);
         }
         ISO27KModel model = cmdLoadModel.getModel();
-        ImportIsoGroup holder = null;
+        ImportIsoGroup importGroup = null;
         try {
-            holder = new ImportIsoGroup(model);
-            addPermissions(holder);
-            getDao(ImportIsoGroup.class).saveOrUpdate(holder);
+            importGroup = new ImportIsoGroup(model);
+            addPermissions(importGroup);
+            addPermissions(importGroup,IRightsService.USERDEFAULTGROUPNAME);
+            getDao(ImportIsoGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e1) {
             handleCreateContainerException(e1);
         }
-        return holder;
+        return importGroup;
     }
     
     private void handleCreateContainerException(Exception e) {
