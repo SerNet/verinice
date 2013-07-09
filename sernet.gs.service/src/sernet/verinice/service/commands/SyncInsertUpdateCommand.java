@@ -361,23 +361,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         if (authService.isPermissionHandlingNeeded()) {
-            addPermissions(parent,child);
+            child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
         }
 
         return child;
-    }
-    
-    private void addPermissions(CnATreeElement parent, CnATreeElement child) {
-        // By default, inherit permissions from parent element but ITVerbund
-        // instances cannot do this, as its parents (BSIModel) is not visible
-        // and has no permissions. Therefore we use the name of the currently
-        // logged in user as a role which has read and write permissions for
-        // the new ITVerbund.
-        if (child instanceof ITVerbund || child instanceof Organization) {
-            addPermissions(child);           
-        } else {
-            child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
-        }
     }
     
     private void addPermissions(/*not final*/ CnATreeElement element) {
