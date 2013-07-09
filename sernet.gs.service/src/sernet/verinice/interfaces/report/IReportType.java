@@ -27,6 +27,8 @@ public interface IReportType {
 	// reports applicable to both of the cases above
 	public final static String USE_CASE_ID_ALWAYS_REPORT = "use_case_report_always";
 	
+	public static final String USER_REPORT_ID = "user"; //$NON-NLS-1$
+	
     
 	/**
 	 * Returns an application usable id.

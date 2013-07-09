@@ -50,6 +50,7 @@ public class UserReportType implements IReportType {
 	/**
      * @return the reportFile
      */
+    @Override
     public String getReportFile() {
         return reportFile;
     }
@@ -57,27 +58,33 @@ public class UserReportType implements IReportType {
     /**
      * @param reportFile the reportFile to set
      */
+    @Override
     public void setReportFile(String reportFile) {
         this.reportFile = reportFile;
     }
     
+    @Override
     public String getDescription() {
 		return Messages.UserReportType_1;
 	}
 
-	public String getId() {
-		return "user"; //$NON-NLS-1$
+	@Override
+    public String getId() {
+		return USER_REPORT_ID; 
 	}
 
-	public String getLabel() {
+	@Override
+    public String getLabel() {
 		return Messages.UserReportType_2;
 	}
 	
-	public IOutputFormat[] getOutputFormats() {
+	@Override
+    public IOutputFormat[] getOutputFormats() {
         return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new ExcelOutputFormat(), new WordOutputFormat(), new ODTOutputFormat(), new ODSOutputFormat() };
     }
 
-	public void createReport(IReportOptions reportOptions) {
+	@Override
+    public void createReport(IReportOptions reportOptions) {
 		BIRTReportService brs = new BIRTReportService();
 	    URL reportDesign;
 
