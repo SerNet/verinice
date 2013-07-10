@@ -98,5 +98,9 @@
     </property>
 </bean>
 
-
+<bean class="sernet.verinice.service.commands.PropertyLoader">
+    <property name="fileSizeMax" value="${veriniceserver.filesize.max}" />
+</bean>
+    
+ 
 </beans>

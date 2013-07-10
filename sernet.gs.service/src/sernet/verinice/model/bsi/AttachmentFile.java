@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 import org.apache.commons.io.FileUtils;
 
@@ -80,6 +81,7 @@ public class AttachmentFile implements Serializable, ITypedElement {
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
@@ -114,6 +116,14 @@ public class AttachmentFile implements Serializable, ITypedElement {
         return true;
     }
     
+    public static double convertByteToMB(long byteSize) {
+        return ((double)byteSize) / ((double)(1024*1024));
+    }
     
+    public static String formatByteToMB(long byteSize) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(new DecimalFormat("#,##0.#").format(convertByteToMB(byteSize)));
+        return sb.append(" MB").toString();
+    }
 	
 }
