@@ -41,7 +41,8 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	private RadioGroupFieldEditor operationMode;
 	private StringFieldEditor serverURI;
 	
-	private String oldServerMode, newServerMode; 
+	private String oldServerMode, newServerMode;
+	private String oldUrl, newUrl; 
 
 	public ClientServerPreferencePage() {
 		super(GRID);
@@ -81,6 +82,9 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	        boolean servermode = newServerMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
 	        serverURI.setEnabled(servermode, getFieldEditorParent());
 	    }
+	    if (event.getProperty().equals(FieldEditor.VALUE) && event.getSource() == serverURI ) {
+            newUrl = (String) event.getNewValue();
+        }
 	}
 
 	/**
@@ -88,10 +92,8 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
      * @return
      */
     private boolean propertyChanged() {       
-        if(newServerMode!=null) {
-            return !(newServerMode.equals(oldServerMode));
-        }
-        return oldServerMode!=null;
+        return (newServerMode!=null && !newServerMode.equals(oldServerMode))
+               || (newUrl!=null &&  !newUrl.equals(oldUrl));
     }
 
     private void createRadioGroup() {
@@ -105,8 +107,10 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	 * @see
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
-	public void init(IWorkbench workbench) {
+	@Override
+    public void init(IWorkbench workbench) {
 	    oldServerMode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+	    oldUrl = getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);
 	}
 	
 	/* (non-Javadoc)
