@@ -91,6 +91,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         this.window = window;
         setText(label);
         setId(ID);
+        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
@@ -222,6 +223,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 @SuppressWarnings("restriction")
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
@@ -309,6 +311,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     /**
      * Action is enabled when only items of the same type are selected.
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;

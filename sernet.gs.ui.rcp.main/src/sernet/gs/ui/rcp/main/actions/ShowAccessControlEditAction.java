@@ -50,6 +50,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         this.window = window;
         setText(label);
         setId(ID);
+        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);
@@ -94,6 +95,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         // Conditions for availability of this action:
         // - Database connection must be open (Implicitly assumes that login

@@ -41,15 +41,19 @@ public class ReloadAction extends Action {
     public ReloadAction(IWorkbenchWindow window, String label) {
         setText(label);
         setId(ID);
+        setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         setEnabled(false);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+            @Override
             public void closed(BSIModel model) {
                 setEnabled(false);
             }
+            @Override
             public void loaded(BSIModel model) {
                 setEnabled(true);
             }
+            @Override
             public void loaded(ISO27KModel model) {
                 setEnabled(true);
             }

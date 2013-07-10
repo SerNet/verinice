@@ -255,8 +255,7 @@
             name="%command.name.assign">
       </command>
    </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
+   <extension point="org.eclipse.ui.bindings">
       <key
             commandId="org.eclipse.ui.file.exit"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
