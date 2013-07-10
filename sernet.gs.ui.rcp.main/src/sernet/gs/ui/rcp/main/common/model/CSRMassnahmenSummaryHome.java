@@ -79,4 +79,12 @@ public class CSRMassnahmenSummaryHome extends MassnahmenSummaryHome {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         return command.getSummary();
     }
+    
+    public Map<String, Double> getControlGroupsWithoutWeight(ControlGroup elmt) throws CommandException{
+        CSRMaturitySummary command = new CSRMaturitySummary(elmt.getEntity().getEntityType(), elmt.getEntity().getDbId(), MaturitySummary.TYPE_MAT_WITHOUT_WEIGHT);
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        return command.getSummary();
+    }
+    
+    
 }

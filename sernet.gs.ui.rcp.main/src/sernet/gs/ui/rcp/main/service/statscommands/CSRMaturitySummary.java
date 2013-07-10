@@ -94,6 +94,8 @@ public class CSRMaturitySummary extends MaturitySummary {
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD1));
         } else if (type == TYPE_THRESHOLD2){
             maturity.put(group.getTitle(), getThreshold(group, TYPE_THRESHOLD2));
+        } else if( type == TYPE_MAT_WITHOUT_WEIGHT){
+            maturity.put(group.getTitle(), Double.valueOf(maturityService.getAvgMaturity(group)));
         }
     }
     

@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +48,8 @@ public final class TocHelper2 {
     
     private static int listOfFiguresEntryCount = 0;
     
+    private static int pageHeadingCount = 0;
+    
     private static int engineIteration = 0;
     
     private static int pageStartCount = 0;
@@ -67,6 +66,9 @@ public final class TocHelper2 {
     
     // list of figures
     private static Map<Integer, TocEntry<String, Integer>> loFMap = new HashMap<Integer, TocEntry<String,Integer>>();
+    
+    // list of pageHeadings
+    private static Map<Integer, String> pageHeadingsMap = new HashMap<Integer, String>();
     
     static{
         TocEntry<String, Integer> dummyEntry = new TocEntry<String, Integer>("Inhaltsverzeichnis braucht 2 Iterationen", -1);
@@ -109,15 +111,27 @@ public final class TocHelper2 {
             listOfTablesEntryCount = 0;
             listOfFiguresEntryCount = 0;
             break;
-        
+            
         case 3:
+            tocEntryCount = 0;
+            listOfTablesEntryCount = 0;
+            listOfFiguresEntryCount = 0;
+            loFMap.clear();
+            loTMap.clear();
+            break;
+            
+        case 4:
             tocMap.clear();
+            loFMap.clear();
+            loTMap.clear();
+            pageHeadingsMap.clear();
             pageBreakCount = 0;
             tocEntryCount = 0;
             listOfTablesEntryCount = 0;
             listOfFiguresEntryCount = 0;
             engineIteration = 0;
             pageStartCount = 0;
+            pageHeadingCount = 0;
             break;
 
         default:
@@ -145,9 +159,21 @@ public final class TocHelper2 {
         }
     }
     
+    public static void addPageHeading(Integer page, String entry){
+        if(engineIteration > 2){
+            pageHeadingsMap.put(page, entry);
+        }
+    }
+    
+    public static String getPageHeading(Integer page){
+        if(pageHeadingsMap.containsKey(page) && engineIteration > 3){
+            return pageHeadingsMap.get(page);
+        } else return "";
+    }
+    
     public static String[] getTocLine(Integer i){
         String[] tocEntryLine = new String[]{"dummyTitle", "dummyPage"};
-        if(engineIteration > 2){
+        if(engineIteration >= 3){
             TocEntry<String, Integer> entry = tocMap.get(i);
             tocEntryLine[0] = entry.getTitle();
             tocEntryLine[1] = String.valueOf(entry.getPageNumber());
@@ -162,7 +188,7 @@ public final class TocHelper2 {
     // List of Tables only needs one run, because it's rendered at the end of the report
     public static String[] getLoTLine(Integer i){
         String[] lotEntryLine = new String[]{"", ""};
-        if(engineIteration > 1){
+        if(engineIteration > 1 && i <= listOfTablesEntryCount){
             TocEntry<String, Integer> entry = loTMap.get(i);
             String title = (entry != null) ? entry.getTitle() : null;
             Integer page = (entry != null) ? entry.getPageNumber() : null;
@@ -174,7 +200,7 @@ public final class TocHelper2 {
 
     public static String[] getLoFLine(Integer i){
         String[] lofEntryLine = new String[]{"", ""};
-        if(engineIteration > 1){
+        if(engineIteration > 1 && i <= listOfFiguresEntryCount){
             TocEntry<String, Integer> entry = loFMap.get(i);
             String title = (entry != null) ? entry.getTitle() : null;
             Integer page = (entry != null) ? entry.getPageNumber() : null;
@@ -256,17 +282,10 @@ public final class TocHelper2 {
             entryTitle0 = entryTitle.substring(entryTitle.indexOf(' ')).trim();
         }
         for(int i = 0; i < indent; i++){
-            sb.append("\t");
+            sb.append("     "); // 5 spaces
         }
         sb.append(entryTitle0);
         addTocEntry(sb.toString(), pageNumber);
-    }
-    
-    public static void checkTocEntryLength(String entry){
-        final int maxTocEngineIteration = 3;
-        if(engineIteration < maxTocEngineIteration && entry.length() > maxTocEntryLength){
-            maxTocEntryLength = getStringDisplaySize(entry);
-        }
     }
     
     public static int getMaxTocEntryLength(){
@@ -296,6 +315,12 @@ public final class TocHelper2 {
         if(engineIteration > 1){
             listOfFiguresEntryCount++;
         }        
+    }
+    
+    public static void increasePHCount(){
+        if(engineIteration > 2){
+            pageHeadingCount++;
+        }
     }
     
     
@@ -353,14 +378,6 @@ public final class TocHelper2 {
     
    public static String addTocPadding(String entry, boolean left){
        return entry;
-   }
-   
-   public static int getStringDisplaySize(String input){
-       final int fontSize = 10;
-       BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-       Font font = new Font("Arial", Font.PLAIN, fontSize); 
-       FontMetrics fm = bi.getGraphics().getFontMetrics(font);
-       return fm.stringWidth(input);
    }
    
    public static class TocEntry<TITLE, PAGENUMBER> implements Comparable<TocEntry<TITLE, PAGENUMBER>>{

@@ -66,7 +66,7 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
                 list.add(cg);
                 for(ControlGroup g : list){
                     CSRMassnahmenSummaryHome dao = new CSRMassnahmenSummaryHome();
-                    Map<String, Double> items1 = dao.getControlGroups(g);
+                    Map<String, Double> items1 = dao.getControlGroupsWithoutWeight(g);
                     for(Entry<String, Double> entry : items1.entrySet()){
                         addMaturity(entry.getValue());
                     }

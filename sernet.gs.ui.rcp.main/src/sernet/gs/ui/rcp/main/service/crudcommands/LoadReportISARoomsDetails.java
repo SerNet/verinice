@@ -47,13 +47,15 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
     
     private static final String SAMT_DEVIATION_PROP = "samt_topic_audit_devi";
     private static final String SAMT_RISK_PROP = "samt_topic_audit_ra";
+    private static final String SAMT_IMPLEMENTATION = "samt_topicimplemented";
     
     public static final String[] ROOMCOLUMNS = new String[] { 
                                             "CONTROLID",
                                             "TITLE",
                                             "RESULT",
                                             "DEVIATION",
-                                            "RISK"
+                                            "RISK",
+                                            "IMPLEMENTATION"
     };
     
     private boolean resultInjectedFromCache = false;
@@ -82,6 +84,7 @@ public class LoadReportISARoomsDetails extends GenericCommand implements ICached
                     result.add(String.valueOf(topic.getMaturity()));
                     result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_DEVIATION_PROP)));
                     result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_RISK_PROP)));
+                    result.add(String.valueOf(topic.getEntity().getSimpleValue(SAMT_IMPLEMENTATION)));
                     results.add(result);
                 }
             } catch (CommandException e) {

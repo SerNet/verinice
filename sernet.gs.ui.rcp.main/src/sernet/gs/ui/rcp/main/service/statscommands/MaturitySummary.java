@@ -43,6 +43,8 @@ public class MaturitySummary extends GenericCommand {
     public static final int ISR_TYPE_IMPLEMENTATION = 4;
     public static final int ISR_TYPE_MAX = 7;
     
+    public static final int TYPE_MAT_WITHOUT_WEIGHT = 8;
+    
     protected Map<String, Double> maturity = new HashMap<String, Double>();
     private Integer dbId;
     private String entityType;

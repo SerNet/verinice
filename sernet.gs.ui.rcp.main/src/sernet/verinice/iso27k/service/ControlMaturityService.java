@@ -89,6 +89,43 @@ public class ControlMaturityService {
         }
         return maturity;
     }
+    /**
+     * Calculates the avg maturity of each control contained in this group.
+     * @return the avg maturity for each control
+     * @param cg
+     * @return
+     */
+    public Double getAvgMaturity(ControlGroup cg){
+        int maturity = 0;
+        int matCount = 0;
+        for (CnATreeElement child : cg.getChildren()) {
+            if (child instanceof IControl) {
+                int m = getMaturity((IControl)child);
+                // don't add maturity if maturity is NA
+                if(m!=IControl.IMPLEMENTED_NA_NUMERIC) {
+                    maturity += m;
+                    matCount += 1;
+                }
+            }
+            if (child instanceof ControlGroup) {
+                maturity += getMaturity((ControlGroup) child);
+                matCount += getControlCount((ControlGroup)child);
+            }
+        }
+        return Double.valueOf(maturity/(double)matCount);
+    }
+    
+    public int getControlCount(ControlGroup cg){
+        int controlCount = 0;
+        for(CnATreeElement child : cg.getChildren()){
+            if(child instanceof IControl){
+                controlCount += 1;
+            } else if(child instanceof ControlGroup){
+                controlCount += getControlCount((ControlGroup)child);
+            }
+        }
+        return controlCount;
+    }
     
     public int getMaturity(IControl control) {
         if (this.type == TYPE_ISR) {

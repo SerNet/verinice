@@ -117,7 +117,7 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
                 return nc.compare(o1.get(0), o2.get(0));
             }
         });
-         return result;
+        return result;
     }
     
     public List<List<String>> getMaturityValues(List<ControlGroup> groups){
@@ -126,12 +126,12 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
             try{
                 CSRMassnahmenSummaryHome dao = new CSRMassnahmenSummaryHome();
 
-                Map<String, Double> items1 = dao.getControlGroups(cg);
+                Map<String, Double> items1 = dao.getControlGroupsWithoutWeight(cg);
                 Set<Entry<String, Double>> entrySet = items1.entrySet();
 
                 for(Entry<String, Double> entry : sort(entrySet)){
                     ArrayList<String> row = new ArrayList<String>();
-                    row.add(entry.getKey());
+                    row.add(adjustTitle(entry.getKey(), entry.getValue().doubleValue()));
                     row.add(String.valueOf(entry.getValue()));
                     row.add(String.valueOf(THRESHOLD_VALUE));
                     row.add(String.valueOf(PADDING_VALUE));
@@ -144,6 +144,26 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
         }
         list.trimToSize();
         return list;
+    }
+    
+    private String adjustTitle(String title, double maturity){
+        final int maxTitleSize = 30;
+        String retVal = null;
+        if(maturity < 0.0){
+            maturity = 0.0;
+        }
+        String matString = String.valueOf(maturity);
+        if(matString.contains(".") && matString.substring(matString.indexOf(".") + 1).length() > 2){
+            matString = matString.substring(0, matString.indexOf(".")+1+2);
+        }
+        if(title.length() > maxTitleSize){
+            retVal = title.substring(0, maxTitleSize - matString.length() - 3).trim() + "... ";
+        } else if(title.length() + matString.length() > maxTitleSize){
+            retVal = title.substring(0, title.length() - (matString.length())- 3).trim() + "... ";
+        } else {
+            retVal = title;
+        }
+        return retVal + "(" + matString + ")";
     }
     
     public int getSgDBId(){

@@ -19,7 +19,6 @@ package sernet.verinice.report.service.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +30,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 /**
  *
@@ -77,8 +75,10 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
                     if(e instanceof SamtTopic){
                         SamtTopic topic = (SamtTopic)e;
                         ArrayList<String> list = new ArrayList<String>(0);
-                        list.add(adjustTitle(topic.getTitle()));
-                        list.add(String.valueOf(getMaturityByWeight(topic)));
+                        int maturity = getMaturity(topic);
+                        String title = adjustTitle(topic.getTitle(), maturity);
+                        list.add(title);
+                        list.add(String.valueOf(maturity));
                         list.add(String.valueOf(THRESHOLD_VALUE));
                         list.trimToSize();
                         result.add(list);
@@ -90,6 +90,7 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
         } 
     }
     
+   
     public List<List<String>> getResult(){
         if(result.size() < MINIMUM_CHART_ENTRIES){
             addPaddingValues();
@@ -141,25 +142,21 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
         return control.getMaturity();
     }
     
-    private String adjustTitle(String title){
-        final int maxTitleSize = 50;
-        final int halfMaxTitleSize = 25;
-        if(TocHelper2.getStringDisplaySize(title) > maxTitleSize){
-            StringBuilder sb = new StringBuilder();
-            StringTokenizer tokenizer = new StringTokenizer(title); // space is one of the standard delimiters
-            while(tokenizer.hasMoreElements()){
-                sb.append(tokenizer.nextToken());
-                if(TocHelper2.getStringDisplaySize(title) > halfMaxTitleSize){
-                    sb.append("\n");
-                } else {
-                    sb.append(" ");
-                }
-               
-            }
-            
+    private String adjustTitle(String title, int maturity){
+        final int maxTitleSize = 25;
+        String retVal = null;
+        if(maturity < 0){
+            maturity = 0;
         }
-        
-        return title;
+        String matString = String.valueOf(maturity);
+        if(title.length() > maxTitleSize){
+            retVal = title.substring(0, maxTitleSize - matString.length() - 3).trim() + "... ";
+        } else if(title.length() + matString.length() > maxTitleSize){
+            retVal = title.substring(0, title.length() - matString.length()- 3).trim() + "... ";
+        } else {
+            retVal = title;
+        }
+        return retVal + "(" + matString + ")";
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Sebastian Hagedorn <sh@sernet.de>.
+ * Copyright (c) 2013 Sebastian Hagedorn <sh@sernet.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -31,7 +31,9 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
@@ -39,26 +41,24 @@ import sernet.verinice.model.samt.SamtTopic;
 /**
  *
  */
-public class LoadReportISAQuestionLvlDescriptions extends GenericCommand implements ICachedCommand{
+public class LoadReportISASpecificMeasures extends GenericCommand implements ICachedCommand {
     
-    private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionLvlDescriptions.class);
+    private static final Logger LOG = Logger.getLogger(LoadReportISASpecificMeasures.class);
 
-    private Integer requestedLvl = 0;
-    private Integer rootElmt;
+    private int rootElmt;
     
     private List<List<String>> results;
     
+
     private boolean resultInjectedFromCache = false;
     
     public static final String[] COLUMNS = new String[] { 
                                                 "lvl_top"
     };
 
-    public LoadReportISAQuestionLvlDescriptions(Integer root, Integer lvl){
-        this.requestedLvl = lvl;
+    public LoadReportISASpecificMeasures(int root){
         this.rootElmt = root;
     }
-    
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
@@ -83,26 +83,36 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                 ArrayList<Control> measuresOfInterest = new ArrayList<Control>(0);
                 // iterate generic measures
                 for(CnATreeElement cmg : measureLoader.getElements()){
-                    LoadCnAElementById controlReloader = new LoadCnAElementById(Control.TYPE_ID, cmg.getDbId());
-                    controlReloader = getCommandService().executeCommand(controlReloader);
-                    cmg = controlReloader.getFound();
-                    if(cmg instanceof Control){
-                        Control mg = (Control)cmg;
-                        // no specific measure found, add generic measure
-                        measuresOfInterest.add(mg);
+                    if(cmg.getTypeId().equals(Control.TYPE_ID)){
+                        Control mg = (Control)Retriever.checkRetrieveLinks(cmg, true);
+                        // check if specific measures exist
+                        LoadReportLinkedElements sMeasureLoader = new LoadReportLinkedElements(Control.TYPE_ID, mg.getDbId(), false, true);
+                        sMeasureLoader = getCommandService().executeCommand(sMeasureLoader);
+                        if(sMeasureLoader.getElements().size() > 0){
+                            //specific measures found, ignore generic measures
+                            for(CnATreeElement cms : sMeasureLoader.getElements()){
+                                HydratorUtil.hydrateElement(getDaoFactory().getDAO(Control.TYPE_ID), cms, false);
+                                if(cms.getTypeId().equals(Control.TYPE_ID)){
+                                    measuresOfInterest.add((Control)cms);
+                                }
+                            }
+                        }
                     }
                 }
                 Collections.sort(measuresOfInterest, new Comparator<Control>() {
 
                     @Override
                     public int compare(Control o1, Control o2) {
-                        NumericStringComparator c = new NumericStringComparator();
-                        return c.compare(o1.getTitle(), o2.getTitle());
+                        NumericStringComparator nc = new NumericStringComparator();
+                        return nc.compare(o1.getTitle(), o2.getTitle());
                     }
                 });
-                for(Control measure : measuresOfInterest){
-
-                    if(getLevel(loadParent(measure.getParent().getDbId()).getTitle()) == requestedLvl){
+                for(int i = 0; i < measuresOfInterest.size(); i++){
+                    Object o = measuresOfInterest.get(i);
+                    HydratorUtil.hydrateElement(getDaoFactory().getDAO(Control.TYPE_ID), (CnATreeElement)o, false);
+                    Control measure = (Control)o;
+                    int lvl = getLevel(loadParent(measure.getParent().getDbId()).getTitle());
+                    if(lvl >= 0 && lvl < 4){
                         String description = measure.getTitle();
                         Pattern subChapt = Pattern.compile("^\\d+.\\d+.*");
                         int idIdx = 0;
@@ -124,15 +134,10 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                                 description = sb.toString().trim();
                             }
                         }
-                        // first results needs lvlPrefix and be bold
-                        if(count == 0){
-                            description = "<B> Level " + requestedLvl + ": " + description + "</B>";
-                            //every result > 1 needs to be a list item
-                        } else {
-                            description = "<LI>" + description + "</LI>";
-                        }
+                        description = "<LI>" + description + "</LI>";
+                        
                         // if more than one result, add <UL>
-                        if(count == 1){
+                        if(count == 0){
                             description = "<UL>" + description;
                         }
                         measureText.append(description);
@@ -152,7 +157,7 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
             Logger.getLogger("org.hibernate.engine.StatefulPersistenceContext").setLevel(tLevel);
         }
     }
-    
+        
     private ControlGroup loadParent(Integer parentid) throws CommandException{
         LoadCnAElementById controlReloader = new LoadCnAElementById(ControlGroup.TYPE_ID, parentid);
         controlReloader = getCommandService().executeCommand(controlReloader);
@@ -184,11 +189,6 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
         }
         return lvl;
     }
-    
-    public List<List<String>> getResults(){
-        return results;
-    }
-
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
@@ -197,11 +197,9 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
     public String getCacheID() {
         StringBuilder cacheID = new StringBuilder(); 
         cacheID.append(String.valueOf(this.getClass().getSimpleName().hashCode()));
-        cacheID.append(String.valueOf(rootElmt.hashCode()));
-        cacheID.append(String.valueOf(requestedLvl.hashCode()));
+        cacheID.append(String.valueOf(Integer.valueOf(rootElmt).hashCode()));
         return cacheID.toString();
     }
-
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
@@ -215,7 +213,6 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
         }
     }
 
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
@@ -224,4 +221,7 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
         return results;
     }
 
+    public List<List<String>> getResults() {
+        return results;
+    }
 }
