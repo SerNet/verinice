@@ -4,30 +4,26 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+       xmlns:cxf="http://cxf.apache.org/core"
        
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-           http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
-	
-	<!-- Basic requirements for CXF to work. -->
-	<import
-		resource="classpath:META-INF/cxf/cxf.xml" />
-	<import
-		resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
-	<import
-		resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-		
-	<!-- Publishes the WS endpoint -->
-	<jaxws:endpoint
-		id="sync-service"
-		implementor="#syncService"
-		address="/sync" />
-		
-	<!-- Makes the SyncService WebService available as a Spring bean. -->
-	<bean id="syncServiceImpl" class="sernet.gs.server.sync.SyncServiceImpl" >
-		<property name="commandService" ref="hibernateCommandService" />
-	</bean>
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+       http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
+       http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     
+    <!-- Basic requirements for CXF to work. -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+    <!-- Publishes the WS endpoint -->
+    <jaxws:endpoint id="sync-service" implementor="#syncService" address="/sync" />
+
+    <!-- Makes the SyncService WebService available as a Spring bean. -->
+    <bean id="syncServiceImpl" class="sernet.gs.server.sync.SyncServiceImpl" >
+            <property name="commandService" ref="hibernateCommandService" />
+    </bean>
+
     <bean id="syncService" parent="baseTxProxy">
         <property name="target" ref="syncServiceImpl" />
         <property name="transactionAttributes">
@@ -37,4 +33,13 @@
         </property>
     </bean>
 
+    <!-- Logging configuration -->
+    <!-- Activate this log all incoming and outgoing SOAP messages -->
+    <!--
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+    </cxf:bus>
+    -->
 </beans>
