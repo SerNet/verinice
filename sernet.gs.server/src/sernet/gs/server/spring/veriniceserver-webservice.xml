@@ -34,7 +34,7 @@
     </bean>
 
     <!-- Logging configuration -->
-    <!-- Activate this log all incoming and outgoing SOAP messages -->
+    <!-- Activate this to log all incoming and outgoing SOAP messages to catalina.out -->
     <!--
     <cxf:bus>
         <cxf:features>
