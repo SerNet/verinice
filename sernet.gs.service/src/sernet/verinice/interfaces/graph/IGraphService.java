@@ -17,13 +17,8 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.graph;
+package sernet.verinice.interfaces.graph;
 
-import java.util.Set;
-
-import org.jgrapht.Graph;
-
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * A service to load and analyze the element network of verinice
@@ -38,7 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *  setElementFilter(IElementFilter elementFilter)
  *  
  *  You have to call "create()" to initialize the service.
- *  After that you can start to use the service.
+ *  After creation get the result by calling getGraph()
  * 
  * @see http://jgrapht.org/
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -56,53 +51,16 @@ public interface IGraphService {
     void setLoader(IGraphElementLoader... loader);
     
     /**
-     * Initializes and creates the JGraphT graph.
-     * Call this before using the graph.
+     * Initializes and creates the VeriniceGraph.
      */
-    void create();
+    VeriniceGraph create();
     
     /**
-     * Returns the element network as JGraphT graph.
+     * Returns the element network in a VeriniceGraph.
      * Call create() before using this method.
      * 
-     * @return The element network as JGraphT graph.
+     * @return The VeriniceGraph
      */
-    Graph<CnATreeElement, Edge> getGraph();
-    
-    /**
-     * Returns all elements
-     * 
-     * @return All elements
-     */
-    Set<CnATreeElement> getElements();
-    
-    /**
-     * Returns all elements of type "typeId".
-     * 
-     * @param typeId Type of returned elements
-     * @return All elements of type "typeId".
-     */
-    Set<CnATreeElement> getElements(String typeId);
-    
-    /**
-     * Returns all link targets of an source element.
-     * If there are no link targets, an empty list is returned.
-     * 
-     * @param source Source element
-     * @return A set of target elements
-     */
-    Set<CnATreeElement> getLinkTargets(CnATreeElement source);
-    
-    /**
-     * Returns link targets of an source element.
-     * Returned links are of type "typeId".
-     * If there are no link targets of this type, an empty list is returned.
-     * 
-     * @param source Source element
-     * @param typeId Type of returned links
-     * @return A set of target elements
-     */
-    Set<CnATreeElement> getLinkTargets(CnATreeElement source, String typeId);
-
+    VeriniceGraph getGraph();
 
 }

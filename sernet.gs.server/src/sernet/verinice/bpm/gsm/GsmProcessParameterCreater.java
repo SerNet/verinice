@@ -33,14 +33,15 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
-import sernet.verinice.graph.Edge;
 import sernet.verinice.graph.GraphElementLoader;
-import sernet.verinice.graph.IGraphElementLoader;
-import sernet.verinice.graph.IGraphService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -100,6 +101,7 @@ public class GsmProcessParameterCreater {
      * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
      */
     private IGraphService graphService;
+    private VeriniceGraph graph;
     
     private IBaseDao<CnATreeElement, Integer> elementDao;
     
@@ -238,7 +240,7 @@ public class GsmProcessParameterCreater {
         IncidentScenario scenario = (IncidentScenario) element;
         Double cvss = scenario.getGsmCvss();
         if(cvss!=null) {
-            Set<CnATreeElement> allAssetList = getGraphService().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);      
+            Set<CnATreeElement> allAssetList = getGraph().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);      
             int numberOfLinkedAssets = 0;
             for (CnATreeElement linkedAsset : allAssetList) {
                 if(processElementSet.contains(linkedAsset)) {
@@ -263,7 +265,7 @@ public class GsmProcessParameterCreater {
             getGraphService().setLoader(loader1, loader2);
             
             getGraphService().setRelationIds(relationIds);
-            getGraphService().create();          
+            graph = getGraphService().create(); 
         } catch(Exception e) {
             LOG.error("Error while initialization", e);
         }
@@ -313,18 +315,18 @@ public class GsmProcessParameterCreater {
     
     private Set<CnATreeElement> getObjectsForControlGroup(CnATreeElement controlGroup) {
         // elements is a set of controls
-        Set<CnATreeElement> elements = getGraphService().getLinkTargets(controlGroup);
+        Set<CnATreeElement> elements = getGraph().getLinkTargets(controlGroup);
         Set<CnATreeElement> scenarios = new HashSet<CnATreeElement>();
         for (CnATreeElement control : elements) {
-            scenarios.addAll(getGraphService().getLinkTargets(control, Control.REL_CONTROL_INCSCEN));
+            scenarios.addAll(getGraph().getLinkTargets(control, Control.REL_CONTROL_INCSCEN));
         }
         Set<CnATreeElement> assets = new HashSet<CnATreeElement>();
         for (CnATreeElement scen : scenarios) {
-            assets.addAll(getGraphService().getLinkTargets(scen, IncidentScenario.REL_INCSCEN_ASSET));
+            assets.addAll(getGraph().getLinkTargets(scen, IncidentScenario.REL_INCSCEN_ASSET));
         }
         Set<CnATreeElement> assetGroups = new HashSet<CnATreeElement>();
         for (CnATreeElement asset : assets) {
-            assetGroups.addAll(getGraphService().getLinkTargets(asset, Edge.RELATIVES));
+            assetGroups.addAll(getGraph().getLinkTargets(asset, Edge.RELATIVES));
         }
         elements.addAll(scenarios);
         elements.addAll(assets);
@@ -334,18 +336,18 @@ public class GsmProcessParameterCreater {
 
     private Set<CnATreeElement> getObjectsForPerson(CnATreeElement person) {
         // elements is a set of AssetGroups
-        Set<CnATreeElement> elements = getGraphService().getLinkTargets(person,AssetGroup.REL_PERSON_ISO);
+        Set<CnATreeElement> elements = getGraph().getLinkTargets(person,AssetGroup.REL_PERSON_ISO);
         Set<CnATreeElement> assets = new HashSet<CnATreeElement>();
         for (CnATreeElement assetGroup : elements) {
-            assets.addAll(getGraphService().getLinkTargets(assetGroup, Edge.RELATIVES));
+            assets.addAll(getGraph().getLinkTargets(assetGroup, Edge.RELATIVES));
         }
         Set<CnATreeElement> scenarios = new HashSet<CnATreeElement>();
         for (CnATreeElement asset : assets) {
-            scenarios.addAll(getGraphService().getLinkTargets(asset, IncidentScenario.REL_INCSCEN_ASSET));
+            scenarios.addAll(getGraph().getLinkTargets(asset, IncidentScenario.REL_INCSCEN_ASSET));
         }
         Set<CnATreeElement> controls = new HashSet<CnATreeElement>();
         for (CnATreeElement scen : scenarios) {
-            controls.addAll(getGraphService().getLinkTargets(scen, Control.REL_CONTROL_INCSCEN));
+            controls.addAll(getGraph().getLinkTargets(scen, Control.REL_CONTROL_INCSCEN));
         }
         elements.addAll(assets);
         elements.addAll(scenarios);
@@ -384,6 +386,10 @@ public class GsmProcessParameterCreater {
 
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
+    }
+
+    public VeriniceGraph getGraph() {
+        return graph;
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

@@ -17,21 +17,34 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.graph;
+package sernet.verinice.interfaces;
 
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.interfaces.graph.IGraphService;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IElementFilter {
+public class GraphCommand extends GenericCommand {
 
-    /**
-     * @param element
-     * @return
+    private IGraphService graphService;
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommand#execute()
      */
-    boolean check(CnATreeElement element);
+    @Override
+    public void execute() {
+        
+
+    }
+
+    public IGraphService getGraphService() {
+        return graphService;
+    }
+
+    public void setGraphService(IGraphService graphService) {
+        this.graphService = graphService;
+    }
 
 }

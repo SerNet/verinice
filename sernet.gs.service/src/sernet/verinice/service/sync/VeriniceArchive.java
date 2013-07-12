@@ -127,21 +127,23 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
             ZipEntry ze = zis.getNextEntry();
             
             while (ze != null) {
-                String fileName = ze.getName();
-                File newFile = new File(getTempFileName() + File.separator + fileName);
-                new File(newFile.getParent()).mkdirs();
-
-                FileOutputStream fos = new FileOutputStream(newFile);
-
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-
-                fos.close();
-
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("File unzipped: " + newFile.getAbsoluteFile());
+                if(!ze.isDirectory()) {              
+                    String fileName = ze.getName();
+                    File newFile = new File(getTempFileName() + File.separator + fileName);
+                    new File(newFile.getParent()).mkdirs();
+    
+                    FileOutputStream fos = new FileOutputStream(newFile);
+    
+                    int len;
+                    while ((len = zis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, len);
+                    }
+    
+                    fos.close();
+    
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("File unzipped: " + newFile.getAbsoluteFile());
+                    }
                 }
                 ze = zis.getNextEntry();
             }

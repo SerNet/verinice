@@ -24,9 +24,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.graph.GraphElementLoader;
-import sernet.verinice.graph.IGraphElementLoader;
-import sernet.verinice.graph.IGraphService;
 import sernet.verinice.interfaces.bpm.IGsmValidationResult;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.bpm.GsmValidationResult;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -61,6 +62,7 @@ public class GsmProcessValidator {
      * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
      */
     private IGraphService graphService;
+    private VeriniceGraph graph;
 
     public IGsmValidationResult validateOrganization(Integer orgId) {
         this.orgId = orgId;
@@ -72,7 +74,7 @@ public class GsmProcessValidator {
     }
 
     private void validateAssets() {
-        Set<CnATreeElement> assetGroupSet = getGraphService().getElements(AssetGroup.TYPE_ID);
+        Set<CnATreeElement> assetGroupSet = getGraph().getElements(AssetGroup.TYPE_ID);
         for (CnATreeElement assetGroup : assetGroupSet) {
             if(!isTopLevel(assetGroup)) {
                 result.oneMoreRelevantAssetGroup();
@@ -81,7 +83,7 @@ public class GsmProcessValidator {
                 }
             }
         }
-        Set<CnATreeElement> assetSet = getGraphService().getElements(Asset.TYPE_ID);
+        Set<CnATreeElement> assetSet = getGraph().getElements(Asset.TYPE_ID);
         for (CnATreeElement asset : assetSet) {
             if(isUngrouped(asset)) {
                 result.addUngroupedAsset(asset.getTitle());               
@@ -90,7 +92,7 @@ public class GsmProcessValidator {
     }
 
     private void validateControls() {
-        Set<CnATreeElement> controlSet = getGraphService().getElements(Control.TYPE_ID);
+        Set<CnATreeElement> controlSet = getGraph().getElements(Control.TYPE_ID);
         for (CnATreeElement control : controlSet) {
             if(isUngrouped(control)) {
                 result.addUngroupedControl(control.getTitle()); 
@@ -99,7 +101,7 @@ public class GsmProcessValidator {
     }
 
     private boolean hasLinkedPerson(CnATreeElement assetGroup) {
-        return !(getGraphService().getLinkTargets(assetGroup, AssetGroup.REL_PERSON_ISO).isEmpty());
+        return !(getGraph().getLinkTargets(assetGroup, AssetGroup.REL_PERSON_ISO).isEmpty());
     }
     
     private boolean isUngrouped(CnATreeElement asset) {
@@ -125,7 +127,7 @@ public class GsmProcessValidator {
             getGraphService().setLoader(loader1, loader2);
             
             getGraphService().setRelationIds(relationIds);
-            getGraphService().create();          
+            graph = getGraphService().create();          
         } catch(Exception e) {
             LOG.error("Error while initialization", e);
         }
@@ -145,6 +147,10 @@ public class GsmProcessValidator {
 
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
+    }
+
+    public VeriniceGraph getGraph() {
+        return graph;
     }
 
     

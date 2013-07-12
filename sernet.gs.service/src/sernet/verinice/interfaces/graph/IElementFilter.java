@@ -17,32 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm.gsm;
+package sernet.verinice.interfaces.graph;
 
-import sernet.verinice.interfaces.graph.IElementFilter;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Filter to reject all (objects at the first level below organization.
+ *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TopElementFilter implements IElementFilter {
+public interface IElementFilter {
 
-    private Integer orgId;
-    
-    public TopElementFilter(Integer orgId) {
-        super();
-        this.orgId = orgId;
-    }
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IElementFilter#check(sernet.verinice.model.common.CnATreeElement)
+    /**
+     * @param element
+     * @return
      */
-    @Override
-    public boolean check(CnATreeElement element) {
-        return element!=null && !element.getParentId().equals(orgId);
-    }
+    boolean check(CnATreeElement element);
 
 }

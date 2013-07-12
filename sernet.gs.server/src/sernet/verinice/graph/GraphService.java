@@ -20,7 +20,6 @@
 package sernet.verinice.graph;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +31,13 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.Pseudograph;
 
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.hibernate.TreeElementDao;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -62,7 +62,7 @@ public class GraphService implements IGraphService {
     private static final Logger LOG = Logger.getLogger(GraphService.class);
     private static final Logger LOG_RUNTIME = Logger.getLogger(GraphService.class.getName() + ".runtime");
     
-    private Graph<CnATreeElement, Edge> graph;
+    private VeriniceGraph graph;
     
     private String[] relationIds;
     
@@ -75,10 +75,13 @@ public class GraphService implements IGraphService {
     private Map<String, CnATreeElement> uuidMap = new Hashtable<String, CnATreeElement>();
 
    
+    /* (non-Javadoc)
+     * @see sernet.verinice.graph.IGraphService#create()
+     */
     @Override
-    public void create() {
+    public VeriniceGraph create() {
         long time = initRuntime();
-        graph = new Pseudograph<CnATreeElement, Edge>(Edge.class);
+        graph = new VeriniceGraph();
         uuidMap.clear();
         
         loadVerticesAndRelatives();     
@@ -86,6 +89,7 @@ public class GraphService implements IGraphService {
          
         log();
         logRuntime("create, runtime: ", time);
+        return graph;
     }
     
     /**
@@ -110,7 +114,7 @@ public class GraphService implements IGraphService {
             for (CnATreeElement child : children) {
                 CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
                 if(childWithProperties!=null) {
-                    graph.addEdge(parent, childWithProperties, new Edge(parent, childWithProperties));
+                    graph.addEdge(parent, childWithProperties);
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
                     }
@@ -137,73 +141,16 @@ public class GraphService implements IGraphService {
             CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
             CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
             if(source!=null && target!=null) {
-                graph.addEdge(source, target, new Edge(source, target, link.getRelationId()));
+                graph.addEdge(source, target, link.getRelationId());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Edge added: " + source.getTitle() + " - " + target.getTitle() + ", " + link.getRelationId());
                 }
             }
         }
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#getElements()
-     */
-    @Override
-    public Set<CnATreeElement> getElements() {
-        return getGraph().vertexSet();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#getElements(java.lang.String)
-     */
-    @Override
-    public Set<CnATreeElement> getElements(String typeId) {
-        HashSet<CnATreeElement> elements = new HashSet<CnATreeElement>();
-        Set<CnATreeElement> allElements = getElements();
-        
-        if(typeId==null || allElements==null) {
-            return elements;
-        }
-        
-        for (CnATreeElement element : allElements) {
-            if(typeId.equals(element.getTypeId())){
-                elements.add(element);
-            }
-        }       
-        return elements;
-    }
-    
-       
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#getLinkTargets(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-    public Set<CnATreeElement> getLinkTargets(CnATreeElement source) {
-        return getLinkTargets(source, null);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#getLinkTargets(sernet.verinice.model.common.CnATreeElement, java.lang.String)
-     */
-    @Override
-    public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String typeId) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Returning link targets of elment: " + source.getTitle() + ", link type is: " + typeId);
-        }
-        Set<Edge> edgeList = getGraph().edgesOf(source);
-        Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
-        for (Edge edge : edgeList) {
-            if(typeId==null || typeId.equals(edge.getType())) {
-                CnATreeElement edgeSource = edge.getSource();
-                CnATreeElement edgeTarget = edge.getTarget();
-                linkTargets.add((edgeSource.equals(source)) ? edgeTarget : edgeSource);
-            }
-        }
-        return linkTargets;
-    }
 
     @Override
-    public Graph<CnATreeElement, Edge> getGraph() {
+    public VeriniceGraph getGraph() {
         return graph;
     }
 
@@ -247,38 +194,9 @@ public class GraphService implements IGraphService {
     public void setLoaderList(List<IGraphElementLoader> loaderList) {
         this.loaderList = loaderList;
     }
-
-    private void logStatistics() {
-        if(graph!=null) {
-            LOG.debug("Number vertices: " + graph.vertexSet().size());
-            LOG.debug("Number edges: " + graph.edgeSet().size());
-        }
-
-    }
     
-    private void log() {    
-        if (LOG.isInfoEnabled()) {
-            logStatistics();
-        }
-        if (LOG.isDebugEnabled()) {
-            logVertices();
-        }        
-    }
-    
-    private void logVertices() {
-        if(graph!=null) {
-            for (CnATreeElement element : graph.vertexSet()) {
-                LOG.debug(element.getTitle());
-                Set<Edge> edges = graph.edgesOf(element);
-                for (Edge edge : edges) {
-                    CnATreeElement target = edge.getTarget();
-                    if(target.equals(element)) {
-                        target = edge.getSource();
-                    }
-                    LOG.debug("  |-" + edge.getType() + " -> " + target.getTitle());
-                }
-            }
-        }
+    private void log() {  
+        getGraph().log();        
     }
     
     private long initRuntime() {

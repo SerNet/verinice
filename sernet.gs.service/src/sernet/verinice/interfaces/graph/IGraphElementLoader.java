@@ -17,11 +17,11 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.graph;
+package sernet.verinice.interfaces.graph;
 
 import java.util.List;
 
-import sernet.verinice.hibernate.TreeElementDao;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -56,7 +56,7 @@ public interface IGraphElementLoader {
      */
     void setElementFilter(IElementFilter elementFilter);
     
-    void setCnaTreeElementDao(TreeElementDao<CnATreeElement, Long> cnaTreeElementDao); 
+    void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDao); 
     
     /**
      * Loads and returns the elements specified by parameters

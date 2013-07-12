@@ -32,10 +32,11 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.verinice.graph.GraphElementLoader;
-import sernet.verinice.graph.IGraphElementLoader;
-import sernet.verinice.graph.IGraphService;
 import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -66,6 +67,7 @@ public class GsmAssetScenarioRemover {
      * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
      */
     private IGraphService graphService;
+    private VeriniceGraph graph;
     
     private HibernateDao<CnALink, CnALink.Id> linkDao;
     
@@ -132,6 +134,10 @@ public class GsmAssetScenarioRemover {
 
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
+    }
+
+    public VeriniceGraph getGraph() {
+        return graph;
     }
 
     public HibernateDao<CnALink, CnALink.Id> getLinkDao() {
@@ -213,14 +219,14 @@ public class GsmAssetScenarioRemover {
 
         private int handleScenario(CnATreeElement scenario) {
             // get all assets linked to the scenario
-            Set<CnATreeElement> allLinkedAssets = getGraphService().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);
+            Set<CnATreeElement> allLinkedAssets = getGraph().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);
             int numberOfAllLinkedAssets = allLinkedAssets.size();
             // use all assets which are linked and in the process
             Set<CnATreeElement> processLinkedAssets = createIntersection(allLinkedAssets,processAssets);
             int numberOfProcessLinkedAssets = processLinkedAssets.size();
             int numberOfDeletedLinks = deleteAssetScenarioLinks(query, scenario, processLinkedAssets);
             // Update control state              
-            Set<CnATreeElement> linkedControls = getGraphService().getLinkTargets(scenario,Control.REL_CONTROL_INCSCEN);
+            Set<CnATreeElement> linkedControls = getGraph().getLinkTargets(scenario,Control.REL_CONTROL_INCSCEN);
             String state = determineState(numberOfProcessLinkedAssets,numberOfAllLinkedAssets);
             updateControlState(linkedControls, state);
             return numberOfDeletedLinks;

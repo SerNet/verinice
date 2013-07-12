@@ -14,7 +14,8 @@ Bundle-ClassPath: .,
  lib/saxon9/saxon9-xom.jar,
  lib/saxon9/saxon9-xpath.jar,
  lib/saxon9/saxon9-xqj.jar,
- lib/saxon9/saxon9.jar
+ lib/saxon9/saxon9.jar,
+ lib/jgrapht-jdk1.6.jar
 Bundle-Localization: plugin
 Export-Package: de.sernet.sync.data,
  de.sernet.sync.mapping,
@@ -27,6 +28,7 @@ Export-Package: de.sernet.sync.data,
  sernet.verinice.interfaces,
  sernet.verinice.interfaces.bpm,
  sernet.verinice.interfaces.encryption,
+ sernet.verinice.interfaces.graph,
  sernet.verinice.interfaces.iso27k,
  sernet.verinice.interfaces.ldap,
  sernet.verinice.interfaces.oda,
