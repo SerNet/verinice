@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.graph;
 
+import java.io.Serializable;
+
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -26,7 +28,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class Edge {
+public class Edge implements Serializable {
 
     public static final String RELATIVES = "relatives";
     

@@ -20,14 +20,12 @@ package sernet.verinice.service;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.jbpm.pvm.internal.cmd.GetResourceAsStreamCmd;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.common.ApplicationRoles;
@@ -40,11 +38,11 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IGraphCommand;
 import sernet.verinice.interfaces.IHibernateCommandService;
 import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.interfaces.IRightsServerHandler;
-import sernet.verinice.interfaces.IRightsService;
-import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
+import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.model.bsi.BSIModel;
@@ -70,6 +68,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	private ICommandExceptionHandler exceptionHandler;
 	
 	private IAuthService authService;
+	
+	private IGraphService graphService;
 	
 	private ILdapService ldapService;
     
@@ -97,7 +97,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	 * A command can execute other commands to fulfill its purpose using the
 	 * reference to the command service.
 	 */
-	public <T extends ICommand> T executeCommand(T command) throws CommandException {
+	@Override
+    public <T extends ICommand> T executeCommand(T command) throws CommandException {
 		VeriniceContext.setState(workObjects);
 		
 		if (!dbOpen)
@@ -118,6 +119,11 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			if (command instanceof IAuthAwareCommand) {
 				((IAuthAwareCommand) command).setAuthService(authService);
 			}
+			
+			// inject graph service if command is a IGraphCommand:
+            if (command instanceof IGraphCommand) {
+                ((IGraphCommand) command).setGraphService(graphService);
+            }
 			
 			// inject ldap service if command is aware of it:
 			if (command instanceof ILdapCommand) {
@@ -226,7 +232,17 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		this.authService = authService;
 	}
 
-	public ILdapService getLdapService() {
+	public IGraphService getGraphService() {
+        return graphService;
+    }
+
+
+    public void setGraphService(IGraphService graphService) {
+        this.graphService = graphService;
+    }
+
+
+    public ILdapService getLdapService() {
 		return ldapService;
 	}
 
@@ -234,6 +250,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		this.ldapService = ldapService;
 	}
 
+    @Override
     public void setWorkObjects(VeriniceContext.State workObjects) {
 		this.workObjects = workObjects;
 	}
@@ -276,6 +293,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     }
 
 
+    @Override
     public Properties getProperties() {
         return properties;
     }
@@ -293,6 +311,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
         if(getConfigurationService().isScopeOnly(authService.getUsername())) {
             final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
             getBsiModelDao().executeCallback(new HibernateCallback() {
+                @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
                     return null;
@@ -307,6 +326,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
         if (enable) {
             final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
             getBsiModelDao().executeCallback(new HibernateCallback() {
+                @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
                     return null;
@@ -323,6 +343,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
      */
     private void disableScopeFilter() {
         getBsiModelDao().executeCallback(new HibernateCallback() {
+            @Override
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 session.disableFilter("scopeFilter");
                 return null;
@@ -341,7 +362,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		return false;
 	}
 	
-	public void discardUserData(){
+	@Override
+    public void discardUserData(){
 	    getConfigurationService().discardUserData();
 	    getRightsServerHandler().discardData();
 	}

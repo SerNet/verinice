@@ -38,7 +38,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class VeriniceGraph implements Serializable{
-
+    
+    static final long serialVersionUID = -5005272072365852368L;
+    
     private transient Logger log = Logger.getLogger(VeriniceGraph.class);
 
     public Logger getLog() {
@@ -48,7 +50,7 @@ public class VeriniceGraph implements Serializable{
         return log;
     }
     
-    private Graph<CnATreeElement, Edge> graph;
+    private Pseudograph<CnATreeElement, Edge> graph;
 
     public VeriniceGraph() {
         super();
@@ -83,7 +85,7 @@ public class VeriniceGraph implements Serializable{
      * @return All elements of type "typeId".
      */
     public Set<CnATreeElement> getElements(String typeId) {
-        HashSet<CnATreeElement> elements = new HashSet<CnATreeElement>();
+        Set<CnATreeElement> elements = new HashSet<CnATreeElement>();
         Set<CnATreeElement> allElements = getElements();
         
         if(typeId==null || allElements==null) {
@@ -99,8 +101,47 @@ public class VeriniceGraph implements Serializable{
     }
     
     /**
-     * Returns all link targets of an source element.
-     * If there are no link targets, an empty list is returned.
+     * Returns the parent of an element.
+     * If parent is not found in grapg, null is returned.
+     * 
+     * @param element A verinice element
+     * @return The parent of the element or null if parent is not found
+     */
+    public CnATreeElement getParent(CnATreeElement element) {
+        CnATreeElement parent = null;
+        int parentId = element.getParentId();
+        Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
+        for (CnATreeElement parentOrChild : relatives) {
+            if(parentId == parentOrChild.getDbId()) {
+                parent = parentOrChild;
+                break;
+            }
+        }
+        return parent;
+    }
+    
+    /**
+     * Returns the children of an element.
+     * If no children are found an empty Set is returned.
+     * 
+     * @param element A verinice element
+     * @return The children of the element
+     */
+    public Set<CnATreeElement> getChildren(CnATreeElement element) {
+        Set<CnATreeElement> children = new HashSet<CnATreeElement>();
+        int parentId = element.getParentId();
+        Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
+        for (CnATreeElement parentOrChild : relatives) {
+            if(parentId != parentOrChild.getDbId()) {
+                children.add(parentOrChild);;
+            }
+        }
+        return children;
+    }
+    
+    /**
+     * Returns all link targets of an source element including
+     * parent and children. If there are no link targets, an empty Set is returned.
      * 
      * @param source Source element
      * @return A set of target elements

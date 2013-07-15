@@ -14,8 +14,7 @@ Bundle-ClassPath: .,
  lib/saxon9/saxon9-xom.jar,
  lib/saxon9/saxon9-xpath.jar,
  lib/saxon9/saxon9-xqj.jar,
- lib/saxon9/saxon9.jar,
- lib/jgrapht-jdk1.6.jar
+ lib/saxon9/saxon9.jar
 Bundle-Localization: plugin
 Export-Package: de.sernet.sync.data,
  de.sernet.sync.mapping,
@@ -55,7 +54,8 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  sernet.hui.common,
  opencsv;bundle-version="2.1.0",
  jbpm;bundle-version="4.4.0",
- com.springsource.net.sf.ehcache;bundle-version="1.6.0"
+ com.springsource.net.sf.ehcache;bundle-version="1.6.0",
+ jgrapht;bundle-version="0.8.3"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,

@@ -17,8 +17,9 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.graph;
+package sernet.verinice.interfaces.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.graph.IElementFilter;
-import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -38,7 +37,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class GraphElementLoader implements IGraphElementLoader {
+public class GraphElementLoader implements IGraphElementLoader, Serializable {
  
     private static final Logger LOG = Logger.getLogger(GraphElementLoader.class);
     
@@ -48,7 +47,7 @@ public class GraphElementLoader implements IGraphElementLoader {
     
     private IElementFilter elementFilter;
     
-    private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
+    private transient IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
 
     /* (non-Javadoc)
      * @see sernet.verinice.graph.IGraphElementLoader#loadElements()
