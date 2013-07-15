@@ -251,6 +251,7 @@ This variant:
 		<property name="ldapService" ref="ldapService" />
         <property name="configurationService" ref="configurationService" />
         <property name="rightsServerHandler" ref="rightsServerHandler" />
+        <property name="graphService" ref="graphService" />
 	</bean>
     
 	<bean id="commandService" parent="baseTxProxy">

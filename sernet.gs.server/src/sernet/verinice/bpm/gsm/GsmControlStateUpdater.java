@@ -21,8 +21,8 @@ package sernet.verinice.bpm.gsm;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.graph.GraphElementLoader;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.model.common.CnATreeElement;

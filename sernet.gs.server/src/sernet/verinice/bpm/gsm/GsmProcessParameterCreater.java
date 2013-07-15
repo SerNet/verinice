@@ -33,12 +33,12 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
-import sernet.verinice.graph.GraphElementLoader;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;

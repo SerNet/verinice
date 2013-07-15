@@ -31,9 +31,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.verinice.graph.GraphElementLoader;
 import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;

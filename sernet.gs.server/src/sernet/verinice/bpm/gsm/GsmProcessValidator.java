@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.graph.GraphElementLoader;
 import sernet.verinice.interfaces.bpm.IGsmValidationResult;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
