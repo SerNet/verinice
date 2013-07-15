@@ -75,6 +75,7 @@ import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.CatalogView;
+import sernet.verinice.iso27k.rcp.GraphAction;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
@@ -174,6 +175,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private RunRiskAnalysisAction runRiskAnalysisAction;
     
     private ServerConnectionToggleAction serverConnectionToggleAction;
+    
+    private GraphAction graphAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -245,6 +248,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         introAction = ActionFactory.INTRO.create(window);
         
+        graphAction = new GraphAction(window);
+        
         IAction actions[] = new IAction[]{exitAction, copyAction, pasteAction,
                 aboutAction, newWindowAction, saveAction, closeAction, closeAllAction,
                 closeOthersAction, openBSIBrowserAction, openNoteAction, openFileAction,
@@ -309,6 +314,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21,IWorkbenchActionConstants.M_HELP);
         helpMenu.add(introAction);
         helpMenu.add(showCheatSheetListAction);
+        helpMenu.add(graphAction);
         helpMenu.add(aboutAction);
         helpMenu.add(new Separator());
         helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
