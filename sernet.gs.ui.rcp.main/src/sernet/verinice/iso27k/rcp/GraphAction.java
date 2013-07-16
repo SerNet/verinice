@@ -39,7 +39,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
- *
+ * Class to test client access of GraphService by using {@link GraphCommand}.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
