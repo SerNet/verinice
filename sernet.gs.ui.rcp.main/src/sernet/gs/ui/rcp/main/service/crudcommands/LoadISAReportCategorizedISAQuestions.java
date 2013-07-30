@@ -22,37 +22,38 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  *  returns title of all "assessment: finding"-objects which are categorized insufficient or good and 
  *  are children of an given audit (root) 
  */
-public class LoadISAReportCategorizedFindings extends GenericCommand implements ICachedCommand {
+public class LoadISAReportCategorizedISAQuestions extends GenericCommand implements ICachedCommand {
 
     private int rootElmt;
     private String categorie;
     
-    private static final Logger LOG = Logger.getLogger(LoadISAReportCategorizedFindings.class);
+    private static final Logger LOG = Logger.getLogger(LoadISAReportCategorizedISAQuestions.class);
     
     public static final String[] COLUMNS = new String[]{
-                                            "TITLE"
+                                            "TITLE",
+                                            "FINDINGS"
     };
     
-    public static final String FINDING_CATEGORIZATION_GOOD = "finding_classification_good";
-    public static final String FINDING_CATEGORIZATION_INSUFFICIENT = "finding_classification_insufficient";
-    private static final String FINDING_CATEGORIZATION = "finding_user_classification";
+    
+    public static final String SAMTTOPIC_CATEGORIZATION_GOOD = "samt_topic_classification_good";
+    public static final String SAMTTOPIC_CATEGORIZATION_INSUFFICIENT = "samt_topic_classification_insufficient";
+    private static final String SAMTTOPIC_CATEGORIZATION = "samt_topic_user_classification";
+    private static final String SAMTTOPIC_FINDING_PROPERTY = "samt_topic_audit_findings";
     
     private boolean resultInjectedFromCache = false;
     
     private List<List<String>> results;
     
-    public LoadISAReportCategorizedFindings(int root, String categorie){
+    public LoadISAReportCategorizedISAQuestions(int root, String categorie){
         this.rootElmt = root;
         this.categorie = categorie;
     }
@@ -62,25 +63,36 @@ public class LoadISAReportCategorizedFindings extends GenericCommand implements 
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
-            try{
-                results = new ArrayList<List<String>>(0);
-                Audit audit = (Audit)getDaoFactory().getDAO(Audit.TYPE_ID).findById(Integer.valueOf(rootElmt));
-                LoadReportElements findingLoader = new LoadReportElements(Finding.TYPE_ID, rootElmt);
-                findingLoader = getCommandService().executeCommand(findingLoader);
+        //        if(!resultInjectedFromCache){
+        List<Object> hqlResult;
+        String isaQuestionHql = "select elmt.dbId from CnATreeElement elmt " + // NON-NLS-1$
+                "inner join elmt.entity as entity " + // NON-NLS-1$
+                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                "inner join propertyList.properties as props " + //$NON-NLS-1$"
+                "where elmt.objectType = ? " +
+                "and elmt.scopeId = ? " + //$NON-NLS-1$"
+                "and props.propertyType = ? " + //$NON-NLS-1$
+                "and props.propertyValue = ? "; //$NON-NLS-1$"
 
-                for(CnATreeElement elmt : findingLoader.getElements()){
-                    if(elmt.getTypeId().equals(Finding.TYPE_ID) && elmt.getEntity().getOptionValue(FINDING_CATEGORIZATION).equals(categorie)){
-                        ArrayList<String> result = new ArrayList<String>(0);
-                        result.add(elmt.getTitle());
-                        results.add(result);
-                    }
+        results = new ArrayList<List<String>>(0);
+
+        Object[] params = new Object[]{SamtTopic.TYPE_ID, getRootAuditScopeID(rootElmt), SAMTTOPIC_CATEGORIZATION, categorie };
+        hqlResult =  getDaoFactory().getDAO(SamtTopic.TYPE_ID).findByQuery(isaQuestionHql, params);
+        if(hqlResult != null && hqlResult.size() > 0){
+            for(Object id : hqlResult){
+                if(id instanceof Integer){
+                    SamtTopic topic = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById((Integer)(id));
+                    ArrayList<String> result = new ArrayList<String>(0);
+                    result.add(topic.getTitle());
+                    result.add(topic.getEntity().getSimpleValue(SAMTTOPIC_FINDING_PROPERTY));
+                    
+                    results.add(result);
                 }
-            } catch(CommandException e){
-                LOG.error("Error while executing command", e);
             }
-
         }
+
+
+        //        }
     }
 
     /* (non-Javadoc)
@@ -119,6 +131,18 @@ public class LoadISAReportCategorizedFindings extends GenericCommand implements 
 
     public List<List<String>> getResults() {
         return results;
+    }
+    
+    private int getRootAuditScopeID(int rootScopeID) {
+        String scopeIDhql = "select scopeId from CnATreeElement where dbId = ?";
+        Object[] scopeIDparams = new Object[]{this.rootElmt};
+        List<Object> hqlResult   = getDaoFactory().getDAO(Audit.TYPE_ID).findByQuery(scopeIDhql, scopeIDparams);
+        if (hqlResult != null && hqlResult.size() == 1) {
+            if(hqlResult.get(0) instanceof Integer){
+                rootScopeID = ((Integer)hqlResult.get(0)).intValue();
+            }
+        }
+        return rootScopeID;
     }
 
 }

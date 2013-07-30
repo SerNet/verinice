@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Interview;
@@ -74,10 +73,14 @@ public class LoadISAQuestionAuditActions extends GenericCommand implements ICach
                     CnATreeElement keyElmt = entry.getKey();
                     if(keyElmt.getTypeId().equals(Interview.TYPE_ID)){
                         ArrayList<String> result = new ArrayList<String>(0);
-                        Interview interview = (Interview)Retriever.checkRetrieveElement(keyElmt);
-                        result.add(interview.getEntity().getSimpleValue(INTERVIEW_DATE));
+                        // initialize elmt if not done (keyElmt needs to be instance of Interview (see getLinkedElements()))
+                        if(!(keyElmt instanceof Interview)){
+                            keyElmt = (Interview)getDaoFactory().getDAO(Interview.TYPE_ID).initializeAndUnproxy(keyElmt);
+                        }
+                        
+                        result.add(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
                         StringBuilder persons = new StringBuilder();
-                        Iterator<Entry<CnATreeElement, CnALink>> iter = CnALink.getLinkedElements(interview, PersonIso.TYPE_ID).entrySet().iterator();
+                        Iterator<Entry<CnATreeElement, CnALink>> iter = CnALink.getLinkedElements(keyElmt, PersonIso.TYPE_ID).entrySet().iterator();
                         while(iter.hasNext()){
                             Entry<CnATreeElement, CnALink> entry2 = iter.next();
                             if(entry2.getValue().getRelationId().equals(INTERVIEW_RESPONSIBLE_PERSON)){

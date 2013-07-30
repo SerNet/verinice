@@ -178,7 +178,8 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                         lvl  = 0;
                     }
                 } catch (NumberFormatException e){
-                    LOG.error("Invalid Controlgrouptitle, contains no lvl information", e);
+                    LOG.warn("Invalid Controlgrouptitle, contains no lvl information. Setting lvl to 0", e);
+                    lvl = 0;
                 }
             }
         }

@@ -79,7 +79,8 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             VerantwortlicheStelle.TYPE_ID,
             Verarbeitungsangaben.TYPE_ID,
             Zweckbestimmung.TYPE_ID,
-            GefaehrdungsUmsetzung.TYPE_ID
+            GefaehrdungsUmsetzung.TYPE_ID,
+            MassnahmenUmsetzung.TYPE_ID
     };
     
     private boolean useScopeID = false;
@@ -98,7 +99,9 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 	public void execute() {
 	    elements = new ArrayList<CnATreeElement>(0);
 	    if(!resultInjectedFromCache){
-	        getLog().debug("LoadReportElements for root_object " + rootElement);
+	        if(getLog().isDebugEnabled()){
+	            getLog().debug("LoadReportElements for root_object " + rootElement);
+	        }
 
 	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
 	        try {
@@ -111,6 +114,9 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 	            return;
 	        }
 	        CnATreeElement root = command.getElements().get(0);
+	        if(getLog().isDebugEnabled()){
+	            getLog().debug("Loading children(" + this.typeId +") of " + root.getTitle());
+	        }
 
 	        if(!useScopeID || !hasScopeID(root)){
 
@@ -188,7 +194,7 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
             }
             if(child instanceof IISO27kGroup){ // ism element that can contain children
                 IISO27kGroup g = (IISO27kGroup)child;
-                if(Arrays.asList(g.getChildTypes()).contains(typeFilter) || g.getTypeId().equals(typeFilter) || g instanceof AuditGroup || g instanceof Audit){
+                if((Arrays.asList(g.getChildTypes()).contains(typeFilter) || g.getTypeId().equals(typeFilter) || g instanceof AuditGroup || g instanceof Audit) && child != null){
                     children.addAll(getElements(typeFilter, child));
                 }
             // gs elements that can contain children

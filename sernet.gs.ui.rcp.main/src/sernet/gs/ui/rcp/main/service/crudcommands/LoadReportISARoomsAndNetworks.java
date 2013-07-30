@@ -37,8 +37,8 @@ import sernet.verinice.model.iso27k.PersonIso;
  */
 public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICachedCommand{
     
-    private Integer rootElmt;
-    private Integer sgdbid;
+    private int rootElmt;
+    private int sgdbid;
     
     private static final Logger LOG = Logger.getLogger(LoadReportISARoomsAndNetworks.class);
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
@@ -50,8 +50,11 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                                             "INSPEKTEUR",
                                             "EINSTUFUNG",
                                             "HATKONZEPT",
-                                            "ROOMDBID"
+                                            "ROOMDBID",
+                                            "NR"
     };
+    
+    private static final String IS_ITROOM_PROPERTY = "controlgroup_isroom_yes";
     
     public static final String[] NETWORKCOLUMNS = new String[] {
         
@@ -82,22 +85,23 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
             networkResults = new ArrayList<List<String>>(0);
             ControlGroup rootControlGroup = null;
             try {
-                if(sgdbid != null){
-                    rootControlGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
-                } else {
-                    FindSGCommand command = new FindSGCommand(true, rootElmt);
-                    command = getCommandService().executeCommand(command);
-                    rootControlGroup = command.getSelfAssessmentGroup();
-                }
-                LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootControlGroup.getDbId(), true);
+//                if(sgdbid != null){
+//                    rootControlGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
+//                } else {
+//                    FindSGCommand command = new FindSGCommand(true, rootElmt);
+//                    command = getCommandService().executeCommand(command);
+//                    rootControlGroup = command.getSelfAssessmentGroup();
+//                }
+                LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt);
                 cgFinder = getCommandService().executeCommand(cgFinder);
                 List<CnATreeElement> cList = new ArrayList<CnATreeElement>();
-                cList.addAll(cgFinder.getElements(ControlGroup.TYPE_ID, rootControlGroup));
+                cList.addAll(cgFinder.getElements());
                 for(CnATreeElement c : cList){
                     if(c instanceof ControlGroup){
                         ControlGroup group = (ControlGroup)c;
+                        // CHECK WHY NO GROUP MATCHES HERE!!!
                         if(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY).equals("1") &&
-                                group.getEntity().getSimpleValue("controlgroup_is_room").equals("1")){
+                                group.getEntity().getOptionValue("controlgroup_is_room").equals(IS_ITROOM_PROPERTY)){
                             List<String> roomResult = new ArrayList<String>();
                             // adding title
                             roomResult.add(group.getTitle());
@@ -136,6 +140,9 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
             } catch (CommandException e) {
                 LOG.error("Error while executing command", e);
             }
+            for(List<String> list : roomResults){
+                list.add(String.valueOf(roomResults.indexOf(list) + 1));
+            }
         }
     }
     
@@ -155,11 +162,7 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
         StringBuilder cacheID = new StringBuilder();
         cacheID.append(this.getClass().getSimpleName());
         cacheID.append(String.valueOf(rootElmt));
-        if(sgdbid != null){
-            cacheID.append(String.valueOf(sgdbid));
-        } else {
-            cacheID.append("null");
-        }
+        cacheID.append(String.valueOf(sgdbid));
         return cacheID.toString();
     }
 
