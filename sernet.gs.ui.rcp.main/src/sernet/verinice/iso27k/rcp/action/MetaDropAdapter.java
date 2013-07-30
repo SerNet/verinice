@@ -98,7 +98,14 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
 		boolean success = false;
 		for (DropPerformer adapter : performerSet) {
-			if(adapter.validateDrop(target, operation, transferType)) {
+		    boolean valid = adapter.validateDrop(target, operation, transferType);
+		    if(LOG.isDebugEnabled()){
+		        LOG.debug("Target:\t" + target.getClass().getCanonicalName() + "\tTransfertype:\t" + transferType.toString() + "\tvalid:\t" + String.valueOf(valid));
+		        if(!valid){
+		            LOG.debug("Adapter that returns false:\t" + adapter.getClass().getCanonicalName());
+		        }
+		    }
+			if(valid) {
 				success = true;
 			}
 		}

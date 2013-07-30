@@ -25,6 +25,7 @@ import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
@@ -38,6 +39,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 
 public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerformer, RightEnabledUserInteraction {
 	
@@ -124,10 +127,20 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 		if (target instanceof Group && isSupportedData(transferType)) {
 			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
 			valid = childTypeList.contains(Control.TYPE_ID) 
-			|| childTypeList.contains(IncidentScenario.TYPE_ID); 
+			|| childTypeList.contains(IncidentScenario.TYPE_ID)
+			|| childTypeList.contains(Threat.TYPE_ID)
+			|| childTypeList.contains(Vulnerability.TYPE_ID); 
+			if(LOG.isDebugEnabled()){
+			    LOG.debug("Group:\t" + ((Group)target).getTypeId());
+			    for(String childType : childTypeList){
+			        LOG.debug("childType:\t" + childType);
+			    }
+			}
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("validateDrop, target: " + target + " result: " + valid); //$NON-NLS-1$ //$NON-NLS-2$
+			LOG.debug("validateDrop, target: " + ((CnATreeElement)target).getTitle() + " result: " + valid); //$NON-NLS-1$ //$NON-NLS-2$
+			LOG.debug("group:\t" + String.valueOf(target instanceof Group) + "\tsupported:\t" + isSupportedData(transferType));
+			
 		}
 		isActive = valid;
 		return isActive;
@@ -144,6 +157,9 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 		boolean valid = false;
 		
 		if(!checkRights()){
+		    if(LOG.isDebugEnabled()){
+		        LOG.debug("not sufficient rights to perform drop");
+		    }
 		    return false;
 		}
 
@@ -169,10 +185,19 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
 		if (target instanceof Group) {
 			List<String> childTypeList = Arrays.asList(((Group) target).getChildTypes());
 			if(childTypeList.contains(Control.TYPE_ID)) {
-				valid = isCorrectItemsForGroup(items, Control.TYPE_ID);			
+				valid = isCorrectItemsForGroup(items, Control.TYPE_ID);
 			}
 			if(!valid && childTypeList.contains(IncidentScenario.TYPE_ID)) {
 				valid = isCorrectItemsForGroup(items, IncidentScenario.TYPE_ID);
+			}
+			if(!valid && childTypeList.contains(Threat.TYPE_ID)){
+			    valid = isCorrectItemsForGroup(items, Threat.TYPE_ID);
+			} 
+			if(!valid && childTypeList.contains(Vulnerability.TYPE_ID)){
+			    valid = isCorrectItemsForGroup(items, Vulnerability.TYPE_ID);
+			}
+			if(LOG.isDebugEnabled() && !valid){
+			    LOG.debug("Targetgroup does not accept droppedData as children");
 			}
 		}
 		isActive = valid;
@@ -217,7 +242,8 @@ public class BSIModelDropPerformer extends ViewerDropAdapter implements DropPerf
     }
     
     private boolean isSupportedData(TransferData transferType){
-        return IGSModelElementTransfer.getInstance().isSupportedType(transferType);
+        return IGSModelElementTransfer.getInstance().isSupportedType(transferType) ||
+                ItemTransfer.getInstance().isSupportedType(transferType);
     }
 
     /* (non-Javadoc)

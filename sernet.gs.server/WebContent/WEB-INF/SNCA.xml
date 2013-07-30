@@ -4226,7 +4226,9 @@ the value between <param></param> will be used directly if no string is found fo
          		tags="VDA_ISA_Audit" >
                 <depends option="controlgroup_is_room" value="Yes"/>
                 <depends option="controlgroup_is_room" value="Ja"/>
-        		<option name="dataCentre" id="controlgroup_isroom_categorisation_datacentre" />
+        		<option name="" id="controlgroup_isroom_categorisation_it_technical" />
+        		<option name="" id="controlgroup_isroom_categorisation_local_data" />
+        		<option name="" id="controlgroup_isroom_categorisation_free_it_enclosure" />
         	</huiproperty>
         	<huiproperty
         		name="gotConcept"
@@ -5409,11 +5411,6 @@ the value between <param></param> will be used directly if no string is found fo
         	name="showInReport"
         	id="finding_showInISAReport"
 			inputtype="booleanoption"  defaultValue="0" tags="VDA_ISA_Audit" />
-    	<huiproperty name="finding user classification" id="finding_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
-    			<option name="Good implementation" id="finding_classification_good" />
-    			<option name="Insufficient implementation" id="finding_classification_insufficient" />
-    			<option name="No classification" id="finding_classification_none" />
-    	</huiproperty>
     </huientity>
     
     <huientity
@@ -6606,6 +6603,12 @@ the value between <param></param> will be used directly if no string is found fo
     			<option name="No" id="samt_topicimplemented_no"/>
     			<option name="Partly" id="samt_topicimplemented_partly"/>
     			<option name="N.a." id="samt_topicimplemented_na"/>
-    		</huiproperty>  		
+    		</huiproperty>  
+    		
+    	<huiproperty name="samt_topic user classification" id="samt_topic_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit">
+    			<option name="Good implementation" id="samt_topic_classification_good" />
+    			<option name="Insufficient implementation" id="samt_topic_classification_insufficient" />
+    			<option name="No classification" id="samt_topic_classification_none" />
+    	</huiproperty>		
       </huientity> 
 </huientities>
