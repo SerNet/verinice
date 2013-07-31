@@ -31,6 +31,7 @@ public interface IRelationTable {
 	String COLUMN_IMG = "_img";
 	String COLUMN_TYPE = "_type";
 	String COLUMN_TYPE_IMG = "_type_img";
+	String COLUMN_SCOPE_ID = "_scope_id";
 	String COLUMN_TITLE = "_title";
 	String COLUMN_COMMENT= "_comment";
     String COLUMN_RISK_C = "_riskc";

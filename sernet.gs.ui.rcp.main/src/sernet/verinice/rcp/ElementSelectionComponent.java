@@ -20,8 +20,11 @@
 package sernet.verinice.rcp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,6 +69,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
+import sernet.verinice.service.commands.LoadElementsbyScopeId;
 
 /**
  *
@@ -73,7 +77,14 @@ import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ElementSelectionComponent {
-
+    private transient Logger log = Logger.getLogger(ElementSelectionComponent.class); 
+    
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(ElementSelectionComponent.class);
+        }
+        return log;
+    }
     private Composite container;
 
     private TableViewer viewer;
@@ -88,7 +99,9 @@ public class ElementSelectionComponent {
     private boolean scopeOnly;
     private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
+    private static final String COLUMN_SCOPE_ID= "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
+    private HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
     
     private List<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
     
@@ -192,10 +205,35 @@ public class ElementSelectionComponent {
             }
         });
         
-        // label column:
+        //scope id column
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setWidth(column2Width);
         column2.setLabelProvider(new CellLabelProvider() {
+            @Override
+            public void update(ViewerCell cell) {
+                if (cell.getElement() instanceof PlaceHolder) {
+                    return;
+                }
+                String title = "";
+               CnATreeElement elmt = (CnATreeElement)cell.getElement();
+                   try {
+                       if(!titleMap.containsKey(elmt.getScopeId())){
+                           title = loadElementsUsingScope(elmt);
+                           titleMap.put(elmt.getScopeId(), title);
+                       } else {
+                           title = titleMap.get(elmt.getScopeId());
+                       }
+                } catch (CommandException e) {
+                    log.error("Error while getting element", e);
+                }
+                    cell.setText(title);
+            }
+        });
+        
+         // label column:
+        TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
+        column3.getColumn().setWidth(column2Width);
+        column3.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder) {
@@ -206,7 +244,7 @@ public class ElementSelectionComponent {
             }
         });
         
-        viewer.setColumnProperties(new String[] {COLUMN_IMG, COLUMN_LABEL});
+        viewer.setColumnProperties(new String[] {COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL});
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
         viewer.setSorter(new ViewerSorter() {
@@ -238,6 +276,7 @@ public class ElementSelectionComponent {
         loadElementsAndSelect(null);
     }
 
+    @SuppressWarnings("unchecked")
     public void loadElementsAndSelect(final CnATreeElement selected) {
         if (entityType == null || entityType.length()==0){
             return;
@@ -253,7 +292,7 @@ public class ElementSelectionComponent {
 
                 try {
                     monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
-                    scopeAndElmntDpntElmntSlctn(selected);                 
+                    scopeAndElmntDpntElmntSlctn(selected);  
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
@@ -349,7 +388,7 @@ public class ElementSelectionComponent {
 
     private void scopeAndElmntDpntElmntSlctn(final CnATreeElement selected) throws CommandException {
         LoadCnAElementByEntityTypeId command;
-        if (scopeOnly && inputElmt!=null) {
+        if (scopeOnly && inputElmt!=null && inputElmt.getScopeId()!=null) {
             command = new LoadCnAElementByEntityTypeId(entityType, inputElmt.getScopeId());    
         } else {
             command = new LoadCnAElementByEntityTypeId(entityType);
@@ -357,4 +396,14 @@ public class ElementSelectionComponent {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         loadAndSelectElements(selected, command.getElements());
     }
+           
+    private String loadElementsUsingScope(CnATreeElement elmt) throws CommandException {
+        LoadElementsbyScopeId  scopeCommand;
+        HashMap<Integer, String> listElmts = new LinkedHashMap<Integer,String>(); 
+        scopeCommand = new LoadElementsbyScopeId(elmt.getScopeId());
+        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+        listElmts = scopeCommand.getElements();
+        return listElmts.get(elmt.getScopeId());
+    } 
+
 }

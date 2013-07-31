@@ -46,7 +46,8 @@ public class RelationTableViewer extends TableViewer {
 		
 		final int defaultColumnWidth = 25;
 		final int viewerCol2Width = 150;
-		final int col4Width = 200;
+		final int col4Width = 100;
+		final int col5Width = 200;
 		final int viewerCol5Width = 250;
 		
 		TableColumn col1;
@@ -55,6 +56,7 @@ public class RelationTableViewer extends TableViewer {
 		IRelationTable view;
 		TableColumn col3;
 		TableViewerColumn viewerCol5;
+		TableColumn col5;
 		
 		view = relationView;
 		
@@ -77,11 +79,16 @@ public class RelationTableViewer extends TableViewer {
 		col3 = new TableColumn(table, SWT.CENTER);
 		col3.setText(""); //$NON-NLS-1$
 		col3.setWidth(defaultColumnWidth);
-		
-		// element title:
+
+		//element scope id
 		col4 = new TableColumn(table, SWT.LEFT);
-		col4.setText(Messages.RelationTableViewer_6);
-		col4.setWidth(col4Width);
+        col4.setText(Messages.RelationTableViewer_5);
+        col4.setWidth(col4Width);
+        
+		// element title:
+		col5 = new TableColumn(table, SWT.LEFT);
+		col5.setText(Messages.RelationTableViewer_6);
+		col5.setWidth(col5Width);
 		
 		viewerCol5 = new TableViewerColumn(this, SWT.LEFT);
         viewerCol5.getColumn().setText(Messages.RelationTableViewer_7);
@@ -108,6 +115,7 @@ public class RelationTableViewer extends TableViewer {
 				IRelationTable.COLUMN_IMG, //$NON-NLS-1$
 				IRelationTable.COLUMN_TYPE, //$NON-NLS-1$
 				IRelationTable.COLUMN_TYPE_IMG, //$NON-NLS-1$
+				IRelationTable.COLUMN_SCOPE_ID, //$NON-NLS-1$
 				IRelationTable.COLUMN_TITLE, //$NON-NLS-1$
 				IRelationTable.COLUMN_COMMENT, //$NON-NLS-1$
 				IRelationTable.COLUMN_RISK_C, //$NON-NLS-1$

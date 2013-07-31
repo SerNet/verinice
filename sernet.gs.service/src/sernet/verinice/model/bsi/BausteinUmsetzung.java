@@ -32,6 +32,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BausteinUmsetzung extends CnATreeElement {
 
 	public static final String TYPE_ID = "bstumsetzung"; //$NON-NLS-1$
+	public static final String HIBERNATE_TYPE_ID = "baustein-umsetzung"; //$NON-NLS-1$
 	public static final String P_NAME = "bstumsetzung_name"; //$NON-NLS-1$
 	public static final String P_NR = "bstumsetzung_nr"; //$NON-NLS-1$
 	public static final String P_URL = "bstumsetzung_url"; //$NON-NLS-1$

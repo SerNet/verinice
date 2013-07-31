@@ -17,20 +17,27 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.LoadElementsbyScopeId;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -38,8 +45,17 @@ import sernet.verinice.model.samt.SamtTopic;
  * 
  */
 public class RelationViewLabelProvider extends LabelProvider implements ITableLabelProvider {
+    private transient Logger log = Logger.getLogger(RelationViewLabelProvider.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(RelationViewLabelProvider.class);
+        }
+        return log;
+    }
+    
 	private IRelationTable view;
-	
+	final HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
 	  
 	private String getRisk(CnALink link, char risk) {
 	    switch (risk) {
@@ -67,43 +83,57 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	}
 
 	public String getColumnText(Object obj, int index) {
-		if (obj instanceof PlaceHolder) {
-			if (index != 1){
-				return ""; //$NON-NLS-1$
-			}
-			PlaceHolder pl = (PlaceHolder) obj;
-			return pl.getTitle();
-		}
+	    if (obj instanceof PlaceHolder) {
+	        if (index != 1){
+	            return ""; //$NON-NLS-1$
+	        }
+	        PlaceHolder pl = (PlaceHolder) obj;
+	        return pl.getTitle();
+	    }
 
-		CnALink link = (CnALink) obj;
-		HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
+	    CnALink link = (CnALink) obj;
+	    HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(link.getRelationId());
 
-		switch (index) {
-		case 0:
-			return ""; // image only //$NON-NLS-1$
-		case 1:
-			// if we can't find a real name for the relation, we just display
-			// "depends on" or "necessary for":
-			if (CnALink.isDownwardLink(view.getInputElmt(), link)){
-				return (relation != null) ? relation.getName() : Messages.RelationViewLabelProvider_2;
-			} else {
-				return (relation != null) ? relation.getReversename() : Messages.RelationViewLabelProvider_3;
-			}
-		case 2:
-			return ""; // image only //$NON-NLS-1$
-		case 3:
-			return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
-		case 4:
-		     return link.getComment();
-		case 5:
-            return getRisk(link, 'C');
-        case 6:
-            return getRisk(link, 'I');
-        case 7:
-            return getRisk(link, 'A');
-		default:
-			return ""; //$NON-NLS-1$
-		}
+	    switch (index) {
+	    case 0:
+	        return ""; // image only //$NON-NLS-1$
+	    case 1:
+	        // if we can't find a real name for the relation, we just display
+	        // "depends on" or "necessary for":
+	        if (CnALink.isDownwardLink(view.getInputElmt(), link)){
+	            return (relation != null) ? relation.getName() : Messages.RelationViewLabelProvider_2;
+	        } else {
+	            return (relation != null) ? relation.getReversename() : Messages.RelationViewLabelProvider_3;
+	        }
+	    case 2:
+	        return ""; // image only //$NON-NLS-1$
+	    case 3:
+	        String title  = "";
+	             try {
+                    if(!titleMap.containsKey(link.getDependency().getScopeId())){
+                        title = loadElementsUsingScope(link.getDependency());
+                        titleMap.put(link.getDependency().getScopeId(), title);
+                    } else {
+                        title = titleMap.get(link.getDependency().getScopeId());
+                    }
+            
+            }catch (CommandException e) {
+                log.error("Error while getting element properties", e);
+            }
+	           return title; //ScopeTitle from element dependencies
+	    case 4:
+	        return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
+	    case 5:
+	        return link.getComment();
+	    case 6:
+	        return getRisk(link, 'C');
+	    case 7:
+	        return getRisk(link, 'I');
+	    case 8:
+	        return getRisk(link, 'A');
+	    default:
+	        return ""; //$NON-NLS-1$
+	    }
 	}
 
 	public Image getColumnImage(Object obj, int index) {
@@ -153,4 +183,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 		return ImageCache.getInstance().getObjectTypeImage(typeId);
 	}
 	
+	private String loadElementsUsingScope(CnATreeElement elmt ) throws CommandException {
+        LoadElementsbyScopeId  scopeCommand;
+        HashMap<Integer, String> listElmts = new LinkedHashMap<Integer,String>(); 
+        scopeCommand = new LoadElementsbyScopeId(elmt.getScopeId());
+        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+        listElmts = scopeCommand.getElements();
+        return listElmts.get(elmt.getScopeId());
+           
+    } 
 }
