@@ -2163,6 +2163,7 @@ the value between <param></param> will be used directly if no string is found fo
                id="mnums_beschreibung"
                editable="true"
                visible="true"
+               focus="true"
                inputtype="text"
                name="Beschreibung"/>
                
@@ -2263,7 +2264,6 @@ the value between <param></param> will be used directly if no string is found fo
 			<huiproperty
 				id="mnums_umsetzung"
 				name="Umsetzung"
-                focus="true"
                 required="true"
 				inputtype="singleoption">
 				<option
@@ -4009,7 +4009,8 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             name="Title"
-            id="audit_name" />
+            id="audit_name"
+            focus="true" />
         <huiproperty
             name="Abbreviation"
             id="audit_abbr" />
@@ -4044,7 +4045,6 @@ the value between <param></param> will be used directly if no string is found fo
 		min="0" 
 		max="3" 
 		defaultValue="2"
-		focus="true"
 	        tags="Information Security Reporting" >
 	       <option name="Strictly Confidential" id="audit_isr_classfc_strictly_confidential" value="3"/>
 	       <option name="Confidential" id="audit_isr_classfc_confidential" value="2"/>
@@ -4278,7 +4278,8 @@ the value between <param></param> will be used directly if no string is found fo
             id="control_name" 
             inputtype="text"
             tags="Web,Basic, VDA_ISA_Audit"
-            required="true"/>
+            required="true" 
+            focus="true"/>
         <huiproperty
             name="Abbreviation"
             id="control_abbr"
@@ -4407,8 +4408,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty
                 id="control_maturity"
                 name="Maturity"
-                 tags="Maturity" 
-                focus="false"
+                 tags="Maturity"
                 required="false"
                 inputtype="numericoption" 
                 min="0" max="9">
@@ -4460,8 +4460,7 @@ the value between <param></param> will be used directly if no string is found fo
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="Information Security Reporting" 
-            focus="true"> 
+            tags="Information Security Reporting"> 
                 <option id="control_isr_maturity_null"  value="-2" />
                 <option id="control_isr_maturity_na"  value="-1" />
                 <option id="control_isr_maturity_0"  value="0" />
@@ -4476,8 +4475,7 @@ the value between <param></param> will be used directly if no string is found fo
             inputtype="numericoption" 
             min="0" 
             max="4" 
-            tags="Information Security Reporting"
-            focus="true"> 
+            tags="Information Security Reporting"> 
                 <option id="control_isr_quantity_of_maturity_0"  value="0" />
                 <option id="control_isr_quantity_of_maturity_25"  value="1" />
                 <option id="control_isr_quantity_of_maturity_50"  value="2" />
@@ -4612,8 +4610,7 @@ the value between <param></param> will be used directly if no string is found fo
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="VDA-ISA,VDA_ISA_Audit"
-            focus="true" >
+            tags="VDA-ISA,VDA_ISA_Audit" >
             	<validationRule class="RegExRule">
             		<param id="regEx">(-1)|[0-5]</param>
             	</validationRule>
@@ -6494,8 +6491,8 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_name" 
             editable="true" 
             required="true"
-            tags="VDA_ISA_Audit"
-            />
+            tags="VDA_ISA_Audit"          
+            focus="true"/>
           <huiproperty 
             id="samt_topic_abbr" 
              visible="false"/>
@@ -6515,8 +6512,7 @@ the value between <param></param> will be used directly if no string is found fo
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="VDA-ISA,VDA_ISA_Audit,Web"
-            focus="true">
+            tags="VDA-ISA,VDA_ISA_Audit,Web">
                 <validationRule class="RegExRule">
                 	<param id="regEx">(-1)|[0-5]</param>
                 </validationRule>
