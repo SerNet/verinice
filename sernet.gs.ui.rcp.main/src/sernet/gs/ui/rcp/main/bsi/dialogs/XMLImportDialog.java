@@ -739,6 +739,7 @@ public class XMLImportDialog extends Dialog {
 
     private void createValidations(Set<CnATreeElement> elmts){
         try{
+            Activator.inheritVeriniceContextState();
             for(CnATreeElement elmt : elmts){
                 ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
             }
