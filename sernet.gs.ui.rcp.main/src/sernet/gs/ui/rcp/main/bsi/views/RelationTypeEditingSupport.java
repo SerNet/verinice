@@ -43,133 +43,119 @@ import sernet.verinice.model.common.CnALink;
  */
 public class RelationTypeEditingSupport extends EditingSupport {
 
-	private IRelationTable view;
-	private TableViewer viewer;
+    private IRelationTable view;
+    private TableViewer viewer;
 
-	public RelationTypeEditingSupport(IRelationTable view, TableViewer viewer) {
-		super(viewer);
-		this.viewer = viewer;
-		this.view = view;
-	}
+    public RelationTypeEditingSupport(IRelationTable view, TableViewer viewer) {
+        super(viewer);
+        this.viewer = viewer;
+        this.view = view;
+    }
 
-	protected boolean canEdit(Object element) {
-		if (!(element instanceof CnALink)){
-			return false;
-		}
-		CnALink link = (CnALink) element;
-		Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
-				.getTypeFactory().getPossibleRelations(
-						link.getDependant().getEntityType().getId(),
-						link.getDependency().getEntityType().getId());
+    @Override
+    protected boolean canEdit(Object element) {
+        if (!(element instanceof CnALink)) {
+            return false;
+        }
+        CnALink link = (CnALink) element;
+        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
 
-		return (possibleRelations != null && possibleRelations.size() > 0);
-	}
+        return (possibleRelations != null && possibleRelations.size() > 0);
+    }
 
-	protected CellEditor getCellEditor(Object element) {
-		if (!(element instanceof CnALink)){
-			return null;
-		}
-		CnALink link = (CnALink) element;
+    @Override
+    protected CellEditor getCellEditor(Object element) {
+        if (!(element instanceof CnALink)) {
+            return null;
+        }
+        CnALink link = (CnALink) element;
 
-		String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
-		ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), 
-				currentLinkTypeNames, SWT.READ_ONLY);
-		choiceEditor
-				.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-		return choiceEditor;
-	}
+        String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
+        ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames, SWT.READ_ONLY);
+        choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        return choiceEditor;
+    }
 
-	private String[] getPossibleLinkTypeNames(CnALink link) {
-		Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
-				.getTypeFactory().getPossibleRelations(
-						link.getDependant().getEntityType().getId(),
-						link.getDependency().getEntityType().getId());
-		Set<String> names = new HashSet<String>();
-		Set<String> ids = new HashSet<String>();
+    private String[] getPossibleLinkTypeNames(CnALink link) {
+        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+        Set<String> names = new HashSet<String>();
+        Set<String> ids = new HashSet<String>();
 
-		for (HuiRelation huiRelation : possibleRelations) {
-			String id = huiRelation.getId();
-			String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation
-					.getName()
-					: huiRelation.getReversename();
-			names.add(name);
-			ids.add(id);
-		}
+        for (HuiRelation huiRelation : possibleRelations) {
+            String id = huiRelation.getId();
+            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
+            names.add(name);
+            ids.add(id);
+        }
 
-		String[] currentLinkTypeNames = (String[]) names
-				.toArray(new String[names.size()]);
-		return currentLinkTypeNames;
-	}
+        String[] currentLinkTypeNames = names.toArray(new String[names.size()]);
+        return currentLinkTypeNames;
+    }
 
-	protected Object getValue(Object element) {
-		if (!(element instanceof CnALink)){
-			return null;
-		}
-		CnALink link = (CnALink) element;
-		String currentName = CnALink.getRelationName(view.getInputElmt(),
-				link);
-		Logger.getLogger(this.getClass()).debug("current name " + currentName);
+    @Override
+    protected Object getValue(Object element) {
+        if (!(element instanceof CnALink)) {
+            return null;
+        }
+        CnALink link = (CnALink) element;
+        String currentName = CnALink.getRelationName(view.getInputElmt(), link);
+        Logger.getLogger(this.getClass()).debug("current name " + currentName);
 
-		int idx = getIndex(currentName, getPossibleLinkTypeNames(link));
-		Logger.getLogger(this.getClass()).debug("getvalue index: " + idx);
-		return idx;
-	}
+        int idx = getIndex(currentName, getPossibleLinkTypeNames(link));
+        Logger.getLogger(this.getClass()).debug("getvalue index: " + idx);
+        return idx;
+    }
 
-	private int getIndex(String currentName, String[] currentLinkTypeNames) {
-		int i = 0;
-		for (String name : currentLinkTypeNames) {
-			if (name.equals(currentName)){
-				return i;
-			}
-			++i;
-		}
-		return -1;
-	}
+    private int getIndex(String currentName, String[] currentLinkTypeNames) {
+        int i = 0;
+        for (String name : currentLinkTypeNames) {
+            if (name.equals(currentName)) {
+                return i;
+            }
+            ++i;
+        }
+        return -1;
+    }
 
-	protected void setValue(Object element, Object value) {
-		if (!(element instanceof CnALink)){
-			return;
-		}
-		CnALink link = (CnALink) element;
-		int index = (Integer) value;
+    @Override
+    protected void setValue(Object element, Object value) {
+        if (!(element instanceof CnALink)) {
+            return;
+        }
+        CnALink link = (CnALink) element;
+        int index = (Integer) value;
 
-		String linkTypeName = getPossibleLinkTypeNames(link)[index];
-		String linkTypeID = getLinkIdForName(link, linkTypeName);
-		Logger.getLogger(this.getClass()).debug("Setting value " + linkTypeID);
+        String linkTypeName = getPossibleLinkTypeNames(link)[index];
+        String linkTypeID = getLinkIdForName(link, linkTypeName);
+        Logger.getLogger(this.getClass()).debug("Setting value " + linkTypeID);
 
-		ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
-		
-		CnALink newLink = null;
-		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(
-					command);
-			newLink = command.getLink();
-		} catch (CommandException e) {
-			ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
-		}
-		
-		CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
-	}
+        ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
 
-	/**
-	 * @param linkTypeName
-	 */
-	private String getLinkIdForName(CnALink link, String linkTypeName) {
-		Set<HuiRelation> possibleRelations = HitroUtil.getInstance()
-				.getTypeFactory().getPossibleRelations(
-						link.getDependant().getEntityType().getId(),
-						link.getDependency().getEntityType().getId());
+        CnALink newLink = null;
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            newLink = command.getLink();
+        } catch (CommandException e) {
+            ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
+        }
 
-		for (HuiRelation huiRelation : possibleRelations) {
-			String id = huiRelation.getId();
-			String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation
-					.getName()
-					: huiRelation.getReversename();
-			if (name.equals(linkTypeName)){
-				return id;
-			}
-		}
-		return "";
+        CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
+    }
 
-	}
+    /**
+     * @param linkTypeName
+     */
+    private String getLinkIdForName(CnALink link, String linkTypeName) {
+        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+
+        for (HuiRelation huiRelation : possibleRelations) {
+            String id = huiRelation.getId();
+            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
+            if (name.equals(linkTypeName)) {
+                return id;
+            }
+        }
+        return "";
+
+    }
 }
