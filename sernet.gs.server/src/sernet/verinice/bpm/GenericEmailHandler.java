@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -63,7 +64,8 @@ public abstract class GenericEmailHandler implements IEmailHandler {
      */
     @Override
     public void send(String assignee, String type, Map<String, Object> processVariables, String uuid) {
-        try {            
+        try { 
+            ServerInitializer.inheritVeriniceContextState();
             Map<String , String> parameter = getRemindService().loadUserData(assignee);
             parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
             addParameter(type, processVariables, uuid, parameter);                          
