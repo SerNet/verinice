@@ -37,7 +37,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.LoadElementsbyScopeId;
+import sernet.verinice.service.commands.LoadAllScopesTitles;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -55,7 +55,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     }
     
 	private IRelationTable view;
-	final HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+	private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
 	  
 	private String getRisk(CnALink link, char risk) {
 	    switch (risk) {
@@ -111,7 +111,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	        String title  = "";
 	             try {
                     if(!titleMap.containsKey(link.getDependency().getScopeId())){
-                        title = loadElementsUsingScope(link.getDependency());
+                        title = loadElementsTitles(link.getDependency());
                         titleMap.put(link.getDependency().getScopeId(), title);
                     } else {
                         title = titleMap.get(link.getDependency().getScopeId());
@@ -183,13 +183,12 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 		return ImageCache.getInstance().getObjectTypeImage(typeId);
 	}
 	
-	private String loadElementsUsingScope(CnATreeElement elmt ) throws CommandException {
-        LoadElementsbyScopeId  scopeCommand;
-        HashMap<Integer, String> listElmts = new LinkedHashMap<Integer,String>(); 
-        scopeCommand = new LoadElementsbyScopeId(elmt.getScopeId());
+	private String loadElementsTitles(CnATreeElement elmt ) throws CommandException {
+        LoadAllScopesTitles  scopeCommand;
+        scopeCommand = new LoadAllScopesTitles();
         scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        listElmts = scopeCommand.getElements();
-        return listElmts.get(elmt.getScopeId());
+        titleMap = scopeCommand.getElements();
+        return titleMap.get(elmt.getScopeId());
            
     } 
 }

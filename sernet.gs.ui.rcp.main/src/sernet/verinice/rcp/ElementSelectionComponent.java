@@ -21,7 +21,6 @@ package sernet.verinice.rcp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -68,8 +67,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.service.commands.LoadAllScopesTitles;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
-import sernet.verinice.service.commands.LoadElementsbyScopeId;
 
 /**
  *
@@ -101,7 +100,7 @@ public class ElementSelectionComponent {
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
     private static final String COLUMN_SCOPE_ID= "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
-    private HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+    private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
     
     private List<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
     
@@ -118,7 +117,8 @@ public class ElementSelectionComponent {
         
         final int formAttachmentDefaultOffset = 5;
         final int column1Width = 25;
-        final int column2Width = 200;
+        final int column2Width = 150;
+        final int column3Width = 200;
         final int formData2Numerator = 100;
         final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
@@ -218,8 +218,7 @@ public class ElementSelectionComponent {
                CnATreeElement elmt = (CnATreeElement)cell.getElement();
                    try {
                        if(!titleMap.containsKey(elmt.getScopeId())){
-                           title = loadElementsUsingScope(elmt);
-                           titleMap.put(elmt.getScopeId(), title);
+                           title = loadElementsTitles(elmt);
                        } else {
                            title = titleMap.get(elmt.getScopeId());
                        }
@@ -232,7 +231,7 @@ public class ElementSelectionComponent {
         
          // label column:
         TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
-        column3.getColumn().setWidth(column2Width);
+        column3.getColumn().setWidth(column3Width);
         column3.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
@@ -397,13 +396,11 @@ public class ElementSelectionComponent {
         loadAndSelectElements(selected, command.getElements());
     }
            
-    private String loadElementsUsingScope(CnATreeElement elmt) throws CommandException {
-        LoadElementsbyScopeId  scopeCommand;
-        HashMap<Integer, String> listElmts = new LinkedHashMap<Integer,String>(); 
-        scopeCommand = new LoadElementsbyScopeId(elmt.getScopeId());
+    private String loadElementsTitles(CnATreeElement elmt) throws CommandException {
+        LoadAllScopesTitles scopeCommand;
+        scopeCommand = new LoadAllScopesTitles();
         scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        listElmts = scopeCommand.getElements();
-        return listElmts.get(elmt.getScopeId());
-    } 
-
+        titleMap = scopeCommand.getElements();
+        return titleMap.get(elmt.getScopeId());
+    }  
 }

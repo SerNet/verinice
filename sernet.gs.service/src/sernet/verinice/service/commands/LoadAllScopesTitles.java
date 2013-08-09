@@ -20,8 +20,10 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -29,29 +31,40 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
  * 
  */
 @SuppressWarnings("serial")
-public class LoadElementsbyScopeId extends GenericCommand {
-    private transient Logger log = Logger.getLogger(LoadElementsbyScopeId.class);
+public class LoadAllScopesTitles extends GenericCommand {
+    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);
 
+    
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(LoadElementsbyScopeId.class);
+            log = Logger.getLogger(LoadAllScopesTitles.class);
         }
         return log;
     }
-    private HashMap<Integer, String> selectedElements = new LinkedHashMap<Integer, String>();
-    private Integer scopeId;
     
+    private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
+    private List<Object> list = new ArrayList<Object>();
 
-    public LoadElementsbyScopeId(Integer scopeId) {
-        this.scopeId = scopeId;
+    public LoadAllScopesTitles() {
+        
     }
 
+
+    private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
+            "join fetch elmt.entity as entity " +
+            "join fetch entity.typedPropertyLists as propertyList " +
+            "join fetch propertyList.properties as props " +
+            "where elmt.objectType = ? " + //$NON-NLS-1$
+             "or elmt.objectType = ?"; //$NON-NLS-1$
+    
+     
     /*
      * (non-Javadoc)
      * 
@@ -59,16 +72,23 @@ public class LoadElementsbyScopeId extends GenericCommand {
      */
     @Override
     public void execute() {
-        IBaseDao<CnATreeElement, Serializable> elmtsDAO = getDaoFactory().getDAO(CnATreeElement.class);
-
-        if (selectedElements != null && !(selectedElements.containsKey(scopeId))) {
-            CnATreeElement elmt = elmtsDAO.findById(scopeId);
-            if(elmt instanceof ITVerbund){
-            selectedElements.put(elmt.getScopeId(), elmt.getTitle());
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+        StringBuilder sb = new StringBuilder(QUERY);
+        list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
+        if(list != null && list.size() > 0){
+            for(Object elmt : list){
+                if(elmt instanceof ITVerbund){
+                    ITVerbund itverbund = (ITVerbund)elmt;
+                    selectedElements.put(itverbund.getDbId(), itverbund.getTitle());
+                }else if(elmt instanceof Organization){
+                    Organization org = (Organization) elmt;
+                    selectedElements.put(org.getDbId(), org.getTitle());
+                }
             }
-        }
+        } 
     }
-
+   
+    
     public HashMap<Integer, String> getElements() {
         return selectedElements;
     }
