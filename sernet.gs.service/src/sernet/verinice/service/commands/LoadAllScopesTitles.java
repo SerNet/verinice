@@ -20,9 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -39,9 +37,8 @@ import sernet.verinice.model.iso27k.Organization;
  */
 @SuppressWarnings("serial")
 public class LoadAllScopesTitles extends GenericCommand {
-    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);
-
     
+    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);   
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(LoadAllScopesTitles.class);
@@ -49,14 +46,6 @@ public class LoadAllScopesTitles extends GenericCommand {
         return log;
     }
     
-    private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
-    private List<Object> list = new ArrayList<Object>();
-
-    public LoadAllScopesTitles() {
-        
-    }
-
-
     private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
             "join fetch elmt.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
@@ -64,17 +53,20 @@ public class LoadAllScopesTitles extends GenericCommand {
             "where elmt.objectType = ? " + //$NON-NLS-1$
              "or elmt.objectType = ?"; //$NON-NLS-1$
     
+    private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
+
+    public LoadAllScopesTitles() {       
+    }
      
     /*
      * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
         StringBuilder sb = new StringBuilder(QUERY);
-        list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
+        List<Object> list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
         if(list != null && list.size() > 0){
             for(Object elmt : list){
                 if(elmt instanceof ITVerbund){
