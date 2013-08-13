@@ -249,9 +249,19 @@ public class ElementSelectionComponent {
         viewer.setSorter(new ViewerSorter() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
+               String title1 = "";
+               String title2 = "";
                 CnATreeElement elmt1 = (CnATreeElement) e1;
                 CnATreeElement elmt2 = (CnATreeElement) e2;
-                return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                if(titleMap!=null){
+                 title1 = titleMap.get(elmt1.getScopeId());
+                 title2 = titleMap.get(elmt2.getScopeId());
+                int allScopeTitles = title1.compareTo(title2);
+                if (allScopeTitles == 0){
+                    return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                }
+                }
+              return title1.compareTo(title2);
             } 
         });
         

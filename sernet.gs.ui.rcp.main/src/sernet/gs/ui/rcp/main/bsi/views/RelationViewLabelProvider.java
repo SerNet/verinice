@@ -109,18 +109,17 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	        return ""; // image only //$NON-NLS-1$
 	    case 3:
 	        String title  = "";
-	             try {
-                    if(!titleMap.containsKey(link.getDependency().getScopeId())){
-                        title = loadElementsTitles(link.getDependency());
-                        titleMap.put(link.getDependency().getScopeId(), title);
-                    } else {
-                        title = titleMap.get(link.getDependency().getScopeId());
-                    }
+	        try {
+	            if(!titleMap.containsKey(link.getDependency().getScopeId())){
+	                title = loadElementsTitles(link.getDependency());
+	            } else {
+	                title = titleMap.get(link.getDependency().getScopeId());
+	            }
+	        }catch (CommandException e) {
+	            log.error("Error while getting element properties", e);
+	        }
+	      return title; //ScopeTitle from element dependencies
             
-            }catch (CommandException e) {
-                log.error("Error while getting element properties", e);
-            }
-	           return title; //ScopeTitle from element dependencies
 	    case 4:
 	        return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
 	    case 5:
@@ -184,11 +183,11 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	}
 	
 	private String loadElementsTitles(CnATreeElement elmt ) throws CommandException {
-        LoadAllScopesTitles  scopeCommand;
-        scopeCommand = new LoadAllScopesTitles();
-        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        titleMap = scopeCommand.getElements();
-        return titleMap.get(elmt.getScopeId());
-           
-    } 
+	    LoadAllScopesTitles  scopeCommand;
+	    scopeCommand = new LoadAllScopesTitles();
+	    scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+	    titleMap = scopeCommand.getElements();
+	    return titleMap.get(elmt.getScopeId());
+	} 
+	
 }
