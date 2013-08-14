@@ -27,6 +27,7 @@ import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.hui.common.VeriniceContext;
+import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
@@ -51,6 +52,8 @@ public class Activator extends AbstractUIPlugin {
 	private ServiceTracker mainTracker;
 	
 	private ServiceTracker commandServiceTracker;
+	
+	private static final String WORK_OBJECTS = "workObjects";
 	
 	/**
 	 * The constructor
@@ -122,10 +125,18 @@ public class Activator extends AbstractUIPlugin {
 	
 	public ICommandService getCommandService()
 	{
+	    inheritVeriniceContext();
 	    if(getPreferenceStore().getBoolean(PreferenceConstants.REPORT_USE_CACHE)){
+	        
 	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
 	    } else {
 	        return (ICommandService)VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
 	    }
 	}
+
+    private void inheritVeriniceContext() {
+        VeriniceContext.State state = (VeriniceContext.State)SpringClientPlugin.getDefault().
+	            getBeanFactory().getBean(WORK_OBJECTS);
+	    VeriniceContext.setState(state);
+    }
 }
