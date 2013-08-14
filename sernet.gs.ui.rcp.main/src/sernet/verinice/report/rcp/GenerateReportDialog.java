@@ -688,7 +688,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
         }
         outputFile = new File(f);
-        resetFormValues();
         super.okPressed();
     }
     
