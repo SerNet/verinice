@@ -10033,6 +10033,12 @@ columns(cols);</value>
                                                 <property name="dataType">javaObject</property>
                                             </structure>
                                             <structure>
+                                                <property name="name">eigene_bstumsetzung_beschreibung</property>
+                                                <text-property name="displayName">eigene_bstumsetzung_beschreibung</text-property>
+                                                <expression name="expression" type="javascript">dataSetRow["eigene_bstumsetzung_beschreibung"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
                                                 <property name="name">bstumsetzung_dokument</property>
                                                 <text-property name="displayName">bstumsetzung_dokument</text-property>
                                                 <expression name="expression" type="javascript">dataSetRow["bstumsetzung_dokument"]</expression>
@@ -10099,159 +10105,6 @@ columns(cols);</value>
                                                     <data id="3374">
                                                         <property name="paddingTop">1pt</property>
                                                         <property name="textAlign">left</property>
-                                                        <property name="dataSet">sonstit</property>
-                                                        <list-property name="boundDataColumns">
-                                                            <structure>
-                                                                <property name="name">sonstit_netadr</property>
-                                                                <text-property name="displayName">sonstit_netadr</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_netadr"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_admin_link</property>
-                                                                <text-property name="displayName">sonstit_admin_link</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_admin_link"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_anwender_link</property>
-                                                                <text-property name="displayName">sonstit_anwender_link</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_anwender_link"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_erlaeuterung</property>
-                                                                <text-property name="displayName">sonstit_erlaeuterung</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_erlaeuterung"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_shared</property>
-                                                                <text-property name="displayName">sonstit_shared</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_shared"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_aufstellungsort</property>
-                                                                <text-property name="displayName">sonstit_aufstellungsort</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_aufstellungsort"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_coms</property>
-                                                                <text-property name="displayName">sonstit_coms</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_coms"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_name</property>
-                                                                <text-property name="displayName">sonstit_name</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_name"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_plattform</property>
-                                                                <text-property name="displayName">sonstit_plattform</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_plattform"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_tag</property>
-                                                                <text-property name="displayName">sonstit_tag</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_tag"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_anzahl</property>
-                                                                <text-property name="displayName">sonstit_anzahl</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_anzahl"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_dokument</property>
-                                                                <text-property name="displayName">sonstit_dokument</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_dokument"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_operatingsystem</property>
-                                                                <text-property name="displayName">sonstit_operatingsystem</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_operatingsystem"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_kuerzel</property>
-                                                                <text-property name="displayName">sonstit_kuerzel</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_kuerzel"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_status</property>
-                                                                <text-property name="displayName">sonstit_status</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_status"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_vertraulichkeit</property>
-                                                                <text-property name="displayName">sonstit_vertraulichkeit</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_vertraulichkeit"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_verfuegbarkeit</property>
-                                                                <text-property name="displayName">sonstit_verfuegbarkeit</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_verfuegbarkeit"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_integritaet</property>
-                                                                <text-property name="displayName">sonstit_integritaet</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_integritaet"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_vertraulichkeit_begruendung</property>
-                                                                <text-property name="displayName">sonstit_vertraulichkeit_begruendung</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_vertraulichkeit_begruendung"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_verfuegbarkeit_begruendung</property>
-                                                                <text-property name="displayName">sonstit_verfuegbarkeit_begruendung</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_verfuegbarkeit_begruendung"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_integritaet_begruendung</property>
-                                                                <text-property name="displayName">sonstit_integritaet_begruendung</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_integritaet_begruendung"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_ergaenzendeanalyse</property>
-                                                                <text-property name="displayName">sonstit_ergaenzendeanalyse</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_ergaenzendeanalyse"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_risikoanalyse</property>
-                                                                <text-property name="displayName">sonstit_risikoanalyse</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_risikoanalyse"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">sonstit_risikoanalyse_begruendung</property>
-                                                                <text-property name="displayName">sonstit_risikoanalyse_begruendung</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["sonstit_risikoanalyse_begruendung"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                            <structure>
-                                                                <property name="name">dbid</property>
-                                                                <text-property name="displayName">dbid</text-property>
-                                                                <expression name="expression" type="javascript">dataSetRow["dbid"]</expression>
-                                                                <property name="dataType">javaObject</property>
-                                                            </structure>
-                                                        </list-property>
                                                         <property name="resultSetColumn">bstumsetzung_nr</property>
                                                     </data>
                                                 </cell>
