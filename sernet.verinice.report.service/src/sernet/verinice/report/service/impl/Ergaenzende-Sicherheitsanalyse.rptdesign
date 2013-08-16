@@ -4280,6 +4280,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="971">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
@@ -4296,6 +4297,7 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
                         <label id="973">
                             <text-property name="text">Name</text-property>
                         </label>
@@ -4331,6 +4333,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="2063">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
@@ -4348,6 +4351,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="2071">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
@@ -4365,6 +4369,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="977">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
@@ -4382,6 +4387,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="979">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
@@ -4399,6 +4405,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="981">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -4702,41 +4709,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="986">
                         <label id="1019">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="987">
                         <label id="1021">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1971">
                         <label id="2056">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="1974">
                         <label id="2064">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="988">
                         <label id="2072">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="989">
                         <label id="1023">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="990">
                         <label id="1027">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="991">
                         <label id="1029">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -4982,41 +4997,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1101">
                         <label id="1325">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1103">
                         <label id="1327">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1986">
                         <label id="2057">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="1983">
                         <label id="2065">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="1105">
                         <label id="2073">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1107">
                         <label id="1331">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1109">
                         <label id="1333">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1111">
                         <label id="1335">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -5252,41 +5275,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1186">
                         <label id="1354">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1187">
                         <label id="1356">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1995">
                         <label id="2058">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="1188">
                         <label id="2066">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="1998">
                         <label id="2074">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1189">
                         <label id="1360">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1190">
                         <label id="1362">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1191">
                         <label id="1364">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -5532,41 +5563,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1221">
                         <label id="1370">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1222">
                         <label id="1372">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1223">
                         <label id="2059">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2010">
                         <label id="2067">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2007">
                         <label id="2075">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1224">
                         <label id="1376">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1225">
                         <label id="1378">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1226">
                         <label id="1380">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -5777,41 +5816,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1256">
                         <label id="1386">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1257">
                         <label id="1388">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1258">
                         <label id="2060">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2022">
                         <label id="2068">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2019">
                         <label id="2076">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1259">
                         <label id="1392">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1260">
                         <label id="1394">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1261">
                         <label id="1396">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -6022,41 +6069,49 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1291">
                         <label id="1402">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1292">
                         <label id="1404">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1293">
                         <label id="2061">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2034">
                         <label id="2069">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2031">
                         <label id="2077">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1294">
                         <label id="1408">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="1295">
                         <label id="1410">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="1296">
                         <label id="1412">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Verfügbarkeit</text-property>
                         </label>
                     </cell>
@@ -6254,36 +6309,43 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="1151">
                         <label id="1341">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1152">
                         <label id="1343">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1153">
                         <label id="2062">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Erg. Si.analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2046">
                         <label id="2070">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Risiko-analyse</text-property>
                         </label>
                     </cell>
                     <cell id="2043">
                         <label id="2078">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Begründung der Leitung</text-property>
                         </label>
                     </cell>
                     <cell id="1154">
                         <label id="1347">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Kritikalität</text-property>
                         </label>
                     </cell>
                     <cell id="1155">
                         <label id="1349">
+                            <property name="textAlign">left</property>
                             <text-property name="text">Extern. Netz</text-property>
                         </label>
                     </cell>
