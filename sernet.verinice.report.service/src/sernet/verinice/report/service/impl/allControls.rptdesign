@@ -2311,6 +2311,7 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="1246">
                 <property name="width">0.5416666666666666in</property>
                 <property name="repeat">1</property>

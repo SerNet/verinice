@@ -4232,6 +4232,11 @@ inParameters(new String[] { "root"});</value>
                     <text-property name="heading">samt_topic_externalnote</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">samt_topic_user_classification</property>
+                    <text-property name="displayName">samt_topic_user_classification</text-property>
+                    <text-property name="heading">samt_topic_user_classification</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">samt_topicimplemented</property>
                     <text-property name="displayName">samt_topicimplemented</text-property>
                     <text-property name="heading">samt_topicimplemented</text-property>
@@ -4247,19 +4252,9 @@ inParameters(new String[] { "root"});</value>
                     <text-property name="heading">samt_topic_audit_ra</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">samt_user_classification</property>
-                    <text-property name="displayName">samt_user_classification</text-property>
-                    <text-property name="heading">samt_user_classification</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">samt_topic_name</property>
                     <text-property name="displayName">samt_topic_name</text-property>
                     <text-property name="heading">samt_topic_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_classification_comment</property>
-                    <text-property name="displayName">samt_topic_classification_comment</text-property>
-                    <text-property name="heading">samt_topic_classification_comment</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_min1</property>
@@ -4350,22 +4345,22 @@ inParameters(new String[] { "root"});</value>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">samt_topicimplemented</property>
+                        <property name="name">samt_topic_user_classification</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">samt_topic_maturity</property>
+                        <property name="name">samt_topicimplemented</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">samt_topic_audit_ra</property>
+                        <property name="name">samt_topic_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">samt_user_classification</property>
+                        <property name="name">samt_topic_audit_ra</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -4375,26 +4370,21 @@ inParameters(new String[] { "root"});</value>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">samt_topic_classification_comment</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
                         <property name="name">samt_topic_min1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">19</property>
+                        <property name="position">18</property>
                         <property name="name">samt_topic_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">20</property>
+                        <property name="position">19</property>
                         <property name="name">samt_topic_min2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">21</property>
+                        <property name="position">20</property>
                         <property name="name">maturitytext</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -4481,29 +4471,29 @@ inParameters(new String[] { "root"});</value>
                 </structure>
                 <structure>
                     <property name="position">12</property>
+                    <property name="name">samt_topic_user_classification</property>
+                    <property name="nativeName">samt_topic_user_classification</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
                     <property name="name">samt_topicimplemented</property>
                     <property name="nativeName">samt_topicimplemented</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
                     <property name="name">samt_topic_maturity</property>
                     <property name="nativeName">samt_topic_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">samt_topic_audit_ra</property>
                     <property name="nativeName">samt_topic_audit_ra</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">samt_user_classification</property>
-                    <property name="nativeName">samt_user_classification</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -4516,27 +4506,20 @@ inParameters(new String[] { "root"});</value>
                 </structure>
                 <structure>
                     <property name="position">17</property>
-                    <property name="name">samt_topic_classification_comment</property>
-                    <property name="nativeName">samt_topic_classification_comment</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
                     <property name="name">samt_topic_min1</property>
                     <property name="nativeName">samt_topic_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                     <property name="name">samt_topic_abbr</property>
                     <property name="nativeName">samt_topic_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                     <property name="name">samt_topic_min2</property>
                     <property name="nativeName">samt_topic_min2</property>
                     <property name="dataType">javaObject</property>
@@ -7539,6 +7522,12 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">samt_topic_user_classification</property>
+                    <text-property name="displayName">samt_topic_user_classification</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_user_classification"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">samt_topicimplemented</property>
                     <text-property name="displayName">samt_topicimplemented</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topicimplemented"]</expression>
@@ -7557,21 +7546,9 @@ reportContext.setPersistentGlobalVariable( "imageResultBytes", result );
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_user_classification</property>
-                    <text-property name="displayName">samt_user_classification</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_user_classification"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">samt_topic_name</property>
                     <text-property name="displayName">samt_topic_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_name"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">samt_topic_classification_comment</property>
-                    <text-property name="displayName">samt_topic_classification_comment</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_classification_comment"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
