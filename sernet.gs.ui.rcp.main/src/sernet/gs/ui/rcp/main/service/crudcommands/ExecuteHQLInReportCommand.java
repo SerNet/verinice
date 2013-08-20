@@ -25,7 +25,10 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 
 /**
- *
+ * Command to enable report designers to execute hql from within a rptdesign file.
+ * typeId is needed to determine which dao should be used to execute query, if cnatreelement dao is needed,
+ * use constructor with parameter of type Class (CnATreeElement.class) in dataset query.
+ * Attention: be sure to define right columns in setup query and cast the return value if needed
  */
 public class ExecuteHQLInReportCommand extends GenericCommand implements ICachedCommand {
 
@@ -58,14 +61,17 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
      */
     @Override
     public void execute() {
-        if(typeId instanceof String){
-            results = getDaoFactory().getDAO((String)typeId).findByQuery(hql, hqlParams);
-        } else if (typeId instanceof Class){
-            results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, hqlParams);
-        } else {
-            results = Collections.emptyList();
+        if(!resultInjectedFromCache){
+            if(typeId instanceof String){
+                results = getDaoFactory().getDAO((String)typeId).findByQuery(hql, hqlParams);
+            } else if (typeId instanceof Class){
+                results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, hqlParams);
+            } else {
+                results = Collections.emptyList();
+            }
         }
     }
+
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
