@@ -188,6 +188,9 @@ public final class ExportFactory {
      * @return ext-id for the tree-element
      */
     public static String createExtId(CnATreeElement element) {
+        if(element==null) {
+            return null;
+        }
         String extId = element.getExtId();
         if(extId==null || extId.isEmpty()) {
             extId = element.getId();
