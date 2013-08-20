@@ -38,8 +38,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -80,10 +78,6 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
      */
     @Override
     public void run(IAction arg0) {
-        if(!checkRights()) {
-            return;
-        }
-        
         try {
             final IconSelectDialog dialog = new IconSelectDialog(shell);
             if(Dialog.OK==dialog.open() && dialog.isSomethingSelected()) {
@@ -130,15 +124,7 @@ public class IconSelectAction implements IWorkbenchWindowActionDelegate, RightEn
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         if (action.isEnabled()) {
-            // Conditions for availability of this action:
-            // - Database connection must be open (Implicitly assumes that login
-            // credentials have
-            // been transferred and that the server can be queried. This is
-            // neccessary since this
-            // method will be called before the server connection is enabled.)
-            // - permission handling is needed by IAuthService implementation
-            boolean b = CnAElementHome.getInstance().isOpen() && ServiceFactory.isPermissionHandlingNeeded();
-            action.setEnabled(b && checkRights());
+            action.setEnabled(checkRights());
         }
         
         if(selection instanceof ITreeSelection) {
