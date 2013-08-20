@@ -32,7 +32,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-//import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.service.commands.LoadCnAElementsByEntityIds;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;

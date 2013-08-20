@@ -114,7 +114,7 @@ public class ElementSelectionComponent {
     }
     
     public void init() {
-        
+       
         final int formAttachmentDefaultOffset = 5;
         final int column1Width = 25;
         final int column2Width = 150;
@@ -212,20 +212,22 @@ public class ElementSelectionComponent {
             @Override
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder) {
+                    cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
                     return;
                 }
                 String title = "";
-               CnATreeElement elmt = (CnATreeElement)cell.getElement();
-                   try {
-                       if(!titleMap.containsKey(elmt.getScopeId())){
-                           title = loadElementsTitles(elmt);
-                       } else {
-                           title = titleMap.get(elmt.getScopeId());
-                       }
+                CnATreeElement elmt = (CnATreeElement)cell.getElement();
+                
+                try {
+                    if(!titleMap.containsKey(elmt.getScopeId())){
+                        title = loadElementsTitles(elmt);
+                    } else {
+                        title = titleMap.get(elmt.getScopeId());
+                    }
                 } catch (CommandException e) {
                     log.error("Error while getting element", e);
                 }
-                    cell.setText(title);
+                cell.setText(title);
             }
         });
         
@@ -249,19 +251,31 @@ public class ElementSelectionComponent {
         viewer.setSorter(new ViewerSorter() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-               String title1 = "";
-               String title2 = "";
+                String title1 = "";
+                String title2 = "";
                 CnATreeElement elmt1 = (CnATreeElement) e1;
                 CnATreeElement elmt2 = (CnATreeElement) e2;
+               
                 if(titleMap!=null){
-                 title1 = titleMap.get(elmt1.getScopeId());
-                 title2 = titleMap.get(elmt2.getScopeId());
-                int allScopeTitles = title1.compareTo(title2);
-                if (allScopeTitles == 0){
-                    return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                    title1 = titleMap.get(elmt1.getScopeId());
+                    title2 = titleMap.get(elmt2.getScopeId());
+                    if(title1 != null && title2 != null){
+                        int allScopeTitles = title1.compareTo(title2);
+                        if (allScopeTitles == 0){
+                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                        }
+                        return title1.compareTo(title2);
+                    }else{
+                        if(title1 == null){
+                            return -1;
+                        }
+                        if(title2 == null){
+                            return 1;
+                        }
+                    }
                 }
-                }
-              return title1.compareTo(title2);
+                return makeTitle(elmt1).compareTo(makeTitle(elmt2));  //return -1;
+
             } 
         });
         

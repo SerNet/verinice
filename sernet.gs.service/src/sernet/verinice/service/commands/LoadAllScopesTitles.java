@@ -37,8 +37,8 @@ import sernet.verinice.model.iso27k.Organization;
  */
 @SuppressWarnings("serial")
 public class LoadAllScopesTitles extends GenericCommand {
-    
-    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);   
+   
+    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(LoadAllScopesTitles.class);
@@ -53,20 +53,21 @@ public class LoadAllScopesTitles extends GenericCommand {
             "where elmt.objectType = ? " + //$NON-NLS-1$
              "or elmt.objectType = ?"; //$NON-NLS-1$
     
+    
     private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
 
-    public LoadAllScopesTitles() {       
-    }
+    public LoadAllScopesTitles() {
+    }       
      
     /*
      * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-        StringBuilder sb = new StringBuilder(QUERY);
-        List<Object> list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
+       List<Object> list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
         if(list != null && list.size() > 0){
             for(Object elmt : list){
                 if(elmt instanceof ITVerbund){

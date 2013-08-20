@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
