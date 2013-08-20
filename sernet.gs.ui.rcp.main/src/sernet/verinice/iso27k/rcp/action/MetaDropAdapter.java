@@ -72,18 +72,18 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 		}
 		boolean success = false;
 		try {
-		for (DropPerformer adapter : performerSet) {
-			if(adapter.isActive()) {
-				if(adapter.performDrop(data, getCurrentTarget(), getViewer())) {
-					success = true;
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("performDrop, success: " + adapter);
-					}
-				}
-			} else if (LOG.isDebugEnabled()) {
-				LOG.debug("performDrop, adapter is not active: " + adapter);
-			}
-		}
+    		for (DropPerformer adapter : performerSet) {
+    			if(adapter.isActive()) {
+    				if(adapter.performDrop(data, getCurrentTarget(), getViewer())) {
+    					success = true;
+    					if (LOG.isDebugEnabled()) {
+    						LOG.debug("performDrop, success: " + adapter);
+    					}
+    				}
+    			} else if (LOG.isDebugEnabled()) {
+    				LOG.debug("performDrop, adapter is not active: " + adapter);
+    			}
+    		}
 		} catch( RuntimeException e ) {
 			LOG.error("Error while performing drop.", e);
 			throw e;
@@ -96,14 +96,16 @@ public class MetaDropAdapter extends ViewerDropAdapter {
 	 */
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
+	    if (LOG.isDebugEnabled()) {
+            LOG.debug("validateDrop...");
+        }
 		boolean success = false;
 		for (DropPerformer adapter : performerSet) {
 		    boolean valid = adapter.validateDrop(target, operation, transferType);
 		    if(LOG.isDebugEnabled()){
-		        LOG.debug("Target:\t" + target.getClass().getCanonicalName() + "\tTransfertype:\t" + transferType.toString() + "\tvalid:\t" + String.valueOf(valid));
-		        if(!valid){
-		            LOG.debug("Adapter that returns false:\t" + adapter.getClass().getCanonicalName());
-		        }
+		        LOG.debug("\tAdapter: " + adapter.getClass().getCanonicalName());
+		        LOG.debug("\tTarget: " + target.getClass().getCanonicalName() + ", Transfertype: " + transferType.toString());
+		        LOG.debug("\tValid: " + String.valueOf(valid));
 		    }
 			if(valid) {
 				success = true;

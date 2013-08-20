@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -82,6 +83,7 @@ import sernet.verinice.iso27k.rcp.action.BSIModelDropPerformer;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
+import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
@@ -248,7 +250,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
             LOG.debug("ISMview: startInitDataJob"); //$NON-NLS-1$
         }
 		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
 					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
@@ -279,7 +282,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	                modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
 	                CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
 	                Display.getDefault().syncExec(new Runnable(){
-	                    public void run() {
+	                    @Override
+                        public void run() {
 	                        setInput(CnAElementFactory.getInstance().getISO27kModel());
 	                    }
 	                });
@@ -291,11 +295,13 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	            // model is not loaded yet: add a listener to load data when it's loaded
 	            modelLoadListener = new IModelLoadListener() {
 	                
-	                public void closed(BSIModel model) {
+	                @Override
+                    public void closed(BSIModel model) {
 	                    // nothing to do
 	                }
 	                
-	                public void loaded(BSIModel model) {
+	                @Override
+                    public void loaded(BSIModel model) {
 	                    // nothing to do
 	                }
 	                
@@ -339,7 +345,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	    ControlDropPerformer controlDropAdapter;
 	    BSIModelViewDropListener bsiDropAdapter;
 		doubleClickAction = new Action() {
-			public void run() {
+			@Override
+            public void run() {
 				if(viewer.getSelection() instanceof IStructuredSelection) {
 					Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();		
 					EditorFactory.getInstance().updateAndOpenObject(sel);
@@ -394,10 +401,12 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 		controlDropAdapter = new ControlDropPerformer(viewer);
 		bsiDropAdapter = new BSIModelViewDropListener(viewer);
 		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
+		FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
 		metaDropAdapter.addAdapter(controlDropAdapter);
 		metaDropAdapter.addAdapter(bsiDropAdapter);	
 		
 		metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
+        metaDropAdapter.addAdapter(fileDropPerformer); 
 		
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 		
@@ -449,7 +458,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
+			@Override
+            public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager);
 			}			
 		});
@@ -468,7 +478,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	                                            ItemTransfer.getInstance(),
 	                                            ISO27kElementTransfer.getInstance(),
 	                                            ISO27kGroupTransfer.getInstance(),
-	                                            IBSIStrukturElementTransfer.getInstance()
+	                                            IBSIStrukturElementTransfer.getInstance(),
+	                                            FileTransfer.getInstance()
 	                                          };
 	    
 
@@ -483,7 +494,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private void addActions() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -501,7 +513,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 			Object sel = ((IStructuredSelection) selection).getFirstElement();
 			if(sel instanceof Organization) {
 				Organization element = (Organization) sel;
-				if(CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) element)) {
+				if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
 					MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
 					submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
 					submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
@@ -542,6 +554,7 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
      */
+    @Override
     public void editorActivated(IEditorPart editor) {
         if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
             return;
@@ -587,7 +600,8 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	/* (non-Javadoc)
 	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
 	 */
-	public String getPerspectiveId() {
+	@Override
+    public String getPerspectiveId() {
 		return Iso27kPerspective.ID;
 	}
 	
