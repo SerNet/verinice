@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: sernet.verinice.fei.rcp; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sernet.verinice.fei.rcp.Activator
+Bundle-Vendor: %Bundle-Vendor
+Require-Bundle: sernet.gs.ui.rcp.main,
+ sernet.gs.service,
+ sernet.verinice.fei.service,
+ com.springsource.org.apache.log4j;bundle-version="1.2.15",
+ org.eclipse.equinox.common;bundle-version="3.6.0",
+ org.eclipse.ui;bundle-version="3.5.2",
+ org.eclipse.equinox.ds;bundle-version="1.1.1",
+ sernet.springclient,
+ org.eclipse.core.resources;bundle-version="3.5.2",
+ org.eclipse.ui.intro;bundle-version="3.3.2",
+ com.springsource.org.apache.commons.io;bundle-version="1.4.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.core.runtime;version="3.4.0",
+ org.eclipse.core.runtime.jobs,
+ org.eclipse.osgi.util

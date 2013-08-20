@@ -1,0 +1,161 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Daniel Murygin.
+ *
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU Lesser General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ ******************************************************************************/
+package sernet.verinice.fei.rcp;
+
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.IDropActionDelegate;
+import org.eclipse.ui.progress.IProgressService;
+
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
+
+/**
+ *
+ *
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
+public class FileElementDropAdapter implements IDropActionDelegate {
+
+    private static final Logger LOG = Logger.getLogger(FileElementDropAdapter.class);
+    private ISchedulingRule iSchedulingRule = new Mutex();
+    
+    private int numberOfFiles = 0;
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.IDropActionDelegate#run(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public boolean run(Object data, final Object target) {
+        try {          
+            ByteArrayInputStream bai = new ByteArrayInputStream((byte[]) data);
+            ObjectInputStream oi = new ObjectInputStream(bai);
+            final String[] filePathes = (String[]) oi.readObject(); 
+            
+            boolean startImport = true;
+            boolean doConfirm = !Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.FEI_DND_CONFIRM);
+            
+            if(doConfirm) {
+                MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openYesNoCancelQuestion(
+                        Messages.FileElementDropAdapter_0,  
+                        getMessage(filePathes),
+                        Messages.FileElementDropAdapter_1,
+                        PreferenceConstants.FEI_DND_CONFIRM);
+                startImport = IDialogConstants.YES_ID == dialog.getReturnCode();
+            }
+                                  
+            if(startImport) {  
+                IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+                progressService.run(true, true, new IRunnableWithProgress() {                 
+                    @Override
+                    public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+                        try { 
+                            importFiles(filePathes, (Group<CnATreeElement>)target);
+                            
+                        } catch (Exception e) {
+                            LOG.error("Error while importing data.", e); //$NON-NLS-1$
+                        }
+                    }
+                });
+                showResult();       
+            }
+            return true;
+         } catch (Exception e) {
+            LOG.error("Error while performing file drop", e); //$NON-NLS-1$
+            return false;
+        }
+    }
+
+    /**
+     * @param filePathes
+     * @param target
+     */
+    private void importFiles(String[] filePathes, Group<CnATreeElement> target) {
+        Activator.inheritVeriniceContextState();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug( "Importing files from: " + filePathes[0] + " to group: " + target.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        numberOfFiles=0;
+        for (String file : filePathes) {
+            FileElementImportTraverser traverser = new FileElementImportTraverser(file, target);
+            traverser.traverseFileSystem();
+            numberOfFiles += traverser.getNumberOfFiles();
+        }       
+    }
+    
+    protected void showResult() {
+        if(!Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.FEI_SHOW_RESULT)) {
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openInformation(
+                        Messages.FileElementDropAdapter_0,  
+                        NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles),
+                        Messages.FileElementDropAdapter_8,
+                        PreferenceConstants.FEI_SHOW_RESULT);
+                }
+            });
+        }
+    }
+    
+    /**
+     * @param filePathes
+     * @return
+     */
+    private String getMessage(String[] filePathes) {
+        String message = ""; //$NON-NLS-1$
+        if(filePathes!=null && filePathes.length==1) {
+            message = NLS.bind(Messages.FileElementDropAdapter_5, filePathes[0]);
+        }
+        if(filePathes!=null && filePathes.length>1) {         
+            StringBuilder sb =  new StringBuilder();
+            boolean first = true;
+            for (String dir : filePathes) {
+                if(!first) {
+                    sb.append("\n"); //$NON-NLS-1$
+                }
+                sb.append("  ").append(dir); //$NON-NLS-1$
+                first = false;
+            }
+            message = NLS.bind(Messages.FileElementDropAdapter_6,  sb.toString());
+        }
+        return message;
+    }
+    
+    private Shell getShell() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    }
+
+}
