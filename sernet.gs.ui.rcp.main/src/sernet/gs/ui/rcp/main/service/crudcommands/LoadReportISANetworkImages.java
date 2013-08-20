@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -59,7 +60,7 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
     
     private boolean oddNumbers = false;
     
-    private List<byte[]> results;
+    private List<List<Object>> results;
     
     // max picture size in pixels (max is a 350x350 rectangle)
     private static final int maxImageHeightAndWidth = 350;
@@ -70,7 +71,8 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
     };
     
     public static final String[] COLUMNS = new String[] { 
-        "imageData"
+        "imageData",
+        "imageDescription"
     };
     
     public LoadReportISANetworkImages(){
@@ -88,18 +90,17 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            results = new ArrayList<byte[]>(0);
+            results = new ArrayList<List<Object>>(0);
             for(SamtTopic topic : getSamtChildren(rootElmt)){
-                List<byte[]> topicPictureList = getNetworkPictures(getLinkedEvidences(topic));
-                for(byte[] picture : topicPictureList){
-                    results.add(picture);
+                List<Object[]> topicPictureList = getNetworkPictures(getLinkedEvidences(topic));
+                for(Object[] picture : topicPictureList){
+                    results.add(Arrays.asList(picture));
                 }
-//                results.addAll(getNetworkPictures(getLinkedEvidences(topic)));
             }
         }
     }
     
-    public List<byte[]> getResults(){
+    public List<List<Object>> getResults(){
         return results;
     }
 
@@ -128,7 +129,7 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.results = (List<byte[]>)result;
+        this.results = (List<List<Object>>)result;
         resultInjectedFromCache = true;
         if(LOG.isDebugEnabled()){
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
@@ -150,8 +151,8 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
         return LOG;
     }
     
-    private List<byte[]> getNetworkPictures(List<Evidence> evidences){
-        List<byte[]> pictures = new ArrayList<byte[]>(0);
+    private List<Object[]> getNetworkPictures(List<Evidence> evidences){
+        List<Object[]> pictures = new ArrayList<Object[]>(0);
         for(Evidence evidence : evidences){
             LoadAttachments attachmentLoader = new LoadAttachments(evidence.getDbId());
 
@@ -171,7 +172,10 @@ public class LoadReportISANetworkImages extends GenericCommand implements ICache
                             }
                             LoadAttachmentFile fileLoader = new LoadAttachmentFile(attachment.getDbId());
                             fileLoader = getCommandService().executeCommand(fileLoader);
-                            pictures.add(scaleImageIfNeeded(fileLoader.getAttachmentFile().getFileData(), attachment.getMimeType()));
+                            Object[] picture = new Object[2];
+                            picture[0] = (scaleImageIfNeeded(fileLoader.getAttachmentFile().getFileData(), attachment.getMimeType()));
+                            picture[1] = attachment.getText();
+                            pictures.add(picture);
                         }
                     }
                 }

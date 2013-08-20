@@ -4199,7 +4199,8 @@ the value between <param></param> will be used directly if no string is found fo
         	name="isISOGroup"
         	id="controlgroup_is_NoIso_group"
         	inputtype="booleanoption" defaultValue="0"
-        	tags="VDA_ISA_Audit" />
+        	tags="VDA_ISA_Audit"
+        	required="true" />
         <huipropertygroup id="controlgroup_isroom_group" name="IT-Room-Check" tags="VDA_ISA_Audit" >
         	<huiproperty
         		name="isRoom"
@@ -4650,7 +4651,8 @@ the value between <param></param> will be used directly if no string is found fo
                  inputtype="numericoption" 
                min="-1" 
                max="2" 
-               defaultValue="-1" >
+               defaultValue="-1"
+               required="true" >
             <validationRule class="RegExRule">
             	<param id="regEx">(-1)|[0-2]</param>
             </validationRule>
@@ -5254,7 +5256,8 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="interview_name" 
             required="true"
-            tags="VDA_ISA_Audit"/>
+            tags="VDA_ISA_Audit"
+            />
         <huiproperty
             name="Abbreviation"
             id="interview_abbr" />
@@ -5288,7 +5291,7 @@ the value between <param></param> will be used directly if no string is found fo
 	 	   required="true"/>    
         
         <huiproperty
-            id="interview_date" name="Date" inputtype="date" >
+            id="interview_date" name="Date" inputtype="date" required="true">
             	<defaultRule class="Today" />
         </huiproperty>   
         
@@ -6416,14 +6419,16 @@ the value between <param></param> will be used directly if no string is found fo
         id="attachment"
         name="Attachment">        
         <huiproperty id="attachment_name"
-            name="Titel" />
+            name="Titel" 
+            required="true"/>
         <huiproperty id="attachment_file_name"
 			name="Datei"
             editable="false"
             visible="true" />
         <huiproperty id="attachment_text"
 			name="Beschreibung"
-            inputtype="text" />
+            inputtype="text" 
+            required="true"/>
         <huiproperty id="attachment_mime_type"
 			name="MIME-Type"
             editable="false"
@@ -6492,7 +6497,8 @@ the value between <param></param> will be used directly if no string is found fo
             editable="true" 
             required="true"
             tags="VDA_ISA_Audit"          
-            focus="true"/>
+            focus="true"
+            />
           <huiproperty 
             id="samt_topic_abbr" 
              visible="false"/>
@@ -6512,7 +6518,8 @@ the value between <param></param> will be used directly if no string is found fo
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="VDA-ISA,VDA_ISA_Audit,Web">
+            tags="VDA-ISA,VDA_ISA_Audit,Web"
+            required="true">
                 <validationRule class="RegExRule">
                 	<param id="regEx">(-1)|[0-5]</param>
                 </validationRule>
@@ -6594,14 +6601,14 @@ the value between <param></param> will be used directly if no string is found fo
 	            inputtype="text"
 	            textrows="12" />
 
-			<huiproperty name="Implemented" id="samt_topicimplemented" inputtype="singleoption" tags="Risk">
+			<huiproperty name="Implemented" id="samt_topicimplemented" inputtype="singleoption" tags="Risk" required="true">
     			<option name="Yes" id="samt_topicimplemented_yes"/>
     			<option name="No" id="samt_topicimplemented_no"/>
     			<option name="Partly" id="samt_topicimplemented_partly"/>
     			<option name="N.a." id="samt_topicimplemented_na"/>
     		</huiproperty>  
     		
-    	<huiproperty name="samt_topic user classification" id="samt_topic_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit">
+    	<huiproperty name="samt_topic user classification" id="samt_topic_user_classification" inputtype="singleoption" tags="VDA_ISA_Audit" required="true">
     			<option name="Good implementation" id="samt_topic_classification_good" />
     			<option name="Insufficient implementation" id="samt_topic_classification_insufficient" />
     			<option name="No classification" id="samt_topic_classification_none" />
