@@ -264,14 +264,11 @@ public class ElementSelectionComponent {
                             return makeTitle(elmt1).compareTo(makeTitle(elmt2));
                         }
                         return title1.compareTo(title2);
-                    }else{
-                        if(title1 == null || title2 == null){
-                            title1 = "1";
-                            title2 = "-1";
-                            int titlesCompares = title1.compareTo(title2);
-                            if(titlesCompares != 0){
-                                return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                            }
+                    } else {
+                        if(title1 == null){
+                            return 1;
+                        } if(title2 == null) {
+                            return -1;
                         }
                     }
                 }
