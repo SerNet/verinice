@@ -81,7 +81,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 		this.view = view;
 	}
 
-	public String getColumnText(Object obj, int index) {
+	@Override
+    public String getColumnText(Object obj, int index) {
 	    if (obj instanceof PlaceHolder) {
 	        if (index != 1){
 	            return ""; //$NON-NLS-1$
@@ -109,12 +110,16 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    case 3:
 	        String title  = "";
 	        try {
-	            if(!titleMap.containsKey(link.getDependency().getScopeId())){
-	                title = loadElementsTitles(link.getDependency());
-	            } else {
-	                title = titleMap.get(link.getDependency().getScopeId());
+	            CnATreeElement target = link.getDependency();
+	            if(target.equals(view.getInputElmt())) {
+	                target = link.getDependant();
 	            }
-	        }catch (CommandException e) {
+	            if(!titleMap.containsKey(target.getScopeId())){
+	                title = loadElementsTitles(target);
+	            } else {
+	                title = titleMap.get(target.getScopeId());
+	            }
+	        } catch (CommandException e) {
 	            log.error("Error while getting element properties", e);
 	        }
 	      return title; //ScopeTitle from element dependencies
@@ -134,7 +139,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    }
 	}
 
-	public Image getColumnImage(Object obj, int index) {
+	@Override
+    public Image getColumnImage(Object obj, int index) {
 		if (obj instanceof PlaceHolder){
 			return null;
 		}
@@ -163,7 +169,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	 * @return
 	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
-	    Image image = CnAImageProvider.getCustomImage((CnATreeElement)elmt);
+	    Image image = CnAImageProvider.getCustomImage(elmt);
         if(image!=null) {
             return image;
         }
