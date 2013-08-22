@@ -20,7 +20,6 @@ package sernet.verinice.service.commands;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,7 +27,6 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -117,13 +115,14 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         this(container, type, null, skipReload, createChildren);
     }
 
+    @Override
     public void execute() {
         IBaseDao<T, Serializable> dao;
         if(clazz==null) {
             clazz = CnATypeMapper.getClassFromTypeId(typeId);
         }
         
-        dao = (IBaseDao<T, Serializable>) getDaoFactory().getDAO(clazz);
+        dao = getDaoFactory().getDAO(clazz);
         
         IBaseDao<CnATreeElement, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
 
@@ -138,7 +137,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
             } else if(isAudit()) {
                 child = (T) Audit.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
             } else {
-                child = (T) clazz.getConstructor(CnATreeElement.class).newInstance(container);
+                child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
             
             }
             if (title != null) {
@@ -154,8 +153,8 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
             container.addChild(child);
             child.setParentAndScope(container);
 
-            if(isOrganization()) {
-                setScope((Organization)child);
+            if(isOrganization() || isItVerbund()) {
+                setScopeOfScope(child);
             }
             
             // initialize UUID, used to find container in display in views:
@@ -170,6 +169,10 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         return Organization.class.equals(clazz) || Organization.TYPE_ID.equals(typeId);
     }
     
+    private boolean isItVerbund() {
+        return ITVerbund.class.equals(clazz) || ITVerbund.TYPE_ID.equals(typeId);
+    }
+    
     private boolean isAudit() {
         return Audit.class.equals(clazz) || Audit.TYPE_ID.equals(typeId);
     }
@@ -177,10 +180,10 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     /**
      * @param child2
      */
-    private void setScope(Organization org) {
-        org.setScopeId(org.getDbId());
-        for (CnATreeElement child : org.getChildren()) {
-            child.setScopeId(org.getDbId());
+    private void setScopeOfScope(CnATreeElement orgOrItVerbund) {
+        orgOrItVerbund.setScopeId(orgOrItVerbund.getDbId());
+        for (CnATreeElement child : orgOrItVerbund.getChildren()) {
+            child.setScopeId(orgOrItVerbund.getDbId());
         }
         
     }
@@ -221,6 +224,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
      * ()
      */
+    @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_INSERT;
     }
@@ -232,6 +236,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
      * ()
      */
+    @Override
     public String getStationId() {
         return stationId;
     }
@@ -250,16 +255,19 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
      * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangedElements()
      */
+    @Override
     public List<CnATreeElement> getChangedElements() {
         ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
         result.add(child);
         return result;
     }
 
+    @Override
     public IAuthService getAuthService() {
         return authService;
     }
 
+    @Override
     public void setAuthService(IAuthService service) {
         this.authService = service;
     }
