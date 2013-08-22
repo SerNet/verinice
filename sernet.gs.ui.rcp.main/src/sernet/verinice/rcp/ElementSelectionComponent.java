@@ -265,6 +265,9 @@ public class ElementSelectionComponent {
                         }
                         return title1.compareTo(title2);
                     } else {
+                        if(title1==null && title2==null) {
+                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
+                        }
                         if(title1 == null){
                             return 1;
                         } if(title2 == null) {
@@ -273,7 +276,6 @@ public class ElementSelectionComponent {
                     }
                 }
                 return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
-
             } 
         });
         
