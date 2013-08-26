@@ -17,9 +17,14 @@
  ******************************************************************************/
 package sernet.verinice.hibernate;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.SecurityException;
@@ -48,6 +53,71 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	
 	private IConfigurationService configurationService;
 
+	
+    @Override
+    public List<CnATreeElement> findByCriteria(DetachedCriteria criteria) {
+	    String username = getAuthService().getUsername();
+	    if(isPermissionHandlingNeeded(username)) {
+	        enableFilter();
+	    }
+	    List<CnATreeElement> result = super.findByCriteria(criteria);
+	    if(isPermissionHandlingNeeded(username)) {
+            disableFilter();
+        }
+	    return result;
+	}
+	
+	public void enableFilter() {
+        if(!hasAdminRole(authService.getRoles())) {
+            if(log.isDebugEnabled()) {
+                log.debug("Enabling security access filter for user: " + authService.getUsername());
+            }
+            setAccessFilterEnabled(true);
+        }
+        setScopeFilterEnabled(true);
+    }
+	
+	public void disableFilter() {
+        if(!hasAdminRole(authService.getRoles())) {
+            if(log.isDebugEnabled()) {
+                log.debug("Disabling security access filter.");
+            }
+            setAccessFilterEnabled(false);
+        }
+        setScopeFilterEnabled(false);
+    }
+
+	private void setScopeFilterEnabled(boolean enable) {
+        if(getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
+            final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
+            getHibernateTemplate().enableFilter("scopeFilter").setParameter("scopeId", userScopeId);        
+        } else {
+            getHibernateTemplate().execute(new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.disableFilter("scopeFilter");
+                    return null;
+                }
+            }); 
+        }
+    }
+	
+	private void setAccessFilterEnabled(boolean enable) {
+        if (enable) {
+            final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
+            getHibernateTemplate().enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
+        } else {
+            getHibernateTemplate().execute(new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.disableFilter("userAccessReadFilter");
+                    return null;
+                }
+            }); 
+        }
+    }
+	
+	
 	/**
 	 * @param type
 	 */
@@ -58,7 +128,10 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.connect.HibernateBaseDao#delete(java.lang.Object)
 	 */
-	@Override
+	/* (non-Javadoc)
+     * @see sernet.verinice.hibernate.ISecureDao#delete(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
 	public void delete(CnATreeElement entity) {
 		checkRights(entity);
 		super.delete(entity);
@@ -70,7 +143,10 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	 * @see
 	 * sernet.gs.ui.rcp.main.connect.HibernateBaseDao#merge(java.lang.Object)
 	 */
-	@Override
+	/* (non-Javadoc)
+     * @see sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
 	public CnATreeElement merge(CnATreeElement entity) {
 		return super.merge(entity);
 	}
@@ -82,7 +158,10 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	 * sernet.gs.ui.rcp.main.connect.HibernateBaseDao#merge(java.lang.Object,
 	 * boolean)
 	 */
-	@Override
+	/* (non-Javadoc)
+     * @see sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.CnATreeElement, boolean)
+     */
+    @Override
 	public CnATreeElement merge(CnATreeElement entity, boolean fireChange) {
 		// check rights only while updating
 		if(entity.getDbId()!=null) {

@@ -42,6 +42,10 @@ public interface ICommandService {
     
 	public  <T extends ICommand> T executeCommand(T command) throws CommandException;
 
+	public void configureFilter(IBaseDao dao);
+	
+	public void disableFilter(IBaseDao dao);
+	
 	public void discardUserData();
 	
 	public Properties getProperties();

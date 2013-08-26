@@ -33,8 +33,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.TimeFormatter;
-import sernet.verinice.hibernate.HibernateDao;
-import sernet.verinice.hibernate.TreeElementDao;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
@@ -68,9 +67,9 @@ public class GraphService implements IGraphService {
     
     private List<IGraphElementLoader> loaderList;
     
-    private TreeElementDao<CnATreeElement, Long> cnaTreeElementDao;
+    private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
     
-    private HibernateDao<CnALink, CnALink.Id> cnaLinkDao;
+    private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
     
     private Map<String, CnATreeElement> uuidMap = new Hashtable<String, CnATreeElement>();
 
@@ -163,19 +162,19 @@ public class GraphService implements IGraphService {
         this.relationIds = (relationIds != null) ? relationIds.clone() : null;
     }
     
-    public TreeElementDao<CnATreeElement, Long> getCnaTreeElementDao() {
+    public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
 
-    public void setCnaTreeElementDao(TreeElementDao<CnATreeElement, Long> cnaTreeElementDao) {
+    public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDao) {
         this.cnaTreeElementDao = cnaTreeElementDao;
     }
     
-    public HibernateDao<CnALink, CnALink.Id> getCnaLinkDao() {
+    public IBaseDao<CnALink, CnALink.Id> getCnaLinkDao() {
         return cnaLinkDao;
     }
 
-    public void setCnaLinkDao(HibernateDao<CnALink, CnALink.Id> cnaLinkDao) {
+    public void setCnaLinkDao(IBaseDao<CnALink, CnALink.Id> cnaLinkDao) {
         this.cnaLinkDao = cnaLinkDao;
     }
     

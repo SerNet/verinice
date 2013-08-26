@@ -54,6 +54,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
@@ -62,6 +63,7 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.service.sync.StreamFactory;
 import sernet.verinice.service.sync.VeriniceArchive;
 import de.sernet.sync.data.SyncData;
@@ -131,6 +133,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient String cacheId = null;
     private transient Cache cache = null;   
     private transient IBaseDao<CnATreeElement, Serializable> dao;
+    private transient IBaseDao<Permission, Serializable> permissionDao;
     private transient ExecutorService taskExecutor;
  
     public ExportCommand( List<CnATreeElement> elements, String sourceId, boolean reImport) {
@@ -272,25 +275,37 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         List<ExportTransaction> transactionList = new ArrayList<ExportTransaction>();
         
         taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
-        
-        for( CnATreeElement child : children ) {
-            ExportTransaction childTransaction = new ExportTransaction(child);
-            transactionList.add(childTransaction);
-            ExportThread thread = new ExportThread(childTransaction);
-            configureThread(thread);
-            thread.addListener(new IThreadCompleteListener() {            
-                @Override
-                public void notifyOfThreadComplete(Thread thread) {
-                    ExportThread exportThread = (ExportThread) thread;
-                    synchronized(LOCK) {
-                        if(exportThread.getSyncObject()!=null) {
-                            transaction.getTarget().getChildren().add(exportThread.getSyncObject());
-                        }
-                        getValuesFromThread(exportThread);
-                    }                 
+        if(!children.isEmpty()) {
+            for( CnATreeElement child : children ) {
+                ExportTransaction childTransaction = new ExportTransaction(child);
+                transactionList.add(childTransaction);
+                ExportThread thread = new ExportThread(childTransaction);
+                configureThread(thread);
+                
+                // Single thread:
+                /*
+                thread.export();
+                if(thread.getSyncObject()!=null) {
+                    transaction.getTarget().getChildren().add(thread.getSyncObject());
                 }
-            });
-            taskExecutor.execute(thread);
+                getValuesFromThread(thread);    
+                */
+                
+                // Multi thread:      
+                thread.addListener(new IThreadCompleteListener() {            
+                    @Override
+                    public void notifyOfThreadComplete(Thread thread) {
+                        ExportThread exportThread = (ExportThread) thread;
+                        synchronized(LOCK) {
+                            if(exportThread.getSyncObject()!=null) {
+                                transaction.getTarget().getChildren().add(exportThread.getSyncObject());
+                            }
+                            getValuesFromThread(exportThread);
+                        }                 
+                    }
+                });
+                taskExecutor.execute(thread);
+            }
         }
         
         awaitTermination(transactionList.size() * timeOutFactor);

@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandCacheClient;
@@ -187,6 +188,20 @@ public class CommandCacheClient implements ICommandCacheClient {
     @Override
     public void setUseCache(boolean useCache) {
         
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandService#configureFilter(sernet.verinice.interfaces.IBaseDao)
+     */
+    @Override
+    public void configureFilter(IBaseDao dao) {  
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandService#disableFilter(sernet.verinice.interfaces.IBaseDao)
+     */
+    @Override
+    public void disableFilter(IBaseDao dao) {
     }
 
 }

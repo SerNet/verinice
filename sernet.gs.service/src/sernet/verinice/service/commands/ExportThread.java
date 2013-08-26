@@ -59,8 +59,6 @@ public class ExportThread extends NotifyingThread {
     
     private Cache cache = null;
     
-    private ICommandService commandService;
-    
     private IBaseDao<CnATreeElement, Serializable> dao;
     
     private IBaseDao<Attachment, Serializable> attachmentDao;
@@ -91,6 +89,8 @@ public class ExportThread extends NotifyingThread {
     
     private String sourceId;
     
+    private ICommandService commandService;
+    
     
     public ExportThread(ExportTransaction transaction) {
         super();
@@ -107,7 +107,11 @@ public class ExportThread extends NotifyingThread {
                 LOG.debug("Starting export job asyncronly...");
             }
             ServerInitializer.inheritVeriniceContextState();
+            // Every thread has it's own Hibernate session
+            // configure filter in this session
+            getCommandService().configureFilter(getDao());
             export();
+            getCommandService().disableFilter(getDao());
         } catch (CommandException e) {
             LOG.error("Error while exporting", e);
         }

@@ -37,9 +37,10 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -55,8 +56,8 @@ public class ValidationService implements IValidationService {
     private Logger log = Logger.getLogger(ValidationService.class);
     
     private ICommandService commandService;
-    private HibernateDao<CnAValidation, Long> cnaValidationDAO;
-    private HibernateDao<CnATreeElement, Long> cnaTreeElementDAO;
+    private IDao<CnAValidation, Long> cnaValidationDAO;
+    private IBaseDao<CnATreeElement, Long> cnaTreeElementDAO;
     
     // values from CnAValidation.hbm.xml
     private static final int MAXLENGTH_DBSTRING = 250;
@@ -157,6 +158,7 @@ public class ValidationService implements IValidationService {
         }
     }
     
+    @Override
     public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId){
         if(scopeId != null && elmtDbId != null){
             String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
@@ -189,19 +191,19 @@ public class ValidationService implements IValidationService {
         this.commandService = commandService;
     }
 
-    public HibernateDao<CnAValidation, Long> getCnaValidationDAO() {
+    public IDao<CnAValidation, Long> getCnaValidationDAO() {
         return cnaValidationDAO;
     }
 
-    public void setCnaValidationDAO(HibernateDao<CnAValidation, Long> cnaValidationDAO) {
+    public void setCnaValidationDAO(IDao<CnAValidation, Long> cnaValidationDAO) {
         this.cnaValidationDAO = cnaValidationDAO;
     }
 
-    public HibernateDao<CnATreeElement, Long> getCnaTreeElementDAO() {
+    public IBaseDao<CnATreeElement, Long> getCnaTreeElementDAO() {
         return cnaTreeElementDAO;
     }
 
-    public void setCnaTreeElementDAO(HibernateDao<CnATreeElement, Long> cnaTreeElementDAO) {
+    public void setCnaTreeElementDAO(IBaseDao<CnATreeElement, Long> cnaTreeElementDAO) {
         this.cnaTreeElementDAO = cnaTreeElementDAO;
     }
 
@@ -222,7 +224,7 @@ public class ValidationService implements IValidationService {
                 " AND validation.propertyId = ? " +
                 "AND validation.hintId = ?"+ 
                 " AND validation.scopeId = ?";
-        CnAValidation validation = getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId}).get(0);
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId}).get(0);
         return deleteValidation(validation);
     }
     
@@ -288,7 +290,7 @@ public class ValidationService implements IValidationService {
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.propertyId = ? " + 
                 " AND validation.scopeId = ?";
-        CnAValidation validation = getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, scopeId}).get(0);
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, scopeId}).get(0);
         getCnaValidationDAO().delete(validation);
         return validation;
     }
@@ -308,7 +310,7 @@ public class ValidationService implements IValidationService {
                 " AND validation.propertyId = ? " +
                 "AND validation.hintId = ?"+ 
                 " AND validation.scopeId = ?";
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{cnaDbId, propertyType, hint, scopeId}).get(0);
+        return (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{cnaDbId, propertyType, hint, scopeId}).get(0);
     }
 
     /* (non-Javadoc)
@@ -365,7 +367,7 @@ public class ValidationService implements IValidationService {
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.scopeId = ?";
-        for(CnAValidation validation : getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, scopeId})){
+        for(CnAValidation validation : (List<CnAValidation>)getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, scopeId})){
             getCnaValidationDAO().delete(validation);
         }
     }

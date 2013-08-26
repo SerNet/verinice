@@ -138,22 +138,15 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			// control (this is the default) and the logged in user is non-
 			// privileged the filter is configured and activated.
 			if (authService.isPermissionHandlingNeeded() && !(command instanceof INoAccessControl) ) {
-			    if(!hasAdminRole(authService.getRoles())) {
-    				if(log.isDebugEnabled()) {
-    					log.debug("Enabling security access filter for user: " + authService.getUsername());
-    				}
-    				setAccessFilterEnabled(true);
-			    }
-			    configureScopeFilter();
+			    configureFilter(getBsiModelDao());
 			} else {
-			    disableScopeFilter();
+			    disableScopeFilter(getBsiModelDao());
 			}
 			
 			// execute actions, compute results:
 			command.execute();
 			
-			setAccessFilterEnabled(false);
-			disableScopeFilter();
+			disableFilter(getBsiModelDao());
 			
 			// log changes:
 			if (command instanceof IChangeLoggingCommand) {
@@ -178,7 +171,31 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		return command;
 	}
 
-
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandService#configureFilter(sernet.verinice.interfaces.IBaseDao)
+     */
+    @Override
+    public void configureFilter(IBaseDao dao) {
+        if(authService.isPermissionHandlingNeeded()) {
+            if(!hasAdminRole(authService.getRoles())) {
+            	if(log.isDebugEnabled()) {
+            		log.debug("Enabling security access filter for user: " + authService.getUsername());
+            	}
+            	setAccessFilterEnabled(true,dao);
+            }
+            configureScopeFilter(dao);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandService#disableFilter(sernet.verinice.interfaces.IBaseDao)
+     */
+    @Override
+    public void disableFilter(IBaseDao dao) {
+        setAccessFilterEnabled(false,dao);
+        disableScopeFilter(dao);
+    }
+    
     private void log(IChangeLoggingCommand notifyCommand) {
 		List<ElementChange> elementChanges = notifyCommand.getChanges();
 		for (ElementChange changedElement : elementChanges) {
@@ -307,10 +324,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
     /**
      * 
      */
-    private void configureScopeFilter() {
+    private void configureScopeFilter(IBaseDao dao) {
         if(getConfigurationService().isScopeOnly(authService.getUsername())) {
             final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
-            getBsiModelDao().executeCallback(new HibernateCallback() {
+            dao.executeCallback(new HibernateCallback() {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
@@ -318,14 +335,14 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
                 }
             });        
         } else {
-            disableScopeFilter();
+            disableScopeFilter(dao);
         }
     }
 	
-    private void setAccessFilterEnabled(boolean enable) {
+    private void setAccessFilterEnabled(boolean enable, IBaseDao dao) {
         if (enable) {
             final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
-            getBsiModelDao().executeCallback(new HibernateCallback() {
+            dao.executeCallback(new HibernateCallback() {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     session.enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
@@ -333,16 +350,13 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
                 }
             });
         } else {
-            disableScopeFilter();
+            disableScopeFilter(dao);
         }
     }
 
 
-    /**
-     * 
-     */
-    private void disableScopeFilter() {
-        getBsiModelDao().executeCallback(new HibernateCallback() {
+    private void disableScopeFilter(IBaseDao dao) {
+        dao.executeCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 session.disableFilter("scopeFilter");
