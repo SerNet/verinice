@@ -19,7 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm.indi;
 
-import sernet.verinice.bpm.ProcessServiceVerinice;
+import java.util.Map;
+
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
@@ -30,7 +31,7 @@ import sernet.verinice.model.bpm.ProcessInformation;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndividualServiceDummy extends ProcessServiceVerinice implements IIndividualService {
+public class IndividualServiceDummy implements IIndividualService {
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.IIndividualService#startProcess(sernet.verinice.interfaces.bpm.IndividualServiceParameter)
@@ -38,6 +39,36 @@ public class IndividualServiceDummy extends ProcessServiceVerinice implements II
     @Override
     public IProcessStartInformation startProcess(IndividualServiceParameter parameter) {
         return new ProcessInformation(0);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
+     */
+    @Override
+    public String findProcessDefinitionId(String processDefinitionKey) {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
+     */
+    @Override
+    public void startProcess(String processDefinitionKey, Map<String, ?> variables) { 
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
+     */
+    @Override
+    public void deleteProcess(String id) {
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
+     */
+    @Override
+    public boolean isActive() {
+        return false;
     }
 
 }
