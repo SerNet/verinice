@@ -47,6 +47,7 @@ import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -87,7 +88,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private static VeriniceContext.State state;
 
-    private IBaseDao<TaskImpl, Long> jbpmTaskDao;
+    private IDao<TaskImpl, Long> jbpmTaskDao;
 
     private IBaseDao<Configuration, Integer> configurationDao;
 
@@ -321,11 +322,11 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
         return NotificationJob.state;
     }
 
-    public IBaseDao<TaskImpl, Long> getJbpmTaskDao() {
+    public IDao<TaskImpl, Long> getJbpmTaskDao() {
         return jbpmTaskDao;
     }
 
-    public void setJbpmTaskDao(IBaseDao<TaskImpl, Long> jbpmTaskDao) {
+    public void setJbpmTaskDao(IDao<TaskImpl, Long> jbpmTaskDao) {
         this.jbpmTaskDao = jbpmTaskDao;
     }
 

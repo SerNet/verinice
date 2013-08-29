@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -17,7 +18,7 @@ public class ProcessValidator implements IProcessCreater {
     
     private IProcessServiceGeneric processService;
     
-    private IBaseDao<ExecutionImpl, Integer> jbpmExecutionDao;
+    private IDao<ExecutionImpl, Integer> jbpmExecutionDao;
     
     private IBaseDao<CnATreeElement,Integer> elementDao;
     
@@ -64,11 +65,11 @@ public class ProcessValidator implements IProcessCreater {
         this.processService = processService;
     }
 
-    public IBaseDao<ExecutionImpl, Integer> getJbpmExecutionDao() {
+    public IDao<ExecutionImpl, Integer> getJbpmExecutionDao() {
         return jbpmExecutionDao;
     }
 
-    public void setJbpmExecutionDao(IBaseDao<ExecutionImpl, Integer> jbpmExecutionDao) {
+    public void setJbpmExecutionDao(IDao<ExecutionImpl, Integer> jbpmExecutionDao) {
         this.jbpmExecutionDao = jbpmExecutionDao;
     }
 
