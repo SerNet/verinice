@@ -117,8 +117,8 @@ public class ElementSelectionComponent {
        
         final int formAttachmentDefaultOffset = 5;
         final int column1Width = 25;
-        final int column2Width = 150;
-        final int column3Width = 200;
+        final int column2Width = 200;
+        final int column3Width = 150;
         final int formData2Numerator = 100;
         final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
@@ -205,10 +205,24 @@ public class ElementSelectionComponent {
             }
         });
         
-        //scope id column
+        // label column
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setWidth(column2Width);
         column2.setLabelProvider(new CellLabelProvider() {
+            @Override
+            public void update(ViewerCell cell) {
+                if (cell.getElement() instanceof PlaceHolder) {
+                    cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
+                    return;
+                }
+                cell.setText( makeTitle((CnATreeElement)cell.getElement()) );
+            }
+        });
+        
+         // scope id column:
+        TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
+        column3.getColumn().setWidth(column3Width);
+        column3.setLabelProvider(new CellLabelProvider() {
             @Override
             public void update(ViewerCell cell) {
                 if (cell.getElement() instanceof PlaceHolder) {
@@ -228,21 +242,7 @@ public class ElementSelectionComponent {
                     log.error("Error while getting element", e);
                 }
                 cell.setText(title);
-            }
-        });
-        
-         // label column:
-        TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
-        column3.getColumn().setWidth(column3Width);
-        column3.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
-                    return;
-                }
-                cell.setText( makeTitle((CnATreeElement)cell.getElement()) );
-            }
+            }    
         });
         
         viewer.setColumnProperties(new String[] {COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL});

@@ -45,9 +45,9 @@ public class RelationTableViewer extends TableViewer {
 		super(parent, style);
 		
 		final int defaultColumnWidth = 25;
-		final int viewerCol2Width = 150;
-		final int col4Width = 100;
-		final int col5Width = 200;
+		final int viewerCol2Width = 100;
+		final int col4Width = 150;
+		final int col5Width = 100;
 		final int viewerCol5Width = 250;
 		
 		TableColumn col1;
@@ -80,14 +80,14 @@ public class RelationTableViewer extends TableViewer {
 		col3.setText(""); //$NON-NLS-1$
 		col3.setWidth(defaultColumnWidth);
 
-		//element scope id
+		//element title
 		col4 = new TableColumn(table, SWT.LEFT);
-        col4.setText(Messages.RelationTableViewer_5);
+        col4.setText(Messages.RelationTableViewer_6);
         col4.setWidth(col4Width);
         
-		// element title:
+		// element scope id:
 		col5 = new TableColumn(table, SWT.LEFT);
-		col5.setText(Messages.RelationTableViewer_6);
+		col5.setText(Messages.RelationTableViewer_5);
 		col5.setWidth(col5Width);
 		
 		viewerCol5 = new TableViewerColumn(this, SWT.LEFT);

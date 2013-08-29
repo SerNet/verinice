@@ -108,24 +108,23 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    case 2:
 	        return ""; // image only //$NON-NLS-1$
 	    case 3:
-	        String title  = "";
-	        try {
-	            CnATreeElement target = link.getDependency();
-	            if(target.equals(view.getInputElmt())) {
-	                target = link.getDependant();
-	            }
-	            if(!titleMap.containsKey(target.getScopeId())){
-	                title = loadElementsTitles(target);
-	            } else {
-	                title = titleMap.get(target.getScopeId());
-	            }
-	        } catch (CommandException e) {
-	            log.error("Error while getting element properties", e);
-	        }
-	      return title; //ScopeTitle from element dependencies
-            
+	        return CnALink.getRelationObjectTitle(view.getInputElmt(), link);      
 	    case 4:
-	        return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
+	        String title  = "";
+            try {
+                CnATreeElement target = link.getDependency();
+                if(target.equals(view.getInputElmt())) {
+                    target = link.getDependant();
+                }
+                if(!titleMap.containsKey(target.getScopeId())){
+                    title = loadElementsTitles(target);
+                } else {
+                    title = titleMap.get(target.getScopeId());
+                }
+            } catch (CommandException e) {
+                log.error("Error while getting element properties", e);
+            }
+            return title; //ScopeTitle from element dependencies         
 	    case 5:
 	        return link.getComment();
 	    case 6:

@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -46,7 +45,7 @@ public class LoadAllScopesTitles extends GenericCommand {
         return log;
     }
     
-    private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
+    private static final String QUERY = "select elmt from CnATreeElement elmt " +
             "join fetch elmt.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
@@ -69,13 +68,10 @@ public class LoadAllScopesTitles extends GenericCommand {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
        List<Object> list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
         if(list != null && list.size() > 0){
-            for(Object elmt : list){
-                if(elmt instanceof ITVerbund){
-                    ITVerbund itverbund = (ITVerbund)elmt;
-                    selectedElements.put(itverbund.getDbId(), itverbund.getTitle());
-                }else if(elmt instanceof Organization){
-                    Organization org = (Organization) elmt;
-                    selectedElements.put(org.getDbId(), org.getTitle());
+            for(Object obj : list){
+                if(obj instanceof CnATreeElement){
+                    CnATreeElement element = (CnATreeElement)obj;
+                    selectedElements.put(element.getDbId(), element.getTitle());
                 }
             }
         } 
