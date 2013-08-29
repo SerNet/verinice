@@ -46,7 +46,6 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.hibernate.HibernateDao;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -88,7 +87,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     private static VeriniceContext.State state;
 
-    private HibernateDao<TaskImpl, Long> jbpmTaskDao;
+    private IBaseDao<TaskImpl, Long> jbpmTaskDao;
 
     private IBaseDao<Configuration, Integer> configurationDao;
 
@@ -322,11 +321,11 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
         return NotificationJob.state;
     }
 
-    public HibernateDao<TaskImpl, Long> getJbpmTaskDao() {
+    public IBaseDao<TaskImpl, Long> getJbpmTaskDao() {
         return jbpmTaskDao;
     }
 
-    public void setJbpmTaskDao(HibernateDao<TaskImpl, Long> jbpmTaskDao) {
+    public void setJbpmTaskDao(IBaseDao<TaskImpl, Long> jbpmTaskDao) {
         this.jbpmTaskDao = jbpmTaskDao;
     }
 
