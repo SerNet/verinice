@@ -31,6 +31,7 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -50,6 +51,7 @@ public class ConfigurationService implements IConfigurationService {
     private Map<String, String> nameMap = new HashMap<String, String>();
     
     private IBaseDao<Configuration, Serializable> configurationDao;
+    private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
     
     private IAuthService authService;
  
@@ -63,9 +65,10 @@ public class ConfigurationService implements IConfigurationService {
                 String user = c.getUser();
                 // Put result into map and save asking the DB next time.
                 roleMap.put(user, roleArray);           
-                scopeMap.put(user, c.isScopeOnly());     
+                scopeMap.put(user, c.isScopeOnly()); 
                 scopeIdMap.put(user, c.getPerson().getScopeId());  
-                nameMap.put(user, c.getPerson().getTitle());  
+                CnATreeElement person = getCnaTreeElementDao().findByUuid(c.getPerson().getUuid(), RetrieveInfo.getPropertyInstance());
+                nameMap.put(user, person.getTitle());  
             }
             String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
             roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
@@ -95,6 +98,7 @@ public class ConfigurationService implements IConfigurationService {
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#discardUserData()
      */
+    @Override
     public void discardUserData() {
         // Block all other threads before clearing the maps
         writeLock.lock();
@@ -223,6 +227,14 @@ public class ConfigurationService implements IConfigurationService {
 
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
+    }
+    
+    public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
+        return cnaTreeElementDao;
+    }
+    
+    public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDAO) {
+        this.cnaTreeElementDao = cnaTreeElementDAO;
     }
 
     public IAuthService getAuthService() {

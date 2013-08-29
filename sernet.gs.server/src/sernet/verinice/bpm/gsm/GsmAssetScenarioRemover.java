@@ -66,7 +66,6 @@ public class GsmAssetScenarioRemover {
      * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
      */
     private IGraphService graphService;
-    private VeriniceGraph graph;
     
     private IBaseDao<CnALink, CnALink.Id> linkDao;
     
@@ -136,7 +135,7 @@ public class GsmAssetScenarioRemover {
     }
 
     public VeriniceGraph getGraph() {
-        return graph;
+        return getGraphService().getGraph();
     }
 
     public IBaseDao<CnALink, CnALink.Id> getLinkDao() {

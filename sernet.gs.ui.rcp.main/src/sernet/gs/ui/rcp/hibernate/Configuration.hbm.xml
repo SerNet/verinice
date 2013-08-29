@@ -23,7 +23,7 @@
 			fetch="join" />
 		
 		<many-to-one name="person"
-			column="person_id" />
+			column="person_id" lazy="false" fetch="join"/>
 
 	</class>
 </hibernate-mapping>
