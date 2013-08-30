@@ -2,7 +2,6 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -642,52 +641,64 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
-            MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
-            return;
-        }
-        List<Integer> scopeIds = new ArrayList<Integer>(0);
-        scopeIds.add(getRootElement());
-        if(getRootElements() != null){
-            scopeIds.addAll(Arrays.asList(getRootElements()));
-        }
-        IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-        boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
-        IValidationService vService = ServiceFactory.lookupValidationService();
-        boolean validationsExistant = false;
-        for(Integer scopeId : scopeIds){
-            if(vService.getValidations(scopeId, (Integer)null).size() > 0){
-                validationsExistant = true;
-                break;
-            }
-        }
-
-        if(!dontShow && validationsExistant){
-            MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(getParentShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_21, Messages.GenerateReportDialog_23, dontShow, preferenceStore, PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
-            preferenceStore.setValue(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, dialog.getToggleState());
-
-            if(!(dialog.getReturnCode()==IDialogConstants.OK_ID || dialog.getReturnCode()==IDialogConstants.YES_ID)){
+        try {
+            if (textFile.getText().length()==0 || scopeCombo.getSelectionIndex()<0) {
+                MessageDialog.openWarning(getShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_6);
                 return;
             }
+            List<Integer> scopeIds = new ArrayList<Integer>(0);
+            if(getRootElement()!=null) {
+                scopeIds.add(getRootElement());
+            }
+            if(getRootElements() != null){
+                for (Integer scopeId : getRootElements()) {
+                    if(scopeId!=null) {
+                        scopeIds.add(scopeId);
+                    }                 
+                }             
+            }
+            IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+            boolean dontShow = preferenceStore.getBoolean(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
+            IValidationService vService = ServiceFactory.lookupValidationService();
+            boolean validationsExistant = false;
+            for(Integer scopeId : scopeIds){
+                if(vService.getValidations(scopeId, (Integer)null).size() > 0){
+                    validationsExistant = true;
+                    break;
+                }
+            }
+
+            if(!dontShow && validationsExistant){
+                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(getParentShell(), Messages.GenerateReportDialog_5, Messages.GenerateReportDialog_21, Messages.GenerateReportDialog_23, dontShow, preferenceStore, PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
+                preferenceStore.setValue(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, dialog.getToggleState());
+
+                if(!(dialog.getReturnCode()==IDialogConstants.OK_ID || dialog.getReturnCode()==IDialogConstants.YES_ID)){
+                    return;
+                }
+            }
+
+            String f = textFile.getText();
+            chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+            chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
+
+            chosenReportType.setReportFile(textReportTemplateFile.getText());
+
+            // This just appends the chosen report's extension if the existing
+            // suffix does not match. Could be enhanced.
+            if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
+                f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
+            }
+
+            String currentPath = setupDirPath();
+            if(useDefaultFolder){
+                Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
+            }
+            outputFile = new File(f);
+        } catch (Exception e) {
+            LOG.error("Error while creating report.", e);
+            MessageDialog.openError(getShell(), "Error", "An error occurred while creating report.");
+            return;
         }
-
-        String f = textFile.getText();
-        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-        chosenOutputFormat = chosenReportType.getOutputFormats()[comboOutputFormat.getSelectionIndex()];
-
-        chosenReportType.setReportFile(textReportTemplateFile.getText());
-
-        // This just appends the chosen report's extension if the existing
-        // suffix does not match. Could be enhanced.
-        if (!f.endsWith(chosenOutputFormat.getFileSuffix())) {
-            f += "." + chosenOutputFormat.getFileSuffix(); //$NON-NLS-1$
-        }
-
-        String currentPath = setupDirPath();
-        if(useDefaultFolder){
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
-        }
-        outputFile = new File(f);
         super.okPressed();
     }
     
