@@ -5474,9 +5474,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="finding_group_name" />
     </huientity>
     
-    <huientity
-        name="Process"
-        id="process" >
+    <huientity name="Process" id="process" >
 
   	<huirelation to="asset" id="rel_process_asset"
         	name="depends on" reversename="necessary for" tooltip="This process needs this asset to function." />
@@ -5778,8 +5776,7 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty id="process_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="process_va_ort_bem" name="Bemerkungen" inputtype="text" />
         </huipropertygroup>
-    
-    
+     
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_zb_zweck" name="Zweck der Verarbeitung" inputtype="multioption">
@@ -5795,7 +5792,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="process_zb_zweck_8" name="Sonstiger" />
             </huiproperty>
             <huiproperty tags="Privacy" id="process_zb_sonst" name="Sonstiger Zweck">
-                <depends option="process_zb_zweck" value="process_zb_zweck_8" />
+                <depends option="process_zb_zweck" value="Sonstiger" />
             </huiproperty>
     
             <huiproperty tags="Privacy" id="process_zb_erlaeuterung" inputtype="text" name="Erläuterung" />
@@ -5810,19 +5807,110 @@ the value between <param></param> will be used directly if no string is found fo
         <huipropertygroup tags="Privacy" id="process_pg_group_empfaenger" name="Daten &amp; Empfänger Intern">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty id="process_empf_int" name="Interne Empfänger" inputtype="text" />
-            <huiproperty id="process_empf_int_art" name="Art der übermitt. Daten" inputtype="text" />
+            <huiproperty id="process_empf_int_art" name="Art der übermitt. Daten" inputtype="multioption">
+                <option id="process_empf_int_art_1" name="Abrechnungs- und Leistungsdaten" />
+                <option id="process_empf_int_art_2" name="Angaben zum beruflichen Werdegang" />
+                <option id="process_empf_int_art_3" name="Angaben zur Ausbildung und Qualifikation" />
+                <option id="process_empf_int_art_4" name="Angebotsdaten" />
+                <option id="process_empf_int_art_5" name="Anzahl der Aktien / Anteile" />
+                <option id="process_empf_int_art_6" name="Arbeitszeiterfassungsdaten sowie Zugangskontrolldaten" />
+                <option id="process_empf_int_art_7" name="Auskunftsangaben (von Dritten, z.B. Auskunfteien, oder aus öffentlichen Verzeichnissen)" />
+                <option id="process_empf_int_art_8" name="Auskünfte" />
+                <option id="process_empf_int_art_9" name="Ausweisdaten (Name, Vorname, Personalausweisnummer)" />
+                <option id="process_empf_int_art_10" name="Bankverbindungsdaten" />
+                <option id="process_empf_int_art_11" name="Daten zum Besuch (besuchte Person, Grund, Datum, Zeit)" />
+                <option id="process_empf_int_art_12" name="Daten zur Kommunikation sowie zur Abwicklung und Kontrolle von Transaktionen sowie der technischen Systeme" />
+                <option id="process_empf_int_art_13" name="Daten zur Personalverwaltung, -planung und -steuerung" />
+                <option id="process_empf_int_art_14" name="Dem Mitarbeiter übergebene Gegenstände und Rechte" />
+                <option id="process_empf_int_art_15" name="Fehlzeiten" />
+                <option id="process_empf_int_art_16" name="Freiwillige Angaben des Betroffenen" />
+                <option id="process_empf_int_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
+                <option id="process_empf_int_art_18" name="Geschäfts- und Vertragsdaten" />
+                <option id="process_empf_int_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_int_art_20" name="Interessensgebiete" />
+                <option id="process_empf_int_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
+                <option id="process_empf_int_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
+                <option id="process_empf_int_art_23" name="Private Adress- und Kontaktdaten" />
+                <option id="process_empf_int_art_24" name="Tätigkeitsbereich" />
+                <option id="process_empf_int_art_25" name="Terminverwaltungsdaten" />
+                <option id="process_empf_int_art_27" name="Verfügbarkeitsdaten" />
+                <option id="process_empf_int_art_28" name="Vertragsdaten" />
+                <option id="process_empf_int_art_29" name="Vertrags-, Stamm- und Abrechnungsdaten" />
+                <option id="process_empf_int_art_30" name="Videoaufzeichnungen" />
+            </huiproperty>
             <huiproperty id="process_empf_int_zweck" name="Zweck der Übermittlung" />
         </huipropertygroup>
+        
         <huipropertygroup tags="Privacy" id="process_pg_group_empfaenger_ext" name="Daten &amp; Empfänger Extern">
             <huiproperty id="process_empf_ext" name="Externe Empfänger / Dritte" inputtype="text" />
-            <huiproperty id="process_empf_ext_art" name="Art der übermitt. Daten" inputtype="text" />
+            <huiproperty id="process_empf_ext_art" name="Art der übermitt. Daten" inputtype="multioption">
+                <option id="process_empf_ext_art_1" name="Abrechnungs- und Leistungsdaten" />
+                <option id="process_empf_ext_art_2" name="Angaben zum beruflichen Werdegang" />
+                <option id="process_empf_ext_art_3" name="Angaben zur Ausbildung und Qualifikation" />
+                <option id="process_empf_ext_art_4" name="Angebotsdaten" />
+                <option id="process_empf_ext_art_5" name="Anzahl der Aktien / Anteile" />
+                <option id="process_empf_ext_art_6" name="Arbeitszeiterfassungsdaten sowie Zugangskontrolldaten" />
+                <option id="process_empf_ext_art_7" name="Auskunftsangaben (von Dritten, z.B. Auskunfteien, oder aus öffentlichen Verzeichnissen)" />
+                <option id="process_empf_ext_art_8" name="Auskünfte" />
+                <option id="process_empf_ext_art_9" name="Ausweisdaten (Name, Vorname, Personalausweisnummer)" />
+                <option id="process_empf_ext_art_10" name="Bankverbindungsdaten" />
+                <option id="process_empf_ext_art_11" name="Daten zum Besuch (besuchte Person, Grund, Datum, Zeit)" />
+                <option id="process_empf_ext_art_12" name="Daten zur Kommunikation sowie zur Abwicklung und Kontrolle von Transaktionen sowie der technischen Systeme" />
+                <option id="process_empf_ext_art_13" name="Daten zur Personalverwaltung, -planung und -steuerung" />
+                <option id="process_empf_ext_art_14" name="Dem Mitarbeiter übergebene Gegenstände und Rechte" />
+                <option id="process_empf_ext_art_15" name="Fehlzeiten" />
+                <option id="process_empf_ext_art_16" name="Freiwillige Angaben des Betroffenen" />
+                <option id="process_empf_ext_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
+                <option id="process_empf_ext_art_18" name="Geschäfts- und Vertragsdaten" />
+                <option id="process_empf_ext_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_ext_art_20" name="Interessensgebiete" />
+                <option id="process_empf_ext_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
+                <option id="process_empf_ext_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
+                <option id="process_empf_ext_art_23" name="Private Adress- und Kontaktdaten" />
+                <option id="process_empf_ext_art_24" name="Tätigkeitsbereich" />
+                <option id="process_empf_ext_art_25" name="Terminverwaltungsdaten" />
+                <option id="process_empf_ext_art_27" name="Verfügbarkeitsdaten" />
+                <option id="process_empf_ext_art_28" name="Vertragsdaten" />
+                <option id="process_empf_ext_art_29" name="Vertrags-, Stamm- und Abrechnungsdaten" />
+                <option id="process_empf_ext_art_30" name="Videoaufzeichnungen" />
+            </huiproperty>
             <huiproperty id="process_empf_ext_zweck" name="Zweck der Übermittlung" />
         </huipropertygroup>
     
         <huipropertygroup tags="Privacy" id="process_pg_group_empfaenger_auftr" name="Daten &amp; Empfänger Dienstleister">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty id="process_empf_dienstl" name="Auftr.dat.verarb. / Dienstleister" inputtype="text" />
-            <huiproperty id="process_empf_dienstl_art" name="Art der übermitt. Daten" inputtype="text" />
+            <huiproperty id="process_empf_dienstl_art" name="Art der übermitt. Daten" inputtype="multioption">
+                <option id="process_empf_dienstl_art_1" name="Abrechnungs- und Leistungsdaten" />
+                <option id="process_empf_dienstl_art_2" name="Angaben zum beruflichen Werdegang" />
+                <option id="process_empf_dienstl_art_3" name="Angaben zur Ausbildung und Qualifikation" />
+                <option id="process_empf_dienstl_art_4" name="Angebotsdaten" />
+                <option id="process_empf_dienstl_art_5" name="Anzahl der Aktien / Anteile" />
+                <option id="process_empf_dienstl_art_6" name="Arbeitszeiterfassungsdaten sowie Zugangskontrolldaten" />
+                <option id="process_empf_dienstl_art_7" name="Auskunftsangaben (von Dritten, z.B. Auskunfteien, oder aus öffentlichen Verzeichnissen)" />
+                <option id="process_empf_dienstl_art_8" name="Auskünfte" />
+                <option id="process_empf_dienstl_art_9" name="Ausweisdaten (Name, Vorname, Personalausweisnummer)" />
+                <option id="process_empf_dienstl_art_10" name="Bankverbindungsdaten" />
+                <option id="process_empf_dienstl_art_11" name="Daten zum Besuch (besuchte Person, Grund, Datum, Zeit)" />
+                <option id="process_empf_dienstl_art_12" name="Daten zur Kommunikation sowie zur Abwicklung und Kontrolle von Transaktionen sowie der technischen Systeme" />
+                <option id="process_empf_dienstl_art_13" name="Daten zur Personalverwaltung, -planung und -steuerung" />
+                <option id="process_empf_dienstl_art_14" name="Dem Mitarbeiter übergebene Gegenstände und Rechte" />
+                <option id="process_empf_dienstl_art_15" name="Fehlzeiten" />
+                <option id="process_empf_dienstl_art_16" name="Freiwillige Angaben des Betroffenen" />
+                <option id="process_empf_dienstl_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
+                <option id="process_empf_dienstl_art_18" name="Geschäfts- und Vertragsdaten" />
+                <option id="process_empf_dienstl_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_dienstl_art_20" name="Interessensgebiete" />
+                <option id="process_empf_dienstl_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
+                <option id="process_empf_dienstl_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
+                <option id="process_empf_dienstl_art_23" name="Private Adress- und Kontaktdaten" />
+                <option id="process_empf_dienstl_art_24" name="Tätigkeitsbereich" />
+                <option id="process_empf_dienstl_art_25" name="Terminverwaltungsdaten" />
+                <option id="process_empf_dienstl_art_27" name="Verfügbarkeitsdaten" />
+                <option id="process_empf_dienstl_art_28" name="Vertragsdaten" />
+                <option id="process_empf_dienstl_art_29" name="Vertrags-, Stamm- und Abrechnungsdaten" />
+                <option id="process_empf_dienstl_art_30" name="Videoaufzeichnungen" />
+            </huiproperty>
             <huiproperty id="process_empf_dienstl_zweck" name="Zweck der Übermittlung" />
         </huipropertygroup>
     
@@ -5834,16 +5922,44 @@ the value between <param></param> will be used directly if no string is found fo
             </huiproperty>
             <huiproperty id="process_pg_sonstempf" name="Liste der Drittstaaten" inputtype="text">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
-            </huiproperty>
-            <huiproperty id="process_empf_sonstempf_art" name="Art der übermitt. Daten" inputtype="text">
-                <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
-            </huiproperty>
+            </huiproperty>        
+            <huiproperty id="process_empf_sonstempf_art" name="Art der übermitt. Daten" inputtype="multioption">
+                <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />        
+                <option id="process_empf_sonstempf_art_1" name="Abrechnungs- und Leistungsdaten" />
+                <option id="process_empf_sonstempf_art_2" name="Angaben zum beruflichen Werdegang" />
+                <option id="process_empf_sonstempf_art_3" name="Angaben zur Ausbildung und Qualifikation" />
+                <option id="process_empf_sonstempf_art_4" name="Angebotsdaten" />
+                <option id="process_empf_sonstempf_art_5" name="Anzahl der Aktien / Anteile" />
+                <option id="process_empf_sonstempf_art_6" name="Arbeitszeiterfassungsdaten sowie Zugangskontrolldaten" />
+                <option id="process_empf_sonstempf_art_7" name="Auskunftsangaben (von Dritten, z.B. Auskunfteien, oder aus öffentlichen Verzeichnissen)" />
+                <option id="process_empf_sonstempf_art_8" name="Auskünfte" />
+                <option id="process_empf_sonstempf_art_9" name="Ausweisdaten (Name, Vorname, Personalausweisnummer)" />
+                <option id="process_empf_sonstempf_art_10" name="Bankverbindungsdaten" />
+                <option id="process_empf_sonstempf_art_11" name="Daten zum Besuch (besuchte Person, Grund, Datum, Zeit)" />
+                <option id="process_empf_sonstempf_art_12" name="Daten zur Kommunikation sowie zur Abwicklung und Kontrolle von Transaktionen sowie der technischen Systeme" />
+                <option id="process_empf_sonstempf_art_13" name="Daten zur Personalverwaltung, -planung und -steuerung" />
+                <option id="process_empf_sonstempf_art_14" name="Dem Mitarbeiter übergebene Gegenstände und Rechte" />
+                <option id="process_empf_sonstempf_art_15" name="Fehlzeiten" />
+                <option id="process_empf_sonstempf_art_16" name="Freiwillige Angaben des Betroffenen" />
+                <option id="process_empf_sonstempf_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
+                <option id="process_empf_sonstempf_art_18" name="Geschäfts- und Vertragsdaten" />
+                <option id="process_empf_sonstempf_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_sonstempf_art_20" name="Interessensgebiete" />
+                <option id="process_empf_sonstempf_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
+                <option id="process_empf_sonstempf_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
+                <option id="process_empf_sonstempf_art_23" name="Private Adress- und Kontaktdaten" />
+                <option id="process_empf_sonstempf_art_24" name="Tätigkeitsbereich" />
+                <option id="process_empf_sonstempf_art_25" name="Terminverwaltungsdaten" />
+                <option id="process_empf_sonstempf_art_27" name="Verfügbarkeitsdaten" />
+                <option id="process_empf_sonstempf_art_28" name="Vertragsdaten" />
+                <option id="process_empf_sonstempf_art_29" name="Vertrags-, Stamm- und Abrechnungsdaten" />
+                <option id="process_empf_sonstempf_art_30" name="Videoaufzeichnungen" />
+            </huiproperty>       
             <huiproperty id="process_empf_sonstempf_zweck" name="Zweck der Übermittlung">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
             </huiproperty>
         </huipropertygroup>
-    
-    
+     
         <huipropertygroup tags="Privacy" id="process_dv_group_kategorie" name="Besonders sensitive Daten">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty id="process_dv_kategorie_yesno" name="Besonders sensitive Daten" inputtype="booleanoption" />
@@ -5951,8 +6067,7 @@ the value between <param></param> will be used directly if no string is found fo
             </huiproperty>
             <huiproperty id="process_empf_gew_loesch" name="Gewährlstg. der Löschung durch" inputtype="text" />
             <huiproperty tags="Privacy" id="process_dv_loeschfrist_erl" name="Erläuterung" inputtype="text" />
-        </huipropertygroup>
-    
+        </huipropertygroup> 
     
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="process_privacy_yesno" value="1" />
@@ -5971,26 +6086,45 @@ the value between <param></param> will be used directly if no string is found fo
     
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_sachg_group" name="Maßnahmen sachgerecht?">
             <depends option="process_privacy_yesno" value="1" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_zutr" name="Zutrittskontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_zuga" name="Zugangskontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_zugr" name="Zugriffskontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_weiterg" name="Weitergabekontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_eing" name="Eingabekontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_auftr" name="Auftragskontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_verf" name="Verfügbarkeitskontrolle" inputtype="booleanoption" />
-            <huiproperty id="process_dsb_schwerw_abw_opt_trenn" name="Trennungsgebot" inputtype="booleanoption" />
-        </huipropertygroup>
-    
-        <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_abw_group" name="Schwerwiegende Abweichungen">
-            <depends option="process_privacy_yesno" value="1" />
-            <huiproperty id="process_dsb_schwerw_abw_zutr" name="Zutrittskontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_zuga" name="Zugangskontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_zugr" name="Zugriffskontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_weiterg" name="Weitergabekontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_eing" name="Eingabekontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_auftr" name="Auftragskontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_verf" name="Verfügbarkeitskontrolle" inputtype="text" />
-            <huiproperty id="process_dsb_schwerw_abw_trenn" name="Trennungsgebot" inputtype="text" />
+            <huiproperty id="process_dsb_schwerw_abw_opt_zutr" name="Zutrittskontrolle" inputtype="booleanoption" defaultValue="1"/>
+            <huiproperty id="process_dsb_schwerw_abw_zutr" name="Abweichungen" inputtype="text">
+                <depends option="process_dsb_schwerw_abw_opt_zutr" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_zuga" name="Zugangskontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_zuga" name="Abweichungen" inputtype="text">
+                <depends option="process_dsb_schwerw_abw_opt_zuga" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_zugr" name="Zugriffskontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_zugr" name="Abweichungen" inputtype="text" >
+                <depends option="process_dsb_schwerw_abw_opt_zugr" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_weiterg" name="Weitergabekontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_weiterg" name="Abweichungen" inputtype="text" >
+          	    <depends option="process_dsb_schwerw_abw_opt_weiterg" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_eing" name="Eingabekontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_eing" name="Abweichungen" inputtype="text" >
+                <depends option="process_dsb_schwerw_abw_opt_eing" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_auftr" name="Auftragskontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_auftr" name="Abweichungen" inputtype="text" >
+                <depends option="process_dsb_schwerw_abw_opt_auftr" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_verf" name="Verfügbarkeitskontrolle" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_verf" name="Abweichungen" inputtype="text">
+                <depends option="process_dsb_schwerw_abw_opt_verf" value="0" />
+            </huiproperty>
+            
+            <huiproperty id="process_dsb_schwerw_abw_opt_trenn" name="Trennungsgebot" inputtype="booleanoption" defaultValue="1" />
+            <huiproperty id="process_dsb_schwerw_abw_trenn" name="Abweichungen" inputtype="text">
+                <depends option="process_dsb_schwerw_abw_opt_trenn" value="0" />
+            </huiproperty>
         </huipropertygroup>           
     </huientity>
     
