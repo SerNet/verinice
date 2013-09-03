@@ -26,8 +26,10 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -37,11 +39,13 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CreateElement;
+import sernet.verinice.service.commands.LoadFileSizeLimit;
 import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
@@ -69,6 +73,8 @@ public class FileElementImportTraverser extends FileSystemTraverser {
     
     private IValidationService validationService;
     
+    private Integer fileSizeMax;
+    
     /**
      * @param startPath
      * @param target 
@@ -88,54 +94,92 @@ public class FileElementImportTraverser extends FileSystemTraverser {
         }
         try {
             CnATreeElement parentGroup = groupMap.get(dir.getParent());
-            CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(parentGroup, parentGroup.getTypeId(), dir.getName());
-            saveCommand.setInheritAuditPermissions(true);
-            saveCommand = getCommandService().executeCommand(saveCommand);    
-            CnATreeElement newElement = saveCommand.getNewElement();
-            groupMap.put(dir.getPath(), newElement);
-            
-            context.addProperty(CURRENT_DIRECTORY, newElement);
-            
-            CnAElementFactory.getModel(newElement).childAdded(parentGroup, newElement);
-            CnAElementFactory.getModel(newElement).databaseChildAdded(newElement);
-            
-            if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-                validateElement(newElement);
+            CnATreeElement element = getElement(parentGroup, dir.getName());
+            if(element==null) {          
+                CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(parentGroup, parentGroup.getTypeId(), dir.getName());
+                saveCommand.setInheritAuditPermissions(true);
+                saveCommand = getCommandService().executeCommand(saveCommand);    
+                element = saveCommand.getNewElement();
+                CnAElementFactory.getModel(element).childAdded(parentGroup, element);
+                CnAElementFactory.getModel(element).databaseChildAdded(element);
             }
+            groupMap.put(dir.getPath(), element);
+            
+            context.addProperty(CURRENT_DIRECTORY, element);
+                   
+            if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
+                validateElement(element);
+            }
+        } catch (FileExceptionNoStop e) {
+            // do not handle this exception here but all others
+            throw e;
         } catch (Exception e) {
-            LOG.error("Erro while handle directory: " + dir.getPath(), e);
+            LOG.error("Error while handle directory: " + dir.getPath(), e);
         }
     }
-    
+
     public void handleFile(File file, TraverserContext context) {
         try {
             if(PathFinder.PROPERTY_FILE_NAME.equals(file.getName())) {
                 return;
-            }
+            }  
+            
+            checkFileSize(file, context); 
+      
             Group<CnATreeElement> parent = (Group<CnATreeElement>) groupMap.get(file.getParent());
+            CnATreeElement element = getElement(parent, file.getName());
+            if(element!=null) {
+                return;
+            }
             CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(parent, parent.getChildTypes()[0], file.getName());
             saveCommand.setInheritAuditPermissions(true);
             saveCommand = getCommandService().executeCommand(saveCommand);    
-            CnATreeElement newElement = saveCommand.getNewElement();
+            element = saveCommand.getNewElement();
             
-            CnAElementFactory.getModel(newElement).childAdded(parent, newElement);
-            CnAElementFactory.getModel(newElement).databaseChildAdded(newElement);
+            CnAElementFactory.getModel(element).childAdded(parent, element);
+            CnAElementFactory.getModel(element).databaseChildAdded(element);
             
             if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-                validateElement(newElement);
+                validateElement(element);
             }    
-            createAttachment(newElement, file); 
+            createAttachment(element, file); 
             CnATreeElement linkTarget = (CnATreeElement) context.getProperty(LINK_TARGET);
             if(linkTarget!=null) {
                 List<CnATreeElement> targetList = new ArrayList<CnATreeElement>();
                 targetList.add(linkTarget);
-                CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, targetList);
+                CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(element, targetList);
             }
             
             numberOfFiles++;
+        } catch (FileExceptionNoStop e) {
+            // do not handle this exception here but all others
+            throw e;
         } catch (Exception e) {
-            LOG.error("Erro while handle directory: " + file.getPath(), e);
+            LOG.error("Erro while handle file: " + file.getPath(), e);
         }
+    }
+
+    protected void checkFileSize(File file, TraverserContext context) {
+        long size = file.length();
+        if(AttachmentFile.convertByteToMB(size) > getMaxFileSizeInMB()) {   
+            String readableSize = AttachmentFile.formatByteToMB(size);
+            throw new FileExceptionNoStop(file.getPath(), NLS.bind(Messages.FileElementImportTraverser_0,readableSize,getMaxFileSizeInMB()));
+        }
+    }
+    
+    private CnATreeElement getElement(CnATreeElement parent, String name) {
+        if(parent==null) {
+            return null;
+        }
+        parent = Retriever.checkRetrieveChildren(parent);
+        Set<CnATreeElement> children = parent.getChildren();
+        for (CnATreeElement child : children) {
+            child = Retriever.checkRetrieveElementAndChildren(child);
+            if(child.getTitle().equals(name)) {
+                return child;
+            }
+        }
+        return null;
     }
 
     protected void createAttachment(CnATreeElement element, File file) throws CommandException, IOException {
@@ -180,6 +224,25 @@ public class FileElementImportTraverser extends FileSystemTraverser {
             commandService = ServiceFactory.lookupCommandService();
         }
         return commandService;
+    }
+    
+    private int getMaxFileSizeInMB() {
+        if(fileSizeMax==null) {
+            fileSizeMax = loadFileSizeMax();
+        }
+        return fileSizeMax;
+    }
+
+    private Integer loadFileSizeMax() {
+        int result = LoadFileSizeLimit.FILE_SIZE_MAX_DEFAULT;
+        LoadFileSizeLimit loadFileSizeLimit = new LoadFileSizeLimit(); 
+        try {
+            loadFileSizeLimit = getCommandService().executeCommand(loadFileSizeLimit);
+        } catch (CommandException e) {
+            LOG.error("Error while saving note", e); //$NON-NLS-1$
+        }
+        result = loadFileSizeLimit.getFileSizeMax();
+        return result;
     }
     
     class DirectoryHandler implements IDirectoryHandler { 

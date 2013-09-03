@@ -19,33 +19,28 @@
  ******************************************************************************/
 package sernet.verinice.fei.rcp;
 
-import org.eclipse.osgi.util.NLS;
-
 /**
- *
+ * Thrown if there is a problem with a file during traversal
+ * but execution will be continued.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.verinice.fei.rcp.messages"; //$NON-NLS-1$
-    public static String FileElementDropAdapter_0;
-    public static String FileElementDropAdapter_1;
-    public static String FileElementDropAdapter_4;
-    public static String FileElementDropAdapter_5;
-    public static String FileElementDropAdapter_6;
-    public static String FileElementDropAdapter_7;
-    public static String FileElementDropAdapter_8;
-    public static String FileElementDropAdapter_9;
-    public static String FileElementDropAdapter_10;
-    public static String FileElementImportHandler_2;
-    public static String FileElementImportPreferencePage_0;
-    public static String FileElementImportPreferencePage_1;
-    public static String FileElementImportTraverser_0;
-    static {
-        // initialize resource bundle
-        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+public class FileExceptionNoStop extends RuntimeException {
+
+    private String path;
+
+    /**
+     * @param path
+     */
+    public FileExceptionNoStop(String path, String message) {
+        super(message);
+        this.path = path;
     }
 
-    private Messages() {
+    public String getPath() {
+        return path;
     }
+    
+    
+    
 }

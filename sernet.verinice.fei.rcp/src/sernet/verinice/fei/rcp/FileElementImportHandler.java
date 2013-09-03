@@ -1,6 +1,7 @@
 package sernet.verinice.fei.rcp;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -43,6 +44,7 @@ public class FileElementImportHandler extends RightsEnabledHandler {
     private ISchedulingRule iSchedulingRule = new Mutex();
     
     private int numberOfFiles = 0;
+    private List<FileExceptionNoStop> errorList;
     
     /**
 	 * The constructor.
@@ -91,8 +93,18 @@ public class FileElementImportHandler extends RightsEnabledHandler {
             FileElementImportTraverser traverser = new FileElementImportTraverser(file, target);
             traverser.traverseFileSystem();
             numberOfFiles += traverser.getNumberOfFiles();
+            addErrors(traverser.getErrorList());
         }
         
+    }
+    
+    private void addErrors(List<FileExceptionNoStop> errorList) {
+        if(errorList!=null && !errorList.isEmpty()) {
+            if(this.errorList==null) {
+                this.errorList = new LinkedList<FileExceptionNoStop>();
+            }
+            this.errorList.addAll(errorList);
+        }      
     }
     
     protected void showResult() {
@@ -102,12 +114,25 @@ public class FileElementImportHandler extends RightsEnabledHandler {
                 public void run() {
                     MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openInformation(
                         Messages.FileElementDropAdapter_0,  
-                        NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles),
+                        createResultMessage(),
                         Messages.FileElementDropAdapter_8,
                         PreferenceConstants.FEI_SHOW_RESULT);
                 }
             });
         }
+    }
+    
+    private String createResultMessage() {
+        StringBuilder sb = new StringBuilder();        
+        sb.append(NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles));
+        if(errorList!=null && !errorList.isEmpty()) {
+            sb.append("\n\n"); //$NON-NLS-1$
+            sb.append(Messages.FileElementDropAdapter_9).append("\n"); //$NON-NLS-1$
+            for (FileExceptionNoStop error : errorList) {         
+                sb.append(NLS.bind(Messages.FileElementDropAdapter_10,error.getPath(),error.getMessage())).append("\n"); //$NON-NLS-1$               
+            }
+        }
+        return sb.toString();
     }
     
     private String selectDirectory(Shell shell) {
@@ -154,6 +179,6 @@ public class FileElementImportHandler extends RightsEnabledHandler {
      */    
     @Override
     public String getRightID() {
-        return ActionRightIDs.XMLIMPORT;
+        return ActionRightIDs.ADDFILE;
     }
 }

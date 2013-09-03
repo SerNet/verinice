@@ -22,10 +22,11 @@ package sernet.verinice.fei.rcp;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -37,7 +38,10 @@ import org.eclipse.ui.part.IDropActionDelegate;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
@@ -47,19 +51,26 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class FileElementDropAdapter implements IDropActionDelegate {
+public class FileElementDropAdapter implements IDropActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(FileElementDropAdapter.class);
-    private ISchedulingRule iSchedulingRule = new Mutex();
     
     private int numberOfFiles = 0;
+    private List<FileExceptionNoStop> errorList;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.IDropActionDelegate#run(java.lang.Object, java.lang.Object)
      */
     @Override
     public boolean run(Object data, final Object target) {
-        try {          
+        try {  
+            if(!checkRights()) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("User is not allowed to perform this file drop.");
+                }
+                return false;
+            }
+            
             ByteArrayInputStream bai = new ByteArrayInputStream((byte[]) data);
             ObjectInputStream oi = new ObjectInputStream(bai);
             final String[] filePathes = (String[]) oi.readObject(); 
@@ -82,8 +93,7 @@ public class FileElementDropAdapter implements IDropActionDelegate {
                     @Override
                     public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
                         try { 
-                            importFiles(filePathes, (Group<CnATreeElement>)target);
-                            
+                            importFiles(filePathes, (Group<CnATreeElement>)target);                        
                         } catch (Exception e) {
                             LOG.error("Error while importing data.", e); //$NON-NLS-1$
                         }
@@ -112,9 +122,20 @@ public class FileElementDropAdapter implements IDropActionDelegate {
             FileElementImportTraverser traverser = new FileElementImportTraverser(file, target);
             traverser.traverseFileSystem();
             numberOfFiles += traverser.getNumberOfFiles();
+            addErrors(traverser.getErrorList());
         }       
     }
     
+
+    private void addErrors(List<FileExceptionNoStop> errorList) {
+        if(errorList!=null && !errorList.isEmpty()) {
+            if(this.errorList==null) {
+                this.errorList = new LinkedList<FileExceptionNoStop>();
+            }
+            this.errorList.addAll(errorList);
+        }      
+    }
+
     protected void showResult() {
         if(!Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.FEI_SHOW_RESULT)) {
             Display.getDefault().asyncExec(new Runnable() {
@@ -122,12 +143,25 @@ public class FileElementDropAdapter implements IDropActionDelegate {
                 public void run() {
                     MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openInformation(
                         Messages.FileElementDropAdapter_0,  
-                        NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles),
+                        createResultMessage(),
                         Messages.FileElementDropAdapter_8,
                         PreferenceConstants.FEI_SHOW_RESULT);
                 }
             });
         }
+    }
+    
+    private String createResultMessage() {
+        StringBuilder sb = new StringBuilder();        
+        sb.append(NLS.bind(Messages.FileElementDropAdapter_7,numberOfFiles));
+        if(errorList!=null && !errorList.isEmpty()) {
+            sb.append("\n\n"); //$NON-NLS-1$
+            sb.append(Messages.FileElementDropAdapter_9).append("\n"); //$NON-NLS-1$
+            for (FileExceptionNoStop error : errorList) {         
+                sb.append(NLS.bind(Messages.FileElementDropAdapter_10,error.getPath(),error.getMessage())).append("\n"); //$NON-NLS-1$               
+            }
+        }
+        return sb.toString();
     }
     
     /**
@@ -156,6 +190,32 @@ public class FileElementDropAdapter implements IDropActionDelegate {
     
     private Shell getShell() {
         return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
+     */
+    @Override
+    public boolean checkRights() {
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ADDFILE;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+     */
+    @Override
+    public void setRightID(String rightID) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

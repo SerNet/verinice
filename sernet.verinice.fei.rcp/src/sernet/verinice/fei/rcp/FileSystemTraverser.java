@@ -48,6 +48,8 @@ public class FileSystemTraverser implements IFileSystemTraverser {
 
     private List<IDirectoryHandler> directoryHandlerList;
 
+    private List<FileExceptionNoStop> errorList;
+    
     public FileSystemTraverser(String startPath) {
         super();
         this.startPath = startPath;
@@ -60,11 +62,19 @@ public class FileSystemTraverser implements IFileSystemTraverser {
         process(root, new TraverserContext());
     }
 
-    protected void process(File file, TraverserContext context) {
-        if (file.isFile()) {
-            processFile(file, context);           
-        } else if (file.isDirectory()) {
-            processDir(file, context);
+    protected void process(File file, TraverserContext context) {     
+        try {
+            if (file.isFile()) {
+                processFile(file, context);           
+            } else if (file.isDirectory()) {
+                processDir(file, context);
+            }
+        } catch (FileExceptionNoStop e) {
+            LOG.warn("Erro while processing file: " + e.getPath() + ". " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e);
+            }
+            addError(e);
         }
     }
 
@@ -137,6 +147,17 @@ public class FileSystemTraverser implements IFileSystemTraverser {
         this.getDirectoryHandlerList().add(directoryHandler);
     }
 
+    
+    protected void addError(FileExceptionNoStop error) {
+        if(errorList==null) {
+            errorList = new LinkedList<FileExceptionNoStop>();
+        }
+        errorList.add(error);
+    }
+    
+    protected List<FileExceptionNoStop> getErrorList() {
+        return errorList;
+    }
     
 }
 
