@@ -100,8 +100,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	private String defaultFolder;
 	
     // estimated size of dialog for placement (doesnt have to be exact):
-    private static final int SIZE_X = 700;
-    private static final int SIZE_Y = 500;
+    private static final int SIZE_X = 750;
+    private static final int SIZE_Y = 550;
+    
+    final int defaultColNr = 3;
+    
+    final int dataScopeMinimumWidth = 200;
+    final int dataScopeComboMinimumWidth = 500;
+    final int marginWidth = 10;
 
 	public GenerateReportDialog(Shell parentShell) {
 		super(parentShell);
@@ -158,12 +164,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.GenerateReportDialog_4);
-        newShell.setSize(SIZE_X, SIZE_Y);
+        //newShell.setSize(SIZE_X, SIZE_Y);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));
-    
+        newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));  
     }
 
 
@@ -178,11 +183,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Override
 	protected Control createDialogArea(Composite parent) {
-        final int dataScopeMinimumWidth = 140;
-        final int dataScopeComboMinimumWidth = 346;
-        final int marginWidth = 10;
-        final int defaultColNr = 3;
-        
         initDefaultFolder();
         
         if(useCase != null){
@@ -190,46 +190,29 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         setTitle(Messages.GenerateReportDialog_0);
         setMessage(Messages.GenerateReportDialog_7);
-
-        final Composite frame = (Composite) super.createDialogArea(parent);
-        GridLayout layout = (GridLayout) frame.getLayout();
+    
+        final Composite composite = (Composite) super.createDialogArea(parent);
+        GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = marginWidth;
         layout.marginHeight = marginWidth;
-        GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
-        frame.setLayoutData(gd);
-        
-        final Composite composite = new Composite(frame, SWT.NONE);  
-		layout = new GridLayout(defaultColNr, false);
-		composite.setLayout(layout);
-		gd = new GridData(GridData.GRAB_HORIZONTAL);
-        gd.grabExcessHorizontalSpace = true;
-        
-		composite.setLayoutData(gd);
+        composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		Group reportGroup = new Group(composite, SWT.NULL);
-		reportGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
-		layout = new GridLayout();
-        layout.numColumns = defaultColNr;
-        reportGroup.setLayout(layout);
+		// GridData for all labels
+		GridData gridDataLabel = createLabelGridData();        
+        // GridData for all combo boxes
+        GridData gridDataCombo = createComboGridData();       
+        // GridData for all text fields
+        GridData gridDataText = createTextGridData();
+		
+        // Report template group
+		Group reportGroup = createGroup(composite);
 		
 		Label labelReportType = new Label(reportGroup, SWT.NONE);
-		GridData gridDataLabel = new GridData();
-		gridDataLabel.horizontalAlignment = SWT.LEFT;
-		gridDataLabel.verticalAlignment = SWT.CENTER;
-		gridDataLabel.grabExcessHorizontalSpace = true;
-		gridDataLabel.minimumWidth = dataScopeMinimumWidth;
 		labelReportType.setText(Messages.GenerateReportDialog_1);
 		labelReportType.setLayoutData(gridDataLabel);
 
-		comboReportType = new Combo(reportGroup, SWT.READ_ONLY);
-		GridData gridComboReportType = new GridData();
-		gridComboReportType.horizontalAlignment = SWT.FILL;
-		gridComboReportType.grabExcessHorizontalSpace = true;
-		gridComboReportType.horizontalSpan=2;
-		gridComboReportType.grabExcessHorizontalSpace = true;
-		gridComboReportType.minimumWidth = dataScopeComboMinimumWidth;
-		comboReportType.setLayoutData(gridComboReportType);
+		comboReportType = new Combo(reportGroup, SWT.READ_ONLY);		
+		comboReportType.setLayoutData(gridDataCombo);
 
 		for (IReportType rt : reportTypes) {
 			comboReportType.add(rt.getLabel());
@@ -243,22 +226,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
 				setupComboOutputFormatContent();
 				enableFileSelection();
-			}
-     
+			}     
 		});
 		
 		Label labelReportFile = new Label(reportGroup, SWT.NONE);
-        GridData gridLabelReportFile = new GridData();
-        gridLabelReportFile.horizontalAlignment = SWT.LEFT;
         labelReportFile.setText(Messages.GenerateReportDialog_2);
-        labelReportFile.setLayoutData(gridLabelReportFile);
+        labelReportFile.setLayoutData(gridDataLabel);
         
-        textReportTemplateFile = new Text(reportGroup, SWT.BORDER);
-        GridData gridTextFile2 = new GridData();
-        gridTextFile2.horizontalAlignment = SWT.FILL;
-        gridTextFile2.verticalAlignment = SWT.CENTER;
-        gridTextFile2.grabExcessHorizontalSpace = true;
-        textReportTemplateFile.setLayoutData(gridTextFile2);
+        textReportTemplateFile = new Text(reportGroup, SWT.BORDER);     
+        textReportTemplateFile.setLayoutData(gridDataText);
         
         openReportButton = new Button(reportGroup, SWT.PUSH);
         openReportButton.setText(Messages.GenerateReportDialog_3);
@@ -267,36 +243,22 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent event) {
                 selectTemplateFile();
               }
-            });
+            });      
         
-        Group scopeGroup = new Group(composite, SWT.NULL);
-        scopeGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
-        layout = new GridLayout();
-        layout.numColumns = 2;
-        scopeGroup.setLayout(layout);
+        // Scope group
+        Group scopeGroup = createGroup(composite);       
             
-            
-        Label labelScope = new Label(scopeGroup, SWT.NULL);
-        GridData gridDataScope = new GridData();
-        gridDataScope.horizontalAlignment = SWT.LEFT;
-        gridDataScope.verticalAlignment = SWT.CENTER;
-        gridDataScope.grabExcessHorizontalSpace = true;
-        gridDataScope.minimumWidth = dataScopeMinimumWidth;
-        labelScope.setLayoutData(gridDataScope);
+        Label labelScope = new Label(scopeGroup, SWT.NULL);   
+        labelScope.setLayoutData(gridDataLabel);
         labelScope.setText(Messages.GenerateReportDialog_8);
 
         scopeCombo = new Combo(scopeGroup, SWT.READ_ONLY);
-        GridData gridDatascopeCombo = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gridDatascopeCombo.grabExcessHorizontalSpace = true;
-        gridDatascopeCombo.minimumWidth = dataScopeComboMinimumWidth;
-        scopeCombo.setLayoutData(gridDatascopeCombo);
-        
+        scopeCombo.setLayoutData(gridDataCombo);    
         scopeCombo.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
@@ -312,23 +274,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
         groupFile.setLayout(layout);
         
 		Label labelOutputFormat = new Label(groupFile, SWT.NONE);
-		GridData gridLabelOutputFormat = new GridData();
-		gridLabelOutputFormat.horizontalAlignment = SWT.LEFT;
-		gridLabelOutputFormat.verticalAlignment = SWT.CENTER;
-		gridLabelOutputFormat.grabExcessHorizontalSpace = true;
-		gridLabelOutputFormat.minimumWidth = dataScopeMinimumWidth;
 		labelOutputFormat.setText(Messages.GenerateReportDialog_9);
-		labelOutputFormat.setLayoutData(gridLabelOutputFormat);
+		labelOutputFormat.setLayoutData(gridDataLabel);
 
 		comboOutputFormat = new Combo(groupFile, SWT.READ_ONLY);
-		GridData gridComboOutputFormat = new GridData();
-		gridComboOutputFormat.horizontalAlignment = SWT.FILL;
-		gridComboOutputFormat.verticalAlignment = SWT.CENTER;
-		gridComboOutputFormat.grabExcessHorizontalSpace = true;
-		gridComboOutputFormat.horizontalSpan=2;
-		gridComboOutputFormat.grabExcessHorizontalSpace = true;
-		gridComboOutputFormat.minimumWidth = dataScopeComboMinimumWidth;
-		comboOutputFormat.setLayoutData(gridComboOutputFormat);
+		comboOutputFormat.setLayoutData(gridDataCombo);
 		comboOutputFormat.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -338,25 +288,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 setupOutputFilepath();
             }
      
-        });
-		
-        GridData gridLabelFile = new GridData();
-        gridLabelFile.horizontalAlignment = SWT.LEFT;
-        gridLabelFile.verticalAlignment = SWT.CENTER;
-        gridLabelFile.grabExcessHorizontalSpace = true;
-        gridLabelFile.minimumWidth = dataScopeMinimumWidth;
-        
-        GridData gridTextFile = new GridData();
-        gridTextFile.horizontalAlignment = SWT.FILL;
-        gridTextFile.verticalAlignment = SWT.CENTER;
-        gridTextFile.grabExcessHorizontalSpace = true;       
+        });           
 
 		Label labelFile = new Label(groupFile, SWT.NONE);
 		labelFile.setText(Messages.GenerateReportDialog_10);
-		labelFile.setLayoutData(gridLabelFile);
+		labelFile.setLayoutData(gridDataLabel);
 
 		textFile = new Text(groupFile, SWT.BORDER);
-		textFile.setLayoutData(gridTextFile);
+		textFile.setLayoutData(gridDataText);
 		
 		textFile.addKeyListener(new KeyListener() {
             @Override
@@ -384,30 +323,22 @@ public class GenerateReportDialog extends TitleAreaDialog {
         useDefaultFolderButton.setText(Messages.GenerateReportDialog_26);
         useDefaultFolderButton.setSelection(true);        
         GridData  useDefaultFolderButtonGridData = new GridData();
-        useDefaultFolderButtonGridData.horizontalSpan = 2;
+        useDefaultFolderButtonGridData.horizontalSpan = 3;
         useDefaultFolderButtonGridData.grabExcessHorizontalSpace = true;
-        useDefaultFolderButtonGridData.horizontalAlignment = GridData.FILL;
-        useDefaultFolderButtonGridData.verticalAlignment = SWT.RIGHT;
+        useDefaultFolderButtonGridData.horizontalAlignment =  SWT.RIGHT;
         useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
-        useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
-        
+        useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {       
             @Override
             public void widgetSelected(SelectionEvent e) {
                 useDefaultFolder = ((Button)e.getSource()).getSelection();
-            }
-           
+            }          
         });
 		
         Group groupCache = new Group(composite, SWT.NULL);
-        groupCache.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
+        groupCache.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, defaultColNr, 1));
         layout = new GridLayout();
         layout.numColumns = 2;
         groupCache.setLayout(layout);
-        
-        gridLabelFile.horizontalAlignment = SWT.LEFT;
-        gridLabelFile.verticalAlignment = SWT.CENTER;
-        gridLabelFile.grabExcessHorizontalSpace = true;
-        gridLabelFile.minimumWidth = dataScopeMinimumWidth;
         
         createCacheResetButton(groupCache);
 	    
@@ -418,9 +349,45 @@ public class GenerateReportDialog extends TitleAreaDialog {
 		setupComboOutputFormatContent();
 		setupComboScopes();
 		
-		frame.pack(); 
-		return frame;
+		composite.pack(); 
+		return composite;
 	}
+
+    protected GridData createTextGridData() {
+        GridData gridDataText = new GridData();
+        gridDataText.horizontalAlignment = SWT.FILL;
+        gridDataText.verticalAlignment = SWT.CENTER;
+        gridDataText.grabExcessHorizontalSpace = true;
+        return gridDataText;
+    }
+
+    protected GridData createComboGridData() {
+        GridData gridDataCombo = new GridData();
+        gridDataCombo.horizontalAlignment = SWT.FILL;
+        gridDataCombo.grabExcessHorizontalSpace = true;
+        gridDataCombo.horizontalSpan=2;
+        gridDataCombo.minimumWidth = dataScopeComboMinimumWidth;
+        return gridDataCombo;
+    }
+
+    protected GridData createLabelGridData() {
+        GridData gridDataLabel = new GridData();
+        gridDataLabel.horizontalAlignment = SWT.LEFT;
+        gridDataLabel.verticalAlignment = SWT.CENTER;
+        gridDataLabel.grabExcessHorizontalSpace = true;
+        gridDataLabel.minimumWidth = dataScopeMinimumWidth;
+        return gridDataLabel;
+    }
+
+    protected Group createGroup(final Composite composite) {
+        GridLayout layout;
+        Group reportGroup = new Group(composite, SWT.NULL);
+		reportGroup.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, defaultColNr, 1));
+		layout = new GridLayout();
+        layout.numColumns = defaultColNr;
+        reportGroup.setLayout(layout);
+        return reportGroup;
+    }
     
     public void selectTemplateFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.OPEN);          
