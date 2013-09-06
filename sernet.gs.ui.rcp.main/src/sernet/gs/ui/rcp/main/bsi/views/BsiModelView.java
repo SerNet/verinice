@@ -65,7 +65,6 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
-import sernet.gs.ui.rcp.main.actions.AssignResponsiblePersonAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
@@ -161,7 +160,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	
 	private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
 	
-	private AssignResponsiblePersonAction assignResponsiblePersonAction;
+    // disabled for 1.6.3
+	//private AssignResponsiblePersonAction assignResponsiblePersonAction;
 	
 	private IModelLoadListener modelLoadListener;
 
@@ -183,6 +183,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
     }
 
     private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+        @Override
         public void propertyChange(PropertyChangeEvent event) {
             if ((event.getProperty().equals(PreferenceConstants.DB_URL) || event.getProperty().equals(PreferenceConstants.DB_USER) || event.getProperty().equals(PreferenceConstants.DB_DRIVER) || event.getProperty().equals(PreferenceConstants.DB_PASS))) {
                 CnAElementFactory.getInstance().closeModel();
@@ -194,7 +195,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	public void setNullModel() {
 		model = new NullModel();
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				viewer.setInput(model);
 				viewer.refresh();
 			}
@@ -271,7 +273,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	 */
 	protected void startInitDataJob() {
 		WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
 					monitor.beginTask(Messages.BsiModelView_5, IProgressMonitor.UNKNOWN);
@@ -294,13 +297,16 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		} else if(modelLoadListener==null) {
 			// model is not loaded yet: add a listener to load data when it's laoded
 			modelLoadListener = new IModelLoadListener() {
-				public void closed(BSIModel model) {
+				@Override
+                public void closed(BSIModel model) {
 					// nothing to do
 				}
-				public void loaded(BSIModel model) {
+				@Override
+                public void loaded(BSIModel model) {
 					startInitDataJob();
 				}
 				
+                @Override
                 public void loaded(ISO27KModel model) {
                     // nothing to do            
                 }		
@@ -327,7 +333,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		manager.add(gsmbasicsecuritycheckAction);
 		manager.add(bausteinZuordnungAction);
 		manager.add(gsmbausteinZuordnungAction);
-		manager.add(assignResponsiblePersonAction);
+		//manager.add(assignResponsiblePersonAction);
 		
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
@@ -356,7 +362,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
+			@Override
+            public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager);
 			}
 		});
@@ -383,7 +390,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -435,7 +443,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		
 		gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 		
-		assignResponsiblePersonAction = new AssignResponsiblePersonAction(getViewSite().getWorkbenchWindow(),Messages.BsiModelView_20);
+		//assignResponsiblePersonAction = new AssignResponsiblePersonAction(getViewSite().getWorkbenchWindow(),Messages.BsiModelView_20);
 		
 
 		doubleClickAction = new Action() {
@@ -519,7 +527,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 		if (bsiModelListener == null) {
 			bsiModelListener = new TreeUpdateListener(viewer,elementManager);
 			Display.getDefault().asyncExec(new Runnable() {
-	            public void run() {
+	            @Override
+                public void run() {
 	                try {
 	                    viewer.setInput(model);
 	                    viewer.refresh();
@@ -549,7 +558,8 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	 * 
 	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
 	 */
-	public String getPerspectiveId() {
+	@Override
+    public String getPerspectiveId() {
 		return Perspective.ID;
 	}
 
