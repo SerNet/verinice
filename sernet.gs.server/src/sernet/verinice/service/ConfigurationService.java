@@ -66,9 +66,14 @@ public class ConfigurationService implements IConfigurationService {
                 // Put result into map and save asking the DB next time.
                 roleMap.put(user, roleArray);           
                 scopeMap.put(user, c.isScopeOnly()); 
-                scopeIdMap.put(user, c.getPerson().getScopeId());  
-                CnATreeElement person = getCnaTreeElementDao().findByUuid(c.getPerson().getUuid(), RetrieveInfo.getPropertyInstance());
-                nameMap.put(user, person.getTitle());  
+                CnATreeElement person = c.getPerson();
+                if(person!=null) {
+                    scopeIdMap.put(user, person.getScopeId());  
+                    person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
+                    if(person!=null) {
+                        nameMap.put(user, person.getTitle());  
+                    }
+                }
             }
             String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
             roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
