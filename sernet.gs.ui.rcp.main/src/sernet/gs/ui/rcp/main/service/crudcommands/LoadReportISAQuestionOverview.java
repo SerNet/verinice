@@ -36,6 +36,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.samt.SamtTopic;
@@ -46,8 +47,6 @@ import sernet.verinice.model.samt.SamtTopic;
 public class LoadReportISAQuestionOverview extends GenericCommand implements ICachedCommand {
     
     private static final Logger LOG = Logger.getLogger(LoadReportISAQuestionOverview.class);
-    private static final String PROP_REL_SAMTTOPIC_PERSONISO_RESP = "rel_samttopic_person-iso_resp";
-    private static final String PROP_SAMT_MATURITY = "samt_topic_maturity";
     private static final String DUMMY_VALUE = "value indeterminable";
     private static final String PROP_SAMT_RISK = "samt_topic_audit_ra";
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
@@ -90,17 +89,7 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
                             String[] splittedTitle = splitTopicTitle(t.getTitle());
                             String maturity = String.valueOf(Integer.parseInt(t.getEntity().getValue(SamtTopic.PROP_MATURITY)));
                             String riskValue = String.valueOf(Integer.parseInt(t.getEntity().getValue(PROP_SAMT_RISK)));
-                            StringBuilder sb = new StringBuilder();
-                            for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(t, PersonIso.TYPE_ID).entrySet()){
-                                if(CnALink.isDownwardLink(t, entry.getValue()) && entry.getValue().getRelationId().equals(PROP_REL_SAMTTOPIC_PERSONISO_RESP)){
-                                    PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
-                                    sb.append(e.getSurname());
-                                    sb.append(", ");
-                                    sb.append(e.getName());
-                                    sb.append("\n"); // newline, to enlist more than one person
-                                }
-                            }
-                            String persons = sb.toString();
+                            String persons = getResponsiblePersons(t).toString();
                             String dueDate = t.getEntity().getSimpleValue(SamtTopic.PROP_COMPLETE_UNTIL);
                             if(dueDate == null){
                                 dueDate = DUMMY_VALUE;
@@ -128,6 +117,29 @@ public class LoadReportISAQuestionOverview extends GenericCommand implements ICa
             }
         }
         
+    }
+
+    private StringBuilder getResponsiblePersons(SamtTopic t) {
+        StringBuilder sb = new StringBuilder();
+        for(Entry<CnATreeElement, CnALink> controlLinkEntry : CnALink.getLinkedElements(t, Control.TYPE_ID).entrySet()){
+            if(CnALink.isDownwardLink(t, controlLinkEntry.getValue())){
+                Control c = (Control)getDaoFactory().getDAO(Control.TYPE_ID).initializeAndUnproxy(controlLinkEntry.getKey());
+                if(c.getParent().getParent().getTypeId().equals(ControlGroup.TYPE_ID)){
+                    ControlGroup containingGroup = (ControlGroup)c.getParent().getParent();
+                    for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(containingGroup, PersonIso.TYPE_ID).entrySet()){
+                        if(CnALink.isDownwardLink(containingGroup, entry.getValue())){
+                            PersonIso e = (PersonIso)getDaoFactory().getDAO(PersonIso.TYPE_ID).initializeAndUnproxy(entry.getKey());
+                            sb.append(e.getSurname());
+                            sb.append(", ");
+                            sb.append(e.getName());
+                            sb.append("\n"); // newline, to enlist more than one person
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return sb;
     }
     
     private String[] splitTopicTitle(String title){

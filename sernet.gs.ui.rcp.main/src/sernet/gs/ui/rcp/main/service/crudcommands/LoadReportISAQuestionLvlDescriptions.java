@@ -17,10 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,9 +33,11 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -49,6 +53,8 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
     private List<List<String>> results;
     
     private boolean resultInjectedFromCache = false;
+    
+    private static String GENERIC_MEASURE_PREFIX = "MG";
     
     public static final String[] COLUMNS = new String[] { 
                                                 "lvl_top"
@@ -81,6 +87,20 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                 measureLoader = getCommandService().executeCommand(measureLoader);
                 // list of measures to inspect
                 ArrayList<Control> measuresOfInterest = new ArrayList<Control>(0);
+                // find specific measures
+                List<String> specificMeasures = new ArrayList(0);
+                for(CnATreeElement measure : measureLoader.getElements()){
+                    st = (SamtTopic)Retriever.checkRetrieveElement(st);
+                    if(LOG.isDebugEnabled()){
+                        LOG.debug("Measure: \t" + measure.getTitle() + "\tFirstDigitString:\t" + findFirstDigitString(measure.getTitle()));
+                    }
+                    if(!measure.getTitle().startsWith(GENERIC_MEASURE_PREFIX)){
+                        String firstDigitString = findFirstDigitString(measure.getTitle());
+                        if(!firstDigitString.equals("")){
+                            specificMeasures.add(firstDigitString);
+                        }
+                    }
+                }
                 // iterate generic measures
                 for(CnATreeElement cmg : measureLoader.getElements()){
                     LoadCnAElementById controlReloader = new LoadCnAElementById(Control.TYPE_ID, cmg.getDbId());
@@ -88,8 +108,11 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
                     cmg = controlReloader.getFound();
                     if(cmg instanceof Control){
                         Control mg = (Control)cmg;
-                        // no specific measure found, add generic measure
-                        measuresOfInterest.add(mg);
+                        // add only measures that are generic, not implemented allready and are not replaced by a specific one
+                        if(mg.getTitle().startsWith(GENERIC_MEASURE_PREFIX) 
+                                && !isMeasureImplemented(mg)){
+                            measuresOfInterest.add(mg);
+                        }
                     }
                 }
                 Collections.sort(measuresOfInterest, new Comparator<Control>() {
@@ -223,6 +246,49 @@ public class LoadReportISAQuestionLvlDescriptions extends GenericCommand impleme
     @Override
     public Object getCacheableResult() {
         return results;
+    }
+    
+    private String findFirstDigitString(String title){
+        StringTokenizer tokenizer = new StringTokenizer(title, " ");
+        if(title.startsWith("9.2.")){
+            title.hashCode();
+        }
+        while(tokenizer.hasMoreTokens()){
+            String token = tokenizer.nextToken();
+            if(isStringNumeric(token)){
+                return token;
+            }
+        }
+        return "";
+    }
+    
+    private boolean isStringNumeric( String str )
+    {
+        DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols.getInstance();
+        char localeMinusSign = currentLocaleSymbols.getMinusSign();
+
+        if ( !Character.isDigit( str.charAt( 0 ) ) && str.charAt( 0 ) != localeMinusSign ) return false;
+
+        char localeDecimalSeparator = currentLocaleSymbols.getDecimalSeparator();
+
+        for ( char c : str.substring( 1 ).toCharArray() )
+        {
+            if ( !Character.isDigit( c ) )
+            {
+                if (! (c == localeDecimalSeparator) )
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private boolean isMeasureImplemented(Control control){
+        if(control.getEntity().getOptionValue(IControl.PROP_IMPL) != null){
+            return control.getEntity().getOptionValue(IControl.PROP_IMPL).equals(IControl.IMPLEMENTED_YES);
+        } 
+        return false;
     }
 
 }

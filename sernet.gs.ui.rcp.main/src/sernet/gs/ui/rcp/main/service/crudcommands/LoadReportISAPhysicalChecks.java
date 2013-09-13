@@ -99,79 +99,81 @@ public class LoadReportISAPhysicalChecks extends GenericCommand implements ICach
             if(getLog().isDebugEnabled()){
                 getLog().debug("RootRoomGroup:\t" + roomRootGroup.getUuid());
             }
-            for(CnATreeElement e : roomRootGroup.getChildrenAsArray()){
-                if(e.getTypeId().equals(ControlGroup.TYPE_ID)){
-                    ArrayList<String> result = new ArrayList<String>(0);
-                    int implementation_yes = 0;
-                    int implementation_no = 0;
-                    int implementation_partly = 0;
-                    int implementation_na = 0;
-                    int severity_none = 0;
-                    int severity_low = 0;
-                    int severity_middle = 0;
-                    int severity_high = 0;
-                    int severity_veryhigh = 0;
-                    e = Retriever.checkRetrieveElementAndChildren(e);
-                    if(getLog().isDebugEnabled()){
-                        getLog().debug("Inspecting Room:\t" + e.getUuid());
-                    }
-                    for(CnATreeElement c : e.getChildren()){
-                        c = Retriever.checkRetrieveElement(c);
+            if(roomRootGroup != null && roomRootGroup.getChildrenAsArray() != null){
+                for(CnATreeElement e : roomRootGroup.getChildrenAsArray()){
+                    if(e.getTypeId().equals(ControlGroup.TYPE_ID)){
+                        ArrayList<String> result = new ArrayList<String>(0);
+                        int implementation_yes = 0;
+                        int implementation_no = 0;
+                        int implementation_partly = 0;
+                        int implementation_na = 0;
+                        int severity_none = 0;
+                        int severity_low = 0;
+                        int severity_middle = 0;
+                        int severity_high = 0;
+                        int severity_veryhigh = 0;
+                        e = Retriever.checkRetrieveElementAndChildren(e);
                         if(getLog().isDebugEnabled()){
-                            getLog().debug("Inspecting SamtTopic:\t" + c.getUuid());
+                            getLog().debug("Inspecting Room:\t" + e.getUuid());
                         }
-                        if(c.getTypeId().equals(SamtTopic.TYPE_ID)){
-                            SamtTopic t = (SamtTopic)c;
-                            int severity = Integer.parseInt(t.getEntity().getSimpleValue(SEVERITY_PROPERTY));
-                            switch(severity){
-                            case -1:
-                                severity_none++;
-                                break;
-                            case 0:
-                                severity_low++;
-                                break;
-                            case 1:
-                                severity_middle++;
-                                break;
-                            case 2:
-                                severity_high++;
-                                break;
-                            case 3:
-                                severity_veryhigh++;
-                                break;
-                            default:
-                                break;
+                        for(CnATreeElement c : e.getChildren()){
+                            c = Retriever.checkRetrieveElement(c);
+                            if(getLog().isDebugEnabled()){
+                                getLog().debug("Inspecting SamtTopic:\t" + c.getUuid());
                             }
-                            String implementation = t.getEntity().getOptionValue(IMPLEMENTED_PROPERTY);
-                            if(implementation == null){
-                                getLog().warn("Implementation for SamtTopic " + t.getUuid() + " not set");
-                            } else if(implementation.equals(VALUE_IMPLEMENTED_NA)){
-                                implementation_na++;
-                            } else if(implementation.equals(VALUE_IMPLEMENTED_NO)){
-                                implementation_no++;
-                            } else if(implementation.equals(VALUE_IMPLEMENTED_PARTLY)){
-                                implementation_partly++;
-                            } else if(implementation.equals(VALUE_IMPLEMENTED_YES)){
-                                implementation_yes++;
-                            }
+                            if(c.getTypeId().equals(SamtTopic.TYPE_ID)){
+                                SamtTopic t = (SamtTopic)c;
+                                int severity = Integer.parseInt(t.getEntity().getSimpleValue(SEVERITY_PROPERTY));
+                                switch(severity){
+                                case -1:
+                                    severity_none++;
+                                    break;
+                                case 0:
+                                    severity_low++;
+                                    break;
+                                case 1:
+                                    severity_middle++;
+                                    break;
+                                case 2:
+                                    severity_high++;
+                                    break;
+                                case 3:
+                                    severity_veryhigh++;
+                                    break;
+                                default:
+                                    break;
+                                }
+                                String implementation = t.getEntity().getOptionValue(IMPLEMENTED_PROPERTY);
+                                if(implementation == null){
+                                    getLog().warn("Implementation for SamtTopic " + t.getUuid() + " not set");
+                                } else if(implementation.equals(VALUE_IMPLEMENTED_NA)){
+                                    implementation_na++;
+                                } else if(implementation.equals(VALUE_IMPLEMENTED_NO)){
+                                    implementation_no++;
+                                } else if(implementation.equals(VALUE_IMPLEMENTED_PARTLY)){
+                                    implementation_partly++;
+                                } else if(implementation.equals(VALUE_IMPLEMENTED_YES)){
+                                    implementation_yes++;
+                                }
 
 
+                            }
                         }
-                    }
-                    result.add(e.getTitle());
-                    result.add(String.valueOf(implementation_yes));
-                    result.add(String.valueOf(implementation_no));
-                    result.add(String.valueOf(implementation_na));
-                    result.add(String.valueOf(implementation_partly));
-                    result.add(String.valueOf(severity_none));
-                    result.add(String.valueOf(severity_low));
-                    result.add(String.valueOf(severity_middle));
-                    result.add(String.valueOf(severity_high));
-                    result.add(String.valueOf(severity_veryhigh));
-                    if(result.size() > 0){
-                        results.add(result);
-                    }
-                } 
+                        result.add(e.getTitle());
+                        result.add(String.valueOf(implementation_yes));
+                        result.add(String.valueOf(implementation_no));
+                        result.add(String.valueOf(implementation_na));
+                        result.add(String.valueOf(implementation_partly));
+                        result.add(String.valueOf(severity_none));
+                        result.add(String.valueOf(severity_low));
+                        result.add(String.valueOf(severity_middle));
+                        result.add(String.valueOf(severity_high));
+                        result.add(String.valueOf(severity_veryhigh));
+                        if(result.size() > 0){
+                            results.add(result);
+                        }
+                    } 
+                }
             }
             Collections.sort(results, new Comparator<List<String>>() {
 

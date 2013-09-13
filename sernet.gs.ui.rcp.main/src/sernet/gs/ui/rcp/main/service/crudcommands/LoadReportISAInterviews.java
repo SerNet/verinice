@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
@@ -55,6 +55,11 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
     public static final String INTERVIEW_DATE = "interview_date";
     public static final String INTERVIEW_TITLE = "interview_name";
     public static final String PERSON_INTERVIEWER_RELATION = "rel_person_interview_intvwer";
+    private static final String INTERVIEW_AUDIT_ACTION_PROPERTY = "interview_audit_action";
+    private static final String[] ALLOWED_AUDIT_ACTION_TYPES = new String[]{
+        "interview_audit_action_type_interview",
+        "interview_audit_action_type_inspection"
+    };
     
     public static final String[] COLUMNS = new String[]{
         "DATE",
@@ -74,7 +79,6 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
     @Override
     public void execute() {
         if(!resultInjectedFromCache){
-            Calendar cal = Calendar.getInstance();
             Date iDate = null;
             ArrayList<String> result = null;
             Interview i = null;
@@ -87,40 +91,56 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                 for(CnATreeElement c : interviewLoader.getElements()){
                     if(c.getTypeId().equals(Interview.TYPE_ID)){
                         i = (Interview)Retriever.checkRetrieveElement(c);
-                        // create local result
-                        result = new ArrayList<String>(0);
-                        // add date
-                        iDate = i.getEntity().getDate(INTERVIEW_DATE);
-                        // add date
-                        result.add(dateFormat.format(iDate));
-                        // add time
-                        result.add(timeFormat.format(iDate));
-                        // store title for later use
-                        title = i.getEntity().getSimpleValue(INTERVIEW_TITLE);
-                        // add role
-                        i = (Interview)Retriever.checkRetrieveLinks(i, true);
-                        for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(i, PersonIso.TYPE_ID).entrySet()){
-                            if(entry.getValue().getRelationId().equals(PERSON_INTERVIEWER_RELATION)){
-                                person = ((PersonIso)(Retriever.checkRetrieveElement(entry.getKey())));
-                                result.add(new StringBuilder().append(person.getName()).append(" ,").append(person.getSurname()).toString());
+                        // is audit action of allowed type?
+                        if(getLog().isDebugEnabled()){
+                            getLog().debug("AuditActionType of " + i.getTitle() + ":\t" + getAuditActionType(i));
+                        }
+                        if(Arrays.asList(ALLOWED_AUDIT_ACTION_TYPES).contains(getAuditActionType(i))){
+                            // create local result
+                            result = new ArrayList<String>(0);
+                            // add date
+                            iDate = i.getEntity().getDate(INTERVIEW_DATE);
+                            // add date
+                            result.add(dateFormat.format(iDate));
+                            // add time
+                            result.add(timeFormat.format(iDate));
+                            // store title for later use
+                            title = i.getEntity().getSimpleValue(INTERVIEW_TITLE);
+                            // add role
+                            i = (Interview)Retriever.checkRetrieveLinks(i, true);
+                            StringBuilder sb = new StringBuilder();
+                            for(Entry<CnATreeElement, CnALink> entry : CnALink.getLinkedElements(i, PersonIso.TYPE_ID).entrySet()){
+                                if(entry.getValue().getRelationId().equals(PERSON_INTERVIEWER_RELATION)){
+                                    person = ((PersonIso)(Retriever.checkRetrieveElement(entry.getKey())));
+                                    sb.append(person.getName()).append(" ,").append(person.getSurname()).append("\n");
+                                }
                             }
+                            if(sb.length() > 0){
+                                if(sb.toString().endsWith("\n")){
+                                    sb.replace(sb.lastIndexOf("\n"), sb.length() - 1, "");
+                                }
+                                result.add(sb.toString());
+                            }
+                            // add empty string if no role is defined
+                            if(result.size() == 2){
+                                result.add("");
+                            }
+                            // add subject
+                            result.add(title);
+
+                            // add to global results
+                            results.add(result);
                         }
-                        // add empty string if no role is defined
-                        if(result.size() == 2){
-                            result.add("");
-                        }
-                        // add subject
-                        result.add(title);
-                        
-                        // add to global results
-                        results.add(result);
-                        
                     }
                 }
             } catch (CommandException e ){
                 getLog().error("Error while executing command", e);
             }
         }
+    }
+    
+    private String getAuditActionType(Interview i){
+        return i.getEntity().getOptionValue(INTERVIEW_AUDIT_ACTION_PROPERTY);
     }
 
     /* (non-Javadoc)

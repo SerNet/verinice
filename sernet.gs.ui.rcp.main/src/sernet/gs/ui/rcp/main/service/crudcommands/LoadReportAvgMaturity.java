@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
     }
 
     private String getMaturityAvg(){
-        final int precision = 3;
+        final int precision = 2;
         if(matCount > 0){
             double d = (double)matSum / (double)matCount;
             return String.valueOf(round(d, precision));
@@ -105,9 +106,7 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
     
     private double round(double value, int precision)
     {
-        final double powBase = 10d;
-        double rounded = Math.round(value * Math.pow(powBase, precision));
-        return rounded / Math.pow(powBase, precision);
+        return new BigDecimal(value).setScale(precision, BigDecimal.ROUND_HALF_UP).doubleValue();
     } 
     
     public List<List<String>> getResult(){

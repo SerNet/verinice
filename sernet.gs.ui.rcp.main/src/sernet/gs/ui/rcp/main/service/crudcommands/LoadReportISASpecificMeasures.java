@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,11 +32,11 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -51,6 +52,8 @@ public class LoadReportISASpecificMeasures extends GenericCommand implements ICa
     
 
     private boolean resultInjectedFromCache = false;
+    
+    private static String GENERIC_MEASURE_PREFIX = "MG";
     
     public static final String[] COLUMNS = new String[] { 
                                                 "lvl_top"
@@ -76,29 +79,21 @@ public class LoadReportISASpecificMeasures extends GenericCommand implements ICa
                 SamtTopic st = (SamtTopic)getDaoFactory().getDAO(SamtTopic.TYPE_ID).findById(rootElmt);
                 // compute text of deduced measures
 
-                // load generic measures
+                // load all measures
                 LoadReportLinkedElements measureLoader = new LoadReportLinkedElements(Control.TYPE_ID, st.getDbId(), false, true);
                 measureLoader = getCommandService().executeCommand(measureLoader);
                 // list of measures to inspect
                 ArrayList<Control> measuresOfInterest = new ArrayList<Control>(0);
                 // iterate generic measures
                 for(CnATreeElement cmg : measureLoader.getElements()){
-                    if(cmg.getTypeId().equals(Control.TYPE_ID)){
-                        Control mg = (Control)Retriever.checkRetrieveLinks(cmg, true);
-                        // check if specific measures exist
-                        LoadReportLinkedElements sMeasureLoader = new LoadReportLinkedElements(Control.TYPE_ID, mg.getDbId(), false, true);
-                        sMeasureLoader = getCommandService().executeCommand(sMeasureLoader);
-                        if(sMeasureLoader.getElements().size() > 0){
-                            //specific measures found, ignore generic measures
-                            for(CnATreeElement cms : sMeasureLoader.getElements()){
-                                HydratorUtil.hydrateElement(getDaoFactory().getDAO(Control.TYPE_ID), cms, false);
-                                if(cms.getTypeId().equals(Control.TYPE_ID)){
-                                    measuresOfInterest.add((Control)cms);
-                                }
-                            }
-                        }
+                    cmg = (Control)getDaoFactory().getDAO(Control.TYPE_ID).initializeAndUnproxy(cmg);
+                    if(!cmg.getTitle().startsWith(GENERIC_MEASURE_PREFIX) 
+                            && isFirstStringADigit(cmg.getTitle())
+                            && !isMeasureImplemented((Control)cmg)){
+                                measuresOfInterest.add((Control)cmg);
                     }
                 }
+                
                 Collections.sort(measuresOfInterest, new Comparator<Control>() {
 
                     @Override
@@ -125,7 +120,7 @@ public class LoadReportISASpecificMeasures extends GenericCommand implements ICa
                                     break;
                                 }
                             }
-                            if(idIdx > 0){
+                            if(idIdx >= 0){
                                 StringBuilder sb = new StringBuilder();
                                 for(int j = idIdx + 1; j < tokens.length; j++){
                                     sb.append(tokens[j]);
@@ -223,5 +218,40 @@ public class LoadReportISASpecificMeasures extends GenericCommand implements ICa
 
     public List<List<String>> getResults() {
         return results;
+    }
+    
+    private boolean isFirstStringADigit(String title){
+        if(title.contains(" ")){
+            String candidate = title.substring(0, title.indexOf(" "));
+            candidate = candidate.trim();
+            return isStringNumeric(candidate);
+        }
+        return false;
+    }
+    
+    private boolean isStringNumeric( String str )
+    {
+        DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols.getInstance();
+        char localeMinusSign = currentLocaleSymbols.getMinusSign();
+
+        if ( !Character.isDigit( str.charAt( 0 ) ) && str.charAt( 0 ) != localeMinusSign ) return false;
+
+        char localeDecimalSeparator = currentLocaleSymbols.getDecimalSeparator();
+
+        for ( char c : str.substring( 1 ).toCharArray() )
+        {
+            if ( !Character.isDigit( c ) )
+            {
+                if (! (c == localeDecimalSeparator) )
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private boolean isMeasureImplemented(Control control){
+        return control.getEntity().getOptionValue(IControl.PROP_IMPL).equals(IControl.IMPLEMENTED_YES);
     }
 }

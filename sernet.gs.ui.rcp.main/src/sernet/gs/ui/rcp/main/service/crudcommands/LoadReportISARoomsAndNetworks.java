@@ -17,8 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -42,6 +46,7 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
     
     private static final Logger LOG = Logger.getLogger(LoadReportISARoomsAndNetworks.class);
     private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
+    private static final String IS_ITROOM_PROPERTY = "controlgroup_is_room";
     
     public static final String[] ROOMCOLUMNS = new String[] { 
                                             "RAUMNAME",
@@ -53,8 +58,6 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                                             "ROOMDBID",
                                             "NR"
     };
-    
-    private static final String IS_ITROOM_PROPERTY = "controlgroup_isroom_yes";
     
     public static final String[] NETWORKCOLUMNS = new String[] {
         
@@ -83,15 +86,7 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
         if(!resultInjectedFromCache){
             roomResults = new ArrayList<List<String>>(0);
             networkResults = new ArrayList<List<String>>(0);
-            ControlGroup rootControlGroup = null;
             try {
-//                if(sgdbid != null){
-//                    rootControlGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(sgdbid);
-//                } else {
-//                    FindSGCommand command = new FindSGCommand(true, rootElmt);
-//                    command = getCommandService().executeCommand(command);
-//                    rootControlGroup = command.getSelfAssessmentGroup();
-//                }
                 LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, rootElmt);
                 cgFinder = getCommandService().executeCommand(cgFinder);
                 List<CnATreeElement> cList = new ArrayList<CnATreeElement>();
@@ -99,19 +94,29 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                 for(CnATreeElement c : cList){
                     if(c instanceof ControlGroup){
                         ControlGroup group = (ControlGroup)c;
-                        // CHECK WHY NO GROUP MATCHES HERE!!!
-                        if(group.getEntity().getSimpleValue(OVERVIEW_PROPERTY).equals("1") &&
-                                group.getEntity().getOptionValue("controlgroup_is_room").equals(IS_ITROOM_PROPERTY)){
+                        if( group.getEntity() != null &&
+                                group.getEntity().getSimpleValue(OVERVIEW_PROPERTY) != null &&
+                                group.getEntity().getSimpleValue(OVERVIEW_PROPERTY).equals("1") &&
+                                group.getEntity().getSimpleValue(IS_ITROOM_PROPERTY) != null && 
+                                group.getEntity().getSimpleValue(IS_ITROOM_PROPERTY).equals("1")){
                             List<String> roomResult = new ArrayList<String>();
                             // adding title
                             roomResult.add(group.getTitle());
                             // adding date of inspection
-                            roomResult.add(group.getEntity().getSimpleValue("controlgroup_isroom_dateofinspection"));
+                            Locale locale = Locale.getDefault();
+                            DateFormat formatter = new SimpleDateFormat("EE, dd.MM.yyyy", locale);
+                            DateFormat destinationFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
+                            formatter.setLenient(true);
+                            Date fDate = formatter.parse(group.getEntity().getSimpleValue("controlgroup_isroom_dateofinspection"));
+                            roomResult.add(destinationFormat.format(fDate));
                             // adding inspecteur and companions
                             Map<CnATreeElement,CnALink> linkedPersonsMap = CnALink.getLinkedElements(group, PersonIso.TYPE_ID);
                             StringBuilder inspectorBuilder = new StringBuilder();
                             StringBuilder companionBuilder = new StringBuilder();
                             for(Entry<CnATreeElement, CnALink> entry : linkedPersonsMap.entrySet()){
+                                if(LOG.isDebugEnabled()){
+                                    LOG.debug("RelationId of Link from " + group.getTitle() + " to " + entry.getKey().getTitle() + ":\t" + entry.getValue().getRelationId());
+                                }
                                 if(entry.getValue().getRelationId().equals("inspector")){
                                     if(entry.getKey() instanceof PersonIso){
                                         PersonIso inspector = (PersonIso)entry.getKey();
@@ -139,6 +144,8 @@ public class LoadReportISARoomsAndNetworks extends GenericCommand implements ICa
                 }
             } catch (CommandException e) {
                 LOG.error("Error while executing command", e);
+            } catch (java.text.ParseException e){
+                LOG.error("Error parsing Date", e);
             }
             for(List<String> list : roomResults){
                 list.add(String.valueOf(roomResults.indexOf(list) + 1));

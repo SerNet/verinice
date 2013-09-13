@@ -17,9 +17,13 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -78,7 +82,14 @@ public class LoadISAQuestionAuditActions extends GenericCommand implements ICach
                             keyElmt = (Interview)getDaoFactory().getDAO(Interview.TYPE_ID).initializeAndUnproxy(keyElmt);
                         }
                         
-                        result.add(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
+                        Locale locale = Locale.getDefault();
+                        DateFormat formatter = new SimpleDateFormat("EE, dd.MM.yyyy", locale);
+                        DateFormat destinationFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
+                        formatter.setLenient(true);
+                        Date fDate = formatter.parse(keyElmt.getEntity().getSimpleValue(INTERVIEW_DATE));
+                        result.add(destinationFormat.format(fDate));
+                        
+                        
                         StringBuilder persons = new StringBuilder();
                         Iterator<Entry<CnATreeElement, CnALink>> iter = CnALink.getLinkedElements(keyElmt, PersonIso.TYPE_ID).entrySet().iterator();
                         while(iter.hasNext()){
