@@ -184,6 +184,7 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         map.put(IGsmIsmExecuteProzess.VAR_ASSET_DESCRIPTION_LIST, createAssetDescriptionList(elementSet));     
         map.put(IGsmIsmExecuteProzess.VAR_CONTROL_DESCRIPTION, getFirstControlDescription(elementSet));      
         map.put(IGenericProcess.VAR_UUID, getAssetGroupUuid(elementSet));
+        map.put(IGenericProcess.VAR_TYPE_ID, AssetGroup.TYPE_ID); 
         map.put(IGenericProcess.VAR_AUDIT_UUID, processParameter.getUuidOrg());    
         map.put(IGsmIsmExecuteProzess.VAR_RISK_VALUE, processParameter.getRiskValue());
         map.put(IGenericProcess.VAR_PRIORITY, processParameter.getPriority());     
