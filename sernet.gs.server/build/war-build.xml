@@ -34,6 +34,7 @@
         	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="portal.verinice.private/contact.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="portal.verinice.private/download.html"/>
         	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="portal.verinice.private/index.html"/>
+        	<zipfileset file="WebContent/portal.verinice.private/manual.html" fullpath="portal.verinice.private/manual.html"/>
         	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
