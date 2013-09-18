@@ -4126,6 +4126,20 @@ the value between <param></param> will be used directly if no string is found fo
             required="true"/>
         <huipropertygroup id="audit_document_data" name="Audit Document Data" tags="VDA_ISA_Audit">
         <huiproperty
+        	id="audit_document_data_responsible_scope"
+        	name="Audit author name"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"
+            required="true"/>
+        <huiproperty
+        	id="audit_document_data_document_basis"
+        	name="Audit author name"
+			inputtype="text" 
+            tags="VDA_ISA_Audit"
+            textrows="1"
+            required="true"/>
+        <huiproperty
         	id="audit_document_data_author_name"
         	name="Audit author name"
 			inputtype="text" 
@@ -4139,94 +4153,14 @@ the value between <param></param> will be used directly if no string is found fo
 			tags="VDA_ISA_Audit" required="true">
             <defaultRule class="Today" />
         </huiproperty>
-        <huiproperty
-        	id="audit_document_data_first_quality_control_name"
-        	name="First Quality Control done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
-         <huiproperty 
-			name="Audit Document Data, Date of First Quality Control"
-			id="audit_document_data_first_quality_control_date"
-			inputtype="date"
-			tags="VDA_ISA_Audit" required="true">
-            <defaultRule class="Today" />
-        </huiproperty>
-        <huiproperty
-        	id="audit_document_data_approval_name"
-        	name="Audit Document Data, Approval done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
-         <huiproperty 
-			name="Audit Document Data, Approval done on"
-			id="audit_document_data_approval_date"
-			inputtype="date"
-			tags="VDA_ISA_Audit"
-			required="true">
-            <defaultRule class="Today" />
-        </huiproperty>
-        <huiproperty
-        	id="audit_document_data_company_coordination_name"
-        	name="Audit Document Data, Coordination with Company done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
-         <huiproperty 
-			name="Audit Document Data, Coordination with Componay done on"
-			id="audit_document_data_company_coordination_date"
-			inputtype="date"
-			tags="VDA_ISA_Audit"
-			required="true">
-            <defaultRule class="Today" />
-        </huiproperty>            
-        <huiproperty
-        	id="audit_document_data_adjustment_approval_name"
-        	name="Audit Document Data, Adjustment and Approval done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
-         <huiproperty 
-			name="Audit Document Data, Adjustment and Approval done on"
-			id="audit_document_data_adjustment_approval_date"
-			inputtype="date"
-			tags="VDA_ISA_Audit"
-			required="true">
-            <defaultRule class="Today" />
-        </huiproperty>            
-         <huiproperty
-        	id="audit_document_data_second_quality_control_name"
-        	name="Audit Document Data, Second Quality Control done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
-         <huiproperty 
-			name="Audit Document Data, Date of Second Quality Control"
-			id="audit_document_data_second_quality_control_date"
-			inputtype="date"
-			tags="VDA_ISA_Audit"
-			required="true">
-            <defaultRule class="Today" />
-         </huiproperty>
-         <huiproperty
-        	id="audit_document_data_final_approval_distribution_name"
-        	name="Audit Document Data, Final Approval and Distribution done by"
-			inputtype="text" 
-            tags="VDA_ISA_Audit"
-            textrows="1"
-            required="true"/>
          <huiproperty 
 			name="Audit Document Data, Date of Final Approval and Distribution"
-			id="audit_document_data_final_approval_distribution_date"
+			id="audit_document_data_final_approval_distribution"
 			inputtype="date"
 			tags="VDA_ISA_Audit"
 			required="true">
-            <defaultRule class="Today" />           
+            <defaultRule class="Today" />  
+                 
         </huiproperty>            
         </huipropertygroup>
         <huipropertygroup id="audit_topics_group" name="Information Security Reporting" tags="VDA_ISA_Audit">

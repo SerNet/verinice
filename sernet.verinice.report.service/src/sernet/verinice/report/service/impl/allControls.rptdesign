@@ -979,6 +979,19 @@
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.model.iso27k.Control;
 import java.lang.Integer;
+import sernet.gs.service.NumericStringComparator;
+import java.util.Comparator;
+import java.util.Collections;
+
+List sort(List list) {
+        Collections.sort(list, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                comparator = new NumericStringComparator();
+                return comparator.compare(o1.getTitle(), o2.getTitle());
+            }
+        });
+        return list;
+}
 
 objects="control";
 
@@ -996,8 +1009,9 @@ if(root == null){
 cols = helper.getAllPropertyTypes(objects);
 c2 = new LoadReportAllControls(new Integer(root));
 elements = helper.execute(c2).getResult();
+sortedElements = sort(elements);
 return helper.map(
-	elements,
+	sortedElements,
 	cols
 );]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
