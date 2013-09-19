@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cspecExtension
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0"
+	xmlns="http://www.eclipse.org/buckminster/CSpec-1.0">
+	<actions>
+        <public name="create.war" actor="ant">
+            <actorProperties>
+                <property key="buildFile" value="build/war-build.xml" />
+                <property key="targets" value="war" />
+            </actorProperties>
+            <properties>
+                <property key="filename" value="veriniceserver.war" />
+            </properties>
+            <prerequisites alias="repository">
+                <attribute name="bundle.jar" />
+            </prerequisites>
+            <products alias="destination" base="${buckminster.output}">
+                <path path="./" />
+            </products>
+        </public>
+        <public name="create.war.local" actor="ant">
+            <actorProperties>
+                <property key="buildFile" value="build/war-build.xml" />
+                <property key="targets" value="war-local" />
+            </actorProperties>
+            <properties>
+                <property key="filename" value="veriniceserver.war" />
+            </properties>
+            <prerequisites alias="repository">
+                <attribute name="bundle.jar" />
+            </prerequisites>
+            <products alias="destination" base="${buckminster.output}">
+                <path path="./" />
+            </products>
+        </public>
+        <public name="create.war.basic" actor="ant">
+            <actorProperties>
+                <property key="buildFile" value="build/war-build.xml" />
+                <property key="targets" value="war-basic" />
+            </actorProperties>
+            <properties>
+                <property key="filename" value="veriniceserver.war" />
+            </properties>
+            <prerequisites alias="repository">
+                <attribute name="bundle.jar" />
+            </prerequisites>
+            <products alias="destination" base="${buckminster.output}">
+                <path path="./" />
+            </products>
+        </public>
+    </actions>
+</cspecExtension>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:c="http://java.sun.com/jsp/jstl/core"
+   xmlns:p="http://primefaces.org/ui"
+   xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition template="/layout-login.xhtml">
+   <ui:define name="content">
+      <div id="col1_login">
+         <div id="col1_content" class="clearfix"></div>
+      </div>
+      <div id="col3"
+         style="width: auto; margin: 0 200px 0 0; *margin-right: 0;">
+         <div id="col3_content">
+            <vn:login error="#{msg['login.error']}" />
+         </div>
+      </div>
+      <div id="col2">
+         <div id="col2_content"></div>
+      </div>
+   </ui:define>
+</ui:composition>
+</html>

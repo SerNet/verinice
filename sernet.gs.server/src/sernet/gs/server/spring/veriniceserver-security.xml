@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:security="http://www.springframework.org/schema/security" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+
+    <!--
+        Security configuration for pre-http authentication and internal
+        commands. The security configuration above only deals with the
+        authentication of the verinice client against the verinice
+        server via http. However it misses two important issues: 
+        
+        - internal commands like
+        the mail notification job cannot authenticate via http. As such
+        those commands have no authentication information at all. 
+        
+        For these cases we added another authentication mechanism. What we
+        authenticate are <em>individual</em> ICommand instances which we
+        trust. All trusted ICommand instances have to be created in the
+        Spring configuration as a named bean and registered in the
+        'internalAuthenticationProvider' bean below. This Bean provides
+        an AOP advice, ie. a method which is called for a pointcut. The
+        advice intercepts the invocation of
+        HibernateCommandService.executeCommand() and inspects the
+        authentication situation and the first argument (an ICommand
+        instance). If the instance is well-known the authentication is
+        granted.
+    -->
+    
+	<aop:config>
+		<aop:aspect ref="internalAuthenticationProvider">
+    		<aop:pointcut id="commandServicePointcut" expression="execution(* sernet.verinice.service.HibernateCommandService.executeCommand(..))" />
+			<aop:around method="doInsertAuthentication" pointcut-ref="commandServicePointcut" />
+		</aop:aspect>
+	</aop:config>
+
+    <bean id="internalAuthenticationProvider" class="sernet.gs.server.security.InternalAuthenticationProvider">
+        <security:custom-authentication-provider />
+        <property name="allowedInstances">
+            <set>
+                <ref bean="pniCommand" />
+            </set>
+        </property>
+    </bean>
+
+</beans>

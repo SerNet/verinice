@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+ <!-- httpInvoker exporter for the verinice command service -->
+    <bean name="/commandServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="commandService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.ICommandService</value>
+        </property>
+    </bean>
+    
+    <bean name="/authServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+        	<ref bean="authService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IAuthService</value>
+        </property>
+    </bean>
+    
+    <bean name="/taskServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="taskService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.ITaskService</value>
+        </property>
+    </bean>
+    
+    <bean name="/processServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="processServiceIsa"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IProcessServiceIsa</value>
+        </property>
+    </bean>
+    
+     <bean name="/controlFlowHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="isaControlFlowService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IIsaControlFlowService</value>
+        </property>
+    </bean>
+    
+    <bean name="/qmHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="isaQmService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IIsaQmService</value>
+        </property>
+    </bean>
+    
+    <bean name="/individualHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="individualService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IIndividualService</value>
+        </property>
+    </bean>
+    
+    <bean name="/gsmHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="gsmService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.bpm.IGsmService</value>
+        </property>
+    </bean>
+    
+    <bean name="/rightsServiceHttpInvoker"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+        <property name="service">
+            <ref bean="rightsService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IRightsService</value>
+        </property>
+    </bean>
+    
+    <bean name="/validationServiceHttpInvoker"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="validationService" />
+		</property>    
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.validation.IValidationService</value>
+		</property>
+	</bean>
+</beans>
+

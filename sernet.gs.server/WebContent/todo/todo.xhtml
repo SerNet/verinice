@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" >
+
+<ui:composition template="/layout.xhtml">
+<ui:define name="content">
+	<div id="col1">
+		<div id="col1_content">	
+			<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
+				<h1><h:outputText value="#{msg['todo.groups']}" /></h1>
+				<ul id="listLeftNavi">
+					<ui:repeat id="itVerbundList" value="#{assetNavigation.itVerbundList}" var="itVerbund">
+			  			<li id="liLeftNavi" class="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
+					  		<p:commandLink				  		 
+					  			value="#{itVerbund.title}" 
+					  			actionListener="#{toDo.loadToDoListForVerbund}"
+					  			update=":verbundForm,:elementsForm,:tablePanel,:editPanel"
+					  			styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
+					            <f:param name="itVerbundTitle" value="#{itVerbund.titleEscaped}" />
+					        </p:commandLink>
+					    </li>
+					</ui:repeat>
+				</ul>
+				<h1><h:outputText value="#{msg['todo.realization']}" /></h1>
+				<ul id="listLeftNavi">
+					<!-- Grundschutz -->				
+		  			<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="executionNo" value="#{toDo.executionNo}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" process="executionNo"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="executionNo" value="#{msg['todo.no']}"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="executionYes" value="#{toDo.executionYes}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="executionYes"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="executionYes" value="#{msg['todo.yes']}"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="executionPartly" value="#{toDo.executionPartly}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="executionPartly"/> 
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="executionPartly" value="#{msg['todo.partly']}"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="executionDispensable" value="#{toDo.executionDispensable}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="executionDispensable"/> 
+				  		</h:selectBooleanCheckbox>
+					    <h:outputLabel for="executionDispensable" value="#{msg['todo.superfluous']}"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="executionUntreated" value="#{toDo.executionUntreated}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="executionUntreated"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="executionUntreated" value="#{msg['todo.untreated']}"/>					    
+				    </li>			    					    				   
+				</ul>
+				<h1><h:outputText value="#{msg['todo.seal']}" /></h1>
+				<ul id="listLeftNavi">
+		  			<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="sealA" value="#{toDo.sealA}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="sealA"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="sealA" value="A"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="sealB" value="#{toDo.sealB}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="sealB"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="sealB" value="B"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="sealC" value="#{toDo.sealC}">
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="sealC"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="sealC" value="C"/>
+				  	</li>
+				  	<li id="liLeftNavi">
+				  		<h:selectBooleanCheckbox id="sealZ" value="#{toDo.sealZ}">				  		
+				  			<p:ajax event="change" listener="#{toDo.loadToDoList}" update=":tablePanel,:editPanel" process="sealZ"/>
+				  		</h:selectBooleanCheckbox>
+				  		<h:outputLabel for="sealZ" value="Z"/>
+				  	</li>
+				</ul>
+			</h:form>
+		</div>
+	</div>
+	<div id="col3" style="width: 180px; margin: 0 650px 0 140px; *margin-right:0;">
+		<div id="col3_content">	
+			<div id="col3_innen" class="floatbox">
+     			<div class="csc-header csc-header-n1">
+     				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}"/></h1>
+     			</div>
+     			<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
+     				<p:accordionPanel id="elementPanel" height="500" style="background-color: #ffffff;">
+	      				<p:tab title="#{msg['todo.buildings']}"  rendered="#{not empty assetNavigation.gebaeudeList}" style="height: 250px">
+				        	<ul>
+						 		<ui:repeat id="gebaeudeList" value="#{assetNavigation.gebaeudeList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.rooms']}" rendered="#{not empty assetNavigation.raumList}">
+				        	<ul>
+						 		<ui:repeat id="raumList" value="#{assetNavigation.raumList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.clients']}" rendered="#{not empty assetNavigation.clienteList}">
+				        	<ul>
+						 		<ui:repeat id="clienteList" value="#{assetNavigation.clienteList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.server']}" rendered="#{not empty assetNavigation.serverList}">
+				        	<ul>
+						 		<ui:repeat id="serverList" value="#{assetNavigation.serverList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.applications']}" rendered="#{not empty assetNavigation.anwendungList}">
+				        	<ul>
+						 		<ui:repeat id="anwendungList" value="#{assetNavigation.anwendungList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.employees']}" rendered="#{not empty assetNavigation.personList}">
+				        	<ul>
+						 		<ui:repeat id="personList" value="#{assetNavigation.personList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.networks']}" rendered="#{not empty assetNavigation.netzList}">
+				        	<ul>
+						 		<ui:repeat id="netzList" value="#{assetNavigation.netzList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.netzkomponente']}" rendered="#{not empty assetNavigation.sonstItList}">
+				        	<ul>
+						 		<ui:repeat id="netzkomponenteList" value="#{assetNavigation.sonstItList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>
+				        <p:tab title="#{msg['todo.tkkomponente']}" rendered="#{not empty assetNavigation.tkKomponenteList}">
+				        	<ul>
+						 		<ui:repeat id="tkList" value="#{assetNavigation.tkKomponenteList}" var="item">
+						 			<li class="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}">
+								  		<p:commandLink 
+								  			value="#{item.title}" 
+								  			actionListener="#{toDo.loadToDoListForElement}"
+								  			update=":tablePanel,:elementsForm,:editPanel" 
+								  			styleClass="#{item.dbId==assetNavigation.selectedElementId ? 'selected' : 'normal'}" >
+								            <f:param name="itemId" value="#{item.dbId}" />
+								        </p:commandLink>
+								    </li>
+							    </ui:repeat>
+							</ul>
+				        </p:tab>      			        
+				    </p:accordionPanel>			        
+     			</h:form>
+     		</div>
+     	</div>
+     </div>
+     <div id="col2" style="width:650px;">
+		<div id="col2_content">
+			<div id="col3_innen" class="floatbox">
+			    <div class="csc-textpic-text">
+			    	<p:outputPanel id="editPanel">
+	      				<p:outputPanel id="editHeader" rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
+		      				<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"/></h1>
+		      			</p:outputPanel>
+	      				<h:form id="editForm" rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
+	      					<table id="editTable">
+								<tr>
+									<td>
+										<h:outputLabel for="umsetzung" value="#{msg['todo.realization']}" styleClass="formLabel"/>
+									</td>
+									<td>
+										<p:selectOneMenu id="audit" value="#{toDo.umsetzung}" style="width: 136px">
+											<f:selectItems value="#{toDo.executionList}" var="option" itemLabel="#{option.key}" itemValue="#{option.value}"/>
+										</p:selectOneMenu>
+									</td>
+									<td>
+										<h:outputLabel for="erlaeuterung" value="#{msg['todo.comment']}" styleClass="formLabel"/>					  					
+									</td>
+									<td rowspan="2">
+										<h:inputTextarea value="#{toDo.massnahmeUmsetzung.erlaeuterung}" style="width:340px;height:75px;"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputLabel for="umsetzungBis" value="#{msg['todo.until']}" styleClass="formLabel"/>
+									</td>
+									<td>
+										<p:calendar value="#{toDo.massnahmeUmsetzung.umsetzungBis}" 
+											showButtonPanel="true" 
+											showWeek="true"
+											mode="popup" 
+											showOn="button"
+											navigator="true"
+											styleClass="hasDatepickerBsi"/>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<p:commandButton id="submit" value="#{msg['todo.save']}" action="#{toDo.save}" update=":editPanel,:tablePanel"/>							
+									</td>
+								</tr>
+							</table>						
+							<p:outputPanel id="descriptionPanel">
+								<p:outputPanel id="descriptionPanelHeader" rendered="#{toDo.massnahmeUmsetzung!=null}" styleClass="csc-header csc-header-n1">
+		      						<h1 class="csc-firstHeader">
+		      							<p:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.description']}" update=":editForm:descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+		      						</h1>
+		      						<p:commandLink action="#{toDo.toggleDescription}" value="#{toDo.showDescription ? msg['todo.hide'] : msg['todo.show']}" update=":editForm:descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null}"/>
+		      					</p:outputPanel>									
+								<h:outputText value="#{toDo.massnahmeHtml}" escape="false" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}"/>									
+								<br/>
+								<p:commandLink action="#{toDo.toggleDescription}" value="#{msg['todo.hide']}" update=":editForm:descriptionPanel" rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}" style="color:#765;"/>
+							</p:outputPanel>
+	      				</h:form>
+	      			</p:outputPanel>
+	      			<p:outputPanel id="tablePanel">
+						<h1 class="csc-firstHeader"><h:outputText value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}" rendered="#{auth.bsiTasks}"/></h1>
+		      			<h:form id="tableForm" rendered="#{auth.bsiTasks}">
+		      				<p:dataTable id="toDoTable"
+				                var="item"
+				                value="#{toDo.todoList}"
+				                rowKey="#{item.dbId}"
+								selection="#{toDo.selectedItem}" 
+				                selectionMode="single"
+				                scrollable="true"
+								scrollHeight="508" 
+								resizableColumns="true"
+				                style="width: 650px"
+				                rendered="#{!empty toDo.todoList}">
+				                <p:ajax event="rowSelect" 
+									listener="#{toDo.loadToDo}"   
+			                    	update=":editPanel" />
+			                    <p:column sortBy="#{item.umsetzung}" style="width:25px">
+			                    	<h:graphicImage id="colUmsetzungImage" url="/image/icon/#{item.umsetzungIcon}" />	
+						        </p:column>	
+						        <p:column headerText="#{msg['todo.until']}" sortBy="#{item.umsetzungBis}" style="width:55px">
+			                    	<h:outputText id="colUmsetzungBisText" value="#{item.umsetzungBis}">
+								    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{toDo.timeZone}" />
+								    </h:outputText>	
+						        </p:column>	
+						        <p:column headerText="#{msg['todo.responsible']}" sortBy="#{item.umsetzungDurch}" style="width:95px">
+									<h:outputText value="#{item.umsetzungDurch}"/>	
+						        </p:column>
+						        <p:column headerText="#{msg['todo.level']}" sortBy="#{item.stufe}" style="width:35px">
+									<h:outputText value="#{item.stufe}"/>	
+						        </p:column>
+						        <p:column headerText="#{msg['todo.asset']}" sortBy="#{item.parentTitle}" style="width:160px">
+									<h:outputText value="#{item.parentTitle}"/>	
+						        </p:column>
+						        <p:column headerText="#{msg['todo.title']}" sortBy="#{item.title}" style="width:260px">
+									<h:outputText value="#{item.title}"/>	
+						        </p:column>
+				            </p:dataTable>
+		      			</h:form>
+		      		</p:outputPanel> 			
+			    </div>
+			</div>
+		</div>
+	</div>
+</ui:define>
+</ui:composition>
+</html>

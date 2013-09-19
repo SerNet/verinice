@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ehcache fragment to allow access to ehcache configuration
+Bundle-SymbolicName: sernet.gs.ehcache.fragment
+Bundle-Version: 1.1.0
+Fragment-Host: com.springsource.net.sf.ehcache
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
