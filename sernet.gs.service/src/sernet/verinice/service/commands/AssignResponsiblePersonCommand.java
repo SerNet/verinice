@@ -32,15 +32,17 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.service.commands.LoadCnAElementsByEntityIds;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
@@ -88,6 +90,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
      * @throws CommandException
      */
     private void checkRelations(MassnahmenUmsetzung massnahme) {
+        IBaseDao<Person, Serializable> personDAO = getDaoFactory().getDAO(Person.class);
         Set<CnALink> linkedPersons = new HashSet<CnALink>();
         try {
             List<Person> personenUmsetzungDurch = getPersonsbyProperty(massnahme);
@@ -99,6 +102,12 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
                 }
             } else {
                 findLinkedPersonsUpTree(massnahme, linkedPersons, rolesToSearch);
+                if (!linkedPersons.isEmpty() && linkedPersons != null) {
+                    for (CnALink plink : linkedPersons) {
+                        Person person = personDAO.findById(plink.getDependant().getDbId());
+                        createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
+                    }
+                }
             }
 
         } catch (CommandException ce) {
@@ -161,7 +170,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
                 }
             }
         }
-        if (createLink) {
+        if (!createLink) {
             createLinkCommand(massnahme, person, MassnahmenUmsetzung.MNUMS_RELATION_ID);
         }
     }
@@ -207,19 +216,33 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
         return Collections.emptyList();
     }
 
-    private void findLinkedPersonsUpTree(MassnahmenUmsetzung massnahme, Set<CnALink> linkedPersons, Set<Property> rolesToSearch) {
+    private void findLinkedPersonsUpTree(CnATreeElement currentElement, Set<CnALink> linkedPersons, Set<Property> rolesToSearch) {
         IBaseDao<Person, Serializable> personDAO = getDaoFactory().getDAO(Person.class);
         try {
-            Set<CnALink> modulResponseLinks = massnahme.getParent().getLinksUp();
-            if (modulResponseLinks == null || modulResponseLinks.isEmpty()) {
-                modulResponseLinks = massnahme.getParent().getParent().getLinksUp();
-                for (CnALink plink : modulResponseLinks) {
-                    if (plink.getDependant().getTypeId().equals(Person.TYPE_ID)) {
-                        Person person = personDAO.findById(plink.getDependant().getDbId());
-                        assignPerson(massnahme, linkedPersons, rolesToSearch, person);
+            Set<CnALink> allLinks = currentElement.getLinksUp();
+            if (allLinks == null || allLinks.isEmpty()) {
+                if (!ITVerbund.TYPE_ID.equals(currentElement.getTypeId()) && !Organization.TYPE_ID.equals(currentElement.getTypeId()) && currentElement.getParent() != null) {
+                    findLinkedPersonsUpTree(currentElement.getParent(), linkedPersons, rolesToSearch);
+                }
+            }
+            for (CnALink link : allLinks) {
+                if (link.getId().getTypeId().equals(MassnahmenUmsetzung.MNUMS_RELATION_ID)) {
+                    linkedElements.add(link);
+                }
+                if (link.getDependant().getTypeId().equals(Person.TYPE_ID)) {
+                    Person person = personDAO.findById(link.getDependant().getDbId());
+                    // noch Kontrolle der existierenden Verknüpfungen einbauen!
+                    for (Property role : rolesToSearch) {
+                        if (person.hasRole(role)) {
+                            linkedPersons.add(link);
+                        }
                     }
                 }
             }
+            if (!ITVerbund.TYPE_ID.equals(currentElement.getTypeId()) && !Organization.TYPE_ID.equals(currentElement.getTypeId()) && currentElement.getParent() != null && linkedPersons.isEmpty()) {
+                findLinkedPersonsUpTree(currentElement.getParent(), linkedPersons, rolesToSearch);
+            }
+
         } catch (Exception e) {
             log.error("Error while searching relations", e);
         }
