@@ -20,6 +20,7 @@
 package sernet.verinice.fei.rcp;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -157,6 +158,16 @@ public class FileSystemTraverser implements IFileSystemTraverser {
     
     protected List<FileExceptionNoStop> getErrorList() {
         return errorList;
+    }
+    
+    public static double convertByteToMB(long byteSize) {
+        return ((double)byteSize) / ((double)(1024*1024));
+    }
+    
+    public static String formatByteToMB(long byteSize) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(new DecimalFormat("#,##0.#").format(convertByteToMB(byteSize)));
+        return sb.append(" MB").toString();
     }
     
 }

@@ -161,8 +161,8 @@ public class FileElementImportTraverser extends FileSystemTraverser {
 
     protected void checkFileSize(File file, TraverserContext context) {
         long size = file.length();
-        if(AttachmentFile.convertByteToMB(size) > getMaxFileSizeInMB()) {   
-            String readableSize = AttachmentFile.formatByteToMB(size);
+        if(FileSystemTraverser.convertByteToMB(size) > getMaxFileSizeInMB()) {   
+            String readableSize = FileSystemTraverser.formatByteToMB(size);
             throw new FileExceptionNoStop(file.getPath(), NLS.bind(Messages.FileElementImportTraverser_0,readableSize,getMaxFileSizeInMB()));
         }
     }

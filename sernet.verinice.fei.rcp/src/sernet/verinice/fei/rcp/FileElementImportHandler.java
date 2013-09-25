@@ -89,6 +89,7 @@ public class FileElementImportHandler extends RightsEnabledHandler {
     private void importFiles(String[] filePathes, Group<CnATreeElement> target) {
         Activator.inheritVeriniceContextState();
         numberOfFiles=0;
+        errorList=null;
         for (String file : filePathes) {
             FileElementImportTraverser traverser = new FileElementImportTraverser(file, target);
             traverser.traverseFileSystem();
