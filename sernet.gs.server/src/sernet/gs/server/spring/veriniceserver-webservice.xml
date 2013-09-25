@@ -16,8 +16,13 @@
     <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-    <!-- Publishes the WS endpoint -->
+    <!-- Publishes the WS endpoints -->
     <jaxws:endpoint id="sync-service" implementor="#syncService" address="/sync" />
+    <jaxws:endpoint id="vna-service" implementor="#vnaService" address="/vna">
+        <jaxws:properties>
+            <entry key="mtom-enabled" value="true"/>
+        </jaxws:properties>
+    </jaxws:endpoint>
 
     <!-- Makes the SyncService WebService available as a Spring bean. -->
     <bean id="syncServiceImpl" class="sernet.gs.server.sync.SyncServiceImpl" >
@@ -28,7 +33,21 @@
         <property name="target" ref="syncServiceImpl" />
         <property name="transactionAttributes">
             <props merge="true">
-                <prop key="executeCommand">PROPAGATION_REQUIRED,-sernet.verinice.interfaces.CommandException</prop>
+                <prop key="sync">PROPAGATION_REQUIRED,-sernet.verinice.interfaces.CommandException</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- Makes the SyncService WebService available as a Spring bean. -->
+    <bean id="vnaServiceImpl" class="sernet.verinice.server.vna.VnaServiceImpl" >
+            <property name="commandService" ref="hibernateCommandService" />
+    </bean>
+
+    <bean id="vnaService" parent="baseTxProxy">
+        <property name="target" ref="vnaServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="importVna">PROPAGATION_REQUIRED,-sernet.verinice.interfaces.CommandException</prop>
             </props>
         </property>
     </bean>

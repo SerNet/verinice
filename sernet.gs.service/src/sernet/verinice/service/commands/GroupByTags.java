@@ -71,6 +71,8 @@ public class GroupByTags extends GenericCommand {
     private String groupUuid;
 
     private Set<String> tags = new HashSet<String>();
+    
+    private boolean allTags = false;
 
     private transient IBaseDao<CnATreeElement, Serializable> elementDao;
 
@@ -81,6 +83,11 @@ public class GroupByTags extends GenericCommand {
     public GroupByTags(String uuid, Set<String> tags) {
         this.groupUuid = uuid;
         this.tags = tags;
+    }
+    
+    public GroupByTags(String uuid, boolean allTags) {
+        this.groupUuid = uuid;
+        this.allTags = allTags;
     }
 
     /*
@@ -96,7 +103,7 @@ public class GroupByTags extends GenericCommand {
             if(this.groupUuid==null) {
                 return;
             }
-            if(this.tags==null || this.tags.isEmpty()) {
+            if(!isValid()) {
                 return;
             }
             RetrieveInfo ri = new RetrieveInfo();
@@ -115,7 +122,6 @@ public class GroupByTags extends GenericCommand {
         }
     }
 
-
     private void moveChildrenToGroups(CnATreeElement group) throws CommandException {
         for (String tag : existingChildren.keySet()) {
             CnATreeElement targetGroup = existingChildrenGroups.get(tag);
@@ -133,6 +139,9 @@ public class GroupByTags extends GenericCommand {
                 childTagList.addAll(LoadTagsOfGroupElements.getGsmTagList(child));
                 childTagList.addAll(LoadTagsOfGroupElements.getGsmIsmTagList(child));            
                 Collections.sort(childTagList);
+                if(allTags) {
+                    tags.addAll(childTagList);
+                }
                 for (String childTag : childTagList) {
                     if(tags.contains(childTag)) {
                         addChild(childTag, child);
@@ -142,10 +151,6 @@ public class GroupByTags extends GenericCommand {
         }
     }
 
-    /**
-     * @param child
-     * @return
-     */
     private boolean isGroup(CnATreeElement child) {
         return child instanceof IISO27kGroup &&
                !(child instanceof Asset) &&
@@ -177,6 +182,10 @@ public class GroupByTags extends GenericCommand {
         CreateElement saveCommand = new CreateElement(parent, parent.getTypeId(), name);
         saveCommand = getCommandService().executeCommand(saveCommand);
         return saveCommand.getNewElement();
+    }
+    
+    private boolean isValid() {
+        return (tags!=null && !tags.isEmpty()) || allTags;
     }
 
     public Set<String> getTags() {

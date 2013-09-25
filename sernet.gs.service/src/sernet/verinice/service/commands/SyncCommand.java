@@ -35,6 +35,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -180,7 +181,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
             }
             if (getLog().isInfoEnabled()) {
                 long time = System.currentTimeMillis() - start;
-                getLog().info("Runtime: " + time + " ms");
+                getLog().info("Runtime: " + TimeFormatter.getHumanRedableTime(time));
             }
         } catch (RuntimeException e) {
             log.error("Error while importing", e);

@@ -94,6 +94,7 @@ public class Reminder implements EventListener  {
         } finally {
             if(dummyAuthAdded) {
                 ctx.setAuthentication(null);
+                dummyAuthAdded = false;
             }
         }
     }
