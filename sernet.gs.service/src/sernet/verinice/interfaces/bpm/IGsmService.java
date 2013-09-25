@@ -52,5 +52,7 @@ public interface IGsmService extends IProcessServiceGeneric {
      * @param elementUuidSet Uuids of all elements in one process
      */
     int deleteAssetScenarioLinks(Set<String> elementUuidSet);
+    
+    void cleanUpOrganization(Integer orgId);
 }
 

@@ -113,7 +113,8 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
 	 */
-	public String getTitle() {
+	@Override
+    public String getTitle() {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
@@ -121,6 +122,7 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.String)
      */
+    @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
@@ -132,7 +134,8 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	    setTitel(name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 	
@@ -140,8 +143,27 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+	}
+	
+	public void setTags(Collection<? extends String>  tags) {
+	    if(tags==null || tags.isEmpty()) {
+	        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TAG), null); 
+	        return;
+	    }
+	    StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String tag : tags) {
+            if(!first) {
+                sb.append(",");         
+            } else {
+                first = false;
+            }
+            sb.append(tag);
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TAG), sb.toString()); 
 	}
 
 	

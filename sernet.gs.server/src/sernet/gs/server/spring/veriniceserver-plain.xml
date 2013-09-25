@@ -12,6 +12,7 @@
 
 <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	<property name="ignoreResourceNotFound" value="true"/>
+    <property name="ignoreUnresolvablePlaceholders" value="true" />
     <property name="locations">
     	<list>
             <value>/WEB-INF/veriniceserver-plain.properties.default</value>
@@ -73,6 +74,16 @@
     <property name="cronExpression" value="0 */30 * * * ?" />
 </bean>
 
+<!-- Spring/Quartz trigger bean to execute cron job processJob. -->
+<bean id="gsmProcessJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="gsmProcessJob" />
+    <!-- for debug only, execute every 2 minutes -->
+    <!-- <property name="cronExpression" value="0 */2 * * * ?" /> -->
+    <property name="cronExpression" value="0 */2 * * * ?" />
+    <!-- execute daily at 3:17 am -->
+    <!--<property name="cronExpression" value="0 17 3 * * ?" />-->
+</bean>
+
 <bean id="taskNotificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
      <property name="jobDetail" ref="taskNotificationJob" />
      <!-- for debug only, execute every 2 minutes -->
@@ -86,6 +97,7 @@
         <list>
               <ref bean="cronTrigger" />
               <ref bean="processJobTrigger" />
+              <ref bean="gsmProcessJobTrigger" />
               <ref bean="taskNotificationTrigger" />  
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">

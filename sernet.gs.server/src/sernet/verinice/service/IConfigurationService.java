@@ -27,10 +27,14 @@ package sernet.verinice.service;
 public interface IConfigurationService {
 
     boolean isScopeOnly(String user);
+    
+    void setScopeOnly(String user, boolean isScopeOnly);
 
     Integer getScopeId(String user);
 
     String[] getRoles(String user);
+    
+    void setRoles(String user, String[] roles);
 
     String getName(String user);
     

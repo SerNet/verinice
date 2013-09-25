@@ -83,6 +83,34 @@ public class ConfigurationService implements IConfigurationService {
         }    
         getConfigurationDao().clear();
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.IConfigurationService#setRoles(java.lang.String, java.lang.String[])
+     */
+    @Override
+    public void setRoles(String user, String[] roles) {
+        // Block all other threads before filling the maps
+        writeLock.lock();
+        try {
+            roleMap.put(user, roles); 
+        } finally {
+            writeLock.unlock();
+        }   
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.IConfigurationService#setScopeOnly(java.lang.String, boolean)
+     */
+    @Override
+    public void setScopeOnly(String user, boolean isScopeOnly) {
+        // Block all other threads before filling the maps
+        writeLock.lock();
+        try {
+            scopeMap.put(user, isScopeOnly); 
+        } finally {
+            writeLock.unlock();
+        }
+    }
 
     private String[] getRoles(Configuration c) {
         Set<String> roleSet = c.getRoles();
@@ -249,4 +277,8 @@ public class ConfigurationService implements IConfigurationService {
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
+
+
+
+    
 }

@@ -28,6 +28,17 @@ import sernet.gs.common.ApplicationRoles;
 @SuppressWarnings("serial")
 public final class DummyAuthentication extends UsernamePasswordAuthenticationToken {
 
+    
+    public DummyAuthentication(String username) {
+        super(
+                new VeriniceUserDetails(username, "$dummypwd$"), 
+                "$notused$", 
+                new GrantedAuthority[] { 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
+    }
+    
     public DummyAuthentication() {
         super(
                 new VeriniceUserDetails("$internaluser$", "$dummypwd$"), 
@@ -38,6 +49,7 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
     }
 
+    @Override
     public void setAuthenticated(boolean b) {
         // Allow being authenticated only when the caller is an
         // InternalAuthenticationProvider instance.

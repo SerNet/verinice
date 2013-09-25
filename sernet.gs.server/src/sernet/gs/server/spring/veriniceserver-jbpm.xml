@@ -94,7 +94,15 @@
                     <idref local="gsmAssetScenarioRemover" />
                 </property>
             </bean>
-        </property>          
+        </property>  
+        
+        <property name="cleanerFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmCleaner" />
+                </property>
+            </bean>
+        </property>         
     </bean>
     
     <bean id="gsmProcessValidator" class="sernet.verinice.bpm.gsm.GsmProcessValidator" scope="prototype">
@@ -119,6 +127,12 @@
         <property name="graphService" ref="graphService" />  
         <property name="linkDao" ref="cnaLinkDao" /> 
         <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <bean id="gsmCleaner" class="sernet.verinice.bpm.gsm.Cleaner" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />
+        <property name="commandService" ref="commandService" />
     </bean>
     
     <!-- Provides methods to interact with jBPM tasks.                                          -->
@@ -257,6 +271,29 @@
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
+    <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="processCreaterSet">
+                    <set>
+                        <ref bean="gsmProcessCreater" />
+                    </set>
+                </entry>
+                <entry key="workObjects" value-ref="workObjects" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean name="gsmProcessCreater" class="sernet.verinice.bpm.gsm.ProcessCreator">
+        <property name="commandService" ref="commandService" />
+        <property name="gsmService" ref="gsmService" />
+        <property name="organizationDao" ref="organizationDAO" />
+        <property name="configurationService" ref="configurationService" />
+        <!--
+        <property name="tag" value="ap-GSM" />
+        -->
+    </bean>
     
     <!-- Creates one control-execution processes for every control. -->
     <!--

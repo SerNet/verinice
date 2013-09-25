@@ -73,6 +73,12 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
      * configured in veriniceserver-jbpm.xml
      */
     private ObjectFactory assetScenarioRemoverFactory;
+    
+    /**
+     * Factory to create Cleaner instances
+     * configured in veriniceserver-jbpm.xml
+     */
+    private ObjectFactory cleanerFactory;
 
     public GsmService() {
         super();
@@ -148,6 +154,23 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
         GsmAssetScenarioRemover assetScenarioRemover = (GsmAssetScenarioRemover) assetScenarioRemoverFactory.getObject();
         Integer numberOfDeletedLinks = assetScenarioRemover.deleteAssetScenarioLinks(elementUuidSet); 
         return numberOfDeletedLinks;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#cleanUpOrganization(java.lang.Integer)
+     */
+    @Override
+    public void cleanUpOrganization(Integer orgId) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Cleaning up organization with id: " + orgId + "..."); //$NON-NLS-1$
+        }        
+        // creates a new (prototype) instances of the GsmAssetScenarioRemover spring bean
+        // see veriniceserver-jbpm.xml and http://static.springsource.org/spring/docs/2.5.x/reference/beans.html#beans-factory-aware-beanfactoryaware
+        Cleaner cleaner = (Cleaner) cleanerFactory.getObject();
+        cleaner.cleanUpOrganization(orgId);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Organization clean up finished, id: " + orgId); //$NON-NLS-1$
+        }
     }
 
     private void startProcess(GsmServiceParameter processParameter) {
@@ -307,6 +330,14 @@ public class GsmService extends ProcessServiceVerinice implements IGsmService {
 
     public void setAssetScenarioRemoverFactory(ObjectFactory assetScenarioRemoverFactory) {
         this.assetScenarioRemoverFactory = assetScenarioRemoverFactory;
+    }
+
+    public ObjectFactory getCleanerFactory() {
+        return cleanerFactory;
+    }
+
+    public void setCleanerFactory(ObjectFactory cleanerFactory) {
+        this.cleanerFactory = cleanerFactory;
     }
 
 }

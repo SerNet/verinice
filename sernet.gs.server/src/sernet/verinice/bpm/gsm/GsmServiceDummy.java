@@ -89,5 +89,12 @@ public class GsmServiceDummy implements IGsmService {
         return 0;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IGsmService#cleanUpOrganization(java.lang.Integer)
+     */
+    @Override
+    public void cleanUpOrganization(Integer orgId) { 
+    }
+
 
 }
