@@ -54,7 +54,7 @@ public class ConfigurationService implements IConfigurationService {
     private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
     
     private IAuthService authService;
- 
+    
     private void loadUserData() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
         // Block all other threads before filling the maps
@@ -68,16 +68,33 @@ public class ConfigurationService implements IConfigurationService {
                 scopeMap.put(user, c.isScopeOnly()); 
                 CnATreeElement person = c.getPerson();
                 if(person!=null) {
-                    scopeIdMap.put(user, person.getScopeId());  
+                    scopeIdMap.put(user, person.getScopeId());                  
+                }
+            }
+            String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
+            roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
+            scopeMap.put(getAuthService().getAdminUsername(), false);
+        } finally {
+            writeLock.unlock();
+        }    
+        getConfigurationDao().clear();
+    }
+    
+    private void loadUserNames() {
+        List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
+        // Block all other threads before filling the maps
+        writeLock.lock();
+        try {
+            for (Configuration c : configurations) {
+                String user = c.getUser();
+                CnATreeElement person = c.getPerson();
+                if(person!=null) {
                     person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
                     if(person!=null) {
                         nameMap.put(user, person.getTitle());  
                     }
                 }
             }
-            String[] adminRoleArray = new String[]{ApplicationRoles.ROLE_ADMIN,ApplicationRoles.ROLE_WEB,ApplicationRoles.ROLE_USER};
-            roleMap.put(getAuthService().getAdminUsername(), adminRoleArray);
-            scopeMap.put(getAuthService().getAdminUsername(), false);
         } finally {
             writeLock.unlock();
         }    
@@ -243,7 +260,7 @@ public class ConfigurationService implements IConfigurationService {
             readLock.unlock(); 
         }
         if (result == null) {
-            loadUserData();
+            loadUserNames();
             readLock.lock();
             try {
                 result = nameMap.get(user);
