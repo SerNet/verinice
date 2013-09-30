@@ -37,8 +37,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8088/veriniceserver-1.6.3/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8088/veriniceserver-1.6.3</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -6643,7 +6643,7 @@ aCommand = new LoadReportCountRisksBySeverity(root, 'a', 3);
 aResults = helper.execute(aCommand).getResult();
 
 // add values for a
-result.add("Availability");
+result.add("Verfuegbarkeit");
 result.add(aResults.get(0).get(1));
 result.add(aResults.get(1).get(1));
 result.add(aResults.get(2).get(1));
@@ -6654,7 +6654,7 @@ results.add(result);
 result = new ArrayList(0);
 
 // add values for i
-result.add("Integrity");
+result.add("Integritaet");
 result.add(iResults.get(0).get(1));
 result.add(iResults.get(1).get(1));
 result.add(iResults.get(2).get(1));
@@ -6664,7 +6664,7 @@ results.add(result);
 result = new ArrayList(0);
 
 //add Values for c
-result.add("Confidentiality");
+result.add("Vertraulichkeit");
 result.add(cResults.get(0).get(1));
 result.add(cResults.get(1).get(1));
 result.add(cResults.get(2).get(1));
@@ -6989,7 +6989,7 @@ for (CnATreeElement process : processes) {
 
 // prepare results
 result = new ArrayList(0);
-result.add("Confidentiality");
+result.add("Vertraulichkeit");
 result.add(cRedCount);
 result.add(cYellowCount);
 result.add(cGreenCount);
@@ -6997,7 +6997,7 @@ result.add(0);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Integrity");
+result.add("Integritaet");
 result.add(iRedCount);
 result.add(iYellowCount);
 result.add(iGreenCount);
@@ -7005,7 +7005,7 @@ result.add(1);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Availabilty");
+result.add("Verfuegbarkeit");
 result.add(aRedCount);
 result.add(aYellowCount);
 result.add(aGreenCount);
@@ -8885,7 +8885,7 @@ for(int probability = 0; probability < elements.length; probability++){
 
 
 result = new ArrayList(0);
-result.add("Confidentiality");
+result.add("Vertraulichkeit");
 result.add(cRedCount);
 result.add(cYellowCount);
 result.add(cGreenCount);
@@ -8893,7 +8893,7 @@ result.add(0);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Integrity");
+result.add("Integritaet");
 result.add(iRedCount);
 result.add(iYellowCount);
 result.add(iGreenCount);
@@ -8901,7 +8901,7 @@ result.add(1);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Availabilty");
+result.add("Verfuegbarkeit");
 result.add(aRedCount);
 result.add(aYellowCount);
 result.add(aGreenCount);
@@ -10781,6 +10781,21 @@ columns(LoadReportHighRiskAssetScenarios.COLUMNS);</value>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="scope_countrisks_aggregated_net_command" id="3407">
             <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">color_name_translated</property>
+                    <expression name="expression">if(row["color_name"] == "Confidentiality"){
+	"Vertraulichkeit";
+} else if(row["color_name"] == "Integrity"){
+	"Integritaet";
+} else if(row["color_name"] == "Availability"){
+	"Verfuegbarkeit";
+} else {
+	row["color_name"];
+}</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">color_name</property>
@@ -10857,6 +10872,11 @@ columns(LoadReportHighRiskAssetScenarios.COLUMNS);</value>
                     <structure>
                         <property name="position">5</property>
                         <property name="name">sortID</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">color_name_translated</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -11210,7 +11230,7 @@ columns(cols);</value>
                                 <property name="fontWeight">bold</property>
                                 <property name="textAlign">center</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content" key="title"><![CDATA[IS Risk Assessment]]></text-property>
+                                <text-property name="content" key="title"><![CDATA[IS Risikobewertung]]></text-property>
                             </text>
                         </cell>
                         <cell id="1575">
@@ -11250,7 +11270,7 @@ columns(cols);</value>
                         <cell id="1531">
                             <label id="1543">
                                 <property name="fontSize">small</property>
-                                <text-property name="text">Client:</text-property>
+                                <text-property name="text">Organisation:</text-property>
                             </label>
                         </cell>
                         <cell id="1532">
@@ -11264,14 +11284,14 @@ columns(cols);</value>
                         <cell id="1534">
                             <label id="1544">
                                 <property name="fontSize">small</property>
-                                <text-property name="text">Date printed:</text-property>
+                                <text-property name="text">Druckdatum:</text-property>
                             </label>
                         </cell>
                         <cell id="1535">
                             <text id="1567">
                                 <property name="fontSize">small</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of> (refer to the electronic document for the current release)]]></text-property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of> (für den aktuellen Stand ist die digitale Version ausschlaggebend)]]></text-property>
                             </text>
                         </cell>
                     </row>
@@ -11280,7 +11300,7 @@ columns(cols);</value>
                         <cell id="1538">
                             <label id="1545">
                                 <property name="fontSize">small</property>
-                                <text-property name="text">(c) 2011 SerNet - all rights reserved</text-property>
+                                <text-property name="text">(c) 2013 SerNet - alle Rechte vorbehalten</text-property>
                             </label>
                         </cell>
                     </row>
@@ -11316,7 +11336,7 @@ columns(cols);</value>
                             <label id="1568">
                                 <property name="fontSize">10pt</property>
                                 <property name="textAlign">right</property>
-                                <text-property name="text">Confidential</text-property>
+                                <text-property name="text">Vertraulich</text-property>
                             </label>
                         </cell>
                     </row>
@@ -11372,7 +11392,7 @@ columns(cols);</value>
                         <property name="fontWeight">bold</property>
                         <property name="textUnderline">underline</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Scope / Client:]]></text-property>
+                        <text-property name="content"><![CDATA[Organisaton / Scope:]]></text-property>
                     </text>
                 </cell>
                 <cell id="12">
@@ -11408,7 +11428,7 @@ columns(cols);</value>
                         <property name="fontWeight">bold</property>
                         <property name="textUnderline">underline</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Date:]]></text-property>
+                        <text-property name="content"><![CDATA[Datum:]]></text-property>
                     </text>
                 </cell>
                 <cell id="15">
@@ -11446,7 +11466,7 @@ columns(cols);</value>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Summary"</expression>
             </structure>
-            <text-property name="text">Risk Register</text-property>
+            <text-property name="text">Risiko Register</text-property>
         </label>
         <label id="136">
             <property name="style">head2</property>
@@ -11459,7 +11479,7 @@ columns(cols);</value>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Risk Acceptance Criteria"</expression>
             </structure>
-            <text-property name="text">Risk Acceptance Criteria</text-property>
+            <text-property name="text">Risiko Akzeptanz Kriterien</text-property>
         </label>
         <grid id="2046">
             <column id="2047"/>
@@ -11494,13 +11514,13 @@ columns(cols);</value>
                                 <cell id="945">
                                     <property name="fontSize">12pt</property>
                                     <label id="961">
-                                        <text-property name="text" key="rba1">Category</text-property>
+                                        <text-property name="text" key="rba1">Kategorie</text-property>
                                     </label>
                                 </cell>
                                 <cell id="946">
                                     <property name="fontSize">12pt</property>
                                     <label id="962">
-                                        <text-property name="text">Tolerable risk level</text-property>
+                                        <text-property name="text">Tolerierbares Risiko Level</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -11510,7 +11530,7 @@ columns(cols);</value>
                                 <cell id="948">
                                     <property name="fontSize">12pt</property>
                                     <label id="966">
-                                        <text-property name="text">Confidentiality</text-property>
+                                        <text-property name="text">Vertraulichkeit</text-property>
                                     </label>
                                 </cell>
                                 <cell id="949">
@@ -11525,7 +11545,7 @@ columns(cols);</value>
                                 <cell id="951">
                                     <property name="fontSize">12pt</property>
                                     <label id="967">
-                                        <text-property name="text">Integrity</text-property>
+                                        <text-property name="text">Integritaet</text-property>
                                     </label>
                                 </cell>
                                 <cell id="952">
@@ -11540,7 +11560,7 @@ columns(cols);</value>
                                 <cell id="954">
                                     <property name="fontSize">12pt</property>
                                     <label id="968">
-                                        <text-property name="text">Availability</text-property>
+                                        <text-property name="text">Verfuegbarkeit</text-property>
                                     </label>
                                 </cell>
                                 <cell id="955">
@@ -11558,8 +11578,8 @@ columns(cols);</value>
                     <text id="2052">
                         <property name="marginLeft">5pt</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[The following risk assessment was performed as detailed in the approved risk assessment method and is in accordance with international standard ISO / IEC 27005.
-Risk acceptance criteria shown on the left are defined in the risk assessment policy and approved by senior management.]]></text-property>
+                        <text-property name="content"><![CDATA[Die folgende Risikobewertung wurde, wie in dem genehmigten Risikobewertungs Verfahren durchgefuehrt und steht im Einklang mit der internationalen Norm ISO / IEC 27005.
+Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in der Risikobewertungs Richtlinie definiert und von der Geschaeftsleitung genehmigt.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11567,9 +11587,9 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
         <text id="2156">
             <property name="pageBreakAfter">auto</property>
             <property name="contentType">html</property>
-            <text-property name="content"><![CDATA[<B><U>Confidentiality</U></B>: property that information is not made available or disclosed to unauthorized individuals, entities, or processes<br/>
-<B><U>Integrity</U></B>: property of protecting the accuracy and completeness of assets<br/>
-<B><U>Availability</U></B>: property of information being accessible and usable upon demand by an authorized entity<br/>
+            <text-property name="content"><![CDATA[<B><U>Vertraulichkeit</U></B>: Eigenschaft von Informationen nicht zugaenglich gemacht oder weitergegeben zu werden an unerlaubte Personen, Unternehmen oder Prozesse<br/>
+<B><U>Integritaet</U></B>: Eigenschaft zum Schutz der Richtigkeit und Vollstaendigkeit von Assets<br/>
+<B><U>Verfuegbarkeit</U></B>: Eigenschaft von Informationen zugaenglich und nutzbar auf Verlangen von einem autorisierten Unternehmen zu sein <br/>
 (ISO/IEC 27000:2009)]]></text-property>
         </text>
         <label id="2863">
@@ -11583,7 +11603,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Risk Acceptance Criteria"</expression>
             </structure>
-            <text-property name="text">Risk Classification</text-property>
+            <text-property name="text">Risiko Klassifikation</text-property>
         </label>
         <grid id="2851">
             <property name="width">7.739583333333333in</property>
@@ -11600,7 +11620,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 <cell id="2856">
                     <text id="2864">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[RED: The risk exceeds the risk acceptance criteria and must be addressed according to the risk assessment policy.]]></text-property>
+                        <text-property name="content"><![CDATA[ROT: Das Risiko bertrifft die Risikoakzeptanzkriterien und muss entsprechend der Risikobewertungs Richtlinie angegangen werden.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11611,7 +11631,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 <cell id="2859">
                     <text id="2865">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[YELLOW: The risk falls just under the risk acceptance criteria. It may need to be addressed according to the risk assessment policy.]]></text-property>
+                        <text-property name="content"><![CDATA[GELB: Das Risiko faellt gerde unter die Risikoakzeptanzkriterien. Es muss entsprechend der Risikobewertungs Richtlinie angegangen werden.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11622,7 +11642,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                 <cell id="2862">
                     <text id="2866">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[GREEN: The risk falls within risk acceptance criteria.]]></text-property>
+                        <text-property name="content"><![CDATA[GRUEN: Das Risiko faellt in die Risikoakzeptanzkriterien.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11632,7 +11652,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
             <property name="pageBreakBefore">always</property>
-            <text-property name="text">Identified Risks</text-property>
+            <text-property name="text">Identifizierte Risiken mit implementierten Controls</text-property>
         </label>
         <extended-item extensionName="Chart" id="2562">
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -12608,7 +12628,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
-            <text-property name="text">Remaining Risks with implemented Controls</text-property>
+            <text-property name="text">Verbleibende Risiken mit implementierten Controls</text-property>
         </label>
         <extended-item extensionName="Chart" id="3442">
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -13406,7 +13426,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>row[&quot;color_name&quot;]</Definition>
+          <Definition>row[&quot;color_name_translated&quot;]</Definition>
         </DataDefinition>
         <SeriesIdentifier></SeriesIdentifier>
         <DataPoint>
@@ -13569,27 +13589,38 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">color_name</property>
+                    <text-property name="displayName">color_name</text-property>
                     <expression name="expression" type="javascript">dataSetRow["color_name"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">CONFIDENTIALITY</property>
+                    <text-property name="displayName">CONFIDENTIALITY</text-property>
                     <expression name="expression" type="javascript">dataSetRow["CONFIDENTIALITY"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">INTEGRITY</property>
+                    <text-property name="displayName">INTEGRITY</text-property>
                     <expression name="expression" type="javascript">dataSetRow["INTEGRITY"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">AVAILABILITY</property>
+                    <text-property name="displayName">AVAILABILITY</text-property>
                     <expression name="expression" type="javascript">dataSetRow["AVAILABILITY"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">sortID</property>
+                    <text-property name="displayName">sortID</text-property>
                     <expression name="expression" type="javascript">dataSetRow["sortID"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">color_name_translated</property>
+                    <text-property name="displayName">color_name_translated</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["color_name_translated"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
@@ -13610,7 +13641,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Assets with High Risks (without Controls)</text-property>
+                        <text-property name="text">Assets mit hohem Risiko (ohne Controls)</text-property>
                     </label>
                     <table id="2660">
                         <property name="textAlign">left</property>
@@ -13672,7 +13703,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <cell id="2664">
                                     <label id="2665">
                                         <property name="textAlign">center</property>
-                                        <text-property name="text">Risk</text-property>
+                                        <text-property name="text">Risiko</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -13724,7 +13755,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Assets with High Risks (with implemented Controls)</text-property>
+                        <text-property name="text">Assets mit hohem Risiko (mit implementierten Controls)</text-property>
                     </label>
                     <table id="3138">
                         <property name="textAlign">left</property>
@@ -13778,7 +13809,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 <cell id="3142">
                                     <label id="3143">
                                         <property name="textAlign">center</property>
-                                        <text-property name="text">Risk</text-property>
+                                        <text-property name="text">Risiko</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -13830,7 +13861,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">High Risk Areas without Controls</text-property>
+                        <text-property name="text">Bereiche mit hohem Risiko ohne Controls</text-property>
                     </label>
                     <extended-item extensionName="Chart" id="2881">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -14710,7 +14741,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">High Risk Areas with implemented Controls</text-property>
+                        <text-property name="text">Bereiche mit hohem Risiko mit implementierten Controls</text-property>
                     </label>
                     <extended-item extensionName="Chart" id="3213">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -15707,7 +15738,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
                         </structure>
-                        <text-property name="text">Risk Matrix: Confidentiality (without Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Vertraulichkeit (ohne Controls)</text-property>
                     </label>
                     <grid id="2006">
                         <property name="pageBreakInside">avoid</property>
@@ -15737,7 +15768,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <structure name="toc">
                                         <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
                                     </structure>
-                                    <text-property name="text">Number of identified Risks</text-property>
+                                    <text-property name="text">Anzahl der identifizierten Risiken</text-property>
                                 </label>
                                 <table id="1795">
                                     <property name="pageBreakInside">avoid</property>
@@ -15799,7 +15830,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1831">
                                             <cell id="1832">
                                                 <label id="1841">
-                                                    <text-property name="text">Impact</text-property>
+                                                    <text-property name="text">Auswirkung</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1833">
@@ -15826,7 +15857,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1796">
                                             <cell id="1825">
                                                 <label id="1829">
-                                                    <text-property name="text">Probability</text-property>
+                                                    <text-property name="text">Warscheinlichkeit</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1797"/>
@@ -15984,7 +16015,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Table shows the number of identified risks and their severity. See below for classification of probability and business impact levels.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2011">
@@ -15998,7 +16029,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <text-property name="text">Total Count</text-property>
+                                    <text-property name="text">Gesamt</text-property>
                                 </label>
                                 <extended-item extensionName="Chart" name="Weighted Risk" id="2142">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -16627,7 +16658,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <Visible>true</Visible>
           </Label>
           <DataDefinition>
-            <Definition>Number(row[&quot;COUNT_RISK_VALUE&quot;])</Definition>
+            <Definition>row[&quot;COUNT_RISK_VALUE&quot;]</Definition>
             <Grouping>
               <Enabled>false</Enabled>
               <GroupType>Text</GroupType>
@@ -17128,7 +17159,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         </structure>
                                         <structure>
                                             <property name="name">COUNT_RISK_VALUE</property>
-                                            <expression name="expression" type="javascript">parseInt(dataSetRow["COUNT_RISK_VALUE"])</expression>
+                                            <expression name="expression" type="javascript">dataSetRow["COUNT_RISK_VALUE"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                     </list-property>
@@ -17152,7 +17183,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Integrity"</expression>
                         </structure>
-                        <text-property name="text">Risk Matrix: Integrity (without Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Integritaet (ohne Controls)</text-property>
                     </label>
                     <grid id="2013">
                         <property name="pageBreakInside">avoid</property>
@@ -17173,7 +17204,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <structure name="toc">
                                         <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
                                     </structure>
-                                    <text-property name="text">Number of identified Risks</text-property>
+                                    <text-property name="text">Anzahl der identifizierten Risiken</text-property>
                                 </label>
                                 <table id="1857">
                                     <property name="pageBreakInside">avoid</property>
@@ -17230,7 +17261,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1858">
                                             <cell id="1859">
                                                 <label id="1860">
-                                                    <text-property name="text">Impact</text-property>
+                                                    <text-property name="text">Auswirkung</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1861">
@@ -17252,7 +17283,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1869">
                                             <cell id="1870">
                                                 <label id="1871">
-                                                    <text-property name="text">Probability</text-property>
+                                                    <text-property name="text">Warscheinlichkeit</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1872"/>
@@ -17376,7 +17407,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Table shows the number of identified risks and their severity. See below for classification of probability and business impact levels.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2018">
@@ -17390,7 +17421,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <text-property name="text">Total Count</text-property>
+                                    <text-property name="text">Gesamt</text-property>
                                 </label>
                                 <extended-item extensionName="Chart" name="Weighted Risk1" id="2146">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -18516,7 +18547,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         </structure>
                                         <structure>
                                             <property name="name">COUNT_RISK_VALUE</property>
-                                            <expression name="expression" type="javascript">parseInt(dataSetRow["COUNT_RISK_VALUE"])</expression>
+                                            <expression name="expression" type="javascript">dataSetRow["COUNT_RISK_VALUE"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                     </list-property>
@@ -18540,7 +18571,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Availability"</expression>
                         </structure>
-                        <text-property name="text">Risk Matrix: Availability (without Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Verfuegbarkeit (ohne Controls)</text-property>
                     </label>
                     <grid id="2020">
                         <property name="pageBreakInside">avoid</property>
@@ -18561,7 +18592,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <structure name="toc">
                                         <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
                                     </structure>
-                                    <text-property name="text">Number of identified Risks</text-property>
+                                    <text-property name="text">Anzahl der identifizierten Risiken</text-property>
                                 </label>
                                 <table id="1895">
                                     <property name="pageBreakInside">avoid</property>
@@ -18641,7 +18672,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1896">
                                             <cell id="1897">
                                                 <label id="1898">
-                                                    <text-property name="text">Impact</text-property>
+                                                    <text-property name="text">Auswirkung</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1899">
@@ -18673,7 +18704,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         <row id="1907">
                                             <cell id="1908">
                                                 <label id="1909">
-                                                    <text-property name="text">Probability</text-property>
+                                                    <text-property name="text">Warscheinlichkeit</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="1910"/>
@@ -18865,7 +18896,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Table shows the number of identified risks and their severity. See below for classification of probability and business impact levels.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2025">
@@ -18879,7 +18910,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                     <property name="marginBottom">6pt</property>
                                     <property name="textAlign">center</property>
                                     <property name="pageBreakAfter">avoid</property>
-                                    <text-property name="text">Total Count</text-property>
+                                    <text-property name="text">Gesamt</text-property>
                                 </label>
                                 <extended-item extensionName="Chart" name="Weighted Risk2" id="2148">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -20005,7 +20036,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                         </structure>
                                         <structure>
                                             <property name="name">COUNT_RISK_VALUE</property>
-                                            <expression name="expression" type="javascript">parseInt(dataSetRow["COUNT_RISK_VALUE"])</expression>
+                                            <expression name="expression" type="javascript">dataSetRow["COUNT_RISK_VALUE"]</expression>
                                             <property name="dataType">javaObject</property>
                                         </structure>
                                     </list-property>
@@ -20022,7 +20053,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="textUnderline">underline</property>
             <property name="paddingTop">20pt</property>
             <property name="pageBreakBefore">always</property>
-            <text-property name="text">Business Impact and Risk Classification</text-property>
+            <text-property name="text">Business Impact und Risiko Klassifikation</text-property>
         </label>
         <grid id="1944">
             <property name="pageBreakAfter">always</property>
@@ -20087,7 +20118,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                             <expression name="expressionValue" type="javascript">"Business Impact Classification"</expression>
                         </structure>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Business Impact Classification]]></text-property>
+                        <text-property name="content"><![CDATA[Business Impact Klassifikation]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -20114,8 +20145,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     <text id="1972">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Confidentiality
-]]></text-property>
+                        <text-property name="content"><![CDATA[Vertraulichkeit]]></text-property>
                     </text>
                 </cell>
                 <cell id="1973">
@@ -20174,7 +20204,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     <text id="1977">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Integrity]]></text-property>
+                        <text-property name="content"><![CDATA[Integritaet]]></text-property>
                     </text>
                 </cell>
                 <cell id="1978">
@@ -20233,7 +20263,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                     <text id="1982">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Availability]]></text-property>
+                        <text-property name="content"><![CDATA[Verfuegbarkeit]]></text-property>
                     </text>
                 </cell>
                 <cell id="1983">
@@ -20298,7 +20328,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                             <expression name="expressionValue" type="javascript">"Threat Classification"</expression>
                         </structure>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Threat Classification]]></text-property>
+                        <text-property name="content"><![CDATA[Klassifikation von Bedrohungen]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -20385,7 +20415,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                             <expression name="expressionValue" type="javascript">"Vulnerability Classification"</expression>
                         </structure>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Vulnerability Classification]]></text-property>
+                        <text-property name="content"><![CDATA[Klassifikation von Schwachstellen]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -20456,7 +20486,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Remaining High Risks (with implemented Controls)</text-property>
+                        <text-property name="text">Verbliebene hohe Risiken (mit implementierten Controls)</text-property>
                     </label>
                 </cell>
             </row>
@@ -20531,7 +20561,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                             <row id="3307">
                                 <cell id="3308">
                                     <label id="3348">
-                                        <text-property name="text">Process</text-property>
+                                        <text-property name="text">Prozess</text-property>
                                     </label>
                                 </cell>
                                 <cell id="3309">
@@ -20541,7 +20571,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 </cell>
                                 <cell id="3310">
                                     <label id="3335">
-                                        <text-property name="text">Scenario</text-property>
+                                        <text-property name="text">Szenario</text-property>
                                     </label>
                                 </cell>
                                 <cell id="3311">
@@ -20561,7 +20591,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                 </cell>
                                 <cell id="3343">
                                     <label id="3347">
-                                        <text-property name="text">Overall</text-property>
+                                        <text-property name="text">Insgesamt</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -20696,7 +20726,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
-            <text-property name="text">Detailed Risk Assessment (without Controls)</text-property>
+            <text-property name="text">Detallierte Risikobewertung (mit Controls)</text-property>
         </label>
         <grid id="2104">
             <property name="borderBottomColor">#FFFFFF</property>
@@ -21021,7 +21051,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1391">
                                                                 <property name="textAlign">center</property>
-                                                                <text-property name="text">Confidentiality</text-property>
+                                                                <text-property name="text">Vertraulichkeit</text-property>
                                                             </label>
                                                         </cell>
                                                         <cell id="1684">
@@ -21039,7 +21069,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1393">
                                                                 <property name="textAlign">center</property>
-                                                                <text-property name="text">Integrity</text-property>
+                                                                <text-property name="text">Integritaet</text-property>
                                                             </label>
                                                         </cell>
                                                         <cell id="1685">
@@ -21057,7 +21087,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1395">
                                                                 <property name="textAlign">center</property>
-                                                                <text-property name="text">Availability</text-property>
+                                                                <text-property name="text">Verfuegbarkeit</text-property>
                                                             </label>
                                                         </cell>
                                                     </row>
@@ -21471,7 +21501,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="verticalAlign">middle</property>
                                                                 <label id="2045">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Assets and Risk Scenarios</text-property>
+                                                                    <text-property name="text">Assets und Risiko Szenarios</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2034">
@@ -21492,7 +21522,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="verticalAlign">middle</property>
                                                                 <label id="2037">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Key Figures by Risk Category</text-property>
+                                                                    <text-property name="text">Kennzahlen nach Risiko Kategorien</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2038">
@@ -21510,7 +21540,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="2043">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Total Risk Figure</text-property>
+                                                                    <text-property name="text">Gesamtrisiko Summe</text-property>
                                                                 </label>
                                                             </cell>
                                                         </row>
@@ -21530,7 +21560,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1720">
-                                                                    <text-property name="text">Abbr.</text-property>
+                                                                    <text-property name="text">Abk.</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="1695">
@@ -21564,7 +21594,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopStyle">solid</property>
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1724">
-                                                                    <text-property name="text">Type</text-property>
+                                                                    <text-property name="text">Typ</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="1697">
@@ -21582,7 +21612,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1726">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Confidentiality</text-property>
+                                                                    <text-property name="text">Vertraulichkeit</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="1698">
@@ -21600,7 +21630,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1728">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Integrity</text-property>
+                                                                    <text-property name="text">Integritaet</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="1699">
@@ -21618,7 +21648,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1730">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Availability</text-property>
+                                                                    <text-property name="text">Verfuegbarkeit</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2039">
