@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring configuration for business process engine JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration                                 -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration                     -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
+        <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
+    </bean>
+
+    <bean id="processEngine" factory-bean="springHelper" factory-method="createProcessEngine" />
+
+    <!-- Provides methods handle ISA processes.                                                 -->
+    <!-- Server side implementation of the IProcessServiceIsa interface.                        -->
+    <!-- Process definitions listet in set processDefinitions are loaded and intialized on      -->
+    <!-- startup.                                                                               -->
+    <!-- processServiceIsa is accessible from verinice client by Spring remoting, configured in    -->
+    <!-- springDispatcher-servlet.xml and veriniceclient.xml                                    -->
+    <bean id="processServiceIsa" class="sernet.verinice.bpm.ProcessServiceIsa" init-method="init">
+        <property name="processEngine" ref="processEngine" />
+        <property name="processDefinitions">
+            <set>
+                <!--<value>sernet/verinice/bpm/control-execution.jpdl.xml</value>-->
+                <value>sernet/verinice/bpm/isa-execution.jpdl.xml</value>
+                <value>sernet/verinice/bpm/isam/isa-control-flow.jpdl.xml</value>
+                <value>sernet/verinice/bpm/qm/isa-quality-management.jpdl.xml</value>
+                <value>sernet/verinice/bpm/indi/individual-task.jpdl.xml</value>
+                <value>sernet/verinice/bpm/gsm/gsm-ism-execute.jpdl.xml</value>
+            </set>
+        </property>
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="changeLogEntryDao" ref="changeLogEntryDAO" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="controlGroupDao" ref="controlGroupDAO" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
+        <property name="processDao" ref="processDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="controlDao" ref="controlDAO" />
+        <property name="controlGroupDao" ref="controlGroupDAO" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="authService" ref="authService" />
+    </bean>
+    
+    <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="authService" ref="authService" />
+        <property name="defaultAssignee" value="qm-review" />
+    </bean>
+    
+    <bean id="individualService" class="sernet.verinice.bpm.indi.IndividualService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" />
+        <property name="authService" ref="authService" />
+    </bean>
+    
+    <bean id="gsmService" class="sernet.verinice.bpm.gsm.GsmService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="authService" ref="authService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="processDao" ref="processDao" /> 
+        
+        <property name="processValidatorFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmProcessValidator" />
+                </property>
+            </bean>
+        </property>
+        
+        <property name="processStarterFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmProcessParameterCreater" />
+                </property>
+            </bean>
+        </property>
+        
+        <property name="assetScenarioRemoverFactory">
+            <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="gsmAssetScenarioRemover" />
+                </property>
+            </bean>
+        </property>          
+    </bean>
+    
+    <bean id="gsmProcessValidator" class="sernet.verinice.bpm.gsm.GsmProcessValidator" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />
+    </bean>
+    
+    <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.GsmProcessParameterCreater" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <!-- Process with risk value below lowPriorityRiskLimit: priority low -->
+        <!-- Process with risk value above lowPriorityRiskLimit: priority normal -->
+        <property name="lowPriorityRiskLimit" value="100" />
+        <!-- Process with risk value above normalPriorityRiskLimit: priority high -->
+        <property name="normalPriorityRiskLimit" value="1000" />
+    </bean>
+    
+    <bean id="gsmAssetScenarioRemover" class="sernet.verinice.bpm.gsm.GsmAssetScenarioRemover" scope="prototype">
+        <!-- Scope of graphService is prototype -->
+        <property name="graphService" ref="graphService" />  
+        <property name="linkDao" ref="cnaLinkDao" /> 
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    <!-- Provides methods to interact with jBPM tasks.                                          -->
+    <!-- Server side implementation of the ITaskService interface.                              -->
+    <!-- TaskService is accessible from verinice client by Spring remoting, configured in       -->
+    <!-- springDispatcher-servlet.xml and veriniceclient.xml                                    -->
+    <bean id="taskService" class="sernet.verinice.bpm.TaskService">
+        <property name="processEngine" ref="processEngine" />
+        <property name="authService" ref="authService" />
+        <property name="elementDao" ref="cnaTreeElementDao" /> 
+        <property name="jbpmTaskDao" ref="jbpmTaskDao" />
+        <property name="jbpmVariableDao" ref="jbpmVariableDao" />
+        <property name="auditDao" ref="auditDAO" />
+        <property name="configurationService" ref="configurationService" />
+        <property name="taskOutcomeBlacklist">
+            <set>
+                <value>icf.trans.reminderDeadline</value>
+                <value>indi.trans.reminderDeadline</value>
+                <value>gsm.ism.execute.trans.reminder</value>
+            </set>
+        </property>
+        <!-- Add task complete handler here -->
+        <!-- Key is <TASK_ID>.<TRANS_ID> from jbpm file -->
+        <!-- See ICompleteServerHandler for more documentation. -->
+        <property name="completeHandler">
+            <map>
+                <entry key="iqm.task.setAssignee.iqm.trans.setAssignee" value-ref="isaQmSetAssigneeHandler"/>
+            </map>
+        </property>
+        <property name="defaultCompleteServerHandler" ref="defaultCompleteServerHandler" />
+        <!-- Add Task-Description-Handler here -->
+        <!-- Key is <TASK_ID> from jbpm file -->
+        <!-- See ITaskDescriptionHandler for more documentation. -->
+        <!-- If no handler is set for a task bean "defaultDescriptionHandler" is used  -->
+        <property name="descriptionHandler">
+            <map>
+                <entry key="iqm.task.setAssignee" value-ref="setAssigneeDescriptionHandler"/>
+                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>              
+                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>
+                <entry key="indi.task.check" value-ref="indiCheckDescriptionHandler"/>
+                <entry key="indi.task.assign" value-ref="indiAssignDescriptionHandler"/>
+                <entry key="indi.task.assign.deadline" value-ref="indiDeadlineDescriptionHandler"/>
+                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>                      
+                <entry key="gsm.ism.execute.task.execute" value-ref="gsmIsmDescriptionHandler"/>            
+            </map>
+        </property>
+        <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
+    </bean>
+    
+    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>
+      
+    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>
+   
+    <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
+    <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler" />
+    <bean id="checkFeedbackDescriptionHandler" class="sernet.verinice.bpm.qm.CheckFeedbackDescriptionHandler" /> 
+    <bean id="indiDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualTaskDescriptionHandler" />
+    <bean id="indiCheckDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualCheckDescriptionHandler" />
+    <bean id="indiAssignDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualAssignDescriptionHandler" />
+    <bean id="indiDeadlineDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualDeadlineDescriptionHandler" />
+    <bean id="indiNrDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualNotResponsibleDescriptionHandler" />
+    
+    <bean id="gsmIsmDescriptionHandler" class="sernet.verinice.bpm.gsm.GsmServiceTaskDescriptionHandler">      
+        <property name="velocityEngine" ref="velocityEngine"/>
+    </bean>
+    
+    <bean id="remindServiceImpl" class="sernet.verinice.bpm.RemindService">   
+        <property name="mailSender" ref="mailSender" />
+        <property name="velocityEngine" ref="velocityEngine"/>
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="configurationDao" ref="configurationDao" />
+        <property name="enabled" value="${veriniceserver.notification.enabled}" />
+        <property name="emailFrom" value="${veriniceserver.notification.email.from}"/>
+        <property name="replyTo" value="${veriniceserver.notification.email.from}"/> 
+        <property name="url" value="${veriniceserver.notification.email.linkto}"/>    
+    </bean>
+    
+    <bean id="remindService" parent="baseTxProxy">
+        <property name="target" ref="remindServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="loadUserData">PROPAGATION_SUPPORTS,readOnly</prop>
+                <prop key="retrieve*">PROPAGATION_SUPPORTS,readOnly</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- Cron job which sends a notification to users with assigned tasks.                      -->
+    <!-- See trigger configuration in veriniceserver-plain.xml.                                 -->  
+	<bean name="taskNotificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	    <property name="jobClass" value="sernet.verinice.bpm.NotificationJob" />
+	    <property name="jobDataAsMap">
+	        <map>             
+	            <entry key="workObjects" value-ref="workObjects" />
+	            <entry key="jbpmTaskDao" value-ref="jbpmTaskDao" />
+	            <entry key="taskService" value-ref="taskService" />
+	            <entry key="configurationDao" value-ref="configurationDao" />
+	            <entry key="mailSender" value-ref="mailSender" />
+	            <entry key="velocityEngine" value-ref="velocityEngine"/>     
+	            <entry key="taskListPath" value="todo/task.jsf"/>
+	            <entry key="enabled" value="${veriniceserver.notification.enabled}" />
+	            <entry key="emailFrom" value="${veriniceserver.notification.email.from}"/>
+	            <entry key="replyTo" value="${veriniceserver.notification.email.from}"/> 
+	            <entry key="url" value="${veriniceserver.notification.email.linkto}"/>
+	        </map>
+	    </property>
+	</bean>
+    
+    <!-- Creates, checks or deletes jBPM process instances by IProcessCreater implementations.  -->
+    <!-- You can add new IProcessCreater to processCreaterSet                                   -->
+    <!-- See trigger configuration in veriniceserver-plain.xml.                                 -->  
+    <bean name="processJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="processCreaterSet">
+                    <set>
+                        <!--<ref bean="controlProcessCreater" />-->
+                        <!--<ref bean="isaProcessCreater" />-->
+                        <ref bean="processValidator" />
+                    </set>
+                </entry>
+                <entry key="workObjects" value-ref="workObjects" />
+            </map>
+        </property>
+    </bean>
+    
+    <!-- Checks if element with UUID of process exists, deletes process if not -->
+    <bean name="processValidator" class="sernet.verinice.bpm.ProcessValidator">
+        <property name="processService" ref="processServiceIsa" />
+        <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
+    </bean>
+    
+    
+    <!-- Creates one control-execution processes for every control. -->
+    <!--
+    <bean name="controlProcessCreater" class="sernet.verinice.bpm.ControlProcessCreator">
+        <property name="processService" ref="processServiceIsa" />
+        <property name="controlDao" ref="controlDAO" />
+    </bean>
+    -->
+    <!-- Creates one isa-execution processes for every isa/samt topic. -->
+    <!--
+    <bean name="isaProcessCreater" class="sernet.verinice.bpm.IsaProcessCreator">
+        <property name="processService" ref="processServiceIsa" />
+        <property name="samtTopicDao" ref="samtTopicDAO" />
+    </bean>
+    -->
+
+
+    <!-- Dao configuration - sessionFactory is defined in veriniceserver-common.xml.            -->
+
+    <bean id="jbpmExecutionDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.model.ExecutionImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="jbpmVariableDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.type.Variable</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="jbpmTaskDao" class="sernet.verinice.hibernate.HibernateDao">
+        <constructor-arg>
+            <value>org.jbpm.pvm.internal.task.TaskImpl</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="processDao" class="sernet.verinice.bpm.ProcessDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+</beans>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Strukturanalyse">
+
+	<intro>
+		<description>
+		In diesem Tutorial lernen Sie, wie Sie Ihren IT-Verbund mit verinice erfassen.
+		<br/><br/>
+		Welche Daten Sie eingeben müssen und wie Sie dabei am besten vorgehen,
+		beschreibt der BSI-Standard 100-2, den Sie auf den Webseiten des BSI finden.
+		</description>
+	</intro>
+
+    <item
+         title="Wechseln zur BSI Grundschutz Perspektive">
+      <description>
+         Wechseln Sie zur BSI-Grundschutz-Perspektive, wenn dies noch nicht geschehen ist. Wählen Sie dazu aus dem Hauptmenü: <br/>
+         Ansicht -&gt; Zeige Perspektive ... -&gt; BSI Grundschutz Perspektive</description>
+    </item>
+	
+	<item title="Neuer IT-Verbund">
+		<description>
+		Im View "Grundschutz Modell" finden Sie einen leeren IT-Verbund.
+		Klicken Sie den IT-Verbund doppelt an. Der Editor-View auf der rechten Seite wird geöffnet. 
+		Hier können Sie eine Bezeichnung für den Verbund und die zugehörige Organisation
+		definieren.
+		<br/><br/>
+		Speichern Sie die Eingaben (Tastenkombination: Strg+S) und schließen Sie den Editor (Tastenkombination: Strg+W).
+		</description>
+	</item>
+	
+	<item title="Neuer Mitarbeiter">
+		<description>
+		Klappen Sie den IT-Verbund auf durch Klicken des Pfeils links neben dem IT-Verbund. Klicken Sie mit der rechten Maustaste
+		auf die Gruppe "Mitarbeiter", dann wählen Sie "Neuer Mitarbeiter" aus. Geben Sie in den Feldern "Vorname" und "Name" Ihren Namen
+		ein. Klicken Sie im Bereich "Rollen" den "Ändern..."-Button und suchen Sie als Rolle "Administrator" aus. Bestätigen Sie die Auswahl 
+		mit einem Klick auf "OK". 
+		<br/><br/>
+		Speichern (Strg+S) Sie die Änderungen. Schließen (Strg+W) Sie dann den Editor-View. 
+		</description>
+	</item>
+	
+	<item title="Neuer Server">
+		<description>
+		Erzeugen Sie einen neuen Server durch Rechtsklick auf die Gruppe "IT-Systeme: Server > 
+		Neuer Server". Geben Sie ihm den Namen "Buchhaltungssystem". 
+		<br/><br/>
+		Lassen Sie die Felder für den Schutzbedarf noch frei! 
+		<br/><br/>
+		Im Feld "Admin" ist eine Eingabehilfe verfügbar: drücken Sie den Button "Ändern...". 
+		Anschließend werden Ihnen die bisher angelegten Mitarbeiter in einem Pop-Up-Fenster vorgeschlagen. 
+                Wählen Sie den bisher angelegten Mitarbeiter aus und bestätigen Sie mit dem "Fertig"-Button.
+		</description>
+	</item>
+	
+	<item title="Neue Anwendung">
+		<description>
+		Klicken Sie mit der rechten Maustaste auf die IT-Verbund-Gruppe "Anwendungen" und wählen Sie daraus "Neue Anwendung" aus.
+		<br/><br/>
+		Geben Sie der Anwendung den Namen "Buchhaltung". Schließen Sie den Editor (Strg+W)
+                (Bestätigen Sie die Warnmeldung zum Speichern der noch nicht gespeicherten Änderungen im Editor-View mit "Ja").
+		</description>
+		<onCompletion>
+		Sehr gut! Legen Sie weitere Objekte in den anderen Kategorien an oder fahren Sie mit dem nächsten Spickzettel/Tutorial "Schutzbedarfsanalyse" fort!
+		</onCompletion>
+	</item>
+
+</cheatsheet>

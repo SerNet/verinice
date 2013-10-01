@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Import der Datenbank-Daten aus dem GSTOOL 4.5">
+
+	<intro 
+		>
+		<description>
+			In diesem Spickzettel ist der direkte Import aus dem GSTOOL beschrieben. 
+			Dazu müssen Sie das GSTOOL installiert haben.
+		</description>
+	</intro>
+
+	<item title="Drei Möglichkeiten">
+		<description>
+			Prinzipiell haben Sie drei Möglichkeiten, Daten aus dem GSTOOL in verinice zu importieren. 
+			Die erste Möglichkeit wird in diesem Spickzettel erläutert und stellt einen GSTOOL-Direkt-Import dar. 
+			Die zweite Möglichkeit ist ein Import der BAK-Dateien - schauen Sie sich dazu zusätzlich den 
+			Spickzettel "GSTOOL-BAK-Datei-Import" an. Die dritte Möglichkeit ist ein Import der 
+			MDF-Dateien - schauen Sie sich dazu zusätzlich den Spickzettel "GSTOOL-MDF-Datei-Import" an.
+		</description>
+	</item>
+	<item title="Erster Schritt - Einstellungen für den Import vornehmen">
+		<description>
+			Sie müssen als erstes die Einstellungen für den Import aus dem GSTOOL vornehmen. Dazu gehen 
+			Sie bitte in der Menüleiste auf "Bearbeiten", "Einstellungen..." und unter den Punkt 
+			"GSTOOL Import". In dieser Maske werden die standardmäßigen Parameter schon vorgegeben. 
+			Sie müssen das GSTOOL-Passwort eingeben, sofern überhaupt ein Datenbankpasswort gesetzt wurde. 
+			Der Standardbenutzername lautet "sa". Jetzt können Sie die Konnektivität durch Anklicken des 
+			Buttons "Teste Verbindung" überprüfen. Eine Erfolgsmeldung sollte erscheinen. 
+			<br/><br/>
+			Sollte dies nicht der Fall sein, so lesen Sie bitte den FAQ-Eintrag "Direktverbindung zur 
+			GSTOOL-Datenbank herstellen" auf den Internetseiten von verinice.org. 
+		</description>
+	</item>
+	<item title="Datenbankimport von einem anderen Host">
+		<description>
+		Beim Import von einem Host auf einen anderen Host ist zu beachten, dass Sie bei den 
+		Einstellungen für den GSTOOL-Import die Angaben unter "GSTOOL Datenbank JDBC URL" korrekt 
+		vornehmen. Wenn Sie die Datenbank von einem anderen Rechner (anderer Host) importieren 
+		wollen, darf als Hostname natürlich nicht mehr der standardmäßige "localhost" 
+		eingetragen sein. Hier müssen Sie dann den korrekten Hostnamen eintragen. 
+		Da das GSTOOL 4.5 bis 4.7 nur unter Windows läuft, ist zusätzlich darauf zu achten, dass 
+		eine eventuell vorhandene Firewall unter Windows Ihre Zugriffe auf diesen Rechner nicht abblocken darf. 
+		</description>
+	</item>
+	<item title="Der eigentliche Import-Vorgang">
+		<description>
+		Nachdem in den bisherigen Abschnitten beschrieben wurde, wie die Einstellungen für ein Import vorzunehmen 
+		sind, geht es in diesem Abschnitt um den eigentlichen Import-Vorgang. Dieser ist denkbar einfach. 
+		Gehen Sie in der Menüleiste auf "Datei" und dort auf "Daten aus dem GSTOOL importieren". Sie starten den 
+		Import-Vorgang in verinice, wenn Sie im Fenster "GSTOOL Import" auf den Button "OK" klicken. Vorher 
+		können Sie noch auswählen, welche Objekte importiert werden sollen. 
+		<br/><br/>
+		Der Importvorgang erzeugt einen neuen IT-Verbund. Nachdem der Import erfolgreich durchgeführt worden ist, 
+		erhalten Sie eine Erfolgsmeldung.
+		<br/><br/>
+		Achtung!!! Sie müssen für einen GSTOOL-Import zwingend die Grundschutzkataloge in verinice geladen haben. 
+		Zusätzlich müssen Sie eine Datenbank im Fenster "Grundschutz Modell" in verinice geöffnet haben - andernfalls 
+		wird der Import nicht funktionieren.
+		</description>
+	
+	<onCompletion>
+		Wenn alle Schritte aus dieser Beschreibung erfolgreich durchgeführt wurden, haben Sie nun alle 
+		gewünschten Daten aus dem GSTOOL importiert und können diese in verinice weiter bearbeiten.
+	</onCompletion>
+	</item>	
+</cheatsheet>

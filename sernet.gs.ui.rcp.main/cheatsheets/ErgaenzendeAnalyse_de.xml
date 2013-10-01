@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Ergänzende Sicherheitsanalyse">
+
+	<intro 
+		>
+		<description>
+		In diesem Abschnitt wird das Durchführen der ergänzenden Sicherheitsanalysen erläutert.  
+		</description>
+	</intro>
+
+	<item title="Zweck">
+		<description>
+		Nun ist für alle Zielobjekte zu entscheiden, ob für diese jeweils eine Risikoanalyse erforderlich ist oder nicht. 
+		Alle Objekte mit hohem oder sehr hohem Schutzbedarf, sowie für alle Objekte, die sich nicht ausreichen 
+		modellieren lassen, sind Kandidaten für eine Risikoanalyse. 
+		</description>
+	</item>
+	
+	<item title="Auswahl">
+		<description>
+		Alle Objekte mit hohem Schutzbedarf sind automatisch in der ergänzenden Risikoanalyse 
+		enthalten. Tragen Sie bei allen Zielobjekten dieser Art im Feld "Erg. Sicherheitsanalyse" "laut Schutzbedarf" ein.   
+		<br/><br/>
+		Definieren Sie zusätzlich alle Zielobjekte, die sich mit den Grundschutz-Bausteinen 
+		nicht ausreichen modellieren lassen, oder deren Einsatzszenarien im Grundschutz nicht
+		vorgesehen sind. Dokumentieren Sie dies im Feld "Erg. Sicherheitsanalyse" mir der Auswahl "zusätzlich vormerken". 
+		</description>
+	</item>
+	
+	<item title="Ergebnisse der erg. Sicherheitsanalysen">
+		<description>
+		Nachdem Sie entschieden haben, für welche Zielobjekte eine Risikoanalyse erforderlich 
+		ist, dokumentieren Sie Ihre Entscheidung, indem Sie für alle in der ergänzenden 
+		Sicherheitsanalyse enthaltenen Zielobjekte	das Feld "Risikoanalyse" auf "nötig", 
+		bzw. "entbehrlich" setzen.
+		<br/><br/>
+		Begründen Sie ihre Entscheidung im Feld darunter. 
+		</description>
+		
+		<onCompletion>
+		Fertig! Fahren Sie nun mit der Risikoanalyse fort.
+		</onCompletion>
+	</item>
+	
+	
+		
+	
+</cheatsheet>

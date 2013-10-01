@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+  XML Schema for Hitro-UI.
+
+  Author:  <koderman@sernet.de>
+  
+
+  Hitro is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  Hitro is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Hitro; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+/-->
+
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+		   xmlns:hitro="http://www.sernet.de/hitro"
+           targetNamespace='http://www.sernet.de/hitro'
+           elementFormDefault="qualified"
+>
+
+
+
+<!-- The root node for all possible documentation properties. 
+     List of entities.
+-->
+<xs:element name="huientities">
+<xs:complexType>
+      <xs:sequence>
+      	<xs:element name="huientity" 
+                  type="hitro:huientitytype"
+                  minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+</xs:complexType>
+</xs:element>
+
+
+<!-- 
+		One entity with all its properties.
+ -->
+<xs:complexType name="huientitytype">
+	<xs:sequence
+		minOccurs="0"
+		maxOccurs="unbounded">
+		<xs:element
+			name="huiproperty"
+			type="hitro:huipropertytype"
+			minOccurs="0"
+			maxOccurs="unbounded" />
+		<xs:element
+			name="huipropertygroup"
+			type="hitro:huipropertygrouptype"
+			minOccurs="0"
+			maxOccurs="unbounded" />
+
+		<xs:element
+			name="huirelation"
+			type="hitro:huirelationtype"
+			maxOccurs="unbounded"
+			minOccurs="0">
+		</xs:element>
+	</xs:sequence>
+	<xs:attribute name="id" type="xs:ID" use="required"/>
+	<xs:attribute name="name" type="xs:string" use="optional"/>
+</xs:complexType>
+
+
+<!--
+Group of properties, may have dependencies, which means it will only
+be displayed when one of the given options has been previously selected.
+-->
+<xs:complexType name="huipropertygrouptype">
+	<xs:sequence>
+        <xs:element  name="depends" 
+			type="hitro:dependstype"
+		    minOccurs="0" maxOccurs="unbounded"/>
+		    
+		<xs:element  name="huiproperty" 
+                  		type="hitro:huipropertytype"
+                 		minOccurs="0" maxOccurs="unbounded" />
+	</xs:sequence>
+
+	<xs:attribute name="id" type="xs:ID" use="required"/>
+	<xs:attribute name="name" type="xs:string" use="required"/>
+	<xs:attribute name="tags" type="xs:string"/> <!-- Tags can be used to filter properties in the view, enter comma separated. -->
+    <xs:attribute name="columns" type="xs:int" default="1" />
+</xs:complexType>
+
+<!-- 
+    Complex type to define dependency to other properties of an entity.
+ -->    
+<xs:complexType name="dependstype">
+    <!-- id of a property to depend on -->
+	<xs:attribute name="option" type="xs:IDREF" use="required" />
+    <!-- value of the property, if this value is set property is enabled -->
+    <xs:attribute name="value" type="xs:string" />
+    <!-- if true dependency evaluation is inverted-->
+    <xs:attribute name="inverse" type="xs:boolean" default="false"/>
+</xs:complexType>
+
+<!-- 
+	Complex type to define references to other entities which can be selected by the user to create links.
+ -->
+<xs:complexType name="referencestype">
+	<!-- Which entities should be listed to create references? -->
+	<xs:attribute name="entitytype" type="xs:IDREF" />
+    <xs:attribute name="linkType" type="xs:IDREF" use="optional" />
+	
+</xs:complexType>
+	    	
+<!-- 
+  A property to be documented.
+
+  May have dependencies, which means it will only
+  be displayed when one of the given options has been previously selected.
+
+  Attributes:
+  name:        name of property, i.e. "Colour"
+  enum:        free text entry, or selection of fixed options?
+  multiselect: can user select multiple items at once?
+/-->
+<xs:complexType name="huipropertytype">   
+    
+    <xs:sequence>
+    	<xs:element name="depends" 
+        			type="hitro:dependstype"
+        		    minOccurs="0" maxOccurs="unbounded"/>
+        		    
+        <xs:element name="references" 
+        			type="hitro:referencestype"
+        		    minOccurs="0" maxOccurs="1"/>
+        		    
+        <xs:element name="defaultRule" minOccurs="0" maxOccurs="1">
+        	<xs:complexType>
+	        	<xs:sequence>
+	        		<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+	        			<xs:complexType mixed="true">
+	        				<xs:attribute name="id" type="xs:ID" use="required"/>
+	        			</xs:complexType>
+	        		</xs:element>
+	        	</xs:sequence>
+	        	<xs:attribute name="class" type="xs:string" use="required"/>
+        	</xs:complexType>
+        </xs:element>
+
+        <xs:element name="validationRule" minOccurs="0" maxOccurs="unbounded">
+        	<xs:complexType>
+	        	<xs:sequence>
+	        		<xs:element name="param" minOccurs="0" maxOccurs="unbounded"/>
+	        	</xs:sequence>
+        	  	<xs:attribute name="class" type="xs:string" use="required"/>
+        	  	<xs:attribute name="hint" type="xs:string" use="optional" />
+        	</xs:complexType>
+        </xs:element>
+
+        
+        <!--
+          Unlimited list of options for enum type, 
+          i.e. "beige, black, blue..."
+          
+          Attributes:
+          id:        unique id under which this entry is referenced 
+                     in the database
+          name:      text to appear in drop-down lists etc.
+        /-->
+	  <xs:element name="option" minOccurs="0" maxOccurs="unbounded">
+	      <xs:complexType>
+	          <xs:attribute 
+	          	name="id" 
+	          	type="xs:ID" 
+	          	use="required"/>
+	          <!-- the name is read from resource bundle properties, key is: [id] -->
+    		  <!-- attribute name is a default value if no property is found-->  
+	          <xs:attribute 
+		        name="name" 
+		        type="xs:string" 
+		        use="optional"/>
+	          <xs:attribute name="value" type="xs:decimal" use="optional"/>
+	      </xs:complexType>
+	  </xs:element>    
+    </xs:sequence>
+        
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+    <!-- the name is read from resource bundle properties, key is: [id] -->
+    <!-- attribute name is a default value if no property is found-->
+    <xs:attribute 
+    	use="optional"
+    	name="name" 
+    	type="xs:string"/>
+
+	<!-- Tooltip hint to display in GUI --> 
+	<!-- the tooltip is read from resource bundle properties, key is: [id]_tooltip -->
+    <!-- attribute tooltip is a default value if no property is found-->  
+    <xs:attribute
+    	use="optional"
+    	name="tooltip" 
+    	type="xs:string"/>
+    
+    <!-- Tags to filter properties in the view, comma separated -->
+   	<xs:attribute name="tags" type="xs:string" />
+
+    <!-- How to edit this property: -->
+   	<xs:attribute name="inputtype" type="hitro:inputtypes" default="line"/>
+	
+	<!-- Optional or required property? -->
+	<xs:attribute name="required" type="xs:boolean" default="false"/> 
+	
+	<!-- Has initial focus? -->
+	<xs:attribute name="focus" type="xs:boolean" default="false"/> 
+	
+	<!-- Field containsURL? User can click on it. -->
+	<xs:attribute name="isURL" type="xs:boolean" default="false"/> 
+
+	<!-- Is editable? -->
+	<xs:attribute name="editable" type="xs:boolean" default="true"/> 
+    
+	<!-- Is visible in GUI? -->
+	<xs:attribute name="visible" type="xs:boolean" default="true"/>
+	
+	<!-- Should the user be presented with buttons to create / delete entities directly in the selection dialog?
+		If true, a listener must be registered to handle the button's actions.
+	-->
+	<xs:attribute name="crudButtons" type="xs:boolean" default="false"/> 
+
+	<!-- Value range for numeric option list -->
+	<xs:attribute name="min" type="xs:int"/> 
+	<xs:attribute name="max" type="xs:int"/> 
+	<xs:attribute name="defaultValue" type="xs:int" default="0" /> 
+
+	<!-- Should this property be included in reports and exports? -->
+	<xs:attribute name="report" type="xs:boolean" default="true"/>
+
+    <!-- Number of rows for text input type -->    
+	<xs:attribute name="textrows" type="xs:int" default="4" /> 
+     
+</xs:complexType>
+
+<xs:simpleType name="inputtypes" >
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="line"/>
+		<xs:enumeration value="singleoption"/>
+		<xs:enumeration value="multioption"/>
+		<xs:enumeration value="text"/>
+		<xs:enumeration value="reference"/>
+        <xs:enumeration value="cnalink-reference"/>
+		<xs:enumeration value="date"/>
+		<xs:enumeration value="numericoption"/>
+		<xs:enumeration value="booleanoption"/>
+	</xs:restriction>
+</xs:simpleType>
+
+
+    <xs:complexType name="huirelationtype">
+    	<xs:attribute
+    		name="id"
+    		type="xs:ID"
+    		use="required">
+    	</xs:attribute>
+    	<!-- the name is read from resource bundle properties, key is: [id]_name -->
+    	<!-- attribute name is a default value if no property is found-->
+    	<xs:attribute
+    		use="optional"
+    		name="name"
+    		type="xs:string">
+    	</xs:attribute>
+    	<!-- the reversename is read from resource bundle properties, key is: [id]_reversename -->
+    	<!-- attribute reversename is a default value if no property is found-->
+        <xs:attribute
+        	use="optional"
+        	name="reversename" 
+        	type="xs:string">
+    	</xs:attribute>
+        <xs:attribute
+    		name="to"
+    		type="xs:IDREF"
+    		use="required">
+    	</xs:attribute>
+    	<!-- the tooltip is read from resource bundle properties, key is: [id]_tooltip -->
+    	<!-- attribute tooltip is a default value if no property is found-->
+    	<xs:attribute
+        	use="optional"
+    		name="tooltip"
+    		type="xs:string">
+    	</xs:attribute>
+    </xs:complexType>
+</xs:schema>

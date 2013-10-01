@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="GSTOOL-BAK-Datei-Import">
+
+	<intro>
+		<description>
+		In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei mit der 
+		Endung "BAK" in verinice importieren können. 
+		</description>
+	</intro>
+
+	<item title="BAK-Datei im GSTOOL erzeugen">
+		<description>
+		Als erstes benötigen Sie eine BAK-Datei, die Sie im GSTOOL erzeugen müssen. Dazu gehen Sie 
+		bitte im GSTOOL in der Menüleiste auf "Datenbank > Daten sichern und wiederherstellen...". In 
+		diesem Fenster können sie den Dateinamen und den Ort der Datei angeben. Gehen Sie auf den Button 
+		"Sichern", um eine Sicherung zu erzeugen. Nach diesem Durchlauf haben Sie bereits eine BAK-Datenbank-Datei 
+		erzeugt. Nun können Sie mit dem nächsten Schritt in verinice fortfahren.
+		</description>
+	</item>
+	<item title="Einstellungen für den BAK-Datei-Import in verinice vornehmen">
+		<description>
+		Zuerst müssen Sie die Konnektivität zur GSTOOL-Datenbank herstellen. Wie das geht, steht im 
+		Spickzettel "Import der Datenbank-Daten aus dem GSTOOL 4.5". Wenn Sie keine Konnektivität 
+		zum GSTOOL herstellen können, weil es z.B. nicht mehr installiert ist, können Sie alternativ 
+		eine MSDE (Microsoft Database Engine) installieren. Wie Sie dann vorgehen müssen, klärt 
+		ein FAQ-Eintrag auf den Seiten von verinice (http://www.verinice.org).
+		<br/><br/>
+		Gehen Sie bitte in der Menüleiste auf "Bearbeiten" und dort auf "Einstellungen...". Vergessen Sie nach 
+		dem Vornehmen der Einstellungen nicht den Button "Anwenden" zu drücken, weil erst dann die 
+		Einstellungen übernommen werden. Da Sie die Konnektivität im Menüpunkt "GSTOOL Import" 
+		hergestellt haben, kann man nun zum Unterreiter "Wiederherzustellende Backup-Datei" gehen. Dort wird der 
+		Dateiname der BAK-Datei eingetragen, die Sie im GSTOOL vorher erzeugt haben. Dieser muss samt korrekten 
+		Pfad im ersten Feld "Datei mit Sicherung aus GSTOOL" stehen.
+		<br/><br/>
+		Achtung! Solange diese Datei auf dem Rechner liegt, auf dem Sie den Import durchführen, haben Sie kein 
+		Problem. Wenn die BAK-Datei auf einem entfernten Host liegt, müssen Sie dafür sorgen, 
+		dass Sie z.B. per Netzwerkfreigabe auf diese Datei zugreifen können. Der "Durchsuchen"-Button 
+		funktioniert also nur dann, wenn Sie eine Netzwerkfreigabe auf diese Datei haben oder diese Datei 
+		lokal zu finden ist.
+		<br/><br/>
+		Jetzt können Sie das zweite und dritte Feld mit einem beliebigen neuen Datenbanknamen und dessen Pfad 
+		ausfüllen. Der Pfad ist nur für den Import-Vorgang wichtig. Nach dem Import-Vorgang sind die 
+		Daten in der verinice-Datenbank enthalten und die Dateien der wiederhergestellten Datenbank werden nicht 
+		mehr benötigt.
+		</description>
+	</item>
+	<item title="Datenbank wiederherstellen">
+		<description>
+	Nachdem Sie alle Einstellungen des vorherigen Schritts vorgenommen haben, können Sie auf den 
+	Button "Datenbank wiederherstellen" klicken. Nun startet der Wiederherstellungsprozess. Jetzt 
+	müssen Sie die wiederhergestellten Daten in verinice importieren. Dazu müssen Sie wieder in den 
+	übergeordneten Reiter "GSTOOL Import" zurückgehen. Dort müssen Sie statt der ursprünglichen 
+	Datenbankbezeichnung den neuen Namen (den Sie sich bei der Wiederherstellung ausgesucht haben) 
+	der Datenbank eintragen (hinter dem letzten Slash-Zeichen). Klicken Sie auf den "Anwenden"-Button 
+	und testen Sie die Konnektivität mit Hilfe des Buttons "Teste Verbindung". Wenn Sie die 
+	Einstellung korrekt vorgenommen haben, ist der Test erfolgreich. Jetzt müssen Sie nur noch 
+	den Import-Prozess anstoßen. 
+	</description>
+	</item>
+	<item title="Import-Prozess anstoßen">
+		<description>
+		Der letzte Schritt ist das Anstoßen des Import-Prozesses. Dafür gehen Sie bitte in der Menüleiste 
+		auf "Datei" und dort auf "Daten aus dem GSTOOL importieren". Im erscheinenden Fenster können Sie die  
+		zu importierten Daten auswählen. Klicken Sie auf den Button "OK", um den Import zu starten. 
+		Nach dem Import-Prozess erscheint ein weiterer IT-Verbund mit dem Namen "BSI" in Ihrem Grundschutz-Modell-View. 
+		</description>
+	</item>
+		
+	
+</cheatsheet>

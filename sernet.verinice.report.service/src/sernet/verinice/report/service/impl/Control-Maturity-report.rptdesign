@@ -1,0 +1,3223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+    <property name="author">S. Hagedorn</property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
+    <text-property name="title">Control Maturity Report</text-property>
+    <simple-property-list name="includeResource">
+        <value>reports</value>
+    </simple-property-list>
+    <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">2152</property>
+        </structure>
+    </list-property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="root_object" id="609">
+            <property name="hidden">true</property>
+            <text-property name="helpText">Manually set root object for this report.</text-property>
+            <text-property name="promptText">Root object for this report, provided by verinice in production setup.</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">-1</value>
+            </simple-property-list>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="maturityChartImage" id="96">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">image</property>
+                    <text-property name="displayName">image</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">width</property>
+                    <property name="nativeName">width</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">550</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">height</property>
+                    <property name="nativeName">height</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue" type="javascript">300</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">elmt_id</property>
+                    <property name="nativeName">elmt_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">3</property>
+                    <expression name="defaultValue" type="constant">-1</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">image</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">image</property>
+                    <property name="nativeName">image</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.gs.ui.rcp.main.bsi.views.chart.MaturityWithOutISASpiderChart;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
+
+objects="controlgroup";
+
+elmtid = inpv("elmt_id");
+
+
+c = helper.execute(new LoadCnAElementById(objects,elmtid));
+mChart = new MaturityWithOutISASpiderChart();
+chart = mChart.createChart(c.getFound()); 
+//chart = new MaturityWithOutISASpiderChart.createChart(c.getFound());
+
+w = inpv("width");
+h = inpv("height");
+
+return helper.createImageResult(chart.createBufferedImage(w,h));
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>width</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>height</design:name>
+        <design:position>2</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+    </design:parameterDefinitions>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>elmt_id</design:name>
+        <design:position>3</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>image</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>image</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>image</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>columns(new String[] { "image" });
+inParameters(new String[] { "width", "height", "elmt_id" });</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="controlGroups" id="978">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">controlgroup_name</property>
+                    <text-property name="displayName">controlgroup_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dbid</property>
+                    <text-property name="displayName">dbid</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">controlgroup_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">dbid</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">controlgroup_name</property>
+                    <property name="nativeName">controlgroup_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">dbid</property>
+                    <property name="nativeName">dbid</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+
+objects="controlgroup";
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+
+cols = helper.getAllPropertyTypes(objects);
+//c2 = new LoadReportElements(objects, root);
+c2 = new LoadReportControlGroups(root);
+elements = helper.execute(c2).getResult();
+return helper.map(
+	elements,
+	cols,
+	true
+);]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>controlgroup_name</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>controlgroup_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>controlgroup_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>dbid</design:name>
+            <design:position>2</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>dbid</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>dbid</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols = helper.getAllPropertyTypes("controlgroup", true);
+inParameters(new String[] { "root_object" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="rootValue" id="2145">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">root</property>
+                    <text-property name="displayName">root</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root_object</property>
+                    <property name="paramName">root_object</property>
+                    <property name="nativeName">root_object</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">root</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">root</property>
+                    <property name="nativeName">root</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+return root;]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:DataSetParameters>
+    <design:parameterDefinitions>
+      <design:inOutMode>In</design:inOutMode>
+      <design:attributes>
+        <design:name>root_object</design:name>
+        <design:position>1</design:position>
+        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+        <design:precision>-1</design:precision>
+        <design:scale>-1</design:scale>
+        <design:nullability>Unknown</design:nullability>
+      </design:attributes>
+      <design:inputAttributes>
+        <design:elementAttributes>
+          <design:defaultValues>
+            <design:values>dummy default value</design:values>
+          </design:defaultValues>
+        </design:elementAttributes>
+      </design:inputAttributes>
+    </design:parameterDefinitions>
+  </design:DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_abbr</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_abbr</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_abbr</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_name</design:name>
+            <design:position>2</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_tag</design:name>
+            <design:position>3</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_tag</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_tag</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_desc</design:name>
+            <design:position>4</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_desc</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_desc</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_implemented</design:name>
+            <design:position>5</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_implemented</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_implemented</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_implemented_explanation</design:name>
+            <design:position>6</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_implemented_explanation</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_implemented_explanation</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_implemented_objective</design:name>
+            <design:position>7</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_implemented_objective</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_implemented_objective</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_implby</design:name>
+            <design:position>8</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_implby</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_implby</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_effectiveness_confidentiality</design:name>
+            <design:position>9</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_effectiveness_confidentiality</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_effectiveness_confidentiality</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_effectiveness_integrity</design:name>
+            <design:position>10</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_effectiveness_integrity</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_effectiveness_integrity</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_effectiveness_availability</design:name>
+            <design:position>11</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_effectiveness_availability</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_effectiveness_availability</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_eff_probability</design:name>
+            <design:position>12</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_eff_probability</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_eff_probability</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_effectiveness_explanation2</design:name>
+            <design:position>13</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_effectiveness_explanation2</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_effectiveness_explanation2</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_maturity</design:name>
+            <design:position>14</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_maturity</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_maturity</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_weight</design:name>
+            <design:position>15</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_weight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_weight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_ownweight</design:name>
+            <design:position>16</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_ownweight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_ownweight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_min1</design:name>
+            <design:position>17</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_min1</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_min1</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_min2</design:name>
+            <design:position>18</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_min2</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_min2</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_maturity_comment</design:name>
+            <design:position>19</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_maturity_comment</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_maturity_comment</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_maturity_duedate</design:name>
+            <design:position>20</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_maturity_duedate</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_maturity_duedate</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_lastrev</design:name>
+            <design:position>21</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_lastrev</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_lastrev</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_revision_notes</design:name>
+            <design:position>22</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_revision_notes</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_revision_notes</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_nextrev</design:name>
+            <design:position>23</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_nextrev</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_nextrev</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_currency</design:name>
+            <design:position>24</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_currency</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_currency</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_ptfix</design:name>
+            <design:position>25</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_ptfix</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_ptfix</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_ptvar</design:name>
+            <design:position>26</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_ptvar</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_ptvar</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_ptperiod</design:name>
+            <design:position>27</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_ptperiod</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_ptperiod</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_sachfix</design:name>
+            <design:position>28</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_sachfix</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_sachfix</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_sachvar</design:name>
+            <design:position>29</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_sachvar</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_sachvar</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_kosten_sachperiod</design:name>
+            <design:position>30</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_kosten_sachperiod</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_kosten_sachperiod</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_audit_findings</design:name>
+            <design:position>31</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_audit_findings</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_audit_findings</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_maturity</design:name>
+            <design:position>32</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_maturity</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_maturity</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_weight</design:name>
+            <design:position>33</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_weight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_weight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_ownweight</design:name>
+            <design:position>34</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_ownweight</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_ownweight</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_min1</design:name>
+            <design:position>35</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_min1</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_min1</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_min2</design:name>
+            <design:position>36</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_min2</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_min2</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_externalnote</design:name>
+            <design:position>37</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_externalnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_externalnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_internalnote</design:name>
+            <design:position>38</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_internalnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_internalnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_audit_ra</design:name>
+            <design:position>39</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_audit_ra</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_audit_ra</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_audit_devi</design:name>
+            <design:position>40</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_audit_devi</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_audit_devi</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_audit_compluntil</design:name>
+            <design:position>41</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_audit_compluntil</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_audit_compluntil</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>control_isa_isaauditnote</design:name>
+            <design:position>42</design:position>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>control_isa_isaauditnote</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>control_isa_isaauditnote</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols =new String[]{"root" };
+inParameters(new String[] { "root_object" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="radarChartData" id="2152">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">cg_name</property>
+                    <text-property name="displayName">cg_name</text-property>
+                    <text-property name="heading">cg_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdRed</property>
+                    <text-property name="displayName">thresholdRed</text-property>
+                    <text-property name="heading">thresholdRed</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdYellow</property>
+                    <text-property name="displayName">thresholdYellow</text-property>
+                    <text-property name="heading">thresholdYellow</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">thresholdGreen</property>
+                    <text-property name="displayName">thresholdGreen</text-property>
+                    <text-property name="heading">thresholdGreen</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">maturity</property>
+                    <text-property name="displayName">maturity</text-property>
+                    <text-property name="heading">maturity</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">cg_id</property>
+                    <property name="nativeName">cg_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="constant">-1</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">cg_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">thresholdRed</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">thresholdYellow</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">thresholdGreen</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">maturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">cg_name</property>
+                    <property name="nativeName">cg_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">thresholdRed</property>
+                    <property name="nativeName">thresholdRed</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">thresholdYellow</property>
+                    <property name="nativeName">thresholdYellow</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">thresholdGreen</property>
+                    <property name="nativeName">thresholdGreen</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">maturity</property>
+                    <property name="nativeName">maturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import java.util.ArrayList;
+import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.hui.common.VeriniceContext;
+import java.lang.Double;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.iso27k.Control;
+
+double getThreshold(ControlGroup cg, int thresholdType){
+	result = 0.0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof Control){
+			threshold = 0.0;
+			control = (Control)child;
+			if(thresholdType == 1){
+				threshold = Double.valueOf(control.getThreshold1());
+			}
+			if(thresholdType == 2){
+				threshold = Double.valueOf(control.getThreshold2());
+			}
+			if(threshold > result){
+				result = threshold;
+			}
+		}
+	}
+	return result;
+}
+
+double getMaxMaturityValue(sernet.verinice.model.iso27k.ControlGroup cg){
+	result = 0.0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof IControl){
+			maturity = getMaxMaturityValue((IControl)child);
+			if(maturity > result){
+				result = maturity;
+			}
+		}
+		if(child instanceof ControlGroup){
+			maturity = getMaxMaturityValue((ControlGroup)child);
+			if(maturity > result){
+				result = maturity;
+			}
+		}
+	}
+
+	return result;
+}
+
+double getMaxMaturityValue(IControl control){
+	htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+	propertyType = htf.getPropertyType(control.getTypeId(), control.getMaturityPropertyId());
+	return Double.valueOf(propertyType.getMaxValue());
+}
+
+double getMaturityByWeight(sernet.verinice.model.iso27k.ControlGroup cg){
+	result = 0;
+	if(getWeights(cg) != 0){
+		result = getWeightedMaturity(cg) / getWeights(cg);
+	}
+	return result;
+}
+
+int getWeights(ControlGroup cg){
+	int weight = 0;
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof IControl){
+			control = (IControl)child;
+			controlReloader =  new LoadElementByUuid(control.getUuid(), new RetrieveInfo().setProperties(true));
+			control = helper.execute(controlReloader).getElement();
+			weight = weight + control.getWeight2();
+		}
+		if(child instanceof ControlGroup){
+			control = (ControlGroup) child;
+			w2 = getWeights(control);
+			weight = weight + w2;
+		}
+	}
+	return weight;
+}
+
+int getWeightedMaturity(ControlGroup cg) {
+	maturity = 0;
+        for (CnATreeElement child : cg.getChildren()) {
+            if (child instanceof IControl) {
+                control = (IControl) child;
+                maturity += getWeightedMaturity(control);
+            }
+            if (child instanceof ControlGroup) {
+                control = (ControlGroup) child;
+                maturity += getWeightedMaturity(control);
+            }
+        }
+        return maturity;
+}
+
+int getWeightedMaturity(IControl contr) {
+	controlReloader =  new LoadElementByUuid(contr.getUuid(), new RetrieveInfo().setProperties(true));
+	contr = helper.execute(controlReloader).getElement();
+        value = contr.getMaturity() * contr.getWeight2();
+        return value;
+}
+
+objects="controlgroup";
+
+cgid = _inpv.get("cg_id");
+
+controlGroupLoader = new LoadPolymorphicCnAElementById(new Integer[]{cgid});
+cgList = helper.execute(controlGroupLoader).getElements();
+cg = null;
+if(cgList.size() > 0){
+	cg = cgList.get(0);
+}
+results = new ArrayList(0);
+if(cg != null){
+	elementReloader = new LoadElementByUuid(cg.getUuid(), new RetrieveInfo().setProperties(true).setChildren(true).setChildrenProperties(true));
+	cg = helper.execute(elementReloader).getElement();
+}
+if(cg != null){
+	for(CnATreeElement child : cg.getChildren()){
+		if(child instanceof ControlGroup){
+			row = new ArrayList(0);
+			childGroup = (ControlGroup)child;
+			childReloader = new LoadElementByUuid(childGroup.getUuid(), new RetrieveInfo().setProperties(true).setChildren(true).setChildrenProperties(true));
+			childGroup = helper.execute(childReloader).getElement();
+			row.add(childGroup.getTitle());
+			row.add(String.valueOf(getThreshold(childGroup, 1)));
+			row.add(String.valueOf(getThreshold(childGroup, 2)));
+			row.add(String.valueOf(getMaxMaturityValue(childGroup)));
+			row.add(String.valueOf(getMaturityByWeight(childGroup)));
+			results.add(row);
+		}
+	}
+}
+return results;
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>cg_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>controlgroup_name</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>controlgroup_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>controlgroup_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>dbid</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>dbid</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>dbid</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+cols = new String[]{"cg_name", "thresholdRed", "thresholdYellow", "thresholdGreen", "maturity"};
+inParameters(new String[] { "cg_id" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="table-header" id="156">
+            <property name="backgroundColor">#BDBDBD</property>
+            <property name="fontWeight">bold</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="leftMargin">0.25in</property>
+            <page-footer>
+                <grid id="868">
+                    <list-property name="visibility">
+                        <structure>
+                            <property name="format">ods</property>
+                            <expression name="valueExpr" type="javascript">true</expression>
+                        </structure>
+                    </list-property>
+                    <column id="869"/>
+                    <column id="870"/>
+                    <column id="871"/>
+                    <column id="872"/>
+                    <row id="873">
+                        <cell id="874">
+                            <grid id="879">
+                                <property name="fontSize">9pt</property>
+                                <property name="width">1.8677685950413223in</property>
+                                <column id="880">
+                                    <property name="width">0.2975206611570248in</property>
+                                </column>
+                                <column id="881">
+                                    <property name="width">0.2066115702479339in</property>
+                                </column>
+                                <column id="882">
+                                    <property name="width">1.3636363636363635in</property>
+                                </column>
+                                <row id="883">
+                                    <cell id="884">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="885">
+                                            <property name="textAlign">right</property>
+                                            <property name="type">page-number</property>
+                                        </auto-text>
+                                    </cell>
+                                    <cell id="886">
+                                        <property name="verticalAlign">bottom</property>
+                                        <text id="887">
+                                            <property name="textAlign">center</property>
+                                            <property name="contentType">plain</property>
+                                            <text-property name="content"><![CDATA[/]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="888">
+                                        <property name="verticalAlign">bottom</property>
+                                        <auto-text id="889">
+                                            <property name="type">total-page</property>
+                                        </auto-text>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                        <cell id="875"/>
+                        <cell id="876"/>
+                        <cell id="877">
+                            <property name="verticalAlign">bottom</property>
+                            <text id="878">
+                                <property name="fontSize">9pt</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="796">
+            <column id="797"/>
+            <column id="798"/>
+            <row id="799">
+                <cell id="800">
+                    <property name="textAlign">center</property>
+                    <property name="verticalAlign">middle</property>
+                    <text id="24">
+                        <property name="fontSize">14pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="contentType">html</property>
+                        <text-property name="content"><![CDATA[Control Maturity Report]]></text-property>
+                    </text>
+                </cell>
+                <cell id="801">
+                    <property name="paddingBottom">20pt</property>
+                    <property name="textAlign">right</property>
+                    <property name="verticalAlign">top</property>
+                    <label id="802">
+                        <text-property name="text" key="isa2">created with</text-property>
+                    </label>
+                    <image name="vnlogo" id="795">
+                        <property name="height">0.36363636363636365in</property>
+                        <property name="width">1.4958677685950412in</property>
+                        <property name="source">embed</property>
+                        <property name="imageName">screenshot1.png</property>
+                    </image>
+                </cell>
+            </row>
+        </grid>
+        <grid id="1033">
+            <property name="height">100%</property>
+            <property name="width">100%</property>
+            <column id="1034">
+                <property name="width">7.739583333333333in</property>
+            </column>
+            <row id="1036">
+                <property name="height">100%</property>
+                <cell id="1037">
+                    <table id="1051">
+                        <property name="width">100%</property>
+                        <property name="dataSet">controlGroups</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">controlgroup_name</property>
+                                <expression name="expression" type="javascript">dataSetRow["controlgroup_name"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">dbid</property>
+                                <expression name="expression" type="javascript">dataSetRow["dbid"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <property name="pageBreakInterval">0</property>
+                        <column id="1061">
+                            <property name="width">100%</property>
+                        </column>
+                        <column id="1080">
+                            <property name="width">550px</property>
+                        </column>
+                        <header>
+                            <row id="1052">
+                                <cell id="1053">
+                                    <label id="1071">
+                                        <text-property name="text">Name</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1078">
+                                    <text id="1081">
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Diagramm]]></text-property>
+                                    </text>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="1055">
+                                <property name="height">100%</property>
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#000000</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#000000</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <cell id="1056">
+                                    <data id="1072">
+                                        <property name="resultSetColumn">controlgroup_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="1079">
+                                    <extended-item extensionName="Chart" id="2149">
+                                        <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithoutAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/RadarChartModelType">
+  <Version>2.5.1</Version>
+  <Type>Radar Chart</Type>
+  <SubType>Spider Radar Chart</SubType>
+  <Block>
+    <Children xsi:type="layout:TitleBlock">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>false</Visible>
+      <Label>
+        <Caption>
+          <Value>Radar Chart Title</Value>
+          <Font>
+            <Size>16.0</Size>
+            <Bold>true</Bold>
+            <Alignment>
+              <horizontalAlignment>Center</horizontalAlignment>
+              <verticalAlignment>Center</verticalAlignment>
+            </Alignment>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>true</Visible>
+      </Label>
+    </Children>
+    <Children xsi:type="layout:Plot">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>true</Visible>
+      <HorizontalSpacing>5</HorizontalSpacing>
+      <VerticalSpacing>5</VerticalSpacing>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>0.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>0.0</Right>
+        </Insets>
+      </ClientArea>
+    </Children>
+    <Children xsi:type="layout:Legend">
+      <Bounds>
+        <Left>0.0</Left>
+        <Top>0.0</Top>
+        <Width>0.0</Width>
+        <Height>0.0</Height>
+      </Bounds>
+      <Insets>
+        <Top>3.0</Top>
+        <Left>3.0</Left>
+        <Bottom>3.0</Bottom>
+        <Right>3.0</Right>
+      </Insets>
+      <Row>-1</Row>
+      <Column>-1</Column>
+      <Rowspan>-1</Rowspan>
+      <Columnspan>-1</Columnspan>
+      <Outline>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>false</Visible>
+      </Outline>
+      <Visible>false</Visible>
+      <ClientArea>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>0</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>2.0</Top>
+          <Left>2.0</Left>
+          <Bottom>2.0</Bottom>
+          <Right>2.0</Right>
+        </Insets>
+      </ClientArea>
+      <Text>
+        <Value></Value>
+        <Font>
+          <Alignment/>
+        </Font>
+      </Text>
+      <Orientation>Vertical</Orientation>
+      <Direction>Top_Bottom</Direction>
+      <Separator>
+        <Style>Solid</Style>
+        <Thickness>1</Thickness>
+        <Color>
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Color>
+        <Visible>true</Visible>
+      </Separator>
+      <Position>Right</Position>
+      <ItemType>Series</ItemType>
+      <Title>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Title>
+      <TitlePosition>Above</TitlePosition>
+    </Children>
+    <Bounds>
+      <Left>0.0</Left>
+      <Top>0.0</Top>
+      <Width>212.0</Width>
+      <Height>130.0</Height>
+    </Bounds>
+    <Insets>
+      <Top>3.0</Top>
+      <Left>3.0</Left>
+      <Bottom>3.0</Bottom>
+      <Right>3.0</Right>
+    </Insets>
+    <Row>-1</Row>
+    <Column>-1</Column>
+    <Rowspan>-1</Rowspan>
+    <Columnspan>-1</Columnspan>
+    <Outline>
+      <Style>Solid</Style>
+      <Thickness>1</Thickness>
+      <Color>
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Color>
+      <Visible>false</Visible>
+    </Outline>
+    <Visible>true</Visible>
+  </Block>
+  <Dimension>Two_Dimensional</Dimension>
+  <Script>// this script ensures that the count of the radar lines equals the maximum of the dataset (if larger than 3.0)
+
+importPackage(Packages.sernet.verinice.report.service.impl);
+importPackage(Packages.java.lang);
+var numberofpoints;
+var valueList;
+var maxValue = 0.0;
+var numberofpositivpoints = 0;
+//called before scripts below
+function afterDataSetFilled( series, dataSet, icsc )
+{
+
+var list = dataSet.getValues();
+numberofpoints = list.length;
+valueList = list;
+	
+for(var i = 0; i &lt; numberofpoints; i++){
+	try{
+		value = Double.parseDouble(list[i]);
+		if(maxValue &lt; list[i]){
+			maxValue = Double.parseDouble(list[i]);
+		}
+	} catch (err) {
+		//TocHelper2.log(&quot;Error: &quot; + err);
+	}
+}
+
+}
+
+function beforeGeneration( chart, icsc )
+{
+	importPackage( Packages.org.eclipse.birt.chart.model.type.impl );
+	importPackage( Packages.org.eclipse.birt.chart.model.attribute );
+	importPackage( Packages.org.eclipse.birt.chart.model.component.impl);
+	importPackage( Packages.org.eclipse.birt.chart.examples.radar.model.type.impl);
+	importPackage( Packages.org.eclipse.birt.chart.examples.radar.model.type);
+	importPackage( Packages.org.eclipse.birt.chart.model.impl );
+	importPackage( Packages.java.math );	
+	if( chart.getClass() == ChartWithoutAxesImpl ){
+		seriesDef = chart.getSeriesDefinitions().get(0);
+		catRunSeries = seriesDef.getRunTimeSeries();
+		valSeriesDef = seriesDef.getSeriesDefinitions().get(0);
+		var series = valSeriesDef.getSeries().get(0);
+		if( maxValue > 3.0){
+			series.setPlotSteps(BigInteger.valueOf(new Double(maxValue).longValue()));
+			series.setWebLabelMin( 0 );
+			series.setWebLabelMax(new Double(maxValue).intValue());
+			series.setRadarAutoScale( false);
+		} else {
+			series.setPlotSteps(BigInteger.valueOf(new Double(4.0).longValue()));
+			series.setWebLabelMin( 0 );
+			series.setWebLabelMax(4);
+			series.setRadarAutoScale( false);
+		}
+
+	}
+
+}</Script>
+  <Units>Points</Units>
+  <SeriesThickness>10.0</SeriesThickness>
+  <GridColumnCount>0</GridColumnCount>
+  <ExtendedProperties>
+    <Name>enable.area.alt</Name>
+    <Value>false</Value>
+  </ExtendedProperties>
+  <SampleData>
+    <BaseSampleData>
+      <DataSetRepresentation>'A','B','C','D','E'</DataSetRepresentation>
+    </BaseSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>6,4,12,8,10</DataSetRepresentation>
+      <SeriesDefinitionIndex>0</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>12.0,8.0,24.0,16.0,20.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>1</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>18.0,12.0,36.0,24.0,30.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>2</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+    <OrthogonalSampleData>
+      <DataSetRepresentation>24.0,16.0,48.0,32.0,40.0</DataSetRepresentation>
+      <SeriesDefinitionIndex>3</SeriesDefinitionIndex>
+    </OrthogonalSampleData>
+  </SampleData>
+  <Interactivity>
+    <Enable>true</Enable>
+    <LegendBehavior>None</LegendBehavior>
+  </Interactivity>
+  <EmptyMessage>
+    <Caption>
+      <Value>This chart contains no data.</Value>
+      <Font>
+        <Alignment>
+          <horizontalAlignment>Center</horizontalAlignment>
+          <verticalAlignment>Center</verticalAlignment>
+        </Alignment>
+      </Font>
+    </Caption>
+    <Background xsi:type="attribute:ColorDefinition">
+      <Transparency>64</Transparency>
+      <Red>127</Red>
+      <Green>127</Green>
+      <Blue>127</Blue>
+    </Background>
+    <Outline>
+      <Color>
+        <Transparency>128</Transparency>
+        <Red>127</Red>
+        <Green>127</Green>
+        <Blue>127</Blue>
+      </Color>
+      <Visible>true</Visible>
+    </Outline>
+    <Insets>
+      <Top>10.0</Top>
+      <Left>10.0</Left>
+      <Bottom>10.0</Bottom>
+      <Right>10.0</Right>
+    </Insets>
+    <Visible>false</Visible>
+  </EmptyMessage>
+  <SeriesDefinitions>
+    <Query>
+      <Definition></Definition>
+    </Query>
+    <SeriesPalette>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>102</Red>
+        <Green>204</Green>
+        <Blue>0</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>255</Red>
+        <Green>255</Green>
+        <Blue>0</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>255</Red>
+        <Green>71</Green>
+        <Blue>71</Blue>
+      </Entries>
+      <Entries xsi:type="attribute:ColorDefinition">
+        <Transparency>255</Transparency>
+        <Red>0</Red>
+        <Green>0</Green>
+        <Blue>0</Blue>
+      </Entries>
+    </SeriesPalette>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdGreen&quot;]</Definition>
+          <Grouping>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDGREEN</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>false</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <ShowWebLabels>false</ShowWebLabels>
+        <ShowCatLabels>true</ShowCatLabels>
+        <RadarAutoScale>false</RadarAutoScale>
+        <WebLabelMax>10.0</WebLabelMax>
+        <WebLabelMin>0.0</WebLabelMin>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Size>5.0</Size>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+        <PlotSteps>10</PlotSteps>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdYellow&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDYELLOW</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>false</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;thresholdRed&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>THRESHOLDRED</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>false</Translucent>
+        <Marker>
+          <Type>Box</Type>
+          <Size>0</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>true</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>false</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <SeriesDefinitions>
+      <Query>
+        <Definition></Definition>
+      </Query>
+      <SeriesPalette>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>0</Red>
+          <Green>0</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>102</Red>
+          <Green>204</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>71</Green>
+          <Blue>71</Blue>
+        </Entries>
+        <Entries xsi:type="attribute:ColorDefinition">
+          <Transparency>255</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>0</Blue>
+        </Entries>
+      </SeriesPalette>
+      <Series xsi:type="type:RadarSeries">
+        <Visible>true</Visible>
+        <Label>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+            <Visible>false</Visible>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>false</Visible>
+        </Label>
+        <DataDefinition>
+          <Definition>row[&quot;maturity&quot;]</Definition>
+          <Grouping>
+            <Enabled>false</Enabled>
+            <GroupType>Text</GroupType>
+            <AggregateExpression>Sum</AggregateExpression>
+          </Grouping>
+        </DataDefinition>
+        <SeriesIdentifier>MATURITYDATA</SeriesIdentifier>
+        <DataPoint>
+          <Components>
+            <Type>Orthogonal_Value</Type>
+          </Components>
+          <Separator>, </Separator>
+        </DataPoint>
+        <LabelPosition>Outside</LabelPosition>
+        <Stacked>false</Stacked>
+        <Translucent>true</Translucent>
+        <Marker>
+          <Type>Circle</Type>
+          <Size>2</Size>
+          <Visible>true</Visible>
+          <Outline>
+            <Visible>true</Visible>
+          </Outline>
+        </Marker>
+        <LineAttributes>
+          <Style>Solid</Style>
+          <Thickness>2</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>true</Visible>
+        </LineAttributes>
+        <PaletteLineColor>true</PaletteLineColor>
+        <WebLineAttributes>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Visible>true</Visible>
+        </WebLineAttributes>
+        <FillPolys>true</FillPolys>
+        <ConnectEndpoints>true</ConnectEndpoints>
+        <WebLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </WebLabel>
+        <CatLabel>
+          <Caption>
+            <Value></Value>
+            <Font>
+              <Alignment/>
+            </Font>
+          </Caption>
+          <Background xsi:type="attribute:ColorDefinition">
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Background>
+          <Outline>
+            <Style>Solid</Style>
+            <Thickness>1</Thickness>
+            <Color>
+              <Transparency>255</Transparency>
+              <Red>0</Red>
+              <Green>0</Green>
+              <Blue>0</Blue>
+            </Color>
+          </Outline>
+          <Insets>
+            <Top>0.0</Top>
+            <Left>2.0</Left>
+            <Bottom>0.0</Bottom>
+            <Right>3.0</Right>
+          </Insets>
+          <Visible>true</Visible>
+        </CatLabel>
+      </Series>
+      <Grouping>
+        <GroupType>Text</GroupType>
+        <AggregateExpression>Sum</AggregateExpression>
+      </Grouping>
+    </SeriesDefinitions>
+    <Series>
+      <Visible>true</Visible>
+      <Label>
+        <Caption>
+          <Value></Value>
+          <Font>
+            <Alignment/>
+          </Font>
+        </Caption>
+        <Background xsi:type="attribute:ColorDefinition">
+          <Transparency>0</Transparency>
+          <Red>255</Red>
+          <Green>255</Green>
+          <Blue>255</Blue>
+        </Background>
+        <Outline>
+          <Style>Solid</Style>
+          <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
+          <Visible>false</Visible>
+        </Outline>
+        <Insets>
+          <Top>0.0</Top>
+          <Left>2.0</Left>
+          <Bottom>0.0</Bottom>
+          <Right>3.0</Right>
+        </Insets>
+        <Visible>false</Visible>
+      </Label>
+      <DataDefinition>
+        <Definition>row[&quot;cg_name&quot;]</Definition>
+      </DataDefinition>
+      <SeriesIdentifier></SeriesIdentifier>
+      <DataPoint>
+        <Components>
+          <Type>Orthogonal_Value</Type>
+        </Components>
+        <Separator>, </Separator>
+      </DataPoint>
+      <LabelPosition>Outside</LabelPosition>
+      <Stacked>false</Stacked>
+    </Series>
+    <Grouping>
+      <Enabled>true</Enabled>
+      <GroupType>Text</GroupType>
+      <AggregateExpression>Sum</AggregateExpression>
+    </Grouping>
+  </SeriesDefinitions>
+</model:ChartWithoutAxes>
+]]></xml-property>
+                                        <property name="outputFormat">SVG</property>
+                                        <property name="inheritColumns">false</property>
+                                        <property name="dataSet">radarChartData</property>
+                                        <property name="height">3.84375in</property>
+                                        <property name="width">5.770833333333333in</property>
+                                        <list-property name="paramBindings">
+                                            <structure>
+                                                <property name="paramName">cg_id</property>
+                                                <simple-property-list name="expression">
+                                                    <value>row["dbid"]</value>
+                                                </simple-property-list>
+                                            </structure>
+                                        </list-property>
+                                        <list-property name="boundDataColumns">
+                                            <structure>
+                                                <property name="name">cg_name</property>
+                                                <expression name="expression">dataSetRow["cg_name"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdRed</property>
+                                                <expression name="expression">dataSetRow["thresholdRed"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdYellow</property>
+                                                <expression name="expression">dataSetRow["thresholdYellow"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">thresholdGreen</property>
+                                                <expression name="expression">dataSetRow["thresholdGreen"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                            <structure>
+                                                <property name="name">maturity</property>
+                                                <expression name="expression">dataSetRow["maturity"]</expression>
+                                                <property name="dataType">javaObject</property>
+                                            </structure>
+                                        </list-property>
+                                    </extended-item>
+                                </cell>
+                            </row>
+                        </detail>
+                    </table>
+                </cell>
+            </row>
+        </grid>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">screenshot1.png</property>
+            <property name="type">image/png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAAZsAAABnCAYAAADWv+8uAAAABmJLR0QA/wD/AP+gvaeTAAAgAElEQVR4
+                nO2dd3wbRdrHf7OrZlvuLXaa00lCCPVoByQEQieUVBI4jnpwB8dxwHt39BIId3BHJ5Tj6DW90HsvSUhC
+                nF6c4tix5Cqra3feP1a2ZVnSzq52Jdns9/MBR9LszDO7s/PMPPPMM0QURQqDtEEIifsbpcajMTAw6Btw
+                6RbAwMDAwKDvYygbAwMDAwPdMaVbgF87hqnMwMDg10BCZZNoPcHAQBcoRfMnn8K58n34ampAeBNyxo5G
+                +awZyD5oVLql65W0/7IBjgWL4N64GTQYhG1IFUqnnIOCCSemWzSDPkz0QJokchAwlI1BKvHX1WH7DTfB
+                tWZtj98Iz2Pw329Bv9/NSYNkvRPR78euO+6BY/ESIMZbXnLeORg2by4Iz6deOIM+T7SyMcxoBhkBFQRs
+                +9MNaF+/Ie7vNXMfAHgO/eZclGLpeid7/vkwHIuWxP3duWQ5IIgY/vCDgDGwNNAZw0HAICNofPf9uIqm
+                Ewrsvv+f8O3ZmxqhejG+vftw4PU3ZdM5l69E48r3UiCRwa8dQ9kYZASNy1cypaPBIJxLluksTe+n6d33
+                QUMCU9qGdxbqLI2BgaFsDDIE785dzGk927brKEnfwLtzJ3Na434apAJD2RhkBgrWDAhnNFtZCPs9Mu6n
+                QSowWplBRqDErTn7oJE6StI3UHY/DZdyA/0xlI1BRlA+azpTOs5mQ+l5U3SWpvdTcs5Z4O05TGlZ772B
+                QTIYysYgI8g/7lhUXnlZwjSE4zD0vrtgqeiXGqF6MebiImkPjSnxHpry2bNQOOnkFEll8GvGUDYGGcOg
+                W/6K/n+4Mub6DWe1YtiDc1Ey5Zw0SNY7KTrtVAz/97/AZWX1/JEA/S69GEPuvDX1ghn8KjEiCBhkHO4N
+                1XAsWQbvjp0gJhNyxoxG2bQLYR3QP92i9UoCdfVoeGch3BuqIQaDyKqqQsmUs2E/dHy6RTPowxjhagwM
+                DAwMdCda2RhmNAMDAwMD3TGUjYGBgYGB7hjKxsDAwMBAdwxlY2BgYGCgO4ayMTAwMDDQHUPZGBgYGBjo
+                TsLD02gwBMHtTpQCgOQebcrLBVIY0E9ob5cJoS7JZsrP0+VgKMHVDtean+GuroZ3xy4E6usRammF6PcD
+                ADiLBXxuLswlxbBWVsA2pAo5Y0Yje8xocBaL5vLojeB2o+37H+D6eR2823cg0NAAod0NUBGc1QZTYSEs
+                ZaWw9q+ErWowskYMR/aokb2yrnL499Wi7adV8GzcBN/uvQg4nRDa2wFRBGe1gs/JgaWyH2yDBsE+/hDk
+                HnE4TAX56RY74xDcbrirN8KzZRt8NbsRqK9HsLERgqsdYiAAUArOZoO5uBjWgQOQPWoE7OPHI2fs6Iw5
+                XTTU3ALX6jVwb9wI784aBA4cQKi1DdTvBzhO6gfycmEuKYG1fyWyhg6R+oGDRoGYfl1nVybcZxNqasbP
+                J06SHrwMo+Y/gcJJEzUVLh5iIIA1x09AqKU1YbqcMaMxbukCzcoV2tvRuPI9OFe8C9eqNaChkOI8OJsV
+                eUcdicJTT0HxmafBlK9fJ1Rzz1w0f/ZFwjS5RxyO4Q/Ni/t7+8/rUPfiy2j+5FOIfvl20AGxmHH4Fx/D
+                XFLS+V39q6+j7r8vMucRi4MXvAFzcbHi6zzbtmPLVdfG/G3QzTei+MzTE14vuN1oeGchHAsXw7N5q6Ky
+                icmE/GOPRtn0qSicfIpmUZbb167Dtr/cnFQeQ+68DQUTTtREHhY8W7eh6f0P0fLFV3BXbwQV2M7cicSU
+                l4uCiRNQfMZpyD/h+JQPaELNzXAuXQHnyvfgXv8LqCgqzoPPyUbescegaPIpKJp8KvicbB0kTS+KjoU2
+                Fxeh6IzT4Fy6XDZjx6IlKVM2zR9/KqtoAKDfJbM1KS/Y2IT9z7+AhjfflkbzSSD6/Gj56hu0fPUNds+d
+                h+Kzz0TlVZcja+gQTWSNJNjUDP++2oRpbIMHxfzev38/au65H82ffKaq7OIzTuumaABAaHPJyiOHms4J
+                AGggELfs/c/+N66yoaKIA6++jn2PP8XU5mLmEQp1PvPsUSMx5K7bkHvkEaryikT0x68TK4LXm7QccoiB
+                AJxLl+PAa2/AXb0p6fxCbS44ly6Hc+lymHJzUTj5FJRMORv5xxyt6/HW/v112D//WTgWL4Xo8yeVl+D2
+                oPnjT9H88aeouXsuSi84DxVX/B7WygqNpM08ZIdYrOe9N3/2BYJNzUkLxIJjwSLZNOaiQhSffWZS5VBB
+                QN1/X8TaU85A3fP/S1rRRCP6/XAsXIz1Z07BrtvvRqilRdP8JVOichrf/xDrzzpPtaIBgH4Xa6Poe6J9
+                Z+Ku3oi2n1b1+D7Q0ICNsy9Fzb0PqFY00Xi2bMXG2Zdi3xNPA1Td8+ktUFFEw1sLsHbS6dj5jzs0UTTR
+                hFwuOBYuxqZLLse6M6eg4e0FqiwOiRD9fux95HGsm3wWDrzxdtKKJhrB7Ub9K69h3alnYs8/H4bg8Wia
+                f6Ygq2zshx6CnHFjZTOiwSAal6/QRKhEBOrq0frtd7LpymZMA2e1qi7HV1OD6ukXYfe8f0n2eB2hgoAD
+                b76NdWeci5bPE5u9lKG8Y6574UVsu/7GpBSrffw42McfooU4KaP+fy93++zduQvVU2fBtWq15mVRUcS+
+                R5/Arjvv7bMKx7N5CzZcOBM7b7sTgfoDKSnTu30Hdt56J9adOQUtX32jSZ7uDRvxy7kXovbJ+Z3rsXoh
+                BgLY/9wLWH/2+XCt+VnXstIBk/GYdXbjWLgkKWGYyli8BFRIbCMlJh7lF81QXUbTR5/gl/Ono339BtV5
+                qCHobMTmq/6IfY8+kZZOqP7lV7H7gX8lXbZ+sxr9aP7kM/j27AUA+OvqsOmSy+Cvq9e1zANvvIXap+br
+                WkY6qH/pVWy4cAbcG6rTUr5vVw22XHE1vNt3JJVPwzsLUT1ztqIjy7XAv3cfNs6+FPWvvp7ScvWGSdkU
+                n3UGTIWFsuncmzbDvWlz0kLFhVImhVY0+RRY+qk786TuxZex7U9/1txkxgyl2PfE09jx99tVLTxGZcac
+                suWLr7B77oNJlgeYS4pRfMZpyYqTAH2UMBVF1L/0KsRAAFuvvR6BAw26lBPNvseeQttP2s+e0gENBrHj
+                /25FzX0PQAwE0ypL+ZyLkDV8mLqLKcWeh/6Dnf+4Q5FTjJbQUAg1d8/FnoceSUv5esCkbDirFWXTL2TK
+                0LFwcVICJaLtx1Wdo89E9Lt4jqr89z/zPHbPfRA0voNeynAsXIxdt9+VZC5sdqugw4ntN/9NA+UmmS9J
+                L3V3dixcjN1z58G9YWPKyqSiiF133K3a8SFTEAMBbLn2ejgW6W/dkCNr2FAMuvlG1dfX3PcA9j/zvIYS
+                qWf/M89h7yOPp1sMTWB29C6fNQN1z78ga8JqXL4Sg//vJhCzOWnhonEslHcMyBkzGrlHHq4474Z3FmLP
+                Q/9RdhEB7AePRd4xRyNn7BhYBw6AKS8PxGyC6PUh6HTCV7MbrnW/oPXLrxBocCiT6e2FsA0ejMqrLlcm
+                l0J23TMXoeb4zglZw4ai+KwzkHv4YbBUVoAzmRBwONC+bj2a3vsQrp/XApBcfMtnJTBfZvCaDSAt1B54
+                /a34CQhB7mGHomDiSbCPGwtLRQU4qxWi34+gwwHvjp1o+3EVWj77QtEir3f7DjiXrUDp+b30uGtRxPYb
+                b0HL518qvpSYeNgPOxR5vzkK2SOGwzpwAPhcOziLFaLPh1BrG/y1tfBu3wH3LxvQtnoNRE98DzpiNmH4
+                ww+Cs9lUVaX2yfmof/k1ZXXgOKkORx+FnDGjYe1fCT43F4TnIXq9CDQ0wLtrN9p/XouWL79W7AhU++R8
+                2KoGo/S8cxVdl2koOs9myzXXofnjT2UzHfnkoyiafEry0kUgtLdj9XETIMq4ag6bdx9KLzxfUd6uVaux
+                8eLLmL1Y+CwbymbNQPnsWbANGsh0DRVFtH7zLfY/8zzafviJWTZi4jH2jVdUHXS17Ya/onHl+wnTmAoL
+                4ioa64D+GPyP/0PRKScndCl1/bwOe+b9E5aKCox45KG46YR2d1xni9bvf8COm/+eUFYAOPybz2EpK5VN
+                F427eiN+OW+a4usAgPA8Ss47l9lFXXC5UPfCy9j/7HPM5qScsaMxbomyPWFiIIBQHA9Qwe3GutPlTzUd
+                8di/45s9Gdn78COonf+comtMhYWouOx3KLvwPJhL2Z+n6A+g7Ycf0bjiXTR9+BEEd3elPvDGP6P/NVcp
+                kqWDpg8+wtbr/sK8ZmnKy0W/S+agbOZ0WMrLmK6hoRCaP/kMtc88B/cv7GtafHYWxi1dCFvVYOZr0k1S
+                h6e1fvMdNl16hWwhhZMmYtT8J1SKGJuGt97BztvuSpjGXFSIw778RJEXWqilBevPPp/ZRl906iRU3XEr
+                LP3KmcuIpvG9D7DrjruZ3WmzRwzHuGULFe84ZlE28Sg67VQMmzcXvD2H7QJRRLClBeaiIlXltXz+JTZf
+                eY1susO/+QyWMrYXOxK1yqbgpBMw+G83q7L/t69dh81XXINQK9tzHrd0AXLGjFZcTiwEVzt+Ovxo2XTJ
+                KpuWL76SnhurUwkh6DfnIgz865/B5zC2rTgI7e1oWLAY+595DkFnI3KPOAxjXntJVXQB/75arD/3Aggu
+                Ns/TsqkXYNAtf4WpsEBxWQAAStHw1gLU3P+g7AC6g7xjfoMxr/xPXXlpIKnD0/KPO4ZpZNfyxVcIOhuV
+                SSZDwwL5tSA17s4199zPpGgIz6Pqzlsx8qnHklI0gLThcdzid5hHKZ5t29HwzkIVJamzW5VNuxAjHvs3
+                u6IBAI5TrWgyET47G8MfmoeDnp+veqHZfuh4jHj8P8wRA5o++EhVOeki1NaGnf+4nVnR8NnZGDX/CVTd
+                8Y+kFQ0A8HY7Ki69GId+9B7KZkzF8H/NUxfGhlLs+PttTIqGs9kw4pGHMPSBe9UrGgAgBGUzp+Hgt19n
+                ntm1ff9jUnvf0o2yuBmEoHzOLNlkNBRiijrAinf7DrSvXZcwDTGZFLs7t373PZwrVsqmIzyH4f/5F7ML
+                OAvWAf0x5vWXmM1w+595XsUisnJHh8JJEzHk3rs0C6miPfov/JhLijHmzVdQMkXeDCVH/rFHM70zAND6
+                tTZ7Q1LFvv88xrwOydtzMPqVF1B48gTN5eDtORh6392wDhyg6nrnshVo+/5H2XSc1YqDnn8axWedoaqc
+                WGQfNBJjX3sR5mK2gVrt089oVnaqUdyjlJ4/hWlUoqVXCouHW9HkScrcnSnFngcfYuqPB93y16Tt2rGw
+                lJZi1PPzmeIi+Wv3q1iAVdYxZw0dguEPzQPhM1XR6A9vt2P0i88jZ/RBmuXZ/w9XgZjlTaDujZuZTSrp
+                xlezGwfefJspLTHxGPnUY7AfMk5nqZQj+gPY++9HmdIOnXcf8o7+jeYy2IZUYdTTjzOZydvX/ZK2/UvJ
+                orhX4e12lDB4RXi2blO0ABYPGgrBsUR+lqTU3bn508+ZwmcUTDwJFZddqihvJWQNqWJ203TqGKGB8ByG
+                /fMB8Ha7bmX0BqruuBXZo0Zqmqe5tAQFJ/xWNh0NheDZuk3TsvWi9ulnZaKudzHwhuuRf+wxOkukDsei
+                xfDvr5NNVzZ9KkqSDH+VCPthhzJ7nTqX6R+pRQ9UDWH7zZnFNGh2LEp+z03LF18i6HQmTKPG3bnufy/J
+                puFsVgy9+3ZF+aqhbOZ0pvWbli+/1jzuUwel558H+/jMG3n2RN89UNmjRuiSb8FJJzClS/VudTUEnU4m
+                8zMA2McdjIorL9NZIpVQirqoMEWxMBcVYvDfbtJdnMqrr4CpQH4dqPmzz3WXRQ9UKZus4cOkCKsyOFe8
+                y3Q8QSJYHAOURnf27apB24/y7sflF82EpUL/KKyE51E+W96uL7jaFUZoYOuYCceh8tqrFeSbTjJ8s04c
+                cg87lCmdf+8+nSVJHsfiZaCMLt1Vd9yaset/bT+ugm9XjWy6yquvAJ+bq7s8fHY2yqZdIJvOV7MnZREu
+                tER1KyhnWCwPtbQm5T0RdDbKrlOoie7sXPGubD9MOA79LlEXiUANxadPZupHlZkm2TrmvOOOgU3l4mrq
+                SX90BzXYhg0FMcl7SmntxakHjSvfZUpXcMLxsB8aIyBrhuBcLj8747OzUDZtagqkkShiXBt2b0ht3EYt
+                UK1sCidNhKVCfkE+mfA1zqXLZM1Gatydmz+R35hqP/wwWPtXKso3GSz9ymEbFPtsmUi8O3ZqXnbRqZM0
+                z1M/eufMhrNYmPYHBZuaUiCNegJ19cxHBfT7XeoGa4qhFC2ffi6brGDCSeBzU7eOmTNmNJPDkB79gN6o
+                VjaEZ4us3Pr1twg0qJvyyZnQJHfnmYryDDY1wb1R3hRVcMLxivLVgqzhw2XT+Pfv17zcvN8cpXme+tE7
+                ZzYAYGbYZS56fSmQRD0sx3sAklNE/m9T/w6x4tm6DQGHvNs2i2OHlhCeR9bQobLp/LXa9wN6k5QxtWza
+                VNkjWakgwMngTRZN+9p1siHCJXdnZRssXat/ZtqEFvM8Fp1hCXkRLzxJbOTrydmssOlwSqhBT0x5ebJp
+                xGB6ogyzwnrOSuFJJ6rbYJkiXKvWMKVLh9MMy6Ak1Jyagyq1RFn8kyjMxUUoPvN0OJYsS5jOsWiJ4mCS
+                TI4BKqI7u6tlIvoSAFQ6PE1wp/aYgcAB+UOmRJ+2+zAs/fpl7AJuX4NlfxoN6uNtqBWsJrT844/VWZLk
+                kO0Hwni2bIWXwYlAS1gCdQoZPgOORVLKBgDK58ySVTbeHTvRvnYdczBJ0etF47vvJUyTM1ZddGfZA5XC
+                k4Fdd92nOO9UoPWRtOYi+XOKMoveuWYDQHFsu4yDUnh3sq0VsJzum04827czpdv2l5t1lkQdWvcDqSDp
+                Ia19/CGwH3KwbDolEQUaP/hINk6R2tMgfXv2qLouY9B4d38yR2drSu/VIcyk1aykwf0NOJxMa0pcdhZs
+                A9nCMKUL/275c7Eymd4Y5UMTiVncoBtXvsesjR0yJjQ17s4dBHuhf3okfJa8p0oXDD1MppjQeu+6v8bo
+                dCM0yDaYyNEnoqlZKyoyp13FQAwEEOyFax6RcFlZ6RZBMZq0iOIzT5c1x4TaXGj6+GPZvHx79spuuFTj
+                7gygMwx+b8ZcWpJuEQx0JXOneAnXEiKUGevZLuki1NzCfiRChmLphf2AJsqGs1pROk3+2GjHQnlTmmPR
+                koQNQY27cweC2wNkwJHPyZA1pEpB6t5d19j0xTr1DoR2NoeZTI+vF+8Av95Eb/Qg1WyuW37RDFmbdNu3
+                3yNQVx/3dyqKsms7atydO8h0t1IW1JzY2bfI3JF/X0cMsoWoyZh1wDiwhtrJZNKxNSNZNHOPsVZWovDk
+                CWj66JO4aagowrFkWdxjW1u/+S6hMgKQXAgZUWRKxttz0P+azIwVpsyltC92zH19ZtMH6pfgCPFMgFK2
+                fsDSr1y1I5KuEJKRxzXIoakvZvmcixIqG0Ayk/X/w5UxG6RcaJucsaORe4Ryd+cOWF1PCW9SvC/IwEAb
+                MrejZn1/RH9mu+Wy1sOUl2v0AxqiqctI/rFHI2tY4lALvprdMXchh1pa0fxxYkWlZhNnJFw2myeX1hsn
+                00cfGCX3IHM7474O61HOqd4MrRSesR/ojRsnMxlt/RMZj42O5SjgXL4Soj/+mork7pzccaycxQI+W95l
+                UPQHEGptTaosA4O+hqkgnyldkPGo6HRhymesh8PZ673WMgnNneFLz5sC3p54BNT43vs9jr91LFyU8BrV
+                7s5RmBki7wJgOr3PwODXhKW0lCmdv64uoztpPtfONLsRfT4EFcUiNEiE5sqGt+egVObYaKHdjaYPPur8
+                7N60OWHMpWTcnaOxDWLb2ezdslWT8gwM+gqW8jLZwLuAdMhfpg/WrIPYzm/ybDX6Aa3QZZtv+ZxZsh4p
+                kS7OjgWJZzVFk09R7e4cTdbwYUzp2tf3vsOJetIX1zcyd8Tc5+E42IZWMSV1Vys55C/1MPcD637RWZJf
+                D7oom6xhw5B/bOJjo1t/+BH+2lqIgQCcyxKfmKf02OdE5BzMFiCw5etvNCvTQEv6ogLtPeSMHs2UrvUb
+                tnNv0gVrP9Bq9AOaoVsAI9l4aSKFY/FSNH/yacIwGMm6O0eTd+QRTOl8u2rg2cYWGTZzMWYBBtqSe8Rh
+                TOmaP/uCeV9bOmDtB1yr1hjrNhqhm7IpPHkCrJUVCdM4Fy2F453EJrRk3Z2jsVT0Y55Cy5n3Mp++OAsw
+                FGg6yT+ObVNxoK4erd99r7M06sk5eCxMhQWy6aggwLl4aQok6vvopmwIz6N8VuJjo31796Hlq/jTVC3c
+                nWNRdNopTOka3l4gBe0zMDAAAFgHDkD2qBFMaeteeElnadRDeB5Fk05mSlv34isZv1G1N6BrHPDS6ReC
+                s8p7r8RDK3fnaEqnnMsUUkNod2Pf409qXr6BQW+m+OyzmNK1fPk1XKtW6yyNekrOT+w120Ggvh51/3tZ
+                Z2n6ProqG3ORdGy0GrR0d47GNqQK+ccdw5T2wGtvou2nVbrIYfAro49YNUsvmAJiZgv5svO2uyAGMjMA
+                bt5RRyJ7xHCmtLVPPg1vr1/DjUIU0fT+h9hyzXVYc8LJ+OnQ3+DniZOx/cZb0Pqt9iZQ3U84YjlYLRZa
+                ujvHovLqK5nSUVHE9htuyvh9A7Ex1jcyij7yOCxlZSg5i+3wQu+Ondh15706S6QSQlB59RVMSUWfH1v/
+                9GeEWvpGZBF/XT2qZ12Crdf9Bc0ff4pA/QEIbjf8+2rhXL4Sm353ObZeez1CbS7NytRd2dgPGacqQqmW
+                7s6xyD/2aOYIyoEGBzZdejkC9YkjUieLZ8tW+Pft07WM3k8fmR70cvpfezVzQEvHgkXY+5/HdJXHs3Ub
+                tv35RsWRC4rPOQvZo0YyNSvvzhpsvvwq3UNZuVavSXxQXZIE6upQPWN2zBiVkTR99Ak2XfJ7zc7/ScnZ
+                rUpnN1q7O8ej6ra/g5jNTGl9u3Zjw/TZ8OgRWYBSHHjjLWyYNgs1983TPv8+RR+ZHvRybEOqUH5RYgeg
+                SGqfegY7b78rYfxDNVBRRP1Lr2DD1JlofPcDNH/+haLrCceh6o5/gHUQ075+A6pnXgz/vloV0iaGhkKo
+                nf8sNs75vX7KWRSx7YabZI9y6cBdvQm77tJmZpoSZVN81ukwFxUxp9fa3TkeWcOHYcB11zCnD9TVY8PU
+                mah/6VVQQdBEBtfPa1E96xLsuuMeiF4fmj/5DC1ffq1J3n0TY2aTKQy84TpYytlN3Q1vvoMNU2fCtXqN
+                JuW7Vq1G9fSLUHPfPIjhCM375z+nOJ+83xylaH3Yu30H1p97IRyLl2kWA67162/wy/nTsffhR0FDITS8
+                9Q7cG+OH8FJL04cfw7VmraJrnMtWaCJLSpQNZ7GgdLr8sdGAfu7O8ai8+krmvQOAZLutue8B/HLOBXAu
+                XQ7KeHphtzz8fjS+9wE2XXK5NJ2Nevl2z31AVb49MTpmA/3gc3Mx7MG5IBx7O/Ns3oLqWRdj85XXoOWr
+                bxQP2qggoOXzL7Hp0itQPeuSHuFkXGvWou2HnxTlCQCD/3YTcsYcxJxecLmw45a/Y8O0i9D04ceqBp+C
+                2wPHoiXYMG0WNv3+Kng2b+n8jQoiau65X/OApo4ly5RfRAHn0uVJl63p4WmJKJ81A3XPvSD7UPRyd44H
+                4TiMeOQhbJgxG75dNczXebZtx/ab/oaae+aiYMJJyD3ycOSMPgjW/v1hKsgHMZtBRRGix4uAowH+fbXw
+                bNwE15q1aP3uhx5RryPx7qxB3UuvoPKKyzSoYV/DMKNlEvnHH4v+1/0R+x59gv0iCrR8/iVaPv8S5qJC
+                5J/4W+QeOh7Zo0bCUlkJc1Gh1AdQdC5au7dsgeunVWj+9HMEnY0Js6+d/yzyjj5KUT04mw0jn3oc1dNm
+                IeBwMl/Xvm49tv7xzzAXF6Fg4gTkHnEYckaNgqV/BUx5eSAmE6ggQPR4EDjQAN/efXBXb4Rr9Rq4flyV
+                0FPPtXoNnMtXouTcsxXVJRHu6o3qrtug7rpIUqZsrJUVKJw0AU0fxj8gTU9350SYCgsw+oVnsXH27xR7
+                nYXaXHAuWwHnshXdvic8ByqKqvvG2ifno+Tcc2ApYwvrHpu+2DEbs7VMY8Af/wBfzW5Vo99gUzOcS5bD
+                uSTqWo5IzVfFyL71m2/h3lDNHP+sA2v/Shz032ew8ZLLFHudBRub4FiwqEfUEcLzSZnc9/zzYRROmsh8
+                cJ0cgkvdYr/QnrxXWkrMaB3IOQro7e6cCOuA/hj9yv9gHdBfk/yooF7RANKG0j3/elgTWfoWfVGB9nII
+                wbAH56KUcZMkEyJVb0KiQK2KtRsAyB59EEa/9F+YiwrVlR0tSpJru4EDDah96hlNZAEAU36equv4PLYD
+                5xKRUmWTf8zRCeOS6e3uLIdt0ECMfetV5Bw8Jq1ydCC0uZK02fbFWUBfrFPvh/A8hj14PwZcd62iNRy9
+                aP7oY3h37FR1bc6Y0Rj75quwVQ3WWCp1hFrbNMsrZ6y6vk3tdZGkVNmAEPSbHfvY6JyxY1Li7iyHpawM
+                Y994BWXTL0xbv8bZbBh0840Y9fTjTGF14tMXZwF9sU6R9OL6EYIB1/8Ro559CuaS4vSJwXMomzUDlnK2
+                U3ljYRtShYMXvoWiyWxxFPXAlJuLoffdhaH33aVZnsVns23GjabkHHXXRZJaZQMpHlGsY6PTPauJhLPZ
+                MHTuPRj1zFOw9q9MWbnEbEbZzGkY/8EKVF51OcCl/PEYpJ30zwqSpeCkEzH+vWUom3YhSCrbMCEoPHkC
+                xi1ZgCF33Q7ebk8qO1NeLkY++SiGPzQP5uLUKU8uKwsVl1+K8R+9i7IZ0zTNu+j0ybCPO1jRNcVnnq7J
+                zCZlDgId8Dk5KD1/Cupfeb3zO3NRIYrPSp27MyuFE3+kacAAAA9ySURBVE9C/nHH4MBrb6Du+RcRcDh0
+                KcdSXoay6VNRNn2qxmtWvb/j6klfrFPfw1RQgKH334N+l8xB7VPzVbsHM5WVn4eSc89G2czpyB7JFpFa
+                CSVTzkHhpImoe+El1L/8mm4RBGyDBqJs5jSUTr0A5kJt1oyiIRyH4Y8+jOoZsxFk8LrLHjEcQ+69U5Oy
+                U65sAKB89izUv/pG53pEqt2dlcBZrai47FL0u3g2Gj/4CM4ly9D63feggeT2wVgrK5B/wm9RdPqpyD/2
+                GBCe10hiA4PMIfugkRjx2L/h378fjkVL0fTeB/Bs3ZZ0vtaBA1Bw/HEoOHkC8o87Rvf+g7fbMeD6P6Ly
+                ysvgXPEunMtWwPXT6qQVqK1qMApO/C2KTj8NeUcenqTZnLHMgQMw9s1Xse36GxO6QheccDyGP/wgTHnq
+                nAqiIaIoxjUSEx0rvul3V6D12+9ATCYc9tmHafNCU4PgdsO1ajXa166HZ+s2+PbsRdDhhOByQQwGQTgO
+                xGwGn50NU34ezKUlsFRUwDZ4ELJHjkDOuINlD5bTBFbnghQ0cCZY5E1GVr3z16J8LWVId33jEKirR9tP
+                q+DeUA3vjp3w79+PoLMJgtsNGgqBmEzgLBZwWVkwFxXCXFwES2UlsoZWIWvYUNjHHwJzSUnK5Y4m1NqK
+                th9XoX3deni3bYd/Xy2CTidCrnapHhwHYjGDz8mBKT8f5tISWCsrYasajOyRI2A/ZBzMpemrBxUENC5f
+                CceS5XBvqIbQ7oKpoAC5hx+G0qnno/DkicnlH9X+0qZswtJ0FKRvOQYGBgYGKSVa2aTFjAYAoKL0HwhA
+                +ogJiYrdFSgxFvgNDJgRRUjeeCT8/vTSQWhnPSD1Ab2hHpRK/RfHQa910bQpG+FADWgwABDA1G8YYGKL
+                vpwRCCFQvwfU7wUN+oBQEFQM9fRaJQSE4wHeBGIyAyYriMUKYskC+BTc+shG343wC90BlwHKPlJRJyIZ
+                WcVE9vWOTk7HziEVdewsK9x5yJalX+cSl6Bfen8CPtCgHxCCMdc+CIF0L3gTwJtBTBYQsxWw2KS/6SYU
+                BPW7u+oRCoCKgkw/YAHMFhCzDcSald53TxQgtjeDetqkvrhDVosNXE4BSE7yGzkjSYsZjfo9EJx7Oz9z
+                9iJw+cmEZUkBVAT1tEH0tIEG4sc1Y4WYLCDWHJCsXKnR6YDYXAfRk3hDGLFkgS8dpEv5ShDbmyG2NiRO
+                RDiYKlV6GwkhhOp3yCQi4Iv7g9i0CQ0SjdjmhOhKHNeL8Gbw/YYmXRYN+CA4dsum48uqUtJx01AA1N0K
+                6nWBChoEmSU8OFs2iC0HxGZPXactClIf4GmTBppJQkxWqQ5ZuSAWmwYCskH9XohN+6VBcjzZLFngiypV
+                D4wzwoxG3a3dTEzU6wLySjJzuklFiO0toO5mKdYZoIl5jAohUE8r4GkF4c0g2XngsvM0nvEwmPIyydSn
+                t6ws1+vZBllMq1qWnwHPlgb9EF2NoD5315eayEUh+tyAzw1CHCA2O0h2vm4Dt45ZgOhu7ZoxatIPBEHd
+                LYC7RRqAdvQDOipPGvBCaKqVZr8J6kCDfgiNteBLBmgiT+qVjRAC9Xu7KxtKQb0ukGxtXOy0gvraIbY6
+                AVGQZsaMjYsgxkw6xned5YgCaHszqLtFamz2Qm0aG+E6ZY4uv/Nzpij4qI44lrxaKptEz0M/EisbTeoY
+                mZlMXiTi/5ojChBdTRA9bTHrFbc9xvgtUsp413QqHosNnL0QxJqtQSXCZXraJIUZHmwSwil6v2MRM70Q
+                guhqAm1vAcnJB5dToP3GbipCbG5Ax7pY5NPvMK5H/qVCCGKrA1xhv6SLTrmyoV5XuJIR1STILGVDRYht
+                TlBveDRGOMWvZKz0LHlQjwuCzw0utwgkK1dhqdEFEmkHd8dyROTbDOkzyYDRLwAQkB6ykI7/dbT+ZGQl
+                cfKPLCOcTi9IDBl6ptHqeUjPniDxMpEe1aUBL2irA1QQOuvT7Vl2Stj9u0hR4okV8xoS/ksBBAMQmw+A
+                WLPB5ZckvcYntjqkwTG6P5uE73d0jx0lM0se1N0KwdsOLq9YU7Mu9bQBVOzezsKykYiP3WTxe4GgH0jS
+                3JpaZUMpRF97TG1NhRBowJdSu2VMhBDElgbJrqzJqCJqMZ4R0dUETgiB2JPYSdwxW4huPYj4nEkzm3j3
+                m0SkSYZEzzMVtyFRHSPTaFZeeASewkdMPW0Q25ulD7HqqnYUpjAfGvKryDSCUEDqB0RBXT8Q651TXE8K
+                sc0JThQ0G4hTv5f9uXS7zpP02l5KlQ31e8J2wtg1o9729CqbUEAayYhCwpde2ZQ5iTedS/bxMLiPZsjM
+                Jras0UPhZM1oLM9Cz545lc+D4X52fqcNtL0ZYthykW64rFzVsxoa9Enm8wR9VUrRcB2XCiFVdaJCKOmW
+                kmJl4+75MkUYY2nIBwih1LgFRyMEJdMZqKT5E2iTztFijPeWdKyTEBJ2P6WgNIY7ZMQ1sX4jvAkkO7lA
+                guDirBF0M01lwMsESLJE3vdOGcPyUSTfEUeO6OKZOXTVNREzzXjtQSsbfSyzIwFASc/vNIC6W6V1kwTv
+                d0x6jCdivD+RLutyizdhuxrJVmmCDvohtoU9Bjv2+rCOLCPNez3qIUprPnL6PtrUZrZqt/7UqTwTPHSl
+                i08KSF2vHgoCQigiCmwsA254upbqtZvwYiYQYZeN+TyiZSaAySzNxkwWEN4cp/OmgCBIprlgQHKZjPUC
+                RcDZC+MJwQwhXJzOq2sBR/coEawQLqyoI7+L+IcGipF0bh6OYaDuLEbH+9GxhhZdbjcBtClf0jXKzSVq
+                oD43qN8t7SWJ11PFqS8xmQGLDeAtICZT7AEFpd3fnVAQXQuQkflL7yexZKmzCgghiO3N0jvR2SlThntG
+                QMwWwGyT9tHwptjPkVJADIGGgtKenKC/594v0l1zcvYC5fWIKyaRYjDK7fXqIXp4n1CSpEzZUL8nRkPq
+                +UBowCstjKesE6QQ3S2yboBdSHIRS5a0cMc0CyPShi7eBFiyQJAvNTafJ6avPjFbk16M6yw3bp2kelAV
+                zg+6oatbcGRHHj8fvSc3qXNF73r2ieuUXG1pKBB2+okcRMqJRkCs2dKInaUTI0TqxE0WkCx7t03VsaYJ
+                qhxrKO1aa+r2DBLXh1hzQGzs9QBvlgal1mwp544NrsHINaZwH2PNBniNN7ubrEAo0PkxymeoB51tR4P+
+                KDXKhooQg34wNUQKyVFAL3/56OK8UvA/1peO8CZwOfnJm/pMFhC7BUQIQfS6InbwQvKz1wAKgMq9LJqU
+                pAWEQdYkO0aG63Wd2aSgjh1Q0r2+ulhGKJX2nSiQmZit4LLVr6cAkAZu2XkgNru0PcHftcmamK2q3k3R
+                0xZ2bWbsB0xmqR9IdsRvtkqmslBQ6gdC0oZXQoikWDWGWLMghnpuqk3UPigBOA3W0lOibGjAFzE1ZUyf
+                CmUjhKSZFKOdnJitYVuwhh0SbwJnL5RCXnjbNQ1hEd+MFpkoQxwEIk1M8RMlkX8cs1JPMfSDpY4aHalM
+                wHI/k4P63NITYX1/bDma7n8Bx0n70qxZoB4XIArg1LgJhwJAKMDeD1iytFcEJjO43CJpluNzS1ERdHg3
+                iSULJCCFCGK+hnUGKkNqZjbBgLIbR0XJLqtzvDTqi2Xaiw2x2HQLY9KZP2/Sducww471TNlnwyZrkh2x
+                AjOpLjDVUcvnr2N9RSEc25Ct/XBZdo1Mwz0hvBkktxA04FfVZyjqB6zZug6EiTW7a91HJ7icPFB3W3fH
+                i3jymC2a9Xv6K5tQUIqRo7BTo0G/tHioF6Fg2MWZYbRrMuuqaDrRuoGlOjxKsugta9oVa4qfB1N4HnVZ
+                04AvYhFdpghrlm6KJqIUVdsmaNDP3D9JnmEpsLjo7Y1LOJCcPMDn6TTb9UgCSAFPNayv7sqGhgKSaSB6
+                JSqRkZAAVAyBiKJ2rqA95PJ3vdjR7n6RnzkuNYpGDzpMl7FcfDv+nSnKhpCe7SRyZZsClCS5osFSV71j
+                o3WYyWLFBtH0eUTdz/BXnWUnAxUT79eIaGOkw1szUwkGuvcDHUS5xhOOB7GlZh05JRAOJMsOIgigQgDo
+                iLpNCMCZQMxmzQdn+iobKoZDh0e5tAJsvgKhgD4NVRRBBbH7zYwjH2fJypwOWTGkK45TTJdiZFDdCHq0
+                k+h/J+2NluaZDQnXEeiqW4+/Gu6zifXeRZalEmk0LLMGG570pMrRRxVCKP6sJuq5SGtNmfKuaAjPg/Cp
+                eUa6Khsaigz5EjVMjTuM6BpOSLtWtXdGpUIoSq4OustACN+7ztmJhhDQmPc/4nO6O+AOCKIWx2NNx5Js
+                B1x0zx4rf3290eLP1Dueh4blcyz1UVGeIMS4l0D0O05MlsxpXzGQ+oF4o5uutiGdRZMBZz71cnRVNkQU
+                QEiHuojxUDsWwzsXqqTvaTg1BaSGrbENk4TD0ZBIWaJlAwHMFk3LTTVS4Meu+nRX6eHPGTKziRWIs0Pm
+                zhRJyspFRhpHnDapqxWNRLS7Ljk6CiaAhp0zARee1cZTB+FkyqBUcuDucS+7v7cEBDBl9vtDogJSdrf0
+                Rwxze3k/kCnop2yEkOTnTzoUSCTh3ethJSIdstP9UXd8okKoM50mUCqFpOkWJjx6ZoVu8vVeCGi3jYy0
+                6752dq6ZoWxACKhMR5vs3CY6/1hLF7rfjR7trqtUTZU/6agvDT/rrrtHu0pTXl9RCLepbmol3LJIZ96U
+                8BkzkIkJFcPmZekeRdaHRnym4DTZPW+go7KhgpBgHTI8dujozMM24JjpKdXWUYCKMTbW9TQJ9IUGFr2x
+                L15XmgldQuRwIz7JOQiwrIvruamzZx17lkXRuaqjSXmx2nbkZ+UTm8j3J1J5dW9nJMPNTlTsWY9YfzO9
+                Hr0JfZQNFcOzh/hNuVtnbjLFPIO8KztBsw1qlDWSa59oZAxrAJky+mRwAEh+nw3D9bou2cg/D01nA3pE
+                uY4MjpooV503lCYNYz+Q8fXoReiibORC9APoNmIgHN915HKs/KgIolm4b8ZGlimdcDIwRW3IlHpqvDge
+                I/u0K1YWGbR0fdahvnKDyK7iM72T7iv16D3oNLMBumy5EgSSWUd6xqT7QwxH/KWg3YK5druWitrsru7h
+                B4yuQKskPOAJy9Q3IDH+FfFFujvgTro8pzqeRw+zV9Kydr8XnYN0Gjlg13Vq0+mYEfNXzcsn3e8lAQjt
+                bOoqttuEXQAi35OofPS/h1pBOqP/R30doYd0HgD9yvh/IHjIZblCLqwAAAAASUVORK5CYII=
+            </property>
+        </structure>
+    </list-property>
+</report>

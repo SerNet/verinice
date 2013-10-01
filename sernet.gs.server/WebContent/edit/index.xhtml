@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+    xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition template="/layout.xhtml">
+<ui:define name="content">
+	<div id="path" style="width: 100%; margin-bottom: 4px;">
+		<h:form id="navForm"  rendered="#{auth.isoElements}">		
+			<p:commandButton action="#{tree.init}" oncomplete="loadLinks();" update=":tableForm,:navForm" icon="home-button" title="Wurzel" style="height: 36px;vertical-align: middle;"/>	
+			<p:commandButton action="#{tree.showParent}" oncomplete="loadLinks();" update=":tableForm,:navForm,:editForm,:navForm:newPanel" icon="up-button" title="Nach oben" style="height: 36px;vertical-align: middle;"/>	
+			<p:commandButton onclick="submitEditForm();" oncomplete="repeatMessage();" disabled="#{edit.element==null}" icon="save-button" title="Save" style="height: 36px;vertical-align: middle;"/>
+			<p:remoteCommand name="repeatMessage" process="@form" action="#{message.repeat}"/>
+		    <p:commandButton onclick="confirmation.show()" disabled="#{edit.element==null}"  icon="delete-button" title="Delete" style="height: 36px;vertical-align: middle;"/>
+			<p:commandButton id="newButton" disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"  icon="new-button" title="New" style="height: 36px;vertical-align: middle;"/>			
+			<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="false" >
+				<p:dataTable id="newElementTable"
+	                var="h"
+	                value="#{tree.handlers}"
+	                styleClass="noheader">
+	                <p:column style="width:20px">
+						<h:graphicImage value="#{h.icon}" />	
+			        </p:column>
+                	<p:column>
+                		<p:commandLink value="#{msgTree[h.label]}" actionListener="#{h.execute}" styleClass="#{h.icon}" update=":tableForm,:navForm" />			
+                	</p:column>
+				</p:dataTable> 
+    		</p:overlayPanel>
+    		<p:confirmDialog id="confirmDialog" message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"  
+                header="Delete" severity="alert" widgetVar="confirmation">
+				<p:commandButton id="confirm" actionListener="#{tree.delete}" value="#{msgTree['confirm-deletion.yes']}" update=":tableForm,:navForm,:editForm,:navForm:newPanel" oncomplete="confirmation.hide()" />  
+        		<p:commandButton id="decline" value="#{msgTree['confirm-deletion.cancel']}" onclick="confirmation.hide()" type="button" />                    
+    		</p:confirmDialog>
+			<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb"/>
+		</h:form>
+	</div>
+	<div id="col3" style="width: auto; margin: 0 200px 0 0; *margin-right:0;">
+		<div id="col3_content">	
+			<h:form id="tableForm" rendered="#{auth.isoElements}">
+				<p:dataTable id="elementTable"
+	                var="item"
+	                value="#{tree.children}"
+	                rowKey="#{item.element.dbId}"
+					selection="#{tree.elementInformation}" 
+	                selectionMode="single"
+	                scrollable="true"
+					scrollHeight="450" 
+					resizableColumns="true"
+					style="width: 450px"
+	                rendered="#{!empty tree.children}">
+	                <p:ajax event="rowSelect"
+						listener="#{tree.openElement}"
+						oncomplete="loadLinks();"   
+                    	update=":tableForm,:navForm,:editForm,:navForm:newPanel" />                 
+			        <p:column style="width:20px">
+						<h:graphicImage value="#{item.icon}" />	
+			        </p:column>
+			        <p:column headerText="#{msgTree['title']}" sortBy="#{item.title}" style="width:430px">
+						<h:outputText value="#{item.title}"/>	
+			        </p:column>
+	            </p:dataTable>
+			</h:form>
+		</div>
+	</div>
+	<div id="col2">
+		<div id="col2_content">									    				
+	    	<vn:editor rendered="#{auth.isoElements}"/>    		 				    			    							
+		</div>
+	</div>
+</ui:define>
+</ui:composition>
+</html>

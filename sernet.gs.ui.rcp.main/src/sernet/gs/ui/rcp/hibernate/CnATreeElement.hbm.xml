@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="sernet.verinice.model.common">
+
+	<class name="CnATreeElement" 
+		table="cnatreeelement"
+		batch-size="10"
+		abstract="true">
+		
+		<cache usage="read-write" />
+			
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="OBJECT_TYPE" type="string"/>	
+        
+        <property name="scopeId" 
+            type="java.lang.Integer" 
+            column="scope_id">
+        </property>
+        
+        <property
+            name="objectType"
+            column="OBJECT_TYPE"
+            insert="false"
+            update="false"/>
+		
+		<property
+			name="uuid"
+			not-null="true"
+			unique="true"
+		/>
+		
+		<property name="extId"/>
+		
+		<property name="sourceId"/>
+		
+		<set name="permissions"
+			inverse="true"
+			cascade="all-delete-orphan"
+			batch-size="10" >
+			<key column="cte_id"/>
+			<one-to-many class="Permission"/>
+		</set>
+		
+		<many-to-one 
+			name="entity"
+			column="entity_id"
+			class="sernet.hui.common.connect.Entity"
+			cascade="all"
+			fetch="join"
+			not-null="false"
+			/>
+			
+		<property name="parentId" column="parent" insert="false" update="false"/>
+		
+		<many-to-one 
+			name="parent"
+			column="parent"
+			class="CnATreeElement" 	
+			/>
+			
+		<set name="children" 
+			cascade="all"
+			inverse="true"
+			batch-size="10"
+			fetch="join"
+			>
+			<cache usage="read-write" />
+			<key column="parent"  not-null="false"/>
+			<one-to-many class="CnATreeElement" />
+			
+			<filter
+	  			name="userAccessReadFilter"
+	  			condition="exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed )"
+	 		/>
+            
+            <filter 
+                name="scopeFilter"
+                condition="scope_id=:scopeId"
+            />
+			
+		</set>
+		
+		<set name="linksDown"
+			inverse="true"
+			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
+			<key column="DEPENDANT_ID" />
+			<one-to-many class="CnALink" not-found="ignore"/>
+		</set>
+		
+		<set name="linksUp"
+			inverse="true"
+			cascade="delete,delete-orphan">
+			
+			<cache usage="read-write" />
+			
+			<key column="DEPENDENCY_ID"  />
+			<one-to-many class="CnALink" not-found="ignore"/>
+		</set>
+        
+        <set name="files"
+            inverse="true"
+            cascade="delete,delete-orphan"
+            lazy="true">
+            
+            <cache usage="read-write" />
+            
+            <key column="cnatreeelement_id" />
+            <one-to-many class="sernet.verinice.model.bsi.Attachment"/>
+        </set>
+        
+        <property name="iconPath" column="icon" type="string" length="256"/>
+		
+<!-- Grundschutz-Elemente: ################################################################# -->
+
+	<subclass 
+		name="sernet.verinice.model.bsi.Person"
+		extends="CnATreeElement"
+		discriminator-value="person"/>
+
+	<subclass 
+		name="sernet.verinice.model.bsi.BausteinUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="baustein-umsetzung"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.MassnahmenUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="massnahmen-umsetzung" >
+	
+		<subclass
+			name="sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung"
+			extends="MassnahmenUmsetzung"
+			discriminator-value="risiko-massnahmen-umsetzung"/>
+		
+	</subclass>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung"
+		extends="CnATreeElement"
+		discriminator-value="gefaehrdungs-umsetzung"/>
+
+	<subclass 
+		name="sernet.verinice.model.bsi.Gebaeude"
+		extends="CnATreeElement"
+		discriminator-value="gebaeude"/>
+
+	<subclass 
+		name="sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis"
+		extends="CnATreeElement"
+		discriminator-value="finished-risk-analysis"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.Anwendung"
+		extends="CnATreeElement"
+		discriminator-value="anwendung"/>
+
+	<subclass 
+		name="sernet.verinice.model.bsi.Client"
+		extends="CnATreeElement"
+		discriminator-value="client"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.SonstIT"
+		extends="CnATreeElement"
+		discriminator-value="sonst-it"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.NetzKomponente"
+		extends="CnATreeElement"
+		discriminator-value="netz-komponente"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.Raum"
+		extends="CnATreeElement"
+		discriminator-value="raum"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.TelefonKomponente"
+		extends="CnATreeElement"
+		discriminator-value="telefon-komponente"/>
+
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.Server"
+		extends="CnATreeElement"
+		discriminator-value="server"/>
+
+	<subclass 
+		name="sernet.verinice.model.bsi.GebaeudeKategorie"
+		extends="CnATreeElement"
+		discriminator-value="gebaeude-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.AnwendungenKategorie"
+		extends="CnATreeElement"
+		discriminator-value="anwendungen-kategorie"/>
+		
+	<subclass 
+		name="sernet.verinice.model.bsi.ClientsKategorie"
+		extends="CnATreeElement"
+		discriminator-value="clients-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.SonstigeITKategorie"
+		extends="CnATreeElement"
+		discriminator-value="sonstige-it-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.NKKategorie"
+		extends="CnATreeElement"
+		discriminator-value="nk-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.PersonenKategorie"
+		extends="CnATreeElement"
+		discriminator-value="personen-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.RaeumeKategorie"
+		extends="CnATreeElement"
+		discriminator-value="raeume-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.ServerKategorie"
+		extends="CnATreeElement"
+		discriminator-value="server-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.TKKategorie"
+		extends="CnATreeElement"
+		discriminator-value="tk-kategorie"/>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.BSIModel"
+		extends="CnATreeElement"
+		discriminator-value="bsimodel">
+		<property name="dbVersion"/>
+	</subclass>
+	
+	<subclass 
+		name="sernet.verinice.model.bsi.ITVerbund"
+		extends="CnATreeElement"
+		discriminator-value="it-verbund"/>
+        
+    <subclass 
+        name="sernet.verinice.model.bsi.ImportBsiGroup"
+        extends="CnATreeElement"
+        discriminator-value="import-bsi"/>
+
+<!-- Datenschutz Elemente: ################################################################# -->
+
+	<subclass 
+		name="sernet.verinice.model.ds.Verarbeitungsangaben"
+		extends="CnATreeElement"
+		discriminator-value="verarbeitungsangaben"/>
+
+	<subclass 
+		name="sernet.verinice.model.ds.VerantwortlicheStelle"
+		extends="CnATreeElement"
+		discriminator-value="verantwortliche-stelle"/>
+
+	<subclass 
+		name="sernet.verinice.model.ds.Personengruppen"
+		extends="CnATreeElement"
+		discriminator-value="personengruppen"/>
+
+	<subclass 
+		name="sernet.verinice.model.ds.Datenverarbeitung"
+		extends="CnATreeElement"
+		discriminator-value="datenverarbeitung"/>
+
+	<subclass 
+		name="sernet.verinice.model.ds.StellungnahmeDSB"
+		extends="CnATreeElement"
+		discriminator-value="stellungnahme-dsb"/>
+	
+	<!-- ISO 27000 Elements -->
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.ISO27KModel"
+		extends="CnATreeElement"
+		discriminator-value="iso27kmodel" />
+
+	<subclass 
+		name="sernet.verinice.model.iso27k.Organization"
+		extends="CnATreeElement"
+		discriminator-value="org" />
+    
+    <subclass 
+        name="sernet.verinice.model.iso27k.ImportIsoGroup"
+        extends="CnATreeElement"
+        discriminator-value="import-iso"/>
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.AssetGroup"
+		extends="CnATreeElement"
+		discriminator-value="assetgroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Asset"
+		extends="CnATreeElement"
+		discriminator-value="asset" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.ControlGroup"
+		extends="CnATreeElement"
+		discriminator-value="controlgroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Control"
+		extends="CnATreeElement"
+		discriminator-value="control" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.AuditGroup"
+		extends="CnATreeElement"
+		discriminator-value="auditgroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Audit"
+		extends="CnATreeElement"
+		discriminator-value="audit" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.ExceptionGroup"
+		extends="CnATreeElement"
+		discriminator-value="exceptiongroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Exception"
+		extends="CnATreeElement"
+		discriminator-value="exception" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.PersonGroup"
+		extends="CnATreeElement"
+		discriminator-value="persongroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.PersonIso"
+		extends="CnATreeElement"
+		discriminator-value="person-iso" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.RequirementGroup"
+		extends="CnATreeElement"
+		discriminator-value="requirementgroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Requirement"
+		extends="CnATreeElement"
+		discriminator-value="requirement" />
+	
+	<subclass 
+		name="sernet.verinice.model.iso27k.IncidentGroup"
+		extends="CnATreeElement"
+		discriminator-value="incidentgroup" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Incident"
+		extends="CnATreeElement"
+		discriminator-value="incident" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.IncidentScenarioGroup"
+		extends="CnATreeElement"
+		discriminator-value="incident_scenario_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.IncidentScenario"
+		extends="CnATreeElement"
+		discriminator-value="incident_scenario" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.ResponseGroup"
+		extends="CnATreeElement"
+		discriminator-value="response_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Response"
+		extends="CnATreeElement"
+		discriminator-value="response" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.ThreatGroup"
+		extends="CnATreeElement"
+		discriminator-value="threat_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Threat"
+		extends="CnATreeElement"
+		discriminator-value="threat" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.VulnerabilityGroup"
+		extends="CnATreeElement"
+		discriminator-value="vulnerability_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Vulnerability"
+		extends="CnATreeElement"
+		discriminator-value="vulnerability" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.DocumentGroup"
+		extends="CnATreeElement"
+		discriminator-value="document_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Document"
+		extends="CnATreeElement"
+		discriminator-value="document" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.EvidenceGroup"
+		extends="CnATreeElement"
+		discriminator-value="evidence_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Evidence"
+		extends="CnATreeElement"
+		discriminator-value="evidence" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.FindingGroup"
+		extends="CnATreeElement"
+		discriminator-value="finding_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Finding"
+		extends="CnATreeElement"
+		discriminator-value="finding" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.InterviewGroup"
+		extends="CnATreeElement"
+		discriminator-value="interview_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Interview"
+		extends="CnATreeElement"
+		discriminator-value="interview" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.ProcessGroup"
+		extends="CnATreeElement"
+		discriminator-value="process_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Process"
+		extends="CnATreeElement"
+		discriminator-value="process" />
+		
+	<subclass 
+		name="sernet.verinice.model.iso27k.RecordGroup"
+		extends="CnATreeElement"
+		discriminator-value="record_group" />
+	<subclass 
+		name="sernet.verinice.model.iso27k.Record"
+		extends="CnATreeElement"
+		discriminator-value="record" />
+
+	<!-- Self Assessment (SAMT) Elements -->
+	
+	<subclass 
+		name="sernet.verinice.model.samt.SamtTopic"
+		extends="CnATreeElement"
+		discriminator-value="samt_topic" />
+
+	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
+	
+	When activated and given a list of roles (parameterRoles) all retrievals of CnATreeElements will be restricted
+	to those elements which the user has read access, to.
+	 
+	 Filter is also set on property "children" (see above)
+	 
+	-->	
+  	<filter
+  		name="userAccessReadFilter"
+  		condition="(object_type='bsimodel' or object_type='iso27kmodel' or exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed))"
+ 	/>
+    
+    <filter
+        name="scopeFilter"
+        condition="(object_type='bsimodel' or object_type='iso27kmodel' or scope_id=:scopeId)"
+    />
+
+	</class>
+
+	<!-- A few workarounds for Hibernate issues here:
+	 - it was not possible to define the condition here, although Hibernate
+	   documentation mentions that possibility (causes NullPointerException
+	   in configuration parser)
+	 - it was neccessary to define the comparison value for the "p.readAllowed ="
+	   expression as a parameter. When hardcoding using 'true' hibernate always
+	   treated that constant like the name of a column from the cnatreelement
+	   table. 
+	-->
+	
+	<filter-def name="userAccessReadFilter">
+		<filter-param name="currentRoles" type="string"/>
+		<filter-param name="readAllowed" type="boolean"/>
+	</filter-def>
+    
+    <filter-def name="scopeFilter">
+        <filter-param name="scopeId" type="int"/>
+    </filter-def>
+
+	
+</hibernate-mapping>
