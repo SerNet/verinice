@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -53,6 +54,7 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskParameter;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -162,51 +164,55 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     }
 
     private void sendNotification(JobExecutionContext context) {
-        // search for user names
-        List<String> nameList = getUserList(context);
-        for (String name : nameList) {
-            ITaskParameter param = new TaskParameter(name);
-            if(context.getPreviousFireTime()!=null) {
-                // select all tasks created since last timer execution
-                param.setSince(context.getPreviousFireTime());
-            } else {
-                // first execution since java vm starts, select all tasks created since 24 hours
-                Calendar yesterday = Calendar.getInstance();
-                yesterday.add(Calendar.DATE, -1);
-                param.setSince(yesterday.getTime());
-            }
-            final List<ITask> taskList = getTaskService().getTaskList(param);
-            loadUserData(name);
-            if(getEmail()!=null) {         
-                if (log.isDebugEnabled()) {
-                    log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " + taskList.size()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                }
-                model.put(TEMPLATE_NUMBER,String.valueOf(taskList.size()));
-                if(getUrl()!=null && !getUrl().isEmpty()) {
-                    model.put(TEMPLATE_URL,getUrl());
+        try{
+            // search for user names
+            List<String> nameList = getUserList(context);
+            for (String name : nameList) {
+                ITaskParameter param = new TaskParameter(name);
+                if(context.getPreviousFireTime()!=null) {
+                    // select all tasks created since last timer execution
+                    param.setSince(context.getPreviousFireTime());
                 } else {
-                    model.put(TEMPLATE_URL,VeriniceContext.getServerUrl() + getTaskListPath());
+                    // first execution since java vm starts, select all tasks created since 24 hours
+                    Calendar yesterday = Calendar.getInstance();
+                    yesterday.add(Calendar.DATE, -1);
+                    param.setSince(yesterday.getTime());
                 }
-                model.put(TEMPLATE_EMAIL_FROM,getEmailFrom());
-                model.put(TEMPLATE_REPLY_TO,getReplyTo());
-                MimeMessagePreparator preparator = new MimeMessagePreparator() {
-                    
-                    @Override
-                    public void prepare(MimeMessage mimeMessage) throws MessagingException {
-                       MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                       message.setTo(getEmail());
-                       message.setFrom(getEmailFrom());
-                       if(getReplyTo()!=null && !getReplyTo().isEmpty()) {
-                           message.setReplyTo(getReplyTo());
-                       }
-                       message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
-                       String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
-                       message.setText(text, false);
+                final List<ITask> taskList = getTaskService().getTaskList(param);
+                loadUserData(name);
+                if(getEmail()!=null) {         
+                    if (log.isDebugEnabled()) {
+                        log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " + taskList.size()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     }
-             
-                 };
-                 this.mailSender.send(preparator);
+                    model.put(TEMPLATE_NUMBER,String.valueOf(taskList.size()));
+                    if(getUrl()!=null && !getUrl().isEmpty()) {
+                        model.put(TEMPLATE_URL,getUrl());
+                    } else {
+                        model.put(TEMPLATE_URL,VeriniceContext.getServerUrl() + getTaskListPath());
+                    }
+                    model.put(TEMPLATE_EMAIL_FROM,getEmailFrom());
+                    model.put(TEMPLATE_REPLY_TO,getReplyTo());
+                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+
+                        @Override
+                        public void prepare(MimeMessage mimeMessage) throws MessagingException {
+                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                            message.setTo(getEmail());
+                            message.setFrom(getEmailFrom());
+                            if(getReplyTo()!=null && !getReplyTo().isEmpty()) {
+                                message.setReplyTo(getReplyTo());
+                            }
+                            message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
+                            String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
+                            message.setText(text, false);
+                        }
+
+                    };
+                    this.mailSender.send(preparator);
+                }
             }
+        } catch (Throwable t){
+            log.error("Error in sendNotification()", t);
         }
     }
 
@@ -304,6 +310,13 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     } else {
                         model.put(TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
                     }
+                // handling for bsi persons
+                } else if (element instanceof Person){
+                    Person person = (Person) element;
+                    String nachname = (person.getEntity() != null ? (person.getEntity().getSimpleValue("nachname") != null ? person.getEntity().getSimpleValue("nachname") : "Kein Name") : "Kein Name");
+                    model.put(TEMPLATE_NAME, nachname);
+                    String anrede = (person.getEntity() != null ? (person.getEntity().getSimpleValue("person_anrede") != null ? person.getEntity().getSimpleValue("person_anrede") : DEFAULT_ADDRESS) : DEFAULT_ADDRESS);
+                    model.put(TEMPLATE_ADDRESS, anrede);
                 }
             }
         }   
