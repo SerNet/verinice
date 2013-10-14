@@ -163,7 +163,13 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
         }
         if (LOG.isInfoEnabled()) {
             LOG.info("Process started, key: " + processDefinitionKey + ", id:" + processInstance.getId());
-        }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Variables: ");
+                for (String key : variables.keySet()) {
+                    LOG.debug( key + ": "+ variables.get(key));
+                }
+            }
+        }       
     }
     
     /* (non-Javadoc)

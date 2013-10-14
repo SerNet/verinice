@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -48,6 +49,8 @@ import sernet.verinice.model.iso27k.PersonIso;
  */
 public class RemindService implements IRemindService {
 
+    private static final Logger LOG = Logger.getLogger(RemindService.class);
+    
     private static final String DEFAULT_ADDRESS = Messages.getString("NotificationJob.0"); //$NON-NLS-1$
      
     private JavaMailSender mailSender;   
@@ -93,6 +96,12 @@ public class RemindService implements IRemindService {
             }
          };
          getMailSender().send(preparator);
+         if (LOG.isDebugEnabled()) {
+            LOG.debug("Email send, parameter: ");
+            for (String key : parameter.keySet()) {
+                LOG.debug( key + ": "+ parameter.get(key));
+            }
+         }
     }
     
     /* (non-Javadoc)
