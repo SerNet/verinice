@@ -65,6 +65,9 @@ public class UnifyWizard extends Wizard {
     
     private ICommandService commandService;
     
+    private boolean copyLinksEnabled = false;
+    private boolean deleteSourceLinksEnabled = false;
+    
     /**
      * @param groups
      */
@@ -134,7 +137,7 @@ public class UnifyWizard extends Wizard {
         if(mappings==null) {
             loadMapping();
         }
-        Unify command = new Unify(mappings);
+        Unify command = new Unify(mappings, copyLinksEnabled, deleteSourceLinksEnabled);
         command = getCommandService().executeCommand(command);
         refresh(command.getChangedElements());
     }
@@ -223,6 +226,22 @@ public class UnifyWizard extends Wizard {
      */
     protected CnATreeElement getDestination() {
         return destination;
+    }
+    
+    public boolean isCopyLinksEnabled() {
+        return copyLinksEnabled;
+    }
+
+    public void setCopyLinksEnabled(boolean b){
+        this.copyLinksEnabled = b;
+    }
+    
+    public void setDeleteSourceLinksEnabled(boolean b){
+        this.deleteSourceLinksEnabled = b;
+    }
+    
+    public boolean isDeleteSourceLinksEnabled() {
+        return deleteSourceLinksEnabled;
     }
 
     /**

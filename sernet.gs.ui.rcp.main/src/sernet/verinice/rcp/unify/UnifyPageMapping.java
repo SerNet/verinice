@@ -34,10 +34,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
@@ -67,6 +70,9 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     private TableViewer table;
     
     private final Color colorDifferentTitle, colorNoMapping;
+    
+    private boolean copyLinksEnabled = false;
+    private boolean deleteSourceLinksEnabled = false;
     
     /**
      * @param pageName
@@ -101,7 +107,50 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         table = createTable(composite);
         table.setContentProvider(new ArrayContentProvider());       
         table.refresh(true);         
+
+        Composite checkboxComposite = new Composite(composite, SWT.NONE);
+        checkboxComposite.setLayoutData(gridData);
+        checkboxComposite.setLayout(gridLayout);
         
+        Button copyLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        copyLinksCheckbox.setEnabled(true);
+        copyLinksCheckbox.setSelection(copyLinksEnabled);
+        copyLinksCheckbox.setText(Messages.UnifyPageMapping_8);
+        
+        final Button deleteSourceLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        deleteSourceLinksCheckbox.setEnabled(false);
+        deleteSourceLinksCheckbox.setText(Messages.UnifyPageMapping_9);
+        deleteSourceLinksCheckbox.setSelection(deleteSourceLinksEnabled);
+        deleteSourceLinksCheckbox.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(e.getSource() instanceof Button){
+                    setDeleteSourceLinksEnabled(((Button)e.getSource()).getSelection());
+                }
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+        
+        copyLinksCheckbox.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(e.getSource() instanceof Button){
+                    setCopyLinksEnabled(((Button)e.getSource()).getSelection());
+                    toggleButtonEnabled(deleteSourceLinksCheckbox, ((Button)e.getSource()).getSelection());
+                }
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
         setPageComplete(false);
         
         setControl(composite);
@@ -227,6 +276,31 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
                 && destination.getTitle()!=null && 
                 source.getTitle().equals(destination.getTitle());
     }
+
+
+    public boolean isCopyLinksEnabled() {
+        return copyLinksEnabled;
+    }
+
+    public boolean isDeleteSourceLinksEnabled() {
+        return deleteSourceLinksEnabled;
+    }
+
+    public void setCopyLinksEnabled(boolean copyLinksEnabled) {
+        getUnifyWizard().setCopyLinksEnabled(copyLinksEnabled);
+    }
+    
+    private void toggleButtonEnabled(Button b, boolean enabled){
+        if(b != null){
+            b.setEnabled(enabled);
+        }
+    }
+
+    public void setDeleteSourceLinksEnabled(boolean deleteSourceLinksEnabled) {
+        getUnifyWizard().setDeleteSourceLinksEnabled(deleteSourceLinksEnabled);
+    }
+
+
 
 
     class ActionLabelProvider extends ColumnLabelProvider {

@@ -28,10 +28,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
-import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
@@ -63,6 +64,9 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     
+    private boolean copyLinksEnabled = false;
+    private boolean deleteSourceLinksEnabled = false;
+    
     /**
      * @param mappings
      */
@@ -71,6 +75,20 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         this.mappings = mappings;
         this.stationId = ChangeLogEntry.STATION_ID;
         setPropertyTypeBlacklist(PROPERTY_TYPE_BLACKLIST);
+    }
+    
+    /**
+     * use this constructor if checkboxes should be considered also
+     * first boolean sets copy links of cnatreeelements also
+     * second sets deletion of existant links after copy is done (representing a cut operation)
+     * @param mappings
+     * @param copyLinks
+     * @param deleteExistantLinks
+     */
+    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks){
+        this(mappings);
+        this.copyLinksEnabled = copyLinks;
+        this.deleteSourceLinksEnabled = deleteExistantLinks;
     }
     
     /* (non-Javadoc)
@@ -83,7 +101,11 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
             for (UnifyMapping mapping : mappings) {
                 UnifyElement source = mapping.getSourceElement();
                 UnifyElement destination = mapping.getDestinationElement();
-                unify(source,destination);
+                try{
+                    unify(source,destination);
+                } catch (CommandException e){
+                    getLog().error("Error unifying elements",e);
+                }
             }
         }
     }
@@ -92,14 +114,21 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
      * @param source
      * @param destination
      */
-    private void unify(UnifyElement source, UnifyElement destination) {
+    private void unify(UnifyElement source, UnifyElement destination) throws CommandException {
         if(source==null || destination==null) {
             return;
         }
         CnATreeElement sourceElement = getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyInstance());
         CnATreeElement destinationElement = getDao().findByUuid(destination.getUuid(), RetrieveInfo.getPropertyInstance());
         destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
-        getDao().merge(destinationElement);
+        if(copyLinksEnabled){
+            destinationElement = unifyLinks(sourceElement, destinationElement);
+        }
+        if(deleteSourceLinksEnabled){
+            sourceElement = deleteExistantLinks(sourceElement);
+            getDao().saveOrUpdate(sourceElement);
+        }
+        getDao().saveOrUpdate(destinationElement);
         changedElementList.add(destinationElement);
     }
 
@@ -143,9 +172,43 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(LoadUnifyMapping.class);
+            log = Logger.getLogger(Unify.class);
         }
         return log;
     }
+    
+    private CnATreeElement unifyLinks(CnATreeElement sourceElement, CnATreeElement destinationElement) throws CommandException{
+        // downLink links dependant -> dependency
+        // upLink links d
+        for(CnALink linkDown : sourceElement.getLinksDown()){
+            createLink(destinationElement, linkDown.getDependency(), linkDown.getRelationId());
+        }
+        for(CnALink linkUp : sourceElement.getLinksUp()){
+            createLink(linkUp.getDependant(), destinationElement, linkUp.getRelationId());
+        }
+        return destinationElement;
+    }
+    
+    private CnATreeElement deleteExistantLinks(CnATreeElement elmt) throws CommandException{
+        for(CnALink link : elmt.getLinksDown()){
+            removeLink(link);
+        }
+        for(CnALink link : elmt.getLinksUp()){
+            removeLink(link);
+        }
+        return elmt;
+    }
+    
+    private void removeLink(CnALink link)throws sernet.verinice.interfaces.CommandException{
+        RemoveLink<CnALink> command = new RemoveLink<CnALink>(link);
+        getCommandService().executeCommand(command);
+    }
+    
+    public CnALink createLink(CnATreeElement source, CnATreeElement destination, String relationId) throws CommandException {
+        CreateLink command = new CreateLink(source, destination, relationId);
+        command = getCommandService().executeCommand(command);
+        return command.getLink();
+    }
+    
 
 }
