@@ -10,6 +10,9 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testSrc"/>
 	<classpathentry kind="lib" path="lib/el-api.jar"/>
+	<classpathentry kind="lib" path="lib/spring-test-2.5.6.jar"/>
+	<classpathentry kind="lib" path="/java/eclipse-3.7/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
