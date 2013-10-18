@@ -127,6 +127,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         if(deleteSourceLinksEnabled){
             sourceElement = deleteExistantLinks(sourceElement);
             getDao().saveOrUpdate(sourceElement);
+            changedElementList.add(sourceElement);
         }
         getDao().saveOrUpdate(destinationElement);
         changedElementList.add(destinationElement);
@@ -190,11 +191,13 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     }
     
     private CnATreeElement deleteExistantLinks(CnATreeElement elmt) throws CommandException{
-        for(CnALink link : elmt.getLinksDown()){
-            removeLink(link);
+        CnALink[] downLinks = elmt.getLinksDown().toArray(new CnALink[elmt.getLinksDown().size()]);
+        for(int i = 0; i < downLinks.length; i++){
+            removeLink(downLinks[i]);
         }
-        for(CnALink link : elmt.getLinksUp()){
-            removeLink(link);
+        CnALink[] upLinks = elmt.getLinksUp().toArray(new CnALink[elmt.getLinksUp().size()]); 
+        for(int i = 0; i < upLinks.length; i++){
+            removeLink(upLinks[i]);
         }
         return elmt;
     }
