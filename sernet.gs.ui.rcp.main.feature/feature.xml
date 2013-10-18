@@ -226,7 +226,6 @@ Library.
       <import plugin="com.springsource.org.apache.commons.io"/>
       <import plugin="com.springsource.com.mchange.v2.c3p0"/>
       <import plugin="org.springframework.web"/>
-      <import plugin="org.junit4"/>
       <import plugin="com.springsource.net.sf.ehcache"/>
       <import plugin="org.springframework.beans"/>
       <import plugin="org.springframework.security.core"/>
@@ -2684,12 +2683,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ops4j.pax.web.pax-web-bundle"
          download-size="0"
          install-size="0"
@@ -2812,6 +2805,13 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.junit"
+         download-size="0"
+         install-size="0"
+         version="4.4.0"
          unpack="false"/>
 
 </feature>

@@ -216,7 +216,6 @@ Library.
       <import plugin="org.springframework.osgi.core"/>
       <import plugin="org.apache.commons.httpclient"/>
       <import plugin="org.springframework.context.support"/>
-      <import plugin="org.junit4"/>
       <import plugin="org.springframework.security.core"/>
       <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="sernet.gs.ui.rcp.main"/>
@@ -530,12 +529,6 @@ Library.
          version="0.0.0"/>
 
    <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="4.3.1"/>
-
-   <plugin
          id="com.springsource.net.sf.ehcache"
          download-size="0"
          install-size="0"
@@ -700,6 +693,13 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.org.junit"
+         download-size="0"
+         install-size="0"
+         version="4.4.0"
          unpack="false"/>
 
 </feature>
