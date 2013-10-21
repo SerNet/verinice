@@ -27,7 +27,7 @@
 	</path>
 	
 	<target name="test" description="runs JUnit tests">
-		<mkdir dir="{reports}"/>
+		<mkdir dir="${reports}"/>
 		<junit printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 		  	<classpath refid="classpath.test" />
