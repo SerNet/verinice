@@ -10,7 +10,7 @@
 <project name="verinice" default="test" basedir="../">
     <description>ant buildfile to run JUnit-tests</description>
 
-	<property name="reports" location="build/reports" />
+	<property name="reports" location="${basedir}/build/reports" />
 	<property name="src.tests" location="testSrc" />
 	
 	<path id="classpath.base">
@@ -27,6 +27,7 @@
 	</path>
 	
 	<target name="test" description="runs JUnit tests">
+		<mkdir dir="{reports}"/>
 		<junit printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 		  	<classpath refid="classpath.test" />
