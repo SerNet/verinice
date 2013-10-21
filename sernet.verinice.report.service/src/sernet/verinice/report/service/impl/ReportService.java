@@ -59,6 +59,7 @@ public class ReportService implements IReportService {
 		        new IncidentsReport(),
 		        new ExceptionsReport(),
 		        new DocumentsReport(),
+		        new TasksReport(),
 		        
 		        new StrukturanalyseReport(), // BSI reports
 		        new AbhaengigkeitenReport(),
@@ -71,6 +72,7 @@ public class ReportService implements IReportService {
 		        new RealisierungsplanReport(),
 		        new GraphischerUmsetzungsstatusReport(),
 		        new AuditberichtReport()
+		        
 		    };
 		}
 		return reportTypes.clone();
