@@ -21,6 +21,8 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -33,15 +35,20 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class DaoTest extends ContextConfiguration {
+public class DaoTest extends UuidLoader {
     
     @Resource(name="cnaTreeElementDao")
     private IBaseDao<CnATreeElement, Integer> elementDao;
     
     @Test
     public void testDao() throws Exception {
-        CnATreeElement element = elementDao.findByUuid("42340c5c-fa8f-46f3-8e96-6dadddac013e", null);
-        assertNotNull(element);
+        List<String> uuidList = getAllUuids();
+        
+        for (String uuid : uuidList) {
+            CnATreeElement element = elementDao.findByUuid(uuid, null);
+            assertNotNull(element);
+            checkScopeId(element);
+         }      
     }
-
+    
 }

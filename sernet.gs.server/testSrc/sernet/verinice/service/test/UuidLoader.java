@@ -25,36 +25,35 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
-
-import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  *
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CommandServiceTest extends UuidLoader {  
+public abstract class UuidLoader extends ContextConfiguration {
     
-    @Resource(name="commandService")
-    private ICommandService commandService;
+    @Resource(name="cnaTreeElementDao")
+    private IBaseDao<CnATreeElement, Integer> elementDao;
     
-    @Test
-    public void testCommandService() throws Exception {
-        List<String> uuidList = getAllUuids();
-        
-        for (String uuid : uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
-            command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
-            assertNotNull(element);
-            checkScopeId(element);
-        }
-        
+    protected List<String> getAllUuids() {
+        String hql = "select element.uuid from CnATreeElement element"; 
+        return elementDao.findByQuery(hql, new Object[0]);
     }
-
-
-
+    
+    protected void checkScopeId(CnATreeElement element) {
+        String typeId = element.getTypeId();
+        if(!ISO27KModel.TYPE_ID.equals(typeId) 
+           && !BSIModel.TYPE_ID.equals(typeId)
+           && !ImportIsoGroup.TYPE_ID.equals(typeId)
+           && !ImportBsiGroup.TYPE_ID.equals(typeId)) {
+            assertNotNull("Scope-Id is null, uuid: " + element.getUuid() + ", type: " + element.getTypeId(), element.getScopeId());
+        } 
+    }
 }
