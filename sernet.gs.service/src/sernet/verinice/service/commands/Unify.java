@@ -66,6 +66,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
+    private boolean copyObjectAttributesEnabled = true;
     
     /**
      * @param mappings
@@ -85,10 +86,11 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
      * @param copyLinks
      * @param deleteExistantLinks
      */
-    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks){
+    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks, boolean copyAttributes){
         this(mappings);
         this.copyLinksEnabled = copyLinks;
         this.deleteSourceLinksEnabled = deleteExistantLinks;
+        this.copyObjectAttributesEnabled = copyAttributes;
     }
     
     /* (non-Javadoc)
@@ -120,7 +122,9 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         }
         CnATreeElement sourceElement = getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyInstance());
         CnATreeElement destinationElement = getDao().findByUuid(destination.getUuid(), RetrieveInfo.getPropertyInstance());
-        destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
+        if(!copyObjectAttributesEnabled){
+            destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
+        }
         if(copyLinksEnabled){
             destinationElement = unifyLinks(sourceElement, destinationElement);
         }

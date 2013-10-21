@@ -73,6 +73,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
+    private boolean copyAttributesEnabled = false;
     
     /**
      * @param pageName
@@ -151,10 +152,33 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
                 widgetSelected(e);
             }
         });
+
+        Button copyAttributesCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        copyAttributesCheckbox.setEnabled(true);
+        copyAttributesCheckbox.setText(Messages.UnifyPageMapping_10);
+        copyAttributesCheckbox.setSelection(copyAttributesEnabled);
+        copyAttributesCheckbox.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(e.getSource() instanceof Button){
+                    setCopyAttributesEnabled(((Button)e.getSource()).getSelection());
+                }
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+        
+        
+        
         setPageComplete(false);
         
         setControl(composite);
     }
+    
     
     /**
      * Called when this wizuard page is entered.
@@ -287,6 +311,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     }
 
     public void setCopyLinksEnabled(boolean copyLinksEnabled) {
+        this.copyLinksEnabled = copyLinksEnabled;
         getUnifyWizard().setCopyLinksEnabled(copyLinksEnabled);
     }
     
@@ -297,7 +322,20 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
     }
 
     public void setDeleteSourceLinksEnabled(boolean deleteSourceLinksEnabled) {
+        this.deleteSourceLinksEnabled = deleteSourceLinksEnabled;
         getUnifyWizard().setDeleteSourceLinksEnabled(deleteSourceLinksEnabled);
+    }
+
+
+
+
+    public boolean isCopyAttributesEnabled() {
+        return copyAttributesEnabled;
+    }
+
+    public void setCopyAttributesEnabled(boolean copyAttributesEnabled) {
+        this.copyAttributesEnabled = copyAttributesEnabled;
+        getUnifyWizard().setCopyObjectAttributes(copyAttributesEnabled);
     }
 
 

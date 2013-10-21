@@ -67,6 +67,7 @@ public class UnifyWizard extends Wizard {
     
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
+    private boolean copyObjectAttributes = false;
     
     /**
      * @param groups
@@ -137,7 +138,7 @@ public class UnifyWizard extends Wizard {
         if(mappings==null) {
             loadMapping();
         }
-        Unify command = new Unify(mappings, copyLinksEnabled, deleteSourceLinksEnabled);
+        Unify command = new Unify(mappings, copyLinksEnabled, deleteSourceLinksEnabled, copyObjectAttributes);
         command = getCommandService().executeCommand(command);
         refresh(command.getChangedElements());
     }
@@ -242,6 +243,14 @@ public class UnifyWizard extends Wizard {
     
     public boolean isDeleteSourceLinksEnabled() {
         return deleteSourceLinksEnabled;
+    }
+
+    public boolean isCopyObjectAttributes() {
+        return copyObjectAttributes;
+    }
+
+    public void setCopyObjectAttributes(boolean copyObjectAttributes) {
+        this.copyObjectAttributes = copyObjectAttributes;
     }
 
     /**

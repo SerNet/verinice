@@ -35,6 +35,7 @@ public class Messages extends NLS {
     public static String UnifyPageMapping_7;
     public static String UnifyPageMapping_8;
     public static String UnifyPageMapping_9;
+    public static String UnifyPageMapping_10;
     public static String UnifyPageSelectGroup_0;
     public static String UnifyPageSelectGroup_1;
     public static String UnifyPageSelectGroup_4;
