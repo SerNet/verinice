@@ -31,7 +31,7 @@
 		<junit printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 		  	<classpath refid="classpath.test" />
-		  	<formatter type="plain"/>
+		  	<formatter type="xml"/>
 			<batchtest fork="yes" todir="${reports}">
 				<fileset dir="${src.tests}">
 					<include name="**/*Test*.java"/>
