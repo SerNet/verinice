@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     15.03.2010 15:06:19                                                        
+
+     verinice    
+     ant buildfile to run JUnit-tests
+                   
+     author: Daniel Murygin - dm[at]sernet[dot]de                                                         
+     ====================================================================== -->
+<project name="verinice" default="test" basedir="../">
+    <description>ant buildfile to run JUnit-tests</description>
+
+	<property name="reports" location="build/reports" />
+	<property name="src.tests" location="testSrc" />
+	
+	<path id="classpath.base">
+		<fileset dir="${basedir}/WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement location="${basedir}/lib/el-api.jar" />
+		<pathelement location="${basedir}/bin" />
+	</path>
+	<path id="classpath.test">
+		<pathelement location="${basedir}/lib/com.springsource.org.junit-4.4.0.jar" />
+		<pathelement location="${basedir}/lib/spring-test-2.5.6.jar" />		
+		<path refid="classpath.base" />
+	</path>
+	
+	<target name="test" description="runs JUnit tests">
+		<junit printsummary="yes" haltonfailure="no">
+			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+		  	<classpath refid="classpath.test" />
+		  	<formatter type="plain"/>
+			<batchtest fork="yes" todir="${reports}">
+				<fileset dir="${src.tests}">
+					<include name="**/*Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>	
+	</target>
+	
+
+</project>

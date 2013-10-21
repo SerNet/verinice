@@ -20,7 +20,6 @@
 package sernet.verinice.service.test;
 
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -29,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
+@org.springframework.test.context.ContextConfiguration(locations={
         "classpath:/sernet/gs/server/spring/veriniceserver-plain.xml",
         "classpath:/sernet/gs/server/spring/veriniceserver-common.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml", //$NON-NLS-1$
@@ -40,7 +39,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$    
         "classpath:/verinice-test.xml"
 })
-public abstract class BaseTest {
+public abstract class ContextConfiguration {
 
 
 }

@@ -33,7 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class DaoTest extends BaseTest {
+public class DaoTest extends ContextConfiguration {
     
     @Resource(name="cnaTreeElementDao")
     private IBaseDao<CnATreeElement, Integer> elementDao;

@@ -34,7 +34,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CommandServiceTest extends BaseTest {
+public class CommandServiceTest extends ContextConfiguration {
     
     @Resource(name="commandService")
     private ICommandService commandService;
