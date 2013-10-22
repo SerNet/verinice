@@ -75,7 +75,7 @@ public class TasksReport implements IReportType {
     public void createReport(IReportOptions reportOptions) {
         BIRTReportService brs = new BIRTReportService();
         
-        URL reportDesign = ExceptionsReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
+        URL reportDesign = TasksReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
         
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {
