@@ -47,6 +47,12 @@ public abstract class UuidLoader extends ContextConfiguration {
         return elementDao.findByQuery(hql, new Object[0]);
     }
     
+    protected List<String> getUuidsOfType(String typeId) {
+        String hql = "select element.uuid from CnATreeElement element where element.objectType = ?"; 
+        Object[] params = new Object[]{typeId}; 
+        return elementDao.findByQuery(hql, params);
+    }
+    
     protected void checkScopeId(CnATreeElement element) {
         String typeId = element.getTypeId();
         if(!ISO27KModel.TYPE_ID.equals(typeId) 

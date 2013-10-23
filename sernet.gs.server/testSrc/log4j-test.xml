@@ -39,22 +39,8 @@
         <level value="DEBUG" />
     </logger>
     -->
-    
-    <!-- Bug 905 -->
-    
-    <logger name="sernet.verinice.service.QuartzAsyncCommandService">
-        <level value="DEBUG" />
-    </logger>
-    
-    <logger name="sernet.verinice.service.CommandExecuterJob">
-        <level value="DEBUG" />
-    </logger>
-    
-    <logger name="sernet.verinice.service.commands.WaitCommand">
-        <level value="DEBUG" />
-    </logger>
-    
-    <logger name="sernet.verinice.service.JobCache">
+      
+    <logger name="sernet.verinice.service.test">
         <level value="DEBUG" />
     </logger>
     
