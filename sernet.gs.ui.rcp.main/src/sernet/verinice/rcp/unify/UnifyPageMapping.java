@@ -109,19 +109,26 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         table.setContentProvider(new ArrayContentProvider());       
         table.refresh(true);         
 
-        Composite checkboxComposite = new Composite(composite, SWT.NONE);
-        checkboxComposite.setLayoutData(gridData);
+        Composite checkboxComposite = new Composite(composite, SWT.RESIZE);
+        GridData cbcGd = new GridData(SWT.FILL, SWT.FILL, true, false);
+        cbcGd.minimumHeight = 200;
+        checkboxComposite.setLayoutData(cbcGd);
         checkboxComposite.setLayout(gridLayout);
+        
+        GridData buttonGridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        buttonGridData.minimumHeight = 10;
         
         Button copyLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
         copyLinksCheckbox.setEnabled(true);
         copyLinksCheckbox.setSelection(copyLinksEnabled);
         copyLinksCheckbox.setText(Messages.UnifyPageMapping_8);
+        copyLinksCheckbox.setLayoutData(buttonGridData);
         
         final Button deleteSourceLinksCheckbox = new Button(checkboxComposite, SWT.CHECK);
         deleteSourceLinksCheckbox.setEnabled(false);
         deleteSourceLinksCheckbox.setText(Messages.UnifyPageMapping_9);
         deleteSourceLinksCheckbox.setSelection(deleteSourceLinksEnabled);
+        deleteSourceLinksCheckbox.setLayoutData(buttonGridData);
         deleteSourceLinksCheckbox.addSelectionListener(new SelectionListener() {
             
             @Override
@@ -157,6 +164,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         copyAttributesCheckbox.setEnabled(true);
         copyAttributesCheckbox.setText(Messages.UnifyPageMapping_10);
         copyAttributesCheckbox.setSelection(copyAttributesEnabled);
+        copyAttributesCheckbox.setLayoutData(buttonGridData);
         copyAttributesCheckbox.addSelectionListener(new SelectionListener() {
             
             @Override
@@ -171,8 +179,6 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
                 widgetSelected(e);
             }
         });
-        
-        
         
         setPageComplete(false);
         
@@ -220,8 +226,10 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
         final int defaultColumnWeight = 50;
         
-        Composite tableComposite = new Composite(parent, SWT.NONE);
-        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        Composite tableComposite = new Composite(parent, SWT.Resize);
+        GridData tGd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        tGd.minimumHeight = 87;
+        tableComposite.setLayoutData(tGd);
         
         TableColumnLayout tableColumnLayout = new TableColumnLayout();
         tableComposite.setLayout(tableColumnLayout);
