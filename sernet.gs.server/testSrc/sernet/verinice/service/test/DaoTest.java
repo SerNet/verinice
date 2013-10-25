@@ -74,7 +74,9 @@ public class DaoTest extends UuidLoader {
             CnATreeElement element = elementDao.findByUuid(uuid, null);
             assertNotNull(element);
             checkScopeId(element);
-         }      
+         }
+        
+        assertTrue("Dieser Fehler wurde eingefuegt, um den Mailversand zu testen.", false);
     }
     
     @Test
