@@ -22,24 +22,11 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
-    
-    <appender name="GSM" class="org.apache.log4j.RollingFileAppender">
-        <param name="Threshold" value="INFO" />
-        <param name="File" value="${catalina.home}/logs/verinice-gsm.log" />
-        <param name="Append" value="true" />
-        <param name="MaxFileSize" value="5000KB" />
-        <param name="MaxBackupIndex" value="10" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
-        </layout>
-    </appender>
-    
-    <!--
-    <logger name="org.hibernate.SQL">
-        <level value="DEBUG" />
+     
+    <logger name="sernet.hui.common.connect.Entity">
+        <level value="ERROR" />
     </logger>
-    -->
-      
+    
     <logger name="sernet.verinice.service.test">
         <level value="DEBUG" />
     </logger>
