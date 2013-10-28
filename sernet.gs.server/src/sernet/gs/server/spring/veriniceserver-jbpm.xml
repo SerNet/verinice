@@ -110,7 +110,12 @@
         <property name="graphService" ref="graphService" />
     </bean>
     
-    <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.GsmProcessParameterCreater" scope="prototype">
+    <!-- Creates a list of parameters for new  GSM processes -->
+    <!-- Set class sernet.verinice.bpm.gsm.ProcessCreaterForPersons to create one process -->
+    <!-- for each person and control group which are connected. -->
+    <!-- Set class sernet.verinice.bpm.gsm.ProcessCreatorForAssetGroups to create one process -->
+    <!-- for each asset-group and control group which are connected. -->
+    <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.ProcessCreatorForAssetGroups" scope="prototype">
         <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -271,6 +276,10 @@
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
+    <!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
+    <!-- See veriniceserver-plain.xml -->
+    <!-- Job to generate GSM processes -->
+    <!-- 
     <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">
         <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
         <property name="jobDataAsMap">
@@ -284,16 +293,14 @@
             </map>
         </property>
     </bean>
-    
     <bean name="gsmProcessCreater" class="sernet.verinice.bpm.gsm.ProcessCreator">
         <property name="commandService" ref="commandService" />
         <property name="gsmService" ref="gsmService" />
         <property name="organizationDao" ref="organizationDAO" />
         <property name="configurationService" ref="configurationService" />
-        <!--
         <property name="tag" value="ap-GSM" />
-        -->
     </bean>
+    -->
     
     <!-- Creates one control-execution processes for every control. -->
     <!--

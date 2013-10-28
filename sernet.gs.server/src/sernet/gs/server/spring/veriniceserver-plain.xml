@@ -74,15 +74,16 @@
     <property name="cronExpression" value="0 */30 * * * ?" />
 </bean>
 
+<!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
+<!-- See veriniceserver-jbpm.xml -->
 <!-- Spring/Quartz trigger bean to execute cron job processJob. -->
-<bean id="gsmProcessJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    <property name="jobDetail" ref="gsmProcessJob" />
-    <!-- for debug only, execute every 2 minutes -->
-    <!-- <property name="cronExpression" value="0 */2 * * * ?" /> -->
-    <property name="cronExpression" value="0 */2 * * * ?" />
+<!-- <bean id="gsmProcessJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
+    <!-- <property name="jobDetail" ref="gsmProcessJob" /> -->
+    <!-- execute every 30 minutes -->
+    <!-- <property name="cronExpression" value="0 */30 * * * ?" /> -->
     <!-- execute daily at 3:17 am -->
-    <!--<property name="cronExpression" value="0 17 3 * * ?" />-->
-</bean>
+    <!-- <property name="cronExpression" value="0 17 3 * * ?" /> -->
+<!-- </bean> -->
 
 <bean id="taskNotificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
      <property name="jobDetail" ref="taskNotificationJob" />
@@ -92,12 +93,13 @@
      <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
-<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+<bean id="quartzSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
               <ref bean="cronTrigger" />
               <ref bean="processJobTrigger" />
-              <ref bean="gsmProcessJobTrigger" />
+              <!-- Activate this to activate GSM process generation -->
+              <!-- <ref bean="gsmProcessJobTrigger" /> -->
               <ref bean="taskNotificationTrigger" />  
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">

@@ -51,8 +51,16 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- * Creates a list of parameters for the creation of
- * a GSM process.
+ * Abstract class to create a list of parameters for the creation of
+ * a GSM process. At the moment there two classes extends this class:
+ * 
+ * {@link ProcessCreatorForAssetGroups}
+ * Creates one process for each asset group and control group which are
+ * connected.
+ * 
+ * {@link ProcessCreaterForPersons}
+ * Creates one process for each person and control group which are
+ * connected.
  * 
  * GsmProcessParameterCreater uses an instance of 
  * sernet.verinice.graph.IGraphService to collect information
@@ -65,7 +73,7 @@ import sernet.verinice.model.iso27k.PersonIso;
  * @see GsmService
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class GsmProcessParameterCreater {
+public abstract class GsmProcessParameterCreater {
 
     private static final Logger LOG = Logger.getLogger(GsmProcessParameterCreater.class);
     
@@ -118,21 +126,21 @@ public class GsmProcessParameterCreater {
         
         initGraph(orgId);
       
-        List<CnATreeElement> controlGroupList = get2ndLevelControlGroups(orgId);
-        List<CnATreeElement> personList = getPersons();
+        List<CnATreeElement> rightElementList = getRightHandElements(orgId); 
+        List<CnATreeElement> leftElementList = getLeftHandElements(orgId);
         
         if (LOG.isInfoEnabled()) {
-            LOG.info( controlGroupList.size() + " control groups");
-            LOG.info( personList.size() + " persons");
+            LOG.info( rightElementList.size() + " control groups");
+            LOG.info( leftElementList.size() + " persons");
         }
         
         List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
-        for (CnATreeElement controlGroup : controlGroupList) {           
-            for (CnATreeElement person : personList) {
-                if(processExists(person, controlGroup)) {
+        for (CnATreeElement controlGroup : rightElementList) {           
+            for (CnATreeElement leftElement : leftElementList) {
+                if(processExists(leftElement, controlGroup)) {
                     continue;
                 }
-                GsmServiceParameter parameter = createParameter(person, controlGroup);
+                GsmServiceParameter parameter = createParameter(leftElement, controlGroup);
                 if(parameter!=null) {
                     List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{orgId});
                     parameter.setUuidOrg(uuidList.get(0));
@@ -148,11 +156,43 @@ public class GsmProcessParameterCreater {
         return parameterList;
     }
 
-    private GsmServiceParameter createParameter(CnATreeElement person, CnATreeElement controlGroup) {
+    /**
+     * Returns the left hand ends of the element grid which is loaded by this class
+     * for process creation (persons or asset-groups). The right hand element is a control group.
+     * 
+     * @param orgId Db-id of an organization
+     * @return A set of tree elements
+     */
+    protected abstract List<CnATreeElement> getLeftHandElements(Integer orgId);
+    
+    /**
+     * Returns all elements ehich are connected to the left hand end.
+     * 
+     * @param leftElement Left hand end (a person are asset-group)
+     * @return A set of tree elements
+     */
+    protected abstract Set<CnATreeElement> getObjectsForLeftElement(CnATreeElement leftElement);
+    
+    /**
+     * Returns the responsible person for the left hand element.
+     * The left hand element is a person or asset-group.
+     * 
+     * @param leftElement A person or asset-group
+     * @return A person
+     */
+    protected abstract CnATreeElement getPersonForLeftElement(CnATreeElement leftElement);
+    
+    protected List<CnATreeElement> getRightHandElements(Integer orgId) {
+        return get2ndLevelControlGroups(orgId);
+    }
+
+    private GsmServiceParameter createParameter(CnATreeElement leftElement, CnATreeElement controlGroup) {
         GsmServiceParameter parameter = null;
-        Set<CnATreeElement> elementSet = getAllElements(controlGroup, person);
+        Set<CnATreeElement> elementSet = getAllElements(controlGroup, leftElement);
         if(!elementSet.isEmpty()) {
+            CnATreeElement person = getPersonForLeftElement(leftElement);
             parameter = new GsmServiceParameter(controlGroup, person);
+            parameter.setProcessId(GsmService.createProcessId(leftElement, controlGroup));
             parameter.setElementSet(elementSet);
             Double riskValueDouble = getRiskValue(elementSet);
             parameter.setRiskValue(convertRiskValueToString(riskValueDouble));
@@ -285,14 +325,7 @@ public class GsmProcessParameterCreater {
         return getElementDao().findByCriteria(crit);   
     }
     
-    @SuppressWarnings("unchecked")
-    private List<CnATreeElement> getPersons() {
-        DetachedCriteria crit = createDefaultCriteria();
-        crit.add(Restrictions.eq("objectType", PersonIso.TYPE_ID));
-        return getElementDao().findByCriteria(crit);
-    }
-    
-    private DetachedCriteria createDefaultCriteria() {
+    protected DetachedCriteria createDefaultCriteria() {
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
@@ -300,13 +333,13 @@ public class GsmProcessParameterCreater {
         return crit;
     }
     
-    private Set<CnATreeElement> getAllElements(CnATreeElement controlGroup, CnATreeElement person) {       
+    private Set<CnATreeElement> getAllElements(CnATreeElement controlGroup, CnATreeElement leftElement) {       
         Set<CnATreeElement> setA = getObjectsForControlGroup(controlGroup);
-        Set<CnATreeElement> setB = getObjectsForPerson(person);
+        Set<CnATreeElement> setB = getObjectsForLeftElement(leftElement);
         Set<CnATreeElement> result = createIntersection(setA,setB);
         if (LOG.isDebugEnabled() && !result.isEmpty()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Task for \"" + person.getTitle() + "\" and group \"" + controlGroup.getTitle() + "\"");
+                LOG.debug("Task for \"" + leftElement.getTitle() + "\" and group \"" + controlGroup.getTitle() + "\"");
             }
             logElementSet(result);
         }
@@ -331,27 +364,6 @@ public class GsmProcessParameterCreater {
         elements.addAll(scenarios);
         elements.addAll(assets);
         elements.addAll(assetGroups);
-        return elements;
-    }
-
-    private Set<CnATreeElement> getObjectsForPerson(CnATreeElement person) {
-        // elements is a set of AssetGroups
-        Set<CnATreeElement> elements = getGraph().getLinkTargets(person,AssetGroup.REL_PERSON_ISO);
-        Set<CnATreeElement> assets = new HashSet<CnATreeElement>();
-        for (CnATreeElement assetGroup : elements) {
-            assets.addAll(getGraph().getLinkTargets(assetGroup, Edge.RELATIVES));
-        }
-        Set<CnATreeElement> scenarios = new HashSet<CnATreeElement>();
-        for (CnATreeElement asset : assets) {
-            scenarios.addAll(getGraph().getLinkTargets(asset, IncidentScenario.REL_INCSCEN_ASSET));
-        }
-        Set<CnATreeElement> controls = new HashSet<CnATreeElement>();
-        for (CnATreeElement scen : scenarios) {
-            controls.addAll(getGraph().getLinkTargets(scen, Control.REL_CONTROL_INCSCEN));
-        }
-        elements.addAll(assets);
-        elements.addAll(scenarios);
-        elements.addAll(controls);
         return elements;
     }
     

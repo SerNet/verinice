@@ -60,7 +60,6 @@ public class GsmServiceParameter implements Serializable {
         this();
         this.controlGroup = controlGroup;
         this.person = person;
-        this.processId = GsmService.createProcessId(person, controlGroup);
     }
 
     public String getProcessId() {
