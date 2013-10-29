@@ -1,0 +1,1383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="verinice-sync" resourceRoot="" soapui-version="4.5.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="sync-serviceSOAP" type="wsdl" bindingName="{http://www.sernet.de/sync/sync-service}sync-serviceSOAP" soapVersion="1_1" anonymous="optional" definition="file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/sync-service.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/sync-service.wsdl"><con:part><con:url>file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/sync-service.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="sync-service" targetNamespace="http://www.sernet.de/sync/sync-service" xmlns:ss="http://www.sernet.de/sync/sync-service" xmlns:sync="http://www.sernet.de/sync/sync" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.sernet.de/sync/sync-service">
+      <xsd:import namespace="http://www.sernet.de/sync/sync" schemaLocation="sync.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="syncRequest">
+    <wsdl:part name="request" element="sync:syncRequest"/>
+  </wsdl:message>
+  <wsdl:message name="syncResponse">
+    <wsdl:part name="response" element="sync:syncResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="sync-service">
+    <wsdl:operation name="sync">
+      <wsdl:input message="ss:syncRequest"/>
+      <wsdl:output message="ss:syncResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="sync-serviceSOAP" type="ss:sync-service">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sync">
+      <soap:operation soapAction="http://www.sernet.de/sync/sync"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="sync-service">
+    <wsdl:port name="sync-service" binding="ss:sync-serviceSOAP">
+      <soap:address location="http://localhost:8080/sync-service"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/sync.xsd</con:url><con:content><![CDATA[<xsd:schema targetNamespace="http://www.sernet.de/sync/sync" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:data="http://www.sernet.de/sync/data" xmlns:map="http://www.sernet.de/sync/mapping">
+  <xsd:import namespace="http://www.sernet.de/sync/data" schemaLocation="data.xsd"/>
+  <xsd:import namespace="http://www.sernet.de/sync/mapping" schemaLocation="mapping.xsd"/>
+  <xsd:element name="syncRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="data:syncData" minOccurs="1" maxOccurs="1"/>
+        <xsd:element ref="map:syncMapping" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="sourceId" type="xsd:string" use="required"/>
+      <!--insert new object, if object with (sourceId, extId) does not yet exist?-->
+      <xsd:attribute name="insert" type="xsd:boolean" default="true"/>
+      <!--update object, if object with (sourceId, extId) already exists?-->
+      <xsd:attribute name="update" type="xsd:boolean" default="true"/>
+      <!--delete objects missing in syncData, which have been imported previously from sourceId?-->
+      <xsd:attribute name="delete" type="xsd:boolean" default="false"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="syncResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="replyMessage" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+        <xsd:element name="inserted" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="updated" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="deleted" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/data.xsd</con:url><con:content><![CDATA[<xsd:schema targetNamespace="http://www.sernet.de/sync/data" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:data="http://www.sernet.de/sync/data">
+  <xsd:element name="syncData">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="syncObject" type="data:syncObject" maxOccurs="unbounded"/>
+        <xsd:element name="syncLink" type="data:syncLink" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="syncObject">
+    <xsd:sequence>
+      <xsd:element name="syncAttribute" maxOccurs="unbounded" type="data:syncAttribute"/>
+      <xsd:element name="extId" type="xsd:string" minOccurs="1" nillable="false"/>
+      <xsd:element name="extObjectType" type="xsd:string" minOccurs="1" nillable="false"/>
+      <xsd:element name="children" minOccurs="0" maxOccurs="unbounded" type="data:syncObject"/>
+      <xsd:element name="file" minOccurs="0" maxOccurs="unbounded" type="data:syncFile"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="syncFile">
+    <xsd:sequence>
+      <xsd:element name="syncAttribute" maxOccurs="unbounded" type="data:syncAttribute"/>
+      <xsd:element name="extId" type="xsd:string" minOccurs="1" nillable="false"/>
+      <xsd:element name="file" type="xsd:string" minOccurs="1" nillable="false"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="syncAttribute">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <!--The verinice object system consistently treats property values as lists. This
+            is hereby reflected. One valued properties simply use only one entry in the
+            value list.-->
+      <xsd:element name="value" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="syncLink">
+    <xsd:sequence>
+      <xsd:element name="dependant" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="false"/>
+      <xsd:element name="dependency" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="false"/>
+      <xsd:element name="relationId" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="false"/>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="false"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/home/dm/eclipse-workspaces/eclipse-3.7_verinice-TRUNK/sernet.gs.service/src/sernet/verinice/service/sync/mapping.xsd</con:url><con:content><![CDATA[<xsd:schema targetNamespace="http://www.sernet.de/sync/mapping" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="syncMapping">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="mapObjectType" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="mapAttributeType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                  <xsd:attribute name="extId" type="xsd:string"/>
+                  <xsd:attribute name="intId" type="xsd:string"/>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="extId" type="xsd:ID" use="required"/>
+            <xsd:attribute name="intId" type="xsd:string" use="required"/>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/vn-1.5.3-B0/sync/sync</con:endpoint><con:endpoint>http://pluto:8088/mocksync</con:endpoint><con:endpoint>http://localhost:8080/veriniceserver/sync/sync</con:endpoint><con:endpoint>https://localhost:8443/veriniceserver/sync/sync</con:endpoint><con:endpoint>http://vdm.local/veriniceserver/sync/sync</con:endpoint><con:endpoint>https://vdm.local/veriniceserver/sync/sync</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://www.sernet.de/sync/sync" name="sync" bindingOperationName="sync" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/vn-1.5.3-B0/sync/sync</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sync="http://www.sernet.de/sync/sync" xmlns:data="http://www.sernet.de/sync/data" xmlns:map="http://www.sernet.de/sync/mapping">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sync:syncRequest sourceId="?" insert="true" update="true" delete="false">
+         <data:syncData>
+            <!--1 or more repetitions:-->
+            <data:syncObject>
+               <!--1 or more repetitions:-->
+               <data:syncAttribute>
+                  <data:name>?</data:name>
+                  <!--Zero or more repetitions:-->
+                  <data:value>?</data:value>
+               </data:syncAttribute>
+               <data:extId>?</data:extId>
+               <data:extObjectType>?</data:extObjectType>
+               <!--Zero or more repetitions:-->
+               <data:children/>
+               <!--Zero or more repetitions:-->
+               <data:file>
+                  <!--1 or more repetitions:-->
+                  <data:syncAttribute>
+                     <data:name>?</data:name>
+                     <!--Zero or more repetitions:-->
+                     <data:value>?</data:value>
+                  </data:syncAttribute>
+                  <data:extId>?</data:extId>
+                  <data:file>?</data:file>
+               </data:file>
+            </data:syncObject>
+            <!--Zero or more repetitions:-->
+            <data:syncLink>
+               <data:dependant>?</data:dependant>
+               <data:dependency>?</data:dependency>
+               <data:relationId>?</data:relationId>
+               <!--Optional:-->
+               <data:comment>?</data:comment>
+            </data:syncLink>
+         </data:syncData>
+         <map:syncMapping>
+            <!--Zero or more repetitions:-->
+            <map:mapObjectType extId="?" intId="?">
+               <!--Zero or more repetitions:-->
+               <map:mapAttributeType extId="?" intId="?"/>
+            </map:mapObjectType>
+         </map:syncMapping>
+      </sync:syncRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.sernet.de/sync/sync"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite name="sync TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="sync TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="sync"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sync-serviceSOAP</con:interface><con:operation>sync</con:operation><con:request name="sync"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/veriniceserver/sync/sync</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+xmlns="http://www.sernet.de/sync/data" 
+xmlns:ns2="http://www.sernet.de/sync/mapping" 
+xmlns:sync="http://www.sernet.de/sync/sync">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sync:syncRequest sourceId="soapui" insert="true" update="true" delete="false">
+       
+	    <syncData>
+    <syncObject>
+      <syncAttribute>
+        <name>itverbund_name</name>
+        <value>verinicepro</value>
+      </syncAttribute>
+      <syncAttribute>
+        <name>gsm_tag</name>
+        <value>ap-GSM</value>
+      </syncAttribute>
+      <extId>verinicepro</extId>
+      <extObjectType>itverbund</extObjectType>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_assets_group_name</name>
+          <value>Assets GSM-Scan</value>
+        </syncAttribute>
+        <extId>verinicepro-ism-assets</extId>
+        <extObjectType>gsm_ism_assets</extObjectType>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>192.168.152.112</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_type</name>
+            <value>asset_type_phys</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:linux:kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2013-01-22T12:58:51Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2013-01-22T13:16:35Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>22,8080</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>08:00:27:9B:CE:B5</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.152.111,192.168.152.112</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.3
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.152.112</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>verinicepro-192.168.152.112</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_vulnerabilities_group_name</name>
+          <value>Vulnerabilities GSM-Scan</value>
+        </syncAttribute>
+        <extId>verinicepro-ism-vulnerabilities</extId>
+        <extObjectType>gsm_ism_vulnerabilities</extObjectType>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_name</name>
+            <value>TCP Sequence Number Approximation Reset Denial of Service Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_description</name>
+            <value>
+  Overview: The host is running TCP services and is prone to denial of service
+  vulnerability.
+
+  Vulnerability Insight:
+  The flaw is triggered when spoofed TCP Reset packets are received by the
+  targeted TCP stack and will result in loss of availability for the attacked
+  TCP services.
+
+  Impact:
+  Successful exploitation will allow remote attackers to guess sequence numbers
+  and cause a denial of service to persistent TCP connections by repeatedly
+  injecting a TCP RST packet.
+
+  Impact Level: System
+
+  Affected Software/OS:
+  TCP
+
+  Fix: Please see the referenced advisories for more information on obtaining
+  and applying fixes.
+
+  References:
+  http://www.osvdb.org/4030
+  http://xforce.iss.net/xforce/xfdb/15886
+  http://www.us-cert.gov/cas/techalerts/TA04-111A.html
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY55949
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY55950
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY62006
+  http://www.microsoft.com/technet/security/Bulletin/MS05-019.mspx
+  http://www.microsoft.com/technet/security/bulletin/ms06-064.mspx
+  http://www.cisco.com/en/US/products/csa/cisco-sa-20040420-tcp-nonios.html
+  http://www.cisco.com/en/US/products/csa/cisco-sa-20040420-tcp-nonios.html 
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_cve</name>
+            <value>CVE-2004-0230</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_level</name>
+            <value>Medium</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.902815-vulnerability</extId>
+          <extObjectType>gsm_ism_vulnerability</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_name</name>
+            <value>openssh-server Forced Command Handling Information Disclosure Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_description</name>
+            <value>According to its banner, the version of OpenSSH installed on the remote
+host is older than 5.7:
+ ssh-2.0-openssh_5.3
+
+Overview:
+The auth_parse_options function in auth-options.c in sshd in OpenSSH before 5.7
+provides debug messages containing authorized_keys command options, which allows
+remote authenticated users to obtain potentially sensitive information by
+reading these messages, as demonstrated by the shared user account required by
+Gitolite. NOTE: this can cross privilege boundaries because a user account may
+intentionally have no shell or filesystem access, and therefore may have no
+supported way to read an authorized_keys file in its own home directory.
+
+OpenSSH before 5.7 is affected; 
+
+Solution:
+Updates are available. Please see the references for more information.
+
+References:
+http://www.securityfocus.com/bid/51702
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=657445
+http://packages.debian.org/squeeze/openssh-server
+https://downloads.avaya.com/css/P8/documents/100161262
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_cve</name>
+            <value>CVE-2012-0814</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_level</name>
+            <value>Medium</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.103503-vulnerability</extId>
+          <extObjectType>gsm_ism_vulnerability</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_name</name>
+            <value>TCP timestamps</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_description</name>
+            <value>
+Synopsis :
+
+The remote service implements TCP timestamps.
+
+Description :
+
+The remote host implements TCP timestamps, as defined by RFC1323.
+A side effect of this feature is that the uptime of the remote 
+host can sometimes be computed.
+
+See also :
+
+http://www.ietf.org/rfc/rfc1323.txt
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_cve</name>
+            <value>NOCVE</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_vulnerability_level</name>
+            <value>Low</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.80091-vulnerability</extId>
+          <extObjectType>gsm_ism_vulnerability</extObjectType>
+        </children>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_controls_group_name</name>
+          <value>Controls GSM-Scan</value>
+        </syncAttribute>
+        <extId>verinicepro-ism-controls</extId>
+        <extObjectType>gsm_ism_controls</extObjectType>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_control_name</name>
+            <value>TCP Sequence Number Approximation Reset Denial of Service Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_control_description</name>
+            <value>Please fix this vulnerability.</value>
+          </syncAttribute>
+          <extId>verinicepro-86b64f20-a2a3-492a-829b-d06923e4dde9-control</extId>
+          <extObjectType>gsm_ism_control</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_control_name</name>
+            <value>openssh-server Forced Command Handling Information Disclosure Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_control_description</name>
+            <value>Please fix this vulnerability.</value>
+          </syncAttribute>
+          <extId>verinicepro-4c3ee48e-fb99-41a1-a3e0-4d148fbb7064-control</extId>
+          <extObjectType>gsm_ism_control</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_control_name</name>
+            <value>TCP timestamps</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_control_description</name>
+            <value>Please fix this vulnerability.</value>
+          </syncAttribute>
+          <extId>verinicepro-677201fc-d352-4f51-adaf-2894fbecff58-control</extId>
+          <extObjectType>gsm_ism_control</extObjectType>
+        </children>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_scenarios_group_name</name>
+          <value>Scenarios GSM-Scan</value>
+        </syncAttribute>
+        <extId>verinicepro-ism-scenario</extId>
+        <extObjectType>gsm_ism_scenarios</extObjectType>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_scenario_name</name>
+            <value>TCP Sequence Number Approximation Reset Denial of Service Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_cve</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_level</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_description</name>
+            <value>
+  Overview: The host is running TCP services and is prone to denial of service
+  vulnerability.
+
+  Vulnerability Insight:
+  The flaw is triggered when spoofed TCP Reset packets are received by the
+  targeted TCP stack and will result in loss of availability for the attacked
+  TCP services.
+
+  Impact:
+  Successful exploitation will allow remote attackers to guess sequence numbers
+  and cause a denial of service to persistent TCP connections by repeatedly
+  injecting a TCP RST packet.
+
+  Impact Level: System
+
+  Affected Software/OS:
+  TCP
+
+  Fix: Please see the referenced advisories for more information on obtaining
+  and applying fixes.
+
+  References:
+  http://www.osvdb.org/4030
+  http://xforce.iss.net/xforce/xfdb/15886
+  http://www.us-cert.gov/cas/techalerts/TA04-111A.html
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY55949
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY55950
+  http://www-01.ibm.com/support/docview.wss?uid=isg1IY62006
+  http://www.microsoft.com/technet/security/Bulletin/MS05-019.mspx
+  http://www.microsoft.com/technet/security/bulletin/ms06-064.mspx
+  http://www.cisco.com/en/US/products/csa/cisco-sa-20040420-tcp-nonios.html
+  http://www.cisco.com/en/US/products/csa/cisco-sa-20040420-tcp-nonios.html 
+</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.902815-scenario</extId>
+          <extObjectType>gsm_ism_scenario</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_scenario_name</name>
+            <value>openssh-server Forced Command Handling Information Disclosure Vulnerability</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_cve</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_level</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_description</name>
+            <value>According to its banner, the version of OpenSSH installed on the remote
+host is older than 5.7:
+ ssh-2.0-openssh_5.3
+
+Overview:
+The auth_parse_options function in auth-options.c in sshd in OpenSSH before 5.7
+provides debug messages containing authorized_keys command options, which allows
+remote authenticated users to obtain potentially sensitive information by
+reading these messages, as demonstrated by the shared user account required by
+Gitolite. NOTE: this can cross privilege boundaries because a user account may
+intentionally have no shell or filesystem access, and therefore may have no
+supported way to read an authorized_keys file in its own home directory.
+
+OpenSSH before 5.7 is affected; 
+
+Solution:
+Updates are available. Please see the references for more information.
+
+References:
+http://www.securityfocus.com/bid/51702
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=657445
+http://packages.debian.org/squeeze/openssh-server
+https://downloads.avaya.com/css/P8/documents/100161262
+</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.103503-scenario</extId>
+          <extObjectType>gsm_ism_scenario</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_scenario_name</name>
+            <value>TCP timestamps</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_cve</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_level</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_scenario_description</name>
+            <value>
+Synopsis :
+
+The remote service implements TCP timestamps.
+
+Description :
+
+The remote host implements TCP timestamps, as defined by RFC1323.
+A side effect of this feature is that the uptime of the remote 
+host can sometimes be computed.
+
+See also :
+
+http://www.ietf.org/rfc/rfc1323.txt
+</value>
+          </syncAttribute>
+          <extId>verinicepro-1.3.6.1.4.1.25623.1.0.80091-scenario</extId>
+          <extObjectType>gsm_ism_scenario</extObjectType>
+        </children>
+      </children>
+      <file>
+        <syncAttribute>
+          <name>attachment_file_name</name>
+          <value>verinicepro_2013-01-22-13-34-23.xml</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_name</name>
+          <value>verinicepro_2013-01-22-13-34-23.xml</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_date</name>
+          <value>1358861663000</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_mime_type</name>
+          <value>xml</value>
+        </syncAttribute>
+        <extId>verinicepro_2013-01-22-13-34-23.xml</extId>
+        <file>files/verinicepro_2013-01-22-13-34-23.xml</file>
+      </file>
+      <file>
+        <syncAttribute>
+          <name>attachment_file_name</name>
+          <value>verinicepro_2013-01-22-13-34-23.html</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_name</name>
+          <value>verinicepro_2013-01-22-13-34-23.html</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_date</name>
+          <value>1358861663000</value>
+        </syncAttribute>
+        <syncAttribute>
+          <name>attachment_mime_type</name>
+          <value>html</value>
+        </syncAttribute>
+        <extId>verinicepro_2013-01-22-13-34-23.html</extId>
+        <file>files/verinicepro_2013-01-22-13-34-23.html</file>
+      </file>
+    </syncObject>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.902815-scenario</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.902815-vulnerability</dependency>
+      <relationId>rel_incscen_vulnerability</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.902815-scenario</dependant>
+      <dependency>verinicepro-192.168.152.112</dependency>
+      <relationId>rel_incscen_asset</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-86b64f20-a2a3-492a-829b-d06923e4dde9-control</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.902815-scenario</dependency>
+      <relationId>rel_control_incscen</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.103503-scenario</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.103503-vulnerability</dependency>
+      <relationId>rel_incscen_vulnerability</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.103503-scenario</dependant>
+      <dependency>verinicepro-192.168.152.112</dependency>
+      <relationId>rel_incscen_asset</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-4c3ee48e-fb99-41a1-a3e0-4d148fbb7064-control</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.103503-scenario</dependency>
+      <relationId>rel_control_incscen</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.80091-scenario</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.80091-vulnerability</dependency>
+      <relationId>rel_incscen_vulnerability</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-1.3.6.1.4.1.25623.1.0.80091-scenario</dependant>
+      <dependency>verinicepro-192.168.152.112</dependency>
+      <relationId>rel_incscen_asset</relationId>
+    </syncLink>
+    <syncLink>
+      <dependant>verinicepro-677201fc-d352-4f51-adaf-2894fbecff58-control</dependant>
+      <dependency>verinicepro-1.3.6.1.4.1.25623.1.0.80091-scenario</dependency>
+      <relationId>rel_control_incscen</relationId>
+    </syncLink>
+  </syncData>
+  <ns2:syncMapping>
+    <ns2:mapObjectType intId="org" extId="itverbund">
+      <ns2:mapAttributeType intId="org_name" extId="itverbund_name"/>
+      <ns2:mapAttributeType intId="org_tag" extId="gsm_tag"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="asset" extId="gsm_ism_asset">
+      <ns2:mapAttributeType intId="asset_abbr" extId="gsm_ism_asset_abbr"/>
+      <ns2:mapAttributeType intId="asset_name" extId="gsm_ism_asset_hostname"/>
+      <ns2:mapAttributeType intId="asset_type" extId="gsm_ism_asset_type"/>
+      <ns2:mapAttributeType intId="gsm_asset_tag" extId="gsm_ism_asset_tags"/>
+      <ns2:mapAttributeType intId="gsm_asset_description" extId="gsm_ism_asset_description"/>
+      <ns2:mapAttributeType intId="gsm_installed_apps" extId="gsm_installed_apps"/>
+      <ns2:mapAttributeType intId="gsm_traceroute" extId="gsm_traceroute"/>
+      <ns2:mapAttributeType intId="gsm_memory" extId="gsm_memory"/>
+      <ns2:mapAttributeType intId="gsm_cpuinfo" extId="gsm_cpuinfo"/>
+      <ns2:mapAttributeType intId="gsm_os" extId="gsm_os"/>
+      <ns2:mapAttributeType intId="gsm_os_cpe" extId="gsm_os_cpe"/>
+      <ns2:mapAttributeType intId="gsm_open_ports" extId="gsm_open_ports"/>
+      <ns2:mapAttributeType intId="gsm_scan_ended" extId="gsm_scan_ended"/>
+      <ns2:mapAttributeType intId="gsm_scan_started" extId="gsm_scan_started"/>
+      <ns2:mapAttributeType intId="gsm_hostname" extId="gsm_hostname"/>
+      <ns2:mapAttributeType intId="gsm_mac_address" extId="gsm_mac_address"/>
+      <ns2:mapAttributeType intId="gsm_ip_address" extId="gsm_ip_address"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="vulnerability" extId="gsm_ism_vulnerability">
+      <ns2:mapAttributeType intId="vulnerability_name" extId="gsm_ism_vulnerability_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_description" extId="gsm_ism_vulnerability_description"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_cve" extId="gsm_ism_vulnerability_cve"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_level" extId="gsm_ism_vulnerability_level"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="control" extId="gsm_ism_control">
+      <ns2:mapAttributeType intId="control_name" extId="gsm_ism_control_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_control_description" extId="gsm_ism_control_description"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="incident_scenario" extId="gsm_ism_scenario">
+      <ns2:mapAttributeType intId="incident_scenario_name" extId="gsm_ism_scenario_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_description" extId="gsm_ism_scenario_description"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_cve" extId="gsm_ism_scenario_cve"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_level" extId="gsm_ism_scenario_level"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="assetgroup" extId="gsm_ism_assets">
+      <ns2:mapAttributeType intId="assetgroup_name" extId="gsm_ism_assets_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="vulnerability_group" extId="gsm_ism_vulnerabilities">
+      <ns2:mapAttributeType intId="vulnerability_group_name" extId="gsm_ism_vulnerabilities_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="controlgroup" extId="gsm_ism_controls">
+      <ns2:mapAttributeType intId="controlgroup_name" extId="gsm_ism_controls_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="incident_scenario_group" extId="gsm_ism_scenarios">
+      <ns2:mapAttributeType intId="incident_scenario_group_name" extId="gsm_ism_scenarios_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="attachment" extId="attachment">
+      <ns2:mapAttributeType intId="attachment_text" extId="attachment_text"/>
+      <ns2:mapAttributeType intId="attachment_file_name" extId="attachment_file_name"/>
+      <ns2:mapAttributeType intId="attachment_version" extId="attachment_version"/>
+      <ns2:mapAttributeType intId="attachment_name" extId="attachment_name"/>
+      <ns2:mapAttributeType intId="attachment_date" extId="attachment_date"/>
+      <ns2:mapAttributeType intId="attachment_mime_type" extId="attachment_mime_type"/>
+      <ns2:mapAttributeType intId="attachment_approval" extId="attachment_approval"/>
+      <ns2:mapAttributeType intId="attachment_publish" extId="attachment_publish"/>
+    </ns2:mapObjectType>
+  </ns2:syncMapping>
+        
+      </sync:syncRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:username>admin</con:username><con:password>fgfdg</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="http://www.sernet.de/sync/sync" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="greenbone"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sync-serviceSOAP</con:interface><con:operation>sync</con:operation><con:request name="greenbone"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/veriniceserver/sync/sync</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope 
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+    xmlns="http://www.sernet.de/sync/data" 
+    xmlns:ns2="http://www.sernet.de/sync/mapping"
+    xmlns:sync="http://www.sernet.de/sync/sync">
+    <soapenv:Header />
+    <soapenv:Body>
+        <sync:syncRequest sourceId="soapui" insert="true" update="true" delete="false">
+
+  <syncData>
+    <syncObject>
+      <syncAttribute>
+        <name>itverbund_name</name>
+        <value>FF Aztec</value>
+      </syncAttribute>
+      <syncAttribute>
+        <name>gsm_tag</name>
+        <value>ap-GSM</value>
+      </syncAttribute>
+      <extId>FF Aztec</extId>
+      <extObjectType>itverbund</extObjectType>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_assets_group_name</name>
+          <value>Assets GSM-Scan</value>
+        </syncAttribute>
+        <extId>FF Aztec-ism-assets</extId>
+        <extObjectType>gsm_ism_assets</extObjectType>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>cipactli.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:linux:kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>cipactli.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:05:40Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:10:51Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>443,465,993,22,636,995,25,389,143,587,2000,80</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.1</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.1</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.1</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>coatl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>coatl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:05:40Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:06:19Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>443,465,993,22,636,995,25,389,143,2000,80</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.5</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.1p1
+cpe:/a:apache:http_server:2.2.15
+cpe:/a:php:php:5.2.13
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.5</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.5</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>itzcuintli.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>itzcuintli.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:05:40Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:05:53Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>22,80</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.10</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.1p1
+cpe:/a:apache:http_server:2.2.9
+cpe:/a:php:php:5.2.6
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.10</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.10</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>acatl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>acatl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:05:40Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:07:15Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>443,465,993,22,636,995,25,389,143,2000,80</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.13</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.1p1
+cpe:/a:apache:http_server:2.2.15
+cpe:/a:php:php:5.2.13
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.13</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.13</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>quiyahuitl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>quiyahuitl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:05:41Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:06:56Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>465,993,22,636,995,25,389,143,587,2000,80</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.19</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.1p1
+cpe:/a:apache:http_server:2.2.9
+cpe:/a:php:php:5.2.6
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.19</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.19</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>teotl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>teotl.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:12:40Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:04:41Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>22</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.11.254,192.168.13.52</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.5p1
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.52</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.52</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+        <children>
+          <syncAttribute>
+            <name>gsm_ism_asset_abbr</name>
+            <value/>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_hostname</name>
+            <value>aktaia.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_tags</name>
+            <value>gsm_system_unix gsm_system_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os</name>
+            <value>Linux Kernel</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_os_cpe</name>
+            <value>cpe:/o:debian:debian_linux</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_hostname</name>
+            <value>aktaia.aztec.intevation.de</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_started</name>
+            <value>2012-09-24T15:47:28Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_scan_ended</name>
+            <value>2012-09-24T16:11:41Z</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_open_ports</name>
+            <value>22,53</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_cpuinfo</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_memory</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_mac_address</name>
+            <value>Not Available</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_traceroute</name>
+            <value>192.168.11.93,192.168.13.254</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_installed_apps</name>
+            <value>cpe:/a:openbsd:openssh:5.5p1
+</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ip_address</name>
+            <value>192.168.13.254</value>
+          </syncAttribute>
+          <syncAttribute>
+            <name>gsm_ism_asset_description</name>
+            <value/>
+          </syncAttribute>
+          <extId>FF Aztec-192.168.13.254</extId>
+          <extObjectType>gsm_ism_asset</extObjectType>
+        </children>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_vulnerabilities_group_name</name>
+          <value>Vulnerabilities GSM-Scan</value>
+        </syncAttribute>
+        <extId>FF Aztec-ism-vulnerabilities</extId>
+        <extObjectType>gsm_ism_vulnerabilities</extObjectType>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_controls_group_name</name>
+          <value>Controls GSM-Scan</value>
+        </syncAttribute>
+        <extId>FF Aztec-ism-controls</extId>
+        <extObjectType>gsm_ism_controls</extObjectType>
+      </children>
+      <children>
+        <syncAttribute>
+          <name>gsm_ism_scenarios_group_name</name>
+          <value>Scenarios GSM-Scan</value>
+        </syncAttribute>
+        <extId>FF Aztec-ism-scenario</extId>
+        <extObjectType>gsm_ism_scenarios</extObjectType>
+      </children>
+    </syncObject>
+  </syncData>
+  <ns2:syncMapping>
+    <ns2:mapObjectType intId="org" extId="itverbund">
+      <ns2:mapAttributeType intId="org_name" extId="itverbund_name"/>
+      <ns2:mapAttributeType intId="org_tag" extId="gsm_tag"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="asset" extId="gsm_ism_asset">
+      <ns2:mapAttributeType intId="asset_abbr" extId="gsm_ism_asset_abbr"/>
+      <ns2:mapAttributeType intId="asset_name" extId="gsm_ism_asset_hostname"/>
+      <ns2:mapAttributeType intId="gsm_asset_tag" extId="gsm_ism_asset_tags"/>
+      <ns2:mapAttributeType intId="gsm_asset_description" extId="gsm_ism_asset_description"/>
+      <ns2:mapAttributeType intId="gsm_installed_apps" extId="gsm_installed_apps"/>
+      <ns2:mapAttributeType intId="gsm_traceroute" extId="gsm_traceroute"/>
+      <ns2:mapAttributeType intId="gsm_memory" extId="gsm_memory"/>
+      <ns2:mapAttributeType intId="gsm_cpuinfo" extId="gsm_cpuinfo"/>
+      <ns2:mapAttributeType intId="gsm_os" extId="gsm_os"/>
+      <ns2:mapAttributeType intId="gsm_os_cpe" extId="gsm_os_cpe"/>
+      <ns2:mapAttributeType intId="gsm_open_ports" extId="gsm_open_ports"/>
+      <ns2:mapAttributeType intId="gsm_scan_ended" extId="gsm_scan_ended"/>
+      <ns2:mapAttributeType intId="gsm_scan_started" extId="gsm_scan_started"/>
+      <ns2:mapAttributeType intId="gsm_hostname" extId="gsm_hostname"/>
+      <ns2:mapAttributeType intId="gsm_mac_address" extId="gsm_mac_address"/>
+      <ns2:mapAttributeType intId="gsm_ip_address" extId="gsm_ip_address"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="vulnerability" extId="gsm_ism_vulnerability">
+      <ns2:mapAttributeType intId="vulnerability_name" extId="gsm_ism_vulnerability_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_description" extId="gsm_ism_vulnerability_description"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_cve" extId="gsm_ism_vulnerability_cve"/>
+      <ns2:mapAttributeType intId="gsm_ism_vulnerability_level" extId="gsm_ism_vulnerability_level"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="samt_topic" extId="gsm_ism_control">
+      <ns2:mapAttributeType intId="samt_topic_name" extId="gsm_ism_control_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_control_description" extId="gsm_ism_control_description"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="incident_scenario" extId="gsm_ism_scenario">
+      <ns2:mapAttributeType intId="incident_scenario_name" extId="gsm_ism_scenario_name"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_description" extId="gsm_ism_scenario_description"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_cve" extId="gsm_ism_scenario_cve"/>
+      <ns2:mapAttributeType intId="gsm_ism_scenario_level" extId="gsm_ism_scenario_level"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="assetgroup" extId="gsm_ism_assets">
+      <ns2:mapAttributeType intId="assetgroup_name" extId="gsm_ism_assets_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="vulnerability_group" extId="gsm_ism_vulnerabilities">
+      <ns2:mapAttributeType intId="vulnerability_group_name" extId="gsm_ism_vulnerabilities_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="controlgroup" extId="gsm_ism_controls">
+      <ns2:mapAttributeType intId="controlgroup_name" extId="gsm_ism_controls_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="incident_scenario_group" extId="gsm_ism_scenarios">
+      <ns2:mapAttributeType intId="incident_scenario_group_name" extId="gsm_ism_scenarios_group_name"/>
+    </ns2:mapObjectType>
+    <ns2:mapObjectType intId="attachment" extId="attachment">
+      <ns2:mapAttributeType intId="attachment_text" extId="attachment_text"/>
+      <ns2:mapAttributeType intId="attachment_file_name" extId="attachment_file_name"/>
+      <ns2:mapAttributeType intId="attachment_version" extId="attachment_version"/>
+      <ns2:mapAttributeType intId="attachment_name" extId="attachment_name"/>
+      <ns2:mapAttributeType intId="attachment_date" extId="attachment_date"/>
+      <ns2:mapAttributeType intId="attachment_mime_type" extId="attachment_mime_type"/>
+      <ns2:mapAttributeType intId="attachment_approval" extId="attachment_approval"/>
+      <ns2:mapAttributeType intId="attachment_publish" extId="attachment_publish"/>
+    </ns2:mapObjectType>
+  </ns2:syncMapping>
+        </sync:syncRequest>
+    </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:credentials><con:username>dmu</con:username><con:password>!Q2w3e4r</con:password></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="empty request"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>sync-serviceSOAP</con:interface><con:operation>sync</con:operation><con:request name="empty request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/vn-1.5.3-B0/sync/sync</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+xmlns="http://www.sernet.de/sync/data" 
+xmlns:ns2="http://www.sernet.de/sync/mapping" 
+xmlns:sync="http://www.sernet.de/sync/sync">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sync:syncRequest sourceId="soapui" insert="true" update="true" delete="false">
+       
+      <!-- Add elements "syncData" and "ns2:syncMapping" -->
+      <!-- from verinice.xml here -->    
+        
+      </sync:syncRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="Web TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="true" maxResults="0" name="Sync Web TestCase" searchProperties="true"><con:settings/><con:testStep type="httprequest" name="http://localhost:8080/veriniceserver/sync/sync"><con:settings/><con:config method="GET" xsi:type="con:HttpRequest" name="http://localhost:8080/veriniceserver/sync/sync" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080/veriniceserver/sync/sync</con:endpoint><con:request/><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:mockService port="8088" path="/mocksync" host="pluto" name="sync MockService"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:mockOperation name="sync" interface="sync-serviceSOAP" operation="sync"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sync="http://www.sernet.de/sync/sync">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sync:syncResponse>
+         <!--1 or more repetitions:-->
+         <sync:replyMessage>?</sync:replyMessage>
+         <sync:inserted>?</sync:inserted>
+         <sync:updated>?</sync:updated>
+         <sync:deleted>?</sync:deleted>
+      </sync:syncResponse>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.sernet.de/sync/sync"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/></con:soapui-project>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	CnAValidation items.
+	@author sh@sernet.de
+ -->
+ <hibernate-mapping package="sernet.verinice.model.validation">
+	<class name="CnAValidation" table="cnavalidation">
+	
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property name="propertyId" column="PROPERTY_ID" type="java.lang.String" length="250" />
+		<property name="elmtTitle" column="ELMT_TITLE" type="java.lang.String" length="250" />
+		<property name="elmtDbId" column="ELMTDB_ID" type="java.lang.Integer" />
+		<property name="hintId" column="HINT_ID" type="java.lang.String" length="250" />
+		<property name="scopeId" column="SCOPE_ID" type="java.lang.Integer" />
+		<property name="elementType" column="ELEMENT_TYPE" type="java.lang.String" length="250" />
+ 		
+	</class>
+</hibernate-mapping>
+ 

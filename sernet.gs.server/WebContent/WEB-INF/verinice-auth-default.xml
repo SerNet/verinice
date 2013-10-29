@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auth version="0" type="whitelist" xmlns="http://www.verinice.org/auth"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
+    
+    <!-- This is the default configuration of access rights to application actions. -->
+    <!-- End users should NEVER edit this file! Use verinice-auth.xml instead. -->
+    <!-- Settings in verinice-auth.xml overwrites settings in this file. -->
+    
+    <profiles>
+        <!-- Each profile in this document defines a collection -->
+        <!-- of application actions. All actions in verinice are -->
+        <!-- defined in property file verinice-action.properties. -->
+        
+        
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             When adding actions here, don't forget to add 
+             them to verinice-auth-standalone-default.xml as well
+             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        -->
+        
+        <profile name="user-default-profile" origin="default">
+        <!-- missing actions: 
+            "accountsettings"
+            "accesscontrol"
+            "editprofile"
+            "taskdelete"
+            "taskshowall"
+            "showallfiles" -->
+        <action id="addbsielement" />
+        <action id="addcatalog" />
+        <action id="addfile" />
+        <action id="addismelement" />
+        <action id="addismgroup" />
+        <action id="addismorg"/>
+        <action id="additverbund" />
+        <action id="addnote" />
+        <action id="addsecurityassessment" />
+        <action id="assignallisatopics" />
+        <action id="addownmodul"/>
+        <action id="auditview" />
+        <action id="bsidnd" />
+        <action id="bsibrowser" />
+        <action id="bsimassnahmen" />
+        <action id="bsimodelview" />
+        <action id="bulkedit" />
+        <action id="changeicon" />
+        <action id="cnavalidation" />
+        <action id="creategreenbonetasks" />
+        <action id="createindividualtasks" />
+        <action id="createisatasks" />
+        <action id="deletecatalog" />
+        <action id="deletefile" />
+        <action id="deleteitem" />
+        <action id="derivestatus" />
+        <action id="documentview" />
+        <action id="dsmodelview" />
+        <action id="editlinks" />
+        <action id="files" />
+        <action id="generateauditreport" />
+        <action id="generateorgreport" />
+        <action id="groupbytag"/>
+        <action id="gsnotesimport" />
+        <action id="gstoolimport" />
+        <action id="importcsv" />
+        <action id="importldap" />
+        <action id="ismcatalog" />
+        <action id="ismcopy" />
+        <action id="ismcut" />
+        <action id="ismview" />
+        <action id="ismviewweb" />       
+        <action id="konsolidator" />
+        <action id="naturalize" />
+        <action id="notes" />
+        <action id="relations" />
+        <action id="riskanalysis" />
+        <action id="samtview" />
+        <action id="showchartview" />
+        <action id="showpreferences" />
+        <action id="simpleauditview" />
+        <action id="taskview" />
+        <action id="todo" />
+        <action id="unify" />
+        <action id="xmlexport" />
+        <action id="xmlimport" />
+        </profile>
+        <profile name="user-scope-default-profile" origin="default">
+        <!-- missing actions: 
+            "accountsettings"
+            "accesscontrol"
+            "editprofile"
+            "taskdelete"
+            "taskshowall"
+            "addismorg"
+            "additverbund"
+            "xmlimport" 
+            "showallfiles"
+            "addsecurityassessment"-->
+	        <action id="addbsielement" />
+	        <action id="addcatalog" />
+	        <action id="addfile" />
+	        <action id="addismelement" />
+	        <action id="addismgroup" />
+	        <action id="addnote" />
+	        <action id="addownmodul"/>
+	        <action id="assignallisatopics" />
+	        <action id="auditview" />
+	        <action id="bausteinzuordnung" />
+	        <action id="bsidnd" />
+        	<action id="bsibrowser" />
+	        <action id="bsimassnahmen" />
+	        <action id="bsimodelview" />
+	        <action id="bulkedit" />
+            <action id="changeicon" />
+	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
+            <action id="createindividualtasks" />
+	        <action id="createisatasks" />
+	        <action id="deletecatalog" />
+	        <action id="deletefile" />
+	        <action id="deleteitem" />
+	        <action id="derivestatus" />
+	        <action id="documentview" />
+	        <action id="dsmodelview" />
+	        <action id="editlinks" />
+	        <action id="files" />
+	        <action id="generateauditreport" />
+	        <action id="generateorgreport" />
+            <action id="groupbytag"/>
+	        <action id="gsnotesimport" />
+	        <action id="gstoolimport" />
+	        <action id="importcsv" />
+	        <action id="importldap" />
+	        <action id="ismcatalog" />
+	        <action id="ismcopy" />
+	        <action id="ismcut" />
+	        <action id="ismview" />
+            <action id="ismviewweb" />   
+	        <action id="konsolidator" />
+	        <action id="naturalize" />
+	        <action id="notes" />
+	        <action id="relations" />
+	        <action id="riskanalysis" />
+	        <action id="samtview" />
+	        <action id="showchartview" />
+	        <action id="showpreferences" />
+	        <action id="simpleauditview" />
+	        <action id="taskview" />
+	        <action id="todo"/>
+            <action id="unify" />
+	        <action id="xmlexport"/>
+        </profile>
+        <profile name="admin-scope-default-profile" origin="default">
+        <!-- missing actions: 
+        	"addismorg"
+        	"additverbund"
+        	"xmlimport"
+        	"showallfiles" 
+    		"addsecurityassessment"-->
+           	<action id="accesscontrol" />
+	        <action id="accountsettings" />
+	        <action id="addbsielement" />
+	        <action id="addcatalog" />
+	        <action id="addfile" />
+	        <action id="addismelement" />
+	        <action id="addismgroup" />
+	        <action id="addnote" />
+	        <action id="addownmodul"/>
+	        <action id="assignallisatopics" />
+	        <action id="auditview" />
+	        <action id="bausteinzuordnung" />
+	        <action id="bsidnd" />
+        	<action id="bsibrowser" />
+	        <action id="bsimassnahmen" />
+	        <action id="bsimodelview" />
+	        <action id="bulkedit" />
+            <action id="changeicon" />
+	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
+            <action id="createindividualtasks" />
+	        <action id="createisatasks" />
+	        <action id="deletecatalog" />
+	        <action id="deletefile" />
+	        <action id="deleteitem" />
+	        <action id="derivestatus"/>
+	        <action id="documentview" />
+	        <action id="dsmodelview" />
+	        <action id="editlinks" />
+            <action id="editprofile" />
+	        <action id="files" />
+	        <action id="generateauditreport" />
+	        <action id="generateorgreport" />
+            <action id="groupbytag"/>
+	        <action id="gsnotesimport" />
+	        <action id="gstoolimport" />
+	        <action id="importcsv" />
+	        <action id="importldap" />
+	        <action id="ismcatalog" />
+	        <action id="ismcopy" />
+	        <action id="ismcut" />
+	        <action id="ismview" />
+            <action id="ismviewweb" />   
+	        <action id="konsolidator" />
+	        <action id="naturalize" />
+	        <action id="notes" />
+	        <action id="relations" />
+	        <action id="riskanalysis" />
+	        <action id="samtview" />
+	        <action id="showchartview" />
+	        <action id="showpreferences" />
+	        <action id="simpleauditview" />
+	        <action id="taskdelete" />
+	        <action id="taskshowall" />
+	        <action id="taskview" />
+	        <action id="todo"/>
+            <action id="unify" />
+	        <action id="xmlexport"/>
+        </profile>
+        <profile name="admin-default-profile" origin="default" >
+        	<!-- this user is allowed to do everything -->
+   	        <action id="accesscontrol" />
+	        <action id="accountsettings" />
+	        <action id="addbsielement" />
+	        <action id="addcatalog" />
+	        <action id="addfile" />
+	        <action id="addismelement" />
+	        <action id="addismgroup" />
+	        <action id="addismorg" />
+	        <action id="additverbund" />
+	        <action id="addnote" />
+	        <action id="addsecurityassessment" />
+	        <action id="addownmodul"/>
+	        <action id="assignallisatopics" />
+	        <action id="auditview" />
+	        <action id="bausteinzuordnung" />
+	        <action id="bsidnd" />
+        	<action id="bsibrowser" />
+	        <action id="bsimassnahmen" />
+	        <action id="bsimodelview" />
+	        <action id="bulkedit" />
+            <action id="changeicon" />
+	        <action id="cnavalidation" />
+            <action id="creategreenbonetasks" />
+            <action id="createindividualtasks" />
+	        <action id="createisatasks" />
+	        <action id="deletecatalog" />
+	        <action id="deletefile" />
+	        <action id="deleteitem" />
+	        <action id="derivestatus"/>
+	        <action id="documentview" />
+	        <action id="dsmodelview" />
+	        <action id="editlinks" />
+            <action id="editprofile" />
+	        <action id="files" />
+	        <action id="generateauditreport" />
+	        <action id="generateorgreport" />
+            <action id="groupbytag"/>
+	        <action id="gsnotesimport" />
+	        <action id="gstoolimport" />
+	        <action id="importcsv" />
+	        <action id="importldap" />
+	        <action id="ismcatalog" />
+	        <action id="ismcopy" />
+	        <action id="ismcut" />
+	        <action id="ismview" />
+            <action id="ismviewweb" />
+	        <action id="konsolidator" />
+	        <action id="naturalize" />
+	        <action id="notes" />
+	        <action id="relations" />
+	        <action id="riskanalysis" />
+	        <action id="samtview" />
+	        <action id="showchartview" />
+	        <action id="showpreferences" />
+	        <action id="simpleauditview" />
+	        <action id="taskdelete" />
+	        <action id="taskshowall" />
+	        <action id="taskview" />
+	        <action id="todo"/>
+            <action id="unify" />
+	        <action id="xmlexport"/>
+	        <action id="xmlimport"/>
+	        <action id="showallfiles" />
+        </profile>
+    </profiles>
+    <userprofiles>
+        <!-- A userprofile defines a n:m mapping between users and -->
+        <!-- profiles. Userprofiles are configured as whitelist or -->
+        <!-- blacklist. Whitelist means: all actions are disabled -->
+        <!-- except the actions in the userprofile. Blacklist: All  -->
+        <!-- actions are nabled except the actions in the userprofile. -->
+        <!-- You can switch from blacklist to whitelist by attibute type -->
+        <!-- of root element auth. -->
+        <userprofile login="user-default-group" origin="default">
+            <profile-ref name="user-default-profile" />
+        </userprofile>
+        <userprofile login="admin-default-group" origin="default">
+            <profile-ref name="admin-default-profile" />
+        </userprofile>
+        <userprofile login="admin" origin="default">
+            <profile-ref name="admin-default-profile" />
+        </userprofile>
+        <userprofile login="user-scope-default-group" origin="default">
+            <profile-ref name="user-scope-default-profile" />
+        </userprofile>
+        <userprofile login="admin-scope-default-group">
+        	<profile-ref name="admin-scope-default-profile"/>
+        </userprofile>
+    </userprofiles>
+</auth>

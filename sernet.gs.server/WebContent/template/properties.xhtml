@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:composition>
+		<p:outputPanel rendered="#{not empty list}">
+			<table style="table-layout:fixed; width: 430px;">	
+				<c:forEach var="p" items="#{list}" > 
+					<tr>
+						<td style="width: 140px; overflow: hidden;">
+							<h:outputText value="#{p.name} "/>
+						</td>
+						<td style="width: 280px;">				
+							<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}" styleClass="hui ui-corner-all"/>
+							<h:outputText value="#{p.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText" />
+							<p:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" styleClass="hui" />
+							<h:outputText value="#{p.value}" escape="false" rendered="#{p.isText and (not p.isEditable)}" styleClass="roText"/>
+							<p:outputPanel rendered="#{p.isDate}">
+								<p:calendar value="#{p.date}" 
+									showButtonPanel="true" 
+									showWeek="true"
+									mode="popup" 
+									showOn="button"
+									navigator="true"/>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isSingleSelect and p.isEditable}">
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"  style="width: 280px;" effectDuration="40">
+									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable}" >
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" style="width: 280px;" effectDuration="40">	
+									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable}">
+								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" onkeydown="return false;" styleClass="hui"/>
+							</p:outputPanel>
+							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
+						</td>
+					</tr>	
+				</c:forEach>
+			</table>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{not empty listNoLabel}">
+			<table style="table-layout:fixed; width: 430px;">
+				<c:forEach var="i" items="#{listNoLabel}">
+					<tr>
+						<td>
+							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}"/>
+							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText"/>
+							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" />
+							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable)}" styleClass="roText"/>
+							<p:outputPanel rendered="#{i.isDate}">
+								<p:calendar value="#{i.date}" 
+									showButtonPanel="true" 
+									showWeek="true"
+									mode="popup" 
+									showOn="button"
+									navigator="true"/>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isSingleSelect and p.isEditable}">
+								<p:selectOneMenu value="#{i.selectedOption}">
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList and p.isEditable}">
+								<p:selectOneMenu value="#{i.selectedOption}">
+									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList and p.isEditable}">
+								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}" onkeydown="return false;"/>
+							</p:outputPanel>
+							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
+						</td>
+					</tr>	
+				</c:forEach>
+			</table>
+		</p:outputPanel>	     			
+	</ui:composition>
+</html>

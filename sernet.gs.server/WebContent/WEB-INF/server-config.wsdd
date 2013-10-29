@@ -1,0 +1,73 @@
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+	<service name="SyncService" provider="java:RPC">
+		<parameter name="allowedMethods" value="*" />
+		<parameter name="className" value="sernet.gs.server.sync.SyncEndpoint" />
+	</service>
+
+
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncRequest" 
+		type="java:de.sernet.sync.sync.SyncRequest"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>
+
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncData" 
+		type="java:de.sernet.sync.data.SyncData"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>
+	
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncData$SyncObject" 
+		type="java:de.sernet.sync.data.SyncData$SyncObject"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>
+	
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncData$SyncObject$SyncAttribute" 
+		type="java:de.sernet.sync.data.SyncData$SyncObject$SyncAttribute"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>
+
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncMapping" 
+		type="java:de.sernet.sync.mapping.SyncMapping"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>
+	
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncMapping$MapObjectType" 
+		type="java:de.sernet.sync.mapping.SyncMapping$MapObjectType"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>	
+	
+	<typeMapping 
+		xmlns:ns="http://www.sernet.de/sync/sync"
+		qname="ns:SyncMapping$MapObjectType$MapAttributeType" 
+		type="java:de.sernet.sync.mapping.SyncMapping$MapObjectType$MapAttributeType"
+		serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+		deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+		encodingStyle="" 
+	/>	
+
+</deployment>

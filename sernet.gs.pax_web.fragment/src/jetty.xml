@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//
+DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<Configure class="org.mortbay.jetty.Server">
+
+    <!-- ============================================================ -->
+    <!-- Configuration of embedded Jetty used in verinice standalone  -->
+    <!-- ============================================================ -->
+    <!-- Documentation:                                               -->
+    <!-- http://docs.codehaus.org/display/JETTY/Walkthrough+jetty.xml -->
+    <!-- ============================================================ -->
+
+    <Call name="addConnector">
+      <Arg>
+          <New class="org.mortbay.jetty.nio.SelectChannelConnector">
+            <!-- the time in milliseconds when a connection is considered idle -->          
+            <!-- Request-timeout in ms -->
+            <Set name="maxIdleTime">500000</Set>
+          </New>
+      </Arg>
+    </Call> 
+      
+
+</Configure>
