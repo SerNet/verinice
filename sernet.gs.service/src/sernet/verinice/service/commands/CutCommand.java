@@ -180,10 +180,9 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         CnATreeElement parentOld = element.getParent();
         parentOld.removeChild(element);
         
-        // save old parent
-        UpdateElement command = new UpdateElement(parentOld, true, ChangeLogEntry.STATION_ID);
-        command.setLogChanges(false);
-        getCommandService().executeCommand(command);
+        // save old parent (switch to dao from command call because of Bug 918)
+        getDao().merge(parentOld, false);
+        
         ElementChange delete = new ElementChange(element, ChangeLogEntry.TYPE_DELETE);
         elementChanges.add(delete);
         
@@ -191,12 +190,12 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         
         group.addChild(element);
         
-        // save element
-        SaveElement saveElementCommand = new SaveElement(element);
-        saveElementCommand.setLogChanges(false);
-        saveElementCommand = getCommandService().executeCommand(saveElementCommand);
-        CnATreeElement savedElement = (CnATreeElement) saveElementCommand.getElement();
-        ElementChange insert = new ElementChange(savedElement, ChangeLogEntry.TYPE_INSERT);
+        // save element (switch to dao from command call because of Bug 918)
+        getDao().merge(element, false);
+        getDao().flush();
+        getDao().clear();
+        
+        ElementChange insert = new ElementChange(element, ChangeLogEntry.TYPE_INSERT);
         if(insert.getTime().equals(delete.getTime())) {
             Calendar plus1Second = Calendar.getInstance();
             plus1Second.add(Calendar.SECOND, 1);       
@@ -205,7 +204,7 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         elementChanges.add(insert);
         
         number++;
-        return savedElement;
+        return element;
     }
     
     /**
