@@ -70,6 +70,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -301,7 +302,8 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
-
+        // ensure initial table sorting (by filename)
+        ((TableSorter)viewer.getSorter()).setColumn(1);
     }
 
     /**
@@ -798,7 +800,9 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
                 }
                 break;
             case 1:
-                rc = a1.getFileName().compareTo(a2.getFileName());
+                NumericStringComparator nsc = new NumericStringComparator();
+                // use lowercase here, to avoid separation of lowercase and uppercase words
+                rc = nsc.compare(a1.getFileName().toLowerCase(), a2.getFileName().toLowerCase());
                 break;
             case 2:
                 mimeType1 = a1.getMimeType();
