@@ -44,7 +44,7 @@ import sernet.verinice.service.commands.RemoveElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CutTest extends CommandServiceTestBase {
+public class CutTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(CutTest.class);
 
@@ -58,7 +58,6 @@ public class CutTest extends CommandServiceTestBase {
         uuidList = new LinkedList<String>();
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        checkOrganization(organization);       
         uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));       
         uuidList.addAll(createGroupsInGroups(organization, NUMBER_PER_GROUP));      
         LOG.debug("Total number of created elements: " + uuidList.size());

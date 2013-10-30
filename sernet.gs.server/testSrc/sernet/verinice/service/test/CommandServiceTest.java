@@ -72,7 +72,7 @@ import sernet.verinice.service.commands.SyncParameter;
  */
 @TransactionConfiguration(transactionManager="txManager", defaultRollback=false)
 @Transactional
-public class CommandServiceTest extends CommandServiceTestBase {  
+public class CommandServiceTest extends CommandServiceProvider {  
     
     private static final Logger LOG = Logger.getLogger(CommandServiceTest.class);
     
@@ -285,6 +285,9 @@ public class CommandServiceTest extends CommandServiceTestBase {
      * This method is not annotated with @Test anymore.
      * To activate ist set the annotation again.
      */
+    //@Test
+    //@Transactional
+    //@Rollback(false)
     public void testVnaImport() throws Exception {      
         importVna();
         
