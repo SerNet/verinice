@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -72,6 +74,7 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.service.commands.CreateElement;
+import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
@@ -143,6 +146,28 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return uuidList;
     }
     
+    protected Collection<? extends String> createInOrganisation(Organization organization, Class clazz, int i) throws CommandException {
+        List<String> uuidList = new LinkedList<String>();
+        Group<CnATreeElement> group = getGroupForClass(organization, clazz);   
+        for (int n = 0; n < i; n++) {
+            uuidList.add(createNewElement(group, clazz, n).getUuid());
+        }                    
+        return uuidList;
+    }
+    
+    protected Group<CnATreeElement> getGroupForClass(Organization organization, Class clazz) {
+        Group<CnATreeElement> group = null;
+        Set<CnATreeElement> children = organization.getChildren();
+        for (CnATreeElement child : children) {
+            assertTrue("Child of organization is not a group", child instanceof Group);       
+            if(clazz.equals(GROUP_TYPE_MAP.get(child.getTypeId()))) {
+                group = (Group) child;
+                break;
+            }          
+        }
+        return group;
+    }
+    
     protected List<String> createGroupsInGroups(Organization organization, int numberPerGroup) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Set<CnATreeElement> children = organization.getChildren();
@@ -172,9 +197,14 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
     
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, int n) throws CommandException {
+        Class clazz = GROUP_TYPE_MAP.get(group.getTypeId());
+        return createNewElement(group, clazz, n);
+    }
+
+    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n) throws CommandException {
         CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(
                 group, 
-                GROUP_TYPE_MAP.get(group.getTypeId()), 
+                clazz, 
                 getClass().getSimpleName() + "_" + n);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
@@ -182,6 +212,12 @@ public abstract class CommandServiceProvider extends UuidLoader {
         checkElement(newElement);
         
         return newElement;
+    }
+    
+    protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
+        CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
+        command = commandService.executeCommand(command);
+        return command.getLink();
     }
     
     protected void checkOrganization(Organization organization) {

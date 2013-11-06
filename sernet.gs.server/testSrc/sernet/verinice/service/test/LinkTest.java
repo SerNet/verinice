@@ -56,7 +56,6 @@ import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 
@@ -182,12 +181,6 @@ public class LinkTest extends CommandServiceProvider {
             linkMap.put(element.getTypeId(), linkSet);
         }
         linkSet.add(link);
-    }
-
-    protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
-        CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
-        command = commandService.executeCommand(command);
-        return command.getLink();
     }
 
     protected boolean isIgnoredType(String destinationTypeId) {
