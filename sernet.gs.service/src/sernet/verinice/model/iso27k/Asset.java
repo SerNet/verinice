@@ -37,6 +37,8 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
 	
+	public static final String REL_ASSET_PERSON_RESPO = "rel_asset_person_respo"; //$NON-NLS-1$
+	
 	public static final String[] CHILD_TYPES = new String[] {
         ControlGroup.TYPE_ID,
         Control.TYPE_ID
@@ -98,11 +100,13 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 	
@@ -110,7 +114,8 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
