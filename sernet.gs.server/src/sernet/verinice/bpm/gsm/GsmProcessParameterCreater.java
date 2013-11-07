@@ -189,8 +189,8 @@ public abstract class GsmProcessParameterCreater {
     private GsmServiceParameter createParameter(CnATreeElement leftElement, CnATreeElement controlGroup) {
         GsmServiceParameter parameter = null;
         Set<CnATreeElement> elementSet = getAllElements(controlGroup, leftElement);
-        if(!elementSet.isEmpty()) {
-            CnATreeElement person = getPersonForLeftElement(leftElement);
+        CnATreeElement person = getPersonForLeftElement(leftElement);
+        if(!elementSet.isEmpty() && person!=null) {
             parameter = new GsmServiceParameter(controlGroup, person);
             parameter.setProcessId(GsmService.createProcessId(leftElement, controlGroup));
             parameter.setElementSet(elementSet);
