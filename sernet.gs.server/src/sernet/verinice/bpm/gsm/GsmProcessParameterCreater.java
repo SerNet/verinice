@@ -36,6 +36,7 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
@@ -111,6 +112,8 @@ public abstract class GsmProcessParameterCreater {
     private IGraphService graphService;
     private VeriniceGraph graph;
     
+    private IGsmService gsmService;
+    
     private IBaseDao<CnATreeElement, Integer> elementDao;
     
     private IDao<ExecutionImpl, Long> jbpmExecutionDao;
@@ -137,8 +140,9 @@ public abstract class GsmProcessParameterCreater {
         List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
         for (CnATreeElement controlGroup : rightElementList) {           
             for (CnATreeElement leftElement : leftElementList) {
-                if(processExists(leftElement, controlGroup)) {
-                    continue;
+                List<ExecutionImpl> processList = findProcesses(leftElement, controlGroup);
+                if(processList!=null && !processList.isEmpty()) {
+                    deleteProcesses(processList);
                 }
                 GsmServiceParameter parameter = createParameter(leftElement, controlGroup);
                 if(parameter!=null) {
@@ -154,6 +158,15 @@ public abstract class GsmProcessParameterCreater {
         }
 
         return parameterList;
+    }
+
+    /**
+     * @param processList
+     */
+    private void deleteProcesses(List<ExecutionImpl> processList) {
+        for (ExecutionImpl executionImpl : processList) {
+            getGsmService().deleteProcess(executionImpl.getId());
+        }     
     }
 
     /**
@@ -202,20 +215,18 @@ public abstract class GsmProcessParameterCreater {
     }
     
     /**
-     * Returns true if there is a process for a person and a control-group,
-     * false if not.
+     * Returns all processes for a person or asset-group and a control-group.
      * 
-     * @param person A person
+     * @param leftElement A person or asset-group
      * @param controlGroup A control-group 
-     * @return true if there is a process, fasle if not
+     * @return A list of processes (ExecutionImpl)
      */
-    private boolean processExists(CnATreeElement person, CnATreeElement controlGroup) {
-        String value = GsmService.createProcessId(person,controlGroup);
-        List<?> processDbIdsList = searchProcessByVariable(IGenericProcess.VAR_PROCESS_ID, value);
-        return !processDbIdsList.isEmpty();
+    private List<ExecutionImpl> findProcesses(CnATreeElement leftElement, CnATreeElement controlGroup) {
+        String value = GsmService.createProcessId(leftElement,controlGroup);
+        return searchProcessByVariable(IGenericProcess.VAR_PROCESS_ID, value);
     }
 
-    private List<?> searchProcessByVariable(String key, String value) {        
+    private List<ExecutionImpl> searchProcessByVariable(String key, String value) {        
         DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
         DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
         variableCrit.add(Restrictions.eq("key", key));
@@ -402,6 +413,14 @@ public abstract class GsmProcessParameterCreater {
 
     public VeriniceGraph getGraph() {
         return graph;
+    }
+
+    public IGsmService getGsmService() {
+        return gsmService;
+    }
+
+    public void setGsmService(IGsmService gsmService) {
+        this.gsmService = gsmService;
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

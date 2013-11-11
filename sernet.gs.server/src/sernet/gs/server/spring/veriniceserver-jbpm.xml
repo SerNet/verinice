@@ -118,6 +118,7 @@
     <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.ProcessCreatorForAssetGroups" scope="prototype">
         <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
+        <property name="gsmService" ref="gsmService" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="elementDao" ref="cnaTreeElementDao" />
         <!-- Process with risk value below lowPriorityRiskLimit: priority low -->
