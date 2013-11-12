@@ -109,6 +109,12 @@ public class XMLImportDialog extends Dialog {
     
     private Integer format = SyncParameter.EXPORT_FORMAT_DEFAULT;
     
+    private int fileDialogFilterIndex = 0;
+    
+    private static final int PASSWORD_INDEX = 2;
+    private static final int CERTIFICATE_INDEX = 3;
+    private static final int NOCRYPT_INDEX = 0;
+    
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
@@ -286,16 +292,33 @@ public class XMLImportDialog extends Dialog {
         GridLayout pbeLayout = new GridLayout(pbeNumColumns, false);
         cryptGroup.setLayout(pbeLayout);
         
+        SelectionAdapter noEncryptionAdapter = new SelectionAdapter(){
+            @Override
+            public void widgetSelected(SelectionEvent e){
+                if(e.getSource() instanceof Button){
+                    fileDialogFilterIndex = NOCRYPT_INDEX;
+                }
+            }
+        };
+        
         // by default, no encryption is selected
-        final Button useNoEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_36, true, null);
+        final Button useNoEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_36, true, noEncryptionAdapter);
 
         // insert two placeholder
         new Label(cryptGroup, SWT.NONE);
         new Label(cryptGroup, SWT.NONE);
 
         // ==== Password Based Encryption controls
+        SelectionAdapter passwordEncryptionAdapter = new SelectionAdapter(){
+            @Override
+            public void widgetSelected(SelectionEvent e){
+                if(e.getSource() instanceof Button){
+                    fileDialogFilterIndex = PASSWORD_INDEX;
+                }
+            }
+        };
         // by default, no encryption is selected
-        final Button passwordEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_16, false, null);
+        final Button passwordEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_16, false, passwordEncryptionAdapter);
         
         passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
@@ -312,6 +335,7 @@ public class XMLImportDialog extends Dialog {
                     ((Button)e.getSource()).setSelection(true);
                     passwordEncryptionRadio.setSelection(false);
                     useNoEncryptionRadio.setSelection(false);
+                    fileDialogFilterIndex = CERTIFICATE_INDEX;
                 }
             }
         };
@@ -542,6 +566,9 @@ public class XMLImportDialog extends Dialog {
         } else {
             dialog.setFilterPath(defaultFolder);
         }
+        if(fileDialogFilterIndex <= dialog.getFilterNames().length){
+            dialog.setFilterIndex(fileDialogFilterIndex);
+        }
         String path = dialog.open();
 
         if (path != null) {
@@ -611,8 +638,7 @@ public class XMLImportDialog extends Dialog {
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
                     fileData = service.decrypt(fileData, password.toCharArray());                   
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {             
-                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,privateKeyPassword);                  
-                    fileData = trimContentSuffix(fileData);
+                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,privateKeyPassword);
                 }
                 // data is encrypted, guess format
                 format = guessFormat(fileData);

@@ -51,7 +51,12 @@ public abstract class PasswordBasedEncryption {
      * the BouncyCastle library.
      */
     private static final String ENCRYPTION_ALGORITHM = "PBEWITHSHA256AND256BITAES-CBC-BC";
-
+    
+    /**
+     * The Bouncycastle Providername
+     */
+    private static final String CRYPTOPROVIDER = BouncyCastleProvider.PROVIDER_NAME;
+    
     /**
      * Encrypts the given byte data with the given password using the AES
      * algorithm.
@@ -72,11 +77,11 @@ public abstract class PasswordBasedEncryption {
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
         try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
             // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, "BC");
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
 
             // encrypt
@@ -86,6 +91,7 @@ public abstract class PasswordBasedEncryption {
             throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
         }
         decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
+        pbeKeySpec.clearPassword();
         return decryptedData;
     }
 
@@ -109,11 +115,11 @@ public abstract class PasswordBasedEncryption {
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
         try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
             // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
 
             // decrypt
@@ -152,11 +158,11 @@ public abstract class PasswordBasedEncryption {
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
         try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, "BC");
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
             // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, "BC");
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
 
             encryptedOutputStream = new CipherOutputStream(unencryptedOutputStream, cipher);
@@ -189,11 +195,11 @@ public abstract class PasswordBasedEncryption {
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
 
         try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
 
             // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
 
             decryptedInputStream = new CipherInputStream(encryptedInputStream, cipher);
