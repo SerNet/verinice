@@ -6643,7 +6643,7 @@ aCommand = new LoadReportCountRisksBySeverity(root, 'a', 3);
 aResults = helper.execute(aCommand).getResult();
 
 // add values for a
-result.add("Verfuegbarkeit");
+result.add("Verfügbarkeit");
 result.add(aResults.get(0).get(1));
 result.add(aResults.get(1).get(1));
 result.add(aResults.get(2).get(1));
@@ -6654,7 +6654,7 @@ results.add(result);
 result = new ArrayList(0);
 
 // add values for i
-result.add("Integritaet");
+result.add("Integrität");
 result.add(iResults.get(0).get(1));
 result.add(iResults.get(1).get(1));
 result.add(iResults.get(2).get(1));
@@ -6997,7 +6997,7 @@ result.add(0);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Integritaet");
+result.add("Integrität");
 result.add(iRedCount);
 result.add(iYellowCount);
 result.add(iGreenCount);
@@ -7005,7 +7005,7 @@ result.add(1);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Verfuegbarkeit");
+result.add("Verfügbarkeit");
 result.add(aRedCount);
 result.add(aYellowCount);
 result.add(aGreenCount);
@@ -8893,7 +8893,7 @@ result.add(0);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Integritaet");
+result.add("Integrität");
 result.add(iRedCount);
 result.add(iYellowCount);
 result.add(iGreenCount);
@@ -8901,7 +8901,7 @@ result.add(1);
 results.add(result);
 
 result = new ArrayList(0);
-result.add("Verfuegbarkeit");
+result.add("Verfügbarkeit");
 result.add(aRedCount);
 result.add(aYellowCount);
 result.add(aGreenCount);
@@ -10787,9 +10787,9 @@ columns(LoadReportHighRiskAssetScenarios.COLUMNS);</value>
                     <expression name="expression">if(row["color_name"] == "Confidentiality"){
 	"Vertraulichkeit";
 } else if(row["color_name"] == "Integrity"){
-	"Integritaet";
+	"Integrität";
 } else if(row["color_name"] == "Availability"){
-	"Verfuegbarkeit";
+	"Verfügbarkeit";
 } else {
 	row["color_name"];
 }</expression>
@@ -11479,7 +11479,7 @@ columns(cols);</value>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Risk Acceptance Criteria"</expression>
             </structure>
-            <text-property name="text">Risiko Akzeptanz Kriterien</text-property>
+            <text-property name="text">Risikoakzeptanzkriterien</text-property>
         </label>
         <grid id="2046">
             <column id="2047"/>
@@ -11545,7 +11545,7 @@ columns(cols);</value>
                                 <cell id="951">
                                     <property name="fontSize">12pt</property>
                                     <label id="967">
-                                        <text-property name="text">Integritaet</text-property>
+                                        <text-property name="text">Integrität</text-property>
                                     </label>
                                 </cell>
                                 <cell id="952">
@@ -11560,7 +11560,7 @@ columns(cols);</value>
                                 <cell id="954">
                                     <property name="fontSize">12pt</property>
                                     <label id="968">
-                                        <text-property name="text">Verfuegbarkeit</text-property>
+                                        <text-property name="text">Verfügbarkeit</text-property>
                                     </label>
                                 </cell>
                                 <cell id="955">
@@ -11578,8 +11578,8 @@ columns(cols);</value>
                     <text id="2052">
                         <property name="marginLeft">5pt</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Die folgende Risikobewertung wurde, wie in dem genehmigten Risikobewertungs Verfahren durchgefuehrt und steht im Einklang mit der internationalen Norm ISO / IEC 27005.
-Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in der Risikobewertungs Richtlinie definiert und von der Geschaeftsleitung genehmigt.]]></text-property>
+                        <text-property name="content"><![CDATA[Die folgende Risikobewertung wurde, wie im genehmigten Verfahren zur Risikobewertung durchgeführt und steht im Einklang mit der internationalen Norm ISO / IEC 27005.
+Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in der Richtlinie zur Risikobewertung definiert und von der Geschäftsleitung genehmigt.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11587,9 +11587,9 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
         <text id="2156">
             <property name="pageBreakAfter">auto</property>
             <property name="contentType">html</property>
-            <text-property name="content"><![CDATA[<B><U>Vertraulichkeit</U></B>: Eigenschaft von Informationen nicht zugaenglich gemacht oder weitergegeben zu werden an unerlaubte Personen, Unternehmen oder Prozesse<br/>
-<B><U>Integritaet</U></B>: Eigenschaft zum Schutz der Richtigkeit und Vollstaendigkeit von Assets<br/>
-<B><U>Verfuegbarkeit</U></B>: Eigenschaft von Informationen zugaenglich und nutzbar auf Verlangen von einem autorisierten Unternehmen zu sein <br/>
+            <text-property name="content"><![CDATA[<B><U>Vertraulichkeit</U></B>: Eigenschaft von Informationen nicht zugänglich gemacht oder weitergegeben zu werden an unerlaubte Personen, Unternehmen oder Prozesse<br/>
+<B><U>Integrität</U></B>: Eigenschaft zum Schutz der Richtigkeit und Vollständigkeit von Assets<br/>
+<B><U>Verfügbarkeit</U></B>: Eigenschaft von Informationen zugänglich und nutzbar auf Verlangen von einem autorisierten Unternehmen zu sein <br/>
 (ISO/IEC 27000:2009)]]></text-property>
         </text>
         <label id="2863">
@@ -11603,7 +11603,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Risk Acceptance Criteria"</expression>
             </structure>
-            <text-property name="text">Risiko Klassifikation</text-property>
+            <text-property name="text">Risikoklassifikation</text-property>
         </label>
         <grid id="2851">
             <property name="width">7.739583333333333in</property>
@@ -11620,7 +11620,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                 <cell id="2856">
                     <text id="2864">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[ROT: Das Risiko bertrifft die Risikoakzeptanzkriterien und muss entsprechend der Risikobewertungs Richtlinie angegangen werden.]]></text-property>
+                        <text-property name="content"><![CDATA[ROT: Das Risiko bertrifft die Risikoakzeptanzkriterien und muss entsprechend der Richtlinie zur Risikobewertung behandelt werden.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11631,7 +11631,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                 <cell id="2859">
                     <text id="2865">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[GELB: Das Risiko faellt gerde unter die Risikoakzeptanzkriterien. Es muss entsprechend der Risikobewertungs Richtlinie angegangen werden.]]></text-property>
+                        <text-property name="content"><![CDATA[GELB: Das Risiko fällt gerade noch unter die Risikoakzeptanzkriterien. Es muss entsprechend der Richtlinie zur Risikobewertung behandelt werden.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11642,7 +11642,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                 <cell id="2862">
                     <text id="2866">
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[GRUEN: Das Risiko faellt in die Risikoakzeptanzkriterien.]]></text-property>
+                        <text-property name="content"><![CDATA[GRÜN: Das Risiko liegt innerhalb der Risikoakzeptanzkriterien.]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -11652,7 +11652,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
             <property name="pageBreakBefore">always</property>
-            <text-property name="text">Identifizierte Risiken mit implementierten Controls</text-property>
+            <text-property name="text">Identifizierte Risiken ohne Berücksichtigung implementierter Controls</text-property>
         </label>
         <extended-item extensionName="Chart" id="2562">
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -13556,7 +13556,6 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
 ]]></xml-property>
             <property name="outputFormat">SVG</property>
             <property name="inheritColumns">false</property>
-            <property name="pageBreakAfter">always</property>
             <property name="dataSet">scope_countrisks_aggregated_net_command</property>
             <property name="height">3.479in</property>
             <property name="width">7.666666666666667in</property>
@@ -13627,7 +13626,6 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
         </extended-item>
         <grid id="2733">
             <property name="pageBreakAfter">always</property>
-            <property name="pageBreakBefore">always</property>
             <property name="height">12.489583333333334in</property>
             <column id="2734"/>
             <row id="2735">
@@ -13641,7 +13639,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Assets mit hohem Risiko (ohne Controls)</text-property>
+                        <text-property name="text">Assets mit hohem Risiko (ohne Berücksichtigung von Controls)</text-property>
                     </label>
                     <table id="2660">
                         <property name="textAlign">left</property>
@@ -13688,10 +13686,10 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                             </structure>
                         </list-property>
                         <column id="2674">
-                            <property name="width">2.90625in</property>
+                            <property name="width">2.625in</property>
                         </column>
                         <column id="2675">
-                            <property name="width">0.4166666666666667in</property>
+                            <property name="width">0.6979166666666666in</property>
                         </column>
                         <header>
                             <row id="2661">
@@ -13794,10 +13792,10 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                             </structure>
                         </list-property>
                         <column id="3148">
-                            <property name="width">2.90625in</property>
+                            <property name="width">2.625in</property>
                         </column>
                         <column id="3149">
-                            <property name="width">0.4166666666666667in</property>
+                            <property name="width">0.698in</property>
                         </column>
                         <header>
                             <row id="3139">
@@ -13861,7 +13859,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                         <property name="textUnderline">underline</property>
                         <property name="marginBottom">10pt</property>
                         <property name="textAlign">left</property>
-                        <text-property name="text">Bereiche mit hohem Risiko ohne Controls</text-property>
+                        <text-property name="text">Bereiche mit hohem Risiko ohne Berücksichtigung von Controls</text-property>
                     </label>
                     <extended-item extensionName="Chart" id="2881">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
@@ -15738,7 +15736,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Confidentiality"</expression>
                         </structure>
-                        <text-property name="text">Risiko Matrix: Vertraulichkeit (ohne Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Vertraulichkeit (ohne Berücksichtigung von Controls)</text-property>
                     </label>
                     <grid id="2006">
                         <property name="pageBreakInside">avoid</property>
@@ -15772,7 +15770,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                 </label>
                                 <table id="1795">
                                     <property name="pageBreakInside">avoid</property>
-                                    <property name="width">3.8264462809917354in</property>
+                                    <property name="width">100%</property>
                                     <property name="dataSet">scope_groupedrisks_c</property>
                                     <list-property name="paramBindings">
                                         <structure>
@@ -15811,7 +15809,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                         </structure>
                                     </list-property>
                                     <column id="1828">
-                                        <property name="width">0.8347107438016529in</property>
+                                        <property name="width">100%</property>
                                         <property name="fontWeight">bold</property>
                                     </column>
                                     <column id="1819">
@@ -16015,7 +16013,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten für die Einstufung der Warscheinlichkeit und die Business-Impact-Klassifizierung. ]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2011">
@@ -17183,7 +17181,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Integrity"</expression>
                         </structure>
-                        <text-property name="text">Risiko Matrix: Integritaet (ohne Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Integrität (ohne Berücksichtigung von Controls)</text-property>
                     </label>
                     <grid id="2013">
                         <property name="pageBreakInside">avoid</property>
@@ -17208,7 +17206,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                 </label>
                                 <table id="1857">
                                     <property name="pageBreakInside">avoid</property>
-                                    <property name="width">3.8264462809917354in</property>
+                                    <property name="width">100%</property>
                                     <property name="dataSet">scope_groupedrisks_i</property>
                                     <list-property name="paramBindings">
                                         <structure>
@@ -17245,7 +17243,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                         </structure>
                                     </list-property>
                                     <column id="1887">
-                                        <property name="width">0.8347107438016529in</property>
+                                        <property name="width">100%</property>
                                         <property name="fontWeight">bold</property>
                                     </column>
                                     <column id="1888">
@@ -17407,7 +17405,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten für die Einstufung der Warscheinlichkeit und die Business-Impact-Klassifizierung.]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2018">
@@ -18571,7 +18569,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                         <structure name="toc">
                             <expression name="expressionValue" type="javascript">"Risk Matrix: Availability"</expression>
                         </structure>
-                        <text-property name="text">Risiko Matrix: Verfuegbarkeit (ohne Controls)</text-property>
+                        <text-property name="text">Risiko Matrix: Verfügbarkeit (ohne Berücksichtigung von Controls)</text-property>
                     </label>
                     <grid id="2020">
                         <property name="pageBreakInside">avoid</property>
@@ -18596,7 +18594,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                 </label>
                                 <table id="1895">
                                     <property name="pageBreakInside">avoid</property>
-                                    <property name="width">100%</property>
+                                    <property name="width">3.7604166666666665in</property>
                                     <property name="dataSet">scope_groupedrisks_a</property>
                                     <list-property name="paramBindings">
                                         <structure>
@@ -18650,23 +18648,23 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                         </structure>
                                     </list-property>
                                     <column id="1925">
-                                        <property name="width">0.8854166666666666in</property>
+                                        <property name="width">1.4270833333333333in</property>
                                         <property name="fontWeight">bold</property>
                                     </column>
                                     <column id="1926">
-                                        <property name="width">0.4791666666666667in</property>
+                                        <property name="width">100%</property>
                                     </column>
                                     <column id="1927">
-                                        <property name="width">0.59375in</property>
+                                        <property name="width">100%</property>
                                     </column>
                                     <column id="1928">
-                                        <property name="width">0.59375in</property>
+                                        <property name="width">100%</property>
                                     </column>
                                     <column id="1929">
-                                        <property name="width">0.59375in</property>
+                                        <property name="width">100%</property>
                                     </column>
                                     <column id="1933">
-                                        <property name="width">0.59375in</property>
+                                        <property name="width">100%</property>
                                     </column>
                                     <header>
                                         <row id="1896">
@@ -18896,7 +18894,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                     <property name="marginTop">5pt</property>
                                     <property name="textAlign">left</property>
                                     <property name="contentType">auto</property>
-                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten fuer die Einstufung der Warscheinlichkeit und die Business Impact Klassifizierung.]]></text-property>
+                                    <text-property name="content"><![CDATA[Die Tabelle zeigt die Anzahl der identifizierten Risiken und deren Schweregrad. Siehe unten für die Einstufung der Warscheinlichkeit und die Business-Impact-Klassifizierung.]]></text-property>
                                 </text>
                             </cell>
                             <cell id="2025">
@@ -20053,7 +20051,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <property name="textUnderline">underline</property>
             <property name="paddingTop">20pt</property>
             <property name="pageBreakBefore">always</property>
-            <text-property name="text">Business Impact und Risiko Klassifikation</text-property>
+            <text-property name="text">Business-Impact und Risikoklassifikation</text-property>
         </label>
         <grid id="1944">
             <property name="pageBreakAfter">always</property>
@@ -20118,7 +20116,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                             <expression name="expressionValue" type="javascript">"Business Impact Classification"</expression>
                         </structure>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Business Impact Klassifikation]]></text-property>
+                        <text-property name="content"><![CDATA[Business-Impact-Klassifikation]]></text-property>
                     </text>
                 </cell>
             </row>
@@ -20204,7 +20202,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                     <text id="1977">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Integritaet]]></text-property>
+                        <text-property name="content"><![CDATA[Integrität]]></text-property>
                     </text>
                 </cell>
                 <cell id="1978">
@@ -20263,7 +20261,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                     <text id="1982">
                         <property name="fontWeight">bold</property>
                         <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Verfuegbarkeit]]></text-property>
+                        <text-property name="content"><![CDATA[Verfügbarkeit]]></text-property>
                     </text>
                 </cell>
                 <cell id="1983">
@@ -20726,7 +20724,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
-            <text-property name="text">Detallierte Risikobewertung (mit Controls)</text-property>
+            <text-property name="text">Detaillierte Risikobewertung (mit Controls)</text-property>
         </label>
         <grid id="2104">
             <property name="borderBottomColor">#FFFFFF</property>
@@ -21016,7 +21014,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                             <property name="borderTopStyle">solid</property>
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1387">
-                                                                <text-property name="text">Abbr.</text-property>
+                                                                <text-property name="text">Abk.</text-property>
                                                             </label>
                                                         </cell>
                                                         <cell id="1682">
@@ -21069,7 +21067,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1393">
                                                                 <property name="textAlign">center</property>
-                                                                <text-property name="text">Integritaet</text-property>
+                                                                <text-property name="text">Integrität</text-property>
                                                             </label>
                                                         </cell>
                                                         <cell id="1685">
@@ -21087,7 +21085,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                             <property name="borderTopWidth">thin</property>
                                                             <label id="1395">
                                                                 <property name="textAlign">center</property>
-                                                                <text-property name="text">Verfuegbarkeit</text-property>
+                                                                <text-property name="text">Verfügbarkeit</text-property>
                                                             </label>
                                                         </cell>
                                                     </row>
@@ -21501,7 +21499,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                                 <property name="verticalAlign">middle</property>
                                                                 <label id="2045">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Assets und Risiko Szenarios</text-property>
+                                                                    <text-property name="text">Assets und Risiko Szenarien</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2034">
@@ -21630,7 +21628,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1728">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Integritaet</text-property>
+                                                                    <text-property name="text">Integrität</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="1699">
@@ -21648,7 +21646,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                                 <property name="borderTopWidth">thin</property>
                                                                 <label id="1730">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Verfuegbarkeit</text-property>
+                                                                    <text-property name="text">Verfügbarkeit</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2039">
