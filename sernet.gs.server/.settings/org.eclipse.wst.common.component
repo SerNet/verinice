@@ -3,6 +3,7 @@
     <wb-module deploy-name="sernet.gs.server">
         <wb-resource deploy-path="/" source-path="/WebContent"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/testSrc"/>
         <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/sernet.gs.ui.rcp.main/sernet.gs.ui.rcp.main">
             <dependency-type>uses</dependency-type>
         </dependent-module>
