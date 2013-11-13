@@ -51,6 +51,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -77,6 +78,8 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 	private IWorkbenchPart targetPart;
 	
 	private ICommandService commandService;
+	
+	private IRightsServiceClient rightsService;
 
 	@Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -143,6 +146,7 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 						// save configuration:
 						SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);			
 						command = getCommandService().executeCommand(command);
+						getRightService().reload();
 					} catch (final UsernameExistsException e) {
 						final String logMessage = "Configuration can not be saved. Username exists: " + e.getUsername(); //$NON-NLS-1$
 						final String messageTitle = Messages.ConfigurationAction_7; 
@@ -276,6 +280,13 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
     @Override
     public void setRightID(String rightID) {
         // DO nothing
+    }
+    
+    private IRightsServiceClient getRightService() {
+        if (rightsService == null) {
+            rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        }
+        return rightsService;
     }
 
 }
