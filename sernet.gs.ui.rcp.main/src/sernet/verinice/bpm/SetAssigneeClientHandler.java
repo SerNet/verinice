@@ -35,7 +35,6 @@ import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE 
@@ -66,11 +65,13 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
     @Override
     public Map<String, Object> execute() {
         Map<String, Object> parameter = null;
-        try {                             
-            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, PersonIso.TYPE_ID, null);            
+        try {  
+            String type = selectElementType();                           
+            final CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, type, null);            
             dialog.setScopeOnly(false);
             dialog.setShowScopeCheckbox(false);
             Display.getDefault().syncExec(new Runnable() {
+                @Override
                 public void run() {
                     dialogStatus = dialog.open();
                 }
@@ -89,13 +90,28 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
                 }
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
-            }
+            }          
         } catch(CompletionAbortedException e) {
             throw e;
         } catch(Exception e) {
             LOG.error("Error while assigning user to task.", e);
         }
         return parameter;
+    }
+    
+    private String selectElementType() {
+        final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                dialogStatus = typeDialog.open();
+            }
+        });
+        if (dialogStatus == Window.OK) { 
+            return typeDialog.getElementType();
+        } else {
+            throw new CompletionAbortedException("Canceled by user.");
+        }
     }
 
     /* (non-Javadoc)
