@@ -46,6 +46,7 @@ import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -104,10 +105,12 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 		}
 
 		WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				Activator.inheritVeriniceContextState();
 				try {			
 				 Display.getDefault().asyncExec(new Runnable() {
+                        @Override
                         public void run() {
                             viewer.setInput(new PlaceHolder(Messages.RelationView_0));
                         }
@@ -121,13 +124,15 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 					final CnATreeElement linkElmt = command.getElmt();
 
 					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							viewer.setInput(linkElmt);
 						}
 					});
 				} catch (Exception e) {
 					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							viewer.setInput(new PlaceHolder(Messages.RelationView_3));
 						}
 					});
@@ -144,7 +149,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	 * This is a callback that will allow us
 	 * to create the viewer and initialize it.
 	 */
-	public void createPartControl(Composite parent) {
+	@Override
+    public void createPartControl(Composite parent) {
 		viewer = new RelationTableViewer(this, parent, SWT.FULL_SELECTION | SWT.MULTI, false);
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);
@@ -170,16 +176,19 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	private void hookModelLoadListener() {
 		this.loadListener = new IModelLoadListener() {
 
-			public void closed(BSIModel model) {
+			@Override
+            public void closed(BSIModel model) {
 				removeModelListeners();
 				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
+					@Override
+                    public void run() {
 						viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
 					}
 				});
 			}
 
-			public void loaded(BSIModel model) {
+			@Override
+            public void loaded(BSIModel model) {
 				synchronized (loadListener) {
 					addBSIModelListeners();
 				}
@@ -201,6 +210,7 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
      */
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
@@ -225,7 +235,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	 */
 	protected void addISO27KModelListeners() {
 		WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
 					monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
@@ -263,7 +274,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
+			@Override
+            public void menuAboutToShow(IMenuManager manager) {
 				RelationView.this.fillContextMenu(manager);
 			}
 		});
@@ -280,7 +292,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	
 	private void hookPageSelection() {
 		selectionListener = new ISelectionListener() {
-			public void selectionChanged(IWorkbenchPart part,
+			@Override
+            public void selectionChanged(IWorkbenchPart part,
 					ISelection selection) {
 				pageSelectionChanged(part, selection);
 			}
@@ -357,7 +370,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 
 	private void makeActions() {
 		jumpToAction = new Action() {
-			public void run() {
+			@Override
+            public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
 				if (obj == null){
@@ -375,7 +389,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 		jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 		
 		doubleClickAction = new Action() {
-			public void run() {
+			@Override
+            public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
 				CnALink link = (CnALink) obj;
@@ -400,7 +415,8 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -409,47 +425,64 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 
 	/**
 	 * 
 	 */
-	public void reload(CnALink oldLink, CnALink newLink) {
+	@Override
+    public void reload(CnALink oldLink, CnALink newLink) {
 		newLink.setDependant(oldLink.getDependant());
 		newLink.setDependency(oldLink.getDependency());
 		
-		boolean removedLinkDown = inputElmt.removeLinkDown(oldLink);
-		boolean removedLinkUp = inputElmt.removeLinkUp(oldLink);
+		boolean removedLinkDown = getInputElmt().removeLinkDown(oldLink);
+		boolean removedLinkUp = getInputElmt().removeLinkUp(oldLink);
 		if (removedLinkUp){
-			inputElmt.addLinkUp(newLink);
+		    getInputElmt().addLinkUp(newLink);
 		}
 		if (removedLinkDown){
-			inputElmt.addLinkDown(newLink);
-		}
-		viewer.refresh();
-		
+		    getInputElmt().addLinkDown(newLink);
+		}    
+		viewer.refresh();		
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
 	 */
-	public CnATreeElement getInputElmt() {
+	@Override
+    public CnATreeElement getInputElmt() {
+	    checkAndRetrieve();
 		return this.inputElmt;
 	}
 
-	/* (non-Javadoc)
+	/**
+     * @return
+     */
+    private CnATreeElement checkAndRetrieve() {
+        CnATreeElement elementWithProperties = Retriever.checkRetrieveElement(inputElmt);
+        this.inputElmt.setEntity(elementWithProperties.getEntity());
+        CnATreeElement elementWithLinks = Retriever.checkRetrieveLinks(inputElmt, true);
+        this.inputElmt.setLinksDown(elementWithLinks.getLinksDown());
+        this.inputElmt.setLinksUp(elementWithLinks.getLinksUp());
+        return this.inputElmt;
+    }
+
+    /* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
-	public void setInputElmt(CnATreeElement inputElmt) {
+	@Override
+    public void setInputElmt(CnATreeElement inputElmt) {
 		this.inputElmt = inputElmt;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
 	 */
-	public void reloadAll() {
+	@Override
+    public void reloadAll() {
 		loadLinks(inputElmt);
 	}
 

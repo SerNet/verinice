@@ -30,6 +30,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -108,6 +109,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    case 2:
 	        return ""; // image only //$NON-NLS-1$
 	    case 3:
+	        replaceLinkEntities(link);
 	        return CnALink.getRelationObjectTitle(view.getInputElmt(), link);      
 	    case 4:
 	        String title  = "";
@@ -137,6 +139,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	        return ""; //$NON-NLS-1$
 	    }
 	}
+
+    protected void replaceLinkEntities(CnALink link) {
+        CnATreeElement dependantWithProperties = Retriever.checkRetrieveElement(link.getDependant());
+        CnATreeElement dependencyWithProperties = Retriever.checkRetrieveElement(link.getDependency());        
+        link.getDependant().setEntity(dependantWithProperties.getEntity());
+        link.getDependency().setEntity(dependencyWithProperties.getEntity());
+    }
 
 	@Override
     public Image getColumnImage(Object obj, int index) {
