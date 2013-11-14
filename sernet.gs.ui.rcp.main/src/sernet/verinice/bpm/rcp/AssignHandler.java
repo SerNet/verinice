@@ -39,11 +39,11 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.bpm.PersonTypeSelectDialog;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  *
@@ -53,6 +53,8 @@ import sernet.verinice.model.iso27k.PersonIso;
 public class AssignHandler extends AbstractHandler {
 
     private static final Logger LOG = Logger.getLogger(AssignHandler.class);
+    
+    private Shell shell;
     
     /* (non-Javadoc)
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -64,7 +66,9 @@ public class AssignHandler extends AbstractHandler {
             if (selection != null && selection instanceof IStructuredSelection) {
                 Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
                 
-                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, PersonIso.TYPE_ID, null);
+                String type = selectElementType(); 
+                
+                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(shell, type, null);
                 dialog.setShowScopeCheckbox(false);
                 if (dialog.open() == Window.OK) {
                     Set<String> taskIdSet = new HashSet<String>();
@@ -94,6 +98,15 @@ public class AssignHandler extends AbstractHandler {
             LOG.error("Error while assigning user to task.", e);
         }
         return null;
+    }
+    
+    private String selectElementType() {
+        final PersonTypeSelectDialog typeDialog = new PersonTypeSelectDialog(shell);
+        if (typeDialog.open() == Window.OK) { 
+            return typeDialog.getElementType();
+        } else {
+            throw new CompletionAbortedException("Canceled by user.");
+        }
     }
     
     private ITaskService getTaskService() {
