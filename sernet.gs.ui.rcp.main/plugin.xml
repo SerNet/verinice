@@ -949,21 +949,26 @@
                icon="icons/generic_element_new.png"
                label="%command.label.newGroup">        
          	<visibleWhen>
-    			<iterate operator="and">
-             		<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
-	               	</not>            
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
-	               	</not>
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
-	               	</not>
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
-	               	</not>
-             	</iterate>
+         	    <with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">	         	    		
+	                    	<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                    	<not>
+		                		<instanceof value="sernet.verinice.model.iso27k.Asset" />
+		               		</not>
+		               		<not>
+			                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+			               	</not>
+			                <not>
+			                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+			               	</not>
+			                <not>
+			                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+			               	</not>            
+	                    </iterate>
+                    </and>            
+		        </with> 
          	</visibleWhen>
          </command>
       </menuContribution>
@@ -974,21 +979,26 @@
                icon="icons/generic_element_new.png"
                label="%command.label.new">
          	<visibleWhen>
-    			<iterate operator="and">
-             		<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Asset" />
-	               	</not>            
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
-	               	</not>
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
-	               	</not>
-	                <not>
-	                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
-	               	</not>
-             	</iterate>
+         		<with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">	         	    		
+	                    	<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                    	<not>
+		                		<instanceof value="sernet.verinice.model.iso27k.Asset" />
+		               		</not>
+		               		<not>
+			                	<instanceof value="sernet.verinice.model.iso27k.Audit" />
+			               	</not>
+			                <not>
+			                	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup" />
+			               	</not>
+			                <not>
+			                	<instanceof value="sernet.verinice.model.iso27k.Organization" />
+			               	</not>            
+	                    </iterate>
+                    </and>            
+		        </with>
          	</visibleWhen>
          </command>
       </menuContribution>
@@ -1475,52 +1485,72 @@
       <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
             commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
-         	<with variable="activePartId">
-     			<or>
-       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       			</or>
-    		</with>
+         	<and>
+	         	<with variable="activePartId">
+	     			<or>
+	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       			</or>
+	    		</with>
+	    		<with variable="selection">
+	           		<count value="+"/>
+	            </with>
+	         </and>
          </activeWhen>
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CopyWithLinksHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks">
          <activeWhen>
-         	<with variable="activePartId">
-     			<or>
-       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       			</or>
-    		</with>
+         	<and>
+	         	<with variable="activePartId">
+	     			<or>
+	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       			</or>
+	    		</with>
+	    		<with variable="selection">
+	           		<count value="+"/>
+	            </with>
+	         </and>
          </activeWhen>
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CutHandler"
             commandId="org.eclipse.ui.edit.cut">
          <activeWhen>
-     		<with variable="activePartId">
-     			<or>
-       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       			</or>
-    		</with>
+         	<and>
+	     		<with variable="activePartId">
+	     			<or>
+	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       			</or>
+	    		</with>
+	    		<with variable="selection">
+	           		<count value="+"/>
+	            </with>
+	         </and>
          </activeWhen>
       </handler>
       <handler class="sernet.gs.ui.rcp.main.bsi.actions.DeleteHandler"
             commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
-     		<with variable="activePartId">
-     			<or>
-       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       			</or>
-    		</with>
+            <and>
+	     		<with variable="activePartId">
+	     			<or>
+	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
+	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       			</or>
+	    		</with>
+	    		<with variable="selection">
+            		<count value="+"/>
+            	</with>
+            </and>
          </activeWhen>
          <enabledWhen>
-            	<with variable="selection">
-	                <iterate operator="and">
+            	<with variable="selection">         		
+            		<iterate operator="and">
 	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
 	                    <test property="sernet.verinice.iso27k.model.isDeletable"/>            
-	                </iterate>
+	                </iterate>           
             	</with>
 		 </enabledWhen>
       </handler>     
