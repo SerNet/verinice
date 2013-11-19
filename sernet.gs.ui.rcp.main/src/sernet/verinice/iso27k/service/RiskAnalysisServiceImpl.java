@@ -208,6 +208,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      * @param impactA
      * @throws CommandException 
      */
+    @Override
     public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA)  {
         if (riskType == RISK_PRE_CONTROLS){
             return null; // do nothing
@@ -234,6 +235,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
             break;
         case RISK_WITH_ALL_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
+                control = Retriever.checkRetrieveElement(control);
                 impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
                 impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
                 impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
