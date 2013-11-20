@@ -54,7 +54,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.bsi.Attachment;
@@ -259,9 +258,17 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         for(CnALink link : linkSet) {
 		    CnATreeElement dependant  = link.getDependant();
 		    dependant = getFromCache(dependant);
+		    if(dependant==null) {
+		        log.warn("Dependant of link not found. Check access rights. " + link.getId());
+		        continue;
+		    }
 		    link.setDependant(dependant);
 		    CnATreeElement dependency  = link.getDependency();
 		    dependency = getFromCache(dependency);
+		    if(dependency==null) {
+                log.warn("Dependency of link not found. Check access rights. " + link.getId());
+                continue;
+            }
 		    link.setDependency(dependency);
 		    ExportFactory.transform(link, syncData.getSyncLink());
 		}
