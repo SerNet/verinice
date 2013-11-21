@@ -396,10 +396,10 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			boolean openConfirm = MessageDialog.openConfirm(getParentShell(), Messages.AccessControlEditDialog_0, Messages.AccessControlEditDialog_2);
 			if (!openConfirm) {
 				return;
-			}
-			isOverride = radioButtonMode[1].getSelection();
-		    isUpdateChildren = buttonInherit.getSelection();
+			}		
 		}
+		isOverride = radioButtonMode[1].getSelection();
+        isUpdateChildren = buttonInherit.getSelection();
 		super.okPressed();
 	}
 
