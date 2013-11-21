@@ -51,12 +51,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdatePermissions;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-
 /**
  * Simple dialog that allows defining the access options for an element.
  * 
@@ -73,19 +71,15 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	private static final String INFORMATION_OVERRIDE_MODE = Messages.AccessControlEditDialog_8;
 	
 	private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
+	private Set<Permission> permissionSet;	
+	private boolean isOverride;
+    private boolean isUpdateChildren;
 
-	private TableViewer viewer;
-
-	private Set<Permission> permissionSet;
-
+    private TableViewer viewer;
 	private Combo comboRole;
-
 	private Button buttonRead;
-
 	private Button buttonWrite;
-
-	private Button buttonInherit;
-	
+	private Button buttonInherit;	
 	private Button[] radioButtonMode = new Button[2];
 	
 	private static final int MARGIN_WIDTH_DEFAULT = 10;
@@ -403,21 +397,27 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 			if (!openConfirm) {
 				return;
 			}
-		}
-		for (CnATreeElement element : elements) {
-			UpdatePermissions up = new UpdatePermissions(element, permissionSet, buttonInherit.getSelection(), isOverride());
-			try {
-				ServiceFactory.lookupCommandService().executeCommand(up);
-			} catch (CommandException e) {
-				LOG.error("Error while updating permissions", e); //$NON-NLS-1$
-				throw new RuntimeException(e);
-			}
+			isOverride = radioButtonMode[1].getSelection();
+		    isUpdateChildren = buttonInherit.getSelection();
 		}
 		super.okPressed();
 	}
 
-	private boolean isOverride() {
-		return radioButtonMode[1].getSelection();
+
+	public List<CnATreeElement> getElements() {
+        return elements;
+    }
+
+    public Set<Permission> getPermissionSet() {
+        return permissionSet;
+    }
+
+    public boolean isOverride() {
+		return isOverride;
 	}
+    
+    public boolean isUpdateChildren() {
+        return isUpdateChildren;
+    }
 
 }

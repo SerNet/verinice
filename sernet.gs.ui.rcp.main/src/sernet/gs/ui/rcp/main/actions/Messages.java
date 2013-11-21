@@ -55,6 +55,7 @@ public class Messages extends NLS {
     public static String RunRiskAnalysisAction_0;
     public static String RunRiskAnalysisAction_1;
     public static String RunRiskAnalysisAction_2;
+    public static String ShowAccessControlEditAction_0;
     public static String ShowAccessControlEditAction_1;
     public static String ShowBulkEditAction_1;
     public static String ShowBulkEditAction_2;
