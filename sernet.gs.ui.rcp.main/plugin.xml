@@ -1604,6 +1604,9 @@
             	<with variable="selection">
 	                <iterate operator="and">
 	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ITVerbund"/>
+	                    </not>
 	                    <test property="sernet.verinice.iso27k.model.canContain"/>
 	                    <test property="sernet.verinice.iso27k.model.cutCopy"/>              
 	                </iterate>
