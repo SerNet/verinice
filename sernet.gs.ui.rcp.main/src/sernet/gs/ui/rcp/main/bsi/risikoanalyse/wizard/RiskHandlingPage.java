@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -40,7 +41,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
@@ -50,6 +50,8 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  */
 public class RiskHandlingPage extends WizardPage {
 
+    private static final Logger LOG = Logger.getLogger(RiskHandlingPage.class);
+    
 	private TableColumn imgColumn;
 	private TableColumn numberColumn;
 	private TableColumn nameColumn;
@@ -76,7 +78,8 @@ public class RiskHandlingPage extends WizardPage {
 	 * 
 	 *  @param parent the parent Composite
 	 */
-	public void createControl(Composite parent) {
+	@Override
+    public void createControl(Composite parent) {
 	    
 	    final int imgColWidth = 35;
 	    final int numColWidth = 100;
@@ -160,7 +163,8 @@ public class RiskHandlingPage extends WizardPage {
 			 * 
 			 * @param event event containing information about the selection
 			 */
-	    	public void modifyText(ModifyEvent event) {
+	    	@Override
+            public void modifyText(ModifyEvent event) {
 				Text text = (Text) event.widget;
 				if (text.getText().length() > 0) {
 					
@@ -292,15 +296,22 @@ public class RiskHandlingPage extends WizardPage {
 		 * @param element given element
 		 * @return true if element passes test, false else
 		 */
-		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-			String gefaehrdungTitle = gefaehrdung.getTitel();
-			Matcher matcher = pattern.matcher(gefaehrdungTitle);
-			
-			if (matcher.find()) {
-				return true;
-			} 
-			return false;
+		@Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+		    try {
+    			GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
+    			String gefaehrdungTitle = gefaehrdung.getTitle();
+    			Matcher matcher = pattern.matcher(gefaehrdungTitle);
+    			
+    			if (matcher.find()) {
+    				return true;
+    			} 
+    			return false;
+		    }
+			catch (Exception e) {
+			    LOG.error("Error while filtering table.", e);
+			    return true;
+            }		
 		}
 	}
 }
