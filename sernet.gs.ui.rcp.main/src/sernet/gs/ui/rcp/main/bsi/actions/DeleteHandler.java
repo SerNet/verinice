@@ -121,7 +121,7 @@ public class DeleteHandler extends RightsEnabledHandler {
                 Object sel = null;
                 try {
                     Activator.inheritVeriniceContextState();
-                    monitor.beginTask(Messages.DeleteActionDelegate_11, deleteList.size());
+                    monitor.beginTask(Messages.DeleteActionDelegate_14, IProgressMonitor.UNKNOWN);
                     for (Iterator iter = deleteList.iterator(); iter.hasNext();) {
                         sel = iter.next();
 
@@ -132,15 +132,17 @@ public class DeleteHandler extends RightsEnabledHandler {
                         }
 
                         CnATreeElement el = (CnATreeElement) sel;
-                        monitor.setTaskName(Messages.DeleteActionDelegate_14);
                         removeElement(el);
-                        monitor.worked(1);
                     }
                 } catch (DataIntegrityViolationException dive) {
                     deleteElementWithAccountAsync((CnATreeElement) sel);
                 } catch (Exception e) {
                     LOG.error(DEFAULT_ERR_MSG, e);
                     ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
+                } finally {
+                    if(monitor!=null) {
+                        monitor.done();
+                    }
                 }
             }             
         });

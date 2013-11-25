@@ -219,6 +219,7 @@ public class CnALink implements Serializable, ITypedElement {
             return typeId;
         }
 
+        @Override
         public boolean equals(Object o) {
 			if (o instanceof Id) {
 				Id that = (Id)o;
@@ -231,12 +232,20 @@ public class CnALink implements Serializable, ITypedElement {
 			}
 		}
 		
-		public int hashCode() {
+		@Override
+        public int hashCode() {
 			if (dependantId == null || dependencyId == null || typeId == null){	
 					return super.hashCode();
 			}
 			return dependantId.hashCode() + dependencyId.hashCode() + typeId.hashCode();
 		}
+
+        @Override
+        public String toString() {
+            return "Id [dependantId=" + dependantId + ", dependencyId=" + dependencyId + ", typeId=" + typeId + "]";
+        }
+		
+		
 		
 	}
 
@@ -382,6 +391,7 @@ public class CnALink implements Serializable, ITypedElement {
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
