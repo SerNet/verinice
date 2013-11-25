@@ -42,7 +42,9 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnALink;
@@ -625,9 +627,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private CnATreeElement createContainer(Class clazz) {
-        if(LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class)) {
+        if(LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
             return createBsiContainer();
-        } else {
+        } else if(BausteinUmsetzung.class.equals(clazz)) {
+            return createBsiContainer();
+        }else {
             return createIsoContainer();
         }     
     }

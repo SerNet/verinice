@@ -17,16 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.service.iso27k;
 
-import java.util.Arrays;
 import java.util.List;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.INoAccessControl;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 @SuppressWarnings("serial")
@@ -40,7 +40,8 @@ public class LoadImportObjectsHolder extends GenericCommand implements INoAccess
 	    this.clazz = clazz;
 	}
 	
-	public void execute() {
+	@Override
+    public void execute() {
 	    String typeId = getTypeId(clazz);
 		RetrieveInfo ri = new RetrieveInfo();
 		List<CnATreeElement> resultList = getDaoFactory().getDAO(typeId).findAll(ri);
@@ -60,20 +61,26 @@ public class LoadImportObjectsHolder extends GenericCommand implements INoAccess
      */
     private String getTypeId(Class clazz) {
         String typeId = ImportIsoGroup.TYPE_ID;
-        if(isImplementation(clazz,IBSIStrukturElement.class)) {
+        if(isImplementation(clazz,IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
+            typeId = ImportBsiGroup.TYPE_ID;
+        }
+        if(BausteinUmsetzung.class.equals(clazz)) {
             typeId = ImportBsiGroup.TYPE_ID;
         }
         return typeId;
     }
 
-    public static boolean isImplementation(Class clazz,Class interfaze) {
+    public static boolean isImplementation(Class clazz,Class... interfaceArray) {
         boolean implementz = false;
-        Class[] interfaceArray = clazz.getInterfaces();
+        Class[] implementedInterfaces = clazz.getInterfaces();
         for (int i = 0; i < interfaceArray.length; i++) {
-            if(interfaceArray[i].equals(interfaze)) {
-                implementz=true;
-                break;
-            }
+            for (int j = 0; j < implementedInterfaces.length; j++) {
+                if(interfaceArray[i].equals(implementedInterfaces[j])) {
+                    implementz=true;
+                    break;
+                }
+                
+            }           
         }
         return implementz;
     }
