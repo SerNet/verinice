@@ -2046,18 +2046,54 @@ columns(cols);</value>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
-                    <data id="783">
-                        <property name="dataSet">org</property>
+                    <data id="2162">
+                        <property name="dataSet">audits</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">org_created</property>
-                                <text-property name="displayName">org_created</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["org_created"]</expression>
+                                <property name="name">audit_enddate</property>
+                                <text-property name="displayName">audit_enddate</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["audit_enddate"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">org_created</property>
+                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "auditEndDate", this.value );]]></method>
+                        <property name="resultSetColumn">audit_enddate</property>
                     </data>
+                    <data id="2163">
+                        <property name="dataSet">audits</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr" type="javascript">true</expression>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">audit_startdate</property>
+                                <text-property name="displayName">audit_startdate</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["audit_startdate"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "auditStartDate", this.value );]]></method>
+                        <property name="resultSetColumn">audit_startdate</property>
+                    </data>
+                    <text-data id="2164">
+                        <method name="onRender"><![CDATA[var startDate = reportContext.getPersistentGlobalVariable( "auditStartDate");
+var endDate = reportContext.getPersistentGlobalVariable( "auditEndDate");
+var result = startDate;
+if(endDate != null &amp;&amp; endDate != ""){
+	result = result + " - " + endDate;
+}
+this.text = result;]]></method>
+                        <property name="contentType">html</property>
+                    </text-data>
                 </cell>
             </row>
         </grid>
