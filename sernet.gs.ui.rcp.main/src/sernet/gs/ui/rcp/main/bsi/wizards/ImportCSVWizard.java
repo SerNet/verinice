@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -12,15 +11,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.SyncCommand;
-import sernet.verinice.service.commands.SyncParameter;
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.data.SyncObject;
@@ -35,6 +26,8 @@ public class ImportCSVWizard extends Wizard {
 	private PropertiesSelectionPage propertyPage;
 
     private String sourceId;
+    
+    private SyncRequest sr = null;
 
     public ImportCSVWizard() {
 		super();
@@ -42,68 +35,36 @@ public class ImportCSVWizard extends Wizard {
 		entityPage = new EntitySelectionPage(Messages.PropertiesSelectionPage_0);
 	}
 
+    public boolean getInsertState() {
+        return entityPage.getInsertState();
+    }
+    
+    public boolean getUpdateState() {
+        return entityPage.getUpdateState();
+    }
+    
+    public boolean getDeleteState() {
+        return entityPage.getDeleteState();
+    }
 	
-	/* (non-Javadoc)
+	public SyncRequest getSyncRequest() {
+        return sr;
+    }
+
+    /* (non-Javadoc)
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override
     public boolean performFinish() {
-		Activator.inheritVeriniceContextState();
-
-		SyncRequest sr = null;
-        try {
-            sr = createSyncRequest();
-        } catch (Exception e) {
-            LOG.error("Error while creating sync request.", e); //$NON-NLS-1$
+	    try {
+	        sr = createSyncRequest();            		
+	    } catch (Exception e) {
+            LOG.error("Error while importing CSV data.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ImportCSVWizard_1);
-        }
-
-		
-		SyncCommand command = new SyncCommand(
-                new SyncParameter(
-                        entityPage.getInsertState(), 
-                        entityPage.getUpdateState(), 
-                        entityPage.getDeleteState(),
-                        false,
-                        SyncParameter.EXPORT_FORMAT_XML_PURE), 
-                sr);
-		try {
-			command = ServiceFactory.lookupCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			throw new IllegalStateException(e);
-		}
-		
-		Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
-        Set<CnATreeElement> changedElement = command.getElementSet();
-        updateModel(importRootObjectSet, changedElement);
-        if(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-            createValidations(changedElement);
         }
 		return true;
 	}
 	
-	private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {   
-    	if (importRootObjectSet != null && importRootObjectSet.size()>0) {     
-        	for (CnATreeElement importRootObject : importRootObjectSet) {        
-                CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-                CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
-                if (changedElement != null) {
-                    for (CnATreeElement cnATreeElement : changedElement) {
-                        CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
-                        CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
-                    }
-                }
-        	}
-        } else {    
-            if (changedElement != null) {
-                for (CnATreeElement cnATreeElement : changedElement) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
-                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
-                }
-            }
-        }       
-    }
-
 	@Override
     public void addPages() {
 		addPage(entityPage);
@@ -123,6 +84,7 @@ public class ImportCSVWizard extends Wizard {
     			setSourceId(entityPage.getSourceIdText().getText());
     			propertyPage.setSeparator(entityPage.getSeparatorCombo().getText().charAt(0));
     			propertyPage.setCharset(Charset.forName(entityPage.getCharsetCombo().getText()));
+    			propertyPage.setPageComplete(false);
     			String[] firstLine = propertyPage.getFirstLine();
     			if(firstLine==null || firstLine.length==0) {
     			    final String message = NLS.bind(Messages.ImportCSVWizard_2, entityPage.getCSVDatei().getPath());
@@ -220,10 +182,6 @@ public class ImportCSVWizard extends Wizard {
         return intId!=null && extId!=null && !intId.trim().isEmpty() && !extId.trim().isEmpty();
     }
 
-
-    /**
-     * @return
-     */
     public String getSourceId() {
         return sourceId;
     }
@@ -232,12 +190,4 @@ public class ImportCSVWizard extends Wizard {
         this.sourceId = sourceId;
     }
     
-    private void createValidations(Set<CnATreeElement> elmts){
-        for(CnATreeElement elmt : elmts){
-            ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
-        }
-        if(elmts.size() > 0){
-            CnAElementFactory.getModel(((CnATreeElement)elmts.toArray()[0])).validationAdded(((CnATreeElement)elmts.toArray()[0]).getScopeId()); 
-        }
-    }
 }

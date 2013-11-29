@@ -70,6 +70,7 @@ public class Messages extends NLS {
     public static String ExportWizard_1;
     public static String ExportWizard_2;
     public static String ExportWizard_6;
+    public static String ImportCSVAction_1;
     public static String ImportCSVWizard_1;
     public static String ImportCSVWizard_2;
     public static String ImportCSVWizard_3;

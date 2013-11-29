@@ -203,7 +203,10 @@ public class PropertiesSelectionPage extends WizardPage {
                 combo.add(propertyNames[j]);         
             }
             combos.add(combo);
-            selectItemByName(combo, propertyColumns[i+1], propertyNames);
+            boolean itemFound = selectItemByName(combo, propertyColumns[i+1], propertyNames);
+            if(itemFound) {
+                setPageComplete(true);
+            }
             editor.grabHorizontal = true;
             editor.setEditor(combo, items[i], 1);
         }
@@ -211,18 +214,22 @@ public class PropertiesSelectionPage extends WizardPage {
 
     /**
      * Pre-select property if it has the same name as a CSV table column.
+     * Returns true if item was found and selected.
      * 
-     * @param combo
-     * @param cString 
-     * @param string
+     * @param combo A combo box
+     * @param cString Combo box item titles
+     * @param string Title to select
+     * @return True if item was selected, false if not.
      */
-    private void selectItemByName(CCombo combo, String name, String[] cString) {
+    private boolean selectItemByName(CCombo combo, String name, String[] cString) {
         for (int i = 0; i < cString.length; i++) {
             String propName = cString[i];
             if (name.equalsIgnoreCase(propName)) {
                 combo.select(i);
+                return true;
             }
         }
+        return false;
     }
 
     // check if the properties are selected
