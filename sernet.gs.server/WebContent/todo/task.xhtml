@@ -12,13 +12,13 @@
 
 <ui:composition template="/layout.xhtml">
 <ui:define name="content">
-	<div id="col3" style="width: auto; margin: 0 480px 0 0; *margin-right:0;">
+	<div id="col3" style="width: auto; margin: 0 560px 0 0; *margin-right:0;">
 		<div id="col3_content">
 			<h:form id="tableForm" rendered="#{auth.isoTasks}">
 				<div class="csc-header csc-header-n1" style="height:40px;">
 					<h1><h:outputText value="#{msgTask['tasks']}" /></h1>
 				</div>
-				<div style="margin-bottom:6px;width:500px;">
+				<div style="margin-bottom:6px;width:560px;">
 					<p:outputPanel id="completePanel">
 						<ui:repeat id="outcomeList" value="#{task.selectedTask.outcomes}" var="outcome" rendered="#{task.selectedTask!=null}">
 					    	<p:commandButton id="complete" 
@@ -53,7 +53,7 @@
 					 			</p:selectBooleanCheckbox>
 					 		</td>
 					 		<td><h:outputText value="#{msgTask['unread']}" style="margin-right:10px;"/></td>
-					 		<td><p:commandButton id="complete" 
+					 		<td width="100%" align="right"><p:commandButton id="complete" 
 					    		action="#{task.loadTasks}" 
 					    		value="#{msgTask['reload']}" 
 					    		update=":tableForm:taskTable,:editForm"/>
@@ -74,10 +74,10 @@
 					rowKey="#{item.id}"
 					selection="#{task.selectedTask}" 
 					selectionMode="single"
-					scrollHeight="400" 
+					scrollHeight="500" 
 					scrollable="true"
 					resizableColumns="true"
-					style="width:500px;height:100%;">
+					style="width:560px;height:100%;">
 					<p:ajax event="rowSelect" 
 						listener="#{task.openTask}"
 						oncomplete="loadLinks();"   

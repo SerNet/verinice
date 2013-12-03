@@ -57,7 +57,7 @@
 }
 
 .hui {
-	width: 280px;
+	width: 525px;
 	border: 1px solid #D8DCDF;
 }
 
@@ -66,7 +66,7 @@ input.submit {
 }
 
 .breadcrumb {	
-	width: 803px;
+	width: 1010px;
 	height: 22px;
 	display: inline-block; 
 	vertical-align: middle;
@@ -105,7 +105,7 @@ input.submit {
     position: relative;
     top: 1px;
     height: 257px;
-    width: 173px;
+    width: 250px;
 }
 
 .floatbox ul {

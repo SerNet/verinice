@@ -41,7 +41,7 @@
 			<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb"/>
 		</h:form>
 	</div>
-	<div id="col3" style="width: auto; margin: 0 200px 0 0; *margin-right:0;">
+	<div id="col3" style="width: auto; margin: 0 560px 0 0; *margin-right:0;">
 		<div id="col3_content">	
 			<h:form id="tableForm" rendered="#{auth.isoElements}">
 				<p:dataTable id="elementTable"
@@ -51,9 +51,9 @@
 					selection="#{tree.elementInformation}" 
 	                selectionMode="single"
 	                scrollable="true"
-					scrollHeight="450" 
+					scrollHeight="500" 
 					resizableColumns="true"
-					style="width: 450px"
+					style="width: 560px"
 	                rendered="#{!empty tree.children}">
 	                <p:ajax event="rowSelect"
 						listener="#{tree.openElement}"
@@ -62,7 +62,7 @@
 			        <p:column style="width:20px">
 						<h:graphicImage value="#{item.icon}" />	
 			        </p:column>
-			        <p:column headerText="#{msgTree['title']}" sortBy="#{item.title}" style="width:430px">
+			        <p:column headerText="#{msgTree['title']}" sortBy="#{item.title}" style="width:490px">
 						<h:outputText value="#{item.title}"/>	
 			        </p:column>
 	            </p:dataTable>

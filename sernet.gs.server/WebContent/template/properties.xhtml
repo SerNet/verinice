@@ -11,10 +11,13 @@
 			<table style="table-layout:fixed; width: 430px;">	
 				<c:forEach var="p" items="#{list}" > 
 					<tr>
-						<td style="width: 140px; overflow: hidden;">
+						<td width="506px" style="padding-bottom: 3px;">
 							<h:outputText value="#{p.name} "/>
 						</td>
-						<td style="width: 280px;">				
+                        <td><p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" /></td>
+                    </tr>
+                    <tr>
+						<td style="padding-bottom: 12px;">				
 							<h:inputText value="#{p.value}" rendered="#{p.isLine and p.isEditable}" styleClass="hui ui-corner-all"/>
 							<h:outputText value="#{p.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText" />
 							<p:inputTextarea value="#{p.value}" rendered="#{p.isText and p.isEditable}" styleClass="hui" />
@@ -28,21 +31,20 @@
 									navigator="true"/>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{p.isSingleSelect and p.isEditable}">
-								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"  style="width: 280px;" effectDuration="40">
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable}" >
-								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" style="width: 280px;" effectDuration="40">	
+								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" effectDuration="40">	
 									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable}">
 								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" onkeydown="return false;" styleClass="hui"/>
-							</p:outputPanel>
-							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
+							</p:outputPanel>						
 						</td>
-					</tr>	
+					</tr>               	
 				</c:forEach>
 			</table>
 		</p:outputPanel>
@@ -50,10 +52,10 @@
 			<table style="table-layout:fixed; width: 430px;">
 				<c:forEach var="i" items="#{listNoLabel}">
 					<tr>
-						<td>
-							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}"/>
+						<td width="506px" style="padding-bottom: 12px;">
+							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable}" styleClass="hui ui-corner-all"/>
 							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not p.isEditable)}" styleClass="roText"/>
-							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" />
+							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable}" styleClass="hui"/>
 							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable)}" styleClass="roText"/>
 							<p:outputPanel rendered="#{i.isDate}">
 								<p:calendar value="#{i.date}" 
@@ -64,17 +66,17 @@
 									navigator="true"/>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{i.isSingleSelect and p.isEditable}">
-								<p:selectOneMenu value="#{i.selectedOption}">
+								<p:selectOneMenu value="#{i.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList and p.isEditable}">
-								<p:selectOneMenu value="#{i.selectedOption}">
+								<p:selectOneMenu value="#{i.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList and p.isEditable}">
-								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}" onkeydown="return false;"/>
+								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}" onkeydown="return false;"  styleClass="hui" />
 							</p:outputPanel>
 							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
 						</td>
