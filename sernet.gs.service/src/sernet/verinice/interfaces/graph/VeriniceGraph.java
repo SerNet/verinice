@@ -39,7 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class VeriniceGraph implements Serializable{
     
-    static final long serialVersionUID = -5005272072365852368L;
+    private static final long serialVersionUID = -3415630205719759141L;
     
     private transient Logger log = Logger.getLogger(VeriniceGraph.class);
 
@@ -100,6 +100,40 @@ public class VeriniceGraph implements Serializable{
         return elements;
     }
     
+    public CnATreeElement getElement(String uuid) {
+        CnATreeElement result = null;
+        Set<CnATreeElement> allElements = getElements();       
+        if(uuid==null || allElements==null) {
+            return result;
+        }
+        
+        for (CnATreeElement element : allElements) {
+            if(uuid.equals(element.getUuid())) {
+                result = element;
+                break;
+            }
+        }
+        
+        return result;
+    }
+    
+    public CnATreeElement getElement(Integer dbId) {
+        CnATreeElement result = null;
+        Set<CnATreeElement> allElements = getElements();       
+        if(dbId==null || allElements==null) {
+            return result;
+        }
+        
+        for (CnATreeElement element : allElements) {
+            if(dbId.equals(element.getDbId())) {
+                result = element;
+                break;
+            }
+        }
+        
+        return result;
+    }
+    
     /**
      * Returns the parent of an element.
      * If parent is not found in grapg, null is returned.
@@ -137,6 +171,54 @@ public class VeriniceGraph implements Serializable{
             }
         }
         return children;
+    }
+    
+    /**
+     * Returns all link targets of an source element (defined by its UUID) including
+     * parent and children. If there are no link targets, an empty Set is returned.
+     * 
+     * @param uuid UUID of an source element
+     * @return A set of target elements
+     */
+    public Set<CnATreeElement> getLinkTargets(String uuid) {
+        return getLinkTargets(getElement(uuid), null);
+    }
+    
+    /**
+     * Returns all link targets of an source element (defined by its database id) including
+     * parent and children. If there are no link targets, an empty Set is returned.
+     * 
+     * @param dbId Database id of an source element
+     * @return A set of target elements
+     */
+    public Set<CnATreeElement> getLinkTargets(Integer dbId) {
+        return getLinkTargets(getElement(dbId), null);
+    }
+    
+    /**
+     * Returns all link targets of an source element (defined by its UUID) including
+     * parent and children. Returned links are of type "typeId".
+     * If there are no link targets, an empty Set is returned.
+     * 
+     * @param uuid UUID of an source element
+     * @param typeId Type of returned links
+     * @return A set of target elements
+     */
+    public Set<CnATreeElement> getLinkTargets(String uuid, String typeId) {
+        return getLinkTargets(getElement(uuid), typeId);
+    }
+    
+    /**
+     * Returns all link targets of an source element (defined by its database id) including
+     * parent and children. Returned links are of type "typeId".
+     * If there are no link targets, an empty Set is returned.
+     * 
+     * @param dbId Database id of an source element
+     * @param typeId Type of returned links
+     * @return A set of target elements
+     */
+    public Set<CnATreeElement> getLinkTargets(Integer dbId, String typeId) {
+        return getLinkTargets(getElement(dbId), typeId);
     }
     
     /**
