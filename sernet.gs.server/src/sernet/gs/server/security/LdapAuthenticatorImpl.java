@@ -117,18 +117,18 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
             }
             try {
                 contextFactory.getReadWriteContext(principal, password);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("AD or LDAP authentication was successful");
+                }
             } catch(RuntimeException e) {
                 // log auth failure and re-throw exception
                 if (LOG.isInfoEnabled()) {
                     LOG.info("AD or LDAP authentication failed.");
                 }
                 if (LOG.isDebugEnabled()) {
-                    LOG.info("Stacktrace: ", e);
+                    LOG.debug("Stacktrace: ", e);
                 }
                 throw e;
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("AD or LDAP authentication was successful");
             }
             
             ServerInitializer.inheritVeriniceContextState();
