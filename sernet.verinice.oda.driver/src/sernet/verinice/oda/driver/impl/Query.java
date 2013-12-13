@@ -241,6 +241,33 @@ public class Query implements IQuery
         }
         
         /**
+         * Takes an existing list of {@link CnATreeElement} instances and converts them into a list
+         * of string values (this can be used as the input for BIRT tables).
+         * 
+         * @param elementList
+         * @param propertyIdArray
+         * @param classes
+         * @param addDbId optionally add database ID of the element at the end of each result
+         * @return
+         */
+        public List<List<Object>> mapfast(List<CnATreeElement> elementList, String[] propertyIdArray) {
+            if (elementList == null || elementList.size()==0) {
+                return new ArrayList<List<Object>>();
+            }
+            List<List<Object>> result = new ArrayList<List<Object>>(elementList.size());           
+            for (CnATreeElement element : elementList) {              
+                List<Object> row = LoadEntityValues.convertValuesToList(element.getEntity(), propertyIdArray);
+                if (log.isDebugEnabled()) {
+                    log.debug("Adding dbid: " + element.getDbId() + " to " + element.getTitle());
+                }
+                // add db-id
+                row.add(element.getDbId().toString());
+                result.add(row);
+            }
+            return result;
+        }
+        
+        /**
          * @param input
          * @return
          */
@@ -288,17 +315,20 @@ public class Query implements IQuery
         
     }
 	
-	public void prepare( String queryText ) throws OdaException
+	@Override
+    public void prepare( String queryText ) throws OdaException
 	{
         this.queryText = queryText;
 	}
 	
-	public void setAppContext( Object context ) throws OdaException
+	@Override
+    public void setAppContext( Object context ) throws OdaException
 	{
 	    // do nothing; assumes no support for pass-through context
 	}
 
-	public void close() throws OdaException
+	@Override
+    public void close() throws OdaException
 	{
         queryText = null;
         result = null;
@@ -307,7 +337,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
 	 */
-	public IResultSetMetaData getMetaData() throws OdaException
+	@Override
+    public IResultSetMetaData getMetaData() throws OdaException
 	{
 		return new ResultSetMetaData(runQuery(), columns);
 	}
@@ -359,7 +390,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
 	 */
-	public IResultSet executeQuery() throws OdaException
+	@Override
+    public IResultSet executeQuery() throws OdaException
 	{
 		ResultSet resultSet = new ResultSet(runQuery(), columns);
 		resultSet.setMaxRows( getMaxRows() );
@@ -369,7 +401,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
 	 */
-	public void setProperty( String name, String value ) throws OdaException
+	@Override
+    public void setProperty( String name, String value ) throws OdaException
 	{
 		properties.put(name, value);
 	}
@@ -377,7 +410,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setMaxRows(int)
 	 */
-	public void setMaxRows( int max ) throws OdaException
+	@Override
+    public void setMaxRows( int max ) throws OdaException
 	{
 	    maxRows = max;
 	}
@@ -385,7 +419,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
 	 */
-	public int getMaxRows() throws OdaException
+	@Override
+    public int getMaxRows() throws OdaException
 	{
 		return maxRows;
 	}
@@ -403,115 +438,137 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
 	 */
-	public void clearInParameters() throws OdaException
+	@Override
+    public void clearInParameters() throws OdaException
 	{
 		inParameterValues.clear();
 	}
 
-	public void setInt( String parameterName, int value ) throws OdaException
+	@Override
+    public void setInt( String parameterName, int value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setInt( int parameterId, int value ) throws OdaException
+	@Override
+    public void setInt( int parameterId, int value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setDouble( String parameterName, double value ) throws OdaException
+	@Override
+    public void setDouble( String parameterName, double value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setDouble( int parameterId, double value ) throws OdaException
+	@Override
+    public void setDouble( int parameterId, double value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
+	@Override
+    public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
+	@Override
+    public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setString( String parameterName, String value ) throws OdaException
+	@Override
+    public void setString( String parameterName, String value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setString( int parameterId, String value ) throws OdaException
+	@Override
+    public void setString( int parameterId, String value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setDate( String parameterName, Date value ) throws OdaException
+	@Override
+    public void setDate( String parameterName, Date value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setDate( int parameterId, Date value ) throws OdaException
+	@Override
+    public void setDate( int parameterId, Date value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setTime( String parameterName, Time value ) throws OdaException
+	@Override
+    public void setTime( String parameterName, Time value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setTime( int parameterId, Time value ) throws OdaException
+	@Override
+    public void setTime( int parameterId, Time value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
-	public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
+	@Override
+    public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
 	{
 		inParameterValues.put(parameterName, value);
 	}
 
-	public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
+	@Override
+    public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
 	{
 		setValue(parameterId, value);
 	}
 
+    @Override
     public void setBoolean( String parameterName, boolean value )
             throws OdaException
     {
 		inParameterValues.put(parameterName, value);
     }
 
+    @Override
     public void setBoolean( int parameterId, boolean value )
             throws OdaException
     {
 		setValue(parameterId, value);
     }
 
+    @Override
     public void setObject( String parameterName, Object value )
             throws OdaException
     {
 		inParameterValues.put(parameterName, value);
     }
     
+    @Override
     public void setObject( int parameterId, Object value ) throws OdaException
     {
 		setValue(parameterId, value);
     }
     
+    @Override
     public void setNull( String parameterName ) throws OdaException
     {
 		inParameterValues.put(parameterName, null);
     }
 
+    @Override
     public void setNull( int parameterId ) throws OdaException
     {
 		setValue(parameterId, null);
     }
 
-	public int findInParameter( String parameterName ) throws OdaException
+	@Override
+    public int findInParameter( String parameterName ) throws OdaException
 	{
 		for (int i = 0; i < inParameters.length; i++)
 		{
@@ -523,7 +580,8 @@ public class Query implements IQuery
 		return -1;
 	}
 
-	public IParameterMetaData getParameterMetaData() throws OdaException
+	@Override
+    public IParameterMetaData getParameterMetaData() throws OdaException
 	{
 		runSetupQuery();
 		return new ParameterMetaData(inParameters);
@@ -532,7 +590,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools.connectivity.oda.SortSpec)
 	 */
-	public void setSortSpec( SortSpec sortBy ) throws OdaException
+	@Override
+    public void setSortSpec( SortSpec sortBy ) throws OdaException
 	{
 		// only applies to sorting, assumes not supported
         throw new UnsupportedOperationException();
@@ -541,7 +600,8 @@ public class Query implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
 	 */
-	public SortSpec getSortSpec() throws OdaException
+	@Override
+    public SortSpec getSortSpec() throws OdaException
 	{
 		// only applies to sorting
 		return null;
@@ -550,6 +610,7 @@ public class Query implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse.datatools.connectivity.oda.spec.QuerySpecification)
      */
+    @Override
     @SuppressWarnings("restriction")
     public void setSpecification( QuerySpecification querySpec )
             throws OdaException
@@ -561,6 +622,7 @@ public class Query implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSpecification()
      */
+    @Override
     @SuppressWarnings("restriction")
     public QuerySpecification getSpecification()
     {
@@ -571,6 +633,7 @@ public class Query implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
      */
+    @Override
     public String getEffectiveQueryText()
     {
         return queryText;
@@ -579,6 +642,7 @@ public class Query implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
+    @Override
     public void cancel() throws OdaException
     {
     	result = null;

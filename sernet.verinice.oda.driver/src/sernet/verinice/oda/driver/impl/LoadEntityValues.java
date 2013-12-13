@@ -55,9 +55,10 @@ public class LoadEntityValues extends GenericCommand {
 	}
 	
 	
+    @Override
     @SuppressWarnings("unchecked")
 	public void execute() {
-		IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeId);
+		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		List<CnATreeElement> elements = dao.findAll();
 		
 		result = new ArrayList<List<String>>(elements.size());
@@ -73,26 +74,31 @@ public class LoadEntityValues extends GenericCommand {
 	 * 
 	 * <p>Note: The method is purposely written in a way that it can be reused from other parts of the application.</p>
 	 */
-	public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes)
-	{
-		ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
-		
+	public static List<String> retrievePropertyValues(Entity entity, String[] propertyIdArray, Class<?>[] classes) {
+		ArrayList<String> values = new ArrayList<String>(propertyIdArray.length);		
 		int i = 0;
-		for (String name : propertyTypes)
-		{
+		for (String id : propertyIdArray) {
 			Class<?> c = (i >= classes.length ? null : classes[i]);
-			if (c == null || c == String.class){
-				values.add(e.getSimpleValue(name));
-			} else if (c == Integer.class){
-				values.add(String.valueOf(e.getInt(name)));
+			if (c == null || c == String.class) {
+				values.add(entity.getSimpleValue(id));
+			} else if (c == Integer.class) {
+				values.add(String.valueOf(entity.getInt(id)));
 			} else {
-				throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
+				throw new IllegalArgumentException("Invalid class for propertyType '" + id + "'.");
 			}
 			i++;
 		}
 		
 		return values;
 	}
+	
+	public static List<Object> convertValuesToList(Entity entity, String[] propertyIdArray) {
+        ArrayList<Object> values = new ArrayList<Object>(propertyIdArray.length);       
+        for (String id : propertyIdArray) {
+            values.add(entity.getSimpleValue(id));
+        }       
+        return values;
+    }
 	
 	public List<List<String>> getResult()
 	{
