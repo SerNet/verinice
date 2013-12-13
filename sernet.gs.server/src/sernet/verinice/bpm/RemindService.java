@@ -95,13 +95,17 @@ public class RemindService implements IRemindService {
                message.setText(text, html);
             }
          };
-         getMailSender().send(preparator);
          if (LOG.isDebugEnabled()) {
-            LOG.debug("Email send, parameter: ");
-            for (String key : parameter.keySet()) {
-                LOG.debug( key + ": "+ parameter.get(key));
-            }
-         }
+             LOG.debug("Sending email... parameter: ");
+             for (String key : parameter.keySet()) {
+                 LOG.debug( key + ": "+ parameter.get(key));
+             }
+          }
+          getMailSender().send(preparator);
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Email was send successfully.");
+          }
+         
     }
     
     /* (non-Javadoc)

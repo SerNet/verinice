@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -208,7 +207,16 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                         }
 
                     };
+                    if (log.isDebugEnabled()) {
+                        log.debug("Sending email... parameter: ");
+                        for (String key : model.keySet()) {
+                            log.debug( key + ": "+ model.get(key));
+                        }
+                    }
                     this.mailSender.send(preparator);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Email was send successfully.");
+                    }
                 }
             }
         } catch (Throwable t){
