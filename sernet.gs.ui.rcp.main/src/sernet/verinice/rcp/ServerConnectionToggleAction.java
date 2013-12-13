@@ -21,7 +21,11 @@ package sernet.verinice.rcp;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -57,7 +61,7 @@ import sernet.verinice.service.sync.VeriniceArchive;
 /**
  * ServerConnectionToggleAction is switching connection mode from server to standalone or vice versa.
  * {@link ServerConnectionToggleDialog} is opened to ask user which organizations is copied.
- * After that every selected organization is exported to a songle VNA archive:
+ * After that every selected organization is exported to a single VNA archive:
  * <CLIENT_WORKSPACE>/conf/client-server-transport-<N>.vna
  * Last step is a restarting the application. 
  * 
@@ -108,6 +112,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
         }
     }
 
+    @Override
     public void run() {       
         dialog = new ServerConnectionToggleDialog(Display.getCurrent().getActiveShell());    
         if( dialog.open() == Dialog.OK ) {
@@ -116,6 +121,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
                 title = Messages.ServerConnectionToggleAction_3;
             }
             WorkspaceJob exportJob = new WorkspaceJob(title) {
+                @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
@@ -146,26 +152,75 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
         }
     }
     
+    /**
+     * Exports all scopes to one VNA and selects the scope-id which occurs
+     * most often in scopes. or creates a new one if there is no scope id.
+     * 
+     * @throws CommandException
+     * @throws IOException
+     */
     private void export() throws CommandException, IOException {
+        export(new ArrayList<CnATreeElement>(dialog.getSelectedElementSet()), 0); 
+    }
+    
+    /**
+     * Exports one VNA archive per scope and keeps the original
+     * scope-id of every single scope.
+     * 
+     * @throws CommandException
+     * @throws IOException
+     */
+    private void exportOneVnaPerScope() throws CommandException, IOException {
         Set<CnATreeElement> elementSet = dialog.getSelectedElementSet(); 
         if(elementSet!=null && elementSet.size()>0) {
             int i=0;
             for (CnATreeElement element : elementSet) {
-                export(element,i);
+                export(Arrays.asList(element),i);
                 i++;
             }                
         }
     }
     
-    private void export(CnATreeElement element,int i) throws CommandException, IOException {
-        String sourceId = element.getSourceId();
+    private void export(List<CnATreeElement> elementList,int i) throws CommandException, IOException {
+        String sourceId = readSourceId(elementList);
         if(sourceId==null) {
             sourceId = SOURCE_ID;
         }
         Activator.inheritVeriniceContextState();
-        ExportCommand exportCommand = new ExportCommand(Arrays.asList(element), sourceId, true, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        ExportCommand exportCommand = new ExportCommand(elementList, sourceId, true, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
         exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         FileUtils.writeByteArrayToFile(new File(createFilePath(i)), exportCommand.getResult());      
+    }
+
+    /**
+     * Returns source-id which occurs most often in {@link ElementListSelectionDialog#}
+     * 
+     * @param elementList A list with {@link CnATreeElement}s
+     * @return A source id
+     */
+    private String readSourceId(List<CnATreeElement> elementList) {
+        String sourceId = null;
+        Map<String, Integer> sourceIdMap = new Hashtable<String, Integer>();
+        for (CnATreeElement element : elementList) {
+            String cur = element.getSourceId();
+            if(cur!=null) {  
+                Integer n = sourceIdMap.get(cur);
+                if(n==null) {
+                    n = 0;
+                }
+                n++;
+                sourceIdMap.put(cur, n);
+            }
+        }
+        int max = 0;
+        for (String cur : sourceIdMap.keySet()) {
+            int n = sourceIdMap.get(cur);
+            if (n>max) {
+                max=n;
+                sourceId=cur;
+            }
+        }
+        return sourceId;
     }
 
     /**
