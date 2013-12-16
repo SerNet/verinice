@@ -72,6 +72,66 @@
                     <text-property name="displayName">incident_vv_bsig_type</text-property>
                     <text-property name="heading">incident_vv_bsig_type</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_external_attack</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_external_attack</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_external_attack</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_data_loss</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_data_loss</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_data_loss</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_security_vulnerability</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_security_vulnerability</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_security_vulnerability</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_swhw_component_error</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_swhw_component_error</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_swhw_component_error</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_policy_violation</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_policy_violation</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_policy_violation</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_internal_reasons</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_internal_reasons</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_internal_reasons</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_external_influences</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_external_influences</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_external_influences</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_classification_particular_findings</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_particular_findings</text-property>
+                    <text-property name="heading">incident_vv_bsig_classification_particular_findings</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_purpose_of_information</property>
+                    <text-property name="displayName">incident_vv_bsig_purpose_of_information</text-property>
+                    <text-property name="heading">incident_vv_bsig_purpose_of_information</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_circumstances</property>
+                    <text-property name="displayName">incident_vv_bsig_circumstances</text-property>
+                    <text-property name="heading">incident_vv_bsig_circumstances</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_procedure_proposals</property>
+                    <text-property name="displayName">incident_vv_bsig_procedure_proposals</text-property>
+                    <text-property name="heading">incident_vv_bsig_procedure_proposals</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">incident_vv_bsig_miscellaneous</property>
+                    <text-property name="displayName">incident_vv_bsig_miscellaneous</text-property>
+                    <text-property name="heading">incident_vv_bsig_miscellaneous</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -124,6 +184,66 @@
                         <property name="name">incident_vv_bsig_type</property>
                         <property name="dataType">javaObject</property>
                     </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">incident_vv_bsig_classification_external_attack</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">incident_vv_bsig_classification_data_loss</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">incident_vv_bsig_classification_security_vulnerability</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">incident_vv_bsig_classification_swhw_component_error</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">incident_vv_bsig_classification_policy_violation</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">incident_vv_bsig_classification_internal_reasons</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">incident_vv_bsig_classification_external_influences</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">incident_vv_bsig_classification_particular_findings</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">incident_vv_bsig_purpose_of_information</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">incident_vv_bsig_circumstances</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">incident_vv_bsig_procedure_proposals</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">incident_vv_bsig_miscellaneous</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
@@ -174,6 +294,90 @@
                     <property name="position">7</property>
                     <property name="name">incident_vv_bsig_type</property>
                     <property name="nativeName">incident_vv_bsig_type</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">incident_vv_bsig_classification_external_attack</property>
+                    <property name="nativeName">incident_vv_bsig_classification_external_attack</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">incident_vv_bsig_classification_data_loss</property>
+                    <property name="nativeName">incident_vv_bsig_classification_data_loss</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">incident_vv_bsig_classification_security_vulnerability</property>
+                    <property name="nativeName">incident_vv_bsig_classification_security_vulnerability</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">incident_vv_bsig_classification_swhw_component_error</property>
+                    <property name="nativeName">incident_vv_bsig_classification_swhw_component_error</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">incident_vv_bsig_classification_policy_violation</property>
+                    <property name="nativeName">incident_vv_bsig_classification_policy_violation</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">incident_vv_bsig_classification_internal_reasons</property>
+                    <property name="nativeName">incident_vv_bsig_classification_internal_reasons</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">incident_vv_bsig_classification_external_influences</property>
+                    <property name="nativeName">incident_vv_bsig_classification_external_influences</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">incident_vv_bsig_classification_particular_findings</property>
+                    <property name="nativeName">incident_vv_bsig_classification_particular_findings</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">incident_vv_bsig_purpose_of_information</property>
+                    <property name="nativeName">incident_vv_bsig_purpose_of_information</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">incident_vv_bsig_circumstances</property>
+                    <property name="nativeName">incident_vv_bsig_circumstances</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">incident_vv_bsig_procedure_proposals</property>
+                    <property name="nativeName">incident_vv_bsig_procedure_proposals</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">incident_vv_bsig_miscellaneous</property>
+                    <property name="nativeName">incident_vv_bsig_miscellaneous</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1128,66 +1332,6 @@ columns(cols);</value>
                     <text-property name="heading">org_vv_bsig_equiry_email</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">org_vv_bsig_classification_external_attack</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_attack</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_external_attack</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_data_loss</property>
-                    <text-property name="displayName">org_vv_bsig_classification_data_loss</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_data_loss</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_security_vulnerability</property>
-                    <text-property name="displayName">org_vv_bsig_classification_security_vulnerability</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_security_vulnerability</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_swhw_component_error</property>
-                    <text-property name="displayName">org_vv_bsig_classification_swhw_component_error</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_swhw_component_error</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_policy_violation</property>
-                    <text-property name="displayName">org_vv_bsig_classification_policy_violation</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_policy_violation</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_internal_reasons</property>
-                    <text-property name="displayName">org_vv_bsig_classification_internal_reasons</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_internal_reasons</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_external_influences</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_influences</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_external_influences</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_classification_particular_findings</property>
-                    <text-property name="displayName">org_vv_bsig_classification_particular_findings</text-property>
-                    <text-property name="heading">org_vv_bsig_classification_particular_findings</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_purpose_of_information</property>
-                    <text-property name="displayName">org_vv_bsig_purpose_of_information</text-property>
-                    <text-property name="heading">org_vv_bsig_purpose_of_information</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_circumstances</property>
-                    <text-property name="displayName">org_vv_bsig_circumstances</text-property>
-                    <text-property name="heading">org_vv_bsig_circumstances</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_procedure_proposals</property>
-                    <text-property name="displayName">org_vv_bsig_procedure_proposals</text-property>
-                    <text-property name="heading">org_vv_bsig_procedure_proposals</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_vv_bsig_miscellaneous</property>
-                    <text-property name="displayName">org_vv_bsig_miscellaneous</text-property>
-                    <text-property name="heading">org_vv_bsig_miscellaneous</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">dbid</property>
                     <text-property name="displayName">dbid</text-property>
                     <text-property name="heading">dbid</text-property>
@@ -1356,66 +1500,6 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">org_vv_bsig_classification_external_attack</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">31</property>
-                        <property name="name">org_vv_bsig_classification_data_loss</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">32</property>
-                        <property name="name">org_vv_bsig_classification_security_vulnerability</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">33</property>
-                        <property name="name">org_vv_bsig_classification_swhw_component_error</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">34</property>
-                        <property name="name">org_vv_bsig_classification_policy_violation</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">35</property>
-                        <property name="name">org_vv_bsig_classification_internal_reasons</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">36</property>
-                        <property name="name">org_vv_bsig_classification_external_influences</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">37</property>
-                        <property name="name">org_vv_bsig_classification_particular_findings</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">38</property>
-                        <property name="name">org_vv_bsig_purpose_of_information</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">39</property>
-                        <property name="name">org_vv_bsig_circumstances</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">40</property>
-                        <property name="name">org_vv_bsig_procedure_proposals</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">41</property>
-                        <property name="name">org_vv_bsig_miscellaneous</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">42</property>
                         <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -1628,90 +1712,6 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">30</property>
-                    <property name="name">org_vv_bsig_classification_external_attack</property>
-                    <property name="nativeName">org_vv_bsig_classification_external_attack</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">31</property>
-                    <property name="name">org_vv_bsig_classification_data_loss</property>
-                    <property name="nativeName">org_vv_bsig_classification_data_loss</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">32</property>
-                    <property name="name">org_vv_bsig_classification_security_vulnerability</property>
-                    <property name="nativeName">org_vv_bsig_classification_security_vulnerability</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">33</property>
-                    <property name="name">org_vv_bsig_classification_swhw_component_error</property>
-                    <property name="nativeName">org_vv_bsig_classification_swhw_component_error</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">34</property>
-                    <property name="name">org_vv_bsig_classification_policy_violation</property>
-                    <property name="nativeName">org_vv_bsig_classification_policy_violation</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">35</property>
-                    <property name="name">org_vv_bsig_classification_internal_reasons</property>
-                    <property name="nativeName">org_vv_bsig_classification_internal_reasons</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">36</property>
-                    <property name="name">org_vv_bsig_classification_external_influences</property>
-                    <property name="nativeName">org_vv_bsig_classification_external_influences</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">37</property>
-                    <property name="name">org_vv_bsig_classification_particular_findings</property>
-                    <property name="nativeName">org_vv_bsig_classification_particular_findings</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">38</property>
-                    <property name="name">org_vv_bsig_purpose_of_information</property>
-                    <property name="nativeName">org_vv_bsig_purpose_of_information</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">39</property>
-                    <property name="name">org_vv_bsig_circumstances</property>
-                    <property name="nativeName">org_vv_bsig_circumstances</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">40</property>
-                    <property name="name">org_vv_bsig_procedure_proposals</property>
-                    <property name="nativeName">org_vv_bsig_procedure_proposals</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">41</property>
-                    <property name="name">org_vv_bsig_miscellaneous</property>
-                    <property name="nativeName">org_vv_bsig_miscellaneous</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">42</property>
                     <property name="name">dbid</property>
                     <property name="nativeName">dbid</property>
                     <property name="dataType">javaObject</property>
@@ -2397,78 +2397,6 @@ columns(new String[]{"name"});</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">org_vv_bsig_classification_external_attack</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_attack</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_external_attack"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_data_loss</property>
-                    <text-property name="displayName">org_vv_bsig_classification_data_loss</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_data_loss"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_security_vulnerability</property>
-                    <text-property name="displayName">org_vv_bsig_classification_security_vulnerability</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_security_vulnerability"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_swhw_component_error</property>
-                    <text-property name="displayName">org_vv_bsig_classification_swhw_component_error</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_swhw_component_error"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_policy_violation</property>
-                    <text-property name="displayName">org_vv_bsig_classification_policy_violation</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_policy_violation"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_internal_reasons</property>
-                    <text-property name="displayName">org_vv_bsig_classification_internal_reasons</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_internal_reasons"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_external_influences</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_influences</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_external_influences"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_particular_findings</property>
-                    <text-property name="displayName">org_vv_bsig_classification_particular_findings</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_particular_findings"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_purpose_of_information</property>
-                    <text-property name="displayName">org_vv_bsig_purpose_of_information</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_purpose_of_information"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_circumstances</property>
-                    <text-property name="displayName">org_vv_bsig_circumstances</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_circumstances"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_procedure_proposals</property>
-                    <text-property name="displayName">org_vv_bsig_procedure_proposals</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_procedure_proposals"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_miscellaneous</property>
-                    <text-property name="displayName">org_vv_bsig_miscellaneous</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_miscellaneous"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">dbid</property>
                     <text-property name="displayName">dbid</text-property>
                     <expression name="expression" type="javascript">dataSetRow["dbid"]</expression>
@@ -2829,7 +2757,80 @@ Bei Einstufung: VSA beachten!]]></text-property>
                                     <property name="dataType">javaObject</property>
                                 </structure>
                                 <structure>
+                                    <property name="name">incident_vv_bsig_classification_external_attack</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_external_attack</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_external_attack"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_data_loss</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_data_loss</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_data_loss"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_security_vulnerability</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_security_vulnerability</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_security_vulnerability"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_swhw_component_error</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_swhw_component_error</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_swhw_component_error"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_policy_violation</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_policy_violation</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_policy_violation"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_internal_reasons</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_internal_reasons</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_internal_reasons"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_external_influences</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_external_influences</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_external_influences"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_classification_particular_findings</property>
+                                    <text-property name="displayName">incident_vv_bsig_classification_particular_findings</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_particular_findings"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_purpose_of_information</property>
+                                    <text-property name="displayName">incident_vv_bsig_purpose_of_information</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_purpose_of_information"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_circumstances</property>
+                                    <text-property name="displayName">incident_vv_bsig_circumstances</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_circumstances"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_procedure_proposals</property>
+                                    <text-property name="displayName">incident_vv_bsig_procedure_proposals</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_procedure_proposals"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">incident_vv_bsig_miscellaneous</property>
+                                    <text-property name="displayName">incident_vv_bsig_miscellaneous</text-property>
+                                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_miscellaneous"]</expression>
+                                    <property name="dataType">javaObject</property>
+                                </structure>
+                                <structure>
                                     <property name="name">VVBSIG_TypeCount</property>
+                                    <text-property name="displayName">VVBSIG_TypeCount</text-property>
                                     <property name="dataType">integer</property>
                                     <simple-property-list name="aggregateOn">
                                         <value>NewTableGroup1</value>
@@ -2838,6 +2839,7 @@ Bei Einstufung: VSA beachten!]]></text-property>
                                     <list-property name="arguments">
                                         <structure>
                                             <property name="name">Expression</property>
+                                            <expression name="value" type="javascript">dataSetRow["incident_vv_bsig_type"]</expression>
                                         </structure>
                                     </list-property>
                                 </structure>
@@ -2882,6 +2884,25 @@ Bei Einstufung: VSA beachten!]]></text-property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
                                         <cell id="2550">
+                                            <method name="onRender"><![CDATA[importPackage(Packages.java.util);
+importPackage(Packages.java.lang);
+
+oldMisc = reportContext.getPersistentGlobalVariable("miscNotes");
+
+sb = new StringBuilder();
+
+if(oldMisc != null &amp;&amp; !(oldMisc.equals(""))){
+	sb.append(oldMisc);
+} else {
+	sb.append("<table>");
+}
+
+newMisc = row["incident_vv_bsig_miscellaneous"];
+if(newMisc != null &amp;&amp; !(newMisc.equals(""))){
+	sb.append("<tr><td><b>" + row["incident_name"]+ ":</b></td><td></td>");
+	sb.append("<td>" + row["incident_vv_bsig_miscellaneous"] + "</td></tr>");
+	reportContext.setPersistentGlobalVariable("miscNotes", sb.toString());
+}]]></method>
                                             <data id="2555">
                                                 <property name="resultSetColumn">incident_vv_bsig_type</property>
                                             </data>
@@ -2935,9 +2956,10 @@ Bei Einstufung: VSA beachten!]]></text-property>
                     <cell id="2990">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
-                        <data id="3003">
-                            <property name="resultSetColumn">org_vv_bsig_miscellaneous</property>
-                        </data>
+                        <text-data id="3072">
+                            <method name="onRender"><![CDATA[this.text = reportContext.getPersistentGlobalVariable("miscNotes") + "</table>";]]></method>
+                            <property name="contentType">html</property>
+                        </text-data>
                     </cell>
                 </row>
             </footer>
@@ -3129,78 +3151,6 @@ Bei Einstufung: VSA beachten!]]></text-property>
                     <property name="name">org_vv_bsig_equiry_email</property>
                     <text-property name="displayName">org_vv_bsig_equiry_email</text-property>
                     <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_equiry_email"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_external_attack</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_attack</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_external_attack"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_data_loss</property>
-                    <text-property name="displayName">org_vv_bsig_classification_data_loss</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_data_loss"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_security_vulnerability</property>
-                    <text-property name="displayName">org_vv_bsig_classification_security_vulnerability</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_security_vulnerability"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_swhw_component_error</property>
-                    <text-property name="displayName">org_vv_bsig_classification_swhw_component_error</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_swhw_component_error"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_policy_violation</property>
-                    <text-property name="displayName">org_vv_bsig_classification_policy_violation</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_policy_violation"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_internal_reasons</property>
-                    <text-property name="displayName">org_vv_bsig_classification_internal_reasons</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_internal_reasons"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_external_influences</property>
-                    <text-property name="displayName">org_vv_bsig_classification_external_influences</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_external_influences"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_classification_particular_findings</property>
-                    <text-property name="displayName">org_vv_bsig_classification_particular_findings</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_classification_particular_findings"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_purpose_of_information</property>
-                    <text-property name="displayName">org_vv_bsig_purpose_of_information</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_purpose_of_information"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_circumstances</property>
-                    <text-property name="displayName">org_vv_bsig_circumstances</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_circumstances"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_procedure_proposals</property>
-                    <text-property name="displayName">org_vv_bsig_procedure_proposals</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_procedure_proposals"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">org_vv_bsig_miscellaneous</property>
-                    <text-property name="displayName">org_vv_bsig_miscellaneous</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["org_vv_bsig_miscellaneous"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -3517,9 +3467,10 @@ Bei Einstufung: VSA beachten!]]></text-property>
                     <cell id="3037">
                         <property name="colSpan">3</property>
                         <property name="rowSpan">1</property>
-                        <data id="3041">
-                            <property name="resultSetColumn">org_vv_bsig_miscellaneous</property>
-                        </data>
+                        <text-data id="3073">
+                            <method name="onRender"><![CDATA[this.text = reportContext.getPersistentGlobalVariable("miscNotes") + "</table>";]]></method>
+                            <property name="contentType">html</property>
+                        </text-data>
                     </cell>
                 </row>
             </footer>
