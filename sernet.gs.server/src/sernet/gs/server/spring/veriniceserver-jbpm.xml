@@ -245,7 +245,7 @@
 	            <entry key="taskListPath" value="todo/task.jsf"/>
 	            <entry key="enabled" value="${veriniceserver.notification.enabled}" />
 	            <entry key="emailFrom" value="${veriniceserver.notification.email.from}"/>
-	            <entry key="replyTo" value="${veriniceserver.notification.email.from}"/> 
+	            <entry key="replyTo" value="${veriniceserver.notification.email.replyto}"/> 
 	            <entry key="url" value="${veriniceserver.notification.email.linkto}"/>
 	        </map>
 	    </property>
