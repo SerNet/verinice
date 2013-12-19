@@ -60,6 +60,8 @@ public class ReportService implements IReportService {
 		        new ExceptionsReport(),
 		        new DocumentsReport(),
 		        new TasksReport(),
+                new VVBSIG_SofortMeldungReport(),
+                new VVBSIG_StatMeldungReport(),		        
 		        
 		        new StrukturanalyseReport(), // BSI reports
 		        new AbhaengigkeitenReport(),

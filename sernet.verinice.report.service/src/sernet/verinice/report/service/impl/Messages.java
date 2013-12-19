@@ -131,6 +131,12 @@ public class Messages extends NLS {
     public static String GraphUmstzngStatus_0;
     public static String GraphUmstzngStatus_1;
     public static String GraphUmstzngStatus_2;
+    public static String VVBSIGStatMeldung_0;
+    public static String VVBSIGStatMeldung_1;
+    public static String VVBSIGStatMeldung_2;
+    public static String VVBSIGSofortMeldung_0;
+    public static String VVBSIGSofortMeldung_1;
+    public static String VVBSIGSofortMeldung_2;
     
     
     static {
