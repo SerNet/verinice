@@ -5,6 +5,58 @@
         <value>incidents</value>
     </simple-property-list>
     <property name="units">in</property>
+    <method name="initialize"><![CDATA[function formatShortDate(inputDate) {
+	importPackage(Packages.java.text);
+	importPackage(Packages.java.util);
+	importPackage(Packages.java.lang);
+	importPackage(Packages.sernet.verinice.report.service.impl);
+
+	fDate = tryParseDate(inputDate);
+	if(fDate != null){
+		destinationFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN);
+		return destinationFormat.format(fDate);
+	} else {
+		return "Datumsformat unbekannt";
+	}
+
+
+}
+
+function formatLongDate(inputDate){
+	importPackage(Packages.java.lang);
+	importPackage(Packages.java.util);
+	importPackage(Packages.java.text);
+	importPackage(Packages.sernet.verinice.report.service.impl);
+		
+	fDate = tryParseDate(inputDate);
+	if(fDate != null){
+		destinationFormat = new SimpleDateFormat("dd. MMMMM yyyy", Locale.GERMAN);
+		return destinationFormat.format(fDate);
+	} else {
+		return "Datumsformat unbekannt";
+	}
+}
+
+function tryParseDate(inputDate){
+	importPackage(Packages.java.lang);
+	importPackage(Packages.java.util);
+	importPackage(Packages.java.text);
+	importPackage(Packages.sernet.verinice.report.service.impl);
+	var	patterns = new Array("dd.MM.yy", "EE, dd.MM.yyyy", "dd.MM.yyyy", "dd.MM.yyyy HH:mm", "MMM dd, yyyy hh:mm aa", "MMM dd, yyyy HH:mm aa", "yyyy-MM-dd");
+	var locales = new Array(Locale.GERMAN, Locale.ENGLISH);
+	for(var i = 0; i < patterns.length; i++){
+		for(var j = 0; j < locales.length; j++){
+			try{
+				formatter = new SimpleDateFormat(patterns[i], locales[j]);
+				formatter.setLenient(true);
+				return formatter.parse(inputDate);
+			} catch(e){
+				
+			}
+		}
+	}	
+	return null;
+}]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -1863,7 +1915,6 @@ for(PersonIso person : hqlPersons){
 		result.append(", ");
 		result.append(surname);
 	}
-	TocHelper2.log("Adding Name:\t" + result.toString());
 	results.add(result.toString());		
 }
 return results;]]></xml-property>
@@ -2199,6 +2250,162 @@ columns(new String[]{"name"});</value>
         </simple-master-page>
     </page-setup>
     <body>
+        <table id="3074">
+            <property name="dataSet">incidents</property>
+            <list-property name="visibility">
+                <structure>
+                    <property name="format">all</property>
+                    <expression name="valueExpr" type="javascript">true</expression>
+                </structure>
+            </list-property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">incident_name</property>
+                    <text-property name="displayName">incident_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_name"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_document</property>
+                    <text-property name="displayName">incident_document</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_document"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_abbr</property>
+                    <text-property name="displayName">incident_abbr</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_abbr"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_date</property>
+                    <text-property name="displayName">incident_date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_date"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_desc</property>
+                    <text-property name="displayName">incident_desc</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_desc"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_tag</property>
+                    <text-property name="displayName">incident_tag</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_tag"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_type</property>
+                    <text-property name="displayName">incident_vv_bsig_type</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_type"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_external_attack</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_external_attack</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_external_attack"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_data_loss</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_data_loss</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_data_loss"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_security_vulnerability</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_security_vulnerability</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_security_vulnerability"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_swhw_component_error</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_swhw_component_error</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_swhw_component_error"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_policy_violation</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_policy_violation</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_policy_violation"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_internal_reasons</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_internal_reasons</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_internal_reasons"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_external_influences</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_external_influences</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_external_influences"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_classification_particular_findings</property>
+                    <text-property name="displayName">incident_vv_bsig_classification_particular_findings</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_particular_findings"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_purpose_of_information</property>
+                    <text-property name="displayName">incident_vv_bsig_purpose_of_information</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_purpose_of_information"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_circumstances</property>
+                    <text-property name="displayName">incident_vv_bsig_circumstances</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_circumstances"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_procedure_proposals</property>
+                    <text-property name="displayName">incident_vv_bsig_procedure_proposals</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_procedure_proposals"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_miscellaneous</property>
+                    <text-property name="displayName">incident_vv_bsig_miscellaneous</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_miscellaneous"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+            </list-property>
+            <column id="3081"/>
+            <detail>
+                <row id="3077">
+                    <cell id="3078">
+                        <data id="3082">
+                            <method name="onRender"><![CDATA[importPackage(Packages.sernet.verinice.report.service.impl);
+latestDate = reportContext.getPersistentGlobalVariable( "latestDate");
+firstDate = reportContext.getPersistentGlobalVariable( "firstDate");
+if(latestDate != null &amp;&amp; !(latestDate.equals(""))){
+	date = tryParseDate(latestDate);
+	input = tryParseDate(this.value);
+	if(input.after(date)){
+		reportContext.setPersistentGlobalVariable( "latestDate", this.value );	
+	}
+} else {
+	reportContext.setPersistentGlobalVariable( "latestDate", this.value );
+}
+if(firstDate != null &amp;&amp; !(firstDate.equals(""))){
+	date = tryParseDate(firstDate);
+	input = tryParseDate(this.value);
+	if(input.before(date)){
+		reportContext.setPersistentGlobalVariable( "firstDate", this.value );	
+	}
+} else {
+	reportContext.setPersistentGlobalVariable( "firstDate", this.value );
+}]]></method>
+                            <property name="resultSetColumn">incident_date</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
         <text id="2291">
             <property name="fontSize">14pt</property>
             <property name="fontWeight">bold</property>
@@ -2700,9 +2907,16 @@ Bei Einstufung: VSA beachten!]]></text-property>
                         </label>
                     </cell>
                     <cell id="2976">
-                        <property name="colSpan">4</property>
+                        <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
+                        <text-data id="3083">
+                            <property name="textAlign">center</property>
+                            <expression name="valueExpr">reportContext.getPersistentGlobalVariable( "firstDate") + " - " +  reportContext.getPersistentGlobalVariable( "latestDate");</expression>
+                            <property name="contentType">html</property>
+                        </text-data>
                     </cell>
+                    <cell id="3085"/>
+                    <cell id="3086"/>
                 </row>
                 <row id="2980">
                     <cell id="2981">

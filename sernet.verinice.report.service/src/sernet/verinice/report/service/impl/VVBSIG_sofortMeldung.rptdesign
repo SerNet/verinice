@@ -5,8 +5,7 @@
         <value>incidents</value>
     </simple-property-list>
     <property name="units">in</property>
-    <method name="initialize"><![CDATA[
-function isIn(list, charToTest){
+    <method name="initialize"><![CDATA[function isIn(list, charToTest){
 	if(list != null &amp;&amp; list.indexOf(",") != -1){
 		sArr = list.split(",");
 		for(var i=0; i < sArr.length; i++){
@@ -2560,24 +2559,6 @@ columns(new String[]{"name"});</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">incident_vv_bsig_circumstances</property>
-                    <text-property name="displayName">incident_vv_bsig_circumstances</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_circumstances"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">incident_vv_bsig_procedure_proposals</property>
-                    <text-property name="displayName">incident_vv_bsig_procedure_proposals</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_procedure_proposals"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">incident_vv_bsig_miscellaneous</property>
-                    <text-property name="displayName">incident_vv_bsig_miscellaneous</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_miscellaneous"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">incident_vv_bsig_classification_data_loss</property>
                     <text-property name="displayName">incident_vv_bsig_classification_data_loss</text-property>
                     <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_classification_data_loss"]</expression>
@@ -2623,6 +2604,24 @@ columns(new String[]{"name"});</value>
                     <property name="name">incident_vv_bsig_purpose_of_information</property>
                     <text-property name="displayName">incident_vv_bsig_purpose_of_information</text-property>
                     <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_purpose_of_information"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_circumstances</property>
+                    <text-property name="displayName">incident_vv_bsig_circumstances</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_circumstances"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_procedure_proposals</property>
+                    <text-property name="displayName">incident_vv_bsig_procedure_proposals</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_procedure_proposals"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">incident_vv_bsig_miscellaneous</property>
+                    <text-property name="displayName">incident_vv_bsig_miscellaneous</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["incident_vv_bsig_miscellaneous"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
@@ -3827,6 +3826,9 @@ Bei Einstufung: VSA beachten!]]></text-property>
                     </cell>
                     <cell id="3581">
                         <property name="verticalAlign">middle</property>
+                        <data id="3606">
+                            <property name="resultSetColumn">incident_date</property>
+                        </data>
                     </cell>
                     <cell id="3582">
                         <property name="verticalAlign">middle</property>
