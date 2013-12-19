@@ -4990,8 +4990,20 @@ the value between <param></param> will be used directly if no string is found fo
 				</huiproperty>
 				<huiproperty id="incident_vv_bsig_circumstances" name="Circumstances"
 					inputtype="text"
-					textrows="10"
-					/>
+					textrows="10">
+					<defaultRule class="SimpleValue">
+                		<param id="incident_vv_bsig_circumstances_default">Leitfragen:
+Was wurde festgestellt / was ist passiert?
+Wer, bzw. was ist betroffen? 
+Welcher Schaden wurde bereits festgestellt?
+Ist eine Kompromittierung weiterer 
+Systeme in anderen Organisationen wahrscheinlich?
+Wurden bereits (Gegen-)
+Maßnahmen ergriffen? Wenn ja, welche?
+Wurden bereits weitere Stellen informiert?
+</param>
+                	</defaultRule>
+                </huiproperty>
 				<huiproperty id="incident_vv_bsig_procedure_proposals" name="Procedure Proposals"
 					inputtype="text"
 					textrows="10"
