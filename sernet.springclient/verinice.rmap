@@ -12,6 +12,5 @@
 			</uri>
 		</provider>
 	</searchPath>
-
 	<locator searchPathRef="default" pattern="^sernet\..*" />
 </rmap>
