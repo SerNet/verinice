@@ -1882,7 +1882,6 @@ import java.util.Arrays;
 import java.lang.Integer;
 import java.lang.StringBuilder;
 import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 elmtid = inpv("elmtID");
 

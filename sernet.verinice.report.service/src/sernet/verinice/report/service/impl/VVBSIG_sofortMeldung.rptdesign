@@ -26,8 +26,6 @@
 }
 
 function isEqual(a, b){
-	importPackage(Packages.sernet.verinice.report.service.impl);
-	TocHelper2.log(new String(trim(a)).valueOf() + " == " + new String(trim(b)).valueOf());
 	if(new String(trim(a)).valueOf() == new String(trim(b)).valueOf() ){
 		return true;
 	}
@@ -35,7 +33,7 @@ function isEqual(a, b){
 }
 
 function trim(str) {
-        return str.replace(/^\s+|\s+$/g,"");
+        return str.replace("/^\s+|\s+$/g","");
 }
 
 function getOptionValuesForPropertyIDs(propertyTypeIds){
@@ -1883,7 +1881,6 @@ import java.util.Arrays;
 import java.lang.Integer;
 import java.lang.StringBuilder;
 import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 elmtid = inpv("elmtID");
 
@@ -2468,7 +2465,17 @@ columns(new String[]{"name"});</value>
                                 <row id="3065">
                                     <cell id="3066">
                                         <data id="3071">
-                                            <method name="onRender"><![CDATA[reportContext.setPersistentGlobalVariable( "responsiblePerson", this.value )]]></method>
+                                            <method name="onRender"><![CDATA[importPackage(Packages.java.lang);
+persons = reportContext.getPersistentGlobalVariable( "responsiblePerson");
+if(persons != null &amp;&amp; !(persons.equals(""))){
+	sb = new StringBuilder();
+	sb.append(persons);
+	sb.append("\n");
+	sb.append(this.value);
+	reportContext.setPersistentGlobalVariable( "responsiblePerson", sb.toString());
+} else {
+	reportContext.setPersistentGlobalVariable( "responsiblePerson", this.value );
+}]]></method>
                                             <property name="resultSetColumn">name</property>
                                         </data>
                                     </cell>
@@ -4555,6 +4562,12 @@ Bei Einstufung: VSA beachten!]]></text-property>
                             <text-property name="text">Störung von SW/HW-Komponenten</text-property>
                         </label>
                         <data id="3599">
+                            <list-property name="visibility">
+                                <structure>
+                                    <property name="format">all</property>
+                                    <expression name="valueExpr" type="javascript">true</expression>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">incident_vv_bsig_classification_swhw_component_error</property>
                         </data>
                     </cell>
