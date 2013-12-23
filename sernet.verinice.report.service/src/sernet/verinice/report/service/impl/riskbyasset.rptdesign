@@ -7719,7 +7719,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <Visible>true</Visible>
           </Label>
           <DataDefinition>
-            <Definition>row[&quot;COUNT_RISK_VALUE&quot;]</Definition>
+            <Definition>Number(row[&quot;COUNT_RISK_VALUE&quot;]);</Definition>
             <Grouping>
               <Enabled>true</Enabled>
               <GroupType>Text</GroupType>

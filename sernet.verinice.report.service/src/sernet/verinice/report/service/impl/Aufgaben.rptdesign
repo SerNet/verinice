@@ -4829,12 +4829,12 @@ columns(newcols);</value>
                     <property name="textAlign">left</property>
                     <cell id="3291">
                         <label id="3292">
-                            <text-property name="text">Audit Title</text-property>
+                            <text-property name="text">Audit Titel</text-property>
                         </label>
                     </cell>
                     <cell id="3293">
                         <label id="3294">
-                            <text-property name="text">Objekt  Title</text-property>
+                            <text-property name="text">Objekt  Titel</text-property>
                         </label>
                     </cell>
                     <cell id="3297">
@@ -4844,48 +4844,48 @@ columns(newcols);</value>
                     </cell>
                     <cell id="3283">
                         <label id="3284">
-                            <text-property name="text">Task</text-property>
+                            <text-property name="text">Aufgabe</text-property>
                         </label>
                     </cell>
                     <cell id="3295">
                         <label id="3296">
                             <property name="marginLeft">0pt</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">Description</text-property>
+                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                     <cell id="3303">
                         <label id="3304">
-                            <text-property name="text">Process</text-property>
+                            <text-property name="text">Prozess</text-property>
                         </label>
                     </cell>
                     <cell id="3281">
                         <label id="3282">
                             <property name="marginLeft">0pt</property>
                             <property name="marginRight">0pt</property>
-                            <text-property name="text">Assignee</text-property>
+                            <text-property name="text">Beauftragte</text-property>
                         </label>
                     </cell>
                     <cell id="3285">
                         <label id="3286">
                             <property name="marginRight">0pt</property>
-                            <text-property name="text">create date</text-property>
+                            <text-property name="text">Erstellt am</text-property>
                         </label>
                     </cell>
                     <cell id="3301">
                         <label id="3302">
-                            <text-property name="text">priority</text-property>
+                            <text-property name="text">Priorität</text-property>
                         </label>
                     </cell>
                     <cell id="3287">
                         <label id="3288">
                             <property name="marginLeft">0pt</property>
-                            <text-property name="text">due date</text-property>
+                            <text-property name="text">Umsetzung bis</text-property>
                         </label>
                     </cell>
                     <cell id="3299">
                         <label id="3300">
-                            <text-property name="text">read state</text-property>
+                            <text-property name="text">Gelesen</text-property>
                         </label>
                     </cell>
                     <cell id="3305">
@@ -5093,12 +5093,12 @@ function formatLongDate(inputDate){
                                 <structure>
                                     <expression name="testExpr" type="javascript">row["IsRead"]</expression>
                                     <property name="operator">is-true</property>
-                                    <text-property name="display">read</text-property>
+                                    <text-property name="display">gelesen</text-property>
                                 </structure>
                                 <structure>
                                     <expression name="testExpr" type="javascript">row["IsRead"]</expression>
                                     <property name="operator">is-false</property>
-                                    <text-property name="display">not yet</text-property>
+                                    <text-property name="display">noch nicht gelesen</text-property>
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">IsRead</property>

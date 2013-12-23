@@ -23,6 +23,7 @@ package sernet.verinice.report.service.impl;
  *
  */
 import java.net.URL;
+import java.util.Locale;
 
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
@@ -73,9 +74,15 @@ public class TasksReport implements IReportType {
      */
     @Override
     public void createReport(IReportOptions reportOptions) {
+    	URL reportDesign = null;
         BIRTReportService brs = new BIRTReportService();
-        
-        URL reportDesign = TasksReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
+        String locale = Locale.getDefault().toString();
+        if(locale.equals("de")){
+        	 reportDesign = TasksReport.class.getResource("Aufgaben.rptdesign");
+        }
+        else {
+        reportDesign = TasksReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
+        }
         
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {

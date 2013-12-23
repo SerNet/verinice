@@ -38,6 +38,7 @@
             <simple-property-list name="defaultValue">
                 <value type="constant">-1</value>
             </simple-property-list>
+            <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
             <structure name="format">
@@ -4213,6 +4214,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
             <property name="borderTopWidth">medium</property>
             <property name="pageBreakInside">avoid</property>
             <property name="width">7.75206611570248in</property>
+            <structure name="toc"/>
             <column id="1067">
                 <property name="width">2.4242424242424243in</property>
                 <property name="backgroundColor">#9AC3D6</property>
