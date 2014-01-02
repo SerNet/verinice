@@ -8,13 +8,13 @@ Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: sernet.gs.ui.rcp.main,
  sernet.gs.service,
  sernet.verinice.fei.service,
- com.springsource.org.apache.log4j;bundle-version="1.2.15",
- org.eclipse.equinox.common;bundle-version="3.6.0",
- org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.springclient,
+ org.eclipse.ui;bundle-version="3.5.2",
  org.eclipse.core.resources;bundle-version="3.5.2",
+ com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.intro;bundle-version="3.3.2",
+ org.eclipse.equinox.common;bundle-version="3.6.0",
  com.springsource.org.apache.commons.io;bundle-version="1.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
