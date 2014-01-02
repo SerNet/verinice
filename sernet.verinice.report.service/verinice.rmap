@@ -12,7 +12,5 @@
 			</uri>
 		</provider>
 	</searchPath>
-
 	<locator searchPathRef="default" pattern="^sernet\..*" />
-	<redirect href="http://www.eclipse.org/buckminster/samples/rmaps/dogfood2.rmap" pattern=".*"/>
 </rmap>
