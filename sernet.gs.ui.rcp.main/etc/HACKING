@@ -3,10 +3,10 @@
 #       plugin folder and Tomcat6
 # 2010-05-08 akoderman added some more hints to deal with problems
 
------------------
+-------------------
 This document describes how to set up verinice for development. It assumes
 that you are using Eclipse and are familiar with this IDE.
------------------
+-------------------
 
 Software requirements:
   - Subversion client
