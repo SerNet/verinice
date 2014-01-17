@@ -982,10 +982,15 @@ import java.lang.Integer;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import java.util.Collections;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.iso27k.service.Retriever;
 
 List sort(List list) {
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {
+		o1 = Retriever.checkRetrieveElement(o1);
+		o2 = Retriever.checkRetrieveElement(o2);
                 comparator = new NumericStringComparator();
                 return comparator.compare(o1.getTitle(), o2.getTitle());
             }
@@ -1006,10 +1011,37 @@ if(root == null){
 	root = Integer.valueOf(-1);
 }
 
+groupHql = "select elmt.dbId from CnATreeElement elmt " + 
+	"inner join elmt.entity as entity " + 
+	"inner join entity.typedPropertyLists as propertyList " + 
+        "inner join propertyList.properties as props " + 
+        "where elmt.scopeId = ? " + 
+        "and props.propertyType = ? " + 
+        "and props.propertyValue = ? ";
+c2 = new ExecuteHQLInReportCommand(groupHql, new Object[]{root, "controlgroup_is_NoIso_group",  "1"}, ControlGroup.TYPE_ID);
+groupIDs = helper.execute(c2).getResult();
+
+groupIDsList = new ArrayList();
+for(Object o : groupIDs){
+	if(o instanceof Integer){
+		groupIDsList.add(o);
+	}
+}
+controlList = new ArrayList();
+for(Integer i : groupIDsList){
+	c2 = new LoadReportElements(objects, i);
+	elements = helper.execute(c2).getElements();
+	for(CnATreeElement c : elements){
+		if(!controlList.contains(c)){
+			controlList.add(c);
+		}
+	}
+}
+
+
+
 cols = helper.getAllPropertyTypes(objects);
-c2 = new LoadReportAllControls(new Integer(root));
-elements = helper.execute(c2).getResult();
-sortedElements = sort(elements);
+sortedElements = sort(controlList);
 return helper.map(
 	sortedElements,
 	cols
