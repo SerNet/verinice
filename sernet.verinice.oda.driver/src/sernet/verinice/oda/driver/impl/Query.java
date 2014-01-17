@@ -234,10 +234,21 @@ public class Query implements IQuery
             if (input == null || input.size()==0){
                 return new ArrayList<List<String>>();
             }
-            
+       
            	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
         	cmd = (MapEntityValues) execute(cmd);
         	return cmd.getResult();
+        }
+        
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
+            if (input == null || input.size()==0){
+                return new ArrayList<List<String>>();
+            }
+
+            MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId, mapNumericalOptionValues);
+            cmd = (MapEntityValues) execute(cmd);
+            return cmd.getResult();
+            
         }
         
         /**
@@ -285,6 +296,10 @@ public class Query implements IQuery
 
         public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
             return map(input, props, classes, false);
+        }
+        
+        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
+            return map(input, props, new Class<?>[0], withDbId, mapNumericalValues);
         }
         
         public Integer getRoot() {
@@ -377,11 +392,17 @@ public class Query implements IQuery
 		try {
 			result = interpreter.eval(queryText);
 		} catch (EvalError e) {
-			log.error("Error evaluating the query: " + queryText, e);
-			result = "Exception while executing query: " + e.getErrorText();
+			result = "Exception while executing query: ";
+			if(e.getMessage() != null){
+			    result = result + e.getMessage();
+			} 
+			if(e.getScriptStackTrace() != null){
+			    result = result + "\n\n"+  e.getScriptStackTrace();
+			}
 			if(e.getCause()!=null) {
 				result = result + ", " + e.getCause().getMessage();
 			}
+			log.error("Error evaluating the query: " + queryText + "\n\n" + result, e);
 		}
 		
 		return result;

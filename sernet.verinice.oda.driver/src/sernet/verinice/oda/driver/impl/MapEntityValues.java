@@ -60,6 +60,11 @@ public class MapEntityValues extends GenericCommand {
     private boolean addDbId;
 
     private String typeID;
+    
+    /**
+     * if set (by constructor), all values of huipropertytype "numericoption" will be replaced by their string values
+     */
+    private boolean mapNumericalOptionValues = false;
 	
 	
 	/**
@@ -75,6 +80,12 @@ public class MapEntityValues extends GenericCommand {
         this.classes = (classes2 != null) ? classes2.clone() : null;
         this.addDbId = addDbId;
     }
+    
+    public MapEntityValues(String typeID, List<Integer> inputIDs, String[] props, Class<?>[] classes2, boolean addDbId, boolean mapNumericalOptionValues) {
+        this(typeID, inputIDs, props, classes2, addDbId);
+        this.mapNumericalOptionValues = mapNumericalOptionValues;
+    }
+    
 
     @SuppressWarnings("unchecked")
 	public void execute() {
@@ -85,7 +96,12 @@ public class MapEntityValues extends GenericCommand {
         {
             IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeID);
             CnATreeElement e = dao.findById(dbid);
-            List<String> row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes);
+            List<String> row = null;
+            if(!mapNumericalOptionValues){
+                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes);
+            } else {
+                row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes, mapNumericalOptionValues);
+            }
             if (addDbId) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Adding dbid: " + e.getDbId() + " to " + e.getTitle());

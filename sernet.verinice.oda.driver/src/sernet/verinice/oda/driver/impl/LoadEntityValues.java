@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -58,7 +60,7 @@ public class LoadEntityValues extends GenericCommand {
     @Override
     @SuppressWarnings("unchecked")
 	public void execute() {
-		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+		IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeId);
 		List<CnATreeElement> elements = dao.findAll();
 		
 		result = new ArrayList<List<String>>(elements.size());
@@ -74,17 +76,20 @@ public class LoadEntityValues extends GenericCommand {
 	 * 
 	 * <p>Note: The method is purposely written in a way that it can be reused from other parts of the application.</p>
 	 */
-	public static List<String> retrievePropertyValues(Entity entity, String[] propertyIdArray, Class<?>[] classes) {
-		ArrayList<String> values = new ArrayList<String>(propertyIdArray.length);		
+	public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes)
+	{
+		ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
+		
 		int i = 0;
-		for (String id : propertyIdArray) {
+		for (String name : propertyTypes)
+		{
 			Class<?> c = (i >= classes.length ? null : classes[i]);
-			if (c == null || c == String.class) {
-				values.add(entity.getSimpleValue(id));
-			} else if (c == Integer.class) {
-				values.add(String.valueOf(entity.getInt(id)));
+			if (c == null || c == String.class){
+				values.add(e.getSimpleValue(name));
+			} else if (c == Integer.class){
+				values.add(String.valueOf(e.getInt(name)));
 			} else {
-				throw new IllegalArgumentException("Invalid class for propertyType '" + id + "'.");
+				throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
 			}
 			i++;
 		}
@@ -93,12 +98,36 @@ public class LoadEntityValues extends GenericCommand {
 	}
 	
 	public static List<Object> convertValuesToList(Entity entity, String[] propertyIdArray) {
-        ArrayList<Object> values = new ArrayList<Object>(propertyIdArray.length);       
-        for (String id : propertyIdArray) {
-            values.add(entity.getSimpleValue(id));
-        }       
-        return values;
-    }
+	    ArrayList<Object> values = new ArrayList<Object>(propertyIdArray.length);       
+	    for (String id : propertyIdArray) {
+	        values.add(entity.getSimpleValue(id));
+	    }       
+	    return values;
+	}
+	
+	public static List<String> retrievePropertyValues(Entity e, String[] propertyTypes, Class<?>[] classes, boolean mapNumericalOptionValues){
+        ArrayList<String> values = new ArrayList<String>(propertyTypes.length);
+        
+        int i = 0;
+        for (String name : propertyTypes)
+        {
+            PropertyType pType = HUITypeFactory.getInstance().getPropertyType(e.getEntityType(), name);
+            
+            Class<?> c = (i >= classes.length ? null : classes[i]);
+            if ((c == null || c == String.class) && (!mapNumericalOptionValues || !pType.getInputName().equals("numericoption"))){
+                values.add(e.getSimpleValue(name));
+            } else if(pType.getInputName().equals("numericoption") && mapNumericalOptionValues){
+                values.add(pType.getNameForValue(Integer.parseInt(e.getValue(name))));
+            } else if (c == Integer.class){
+                values.add(String.valueOf(e.getInt(name)));
+            } else {
+                throw new IllegalArgumentException("Invalid class for propertyType '" + name + "'.");
+            }
+            i++;
+        }
+        
+        return values;	    
+	}
 	
 	public List<List<String>> getResult()
 	{
