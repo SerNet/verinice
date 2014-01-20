@@ -6,3 +6,4 @@ CREATE INDEX parent_idx ON cnatreeelement (parent);
 CREATE INDEX typedlist_id_idx ON propertylist (typedlist_id);
 CREATE INDEX properties_id_idx ON properties (properties_id);
 CREATE INDEX cte_id_idx ON permission (cte_id);
+CREATE INDEX cnatreeelement_id_idx ON note (cnatreeelement_id);
