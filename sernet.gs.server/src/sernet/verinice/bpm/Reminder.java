@@ -34,9 +34,19 @@ import org.springframework.security.context.SecurityContextHolder;
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
 
 /**
- *
+ * jBPM EventListener which sends email reminder to the assignee
+ * of an task if notify is called by jBPM engine.
+ * 
+ * See jBPM developers guide for timer and event listener
+ * documentation.
+ * 
+ * This Reminder is referenced for example in individual-task.jpdl.xml
+ * (see task: "indi.task.execute").
+ * 
+ * http://docs.jboss.com/jbpm/v4/devguide/html_single/#timer
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -47,30 +57,28 @@ public class Reminder implements EventListener  {
     private DummyAuthentication authentication = new DummyAuthentication(); 
     
     private String taskType;
-    private String assignee;
-    private String uuid;
 
-    public void sendEmail(String taskType, String assignee, String uuid) {
+    public void sendEmail(String taskType, String recipient, String uuid) {
         ServerInitializer.inheritVeriniceContextState();
-        doSendEmail(Collections.<String, Object> emptyMap(), taskType, assignee, uuid);
+        doSendEmail(Collections.<String, Object> emptyMap(), taskType, recipient, uuid);
     }
     
-    public void sendEmail(String executionId, String taskType, String assignee, String uuid) {
+    public void sendEmail(String executionId, String taskType, String recipient, String uuid) {
         ServerInitializer.inheritVeriniceContextState();
-        doSendEmail(loadVariablesForProcess(executionId), taskType, assignee, uuid);
+        doSendEmail(loadVariablesForProcess(executionId), taskType, recipient, uuid);
     }
     
-    public void sendEmailWithoutElement(String executionId, String taskType, String assignee) {
+    public void sendEmailWithoutElement(String executionId, String taskType, String recipient) {
         ServerInitializer.inheritVeriniceContextState();
-        doSendEmail(loadVariablesForProcess(executionId), taskType, assignee, null);
+        doSendEmail(loadVariablesForProcess(executionId), taskType, recipient, null);
     }
    
-    private void doSendEmail(Map<String, Object> variables, String taskType, String assignee, String uuid) {
+    private void doSendEmail(Map<String, Object> variables, String taskType, String recipient, String uuid) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("sendEmail called (taskType: " + taskType + ", recipient: " + assignee + ")...");           
+            LOG.debug("sendEmail called (taskType: " + taskType + ", recipient: " + recipient + ", uuid: " + uuid + ")...");           
         }
         
-        if(!validate(taskType,assignee)) {
+        if(!validate(taskType,recipient)) {
             return;
         }      
         
@@ -90,7 +98,7 @@ public class Reminder implements EventListener  {
                 LOG.error("No email handler found for task: " + taskType + ". Can not send email."); 
                 return;
             }
-            handler.send(assignee, taskType, variables, uuid);
+            handler.send(recipient, taskType, variables, uuid);
         } finally {
             if(dummyAuthAdded) {
                 ctx.setAuthentication(null);
@@ -120,7 +128,32 @@ public class Reminder implements EventListener  {
      */
     @Override
     public void notify(EventListenerExecution execution) throws Exception {
-        doSendEmail((Map<String, Object>)execution.getVariables(), taskType, assignee, uuid);   
+        Map<String, Object> variables = (Map<String, Object>)execution.getVariables();        
+        String recipient = getRecipient(variables);
+        String uuid = (String) variables.get(IGenericProcess.VAR_UUID);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Notify, taskType: " + taskType + ", assignee: " + recipient + ", uuid: " + uuid);
+        }
+        
+        doSendEmail(variables, taskType, recipient, uuid);   
+    }
+
+    /**
+     * Returns the user name of the recipient
+     * of the reminder email.
+     * 
+     * In this class the value of process variable
+     * IGenericProcess.VAR_ASSIGNEE_NAME is returned.
+     * 
+     * Extend {@link Reminder} and override this method
+     * to change the recipient
+     * 
+     * @param variables Process variables
+     * @return User name of the recipient
+     */
+    protected String getRecipient(Map<String, Object> variables) {
+        return (String) variables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
     }
     
     private Map<String, Object> loadVariablesForProcess(String executionId) {

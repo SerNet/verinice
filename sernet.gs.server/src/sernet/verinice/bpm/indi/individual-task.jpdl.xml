@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process key="individual-task" name="Individual task workflow" version="1" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+<process key="individual-task" name="Individual task workflow" version="2" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
    <description>Workflow to manage individual tasks.</description>
    
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
@@ -36,10 +36,8 @@
    <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="306,244,146,52" name="indi.task.assign">
       <on event="timeout">
       <timer duedate="#{INDI_REMINDER_DATE}"/>
-        <event-listener class="sernet.verinice.bpm.Reminder">
+        <event-listener class="sernet.verinice.bpm.ProcessCreaterReminder">
           <field name="taskType"><string value="indi.task.assign"/></field>
-          <field name="assignee"><object expr="#{ISA_OWNER_NAME}"/></field>
-          <field name="uuid"><object expr="#{UUID}"/></field>
         </event-listener>
       </on>
       <transition g="378,169;236,169:81,52" name="indi.trans.complete" to="checkDate"/>
@@ -65,8 +63,6 @@
       <timer duedate="#{INDI_REMINDER_DATE}"/>
         <event-listener class="sernet.verinice.bpm.Reminder">
           <field name="taskType"><string value="indi.task.execute"/></field>
-          <field name="assignee"><object expr="#{ISA_ASSIGNEE_NAME}"/></field>
-          <field name="uuid"><object expr="#{UUID}"/></field>
         </event-listener>
       </on>
       <transition g="7,-24" name="indi.trans.complete" to="indi.task.check"/>
