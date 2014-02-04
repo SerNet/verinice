@@ -457,7 +457,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="anwendung";
 
@@ -922,7 +922,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="server";
 
@@ -1387,7 +1387,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="client";
 
@@ -1715,7 +1715,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="netzkomponente";
 
@@ -2196,7 +2196,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="sonstit";
 
@@ -2559,7 +2559,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="raum";
 
@@ -2922,7 +2922,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="gebaeude";
 
@@ -3353,7 +3353,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 objects="tkkomponente";
 
@@ -3811,7 +3811,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -4099,7 +4099,8 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
+import sernet.verinice.service.commands.reports.LoadReportLinkedElements;
 
 // get current elmt:
 elmtid=-1;
@@ -4394,9 +4395,11 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.reports.LoadReportElements;
+import sernet.verinice.service.commands.reports.LoadReportLinkedElements;
+import sernet.verinice.service.commands.LoadCnAElementById;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.service.iso27k.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
@@ -4470,483 +4473,6 @@ return helper.map(
 
 cols = helper.getAllPropertyTypes("bstumsetzung",true);
 inParameters(new String[] { "elmt_id" });
-columns(cols);</value>
-                </ex-property>
-            </list-property>
-        </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="bst_mnums" id="1886">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">mnums_verantwortlichinit</property>
-                    <text-property name="displayName">mnums_verantwortlichinit</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_verantwortlichums</property>
-                    <text-property name="displayName">mnums_verantwortlichums</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_id</property>
-                    <text-property name="displayName">mnums_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_dokument</property>
-                    <text-property name="displayName">mnums_dokument</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_lebenszyklus</property>
-                    <text-property name="displayName">mnums_lebenszyklus</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_url</property>
-                    <text-property name="displayName">mnums_url</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_siegel</property>
-                    <text-property name="displayName">mnums_siegel</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_name</property>
-                    <text-property name="displayName">mnums_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_stand</property>
-                    <text-property name="displayName">mnums_stand</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_umsetzung</property>
-                    <text-property name="displayName">mnums_umsetzung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_erlaeuterung</property>
-                    <text-property name="displayName">mnums_erlaeuterung</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_umsetzungbis</property>
-                    <text-property name="displayName">mnums_umsetzungbis</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_umsetzungdurch_link</property>
-                    <text-property name="displayName">mnums_umsetzungdurch_link</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_initdurch_link</property>
-                    <text-property name="displayName">mnums_initdurch_link</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_ptfix</property>
-                    <text-property name="displayName">mnums_kosten_ptfix</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_ptvar</property>
-                    <text-property name="displayName">mnums_kosten_ptvar</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_ptperiod</property>
-                    <text-property name="displayName">mnums_kosten_ptperiod</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_sachfix</property>
-                    <text-property name="displayName">mnums_kosten_sachfix</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_sachvar</property>
-                    <text-property name="displayName">mnums_kosten_sachvar</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_kosten_sachperiod</property>
-                    <text-property name="displayName">mnums_kosten_sachperiod</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_letzterevisiondurch_link</property>
-                    <text-property name="displayName">mnums_letzterevisiondurch_link</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_letzterevisionam</property>
-                    <text-property name="displayName">mnums_letzterevisionam</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_bemerkungen</property>
-                    <text-property name="displayName">mnums_bemerkungen</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_naechsterevisiondurch_link</property>
-                    <text-property name="displayName">mnums_naechsterevisiondurch_link</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">mnums_naechsterevisionam</property>
-                    <text-property name="displayName">mnums_naechsterevisionam</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">elmt_id</property>
-                    <property name="nativeName">elmt_id</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">1</property>
-                    <expression name="defaultValue">'dummy default value'</expression>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                    <property name="isOutput">false</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">mnums_verantwortlichinit</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">mnums_verantwortlichums</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">mnums_id</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">mnums_dokument</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">mnums_lebenszyklus</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">mnums_url</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">mnums_siegel</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">mnums_name</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">mnums_stand</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">mnums_umsetzung</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">mnums_erlaeuterung</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">mnums_umsetzungbis</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">mnums_umsetzungdurch_link</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">mnums_initdurch_link</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">mnums_kosten_ptfix</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">mnums_kosten_ptvar</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">mnums_kosten_ptperiod</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">mnums_kosten_sachfix</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">mnums_kosten_sachvar</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">mnums_kosten_sachperiod</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">mnums_letzterevisiondurch_link</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">mnums_letzterevisionam</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">mnums_bemerkungen</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">mnums_naechsterevisiondurch_link</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">mnums_naechsterevisionam</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">mnums_verantwortlichinit</property>
-                    <property name="nativeName">mnums_verantwortlichinit</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">mnums_verantwortlichums</property>
-                    <property name="nativeName">mnums_verantwortlichums</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">mnums_id</property>
-                    <property name="nativeName">mnums_id</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">mnums_dokument</property>
-                    <property name="nativeName">mnums_dokument</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">mnums_lebenszyklus</property>
-                    <property name="nativeName">mnums_lebenszyklus</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">mnums_url</property>
-                    <property name="nativeName">mnums_url</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">mnums_siegel</property>
-                    <property name="nativeName">mnums_siegel</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">mnums_name</property>
-                    <property name="nativeName">mnums_name</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">mnums_stand</property>
-                    <property name="nativeName">mnums_stand</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">mnums_umsetzung</property>
-                    <property name="nativeName">mnums_umsetzung</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">mnums_erlaeuterung</property>
-                    <property name="nativeName">mnums_erlaeuterung</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">mnums_umsetzungbis</property>
-                    <property name="nativeName">mnums_umsetzungbis</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">mnums_umsetzungdurch_link</property>
-                    <property name="nativeName">mnums_umsetzungdurch_link</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">mnums_initdurch_link</property>
-                    <property name="nativeName">mnums_initdurch_link</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">mnums_kosten_ptfix</property>
-                    <property name="nativeName">mnums_kosten_ptfix</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">mnums_kosten_ptvar</property>
-                    <property name="nativeName">mnums_kosten_ptvar</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">mnums_kosten_ptperiod</property>
-                    <property name="nativeName">mnums_kosten_ptperiod</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">mnums_kosten_sachfix</property>
-                    <property name="nativeName">mnums_kosten_sachfix</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">mnums_kosten_sachvar</property>
-                    <property name="nativeName">mnums_kosten_sachvar</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">mnums_kosten_sachperiod</property>
-                    <property name="nativeName">mnums_kosten_sachperiod</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">mnums_letzterevisiondurch_link</property>
-                    <property name="nativeName">mnums_letzterevisiondurch_link</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">mnums_letzterevisionam</property>
-                    <property name="nativeName">mnums_letzterevisionam</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">mnums_bemerkungen</property>
-                    <property name="nativeName">mnums_bemerkungen</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">mnums_naechsterevisiondurch_link</property>
-                    <property name="nativeName">mnums_naechsterevisiondurch_link</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">mnums_naechsterevisionam</property>
-                    <property name="nativeName">mnums_naechsterevisionam</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
-// get current elmt:
-elmtid = inpv("elmt_id");
-
-// load its children
-c2 = new LoadReportElementWithChildren("mnums", elmtid);
-elements = helper.execute(c2).getResult();
-
-cols = helper.getAllPropertyTypes("mnums", false);
-return helper.map(
-	elements,
-	cols,
-	false
-);
-]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
-</model:DesignValues>]]></xml-property>
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>setupQueryText</name>
-                    <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
-
-inParameters(new String[] { "elmt_id" });
-
-cols = helper.getAllPropertyTypes("mnums", false);
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -5454,7 +4980,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 import sernet.verinice.model.bsi.ITVerbund;
 import java.lang.*;
 
@@ -5520,6 +5046,827 @@ import sernet.verinice.model.bsi.ITVerbund;
 
 cols = helper.getAllPropertyTypes(ITVerbund.TYPE_ID, true);
 inParameters(new String[] { "root_object" });
+columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="bst_mnums1" id="3971">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">mnums_verantwortlichinit</property>
+                    <text-property name="displayName">mnums_verantwortlichinit</text-property>
+                    <text-property name="heading">mnums_verantwortlichinit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_beschreibung</property>
+                    <text-property name="displayName">mnums_beschreibung</text-property>
+                    <text-property name="heading">mnums_beschreibung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_verantwortlichums</property>
+                    <text-property name="displayName">mnums_verantwortlichums</text-property>
+                    <text-property name="heading">mnums_verantwortlichums</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_id</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">mnums_id</text-property>
+                    <text-property name="heading">mnums_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_dokument</property>
+                    <text-property name="displayName">mnums_dokument</text-property>
+                    <text-property name="heading">mnums_dokument</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_lebenszyklus</property>
+                    <text-property name="displayName">mnums_lebenszyklus</text-property>
+                    <text-property name="heading">mnums_lebenszyklus</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_url</property>
+                    <text-property name="displayName">mnums_url</text-property>
+                    <text-property name="heading">mnums_url</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_siegel</property>
+                    <text-property name="displayName">mnums_siegel</text-property>
+                    <text-property name="heading">mnums_siegel</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_name</property>
+                    <text-property name="displayName">mnums_name</text-property>
+                    <text-property name="heading">mnums_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_stand</property>
+                    <text-property name="displayName">mnums_stand</text-property>
+                    <text-property name="heading">mnums_stand</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_auditor</property>
+                    <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                    <text-property name="heading">mnums_gsaudit_auditor</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_befragt</property>
+                    <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                    <text-property name="heading">mnums_gsaudit_befragt</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_methode</property>
+                    <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                    <text-property name="heading">mnums_gsaudit_methode</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_fragen</property>
+                    <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                    <text-property name="heading">mnums_gsaudit_fragen</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_beobachtung</property>
+                    <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                    <text-property name="heading">mnums_gsaudit_beobachtung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_bericht</property>
+                    <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                    <text-property name="heading">mnums_gsaudit_bericht</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_auditam</property>
+                    <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                    <text-property name="heading">mnums_gsaudit_auditam</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_status</property>
+                    <text-property name="displayName">mnums_gsaudit_status</text-property>
+                    <text-property name="heading">mnums_gsaudit_status</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_abweichung</property>
+                    <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                    <text-property name="heading">mnums_gsaudit_abweichung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_frist</property>
+                    <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                    <text-property name="heading">mnums_gsaudit_frist</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_nachberfolgt</property>
+                    <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                    <text-property name="heading">mnums_gsaudit_nachberfolgt</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_nachb</property>
+                    <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                    <text-property name="heading">mnums_gsaudit_nachb</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_gsaudit_votum</property>
+                    <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                    <text-property name="heading">mnums_gsaudit_votum</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_umsetzung</property>
+                    <text-property name="displayName">mnums_umsetzung</text-property>
+                    <text-property name="heading">mnums_umsetzung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_erlaeuterung</property>
+                    <text-property name="displayName">mnums_erlaeuterung</text-property>
+                    <text-property name="heading">mnums_erlaeuterung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_umsetzungbis</property>
+                    <text-property name="displayName">mnums_umsetzungbis</text-property>
+                    <text-property name="heading">mnums_umsetzungbis</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_umsetzungdurch_link</property>
+                    <text-property name="displayName">mnums_umsetzungdurch_link</text-property>
+                    <text-property name="heading">mnums_umsetzungdurch_link</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_initdurch_link</property>
+                    <text-property name="displayName">mnums_initdurch_link</text-property>
+                    <text-property name="heading">mnums_initdurch_link</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_ptfix</property>
+                    <text-property name="displayName">mnums_kosten_ptfix</text-property>
+                    <text-property name="heading">mnums_kosten_ptfix</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_ptvar</property>
+                    <text-property name="displayName">mnums_kosten_ptvar</text-property>
+                    <text-property name="heading">mnums_kosten_ptvar</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_ptperiod</property>
+                    <text-property name="displayName">mnums_kosten_ptperiod</text-property>
+                    <text-property name="heading">mnums_kosten_ptperiod</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_sachfix</property>
+                    <text-property name="displayName">mnums_kosten_sachfix</text-property>
+                    <text-property name="heading">mnums_kosten_sachfix</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_sachvar</property>
+                    <text-property name="displayName">mnums_kosten_sachvar</text-property>
+                    <text-property name="heading">mnums_kosten_sachvar</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_kosten_sachperiod</property>
+                    <text-property name="displayName">mnums_kosten_sachperiod</text-property>
+                    <text-property name="heading">mnums_kosten_sachperiod</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_letzterevisiondurch_link</property>
+                    <text-property name="displayName">mnums_letzterevisiondurch_link</text-property>
+                    <text-property name="heading">mnums_letzterevisiondurch_link</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_letzterevisionam</property>
+                    <text-property name="displayName">mnums_letzterevisionam</text-property>
+                    <text-property name="heading">mnums_letzterevisionam</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_bemerkungen</property>
+                    <text-property name="displayName">mnums_bemerkungen</text-property>
+                    <text-property name="heading">mnums_bemerkungen</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_naechsterevisiondurch_link</property>
+                    <text-property name="displayName">mnums_naechsterevisiondurch_link</text-property>
+                    <text-property name="heading">mnums_naechsterevisiondurch_link</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_naechsterevisionam</property>
+                    <text-property name="displayName">mnums_naechsterevisionam</text-property>
+                    <text-property name="heading">mnums_naechsterevisionam</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">elmt_id</property>
+                    <property name="nativeName">elmt_id</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'dummy default value'</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">mnums_verantwortlichinit</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">mnums_beschreibung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">mnums_verantwortlichums</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">mnums_id</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">mnums_dokument</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">mnums_lebenszyklus</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">mnums_url</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">mnums_siegel</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">mnums_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">mnums_stand</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">mnums_gsaudit_auditor</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">mnums_gsaudit_befragt</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">mnums_gsaudit_methode</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">mnums_gsaudit_fragen</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">mnums_gsaudit_beobachtung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">mnums_gsaudit_bericht</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">mnums_gsaudit_auditam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">mnums_gsaudit_status</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">mnums_gsaudit_abweichung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">mnums_gsaudit_frist</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">mnums_gsaudit_nachberfolgt</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">mnums_gsaudit_nachb</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">mnums_gsaudit_votum</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">mnums_umsetzung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">mnums_erlaeuterung</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">mnums_umsetzungbis</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">mnums_umsetzungdurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">mnums_initdurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">mnums_kosten_ptfix</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">mnums_kosten_ptvar</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">mnums_kosten_ptperiod</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">mnums_kosten_sachfix</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">33</property>
+                        <property name="name">mnums_kosten_sachvar</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">mnums_kosten_sachperiod</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">mnums_letzterevisiondurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">mnums_letzterevisionam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">mnums_bemerkungen</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">mnums_naechsterevisiondurch_link</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">mnums_naechsterevisionam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">mnums_verantwortlichinit</property>
+                    <property name="nativeName">mnums_verantwortlichinit</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">mnums_beschreibung</property>
+                    <property name="nativeName">mnums_beschreibung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">mnums_verantwortlichums</property>
+                    <property name="nativeName">mnums_verantwortlichums</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">mnums_id</property>
+                    <property name="nativeName">mnums_id</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">mnums_dokument</property>
+                    <property name="nativeName">mnums_dokument</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">mnums_lebenszyklus</property>
+                    <property name="nativeName">mnums_lebenszyklus</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">mnums_url</property>
+                    <property name="nativeName">mnums_url</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">mnums_siegel</property>
+                    <property name="nativeName">mnums_siegel</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">mnums_name</property>
+                    <property name="nativeName">mnums_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">mnums_stand</property>
+                    <property name="nativeName">mnums_stand</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">mnums_gsaudit_auditor</property>
+                    <property name="nativeName">mnums_gsaudit_auditor</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">mnums_gsaudit_befragt</property>
+                    <property name="nativeName">mnums_gsaudit_befragt</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">mnums_gsaudit_methode</property>
+                    <property name="nativeName">mnums_gsaudit_methode</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">mnums_gsaudit_fragen</property>
+                    <property name="nativeName">mnums_gsaudit_fragen</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">mnums_gsaudit_beobachtung</property>
+                    <property name="nativeName">mnums_gsaudit_beobachtung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">mnums_gsaudit_bericht</property>
+                    <property name="nativeName">mnums_gsaudit_bericht</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">mnums_gsaudit_auditam</property>
+                    <property name="nativeName">mnums_gsaudit_auditam</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">mnums_gsaudit_status</property>
+                    <property name="nativeName">mnums_gsaudit_status</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">mnums_gsaudit_abweichung</property>
+                    <property name="nativeName">mnums_gsaudit_abweichung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">mnums_gsaudit_frist</property>
+                    <property name="nativeName">mnums_gsaudit_frist</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">mnums_gsaudit_nachberfolgt</property>
+                    <property name="nativeName">mnums_gsaudit_nachberfolgt</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">mnums_gsaudit_nachb</property>
+                    <property name="nativeName">mnums_gsaudit_nachb</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">mnums_gsaudit_votum</property>
+                    <property name="nativeName">mnums_gsaudit_votum</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">mnums_umsetzung</property>
+                    <property name="nativeName">mnums_umsetzung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">mnums_erlaeuterung</property>
+                    <property name="nativeName">mnums_erlaeuterung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">mnums_umsetzungbis</property>
+                    <property name="nativeName">mnums_umsetzungbis</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">mnums_umsetzungdurch_link</property>
+                    <property name="nativeName">mnums_umsetzungdurch_link</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">mnums_initdurch_link</property>
+                    <property name="nativeName">mnums_initdurch_link</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">mnums_kosten_ptfix</property>
+                    <property name="nativeName">mnums_kosten_ptfix</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">mnums_kosten_ptvar</property>
+                    <property name="nativeName">mnums_kosten_ptvar</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">mnums_kosten_ptperiod</property>
+                    <property name="nativeName">mnums_kosten_ptperiod</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">mnums_kosten_sachfix</property>
+                    <property name="nativeName">mnums_kosten_sachfix</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">mnums_kosten_sachvar</property>
+                    <property name="nativeName">mnums_kosten_sachvar</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">mnums_kosten_sachperiod</property>
+                    <property name="nativeName">mnums_kosten_sachperiod</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">mnums_letzterevisiondurch_link</property>
+                    <property name="nativeName">mnums_letzterevisiondurch_link</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
+                    <property name="name">mnums_letzterevisionam</property>
+                    <property name="nativeName">mnums_letzterevisionam</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">37</property>
+                    <property name="name">mnums_bemerkungen</property>
+                    <property name="nativeName">mnums_bemerkungen</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">38</property>
+                    <property name="name">mnums_naechsterevisiondurch_link</property>
+                    <property name="nativeName">mnums_naechsterevisiondurch_link</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">39</property>
+                    <property name="name">mnums_naechsterevisionam</property>
+                    <property name="nativeName">mnums_naechsterevisionam</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.verinice.service.commands.reports.LoadReportElementWithChildren;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.service.iso27k.Retriever;
+import sernet.gs.service.NumericStringComparator;
+import java.util.Comparator;
+import java.lang.String;
+import java.lang.Integer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.lang.StringBuilder;
+import sernet.hui.common.connect.Entity;
+
+// get current elmt:
+elmtid = inpv("elmt_id");
+
+// load its children
+c2 = new LoadReportElementWithChildren("mnums", elmtid);
+elements = helper.execute(c2).getResult();
+results = new ArrayList(0);
+if(elements.size() > 0){
+	cols = helper.getAllPropertyTypes("mnums", false);
+	root = elements.get(0).getScopeId();
+	umsDurchIndex = 0;
+	dbidIndex = 0;
+	for(int i = 0; i < cols.length; i++){
+		s = cols[i];
+		if(s.equals(MassnahmenUmsetzung.P_UMSETZUNGDURCH_LINK)){
+			umsDurchIndex = i;
+		}
+	}
+	lists = helper.map(
+		elements,
+		cols,
+		true
+	);
+	for(List l : lists){
+		nameList = new ArrayList(0);
+		umsDurch = l.get(umsDurchIndex);
+		dbidIndex = l.size()-1;
+		nameList.add(umsDurch);
+		dbid = l.get(dbidIndex);
+		personNameHql = " from CnATreeElement elmt " + 
+		"inner join elmt.entity as entity " + 
+		"inner join entity.typedPropertyLists as propertyList " + 
+        	"inner join propertyList.properties as props " + 
+		"where elmt.dbId IN ( " +
+		"select link.id.dependantId from CnALink link where link.id.dependencyId IN ( " +
+		"select  elmt2.dbId FROM CnATreeElement elmt2 " +
+		"where elmt2.scopeId = ? and  elmt2.objectType = ?) " +
+		"and link.id.dependencyId = ? " +  
+		")";
+		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
+		persons = helper.execute(c2).getResult();
+		
+		for(Object[] oArr : persons){
+			for(Object o : oArr){
+				if(o instanceof Person){
+					person = (Person)Retriever.checkRetrieveElement(o);
+					boolean nameAlreadyAdded = false;
+					for(String name : nameList){
+						if(name.equals(person.getTitle()) || name.contains(person.getTitle())){
+							nameAlreadyAdded = true;
+							break;	
+						}
+					}
+					if(!nameAlreadyAdded){
+						nameList.add(person.getTitle());
+					}				
+				}
+
+			}
+		}
+		Collections.sort(nameList, new Comparator() {
+            public int compare(String s1, String s2) {
+                comparator = new NumericStringComparator();
+                return comparator.compare(s1, s2);
+            }
+        });
+		sb = new StringBuilder();
+		for(String nameString : nameList){
+			sb.append(nameString);
+			if(!(nameList.indexOf(nameString) == nameList.size()-1)){
+				sb.append("\n");
+			}
+		}
+		l.set(umsDurchIndex, sb.toString().trim());
+	}
+}
+return lists;]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+
+inParameters(new String[] { "elmt_id" });
+
+cols = helper.getAllPropertyTypes("mnums", true);
 columns(cols);</value>
                 </ex-property>
             </list-property>
@@ -6415,7 +6762,7 @@ columns(cols);</value>
                                                     <table id="3943">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -6429,6 +6776,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -6477,6 +6830,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -6707,6 +7138,7 @@ columns(cols);</value>
         </label>
         <table id="1983">
             <property name="pageBreakBefore">avoid</property>
+            <property name="height">100%</property>
             <property name="width">100%</property>
             <property name="dataSet">anwendungen</property>
             <list-property name="boundDataColumns">
@@ -6865,10 +7297,12 @@ columns(cols);</value>
             <column id="1990"/>
             <detail>
                 <row id="1986">
+                    <property name="height">100%</property>
                     <property name="pageBreakBefore">avoid</property>
                     <property name="pageBreakInside">auto</property>
                     <cell id="1987">
                         <grid id="1991">
+                            <property name="height">100%</property>
                             <property name="width">100%</property>
                             <column id="1992"/>
                             <row id="1993">
@@ -6916,11 +7350,13 @@ columns(cols);</value>
                                 </cell>
                             </row>
                             <row id="1995">
+                                <property name="height">100%</property>
                                 <property name="pageBreakInside">auto</property>
                                 <cell id="1996">
                                     <table id="2009">
                                         <property name="pageBreakBefore">auto</property>
                                         <property name="pageBreakInside">auto</property>
+                                        <property name="height">100%</property>
                                         <property name="width">100%</property>
                                         <property name="dataSet">zobj_linkedbst</property>
                                         <list-property name="paramBindings">
@@ -7011,7 +7447,7 @@ columns(cols);</value>
                                             <property name="width">2.40625in</property>
                                         </column>
                                         <column id="2020">
-                                            <property name="width">5.177083333333333in</property>
+                                            <property name="width">100%</property>
                                         </column>
                                         <detail>
                                             <row id="2532">
@@ -7098,7 +7534,7 @@ columns(cols);</value>
                                                     <table id="2030">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -7112,6 +7548,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -7160,6 +7602,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -7773,7 +8293,7 @@ columns(cols);</value>
                                                     <table id="3168">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -7787,6 +8307,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -7835,6 +8361,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -8448,7 +9052,7 @@ columns(cols);</value>
                                                     <table id="3245">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -8462,6 +9066,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -8510,6 +9120,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -9111,7 +9799,7 @@ columns(cols);</value>
                                                     <table id="3322">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -9125,6 +9813,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -9173,6 +9867,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -9790,7 +10562,7 @@ columns(cols);</value>
                                                     <table id="3399">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -9804,6 +10576,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -9852,6 +10630,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -10429,7 +11285,7 @@ columns(cols);</value>
                                                     <table id="3476">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -10443,6 +11299,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -10491,6 +11353,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -11068,7 +12008,7 @@ columns(cols);</value>
                                                     <table id="3553">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -11082,6 +12022,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -11130,6 +12076,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -11695,7 +12719,7 @@ columns(cols);</value>
                                                     <table id="3630">
                                                         <property name="pageBreakInside">auto</property>
                                                         <property name="width">100%</property>
-                                                        <property name="dataSet">bst_mnums</property>
+                                                        <property name="dataSet">bst_mnums1</property>
                                                         <list-property name="paramBindings">
                                                             <structure>
                                                                 <property name="paramName">elmt_id</property>
@@ -11709,6 +12733,12 @@ columns(cols);</value>
                                                                 <property name="name">mnums_verantwortlichinit</property>
                                                                 <text-property name="displayName">mnums_verantwortlichinit</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_verantwortlichinit"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_beschreibung</property>
+                                                                <text-property name="displayName">mnums_beschreibung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_beschreibung"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
@@ -11757,6 +12787,84 @@ columns(cols);</value>
                                                                 <property name="name">mnums_stand</property>
                                                                 <text-property name="displayName">mnums_stand</text-property>
                                                                 <expression name="expression" type="javascript">dataSetRow["mnums_stand"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditor</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditor</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditor"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_befragt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_befragt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_befragt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_methode</property>
+                                                                <text-property name="displayName">mnums_gsaudit_methode</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_methode"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_fragen</property>
+                                                                <text-property name="displayName">mnums_gsaudit_fragen</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_fragen"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_beobachtung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_beobachtung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_beobachtung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_bericht</property>
+                                                                <text-property name="displayName">mnums_gsaudit_bericht</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_bericht"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_auditam</property>
+                                                                <text-property name="displayName">mnums_gsaudit_auditam</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_auditam"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_status</property>
+                                                                <text-property name="displayName">mnums_gsaudit_status</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_status"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_abweichung</property>
+                                                                <text-property name="displayName">mnums_gsaudit_abweichung</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_abweichung"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_frist</property>
+                                                                <text-property name="displayName">mnums_gsaudit_frist</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_frist"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachberfolgt</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachberfolgt</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachberfolgt"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_nachb</property>
+                                                                <text-property name="displayName">mnums_gsaudit_nachb</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_nachb"]</expression>
+                                                                <property name="dataType">javaObject</property>
+                                                            </structure>
+                                                            <structure>
+                                                                <property name="name">mnums_gsaudit_votum</property>
+                                                                <text-property name="displayName">mnums_gsaudit_votum</text-property>
+                                                                <expression name="expression" type="javascript">dataSetRow["mnums_gsaudit_votum"]</expression>
                                                                 <property name="dataType">javaObject</property>
                                                             </structure>
                                                             <structure>
