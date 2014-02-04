@@ -14,7 +14,7 @@
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
-    <parameters>
+    <parameters> 
         <scalar-parameter name="root_object" id="609">
             <property name="hidden">true</property>
             <text-property name="helpText">Manually set root object for this report.</text-property>

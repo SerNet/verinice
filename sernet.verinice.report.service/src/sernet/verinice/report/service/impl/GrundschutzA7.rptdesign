@@ -336,7 +336,7 @@
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
-                <structure>
+                <structure> 
                     <property name="position">6</property>
                     <property name="name">itverbund_autor</property>
                     <property name="nativeName">itverbund_autor</property>
