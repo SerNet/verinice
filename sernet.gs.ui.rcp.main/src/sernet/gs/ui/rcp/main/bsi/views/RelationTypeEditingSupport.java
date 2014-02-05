@@ -29,12 +29,15 @@ import org.eclipse.swt.SWT;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.ChangeLinkType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CreateLink;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -45,6 +48,8 @@ public class RelationTypeEditingSupport extends EditingSupport {
 
     private IRelationTable view;
     private TableViewer viewer;
+    
+    private Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
 
     public RelationTypeEditingSupport(IRelationTable view, TableViewer viewer) {
         super(viewer);
@@ -77,16 +82,24 @@ public class RelationTypeEditingSupport extends EditingSupport {
     }
 
     private String[] getPossibleLinkTypeNames(CnALink link) {
-        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+        Set<HuiRelation> possibleDownRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+        Set<HuiRelation> possibleUpRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
         Set<String> names = new HashSet<String>();
         Set<String> ids = new HashSet<String>();
-
-        for (HuiRelation huiRelation : possibleRelations) {
+           
+        for (HuiRelation huiRelation : possibleDownRelations) {
             String id = huiRelation.getId();
             String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
             names.add(name);
             ids.add(id);
         }
+        for (HuiRelation huiRelation : possibleUpRelations) {
+            String id = huiRelation.getId();
+            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getReversename() : huiRelation.getName();
+            names.add(name);
+            ids.add(id);
+        }
+        
 
         String[] currentLinkTypeNames = names.toArray(new String[names.size()]);
         return currentLinkTypeNames;
@@ -99,10 +112,14 @@ public class RelationTypeEditingSupport extends EditingSupport {
         }
         CnALink link = (CnALink) element;
         String currentName = CnALink.getRelationName(view.getInputElmt(), link);
-        Logger.getLogger(this.getClass()).debug("current name " + currentName);
+        if(log.isDebugEnabled()){
+            log.debug("current name " + currentName);
+        }
 
         int idx = getIndex(currentName, getPossibleLinkTypeNames(link));
-        Logger.getLogger(this.getClass()).debug("getvalue index: " + idx);
+        if(log.isDebugEnabled()){
+            log.debug("getvalue index: " + idx);
+        }
         return idx;
     }
 
@@ -127,34 +144,79 @@ public class RelationTypeEditingSupport extends EditingSupport {
 
         String linkTypeName = getPossibleLinkTypeNames(link)[index];
         String linkTypeID = getLinkIdForName(link, linkTypeName);
-        Logger.getLogger(this.getClass()).debug("Setting value " + linkTypeID);
-
-        ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
-
-        CnALink newLink = null;
-        try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            newLink = command.getLink();
-        } catch (CommandException e) {
-            ExceptionUtil.log(e, "Fehler beim Ändern der Relation.");
+        if(log.isDebugEnabled()){
+            log.debug("Setting value " + linkTypeID);
         }
+        
+        CnALink newLink = null;
+        if(changeLinkDirection(link, linkTypeID)){
+            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(link.getDependency(), link.getDependant(), linkTypeID);
+            try {
+                createLinkCommand = ServiceFactory.lookupCommandService().executeCommand(createLinkCommand);
+                newLink = createLinkCommand.getLink();
+                if(CnAElementHome.getInstance().isDeleteAllowed(link)){
+                    CnAElementHome.getInstance().remove(link);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getLoadedModel().linkRemoved(link);
+                        CnAElementFactory.getLoadedModel().linkAdded(newLink);
+                    }
+                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+                    CnAElementFactory.getInstance().getISO27kModel().linkAdded(newLink);
+                }
+            } catch (CommandException e) {
+                ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_1);
+            }
+        } else {
 
-        CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
+            ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
+
+            try {
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                newLink = command.getLink();
+            } catch (CommandException e) {
+                ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_2);
+            }
+            CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
+            if (CnAElementFactory.isModelLoaded()) {
+                CnAElementFactory.getLoadedModel().linkChanged(link, newLink, view);
+            }
+            CnAElementFactory.getInstance().getISO27kModel().linkChanged(link, newLink, view);
+        }
+    }
+    
+    private boolean changeLinkDirection(CnALink link, String linkTypeId){
+        Set<HuiRelation> toFromRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
+        for(HuiRelation hr : toFromRelations){
+            if(hr.getId().equals(linkTypeId)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * @param linkTypeName
      */
     private String getLinkIdForName(CnALink link, String linkTypeName) {
-        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
-
-        for (HuiRelation huiRelation : possibleRelations) {
+        Set<HuiRelation> possibleDownRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+        Set<HuiRelation> possibleUpRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
+        for (HuiRelation huiRelation : possibleDownRelations) {
             String id = huiRelation.getId();
             String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
             if (name.equals(linkTypeName)) {
                 return id;
             }
         }
+
+        for (HuiRelation huiRelation : possibleUpRelations) {
+            String id = huiRelation.getId();
+            String name = (view.getInputElmt().getLinksUp().contains(link)) ? huiRelation.getName() : huiRelation.getReversename();
+            if (name.equals(linkTypeName)) {
+                return id;
+            }
+        }
+
+        
         return "";
 
     }
