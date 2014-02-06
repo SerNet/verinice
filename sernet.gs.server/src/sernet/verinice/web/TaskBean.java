@@ -20,7 +20,6 @@
 package sernet.verinice.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -126,7 +125,8 @@ public class TaskBean {
             getSelectedTask().addStyle(ITask.STYLE_READ);
             
             getEditBean().setSaveMessage(Util.getMessage(TaskBean.BOUNDLE_NAME, "elementSaved"));
-            getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
+            // removed due to bug 688
+            //getEditBean().setVisibleTags(Arrays.asList(EditBean.TAG_WEB));
             if(getSelectedTask().getProperties()!=null) {
                 getEditBean().setVisiblePropertyIds(getSelectedTask().getProperties());
             }
