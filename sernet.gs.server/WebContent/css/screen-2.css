@@ -379,6 +379,11 @@ ul#listLeftNavi{
 	margin-bottom:20px;
 }
 
+#ie_clearing {
+	display: block;
+	clear: both;
+}
+
 .tx-indexedsearch .tx-indexedsearch-res table {
 	border-top:1px solid #CECECE;
 	padding-top: 5px;
