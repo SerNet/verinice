@@ -137,27 +137,32 @@ public abstract class GsmProcessParameterCreater {
             LOG.info( leftElementList.size() + " persons");
         }
         
-        List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
+        List<GsmServiceParameter> allParameterList = new LinkedList<GsmServiceParameter>();
         for (CnATreeElement controlGroup : rightElementList) {           
             for (CnATreeElement leftElement : leftElementList) {
                 List<ExecutionImpl> processList = findProcesses(leftElement, controlGroup);
                 if(processList!=null && !processList.isEmpty()) {
                     deleteProcesses(processList);
                 }
-                GsmServiceParameter parameter = createParameter(leftElement, controlGroup);
-                if(parameter!=null) {
-                    List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{orgId});
-                    parameter.setUuidOrg(uuidList.get(0));
-                    parameterList.add(parameter);
+                List<GsmServiceParameter> parameterList = createParameter(leftElement, controlGroup);
+                String uuidOrg = loadOrgUuid(orgId);
+                for (GsmServiceParameter parameter : parameterList) {
+                    parameter.setUuidOrg(uuidOrg);
+                    allParameterList.add(parameter);
                 }
             }
         }
         
         if (LOG.isInfoEnabled()) {
-            LOG.info( parameterList.size() + " process parameter objects created");
+            LOG.info( allParameterList.size() + " process parameter objects created");
         }
 
-        return parameterList;
+        return allParameterList;
+    }
+
+    protected String loadOrgUuid(Integer orgId) {
+        List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{orgId});
+        return uuidList.get(0);
     }
 
     /**
@@ -187,31 +192,35 @@ public abstract class GsmProcessParameterCreater {
     protected abstract Set<CnATreeElement> getObjectsForLeftElement(CnATreeElement leftElement);
     
     /**
-     * Returns the responsible person for the left hand element.
+     * Returns the responsible person(s) for the left hand element.
      * The left hand element is a person or asset-group.
      * 
      * @param leftElement A person or asset-group
-     * @return A person
+     * @return A {@link Set} of persons, usually one person
      */
-    protected abstract CnATreeElement getPersonForLeftElement(CnATreeElement leftElement);
+    protected abstract Set<CnATreeElement> getPersonForLeftElement(CnATreeElement leftElement);
     
     protected List<CnATreeElement> getRightHandElements(Integer orgId) {
         return get2ndLevelControlGroups(orgId);
     }
 
-    private GsmServiceParameter createParameter(CnATreeElement leftElement, CnATreeElement controlGroup) {
-        GsmServiceParameter parameter = null;
+    private List<GsmServiceParameter> createParameter(CnATreeElement leftElement, CnATreeElement controlGroup) {
+        List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
         Set<CnATreeElement> elementSet = getAllElements(controlGroup, leftElement);
-        CnATreeElement person = getPersonForLeftElement(leftElement);
-        if(!elementSet.isEmpty() && person!=null) {
-            parameter = new GsmServiceParameter(controlGroup, person);
-            parameter.setProcessId(GsmService.createProcessId(leftElement, controlGroup));
-            parameter.setElementSet(elementSet);
-            Double riskValueDouble = getRiskValue(elementSet);
-            parameter.setRiskValue(convertRiskValueToString(riskValueDouble));
-            parameter.setPriority(convertRiskValueToPriority(riskValueDouble));
+        Set<CnATreeElement> personSet = getPersonForLeftElement(leftElement);
+        if(!elementSet.isEmpty() && personSet!=null) {
+            for (CnATreeElement person : personSet) {
+                GsmServiceParameter parameter = new GsmServiceParameter(controlGroup, person);
+                parameter.setProcessId(GsmService.createProcessId(leftElement, controlGroup));
+                parameter.setElementSet(elementSet);
+                Double riskValueDouble = getRiskValue(elementSet);
+                parameter.setRiskValue(convertRiskValueToString(riskValueDouble));
+                parameter.setPriority(convertRiskValueToPriority(riskValueDouble));
+                parameterList.add(parameter);
+            }
+           
         }
-        return parameter;
+        return parameterList;
     }
     
     /**

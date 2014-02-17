@@ -97,13 +97,8 @@ public class ProcessCreatorForAssetGroups extends GsmProcessParameterCreater {
      * @see sernet.verinice.bpm.gsm.GsmProcessParameterCreater#getPersonForLeftElement(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    protected CnATreeElement getPersonForLeftElement(CnATreeElement assetGroup) {
-        Set<CnATreeElement> personSet = getGraph().getLinkTargets(assetGroup, AssetGroup.REL_PERSON_ISO);
-        if(personSet==null || personSet.isEmpty()) {
-            return null;
-        } else {
-            return personSet.iterator().next();
-        }        
+    protected Set<CnATreeElement> getPersonForLeftElement(CnATreeElement assetGroup) {
+        return getGraph().getLinkTargets(assetGroup, AssetGroup.REL_PERSON_ISO);       
     }
 
 }

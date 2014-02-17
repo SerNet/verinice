@@ -94,7 +94,9 @@ public class ProcessCreaterForPersons extends GsmProcessParameterCreater {
      * @see sernet.verinice.bpm.gsm.GsmProcessParameterCreater#getPersonForLeftElement(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    protected CnATreeElement getPersonForLeftElement(CnATreeElement person) {
-        return person;
+    protected Set<CnATreeElement> getPersonForLeftElement(CnATreeElement person) {
+        Set<CnATreeElement> personSet = new HashSet<CnATreeElement>();
+        personSet.add(person);
+        return personSet;
     }
 }
