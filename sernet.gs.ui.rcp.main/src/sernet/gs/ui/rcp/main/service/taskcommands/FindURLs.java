@@ -31,14 +31,23 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
+import sernet.hui.common.connect.Entity;
 import sernet.hui.swt.widgets.URL.URLUtil;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * Retrieves the properties which are URLs as a {@link DocumentLinkRoot}
@@ -80,7 +89,7 @@ public class FindURLs extends GenericCommand {
 		
 		// Retrieves all the CnATreeElement instances which have a document link
 		// according to the query contained in FindURLsCallbackWithCnATreeElement.
-		List<CnATreeElement> treeElements = (List<CnATreeElement>)
+		List<Object[]> treeElements = (List<Object[]>)
 			dao.findByCallback(new FindCnATreeElementsCallback(treeElementIds));
 		
 		// Fills the DocumentRoot structure by iterating the URLs and preparing the
@@ -89,29 +98,69 @@ public class FindURLs extends GenericCommand {
 		for (int i = 0; i < size; i++)
 		{
 			String rawURL = (String) resultList.get(i)[0];
-			
+			int entityID = ((Integer)resultList.get(i)[1]).intValue();
+
 			String name = URLUtil.getName(rawURL);
 			String url = URLUtil.getHref(rawURL);
 			
-			DocumentLink link = root.getDocumentLink(name, url);
-			if (link == null) {
-				link = new DocumentLink(name, url);
-				root.addChild(link);
-			}
-			
-			if(treeElements!=null && i<treeElements.size()) {
-    			CnATreeElement element = treeElements.get(i);			
-    			DocumentReference reference = new DocumentReference(element);
-    			element.getTitle();
-    			link.addChild(reference);
-			}
+			DocumentLink link = createLinkIfNecessary(name, url);
+			addReferenceToLink(treeElements, entityID, link); 
 		}
 	}
 
+    private void addReferenceToLink(List<Object[]> treeElements, int entityID, DocumentLink link) {
+        if(link != null && treeElements!=null) {
+            CnATreeElement element = findElement(treeElements, entityID);
+        	if(element != null){
+        	    addReferenceIfAllowed(link, element);
+        	}
+        }
+    }
+
+    private void addReferenceIfAllowed(DocumentLink link, CnATreeElement element) {
+        DocumentReference reference = new DocumentReference(element);
+        element.getTitle();
+        // rightmanagement is done by hibernate filter
+//        if(isReadAllowed(element)){
+            link.addChild(reference);
+//        }
+    }
+
+    private CnATreeElement findElement(List<Object[]> treeElements, int entityID) {
+        for(Object[] arr : treeElements){
+            if(((Entity)arr[1]).getDbId().equals(entityID)){
+                return (CnATreeElement)arr[0];
+            }
+        }
+        return null;
+    }
+
+    private DocumentLink createLinkIfNecessary(String name, String url) {
+        DocumentLink link = root.getDocumentLink(name, url);
+        if (link == null && (!name.isEmpty() || !url.isEmpty())) { // at least name or url have to be not empty
+            link = new DocumentLink(name, url);
+            root.addChild(link);
+        }
+        return link;
+    }
+	
+
+
 	public DocumentLinkRoot getUrls() {
+	    filterNullReferences();
 		return root;
 	}
 
+	private void filterNullReferences(){
+	    DocumentLinkRoot filtered = new DocumentLinkRoot();
+	    for(DocumentLink link : root.getChildren()){
+	        if(link.getChildren().size() > 0){
+	            filtered.addChild(link);
+	        }
+	    }
+	    root = filtered;
+	}
+	
 	@SuppressWarnings("serial")
 	private class FindURLsCallbackWithCnATreeElement implements
 			HibernateCallback, Serializable {
@@ -132,12 +181,14 @@ public class FindURLs extends GenericCommand {
 			StringBuilder sb = new StringBuilder();
 			sb.append("SELECT p.propertyValue,pl.entityId FROM PropertyList as pl INNER JOIN pl.properties as p ");
 			sb.append("WHERE p.propertyType IN (:types) ");
+			sb.append("AND NULLIF(p.propertyValue, '') IS NOT NULL");
 			final String hql = sb.toString();
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("hql: " + hql);
-			}
 			Query hqlQuery = session.createQuery(hql);
 			hqlQuery.setParameterList("types", types, Hibernate.STRING);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("hql: " + hql);
+				LOG.debug("QueryString:\t"+ hqlQuery.getQueryString());
+			}
 
 			return hqlQuery.list();
 		}
@@ -158,19 +209,53 @@ public class FindURLs extends GenericCommand {
 			
 			/*
 			 * Retrieves all the CnATreeElements whose ids are mentioned in the
-			 * treeElementIds list.
+			 * treeElementIds list (changed to hql to consider rightmanagement)
 			 */
-			Query query = session.createQuery(
-					"from CnATreeElement elmt "
-					+ "where elmt.entity.dbId in (:treeElementIds)")
-					.setParameterList("treeElementIds", treeElementIds);
-
-			if (LOG.isDebugEnabled()){
-				LOG.debug("created statement: " + query.getQueryString());
-			}
-			return query.list();
+			String hql = "from CnATreeElement elmt" + 
+					" inner join elmt.entity as entity" +
+			        " where entity.dbId in (:ids)";
+			return getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[]{"ids"}, new Object[]{treeElementIds});
 		}
 		
+	}
+	/**
+	 * Rightmanagement is done by Hibernate Filter since HQL-Query is used to determine content
+	 * @param elmt
+	 * @return
+	 */
+	@Deprecated
+	private boolean isReadAllowed(CnATreeElement elmt){
+	    ServiceFactory.lookupAuthService();
+        if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            return true;
+        }
+        
+        if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+            return true;
+        }
+	    
+	    LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
+	    try{
+	        lcuc = ServiceFactory.lookupCommandService().executeCommand(lcuc);
+	    } catch (CommandException e){
+	        LOG.error("Error checking element permissions", e);
+	        return false;
+	    }
+	    Configuration c = lcuc.getConfiguration();
+
+	    // No configuration for the current user (anymore?). Then nothing is
+	    // writable.
+	    if (c == null) {
+	        return false;
+	    }
+
+	    CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(elmt);
+	    for (Permission p : elemntWithPermissions.getPermissions()) {
+	        if (p.isReadAllowed() && c.getRoles().contains(p.getRole())) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	
 

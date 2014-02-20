@@ -44,4 +44,10 @@ public class DocumentLinkRoot implements Serializable {
 		}
 		return null;
 	}
+	
+	public void removeChild(DocumentLink link){
+	    if(this.children.contains(link)){
+	        this.children.remove(link);
+	    }
+	}
 }

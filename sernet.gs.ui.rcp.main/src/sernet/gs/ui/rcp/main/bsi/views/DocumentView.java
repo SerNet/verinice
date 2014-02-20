@@ -38,6 +38,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
+import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -59,25 +60,11 @@ public class DocumentView extends ViewPart {
 	
 	private IModelLoadListener loadListener = new IModelLoadListener() {
 		public void closed(BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					if (viewer.getContentProvider() != null){
-						setInput();
-					}
-				}
-			});
+			setInputAsync();
 		}
 		
 		public void loaded(final BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					if (viewer.getContentProvider() != null) {
-						setInput();
-					}
-				}
-
-				
-			});
+			setInputAsync();
 		}
 
         @Override
@@ -221,5 +208,17 @@ public class DocumentView extends ViewPart {
 			}
 		});
 }
+
+    private void setInputAsync() {
+        Display.getDefault().asyncExec(new Runnable() {
+        	public void run() {
+        		if (viewer.getContentProvider() != null) {
+        			setInput();
+        		}
+        	}
+
+        	
+        });
+    }
 
 }
