@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -34,11 +35,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -58,6 +62,8 @@ public class DocumentView extends ViewPart {
 
 	private Action doubleClickAction;
 	
+	private Action refreshAction;
+	
 	private IModelLoadListener loadListener = new IModelLoadListener() {
 		public void closed(BSIModel model) {
 			setInputAsync();
@@ -74,7 +80,6 @@ public class DocumentView extends ViewPart {
 	};
 
 	public DocumentView() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public String getRightID(){
@@ -175,7 +180,8 @@ public class DocumentView extends ViewPart {
 		hookActions();
 		getSite().setSelectionProvider(viewer);
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
-		
+        fillLocalToolBar();
+		addPartLister();
 	}
 	
 
@@ -199,6 +205,14 @@ public class DocumentView extends ViewPart {
 				}
 			}
 		};
+		
+        refreshAction = new Action(Messages.DocumentView_7, SWT.NONE){
+            public void run(){
+                setInput();
+            }
+        };
+        
+        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
 	}
 	
 	private void hookActions() {
@@ -220,5 +234,39 @@ public class DocumentView extends ViewPart {
         	
         });
     }
+    
+    
+    private void addPartLister(){
+        this.getSite().getWorkbenchWindow().getPartService().addPartListener(new IPartListener() {
+            
+            /**
+             * this ensures a refresh on reopening the view
+             */
+            @Override
+            public void partActivated(IWorkbenchPart arg0) {
+                setInput();
+            }
+            
+            // other events does not matter here
+            @Override
+            public void partBroughtToTop(IWorkbenchPart arg0) {}
+
+            @Override
+            public void partClosed(IWorkbenchPart arg0) {}
+
+            @Override
+            public void partDeactivated(IWorkbenchPart arg0) {}
+
+            @Override
+            public void partOpened(IWorkbenchPart arg0) {}
+        });
+    }
+    
+    private void fillLocalToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.refreshAction);
+    }
+
 
 }

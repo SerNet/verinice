@@ -114,6 +114,8 @@ public final class Messages extends NLS {
 
 	public static String DocumentView_6;
 
+	public static String DocumentView_7;
+
 	public static String DSModelView_0;
 
 	public static String DSModelView_1;
