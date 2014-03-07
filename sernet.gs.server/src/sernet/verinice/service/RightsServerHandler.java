@@ -129,7 +129,14 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
         if(usernameList!=null) {
             userprofileMap = new HashMap<String, List<Userprofile>>(usernameList.size());
             for (String name : usernameList) {
-                userprofileMap.put(name, getRightsService().getUserprofile(name));
+                if(name!=null) {
+                    userprofileMap.put(name, getRightsService().getUserprofile(name));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("User-profiles loaded for login-name: " + name);
+                    }
+                } else {
+                    LOG.warn("Empty (NULL) login-name found. Can not load user-profiles.");
+                }
             }
         }
         return userprofileMap;
@@ -179,6 +186,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServerHandler#discardData()
      */
+    @Override
     public void discardData() {
         profileMap=null;
         userActionMap=null;
