@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -186,10 +187,8 @@ public class FindURLs extends GenericCommand {
 			Query hqlQuery = session.createQuery(hql);
 			hqlQuery.setParameterList("types", types, Hibernate.STRING);
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("hql: " + hql);
 				LOG.debug("QueryString:\t"+ hqlQuery.getQueryString());
 			}
-
 			return hqlQuery.list();
 		}
 
@@ -214,7 +213,11 @@ public class FindURLs extends GenericCommand {
 			String hql = "from CnATreeElement elmt" + 
 					" inner join elmt.entity as entity" +
 			        " where entity.dbId in (:ids)";
-			return getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[]{"ids"}, new Object[]{treeElementIds});
+			if(treeElementIds != null && treeElementIds.size() > 0){
+			    return getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[]{"ids"}, new Object[]{treeElementIds});
+			} else {
+			    return Collections.emptyList();
+			}
 		}
 		
 	}
