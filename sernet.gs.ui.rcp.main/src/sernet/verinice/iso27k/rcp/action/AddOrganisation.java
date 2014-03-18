@@ -51,7 +51,8 @@ public class AddOrganisation extends ActionDelegate implements IViewActionDelega
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
 	 */
-	public void init(IViewPart view) {
+	@Override
+    public void init(IViewPart view) {
 	}
 	
 	@Override
@@ -74,8 +75,10 @@ public class AddOrganisation extends ActionDelegate implements IViewActionDelega
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	public void run(IAction action) {
+	@Override
+    public void run(IAction action) {
 		try {
+		    Activator.inheritVeriniceContextState();
 		    if(checkRights()){
     			CnATreeElement newElement=null;	
     			newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getInstance().getISO27kModel(), Organization.TYPE_ID, null);
@@ -97,7 +100,8 @@ public class AddOrganisation extends ActionDelegate implements IViewActionDelega
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
 	}
 
     /* (non-Javadoc)
