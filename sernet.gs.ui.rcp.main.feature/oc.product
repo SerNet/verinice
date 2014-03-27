@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.6.2.90" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.6.9.90" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
       <text>
-         SerNet verinice 1.6.2 Beta - Codename &apos;Construkta&apos;
+         SerNet verinice 1.7.0 - Codename &apos;Construkta&apos;
 
 (c) SerNet Service Network GmbH and others
-1996-2013
+1996-2014
 
 Contact the authors:
 verinice@sernet.de
