@@ -32,18 +32,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**
  * Action in SAMT/ISA view toolbar registered in sernet.verinice.samt.rcp plugin.xml.
@@ -57,7 +53,7 @@ import sernet.verinice.iso27k.rcp.Mutex;
  * @author Daniel Murygin <dm@sernet.de>
  */
 @SuppressWarnings("restriction")
-public class AddSelfAssessment extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
+public class AddSelfAssessment extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(AddSelfAssessment.class);
 
@@ -69,8 +65,6 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
     private CreateNewSelfAssessmentService samtService = new CreateNewSelfAssessmentService();
     
     private static ISchedulingRule iSchedulingRule = new Mutex();
-    
-    private boolean serverIsRunning = true;
     
     /*
      * (non-Javadoc)
@@ -84,53 +78,29 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
         }
     }
     
-    @Override
-    public void init(final IAction action){
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        serverIsRunning = true;
-                        action.setEnabled(checkRights());
-                    }
-                }
-                
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            action.setEnabled(checkRights());
-        }
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
      */
     @Override
-    public void run(IAction action) {
-        if(checkRights()){
-            WorkspaceJob importJob = new WorkspaceJob(Messages.AddSelfAssessment_3) {
-                @Override
-                public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                    IStatus status = Status.OK_STATUS;
-                    try {
-                        createSelfAssessment(monitor);
-                    } catch (Exception e) {
-                        LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
-                        status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
-                    } finally {
-                        monitor.done();
-                    }
-                    return status;
+    public void doRun(IAction action) {
+        WorkspaceJob importJob = new WorkspaceJob(Messages.AddSelfAssessment_3) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    createSelfAssessment(monitor);
+                } catch (Exception e) {
+                    LOG.error("Could not create self-assessment", e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.verinice.samt.rcp", Messages.AddSelfAssessment_2, e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
                 }
+                return status;
+            }
 
 
-            };
-            JobScheduler.scheduleJob(importJob, iSchedulingRule);
-        }
+        };
+        JobScheduler.scheduleJob(importJob, iSchedulingRule);
     }
 
     private void createSelfAssessment(final IProgressMonitor monitor) throws CommandException, IOException {
@@ -140,6 +110,7 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
         monitor.setTaskName(Messages.AddSelfAssessment_5);
         if(Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.EXPAND_ISA) && samtView!=null) {
             Display.getDefault().syncExec(new Runnable() {
+                @Override
                 public void run() {
                     samtView.expand();
                 }
@@ -156,18 +127,9 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if(serverIsRunning) {
+        if(isServerRunning()) {
             action.setEnabled(checkRights());
         }
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
     /* (non-Javadoc)
@@ -177,16 +139,5 @@ public class AddSelfAssessment extends ActionDelegate implements IViewActionDele
     public String getRightID() {
         return ActionRightIDs.ADDSECURITYASSESSMENT;
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing
-        
-    }
-
-   
 
 }
