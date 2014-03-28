@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -48,7 +47,6 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -56,11 +54,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
@@ -70,15 +64,21 @@ import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.service.commands.ExportCommand;
 
 /**
- * {@link Action} that exports assessment objects from the
- * database to an XML file at the selected path. This uses
- * {@link ExportDialog} to retrieve user selections.
+ * Eclipse ActionDelegate which is called to import XML or VNA data.
+ * Rights profile management is enabled for this action.
+ * 
+ * Action opens {@link ExportDialog} to import data.
+ * If user user hits closes dialog with ok, export is started asynchronously by calling
+ * {@link ExportCommand}.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class ExportAction extends ActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction
+public class ExportAction extends RightsEnabledActionDelegate implements IViewActionDelegate, IWorkbenchWindowActionDelegate, RightEnabledUserInteraction
 {
 	public static final String ID = "sernet.verinice.samt.rcp.ExportSelfAssessment"; //$NON-NLS-1$
 	
@@ -100,28 +100,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 	private static ISchedulingRule iSchedulingRule = new Mutex();
 	
 	private ITreeSelection selection;
-	
-	private boolean serverIsRunning = true;
-	
-    @Override
-    public void init(final IAction action){
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        serverIsRunning = true;
-                        action.setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            action.setEnabled(checkRights());
-        }
-    }
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
@@ -138,13 +116,12 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
         
     }
     
-	/*
-	 * @see
-	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-	 * ExecutionEvent)
-	 */
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+     */
     @Override
-    public void run(IAction action) {
+    public void doRun(IAction action) {
 		dialog = new ExportDialog(Display.getCurrent().getActiveShell(), selection);
 		if( dialog.open() == Dialog.OK ) {	     
 		    if(dialog.getEncryptOutput()) {
@@ -288,7 +265,7 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
     @SuppressWarnings("unchecked")
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             action.setEnabled(checkRights());
         }
         if (selection instanceof ITreeSelection) {
@@ -343,16 +320,6 @@ public class ExportAction extends ActionDelegate implements IViewActionDelegate,
 
     private int getFileFormat() {
         return dialog.getFormat();
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
     /* (non-Javadoc)

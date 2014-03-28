@@ -24,60 +24,32 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.progress.IProgressService;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
-/**
- *
- */
-public class CnAValidationAction extends ActionDelegate implements RightEnabledUserInteraction {
+public class CnAValidationAction extends RightsEnabledActionDelegate implements RightEnabledUserInteraction {
 
     private static transient Logger LOG = Logger.getLogger(CnAValidationAction.class);
     
     private List<Object> rootObjects;
     
-    private boolean serverIsRunning = true;
-    
     private IValidationService validationService;
-    
-    @Override
-    public void init(final IAction action) {
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        serverIsRunning = true;
-                        action.setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            action.setEnabled(checkRights());
-        }
-    }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+     */
     @Override
-    public void run(IAction action) {
-        if(!checkRights()){
-            return;
-        }
+    public void doRun(IAction action) {
         try {
             if(rootObjects.size() == 1){
                 Object o = rootObjects.get(0);
@@ -90,7 +62,7 @@ public class CnAValidationAction extends ActionDelegate implements RightEnabledU
                     CnAElementFactory.getModel(c).validationAdded(c.getScopeId());
                 } else {
                     return;
-                    //tell user element cant be validated
+                    //tell user element can't be validated
                 }
             } else {
                 // tell user only 1 object can be validated
@@ -100,18 +72,6 @@ public class CnAValidationAction extends ActionDelegate implements RightEnabledU
         }
     }
     
-
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
-    }
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
@@ -119,21 +79,13 @@ public class CnAValidationAction extends ActionDelegate implements RightEnabledU
     public String getRightID() {
         return ActionRightIDs.CNAVALIDATION;
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // empty
-    }
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             action.setEnabled(checkRights());
         }
         if(selection instanceof ITreeSelection) {

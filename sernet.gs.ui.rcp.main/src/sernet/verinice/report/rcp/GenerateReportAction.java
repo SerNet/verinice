@@ -15,21 +15,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
-@SuppressWarnings("restriction")
-public class GenerateReportAction extends ActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
+public class GenerateReportAction extends RightsEnabledActionDelegate implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(GenerateReportAction.class);
 
@@ -48,43 +43,12 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
             LOG.error("Error creating dialog", t); //$NON-NLS-1$
         }
     }
-	
-	@Override
-	public void init(final IAction action){
-	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-        IInternalServerStartListener listener = new IInternalServerStartListener(){
-            @Override
-            public void statusChanged(InternalServerEvent e) {
-                if(e.isStarted()){
-                    action.setEnabled(checkRights());
-                }
-            }
-            
-        };
-        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            try{
-                Activator.inheritVeriniceContextState();
-                action.setEnabled(checkRights());
-            } catch (NullPointerException npe){
-                action.setEnabled(false);
-            }
-        }
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionDelegate#run(org.eclipse.jface.action.IAction
-	 * )
+	/* (non-Javadoc)
+	 * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
 	 */
 	@Override
-	public void run(IAction action) {
-	    if(!checkRights()){
-	        return;
-	    }
-	    
+	public void doRun(IAction action) {    
 	    try {
 	        if(!isContextMenuCall() || rootObjects == null || rootObjects.size() == 0){
 	            dialog = new GenerateReportDialog(shell);
@@ -99,13 +63,21 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     			final IReportOptions ro = new IReportOptions() {
     			    Integer rootElmt; 
     			    Integer[] rootElmts;
-    				public boolean isToBeEncrypted() { return false; }
-    				public boolean isToBeCompressed() { return false; }
-    				public IOutputFormat getOutputFormat() { return dialog.getOutputFormat(); } 
-    				public File getOutputFile() { return dialog.getOutputFile(); }
+    				@Override
+                    public boolean isToBeEncrypted() { return false; }
+    				@Override
+                    public boolean isToBeCompressed() { return false; }
+    				@Override
+                    public IOutputFormat getOutputFormat() { return dialog.getOutputFormat(); } 
+    				@Override
+                    public File getOutputFile() { return dialog.getOutputFile(); }
+                    @Override
                     public void setRootElement(Integer rootElement) { rootElmt = rootElement; }
+                    @Override
                     public Integer getRootElement() {return rootElmt; }
+                    @Override
                     public Integer[] getRootElements(){return rootElmts;}
+                    @Override
                     public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
     			};
     			if(dialog.getRootElement() != null){
@@ -115,6 +87,7 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
     			}
     			
     			 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                    @Override
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
                         Activator.inheritVeriniceContextState();
@@ -130,29 +103,11 @@ public class GenerateReportAction extends ActionDelegate implements IWorkbenchWi
 	}
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.GENERATEORGREPORT;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing, no need for an implementation              
     }
     
     /* (non-Javadoc)

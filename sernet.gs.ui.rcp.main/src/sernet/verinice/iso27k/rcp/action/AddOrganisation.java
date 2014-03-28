@@ -24,27 +24,22 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-// TODO: is there any reason why this shouldnt extend actiondelegate (but exportaction does so) ?
-public class AddOrganisation extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
+public class AddOrganisation extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction {
 	
 	private static final Logger LOG = Logger.getLogger(AddOrganisation.class);
 	
@@ -54,29 +49,13 @@ public class AddOrganisation extends ActionDelegate implements IViewActionDelega
 	@Override
     public void init(IViewPart view) {
 	}
-	
-	@Override
-	public void init(final IAction action){
-	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-	        IInternalServerStartListener listener = new IInternalServerStartListener(){
-	            @Override
-	            public void statusChanged(InternalServerEvent e) {
-	                if(e.isStarted()){
-	                    action.setEnabled(checkRights());
-	                }
-	            }
-	        };
-	        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-	    } else {
-	        action.setEnabled(checkRights());
-	    }
-	}
+
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
 	 */
 	@Override
-    public void run(IAction action) {
+    public void doRun(IAction action) {
 		try {
 		    Activator.inheritVeriniceContextState();
 		    if(checkRights()){
@@ -105,33 +84,11 @@ public class AddOrganisation extends ActionDelegate implements IViewActionDelega
 	}
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-            RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-            return service.isEnabled(getRightID());
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
        return ActionRightIDs.ADDISMORG;
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-        
-        
-    }
-	
-
-	
 
 }

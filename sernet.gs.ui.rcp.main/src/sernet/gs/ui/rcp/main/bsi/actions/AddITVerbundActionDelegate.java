@@ -22,27 +22,22 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.actions.ActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
-@SuppressWarnings("restrictions")
-public class AddITVerbundActionDelegate extends ActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction  {
+public class AddITVerbundActionDelegate extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction  {
     
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -50,12 +45,11 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
+    @Override
+    public void doRun(IAction action) {
         try {
             CnATreeElement newElement = null;
             newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
@@ -88,33 +82,6 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
 	public void init(IViewPart arg0) {
 		
 	}
-	
-	@Override
-	public void init(final IAction action){
-	    if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-	        IInternalServerStartListener listener = new IInternalServerStartListener(){
-	            @Override
-	            public void statusChanged(InternalServerEvent e) {
-	                if(e.isStarted()){
-	                    action.setEnabled(checkRights());
-	                }
-	            }
-
-	        };
-	        Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-	    } else {
-	        action.setEnabled(checkRights());
-	    }
-	}
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
-    @Override
-    public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
@@ -124,11 +91,5 @@ public class AddITVerbundActionDelegate extends ActionDelegate implements IViewA
         return ActionRightIDs.ADDITVERBUND;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing, no implementation needed
-    }
+
 }
