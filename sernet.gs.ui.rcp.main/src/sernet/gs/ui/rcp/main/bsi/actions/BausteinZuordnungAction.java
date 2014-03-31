@@ -83,8 +83,11 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
         }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
     @Override
-    public void run() {
+    public void doRun() {
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
             return;

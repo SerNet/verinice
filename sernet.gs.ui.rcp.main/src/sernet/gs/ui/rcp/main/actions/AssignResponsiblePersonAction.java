@@ -88,8 +88,11 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
         }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();
         final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
@@ -98,6 +101,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
 
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 @SuppressWarnings("restriction")
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     try {

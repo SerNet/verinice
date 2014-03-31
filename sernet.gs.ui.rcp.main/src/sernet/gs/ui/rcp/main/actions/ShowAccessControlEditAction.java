@@ -92,11 +92,12 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         }
     }
 
+   
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
         if (selection == null || selection.size() < 1) {

@@ -112,8 +112,11 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
         }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
     @Override
-    public void run() {       
+    public void doRun() {       
         dialog = new ServerConnectionToggleDialog(Display.getCurrent().getActiveShell());    
         if( dialog.open() == Dialog.OK ) {
             String title = Messages.ServerConnectionToggleAction_2;

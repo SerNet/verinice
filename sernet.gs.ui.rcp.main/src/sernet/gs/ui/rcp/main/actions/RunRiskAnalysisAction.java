@@ -63,14 +63,17 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
             setEnabled(checkRights());
         }
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
+            @Override
             public void closed(BSIModel model) {
                 setEnabled(false);
             }
+            @Override
             public void loaded(BSIModel model) {
                 if(checkRights()){
                     setEnabled(true);
                 }
             }
+            @Override
             public void loaded(ISO27KModel model) {
                 if(checkRights()){
                     setEnabled(true);
@@ -79,18 +82,18 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
         });
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();
         try {
             // close editors:
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
                     RunRiskAnalysisCommand command = new RunRiskAnalysisCommand();

@@ -78,11 +78,12 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         }
     }
     
+
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();
 
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
@@ -113,6 +114,7 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
                     monitor.setTaskName(Messages.ShowKonsolidatorAction_2);
@@ -158,6 +160,7 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;

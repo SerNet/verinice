@@ -513,7 +513,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
     private void makeActions() {
         addFileAction = new RightsEnabledAction(ActionRightIDs.ADDFILE) {
             @Override
-            public void run() {
+            public void doRun() {
                 FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
                 fd.setText(Messages.FileView_14);
                 fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
@@ -530,7 +530,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
 
         deleteFileAction = new RightsEnabledAction(ActionRightIDs.DELETEFILE) {
             @Override
-            public void run() {
+            public void doRun() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
                 boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
                 if (!confirm){
@@ -574,7 +574,7 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
 
         toggleLinkAction = new RightsEnabledAction(ActionRightIDs.SHOWALLFILES, Messages.FileView_24, SWT.TOGGLE){
             @Override
-            public void run() {
+            public void doRun() {
                 isLinkingActive = !isLinkingActive;
                 toggleLinkAction.setChecked(isLinkingActive());
                 checkModelAndLoadFiles();

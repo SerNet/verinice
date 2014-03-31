@@ -49,8 +49,10 @@ public class ImportGstoolAction extends RightsEnabledAction {
         /* (non-Javadoc)
          * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#closed(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
          */
+        @Override
         public void closed(BSIModel model) {
             Display.getDefault().asyncExec(new Runnable() {
+                @Override
                 public void run() {
 //                    setEnabled(false);server only
                 }
@@ -60,8 +62,10 @@ public class ImportGstoolAction extends RightsEnabledAction {
         /* (non-Javadoc)
          * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
          */
+        @Override
         public void loaded(final BSIModel model) {
             Display.getDefault().asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     // only enable in server mode:
 //                    ServiceFactory.lookupAuthService();
@@ -101,11 +105,12 @@ public class ImportGstoolAction extends RightsEnabledAction {
         }
     }
     
+
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         try {
             
             final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
@@ -114,6 +119,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			}
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
 
@@ -128,18 +134,22 @@ public class ImportGstoolAction extends RightsEnabledAction {
 							dialog.isBausteinPersonen());
                     try {
                         importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
+                            @Override
                             public void done() {
                                 monitor.done();
                             }
 
+                            @Override
                             public void worked(int work) {
                                 monitor.worked(work);
                             }
 
+                            @Override
                             public void beginTask(String name, int totalWork) {
                                 monitor.beginTask(name, totalWork);
                             }
 
+                            @Override
                             public void subTask(String name) {
                                 monitor.subTask(name);
                             }
@@ -153,22 +163,27 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			if (dialog.isNotizen()) {
 			    PlatformUI.getWorkbench().getProgressService().
 			    busyCursorWhile(new IRunnableWithProgress() {
-			        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			        @Override
+                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			            Activator.inheritVeriniceContextState();
 			            
 			            ImportNotesTask importTask = new ImportNotesTask();
 			            try {
 			                importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-			                    public void done() {
+			                    @Override
+                                public void done() {
 			                        monitor.done();
 			                    }
-			                    public void worked(int work) {
+			                    @Override
+                                public void worked(int work) {
 			                        monitor.worked(work);
 			                    }
-			                    public void beginTask(String name, int totalWork) {
+			                    @Override
+                                public void beginTask(String name, int totalWork) {
 			                        monitor.beginTask(name, totalWork);
 			                    }
-			                    public void subTask(String name) {
+			                    @Override
+                                public void subTask(String name) {
 			                        monitor.subTask(name);
 			                    }
 			                });

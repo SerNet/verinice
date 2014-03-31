@@ -39,7 +39,11 @@ public class ImportPersonFromLdap extends RightsEnabledAction {
 		}
 	}
 
-	public void run() {
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+	 */
+	@Override
+    public void doRun() {
 		final LdapImportDialog dialog = new LdapImportDialog(window.getShell());
 		if (dialog.open() != Window.OK) {
 			return;

@@ -91,13 +91,16 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
         }
     }
     
+
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
-    public void run() {
+    @Override
+    public void doRun() {
         final int maxChangedElements = 10;
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     try {
                         Activator.inheritVeriniceContextState();

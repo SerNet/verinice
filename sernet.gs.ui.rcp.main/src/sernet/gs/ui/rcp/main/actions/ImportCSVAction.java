@@ -60,8 +60,11 @@ public class ImportCSVAction extends RightsEnabledAction {
         }
 	}
 
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+	 */
 	@Override
-    public void run() {
+    public void doRun() {
 	    //Display.getCurrent().getActiveShell()
 	    ImportCSVWizard wizard = new ImportCSVWizard();
 		final WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);

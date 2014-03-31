@@ -105,8 +105,11 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
         }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
     @Override
-    public void run() {
+    public void doRun() {
 
         loadtemplates();
 

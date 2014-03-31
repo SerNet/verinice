@@ -133,6 +133,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
 
     private void hookPageSelection() {
         selectionListener = new ISelectionListener() {
+            @Override
             public void selectionChanged(IWorkbenchPart part, ISelection selection) {
                 pageSelectionChanged(part, selection);
             }
@@ -188,12 +189,14 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     private void makeActions() {
 
         addNoteAction = new RightsEnabledAction(ActionRightIDs.ADDNOTE) {
-            public void run() {
+            @Override
+            public void doRun() {
                 Note note = new Note();
                 note.setCnATreeElementId(getCurrentCnaElement().getDbId());
                 note.setCnAElementTitel(getCurrentCnaElement().getTitle());
                 note.setTitel(Messages.NoteView_2);
                 note.addListener(new Note.INoteChangedListener() {
+                    @Override
                     public void noteChanged() {
                         clear();
                         loadNotes();
@@ -227,6 +230,7 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
             if (noteList != null && noteList.size() > 0) {
                 for (final Note note : noteList) {
                     note.addListener(new Note.INoteChangedListener() {
+                        @Override
                         public void noteChanged() {
                             clear();
                             loadNotes();
@@ -262,9 +266,11 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
                     editButton.setImage(ImageCache.getInstance().getImage(ImageCache.EDIT));
                     editButton.setToolTipText(Messages.NoteView_4);
                     editButton.addSelectionListener(new SelectionListener() {
+                        @Override
                         public void widgetDefaultSelected(SelectionEvent e) {
                         }
 
+                        @Override
                         public void widgetSelected(SelectionEvent e) {
                             editNote(note);
                         }
@@ -274,9 +280,11 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
                     deleteButton.setImage(ImageCache.getInstance().getImage(ImageCache.DELETE));
                     deleteButton.setToolTipText(Messages.NoteView_5);
                     deleteButton.addSelectionListener(new SelectionListener() {
+                        @Override
                         public void widgetDefaultSelected(SelectionEvent e) {
                         }
 
+                        @Override
                         public void widgetSelected(SelectionEvent e) {
                             boolean b = MessageDialog.openQuestion(NoteView.this.getSite().getShell(), Messages.NoteView_6, NLS.bind(Messages.NoteView_7, note.getTitel()));
                             if (b) {

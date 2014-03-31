@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
@@ -26,7 +28,7 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
-public class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
+public abstract class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
     
     private String rightID = null;
     
@@ -46,8 +48,28 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
     
     public RightsEnabledAction(){
     }
+    
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        if(checkRights()) {
+            doRun();         
+        } else {
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.RightsEnabledAction_0, Messages.RightsEnabledAction_1);
+        }
+            
+    }
+    
+    /**
+     * @param action
+     */
+    public abstract void doRun();
    
 
+    @Override
     public boolean checkRights(){
         /**
          * no right management should be used
@@ -70,6 +92,7 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
         }
     }
     
+    @Override
     public String getRightID() {
         return rightID;
     }
@@ -78,6 +101,7 @@ public class RightsEnabledAction extends Action implements RightEnabledUserInter
      * Overwrite/call this, to enable right-management for the action implementing this class
      * @param rightID
      */
+    @Override
     public void setRightID(String rightID) {
         this.rightID = rightID;
     }

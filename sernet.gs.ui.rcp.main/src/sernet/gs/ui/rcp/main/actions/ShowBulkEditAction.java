@@ -112,9 +112,12 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         }
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
     @SuppressWarnings("restriction")
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();
 
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();

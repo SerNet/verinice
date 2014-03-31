@@ -46,17 +46,21 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 	private final IWorkbenchWindow window;
 	
 	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
+		@Override
+        public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 //					setEnabled(false);
 				}
 			});
 		}
 		
-		public void loaded(final BSIModel model) {
+		@Override
+        public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 				    // only enable in server mode:
 //                    ServiceFactory.lookupAuthService();
 //                    if (ServiceFactory.isPermissionHandlingNeeded()) {
@@ -96,7 +100,11 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
 	
-	public void run() {
+	/* (non-Javadoc)
+	 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+	 */
+	@Override
+    public void doRun() {
 		try {
 			boolean confirm = MessageDialog.openConfirm(window.getShell(), "Nachträglicher Notizimport", "Notizen werden aus der GSTOOL-Datenbank (siehe \"Bearbeiten\" -> \"Einstellungen\") in vorhandene IT-Verbünde angehängt. Fortfahren?");
 			if (!confirm){
@@ -104,22 +112,27 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 			}
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
-				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				@Override
+                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					Activator.inheritVeriniceContextState();
 					
 					ImportNotesTask importTask = new ImportNotesTask();
 					try {
 						importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-							public void done() {
+							@Override
+                            public void done() {
 								monitor.done();
 							}
-							public void worked(int work) {
+							@Override
+                            public void worked(int work) {
 								monitor.worked(work);
 							}
-							public void beginTask(String name, int totalWork) {
+							@Override
+                            public void beginTask(String name, int totalWork) {
 								monitor.beginTask(name, totalWork);
 							}
-							public void subTask(String name) {
+							@Override
+                            public void subTask(String name) {
 								monitor.subTask(name);
 							}
 						});

@@ -154,7 +154,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	 */
 	protected void startInitDataJob() {
 		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				IStatus status = Status.OK_STATUS;
 				try {
 					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
@@ -188,7 +189,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		comboCatalog = new Combo(compForm, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		comboCatalog.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
+		      @Override
+            public void widgetSelected(SelectionEvent e) {
 		    	  comboModel.setSelectedIndex(comboCatalog.getSelectionIndex());
 		    	  openCatalog();
 		    	  deleteCatalogAction.setEnabled(deleteCatalogAction.checkRights());
@@ -210,9 +212,11 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		filter = new Text(compForm, SWT.BORDER);
 		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		filter.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {				
+			@Override
+            public void keyPressed(KeyEvent e) {				
 			}
-			public void keyReleased(KeyEvent e) {
+			@Override
+            public void keyReleased(KeyEvent e) {
 				textFilter.setPattern(filter.getText());
 			}		
 		});
@@ -248,7 +252,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 					comboModel.add(attachment);
 				}
 				Display.getDefault().syncExec(new Runnable(){
-					public void run() {
+					@Override
+                    public void run() {
 						comboCatalog.setItems(comboModel.getLabelArray());
 					}
 				});
@@ -256,11 +261,13 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 				// model is not loaded yet: add a listener to load data when it's laoded
 				modelLoadListener = new IModelLoadListener() {
 
-					public void closed(BSIModel model) {
+					@Override
+                    public void closed(BSIModel model) {
 						// nothing to do
 					}
 
-					public void loaded(BSIModel model) {
+					@Override
+                    public void loaded(BSIModel model) {
                         // work is done in loaded(ISO27KModel model)
 					}
 
@@ -323,7 +330,11 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 	private void makeActions() {
 		addCatalogAction = new RightsEnabledAction(ActionRightIDs.ADDCATALOG) {
-			public void run() {
+			/* (non-Javadoc)
+			 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+			 */
+			@Override
+            public void doRun() {
 				importCatalog();
 			}
 		};
@@ -344,7 +355,11 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		    addCatalogAction.setEnabled(addCatalogAction.checkRights());
         }
 		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
-			public void run() {
+			/* (non-Javadoc)
+			 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+			 */
+			@Override
+            public void doRun() {
 				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
 				if (confirm){
 					deleteCatalog();
@@ -415,32 +430,39 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 
 	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
-		public void dispose() {
+		@Override
+        public void dispose() {
 		}
 
-		public Object[] getChildren(Object parent) {
+		@Override
+        public Object[] getChildren(Object parent) {
 			return ((IItem) parent).getItems().toArray();		
 		}
 
-		public Object[] getElements(Object parent) {
+		@Override
+        public Object[] getElements(Object parent) {
 			return getChildren(parent);
 		}
 
-		public Object getParent(Object child) {
+		@Override
+        public Object getParent(Object child) {
 			return null;
 		}
 
-		public boolean hasChildren(Object parent) {
+		@Override
+        public boolean hasChildren(Object parent) {
 			return ((IItem) parent).getItems().size()>0;
 		}
 
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+		@Override
+        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 	}
 	
 	static class ViewLabelProvider extends LabelProvider {
 
-		public Image getImage(Object obj) {
+		@Override
+        public Image getImage(Object obj) {
 			IItem item = (IItem) obj;
 			String image = ImageCache.UNKNOWN;
 			
@@ -462,7 +484,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 			return ImageCache.getInstance().getImage(image);	
 		}
 
-		public String getText(Object obj) {
+		@Override
+        public String getText(Object obj) {
 		    final int maxLabelWidth = 80;
 			IItem item = ((IItem)obj);
 			String label = "";
@@ -596,7 +619,8 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	/* (non-Javadoc)
 	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
 	 */
-	public String getPerspectiveId() {
+	@Override
+    public String getPerspectiveId() {
 		return Iso27kPerspective.ID;
 	}
 }

@@ -73,11 +73,12 @@ public class ProfileEditAction extends RightsEnabledAction implements ISelection
         }
     }
 
+
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         Activator.inheritVeriniceContextState();      
         final UserprofileDialog profiledialog = new UserprofileDialog(window.getShell());
         if (profiledialog.open() != Window.OK) {
@@ -92,6 +93,7 @@ public class ProfileEditAction extends RightsEnabledAction implements ISelection
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         
     }

@@ -66,11 +66,12 @@ public class OpenMultipleViewAction extends RightsEnabledAction {
         }
     }
 
+
     /* (non-Javadoc)
-     * @see org.eclipse.jface.action.Action#run()
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
     @Override
-    public void run() {
+    public void doRun() {
         if (window != null) {
             try {
                 window.getActivePage().showView(viewId, "" + instance++, IWorkbenchPage.VIEW_CREATE); //$NON-NLS-1$

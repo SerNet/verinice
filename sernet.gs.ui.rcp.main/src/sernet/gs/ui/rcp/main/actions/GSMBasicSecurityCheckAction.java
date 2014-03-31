@@ -96,10 +96,13 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         }
     }
 
-    public void run () {
-
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+     */
+    @Override
+    public void doRun () {
         try{
-            dorun();
+            runSecurityCheck();
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
         catch(Exception e){
@@ -109,7 +112,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         }
     }
   
-    public void dorun() {
+    public void runSecurityCheck() {
         Activator.inheritVeriniceContextState();
         final IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection(BsiModelView.ID);
         if (selection == null) {
@@ -117,6 +120,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
         }
         try {
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
                     for (Iterator serverIter = selection.iterator(); serverIter.hasNext();) {
@@ -200,6 +204,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (serverIsRunning) {
             setEnabled(checkRights());  
