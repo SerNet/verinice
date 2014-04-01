@@ -103,7 +103,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskView extends ViewPart implements IAttachedToPerspective {
+public class TaskView extends ViewPart implements IAttachedToPerspective{
 
     static final Logger LOG = Logger.getLogger(TaskView.class);
 
@@ -152,6 +152,9 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
      */
     @Override
     public void createPartControl(Composite parent) {
+        if(!checkRights()){
+            return;
+        }
         final int defaultContainerWeight = 50;
         final int defaultContainerSashWidth = 4;
         this.parent = parent;
@@ -172,6 +175,12 @@ public class TaskView extends ViewPart implements IAttachedToPerspective {
 
     public String getRightID() {
         return ActionRightIDs.TASKVIEW;
+    }
+    
+    private boolean checkRights(){
+        Activator.inheritVeriniceContextState();
+        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        return service.isEnabled(getRightID());
     }
 
     /*
