@@ -28,6 +28,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
@@ -70,6 +71,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.ISMView#initView(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected void initView(Composite parent) {
         super.initView(parent);
         makeActions();
@@ -90,6 +92,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
                 try {
                     monitor.beginTask(Messages.SamtView_2, IProgressMonitor.UNKNOWN);
                     Display.getDefault().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             expand();
                         }
@@ -115,6 +118,7 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.ISMView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
+    @Override
     protected void fillContextMenu(IMenuManager manager) {
         super.fillContextMenu(manager);
         manager.add(new Separator());
@@ -154,8 +158,22 @@ public class SamtView extends ISMView implements IAttachedToPerspective  {
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
+    @Override
     public String getPerspectiveId() {
         return SamtPerspective.ID;
+    }
+    
+    @Override
+    public String getRightID(){
+        return ActionRightIDs.SAMTVIEW;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 
 }
