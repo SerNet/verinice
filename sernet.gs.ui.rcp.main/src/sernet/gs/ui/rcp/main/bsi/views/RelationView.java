@@ -268,8 +268,12 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 	 * 
 	 */
 	protected void removeModelListeners() {
-		CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
-		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+	    if(CnAElementFactory.isModelLoaded()) {
+	        CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
+	    }
+	    if(CnAElementFactory.isIsoModelLoaded()) {
+	        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+	    }
 	}
 
 	public CnATreeElement getInputElement() {

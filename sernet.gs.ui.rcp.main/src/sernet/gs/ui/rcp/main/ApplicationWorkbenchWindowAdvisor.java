@@ -212,7 +212,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IViewReference chosenRef = null;
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
-            IViewPart part = ref.getView(true);
+            final IViewPart part = ref.getView(true);
             if(part!=null) {
                 for(Method m : part.getClass().getDeclaredMethods()){
                     if(m.getName().equals("getRightID")){
@@ -245,7 +245,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                                 Display.getDefault().asyncExec(new Runnable() { // execute in ui thread
                                     @Override
                                     public void run() {
-                                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
+                                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                                        if(page.isPartVisible(part)) {
+                                            page.hideView(rRef);
+                                        }
                                     }
                                 });
                             }
@@ -256,7 +259,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }  else {
                 Activator.inheritVeriniceContextState();
                 if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(rRef);
+                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                    if(page.isPartVisible(part)) {
+                        page.hideView(rRef);
+                    }
                 }
             }
         }

@@ -36,6 +36,8 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.InternalServerEvent;
 
 /**
  * Abstract base class for rights enabled views.
@@ -67,7 +69,7 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
      */
     @Override
     public void createPartControl(Composite parent) {
-        if (!checkRights()) {
+        if (!Activator.getDefault().isStandalone() && !checkRights()) {
             final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
             workbenchWindow.getPartService().addPartListener(this);
             return;
@@ -155,9 +157,26 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
             LOG.debug("partVisible: " + partRef.getId()); //$NON-NLS-1$
         }
         if(getViewId().equals(partRef.getId())) {
-            if (!checkRights()) {         
-                openingDeclined();
-            }
+            if(!isServerRunning()){
+                IInternalServerStartListener listener = new IInternalServerStartListener(){
+                    @Override
+                    public void statusChanged(InternalServerEvent e) {
+                        if(e.isStarted()){
+                            checkAndDecline();
+                        }
+                    }
+
+                };
+                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+            } else {
+                checkAndDecline();
+            }         
+        }
+    }
+
+    private void checkAndDecline() {
+        if (!checkRights()) {         
+            openingDeclined();
         }
     }
        
@@ -244,6 +263,13 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         if (LOG.isDebugEnabled()) {
             LOG.debug("partInputChanged: " + partRef.getId()); //$NON-NLS-1$
         }
+    }
+    
+    /**
+     * @return false if operation mode is standalone and internal server is not running
+     */
+    protected boolean isServerRunning() {
+        return !(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning());
     }
 
 }
