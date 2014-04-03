@@ -148,12 +148,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     private void showFirstSteps() {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener() {
 
+            @Override
             public void partActivated(IWorkbenchPart part) {
             }
 
+            @Override
             public void partBroughtToTop(IWorkbenchPart part) {
             }
 
+            @Override
             public void partClosed(IWorkbenchPart part) {
                 if (part instanceof ViewIntroAdapterPart &&
                         Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.FIRSTSTART)) {
@@ -165,9 +168,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 }
             }
 
+            @Override
             public void partDeactivated(IWorkbenchPart part) {
             }
 
+            @Override
             public void partOpened(IWorkbenchPart part) {
             }
         });
@@ -208,21 +213,23 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
             IViewPart part = ref.getView(true);
-            for(Method m : part.getClass().getDeclaredMethods()){
-                if(m.getName().equals("getRightID")){
-                    try {
-                        Object o = m.invoke(part, null);
-                        if(o instanceof String){
-                            rightID = (String)o;
-                            chosenRef = ref;
-                            break;
+            if(part!=null) {
+                for(Method m : part.getClass().getDeclaredMethods()){
+                    if(m.getName().equals("getRightID")){
+                        try {
+                            Object o = m.invoke(part, null);
+                            if(o instanceof String){
+                                rightID = (String)o;
+                                chosenRef = ref;
+                                break;
+                            }
+                        } catch (InvocationTargetException e) {
+                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
+                        } catch (IllegalArgumentException e) {
+                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
+                        } catch (IllegalAccessException e) {
+                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
                         }
-                    } catch (InvocationTargetException e) {
-                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
-                    } catch (IllegalArgumentException e) {
-                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
-                    } catch (IllegalAccessException e) {
-                        LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
                     }
                 }
             }

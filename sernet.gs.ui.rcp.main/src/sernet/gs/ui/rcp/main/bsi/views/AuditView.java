@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.actions.AuditViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
@@ -106,7 +107,8 @@ public class AuditView extends GenericMassnahmenView {
 		table.setLinesVisible(true);
 	}
 	
-	protected String[] getUmsetzungPattern() {
+	@Override
+    protected String[] getUmsetzungPattern() {
 		return new String[] {
 				MassnahmenUmsetzung.P_UMSETZUNG_JA,
 				MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH
@@ -171,7 +173,8 @@ public class AuditView extends GenericMassnahmenView {
 
 		private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 		
-		public Image getColumnImage(Object element, int columnIndex) {
+		@Override
+        public Image getColumnImage(Object element, int columnIndex) {
 			if (element instanceof PlaceHolder) {
 				return null;
 			}
@@ -183,7 +186,8 @@ public class AuditView extends GenericMassnahmenView {
 			return null;
 		}
 
-		public String getColumnText(Object element, int columnIndex) {
+		@Override
+        public String getColumnText(Object element, int columnIndex) {
 
 			if (element instanceof PlaceHolder) {
 				if (columnIndex == 1) {
@@ -270,5 +274,18 @@ public class AuditView extends GenericMassnahmenView {
             return rc;
 	    }
 	}
+	
+	@Override
+    public String getRightID(){
+        return ActionRightIDs.AUDITVIEW;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 
 }

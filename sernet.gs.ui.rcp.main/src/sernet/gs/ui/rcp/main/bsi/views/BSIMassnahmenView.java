@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -67,6 +66,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  * View for parsed BSI IT-Grundschutz catalogues.
@@ -75,7 +75,7 @@ import sernet.verinice.rcp.IAttachedToPerspective;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspective {
+public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToPerspective {
 
 	// private Clipboard clipboard;
 
@@ -97,11 +97,22 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
     
     private IModelLoadListener modelLoadListener;
 	
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.BSIMASSNAHMEN;
 	}
+	
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 
-	public void createPartControl(Composite parent) {
+	@Override
+    public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
@@ -111,7 +122,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 		viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
 		BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
-			public void cataloguesChanged() {
+			@Override
+            public void cataloguesChanged() {
 				refresh();
 			}
 		});
@@ -135,9 +147,11 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
         } else if(modelLoadListener==null) {
             // model is not loaded yet: add a listener to load data when it's laoded
             modelLoadListener = new IModelLoadListener() {
+                @Override
                 public void closed(BSIModel model) {
                     // nothing to do
                 }
+                @Override
                 public void loaded(BSIModel model) {
                     // work is done in loaded(ISO27KModel model)
                 }
@@ -157,7 +171,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 	private void refresh() {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				viewer.refresh();
 			}
 		});
@@ -212,7 +227,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
+			@Override
+            public void menuAboutToShow(IMenuManager manager) {
 				BSIMassnahmenView.this.fillContextMenu(manager);
 			}
 		});
@@ -231,7 +247,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 
@@ -268,7 +285,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 	/* (non-Javadoc)
 	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
 	 */
-	public String getPerspectiveId() {
+	@Override
+    public String getPerspectiveId() {
 		return Perspective.ID;
 	}
 	
@@ -299,10 +317,12 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
-		public void dispose() {
+		@Override
+        public void dispose() {
 		}
 
-		public Object[] getChildren(Object parent) {
+		@Override
+        public Object[] getChildren(Object parent) {
 		    final int childrenListSize = 100;
 			if (parent instanceof Baustein) {
 				ArrayList<IGSModel> children = new ArrayList<IGSModel>(childrenListSize);
@@ -315,15 +335,18 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 			return new Object[0];
 		}
 
-		public Object[] getElements(Object parent) {
+		@Override
+        public Object[] getElements(Object parent) {
 			return getChildren(parent);
 		}
 
-		public Object getParent(Object child) {
+		@Override
+        public Object getParent(Object child) {
 			return null;
 		}
 
-		public boolean hasChildren(Object parent) {
+		@Override
+        public boolean hasChildren(Object parent) {
 			if (parent instanceof Baustein){
 				return ((Baustein) parent).getMassnahmen().size() > 0;
 			} else if (parent instanceof BSIKatalogInvisibleRoot){
@@ -332,13 +355,15 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 			return false;
 		}
 
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+		@Override
+        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 	}
 
 	static class ViewLabelProvider extends LabelProvider {
 
-		public Image getImage(Object obj) {
+		@Override
+        public Image getImage(Object obj) {
 
 			if (obj instanceof Baustein){
 				return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN);
@@ -367,7 +392,8 @@ public class BSIMassnahmenView extends ViewPart implements IAttachedToPerspectiv
 
 		}
 
-		public String getText(Object obj) {
+		@Override
+        public String getText(Object obj) {
 			if (obj instanceof Massnahme) {
 				Massnahme mn = (Massnahme) obj;
 				return mn.getId() + " " + mn.getTitel() + " [" //$NON-NLS-1$ //$NON-NLS-2$

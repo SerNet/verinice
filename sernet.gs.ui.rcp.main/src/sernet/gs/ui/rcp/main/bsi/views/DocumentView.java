@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -53,8 +52,9 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.RightsEnabledView;
 
-public class DocumentView extends ViewPart {
+public class DocumentView extends RightsEnabledView {
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.documentview"; //$NON-NLS-1$
 
@@ -65,11 +65,13 @@ public class DocumentView extends ViewPart {
 	private Action refreshAction;
 	
 	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
+		@Override
+        public void closed(BSIModel model) {
 			setInputAsync();
 		}
 		
-		public void loaded(final BSIModel model) {
+		@Override
+        public void loaded(final BSIModel model) {
 			setInputAsync();
 		}
 
@@ -82,9 +84,18 @@ public class DocumentView extends ViewPart {
 	public DocumentView() {
 	}
 	
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.DOCUMENTVIEW;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 	
 	protected void setInput() {
 		Set<String> allIDs = new HashSet<String>();
@@ -106,6 +117,7 @@ public class DocumentView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 	    
 	    final int colum1Width = 200;
         final int colum2Width = 100;
@@ -192,7 +204,8 @@ public class DocumentView extends ViewPart {
 	
 	private void makeActions() {
 		doubleClickAction = new Action() {
-			public void run() {
+			@Override
+            public void run() {
 				Object sel = ((IStructuredSelection)viewer.getSelection())
 					.getFirstElement();
 				if (sel instanceof DocumentReference) {
@@ -207,6 +220,7 @@ public class DocumentView extends ViewPart {
 		};
 		
         refreshAction = new Action(Messages.DocumentView_7, SWT.NONE){
+            @Override
             public void run(){
                 setInput();
             }
@@ -217,7 +231,8 @@ public class DocumentView extends ViewPart {
 	
 	private void hookActions() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -225,7 +240,8 @@ public class DocumentView extends ViewPart {
 
     private void setInputAsync() {
         Display.getDefault().asyncExec(new Runnable() {
-        	public void run() {
+        	@Override
+            public void run() {
         		if (viewer.getContentProvider() != null) {
         			setInput();
         		}

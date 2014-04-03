@@ -58,14 +58,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.AssignResponsiblePersonAction;
+import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
@@ -107,6 +106,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
@@ -121,7 +121,7 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
  * 
  */
 @SuppressWarnings("restriction")
-public class BsiModelView extends ViewPart implements IAttachedToPerspective, ILinkedWithEditorView {
+public class BsiModelView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(BsiModelView.class);
 	
@@ -210,9 +210,18 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	    elementManager = new ElementManager();
 	}
 	
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.BSIMODELVIEW;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 
 	private void addBSIFilter() {
 		viewer.addFilter(new ViewerFilter() {
@@ -232,6 +241,7 @@ public class BsiModelView extends ViewPart implements IAttachedToPerspective, IL
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		try {
 			initView(parent);
 			startInitDataJob();

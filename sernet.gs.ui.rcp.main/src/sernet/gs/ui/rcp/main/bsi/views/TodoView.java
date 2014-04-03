@@ -36,6 +36,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
@@ -103,11 +104,13 @@ public class TodoView extends GenericMassnahmenView {
         table.setLinesVisible(true);
     }
 
+    @Override
     protected Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter, MassnahmenSiegelFilter siegelFilter) {
         return new TodoViewFilterAction(this,getViewer(), Messages.TodoView_2, umsetzungFilter, siegelFilter);
 
     }
 
+    @Override
     protected String[] getUmsetzungPattern() {
         return new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET };
     }
@@ -162,6 +165,7 @@ public class TodoView extends GenericMassnahmenView {
 
         private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yy, EE"); //$NON-NLS-1$
 
+        @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (element instanceof PlaceHolder) {
                 return null;
@@ -174,6 +178,7 @@ public class TodoView extends GenericMassnahmenView {
             return null;
         }
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             final int fullTextColumnIndex = 5;
             if (element instanceof PlaceHolder) {
@@ -207,5 +212,18 @@ public class TodoView extends GenericMassnahmenView {
             }
             return ""; //$NON-NLS-1$
         }
+    }
+    
+    @Override
+    public String getRightID(){
+        return ActionRightIDs.TODO;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 }

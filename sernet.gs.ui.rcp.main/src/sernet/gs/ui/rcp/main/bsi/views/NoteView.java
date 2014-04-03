@@ -44,7 +44,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -66,9 +65,10 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightsEnabledView;
 
 @SuppressWarnings("restriction")
-public class NoteView extends ViewPart implements ILinkedWithEditorView {
+public class NoteView extends RightsEnabledView implements ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(NoteView.class);
 
@@ -95,12 +95,22 @@ public class NoteView extends ViewPart implements ILinkedWithEditorView {
     public NoteView() {
     }
 
+    @Override
     public String getRightID() {
         return ActionRightIDs.NOTES;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 
     @Override
     public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
         
         final int expandBarSpacing = 4;
         

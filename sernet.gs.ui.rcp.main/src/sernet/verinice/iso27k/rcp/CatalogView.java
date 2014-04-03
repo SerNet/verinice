@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.service.CsvFile;
 import sernet.gs.service.VeriniceCharset;
@@ -80,6 +79,7 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadBSIModel;
@@ -93,7 +93,7 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * @author Daniel <dm[at]sernet[dot]de>
  * 
  */
-public class CatalogView extends ViewPart implements IAttachedToPerspective  {
+public class CatalogView extends RightsEnabledView implements IAttachedToPerspective  {
 
 	private static final Logger LOG = Logger.getLogger(CatalogView.class);
 
@@ -136,6 +136,7 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		try {
 			initView(parent);
 			startInitDataJob();		
@@ -145,9 +146,18 @@ public class CatalogView extends ViewPart implements IAttachedToPerspective  {
 		}	
 	}
 
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.ISMCATALOG;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 
 	/**
 	 * 

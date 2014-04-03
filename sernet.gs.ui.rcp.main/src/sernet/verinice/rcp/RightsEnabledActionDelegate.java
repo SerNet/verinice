@@ -32,7 +32,11 @@ import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 
 /**
- *
+ * Base class for rights enabled {@link ActionDelegate}.
+ * This ActionDelegate enables or disables corresponding action
+ * depending on the user rights.
+ * 
+ * User rights are checked before the action is executed in method run.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

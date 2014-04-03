@@ -58,8 +58,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.service.IThreadCompleteListener;
@@ -90,6 +90,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
@@ -103,16 +104,16 @@ import sernet.verinice.service.commands.LoadAncestors;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskView extends ViewPart implements IAttachedToPerspective{
+public class TaskView extends RightsEnabledView implements IAttachedToPerspective, IPartListener2 {
 
     static final Logger LOG = Logger.getLogger(TaskView.class);
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
-    
+
     private static final long TIMEOUT_LOAD_TASKS_MINUTES = 2;
 
     private TreeViewer treeViewer;
-    
+
     private Browser textPanel;
 
     private TaskLabelProvider labelProvider;
@@ -126,7 +127,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     private Action myTasksAction;
 
     private Action cancelTaskAction;
-    
+
     private TaskFilterAction taskFilterAction;
 
     private ICommandService commandService;
@@ -134,13 +135,13 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     private boolean onlyMyTasks = true;
 
     private Composite parent = null;
-    
+
     private RightsServiceClient rightsService;
-    
+
     private IModelLoadListener modelLoadListener;
 
     private ITaskListener taskListener;
-    
+
     private ExecutorService executer = Executors.newFixedThreadPool(1);
 
     /*
@@ -152,35 +153,29 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
      */
     @Override
     public void createPartControl(Composite parent) {
-        if(!checkRights()){
-            return;
-        }
+        super.createPartControl(parent);
+        
         final int defaultContainerWeight = 50;
         final int defaultContainerSashWidth = 4;
         this.parent = parent;
-        SashForm container = new SashForm(parent, SWT.VERTICAL);       
-              
+        SashForm container = new SashForm(parent, SWT.VERTICAL);
+
         createInfoPanel(container);
         createTreeViewer(container);
-        
-        container.setWeights(new int[] { defaultContainerWeight, defaultContainerWeight});
+
+        container.setWeights(new int[] { defaultContainerWeight, defaultContainerWeight });
         container.setSashWidth(defaultContainerSashWidth);
         container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-        
+
         initData();
         makeActions();
         addActions();
         addListener();
     }
 
+    @Override
     public String getRightID() {
         return ActionRightIDs.TASKVIEW;
-    }
-    
-    private boolean checkRights(){
-        Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
     }
 
     /*
@@ -192,47 +187,50 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     public void setFocus() {
         // empty
     }
-    
+
     private void initData() {
-        if(CnAElementFactory.isModelLoaded()) {
+        if (CnAElementFactory.isModelLoaded()) {
             loadTasks();
-        } else if(modelLoadListener==null) {
-            // model is not loaded yet: add a listener to load data when it's laoded
+        } else if (modelLoadListener == null) {
+            // model is not loaded yet: add a listener to load data when it's
+            // laoded
             modelLoadListener = new IModelLoadListener() {
                 @Override
                 public void closed(BSIModel model) {
                     // nothing to do
                 }
+
                 @Override
-                public void loaded(BSIModel model) {                
+                public void loaded(BSIModel model) {
                     Display.getDefault().syncExec(new Runnable() {
                         @Override
                         public void run() {
                             initData();
                         }
-                    });                
+                    });
                 }
+
                 @Override
                 public void loaded(ISO27KModel model) {
-                    // work is done in loaded(BSIModel model)                        
-                }               
+                    // work is done in loaded(BSIModel model)
+                }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
         Display d = Display.getCurrent();
-        if(d == null){
+        if (d == null) {
             d = Display.getDefault();
         }
         d.asyncExec(new Runnable() {
             @Override
             public void run() {
-                for(TreeColumn tc : treeViewer.getTree().getColumns()){
+                for (TreeColumn tc : treeViewer.getTree().getColumns()) {
                     tc.pack();
                 }
             }
         });
     }
-    
+
     void loadTasks() {
         loadTasks(true);
     }
@@ -240,21 +238,21 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     void loadTasks(boolean showProgress) {
         TaskParameter param = new TaskParameter();
         param.setAllUser(!onlyMyTasks);
-        if(taskFilterAction!=null) {
+        if (taskFilterAction != null) {
             param.setProcessKey(taskFilterAction.getProcessKey());
             param.setTaskId(taskFilterAction.getTaskId());
         }
-        final LoadTaskJob job = new LoadTaskJob(param);         
-        if(showProgress) {
+        final LoadTaskJob job = new LoadTaskJob(param);
+        if (showProgress) {
             loadTasksAndShowProgress(job);
         } else {
             loadTasksInBackground(job);
         }
-        
-        Display.getDefault().syncExec(new Runnable(){
+
+        Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                getInfoPanel().setText("");                          
+                getInfoPanel().setText("");
             }
         });
     }
@@ -262,38 +260,38 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     /**
      * @param job
      */
-    private void loadTasksInBackground(final LoadTaskJob job) {  
-        job.addListener(new IThreadCompleteListener() {            
+    private void loadTasksInBackground(final LoadTaskJob job) {
+        job.addListener(new IThreadCompleteListener() {
             @Override
             public void notifyOfThreadComplete(Thread thread) {
                 final RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), getViewer());
-                Display.getDefault().asyncExec(new Runnable(){
+                Display.getDefault().asyncExec(new Runnable() {
                     @Override
                     public void run() {
-                        refresh.refresh();                         
+                        refresh.refresh();
                     }
-                });                           
+                });
             }
         });
-        executer.execute(job);     
+        executer.execute(job);
     }
 
     private void loadTasksAndShowProgress(final LoadTaskJob job) {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
-            progressService.run(true, false, job);      
+            progressService.run(true, false, job);
         } catch (Exception e) {
-            LOG.error("Error while loading tasks.",e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Error while loading tasks."); 
-        }       
+            LOG.error("Error while loading tasks.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, "Error while loading tasks.");
+        }
         RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), getViewer());
         refresh.refresh();
     }
-    
+
     private void createInfoPanel(Composite container) {
         final int gridDataHeight = 80;
         textPanel = new Browser(container, SWT.NONE);
-        textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ));
+        textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         final GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
         gridData.heightHint = gridDataHeight;
         textPanel.setLayoutData(gridData);
@@ -305,19 +303,18 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.treeViewer.getControl().setLayoutData(gridData);
         this.treeViewer.setUseHashlookup(true);
-        
+
         /*** Tree table specific code starts ***/
 
         tree.setHeaderVisible(true);
         tree.setLinesVisible(true);
 
-        
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
-        treeColumn.setText(Messages.TaskViewColumn_0); 
-        
+        treeColumn.setText(Messages.TaskViewColumn_0);
+
         treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskView_4);
-        
+
         treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.TaskViewColumn_1);
 
@@ -389,7 +386,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
                         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                         LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
-                        if(loadControl.getElement()!=null) {
+                        if (loadControl.getElement() != null) {
                             EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
                         } else {
                             MessageDialog.openError(getSite().getShell(), "Error", "Object not found.");
@@ -413,7 +410,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
         myTasksAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_PERSON));
 
         taskFilterAction = new TaskFilterAction(getSite().getShell(), getViewer(), myTasksAction);
-        
+
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
             @Override
             public void run() {
@@ -426,14 +423,14 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
                 }
             }
         };
-        cancelTaskAction.setEnabled(false);      
+        cancelTaskAction.setEnabled(false);
         cancelTaskAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
-        
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
+
+        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
+            IInternalServerStartListener listener = new IInternalServerStartListener() {
                 @Override
                 public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
+                    if (e.isStarted()) {
                         configureActions();
                     }
                 }
@@ -444,7 +441,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
             configureActions();
         }
     }
-    
+
     private void configureActions() {
         cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
         boolean enabled = getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL);
@@ -466,7 +463,8 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         // Dummy action to force displaying the toolbar in a new line
-        Action dummyAction = new Action() {};
+        Action dummyAction = new Action() {
+        };
         dummyAction.setText(" "); //$NON-NLS-1$
         dummyAction.setEnabled(false);
         ActionContributionItem item = new ActionContributionItem(dummyAction);
@@ -492,13 +490,13 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
                     public void run() {
                         loadTasks(false);
                     }
-                });              
+                });
             }
         };
         TaskChangeRegistry.addTaskChangeListener(taskListener);
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void selectionChanged(SelectionChangedEvent event) {         
+            public void selectionChanged(SelectionChangedEvent event) {
                 if (isTaskSelected()) {
                     try {
                         taskSelected();
@@ -524,9 +522,13 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
         getSite().registerContextMenu(menuManager, treeViewer);
         // Make the selection available
         getSite().setSelectionProvider(treeViewer);
+        
+        
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -536,7 +538,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
         shutdownAndAwaitTermination(executer);
         super.dispose();
     }
-    
+
     private void shutdownAndAwaitTermination(ExecutorService executer) {
         executer.shutdown(); // Disable new tasks from being submitted
         try {
@@ -555,25 +557,25 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
             Thread.currentThread().interrupt();
         }
     }
-    
+
     /**
      * @param manager
      */
-    private void taskSelected() { 
+    private void taskSelected() {
         IToolBarManager manager = resetToolbar();
-        
+
         cancelTaskAction.setEnabled(false);
         cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-        getInfoPanel().setText( HtmlWriter.getPage(task.getDescription()));   
-        
+        getInfoPanel().setText(HtmlWriter.getPage(task.getDescription()));
+
         List<KeyValue> outcomeList = task.getOutcomes();
         for (KeyValue keyValue : outcomeList) {
             CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());
             completeAction.setText(keyValue.getValue());
             completeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_JA));
             ActionContributionItem item = new ActionContributionItem(completeAction);
-            
+
             item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
             manager.add(item);
         }
@@ -582,7 +584,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     private IToolBarManager resetToolbar() {
         IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
         manager.removeAll();
-         
+
         addToolBarActions();
         return manager;
     }
@@ -592,7 +594,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
      */
     protected void addTasks(List<ITask> taskList) {
         final List<ITask> newList;
-        if(taskList==null || taskList.isEmpty()) {
+        if (taskList == null || taskList.isEmpty()) {
             newList = new LinkedList<ITask>();
         } else {
             newList = taskList;
@@ -623,7 +625,7 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     protected TreeViewer getViewer() {
         return treeViewer;
     }
-    
+
     protected Browser getInfoPanel() {
         return textPanel;
     }
@@ -639,30 +641,29 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
     }
 
     protected void showError(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable(){
+        Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
                 MessageDialog.openError(TaskView.this.getSite().getShell(), title, message);
             }
-        });     
+        });
     }
 
     protected void showInformation(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable(){
+        Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
                 MessageDialog.openInformation(TaskView.this.getSite().getShell(), title, message);
             }
-        }); 
-        
+        });
+
     }
 
     private void cancelTask() throws InvocationTargetException, InterruptedException {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
         final int number = selection.size();
-        if (number > 0
-            && MessageDialog.openConfirm(parent.getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, selection.size()))) {
+        if (number > 0 && MessageDialog.openConfirm(parent.getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, selection.size()))) {
             progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -678,10 +679,10 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
                 }
             });
             getInfoPanel().setText("");
-            showInformation(Messages.TaskView_0,NLS.bind(Messages.TaskView_8, number));               
+            showInformation(Messages.TaskView_0, NLS.bind(Messages.TaskView_8, number));
         }
     }
-    
+
     public void removeTask(ITask task) {
         contentProvider.removeTask(task);
     }
@@ -690,10 +691,17 @@ public class TaskView extends ViewPart implements IAttachedToPerspective{
      * @return the rightsService
      */
     public RightsServiceClient getRightsService() {
-        if(rightsService==null) {
+        if (rightsService == null) {
             rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 }

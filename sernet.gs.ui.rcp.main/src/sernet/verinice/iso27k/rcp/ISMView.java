@@ -53,7 +53,6 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -128,6 +127,7 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -137,8 +137,7 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-@SuppressWarnings("restriction")
-public class ISMView extends ViewPart implements IAttachedToPerspective, ILinkedWithEditorView {
+public class ISMView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
@@ -187,24 +186,30 @@ public class ISMView extends ViewPart implements IAttachedToPerspective, ILinked
 	
 	private ICommandService commandService;
 	
-	
-	/**
-     * 
-     */
     public ISMView() {
         super();
         elementManager = new ElementManager();
     }
 
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.ISMVIEW;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public void createPartControl(final Composite parent) {
+	    super.createPartControl(parent);
 		try {
 			initView(parent);
 			startInitDataJob();

@@ -31,7 +31,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
@@ -45,9 +44,9 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.RightsEnabledView;
 
-@SuppressWarnings("restriction")
-public class BrowserView extends ViewPart implements ILinkedWithEditorView {
+public class BrowserView extends RightsEnabledView implements ILinkedWithEditorView {
     
 	private static final Logger LOG = Logger.getLogger(BrowserView.class);
 	
@@ -63,7 +62,9 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
     
     private SerialiseBrowserLoadingListener serialiseListener;
 
-	public void createPartControl(Composite parent) {
+	@Override
+    public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		GridLayout gl = new GridLayout(1, false);
 		parent.setLayout(gl);
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
@@ -104,9 +105,18 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
         return linkingActive;
     }
 	
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.BSIBROWSER;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 	
 	private String defaultImage() {
 		return String.format("file:///%s/html/about.html", CnAWorkspace //$NON-NLS-1$
@@ -115,7 +125,8 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
 
 	private void hookPageSelection() {
 		selectionListener = new ISelectionListener() {
-			public void selectionChanged(IWorkbenchPart part,
+			@Override
+            public void selectionChanged(IWorkbenchPart part,
 					ISelection selection) {
 				pageSelectionChanged(part, selection);
 			}
@@ -148,7 +159,8 @@ public class BrowserView extends ViewPart implements ILinkedWithEditorView {
         }
 	}
 
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		browser.setFocus();
 	}
 	

@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -74,6 +73,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  * Base class for a view that shows instances of {@link MassnahmenUmsetzung} as
@@ -89,7 +89,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  * @author dm[at]sernet[dot]de
  * 
  */
-public abstract class GenericMassnahmenView extends ViewPart implements IMassnahmenListView {
+public abstract class GenericMassnahmenView extends RightsEnabledView implements IMassnahmenListView {
 
 	private static final Logger LOG = Logger.getLogger(GenericMassnahmenView.class);
 
@@ -156,11 +156,13 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 			combo.addSelectionListener(new SelectionListener() {
 
-				public void widgetDefaultSelected(SelectionEvent e) {
+				@Override
+                public void widgetDefaultSelected(SelectionEvent e) {
 					widgetSelected(e);
 				}
 
-				public void widgetSelected(SelectionEvent e) {
+				@Override
+                public void widgetSelected(SelectionEvent e) {
 					int s = combo.getSelectionIndex();
 					// First entry means 'show nothing'
 					if (s == 0) {
@@ -403,9 +405,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 * </p>
 		 * 
 		 */
-		public void closed(BSIModel model) {
+		@Override
+        public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					if (CnAElementHome.getInstance().isOpen()) {
 						// Connection still open -> explicit reload
 						lastSelectedCompound = compoundChoser.getSelectedCompound();
@@ -431,9 +435,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		 * reload occured.
 		 * </p>
 		 */
-		public void loaded(final BSIModel model) {
+		@Override
+        public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					try {
 						loadCompounds(lastSelectedCompound);
 					} catch (RuntimeException e) {
@@ -443,6 +449,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 			});
 		}
 
+        @Override
         public void loaded(ISO27KModel model) {
             // work is done in loaded(BSIModel model)            
         }
@@ -479,6 +486,7 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 
 	@Override
 	public final void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		// Customized table viewer implementation that automatically
 		// replaces the 'data' item when it is looked up.
 		// This makes it possible that when
@@ -619,7 +627,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 					compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
 					final List<ITVerbund> elements = compoundLoader.getElements();
 					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							compoundChoser.setElements(elements);
 							compoundChoser.setEnabled(true);
 
@@ -669,7 +678,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	 * In case that no IT-Verbund is selected the method has no effect.
 	 * </p>
 	 */
-	public final void reloadMeasures() {
+	@Override
+    public final void reloadMeasures() {
 		ITVerbund compound = compoundChoser.getSelectedCompound();
 		if (compound == null) {
 			LOG.warn("No IT-Verbund was selected during reload."); //$NON-NLS-1$
@@ -737,7 +747,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	                    allMassnahmen.addAll(command.getAll());
 					}
 					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							viewer.setInput(allMassnahmen);
 							compoundChoser.setEnabled(true);
 							int loaded = loadBlockNumber*FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
@@ -751,7 +762,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 					});
 				} catch (Exception e) {
 					Display.getDefault().asyncExec(new Runnable() {
-						public void run() {
+						@Override
+                        public void run() {
 							compoundChoser.setEnabled(true);
 						}
 					});
@@ -856,11 +868,13 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 	@Override
 	public final void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
+		super.dispose();
 	}
 
 	private void hookActions() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -877,9 +891,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		viewer.getTable().setFocus();
 	}
 
-	public final void compoundAdded(final ITVerbund compound) {
+	@Override
+    public final void compoundAdded(final ITVerbund compound) {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 			    if (LOG.isDebugEnabled()) {
 			        LOG.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
@@ -888,9 +904,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		});
 	}
 
-	public final void compoundRemoved(final ITVerbund compound) {		
+	@Override
+    public final void compoundRemoved(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 			    if (LOG.isDebugEnabled()) {
 			        LOG.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
@@ -899,9 +917,11 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		});
 	}
 
-	public final void compoundChanged(final ITVerbund compound) {		
+	@Override
+    public final void compoundChanged(final ITVerbund compound) {		
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 			    if (LOG.isDebugEnabled()) {
 			        LOG.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
                 }
@@ -910,10 +930,12 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		});
 	}
 
-	public final ITVerbund getCurrentCompound() {
+	@Override
+    public final ITVerbund getCurrentCompound() {
 		final ITVerbund[] retval = new ITVerbund[1];
 		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				retval[0] = compoundChoser.getSelectedCompound();
 			}
 		});
@@ -973,7 +995,8 @@ public abstract class GenericMassnahmenView extends ViewPart implements IMassnah
 		}
 		
 		
-		public int compare(Viewer viewer, Object o1, Object o2) {
+		@Override
+        public int compare(Viewer viewer, Object o1, Object o2) {
 		    int rc = 0;
 		    try {
     			TodoViewItem mn1 = (TodoViewItem) o1;

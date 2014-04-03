@@ -54,7 +54,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -77,11 +76,12 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  *
  */
-public class CnAValidationView extends ViewPart implements ILinkedWithEditorView  {
+public class CnAValidationView extends RightsEnabledView implements ILinkedWithEditorView  {
     
     static final Logger LOG = Logger.getLogger(CnAValidationView.class);
     
@@ -120,6 +120,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
      */
     @Override
     public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
         parent.setLayout(new FillLayout());
         createTable(parent);
         getSite().setSelectionProvider(viewer);
@@ -140,6 +141,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     private void makeActions() {
 
         refreshAction = new Action(Messages.ValidationView_8, SWT.NONE){
+            @Override
             public void run(){
                 loadValidations();
             }
@@ -148,6 +150,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
 
         doubleClickAction = new Action(){
+            @Override
             public void run() {
                 if (viewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) viewer.getSelection()).getFirstElement() instanceof CnAValidation) {
                     try {
@@ -169,6 +172,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
 
     private void hookActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
@@ -177,6 +181,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
 
     private void hookPageSelection() {
         selectionListener = new ISelectionListener() {
+            @Override
             public void selectionChanged(IWorkbenchPart part, ISelection selection) {
                 pageSelectionChanged(part, selection);
             }
@@ -244,6 +249,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     
     protected void startInitDataJob() {
         WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
@@ -307,6 +313,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     
     protected void addISO27KModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
@@ -328,6 +335,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
@@ -350,15 +358,18 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
     private void hookModelLoadListener() {
         this.modelLoadListener = new IModelLoadListener() {
 
+            @Override
             public void closed(BSIModel model) {
                 removeModelListeners();
                 Display.getDefault().asyncExec(new Runnable() {
+                    @Override
                     public void run() {
                         viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
                     }
                 });
             }
 
+            @Override
             public void loaded(BSIModel model) {
                 synchronized (modelLoadListener) {
                     startInitDataJob();
@@ -380,6 +391,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
       
     private static class ValidationLabelProvider extends LabelProvider implements ITableLabelProvider {      
         
+        @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (element instanceof PlaceHolder) {
                 return null;
@@ -387,6 +399,7 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
             return null;
         }
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             try {
                 if (element instanceof PlaceHolder) {
@@ -629,8 +642,17 @@ public class CnAValidationView extends ViewPart implements ILinkedWithEditorView
         return rightsService;
     }
     
+    @Override
     public String getRightID() {
         return ActionRightIDs.CNAVALIDATION;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 
 }

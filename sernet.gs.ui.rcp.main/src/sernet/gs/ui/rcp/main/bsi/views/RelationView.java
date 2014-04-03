@@ -27,7 +27,6 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -51,6 +50,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.RightsEnabledView;
 
 
 /**
@@ -61,8 +61,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
  * $LastChangedBy$
  *
  */
-@SuppressWarnings("restriction")
-public class RelationView extends ViewPart implements IRelationTable, ILinkedWithEditorView {
+public class RelationView extends RightsEnabledView implements IRelationTable, ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 
@@ -91,9 +90,18 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	public RelationView() {
 	}
 
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.RELATIONS;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 	
 	/**
 	 * @param elmt
@@ -151,6 +159,7 @@ public class RelationView extends ViewPart implements IRelationTable, ILinkedWit
 	 */
 	@Override
     public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		viewer = new RelationTableViewer(this, parent, SWT.FULL_SELECTION | SWT.MULTI, false);
 		contentProvider = new RelationViewContentProvider(this, viewer);
 		viewer.setContentProvider(contentProvider);

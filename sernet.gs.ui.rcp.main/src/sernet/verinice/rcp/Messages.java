@@ -54,6 +54,8 @@ public class Messages extends NLS {
     public static String ProfileEditAction_0;
     public static String RightsEnabledActionDelegate_0;
     public static String RightsEnabledActionDelegate_1;
+    public static String RightsEnabledView_0;
+    public static String RightsEnabledView_1;
     public static String ServerConnectionToggleAction_0;
     public static String ServerConnectionToggleAction_1;
     public static String ServerConnectionToggleAction_2;

@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -56,6 +55,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 
@@ -65,7 +65,7 @@ import sernet.verinice.rcp.tree.TreeContentProvider;
  * @author koderman[at]sernet[dot]de
  * 
  */
-public class DSModelView extends ViewPart {
+public class DSModelView extends RightsEnabledView {
 	public static final String ID = "sernet.gs.ui.rcp.main.views.dsmodelview"; //$NON-NLS-1$
 
 	protected TreeViewer viewer;
@@ -76,17 +76,21 @@ public class DSModelView extends ViewPart {
 	 * Check model load / unload and update view.
 	 */
 	private IModelLoadListener loadListener = new IModelLoadListener() {
-		public void closed(BSIModel model) {
+		@Override
+        public void closed(BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					setNullModel();
 				}
 			});
 		}
 
-		public void loaded(final BSIModel model) {
+		@Override
+        public void loaded(final BSIModel model) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					try {
 						setInput();
 					} catch (CommandException e) {
@@ -96,6 +100,7 @@ public class DSModelView extends ViewPart {
 			});
 		}
 
+        @Override
         public void loaded(ISO27KModel model) {
             // work is done in loaded( BSIModel model)    
         }
@@ -109,58 +114,71 @@ public class DSModelView extends ViewPart {
 		private ThreadSafeViewerUpdate updater = new ThreadSafeViewerUpdate(
 				viewer);
 
-		public void childAdded(CnATreeElement category, CnATreeElement child) {
+		@Override
+        public void childAdded(CnATreeElement category, CnATreeElement child) {
 			updater.add(category, child);
 		}
 
-		public void childChanged(CnATreeElement child) {
+		@Override
+        public void childChanged(CnATreeElement child) {
 			updater.refresh(child);
 		}
 
-		public void childRemoved(CnATreeElement category, CnATreeElement child) {
+		@Override
+        public void childRemoved(CnATreeElement category, CnATreeElement child) {
 			updater.refresh();
 		}
 
 		/**
 		 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
 		 */
-		public void modelRefresh() {
+		@Deprecated
+        @Override
+        public void modelRefresh() {
 			modelRefresh(null);
 		}
 
-		public void modelRefresh(Object source) {
+		@Override
+        public void modelRefresh(Object source) {
 			updater.refresh();
 		}
 
-		public void linkChanged(CnALink old, CnALink link, Object source) {
+		@Override
+        public void linkChanged(CnALink old, CnALink link, Object source) {
 			// do nothing
 		}
 		
-		public void linkRemoved(CnALink link) {
+		@Override
+        public void linkRemoved(CnALink link) {
 			// do nothing
 			
 		}
 		
-		public void linkAdded(CnALink link) {
+		@Override
+        public void linkAdded(CnALink link) {
 			// do nothing
 		}
 
-		public void databaseChildAdded(CnATreeElement child) {
+		@Override
+        public void databaseChildAdded(CnATreeElement child) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		public void databaseChildChanged(CnATreeElement child) {
+		@Override
+        public void databaseChildChanged(CnATreeElement child) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		public void databaseChildRemoved(CnATreeElement child) {
+		@Override
+        public void databaseChildRemoved(CnATreeElement child) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		public void modelReload(BSIModel newModel) {
+		@Override
+        public void modelReload(BSIModel newModel) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -168,7 +186,8 @@ public class DSModelView extends ViewPart {
 		/* (non-Javadoc)
 		 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(java.lang.Integer)
 		 */
-		public void databaseChildRemoved(ChangeLogEntry id) {
+		@Override
+        public void databaseChildRemoved(ChangeLogEntry id) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -211,11 +230,22 @@ public class DSModelView extends ViewPart {
 	    elementManager = new ElementManager();
 	}
 	
-	public String getRightID(){
+	@Override
+    public String getRightID(){
 	    return ActionRightIDs.DSMODELVIEW;
 	}
+	
+	/* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
 
-	public void createPartControl(Composite parent) {
+	@Override
+    public void createPartControl(Composite parent) {
+	    super.createPartControl(parent);
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		viewUpdater = new DSModelViewUpdater();
 		drillDownAdapter = new DrillDownAdapter(viewer);
@@ -243,6 +273,7 @@ public class DSModelView extends ViewPart {
 	public void dispose() {
 		CnAElementFactory.getInstance().removeLoadListener(loadListener);
 		model.removeBSIModelListener(viewUpdater);
+		super.dispose();
 	}
 
 	private void setInput() throws CommandException {
@@ -262,7 +293,8 @@ public class DSModelView extends ViewPart {
 		model.addBSIModelListener(this.viewUpdater);
 
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				viewer.setInput(model);
 				viewer.refresh();
 			}
@@ -272,7 +304,8 @@ public class DSModelView extends ViewPart {
 	public void setNullModel() {
 		model = new NullModel();
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				viewer.setInput(model);
 				viewer.refresh();
 			}
@@ -309,7 +342,8 @@ public class DSModelView extends ViewPart {
 	private void makeActions() {
 
 		doubleClickAction = new Action() {
-			public void run() {
+			@Override
+            public void run() {
 				Object sel = ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement();
 				if (sel instanceof CnATreeElement
@@ -322,7 +356,8 @@ public class DSModelView extends ViewPart {
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
+			@Override
+            public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -331,7 +366,8 @@ public class DSModelView extends ViewPart {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 

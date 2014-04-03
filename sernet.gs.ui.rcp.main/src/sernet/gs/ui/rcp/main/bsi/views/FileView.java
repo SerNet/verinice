@@ -68,7 +68,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
@@ -95,6 +94,7 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
@@ -108,7 +108,7 @@ import sernet.verinice.service.commands.LoadFileSizeLimit;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class FileView extends ViewPart implements ILinkedWithEditorView, IPropertyChangeListener {
+public class FileView extends RightsEnabledView implements ILinkedWithEditorView, IPropertyChangeListener {
     
     static final Logger LOG = Logger.getLogger(FileView.class);
 
@@ -197,12 +197,23 @@ public class FileView extends ViewPart implements ILinkedWithEditorView, IProper
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
     }
 
+    @Override
     public String getRightID() {
         return ActionRightIDs.FILES;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
+    
 
     @Override
     public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
         initView(parent);
     }
 
