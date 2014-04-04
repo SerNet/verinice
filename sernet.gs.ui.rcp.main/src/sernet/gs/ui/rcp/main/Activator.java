@@ -459,7 +459,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     }
                 } catch (Exception e) {
                     LOG.error("Error while initializing database.", e); //$NON-NLS-1$
-                    status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_29, e);
+                    if(e.getCause()!=null && e.getCause().getLocalizedMessage()!=null) {
+                        setName(e.getCause().getLocalizedMessage());
+                    }
+                    status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_31, e);
                 } finally {
                     monitor.done();
                 }
@@ -492,6 +495,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     CnAElementFactory.getInstance().getISO27kModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
+                    if(e.getCause()!=null && e.getCause().getLocalizedMessage()!=null) {
+                        setName(e.getCause().getLocalizedMessage());
+                    }
                     status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_31, e); //$NON-NLS-1$
                 } finally {
                     monitor.done();

@@ -328,7 +328,9 @@ public class ISMView extends RightsEnabledView implements IAttachedToPerspective
 	@Override
 	public void dispose() {
 	    elementManager.clearCache();
-		CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
+	    if(CnAElementFactory.isIsoModelLoaded()) {
+	        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
+	    }
 		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 		getSite().getPage().removePartListener(linkWithEditorPartListener);
 		super.dispose();

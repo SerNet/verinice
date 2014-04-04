@@ -20,10 +20,7 @@
 package sernet.verinice.rcp;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -54,14 +51,12 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
     private static final Logger LOG = Logger.getLogger(RightsEnabledView.class);
     
     protected void openingDeclined() { 
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.RightsEnabledView_0, Messages.RightsEnabledView_1);
-            }
-        });       
+        LOG.error("Opening of view is now allowed, view-id: " + getViewId() + ", action-id: " + getRightID());      
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Stacktrace: ", new RuntimeException());
+        }
         closeAllViews(this.getClass());
-        dispose();  
+        dispose();        
     }
     
     /* (non-Javadoc)
@@ -126,26 +121,16 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
                     if (viewType == null || viewType.equals(partType)) {
                         try {
                             page.hideView(viewRef);
-                        } catch(AssertionFailedException afe) {
-                            LOG.warn("AssertionFailedException while closing view."); //$NON-NLS-1$
+                        } catch(Exception e) {
+                            LOG.warn("Exception while closing view."); //$NON-NLS-1$
                             if (LOG.isDebugEnabled()) {
-                                LOG.debug("Stacktrace: ", afe); //$NON-NLS-1$
+                                LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
                             }
-                        }
+                        } 
                     }
                 }
             }
         }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-     */
-    @Override
-    public void dispose() {
-        final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
-        workbenchWindow.getPartService().removePartListener(this);
-        super.dispose();
     }
     
     /* (non-Javadoc)
