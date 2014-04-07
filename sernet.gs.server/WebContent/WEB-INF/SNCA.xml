@@ -2076,7 +2076,7 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 				id="gefaehrdungsumsetzung_mechanismenstaerke"
 				inputtype="singleoption"
-				name="Mechanismensstärke" >
+				name="Mechanismenstärke" >
 				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_ja"
 					name="Ausreichend" />
 				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_nein"
