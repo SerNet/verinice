@@ -47,8 +47,7 @@ public class ReportService implements IReportService {
 		        new ControlMaturityReport(),
 		        new StatementOfApplicabilityReport(),
 		        new InventoryOfAssetsReport(),
-		        new Audits(),
-		        
+		      		        
 		        new VulnerabilitiesReport(), // new Export Reports, since v1.6.0
 		        new ThreatsReport(),
 		        new ScenariosReport(),
@@ -61,6 +60,7 @@ public class ReportService implements IReportService {
 		        new ExceptionsReport(),
 		        new DocumentsReport(),
 		        new TasksReport(),//Tasks in english
+		        new AufgabenReport(),//Aufgaben in deutsch
                 new VVBSIG_SofortMeldungReport(),
                 new VVBSIG_StatMeldungReport(),		        
 		        
