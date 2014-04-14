@@ -534,18 +534,12 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter dataBrowseListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(LOG.isDebugEnabled()){
-                    LOG.debug("dataPathTextWidget selected");
-                }
                displayFiles(container.getShell(), dataPathText, dataFile);
             }
         };
         
-        final Button dataBrowse = SWTElementFactory.generatePushButton(dataGroup, Messages.XMLImportDialog_14, null, dataBrowseListener);
+        final Button dataBrowse = SWTElementFactory.generateButton(dataGroup, Messages.XMLImportDialog_14, null, dataBrowseListener);
         dataBrowse.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-        if(LOG.isDebugEnabled()){
-            LOG.debug("dataBrowse button generated");
-        }
         // prevent passwordtextfield from gaining focus automatically
         // which happens in osx client, and causes wrong default radio selection (bug 341)
         dataPathText.setFocus();
@@ -553,46 +547,39 @@ public class XMLImportDialog extends Dialog {
     }
 
     private void displayFiles(Shell shell, Text pathText, File file) {
-        try{
-            File f = file;
-            FileDialog dialog = new FileDialog(shell, SWT.NULL);
-            dialog.setFilterExtensions(new String[] { 
-                    "*"+VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
-                    "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
-                    "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                    "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-            dialog.setFilterNames(new String[] { 
-                    Messages.XMLImportDialog_30,
-                    Messages.XMLImportDialog_33,
-                    Messages.XMLImportDialog_34,
-                    Messages.XMLImportDialog_35 });
+        File f = file;
+        FileDialog dialog = new FileDialog(shell, SWT.NULL);
+        dialog.setFilterExtensions(new String[] { 
+                "*"+VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
+                "*"+ExportAction.EXTENSION_XML, //$NON-NLS-1$
+                "*"+ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
+                "*"+ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
+        dialog.setFilterNames(new String[] { 
+                Messages.XMLImportDialog_30,
+                Messages.XMLImportDialog_33,
+                Messages.XMLImportDialog_34,
+                Messages.XMLImportDialog_35 });
 
-            if(isFilePath()) {
-                dialog.setFilterPath(getOldFolderPath());
-            } else {
-                dialog.setFilterPath(defaultFolder);
+        if(isFilePath()) {
+            dialog.setFilterPath(getOldFolderPath());
+        } else {
+            dialog.setFilterPath(defaultFolder);
+        }
+        if(fileDialogFilterIndex <= dialog.getFilterNames().length){
+            dialog.setFilterIndex(fileDialogFilterIndex);
+        }
+        String path = dialog.open();
+        if (path != null) {
+            f = new File(path);
+            if(dialog.getFilterIndex()<2) {
+                // set the format if an uncrypted file was selected
+                format = dialog.getFilterIndex();
             }
-            if(fileDialogFilterIndex <= dialog.getFilterNames().length){
-                dialog.setFilterIndex(fileDialogFilterIndex);
+            if (f.isFile()) {
+                pathText.setText(f.getPath());
+                pathText.setEditable(true);
             }
-            String path = dialog.open();
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Dialog open() called");
-            }
-            if (path != null) {
-                f = new File(path);
-                if(dialog.getFilterIndex()<2) {
-                    // set the format if an uncrypted file was selected
-                    format = dialog.getFilterIndex();
-                }
-                if (f.isFile()) {
-                    pathText.setText(f.getPath());
-                    pathText.setEditable(true);
-                }
 
-            }
-        } catch (Throwable t){
-            LOG.error("Error opening fileSelectionDialog", t);
         }
     }
     
