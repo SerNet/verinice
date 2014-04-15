@@ -51,10 +51,10 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
@@ -111,7 +111,7 @@ public class CommandServiceTest extends CommandServiceProvider {
 
     /**
      * Loads all elements with the LoadTreeItem command.
-     * ISO- and BIS-view using LoadTreeItem to load the tree.
+     * ISO- and BSI-View using LoadTreeItem to load the tree.
      */
     @Test
     public void testLoadTreeItems() throws Exception {
@@ -119,11 +119,21 @@ public class CommandServiceTest extends CommandServiceProvider {
         loadOrgs = commandService.executeCommand(loadOrgs);
         List<Organization> allOrgs = (List<Organization>) loadOrgs.getElementList();
         
-        for (Organization organization : allOrgs) {
-            String title = organization.getTitle();
-            assertNotNull("Title of organization is null", title);
-            LOG.debug("Testing organization: " + title);
-            loadChildren(organization);
+        loadTree(allOrgs);
+        
+        LoadElementByTypeId loadItVerbunds = new LoadElementByTypeId(ITVerbund.TYPE_ID, RetrieveInfo.getPropertyInstance());
+        loadItVerbunds = commandService.executeCommand(loadItVerbunds);
+        List<ITVerbund> allItVerbunds = (List<ITVerbund>) loadItVerbunds.getElementList();
+        
+        loadTree(allItVerbunds);
+    }
+
+    protected void loadTree(List<? extends CnATreeElement> elementList) throws CommandException {
+        for (CnATreeElement element : elementList) {
+            String title = element.getTitle();
+            assertNotNull("Title of element is null", title);
+            LOG.debug("Testing element: " + title);
+            loadChildren(element);
         }
     }    
     
@@ -223,15 +233,13 @@ public class CommandServiceTest extends CommandServiceProvider {
         command = commandService.executeCommand(command);
         CnATreeElement elementWithChildren = command.getElement();       
         Set<CnATreeElement> children = elementWithChildren.getChildren();
-        assertNotNull("Children set of element is children", children);
+        assertNotNull("Children set of element is null", children);
         for (CnATreeElement child : children) {
             assertNotNull("Title of child is null", child.getTitle());
         }
         for (CnATreeElement child : children) {
-            if(child instanceof Group) {
-                LOG.debug("Loading children of: " + child.getTitle());
-                loadChildren(child);
-            }
+            LOG.debug("Loading children of: " + child.getTitle());
+            loadChildren(child);
         }
     }
     
@@ -283,7 +291,7 @@ public class CommandServiceTest extends CommandServiceProvider {
      * saved in DB. Probably this is a spring-junit-transaction issue.
      * 
      * This method is not annotated with @Test anymore.
-     * To activate ist set the annotation again.
+     * To activate it activate the annotation again.
      */
     //@Test
     //@Transactional
