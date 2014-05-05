@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.7"?>
+<plugin>
+	<extension point="org.eclipse.ui.commands">
+		<category id="sernet.verinice.fei.rcp.category"
+			name="File Element Import Category">
+		</category>
+		<command id="sernet.verinice.fei.rcp.FileElementImportCommand"
+			name="File Element Import Command"
+			categoryId="sernet.verinice.fei.rcp.category">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="sernet.verinice.fei.rcp.FileElementImportCommand"
+			class="sernet.verinice.fei.rcp.FileElementImportHandler">
+		</handler>
+		<handler class="sernet.verinice.fei.rcp.FileElementImportHandler"
+			commandId="sernet.verinice.fei.rcp.FileElementImportCommand">
+			<activeWhen>
+				<iterate operator="or">
+					<instanceof value="sernet.verinice.model.iso27k.Group" />
+				</iterate>
+			</activeWhen> 
+			<enabledWhen>
+				<with variable="selection">
+					<count value="1"/>
+				</with>
+			</enabledWhen>
+		</handler> 
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
+			<command commandId="sernet.verinice.fei.rcp.FileElementImportCommand"
+				disabledIcon="icons/file-element-import.gif"
+				icon="icons/file-element-import.gif"
+				label="%fei.import.menu.label"
+				tooltip="%fei.import.menu.tooltip">
+				<visibleWhen>
+					<iterate operator="or">
+					<instanceof value="sernet.verinice.model.iso27k.Group" />
+					</iterate>
+				</visibleWhen>
+			</command>          
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.dropActions">
+		<action id="sernet.verinice.ismview.filedrop"
+			class="sernet.verinice.fei.rcp.FileElementDropAdapter">
+		</action>
+	</extension>
+ 	<extension point="org.eclipse.ui.preferencePages">
+      	<page id="sernet.verinice.fei.rcp.FileElementImportPreferencePage"
+            class="sernet.verinice.fei.rcp.FileElementImportPreferencePage"          
+            name="%fei.preferences.titel"/>
+ 	</extension>
+</plugin>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <description>JSP/Facelet tag library for verinice</description>
+    <display-name>verinice components</display-name>
+    <tlib-version>1.1</tlib-version>
+    <short-name>v-components</short-name>
+    <uri>http://www.verinice.org/taglib</uri>
+    <tag>
+        <description>Editor for verinice elements</description>
+        <name>editor</name>
+        <tag-class />
+        <body-content>empty</body-content>
+        <attribute>
+            <description>boolean</description>
+            <name>rendered</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Property list for element editor</description>
+        <name>properties</name>
+        <tag-class />
+        <body-content>empty</body-content>
+        <attribute>
+            <description>sernet.verinice.web.HuiProperty List</description>
+            <name>list</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>sernet.verinice.web.HuiProperty List, no label is shown</description>
+            <name>listNoLabel</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <description>Login form</description>
+        <name>login</name>
+        <tag-class />
+        <body-content>empty</body-content>
+        <attribute>
+            <description>Error message</description>
+            <name>error</name>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

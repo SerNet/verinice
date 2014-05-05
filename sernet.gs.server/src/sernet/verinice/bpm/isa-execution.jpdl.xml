@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="isa-execution" name="verinice ISA Execution" version="2" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <description>Describes the implementation of controls in verinice</description>
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
+   <start g="287,18,48,48" name="start">
+      <transition to="evaluate control"/>
+   </start>
+    <decision g="286,124,80,40" name="evaluate control">
+      <transition g="-127,-10" name="not implemented" to="evaluate assignee">
+        <condition expr="#{ISA_IMPLEMENTATION==-2}"/>
+      </transition>
+      <transition g="151,149;153,670:-92,-22" name="implemented" to="end">
+        <condition expr="#{ISA_IMPLEMENTATION!=-2}"/>
+      </transition>
+   </decision>
+   <decision g="286,226,80,40" name="evaluate assignee">
+      <transition g="-77,-14" name="is assigned" to="load write permission">
+        <condition expr="#{ISA_ASSIGNEE_NAME!=null}"/>
+      </transition>
+      <transition g="-60,-24" name="is not assigned" to="isa.task.setAssignee">
+        <condition expr="#{ISA_ASSIGNEE_NAME==null}"/>
+      </transition>
+   </decision>
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="509,175,193,40" name="isa.task.setAssignee">
+       <assignment-handler class="sernet.verinice.bpm.UnreadHandler"/>
+      <transition g="6,-10" name="isa.transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.IsaExecution" g="529,286,152,40" method="loadAssignee" name="load assignee" var="ISA_ASSIGNEE_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate assignee"/>
+   </java>
+   <java class="sernet.verinice.bpm.IsaExecution" g="227,322,169,40" method="loadWritePermission" name="load write permission" var="ISA_WRITE_PERMISSION">
+      <arg><object expr="#{UUID}"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <transition to="evaluate write permission"/>
+   </java>
+   <decision g="285,413,80,40" name="evaluate write permission">
+      <handler class="sernet.verinice.bpm.EvaluateWritePermission" />
+      <transition g="-128,-10" name="is write permission" to="evaluate implementation"/>
+      <transition g="-31,8" name="no write permission" to="isa.task.setWritePermission"/>   
+   </decision>
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="508,366,210,40" name="isa.task.setWritePermission">
+   	  <transition g="-28,-22" name="isa.transition.complete" to="load write permission"/>
+   </task>
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="529,458,172,40" name="isa.task.implement">    
+      <transition g="6,-11" name="isa.transition.complete" to="load implementation"/>
+      <transition g="-12,4" name="isa.transition.escalate" to="isa.task.escalate">
+        <timer duedate="#{ISA_DUEDATE}"/>
+      </transition>
+   </task>
+   <task assignee="#{ISA_OWNER_NAME}" g="793,354,134,40" name="isa.task.escalate">
+      <assignment-handler class="sernet.verinice.bpm.UnreadHandler"/>
+      <transition g="-8,-19" name="isa.transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.IsaExecution" g="536,583,159,40" method="loadImplementation" name="load implementation" var="ISA_IMPLEMENTATION">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate implementation"/>
+   </java>
+   <decision g="285,521,48,48" name="evaluate implementation">
+      <handler class="sernet.verinice.bpm.EvaluateImplementation" />
+      <transition g="9,2" name="not implemented" to="isa.task.implement"/>
+      <transition g="-92,-14" name="implemented" to="isa.task.checkImplementation"/>
+   </decision>
+   <task assignee="#{ISA_OWNER_NAME}" g="196,651,223,40" name="isa.task.checkImplementation">
+      <transition g="7,-13" name="isa.transition.accepted" to="end"/>
+      <transition g="-8,4" name="isa.transition.decline" to="load implementation"/>
+   </task>
+   <end g="284,740,48,48" name="end"/>
+</process>

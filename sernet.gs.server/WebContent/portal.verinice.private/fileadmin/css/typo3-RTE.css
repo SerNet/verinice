@@ -1,0 +1,37 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  Dateiversion: 19.1.07
+**  Datei       : typo3-RTE.css
+**  Funktion    : Formatierung der Inhalte im RTE, wird in den layout*.css files importiert.
+**  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
+*/
+p {font-family:'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;}
+/* #############################
+** ### classesParagraph ########
+** #############################
+*/
+p.smalltext {font-size:0.9em;}
+p.box {display:block; font-size:1em; color:#000; padding:0.5em;	background:#f0f0f4; border-left:8px #E0E7F5 solid;}
+p.redbox {color:#000; background-color:#fee; border:1px #fcc solid; padding:6px; margin-bottom:0.5em;}
+p.bluebox {color:#000; background:#f0f0f4; padding:2px; border:1px #ccd solid; text-align:center;	padding:4px 0 4px 0; margin-bottom:1em;}
+p.greenbox {background-color:#f4f8f4; border:1px #aca dotted; padding:6px; margin-bottom:0.5em;}
+p.greenbox a {color:#353;}
+p.greenbox a:hover {background:transparent;}
+p.code {display:block; margin:0 0 1em 1em; font-family:"Courier New", Courier, monospace; font-size:1em; padding:0.5em; color:#000;	background:#f0f0f4;	border-left:8px #E0E7F5 solid;}
+
+/* #############################
+** ### classesCharacter ########
+** #############################
+*/
+span.mono {font-family:"Courier New", Courier, monospace; font-style:normal; padding:0 0.3em 0 0.3em; background:#f0f0f4; border:1px #ccd solid;}
+span.file {font-family:"Courier New", Courier, monospace;	font-style:normal; padding:0 0 0 14px; color:#000088; background:transparent url('file.gif') no-repeat left;}
+span.directory {font-family:"Courier New", Courier, monospace; font-style:normal; padding:0 0 0 15px; color:#000088; background:transparent url('dir.gif') no-repeat left;}
+
+/* #############################
+** ### TagFreeClasses ##########
+** #############################
+*/
+.orangeBackground {background:#FEC216;}

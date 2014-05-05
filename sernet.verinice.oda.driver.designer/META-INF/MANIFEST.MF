@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: verinice ODA driver designer
+Bundle-SymbolicName: sernet.verinice.oda.driver.designer;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sernet.verinice.oda.driver.designer.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.datatools.connectivity.oda.design.ui;bundle-version="[3.2.0,4.0.0)",
+ sernet.verinice.oda.driver;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: SerNet
+Import-Package: org.apache.log4j
+Bundle-ClassPath: .

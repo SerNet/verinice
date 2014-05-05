@@ -1,0 +1,17 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" >
+	<ul id="topNavi" class="listNavi">
+		<li class="liNavi #{nav.bsiTodoStyle}" id="liNavi_02">
+			<h:outputLink value="#{request.contextPath}/todo/todo.jsf" rendered="#{auth.bsiTasks}"><span>#{msg['nav.bsi-controls']}</span></h:outputLink>
+		</li>
+		<li class="liNavi #{nav.taskStyle}" id="liNavi_02">
+			<h:outputLink value="#{request.contextPath}/todo/task.jsf" rendered="#{auth.isoTasks}"><span>#{msg['nav.iso-tasks']}</span></h:outputLink>
+		</li>
+		<li class="liNavi #{nav.editStyle}" id="liNavi_02">
+			<h:outputLink value="#{request.contextPath}/edit/index.jsf" rendered="#{auth.isoElements}"><span>#{msg['nav.iso-objects']}</span></h:outputLink>
+		</li>
+	</ul>	
+</ui:composition>
+

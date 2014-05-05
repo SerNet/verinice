@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://www.sernet.de/service/vna" 
+        xmlns:tns="http://www.sernet.de/service/vna"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xmime="http://www.w3.org/2005/05/xmlmime" 
+        elementFormDefault="qualified">
+    <element name="vna">
+        <complexType>
+            <sequence>
+                <element name="data" 
+                    type="xsd:base64Binary" 
+                    xmime:expectedContentTypes="application/octet-stream" 
+                    nillable="false" />
+            </sequence>
+            <attribute name="name" type="xsd:string" use="required" />
+            <attribute name="type" type="tns:fileType" default="vna" />
+            <attribute name="insert" type="xsd:boolean" default="true"  />
+            <attribute name="update" type="xsd:boolean" default="true" />
+            <attribute name="delete" type="xsd:boolean" default="false" />
+            <attribute name="integrate" type="xsd:boolean" default="false" />
+        </complexType>
+    </element>
+    <element name="response">
+        <complexType>
+            <sequence>
+                <element name="message" type="xsd:string" minOccurs="1" maxOccurs="unbounded" />
+                <element name="inserted" type="xsd:int" minOccurs="1" maxOccurs="1" />
+                <element name="updated" type="xsd:int" minOccurs="1" maxOccurs="1" />
+                <element name="deleted" type="xsd:int" minOccurs="1" maxOccurs="1" />
+            </sequence>
+        </complexType>
+    </element>
+
+    <simpleType name="fileType">
+        <restriction base="xsd:string">
+            <enumeration value="vna" />
+            <enumeration value="xml" />
+        </restriction>
+    </simpleType>
+</schema>
