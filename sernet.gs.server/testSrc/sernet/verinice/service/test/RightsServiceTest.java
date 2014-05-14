@@ -73,6 +73,14 @@ public class RightsServiceTest extends ContextConfiguration {
         }
         rightsService.updateConfiguration(clone(conf));
         assertFalse( "Action: " + ActionRightIDs.ISMVIEW + " is enabled after removal.", rightsServerHandler.isEnabled("nn", ActionRightIDs.ISMVIEW));
+        conf = rightsService.getConfiguration();
+        profileList = conf.getProfiles().getProfile();
+        for (Profile profile : profileList) {
+            profile.getAction().add(removedAction);  
+            profile.setOrigin(OriginType.MODIFICATION);
+        }
+        rightsService.updateConfiguration(clone(conf));
+        assertTrue( "Action: " + ActionRightIDs.ISMVIEW + " is disabled after adding.", rightsServerHandler.isEnabled("nn", ActionRightIDs.ISMVIEW));
     }
     
     @Test
