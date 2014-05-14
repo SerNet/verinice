@@ -21,7 +21,7 @@
             <property name="dataType">integer</property>
             <property name="distinct">true</property>
             <simple-property-list name="defaultValue">
-                <value type="constant">144858</value>
+                <value type="constant">-1</value>
             </simple-property-list>
             <list-property name="selectionList"/>
             <property name="paramType">simple</property>
