@@ -106,6 +106,12 @@ public class RemindService implements IRemindService {
             LOG.debug("Email was send successfully.");
           }
          
+         if (LOG.isDebugEnabled()) {
+            LOG.debug("Email send, parameter: ");
+            for (String key : parameter.keySet()) {
+                LOG.debug( key + ": "+ parameter.get(key));
+            }
+         }
     }
     
     /* (non-Javadoc)

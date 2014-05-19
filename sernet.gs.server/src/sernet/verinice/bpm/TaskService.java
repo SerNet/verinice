@@ -164,12 +164,12 @@ public class TaskService implements ITaskService {
         List<ITask> taskList = Collections.emptyList();
         if(doSearch(parameter)) {      
             Object[] queryElements = prepareSearchQuery(parameter);
-            List<Object> paramList = (List<Object>)queryElements[0];
+            List<?> paramList = (List<Object>)queryElements[0];
             final String hql = (String)queryElements[1];
             if (log.isDebugEnabled()) {
                 log.debug("getTaskList, hql: " + hql); //$NON-NLS-1$
             }
-            List jbpmTaskList = getJbpmTaskDao().findByQuery(hql,paramList.toArray());
+            List<Object> jbpmTaskList = getJbpmTaskDao().findByQuery(hql,paramList.toArray());
             if (log.isDebugEnabled()) {
                 log.debug("getTaskList, number of tasks: " + jbpmTaskList.size()); //$NON-NLS-1$
             }
@@ -184,11 +184,11 @@ public class TaskService implements ITaskService {
         return taskList;
     }
 
-    private List<ITask> populateTaskList(List jbpmTaskList) {
+    private List<ITask> populateTaskList(List<?> jbpmTaskList) {
         List<ITask> taskList;
         taskList = new ArrayList<ITask>();
         Task task=null;
-        for (Iterator iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = jbpmTaskList.iterator(); iterator.hasNext();) {
             Object object = iterator.next();
             if(object instanceof Task ) {
                 task = (Task) object;
@@ -197,19 +197,30 @@ public class TaskService implements ITaskService {
                 task = (Task)((Object[])object)[0];
             }       
             if(task!=null) {
-                ITask taskInfo = map(task);
-                Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
-                List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
-                for (String id : outcomeSet) {
-                    if(!getTaskOutcomeBlacklist().contains(id)) {
-                        outcomeList.add(new KeyValue(id, Messages.getString(id)));
+                try {
+                    ITask taskInfo = map(task);
+                    taskInfo.setOutcomes(getOutcomeList(task));
+                    taskList.add(taskInfo);  
+                } catch(ElementNotFoundException enfe) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("populateTaskList, element not found (no read permission?): " + enfe.getUuid()); //$NON-NLS-1$
                     }
+                    // ignore task
                 }
-                taskInfo.setOutcomes(outcomeList);
-                taskList.add(taskInfo);  
             }
         }
         return taskList;
+    }
+
+    private List<KeyValue> getOutcomeList(Task task) {
+        Set<String> outcomeSet = getTaskService().getOutcomes(task.getId());
+        List<KeyValue> outcomeList = new ArrayList<KeyValue>(outcomeSet.size());
+        for (String id : outcomeSet) {
+            if(!getTaskOutcomeBlacklist().contains(id)) {
+                outcomeList.add(new KeyValue(id, Messages.getString(id)));
+            }
+        }
+        return outcomeList;
     }
 
     private Object[] prepareSearchQuery(ITaskParameter parameter) {
@@ -311,7 +322,6 @@ public class TaskService implements ITaskService {
     
     /**
      * @param task
-     * @param taskInformation
      */
     private TaskInformation map(Task task) {
         TaskInformation taskInformation = new TaskInformation();
@@ -340,7 +350,7 @@ public class TaskService implements ITaskService {
             taskInformation.setProperties((Set<String>) value);
         }
         
-        mapControl(taskInformation, varMap);       
+        mapElement(taskInformation, varMap);       
         mapAudit(taskInformation, varMap);
         
         if (log.isDebugEnabled()) {
@@ -433,22 +443,25 @@ public class TaskService implements ITaskService {
      * @param varMap
      * @return
      */
-    private void mapControl(TaskInformation taskInformation, Map<String, Object> varMap) {
-        String uuidControl = (String) varMap.get(IGenericProcess.VAR_UUID);       
-        taskInformation.setUuid(uuidControl);
+    private void mapElement(TaskInformation taskInformation, Map<String, Object> varMap) {
+        String uuid = (String) varMap.get(IGenericProcess.VAR_UUID);       
+        taskInformation.setUuid(uuid);
         taskInformation.setControlTitle("no object");
-        if(uuidControl==null) {
+        if(uuid==null) {
             return;
         }
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setProperties(true);
-        CnATreeElement element = getElementDao().findByUuid(uuidControl, ri);
+        ri.setProperties(true).setPermissions(true);
+        CnATreeElement element = getElementDao().findByUuid(uuid, ri);
         if(element!=null) {
             taskInformation.setControlTitle(element.getTitle());
             taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
             if(element instanceof SamtTopic) {
                 taskInformation.setIsProcessed(((SamtTopic)element).getMaturity()!=SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC);
             }          
+        } else {
+            // uuid exits, but no element found
+            throw new ElementNotFoundException(uuid);
         }
     }
     
@@ -611,7 +624,6 @@ public class TaskService implements ITaskService {
             
         }
     }
-    
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#setVariables(java.lang.String, java.util.Map)
