@@ -46,6 +46,7 @@ implements IBSIStrukturElement {
     }
 	
 	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
+    public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
 	public static final String P_NAME = "nachname"; //$NON-NLS-1$
 	private static final String P_VORNAME = "vorname"; //$NON-NLS-1$
 	private static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
@@ -127,6 +128,14 @@ implements IBSIStrukturElement {
 		
 		return buff.toString();
 	}
+	
+	public String getNachname() {
+	    return getEntity().getSimpleValue(P_NAME);
+	}
+	
+	public String getAnrede() {
+        return getEntity().getSimpleValue(P_ANREDE);
+    }
 	
 	private String getRollen() {
 		if (getEntity() == null){
