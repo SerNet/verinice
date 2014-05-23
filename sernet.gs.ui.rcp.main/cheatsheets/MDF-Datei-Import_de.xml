@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="GSTOOL-MDF-Datei-Import">
+	
+	<intro>
+		<description>
+			In diesem Spickzettel wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte 
+			Datenbank-Datei, die im MDF-Dateiformat vorliegt, in verinice importieren können. 
+			Dieser Prozess ist prinzipiell analog zum Importieren von Daten aus einer 
+			BAK-Datei, nur dass in dem Fall bereits eine MDF-Datei vorliegt.
+		</description>
+	</intro>
+	<item title="Einstellungen für den MDF-Datei-Import zum Anhängen einer Datenbank">
+		<description>
+			Zuerst müssen Sie die Einstellungen für die anzuhängende 
+			Datenbankdatei vornehmen. Gehen Sie dafür in der Menüleiste auf 
+			"Bearbeiten > Einstellungen...". Klicken Sie dort auf den Unterpunkt 
+			"Datenbank verbinden" des Punktes "GSTOOL Import". Jetzt können 
+			Sie auf der rechten Seite des Menüfensters die Einstellungen vornehmen. 
+			Sollten Sie das erste Feld nicht ausfüllen, so wird die Datenbank des 
+			GSTOOLs angehängt, deren Konnektivität Sie über den Menüpunkt 
+			"GSTOOL Import" einstellen. Wenn Sie das erste Feld mit dem Dateinamen der 
+			anzuhängenden Datenbank füllen, so werden die Daten aus dieser 
+			Datenbankdatei angehängt. Diese Datei muss dann im MDF-Format vorliegen. 
+			Sie können dazu auch den "Durchsuchen..."-Button verwenden. Im zweiten 
+			Feld müssen Sie einen Namen der anzuhängenden Datenbank angeben. 
+			Nun können Sie die Datenbank mit dem Drücken des Buttons 
+			"Datenbank anhängen" anhängen :).
+		</description>
+	</item>
+	<item title="Einstellungen vervollständigen, Konnektivität prüfen">
+		<description>
+			Sie müssen jetzt im Menüpunkt "GSTOOL Import" den neuen Dateinamen 
+			Ihrer angehängten Datenbank angeben. Im ersten Feld ersetzen Sie den 
+			vorherigen Datenbanknamen gegen den neuen (nach dem letzten Slash). Prüfen 
+			Sie nochmal die Konnektivität mit Hilfe des Buttons "Teste Verbindung". 
+			Der letzte Schritt ist der eigentliche Import-Prozess, der bereits im Spickzettel 
+			"Import der Datenbank aus dem GSTOOL 4.5" erklärt wird.
+		</description>
+	</item>
+</cheatsheet> 

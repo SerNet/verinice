@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+
+    <!-- 
+     Security configuration which provides digest authentication for the rich client
+     and for the web client.
+     Never transmits passwords in clear text (with or without HTTPS).
+    -->
+
+    <!-- Default authentication manager -->
+	<security:authentication-manager alias="authenticationManager" />
+    
+    <!-- Using digest authentication: (doesn't work with LDAP) 
+    
+	 Instead of digest auth, the authentication method can be switched, i.e. to basic auth over SSL with SHA hashes.
+	 Please refer to the Spring framework security documentation for instructions on how to do this 
+	 (http://static.springsource.org/spring-security/site/suggested.html).
+     However, digest auth works just as well over SSL.
+     
+     Digest authentication however is not supported when using LDAP / AD bind authentication, since LDAP uses a different hashing
+     algorithm for passwords so there would be no way to compare the A1 hash against the directory. Basic authentication transmits the password in clear text over HTTP, so make sure to
+     use HTTPS when switching to LDAP / AD authentication too!
+     -->
+    
+    <bean id="digestProcessingFilterEntryPoint" class="org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoint">
+        <property name="realmName" value="${veriniceserver.realm}" />
+        <property name="key" value="${veriniceserver.key}" />
+        <property name="nonceValiditySeconds" value="${veriniceserver.nonceValiditySeconds}" />
+    </bean>
+	
+    <bean id="digestProcessingFilter" class="org.springframework.security.ui.digestauth.DigestProcessingFilter">
+		<property name="userDetailsService" ref="uds" />
+		<property name="authenticationEntryPoint" ref="digestProcessingFilterEntryPoint" />
+		<property name="passwordAlreadyEncoded" value="true" />
+	</bean>
+
+	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
+		<security:filter-chain-map path-type="ant">
+			<security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+            <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" /> 
+			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor" />
+		</security:filter-chain-map>
+	</bean>
+    
+    <!--  service to allow application access to currently active roles, server realm etc:
+-->
+    <bean id="authService" class="sernet.gs.server.security.DigestAuthenticationService">
+        <property name="entryPoint" ref="digestProcessingFilterEntryPoint" />
+		<property name="adminUsername" value="${admin.username}" />
+        <security:intercept-methods>
+             <!-- must be logged in to access roles: -->
+            <security:protect method="sernet.gs.server.security.DigestAuthenticationService.getRoles" access="ROLE_USER,ROLE_WEB" />
+             <!-- must be logged in as admin to change passwords:--> 
+            <security:protect method="sernet.gs.server.security.DigestAuthenticationService.hashPassword" access="ROLE_USER,ROLE_WEB" />
+        </security:intercept-methods>
+    </bean>
+    
+    <bean id="exceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint" ref="digestProcessingFilterEntryPoint" />
+    </bean>
+    
+    <bean id="uds" class="sernet.gs.server.security.DbUserDetailsService">
+    
+        <property name="entityDao" ref="entityDao" />
+
+        <property name="adminuser">
+            <value>${admin.username}</value>
+        </property>
+        <property name="adminpass">
+            <value>${admin.password}</value>
+        </property>
+    </bean>
+
+    <security:authentication-provider user-service-ref="uds" />
+    
+     <!-- END digest auth  ========================================================================================
+-->
+
+
+	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
+
+    <!-- Protect HTTP access to these paths: -->
+	<bean id="filterSecurityInterceptor" class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+
+		<property name="authenticationManager" ref="authenticationManager" />
+
+		<property name="accessDecisionManager" ref="accessDecisionManager" />
+
+		<property name="objectDefinitionSource">
+			<security:filter-invocation-definition-source>
+                <security:intercept-url pattern="/edit/**" access="ROLE_WEB" />
+				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
+				<security:intercept-url pattern="/service/**" access="ROLE_USER" />
+				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
+			</security:filter-invocation-definition-source>
+		</property>
+	</bean>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<property name="decisionVoters">
+			<list>
+				<bean class="org.springframework.security.vote.RoleVoter" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

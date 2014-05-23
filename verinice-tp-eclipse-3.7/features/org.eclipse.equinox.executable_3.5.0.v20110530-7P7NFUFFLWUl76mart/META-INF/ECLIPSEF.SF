@@ -1,0 +1,197 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: iFtV/nBcWEW8NbJUQXN54/0FHd0=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: 4gIfTP5y3EzwI5ecyebQLugBMgo=
+
+Name: bin/gtk/aix/ppc/launcher
+SHA1-Digest: Hygb7OEfBIp0fYzoAVcTMFoq2+c=
+
+Name: motif_root/about_files/about_cairo.html
+SHA1-Digest: P7guVJ+uEMI9sbP+B32a9o9iMwo=
+
+Name: motif_root/about_files/mpl-v11.txt
+SHA1-Digest: RX4mWnqNA8UvggT9O2wD6jYdiJ0=
+
+Name: gtk_root/about_files/pixman-licenses.txt
+SHA1-Digest: IPR5bdOC6MHiO05Zm3mN5VMFD4E=
+
+Name: epl-v10.html
+SHA1-Digest: /iY8aEvT0IMpNnSjB0FpTUhvUGc=
+
+Name: bin/cocoa/macosx/x86_64/Eclipse.app/Contents/MacOS/launcher
+SHA1-Digest: HhlVNuqwStcfQiwluvN5YST+RZc=
+
+Name: bin/gtk/linux/x86_64/libcairo-swt.so
+SHA1-Digest: wzAeIgfgC0GGHuC9WvbHTsR4/Oo=
+
+Name: bin/gtk/hpux/ia64_32/launcher
+SHA1-Digest: N25sx1MpcXBU4L1OyWPnjkoNlDY=
+
+Name: contributed/gtk/linux/s390x/launcher
+SHA1-Digest: SgxaYOEP7u7ZuB4t+wjsmy/xI20=
+
+Name: bin/motif/aix/ppc/launcher
+SHA1-Digest: g225FxqdnOyeMUFNoKBRz5RMFU0=
+
+Name: bin/cocoa/macosx/ppc/Eclipse.app/Contents/MacOS/launcher
+SHA1-Digest: 5kijvLPfhjYrNz9st28KMIz2UXQ=
+
+Name: build.xml
+SHA1-Digest: JFGb1bu8rjt+YZsu9M42FDqmSi4=
+
+Name: bin/wpf/win32/x86/eclipsec.exe
+SHA1-Digest: yztf+VHavoBuazyNQSFhgNoLuKE=
+
+Name: bin/gtk/solaris/sparc/launcher
+SHA1-Digest: 4cJbRIdm7k74DBD+P/f3IH61yHo=
+
+Name: gtk_root/about.html
+SHA1-Digest: dsXSDgBp7g69LiWJzXdcIyaC96Y=
+
+Name: contributed/win32/win32/ia64/eclipsec.exe
+SHA1-Digest: arva7ZHx2D0HrqIn4oY0riIJXfs=
+
+Name: feature.xml
+SHA1-Digest: VykZRbW1P1W9NIf8JFZICgpOVWM=
+
+Name: motif_root/about_files/pixman-licenses.txt
+SHA1-Digest: yHtUBqTPkCqAgwsIrApUqdqBQxs=
+
+Name: bin/carbon/macosx/ppc/Eclipse.app/Contents/MacOS/launcher
+SHA1-Digest: HUW9OwH71QcHRVUs81H4iHsCsyc=
+
+Name: bin/gtk/linux/ppc/launcher
+SHA1-Digest: Bx1ce+nNkDu3gsZwxsV8wrzW9xI=
+
+Name: bin/cocoa/macosx/x86_64/Eclipse.app/Contents/Info.plist
+SHA1-Digest: xztBczCef7VOEZDNcHy6TO0hhXE=
+
+Name: bin/gtk/linux/ppc/libcairo-swt.so
+SHA1-Digest: hJGfb2B8DHWt7O08Z8vEFgDq/5A=
+
+Name: eclipse_update_120.jpg
+SHA1-Digest: RyXo3knk5T635eCpQEPXyFBrCyA=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: SAqY+5ITAL0mkdYeijlSRhyIaZk=
+
+Name: bin/cocoa/macosx/ppc/Eclipse.app/Contents/Info.plist
+SHA1-Digest: O7UxaMe9WrOo3UKXveMgUL3RNws=
+
+Name: bin/cocoa/macosx/x86/Eclipse.app/Contents/MacOS/launcher
+SHA1-Digest: c+Xrerk8mZR3S+7z8PNJBWv4Fkc=
+
+Name: motif_root/about.html
+SHA1-Digest: oi2tRTgvAxWtBTr4p5SXMdzIY3Y=
+
+Name: feature.properties
+SHA1-Digest: qWSDZ4ogek9dGldyrq97rZh4+8Q=
+
+Name: bin/carbon/macosx/ppc/Eclipse.app/Contents/Info.plist
+SHA1-Digest: Z6kJkcO85hyUa9M48q8m/eppHsM=
+
+Name: bin/carbon/macosx/x86/Eclipse.app/Contents/MacOS/launcher
+SHA1-Digest: qsYjFDyVWKfM4+UxSA1H1vEZ31U=
+
+Name: build.properties
+SHA1-Digest: rxDZXQQi5AOIVvX+s20o3jatPmk=
+
+Name: bin/gtk/linux/x86_64/launcher
+SHA1-Digest: 4zyX8joq2AdbcK5ZKw1Zq/B9zSY=
+
+Name: contributed/gtk/linux/s390/launcher
+SHA1-Digest: /iM3cNO4hzBmJTQs0QPWZSkTxwU=
+
+Name: bin/gtk/linux/x86/libcairo-swt.so
+SHA1-Digest: 18xWxKrUHfZjNflkoQmIEOcxTos=
+
+Name: license.html
+SHA1-Digest: Rp9AnRyeUIxNWe10fjaMDkQB8rU=
+
+Name: gtk_root/about_files/about_cairo.html
+SHA1-Digest: NGGOgBIM2dM2Y13a8mpbQ/EEn4g=
+
+Name: bin/cocoa/macosx/x86/Eclipse.app/Contents/Info.plist
+SHA1-Digest: kP+5a8abBuymi3L/BEQ3zLBhBk8=
+
+Name: bin/wpf/win32/x86/launcher.exe
+SHA1-Digest: YdCH2sZJYCG3fctK345qx38Uer0=
+
+Name: contributed/motif/solaris/sparc/Eclipse.m.pm
+SHA1-Digest: /V45khIIS3gfiRaYBuibC0SQ9TU=
+
+Name: bin/motif/linux/x86/launcher
+SHA1-Digest: 5WT1c/09HyCLsX3i22dswWHYrNE=
+
+Name: bin/carbon/macosx/ppc/Eclipse.app/Contents/MacOS/eclipse.ini
+SHA1-Digest: m3EAGPmmYJnSkG9WoQKjCLltUY4=
+
+Name: contributed/win32/win32/ia64/launcher.exe
+SHA1-Digest: V22v6ZyscCPP0ym+kEDt4XJqDz8=
+
+Name: bin/carbon/macosx/x86/Eclipse.app/Contents/Info.plist
+SHA1-Digest: qcm2ifP6JJJR/YFv/uo4GlmS0M8=
+
+Name: motif_root/about_files/about_open_motif.html
+SHA1-Digest: YhcoEb0NBJNLcEYqwMEyQHeGRBU=
+
+Name: bin/gtk/aix/ppc64/launcher
+SHA1-Digest: SvGQhqduq11p8x8Hxbo9rO/8G0g=
+
+Name: bin/cocoa/macosx/ppc/Eclipse.app/Contents/MacOS/eclipse.ini
+SHA1-Digest: ZKSZf56UbH6+xvZhwGL0z0J39Tk=
+
+Name: bin/win32/win32/x86/eclipsec.exe
+SHA1-Digest: VeYq4cWyv6qbJfvNO1tayOLvW98=
+
+Name: bin/carbon/macosx/x86/Eclipse.app/Contents/MacOS/eclipse.ini
+SHA1-Digest: k4dIVme/fV1KI2v7bAcHlGPYPGU=
+
+Name: bin/cocoa/macosx/x86_64/Eclipse.app/Contents/MacOS/eclipse.ini
+SHA1-Digest: QlhRYwntSecDR/W4XSTzv/4lzCQ=
+
+Name: bin/motif/linux/x86/libXm.so.2
+SHA1-Digest: YZsfwR/EFnscpxZ0X+gCDOogGUc=
+
+Name: contributed/motif/solaris/sparc/Eclipse.t.pm
+SHA1-Digest: aNRZ35U4EonZ8JLr5gj05oum2VY=
+
+Name: contributed/motif/solaris/sparc/launcher
+SHA1-Digest: agOfOaqTfdHUFyegNdyQCQ/IU4U=
+
+Name: bin/gtk/solaris/x86/launcher
+SHA1-Digest: YKQzV6lGLV829cImf0eB9Si+xH0=
+
+Name: bin/cocoa/macosx/x86/Eclipse.app/Contents/MacOS/eclipse.ini
+SHA1-Digest: YlNAKlKRx1QCcDlg7Ni4nKkkvI4=
+
+Name: bin/win32/win32/x86_64/eclipsec.exe
+SHA1-Digest: 8H6+2Y4JLXDVmInNLE28YtUIL7M=
+
+Name: contributed/motif/solaris/sparc/Eclipse.l.pm
+SHA1-Digest: 30SKFgqE2/K1y6485Bkm30CPfFU=
+
+Name: bin/gtk/linux/ppc64/launcher
+SHA1-Digest: sMS9bc60FpUEkHpschTBzU27iJ0=
+
+Name: bin/motif/hpux/ia64_32/launcher
+SHA1-Digest: gAC9qQqqcUUDMhSo6SyiTJN4chY=
+
+Name: bin/win32/win32/x86/launcher.exe
+SHA1-Digest: Z6bHsXQPm6FDdI+4Skuy0rZ/Vzc=
+
+Name: bin/gtk/linux/x86/launcher
+SHA1-Digest: e/kT/C4JEWU3ULo6Ck42tEXJAIo=
+
+Name: motif_root/about_files/mlpl-v10.html
+SHA1-Digest: iRc3dc8+MEhRmypxxJVMFwGoxao=
+
+Name: contributed/motif/solaris/sparc/Eclipse.s.pm
+SHA1-Digest: HwTirg2T0I4oCuYet5dnqUR07eU=
+
+Name: bin/win32/win32/x86_64/launcher.exe
+SHA1-Digest: qMt7Mfji8vmrftPjzFv0qXH2eh8=
+
+Name: gtk_root/about_files/mpl-v11.txt
+SHA1-Digest: xRDVpAiUuKrvEQjBmvU5eiiqxSM=
+

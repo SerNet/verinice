@@ -1,0 +1,50 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui" >
+	
+	<!-- newQmBean.description is called to force bean instantiation -->
+	<p:outputPanel id="completeHandlerPanel" style="#{newQmBean.description}">			
+		<p:dialog widgetVar="newQmBean" dynamic="true" modal="true" header="#{msgTask['dialogWindowTitle']}" width="350" height="342">
+			<h:form id="completeHandlerForm">
+				<table style="margin: 5px;">
+					<tr>
+						<td style="font-weight: bold;"><h:outputText value="#{msgTask['dialogTitle']}"/></td>
+					</tr>
+					<tr>
+						<td><div style="padding-top:5px;padding-bottom: 15px;"><h:outputText value="#{msgTask['information']}"/></div></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="#{msgTask['description']}"/></td>
+					</tr>
+					<tr>
+						<td><p:inputTextarea value="#{newQmBean.description}" style="width:300px;height:150px;"/></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="#{msgTask['priority']}"/></td>
+					</tr>
+					<tr>
+						<td>
+							<p:selectOneMenu id="priority" value="#{newQmBean.priority}" style="width:300px" editable="false">
+			      				<f:selectItem itemLabel="#{msgTask['low']}" itemValue="LOW" />
+			      				<f:selectItem itemLabel="#{msgTask['normal']}" itemValue="NORMAL" />
+			      				<f:selectItem itemLabel="#{msgTask['high']}" itemValue="HIGH" />
+			      			</p:selectOneMenu>
+		      			</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">
+							<div style="padding-top:15px;text-align: right;width:100%">
+								<p:commandButton value="#{msgTask['cancel']}" type="button" onclick="newQmBean.hide()" style="margin-right:5px;"/>
+								<p:commandButton value="#{msgTask['ok']}" type="submit" action="#{newQmBean.complete}" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</p:dialog>				
+	</p:outputPanel>	
+</ui:composition>
+

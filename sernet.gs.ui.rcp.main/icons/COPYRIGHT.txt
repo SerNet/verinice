@@ -1,0 +1,19 @@
+Sources for icons in this directory:
+
+- Eclipse Icons, 
+  eclipse.org,
+  Common Public License 1.0
+
+- Sweetie-v2 by Joseph North,
+  CC Attribution-ShareAlike 2.0, 
+  http://sublink.ca/north/
+
+- FamFam Silk Icons by Mark James,
+  Creative Commons Attribution 2.5 License,
+  http://www.famfamfam.com/lab/icons/silk/
+
+- all others by Alexander Koderman, SerNet GmbH 2007
+  Commons Attribution-Noncommercial-Share Alike 2.0 Germany License
+  http://creativecommons.org/licenses/by-nc-sa/2.0/de/
+
+

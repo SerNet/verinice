@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Schutzbedarfsanalyse">
+
+	<intro 
+		>
+		<description>
+		verinice hilft Ihnen beim korrekten Zuweisen von Schutzbedarfskategorien
+		zu ihren Zielobjekten. Hier lernen Sie, wie.
+		</description>
+	</intro>
+
+	<item title="Schutzbedarfsdefinition">
+		<description>
+		Öffnen Sie das IT-Verbund-Objekt durch Doppelklick. Hier können Sie die Schutzbedarfsdefinitionen
+		der drei Kategorien "Normal", "Hoch" und "Sehr Hoch" auf ihr Unternehmen anpassen.
+		<br/><br/>
+		Schließen Sie danach den IT-Verbund (Strg+W) (Sie werden ggf. gefragt, ob Sie die Änderungen speichern wollen). 
+		</description>
+	</item>
+	<item title="Schutzbedarf zuweisen">
+		<description>
+		Öffnen Sie die Anwendung "Buchhaltung", die Sie in der Strukturanalyse
+		erzeugt haben. Wählen Sie für die drei Werte "Vertraulichkeit", "Verfügbarkeit" 
+		und "Integrität" die Stufen "Hoch", "Normal" und "Sehr Hoch".
+		<br/><br/>
+		Geben Sie jeweils eine stichwortartige Begründung 
+		dafür ein, warum die Daten der Buchhaltung den jeweiligen Schutzbedarf 
+		aufweisen könnten.
+		</description>
+	</item>
+	
+	<item title="Schutzbedarf vererben 1">
+		<description>
+		Speichern Sie die Änderungen an der Anwendung (Strg+S).
+		<br/><br/>
+		Öffnen Sie den Server "Buchhaltungssystem" durch Doppelklick. Lassen Sie die
+		Felder für den Schutzbedarf bitte leer!
+		<br/><br/>
+		Geben Sie in allen Feldern für die Begründung des Schutzbedarfs "Maximumprinzip" ein. Dafür gibt es auch eine Eingabehilfe: 
+                Klicken Sie jeweils in das Begründungsfeld und drücken Sie dann die Pfeiltaste nach unten. Wählen Sie dann jeweils das Maximunprinzip aus. 
+		</description>
+	</item>
+	
+	<item title="Schutzbedarf vererben 2">
+		<description>
+		Klicken Sie das Server-Objekt an, um es zu aktivieren. Klicken und ziehen Sie anschließend (Drag and Drop) mit der linken Maustaste den Server auf die Anwendung 
+		"Buchhaltung".
+		</description>
+	</item>
+
+	<item title="Schutzbedarf vererben 3">
+	<description>
+		Die Werte für den Schutzbedarf werden beim Server automatisch ausgefüllt. Im Editor-View sehen Sie nun im unteren Linkmaker-Bereich, dass es nun eine 
+		Verknüpfung mit dem Server gibt. Damit wird ausgedrückt, dass die Anwendung
+		"Buchhaltung" für ihr Funktionieren auf den Server angewiesen ist. Anhand des Maximumprinzips
+		entspricht der Schutzbedarf für den Server nun dem der Anwendung. 
+	</description>
+	</item>
+	
+	<item title="Schutzbedarf vererben 3">
+		<description>
+		Öffnen Sie erneut die Anwendung "Buchhaltung" und reduzieren Sie den Wert
+		"Integrität" von "Sehr Hoch" auf "Hoch".
+		<br/><br/>
+		Wie Sie sehen, wurde der Wert nun auch beim Server automatisch angepasst.
+		<br/><br/>
+		Schließen und speichern Sie alle Editoren (Strg+Shift+W).
+		</description>
+		<onCompletion>
+		Sehr gut! Sie wissen jetzt, wie Sie den Schutzbedarf für alle übrigen Objekte ihres IT-Verbundes dokumentieren können. Wenn Sie möchten, fahren Sie mit dem Spickzettel "Modellierung" fort!
+		</onCompletion>
+	</item>
+		
+	
+</cheatsheet>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Saved lists to restore every step for risk analysis for later editing.
+	@author ahanekop@sernet.de
+ -->
+ 
+<hibernate-mapping package="sernet.verinice.model.bsi.risikoanalyse">
+	<class name="FinishedRiskAnalysisLists" table="finishedriskanalysislists">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property
+			name="uuid"
+			unique="true"
+		/>
+		
+		<property name="finishedRiskAnalysisId" />
+		
+		<list name="allGefaehrdungsUmsetzungen" 
+			cascade="all" 
+			table="allgefaehrdungsumsetzungen">
+            <key column="riskanalysislists_id1" />
+            <index column="idx1"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
+        </list>
+
+		<list name="associatedGefaehrdungen" 
+			cascade="all"
+			table="associatedgefaehrdungen">
+            <key column="riskanalysislists_id2" />
+            <index column="idx2"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
+        </list>
+
+		<list name="notOKGefaehrdungsUmsetzungen" 
+			cascade="all"
+			table="notokgefaehrdungsumsetzungen">
+            <key column="riskanalysislists_id3" />
+            <index column="idx3"/>
+            <many-to-many class="GefaehrdungsUmsetzung"/>
+        </list>
+		
+		
+	</class>
+</hibernate-mapping>

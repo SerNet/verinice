@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Working with the ISO 27001 model in verinice.">
+	<intro>
+		<description>
+			In this tutorial you will learn the basic operations
+   when dealing with the ISO 27001 perspective in verinice.
+			<br/>
+		</description>
+	</intro>
+	<item title="Creating Assets">
+		<description>
+		In the view "Information Security Model" you can create objects and object groups.
+  The predefined categories for objects are displayed when you create a new root object 
+  (organization object). Click on 
+  "Add new organization" button which is located at the top right
+  edge of the view. An organization object means a scope,
+  a department or even the entire organization.
+		<br/>
+		<br/>
+		Now create an asset group. To do this, click the right mouse button on the
+  category "Assets". You will see a context menu from which you should choose to option 
+  "Add New Asset Group ... ". Now you have created a group object for assets. 
+  A group object corresponds to a folder of an operating system. 
+  This object can contain other asset objects or other asset group objects. You can build 
+  completely custom hierarchical object groups and objects so.  
+		<br/>
+  Rename the newly created asset group by entering the title text "Client PC" appeared in the 
+  left window (editor view). Save by pressing the key combination Ctrl+S.	
+		<br/>
+		<br/>
+  Now create for the group "Client PC" an asset object by right-clicking and selecting "Add New Asset ...".		
+		<br/>
+	 Now an asset object is created and attached to the group object you created. The editor view 
+	 for entering the data for the new asset appears automatically on the right site. Enter here some 
+	 fictitious data and save it with the key combination Ctrl+S or by closing the view. On closing 
+	 of unsaved view content you will be automatically asked if you want to save this.	
+		</description>
+	</item>
+	<item title="Modelling Controls">
+		<description>
+		Before starting the procedure, you must import the catalog first.
+  The catalog "ISO 27001 Implementation Guidance" can be found on http://v.de 
+		under "Downloads".
+		<br/><br/> 
+		To insert controls into the "Information Security Model", you need 
+		drag'n'drop the required controls from the catalog view 
+		onto the group "Controls" in the view "Information Security Model". 
+		Do this with the control "11.5 Responsibility for assets".
+  <br/><br/> 
+  By double-clicking the inserted controls, you can now edit the information 
+  for this control in the editor view. Choose "Yes" for the item "Implemented". 
+		</description>
+	</item>
+	
+	<item title="Creating Relations">
+		<description>
+  In verinice diverse relations between the objects are possible. 
+  To create a simple relation, just connect the newly created asset 
+  object with the newly inserted control via drag'n'drop. You can see that 
+  in the relation view the relation is just created. A matching relation 
+  type is also visible. Double-click on the referenced object in the relation view. 
+  The referenced object will be opened in the editor view.  
+  <br/> 
+		<br/>
+  Explore what 
+  types of relations are possible. If there are types of relations missing, these can 
+  easily be added or existing ones be modified. How to realize this is described on 
+  http://v.de. If you have any questions, please use our forum: http://www.forum.verinice.org 
+		</description>
+	</item>
+ <item
+       title="Inserting Documents">
+    <description>
+       Imagine, you have just signed a customer non-disclosure agreement (NDA). 
+       In it, you commit to a high penalty when data should be revealed. Additionally all customer 
+       data hast to be encrypted.   
+       <br/><br/>
+       First we load the document into verinice. Right-click in the 
+       view "Information Security Model" (ISM) on the group "Documents". 
+       Now select "Add Document ...".
+       <br/><br/>
+          Please enter "NDA Customer1" as title in the editor view. Change the "Document Type" 
+          to "Contract". Open the files view from the view menu. Select the document object in the ISM view 
+          again if it is not already selected. Then drag any PDF 
+          document as a placeholder for our NDA in the files view. 
+ <br/><br/>
+          You can now enter meta information for the attached file - for example the version of the document. 
+          When you press Ctrl+S, the document will be uploaded and is linked now with 
+          the object in the ISM view. You can open the attached file by clicking on 
+          the "Show" button. If you use the verinice.PRO server, the document is 
+          immediately available to everyone in your organization who has access to it. 
+    </description>
+ </item>
+ <item
+       title="Modelling Requirements">
+    <description>
+      The NDA demanded the encryption of customer data. So right-click on 
+      the group "Requirements", then on "Add Requirement ...". Change the name to 
+      "Encryption" in the editor view. 
+      Now create a relation by dragging and dropping the requirement object onto the document 
+      object. The link appears now in the relations view. 
+    </description>
+ </item>
+ <item
+ 					title="Comply Requirements With Controls">
+    <description>
+       Right-click on the "Controls" group in the ISM tree, select "Add Control..." now.  
+       Change 
+       the name to "Customer data must be encrypted" in the editor view. Save by pressing Ctrl+S. 
+       Link by dragging and dropping the control with the requirement "Encryption". 
+       The relations view indicates that this requirement is now met by the control. 
+    </description>
+ </item>
+ <item
+       title="Creating More Relations">
+    <description>
+       In the same manner as described, you can create more relations now.  For 
+       example, you can document which person is responsible for implementing 
+       the measures. You should 
+       also create the customer data as an asset object and document the accompanying owner person. 
+       The relation types are generated automatically. It one type is incorrect, you can change the 
+       type in the relations view. Simply click on the type of relationship. If there 
+       are alternatives - they will be listed now. 
+    </description>
+ </item>
+	
+ <item
+       title="Thank You!">
+    <description>
+       That's it! This was a small overview of the functions of verinice to fulfill the 
+       ISO 27001 standard. More information is available on our website: http://v.de 
+    </description>
+ </item>
+</cheatsheet>

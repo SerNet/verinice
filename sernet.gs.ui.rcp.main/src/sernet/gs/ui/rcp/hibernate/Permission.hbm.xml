@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Permission items.
+	@author Robert Schuster <r.schuster@tarent.de>
+ -->
+<hibernate-mapping package="sernet.verinice.model.common">
+	<class name="Permission" table="permission">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property name="role"
+				  type="string"
+				  not-null="true">
+		</property>
+		
+		<property name="readAllowed"
+				  type="boolean"
+				  not-null="true">
+		</property>
+		
+		<property name="writeAllowed"
+				  type="boolean"
+				  not-null="true">
+		</property>
+		
+		<many-to-one name="cnaTreeElement"
+			column="cte_id"
+			class="CnATreeElement"
+			not-null="true"/>
+		
+	</class>
+</hibernate-mapping>
