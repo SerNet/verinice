@@ -451,7 +451,7 @@ public class TaskService implements ITaskService {
             return;
         }
         RetrieveInfo ri = new RetrieveInfo();
-        ri.setProperties(true).setPermissions(true);
+        ri.setProperties(true);
         CnATreeElement element = getElementDao().findByUuid(uuid, ri);
         if(element!=null) {
             taskInformation.setControlTitle(element.getTitle());
