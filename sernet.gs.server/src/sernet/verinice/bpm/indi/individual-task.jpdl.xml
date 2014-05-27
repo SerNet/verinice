@@ -25,7 +25,7 @@
    </java>  
    
    <decision g="685,120,80,40" name="isAssignee">
-      <transition g="694,165;693,271:-109,9" name="not assigned" to="indi.task.assign">
+      <transition g="694,165;693,271:-93,-36" name="not assigned" to="indi.task.assign">
         <condition expr="#{ISA_ASSIGNEE_NAME==null}"/>
       </transition>
       <transition g="5,-79" name="assigned" to="indi.task.execute">
@@ -33,25 +33,25 @@
       </transition>
    </decision>
    
-   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="306,244,146,52" name="indi.task.assign">
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE}" g="261,248,146,52" name="indi.task.assign">
       <on event="timeout">
       <timer duedate="#{INDI_REMINDER_DATE}"/>
         <event-listener class="sernet.verinice.bpm.ProcessCreaterReminder">
           <field name="taskType"><string value="indi.task.assign"/></field>
         </event-listener>
       </on>
-      <transition g="378,169;236,169:81,52" name="indi.trans.complete" to="checkDate"/>
+      <transition g="334,214;236,169:54,36" name="indi.trans.complete" to="checkDate"/>
    </task>
    
-   <java class="sernet.verinice.bpm.DateChecker" g="165,126,100,35" method="checkIfDateIsPast" name="checkDate" var="ISA_DUEDATE">
+   <java class="sernet.verinice.bpm.DateChecker" g="122,123,100,35" method="checkIfDateIsPast" name="checkDate" var="ISA_DUEDATE">
       <arg><object expr="#{ISA_DUEDATE}"/></arg>
       <arg><object expr="7"/></arg>
       <transition to="checkReminderDate"/>
    </java>
    
-   <java class="sernet.verinice.bpm.DateChecker" g="269,125,161,35" method="checkIfDateIsPast" name="checkReminderDate" var="INDI_REMINDER_DATE">
+   <java class="sernet.verinice.bpm.DateChecker" g="253,124,161,35" method="checkIfDateIsPast" name="checkReminderDate" var="INDI_REMINDER_DATE">
       <arg><object expr="#{INDI_REMINDER_DATE}"/></arg>
-      <arg><object expr="7" /></arg>
+      <arg><object expr="7"/></arg>
       <transition to="isRelation"/>
    </java>
     
@@ -59,34 +59,64 @@
    <!-- Execute --> 
     
    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="615,354,186,52" name="indi.task.execute">
-      <on event="timeout">
+   <!-- Test settings -->
+   <!-- <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="3 minutes" g="615,319,186,52" name="indi.task.execute"> -->
+      <on event="reminder-timeout">
       <timer duedate="#{INDI_REMINDER_DATE}"/>
-        <event-listener class="sernet.verinice.bpm.Reminder">
-          <field name="taskType"><string value="indi.task.execute"/></field>
-        </event-listener>
+      <!-- Test settings -->
+      <!-- <timer duedate="2 minute"/> -->
+         <event-listener class="sernet.verinice.bpm.Reminder">
+            <field name="taskType"><string value="indi.task.execute"/></field>
+         </event-listener>
       </on>
-      <transition g="7,-24" name="indi.trans.complete" to="indi.task.check"/>
-      <transition g="603,397;46,396:112,9" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
-      <transition g="216,380:195,-26" name="indi.trans.reminderDeadline" to="indi.task.assign.deadline">
+      <transition g="-253,136" name="indi.trans.complete" to="indi.task.check"/>
+      <transition g="171,343:281,-23" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
+      <transition g="-47,-24" name="timeout" to="java.sendReminder.admin">
           <timer duedate="#{ISA_DUEDATE}"/>
+          <!-- Test settings -->
+          <!-- <timer duedate="3 minutes"/> -->
       </transition>
    </task> 
    
-   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="121,244,188,52" name="indi.task.assign.deadline">
-      <transition g="6,18" name="indi.trans.assigned" to="checkDate"/>
-   </task>
+   <java class="sernet.verinice.bpm.Reminder" g="462,433,212,34" method="sendEmail" name="java.sendReminder.admin">
+      <arg><object expr="#{execution.id}"/></arg>
+      <arg><object expr="indi.task.execute.deadline.admin"/></arg>
+      <arg><object expr="#{ISA_OWNER_NAME}"/></arg>
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="java.sendReminder"/>
+   </java>
    
-   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="-29,244,147,52" name="indi.task.assign.nr">
-      <transition g="44,141:5,82" name="indi.trans.assigned" to="checkDate"/>
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="7 days" g="501,502,186,52" name="indi.task.execute.loop">
+   <!-- Test settings -->
+   <!-- <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="241,577,186,52" name="indi.task.execute.loop"> -->
+      <transition g="49,-122" name="indi.trans.complete" to="indi.task.check"/>
+      <transition g="173,602:8,-250" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
+      <transition g="321,525:-58,-9" name="timeout" to="java.sendReminder">
+         <timer duedate="7 days"/>
+          <!-- Test settings -->
+          <!-- <timer duedate="2 minutes"/> -->
+      </transition>
+   </task> 
+   
+   <java class="sernet.verinice.bpm.Reminder" g="251,434,170,34" method="sendEmail" name="java.sendReminder">
+      <arg><object expr="#{execution.id}"/></arg>
+      <arg><object expr="indi.task.execute.deadline.assignee"/></arg>
+      <arg><object expr="#{ISA_ASSIGNEE_NAME}"/></arg>
+      <arg><object expr="#{UUID}"/></arg>
+      <transition g="352,528:" to="indi.task.execute.loop"/>
+   </java>
+   
+   <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="98,245,147,52" name="indi.task.assign.nr">
+      <transition g="5,22" name="indi.trans.assigned" to="checkDate"/>
    </task>   
    
    <!-- Check -->
    
-   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE} + 14 days" g="617,497,186,52" name="indi.task.check">
-      <transition g="654,489;653,414:-119,-17" name="indi.trans.decline" to="indi.task.execute"/>
+   <task assignee="#{ISA_OWNER_NAME}" duedate="#{ISA_DUEDATE} + 14 days" g="616,573,186,52" name="indi.task.check">
+      <transition g="725,466:8,-6" name="indi.trans.decline" to="indi.task.execute"/>
       <transition g="10,-12" name="indi.trans.accept" to="end"/>
    </task>
    
-   <end g="686,627,48,48" name="end"/>
+   <end g="685,703,48,48" name="end"/>
 
 </process>

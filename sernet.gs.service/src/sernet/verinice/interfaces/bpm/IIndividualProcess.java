@@ -34,7 +34,9 @@ public interface IIndividualProcess extends IGenericProcess {
     String VAR_REMINDER_DATE = "INDI_REMINDER_DATE";
     
     String TASK_ASSIGN = "indi.task.assign";  
-    String TASK_EXECUTE = "indi.task.execute";    
+    String TASK_EXECUTE = "indi.task.execute";
+    String TASK_EXECUTE_DEADLINE_ADMIN = "indi.task.execute.deadline.admin";
+    String TASK_EXECUTE_DEADLINE_ASSIGNEE = "indi.task.execute.deadline.assignee";
     String TASK_CHECK = "indi.task.check";   
     String TASK_DEADLINE = "indi.task.assign.deadline"; 
     String TASK_NOT_RESPOSIBLE = "indi.task.assign.nr";

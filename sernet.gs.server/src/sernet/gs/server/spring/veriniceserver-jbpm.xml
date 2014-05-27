@@ -158,6 +158,7 @@
                 <value>icf.trans.reminderDeadline</value>
                 <value>indi.trans.reminderDeadline</value>
                 <value>gsm.ism.execute.trans.reminder</value>
+                <value>timeout</value>
             </set>
         </property>
         <!-- Add task complete handler here -->
@@ -176,8 +177,11 @@
         <property name="descriptionHandler">
             <map>
                 <entry key="iqm.task.setAssignee" value-ref="setAssigneeDescriptionHandler"/>
-                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>              
-                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>
+                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>            
+                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>            
+                <entry key="indi.task.execute.deadline.admin" value-ref="indiDescriptionHandler"/>            
+                <entry key="indi.task.execute.deadline.assignee" value-ref="indiDescriptionHandler"/>
+                <entry key="indi.task.execute.loop" value-ref="indiDescriptionHandler"/>           
                 <entry key="indi.task.check" value-ref="indiCheckDescriptionHandler"/>
                 <entry key="indi.task.assign" value-ref="indiAssignDescriptionHandler"/>
                 <entry key="indi.task.assign.deadline" value-ref="indiDeadlineDescriptionHandler"/>

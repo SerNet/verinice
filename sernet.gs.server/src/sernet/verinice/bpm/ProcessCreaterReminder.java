@@ -44,7 +44,7 @@ public class ProcessCreaterReminder extends Reminder {
      * of the reminder email.
      * 
      * In this class the value of process variable
-     * IGenericProcess.VAR_ASSIGNEE_NAME is returned.
+     * IGenericProcess.VAR_OWNER_NAME is returned.
      * 
      * @param variables Process variables
      * @return User name of the recipient

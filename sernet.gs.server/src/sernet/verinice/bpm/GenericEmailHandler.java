@@ -52,6 +52,10 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     private static final String TEMPLATE_BASE_PATH = "sernet/verinice/bpm/"; //$NON-NLS-1$
     protected static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
     
+    protected static final String TEMPLATE_TASK_TITLE = "taskTitle";
+    protected static final String TEMPLATE_TASK_DESCRIPTION = "taskDescription";    
+    protected static final String TEMPLATE_ELEMENT_TITLE = "elementTitle";
+    
     private IRemindService remindService;
     
     private ICommandService commandService;
@@ -105,6 +109,18 @@ public abstract class GenericEmailHandler implements IEmailHandler {
             path = TEMPLATE_BASE_PATH + getTemplate() + TEMPLATE_EXTENSION;
         }
         return path;
+    }
+    
+    protected String replaceSpecialChars(String description) {
+        String result = description.replace("ä", "&auml;");
+        result = result.replace("Ä", "&Auml;");
+        result = result.replace("ü", "&uuml;");
+        result = result.replace("Ü", "&Uuml;");
+        result = result.replace("ö", "&ouml;");
+        result = result.replace("Ö", "&Ouml;");
+        result = result.replace("ß", "&szlig;");
+        result = result.replace("€", "&euro;");
+        return result;
     }
     
     protected CnATreeElement retrieveElement(String uuid, RetrieveInfo ri) throws CommandException {

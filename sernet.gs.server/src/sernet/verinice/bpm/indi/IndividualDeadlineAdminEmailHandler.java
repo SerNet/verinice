@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2013 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -17,25 +17,35 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bpm;
+package sernet.verinice.bpm.indi;
 
 import java.util.Map;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.bpm.GenericEmailHandler;
+import sernet.verinice.bpm.IEmailHandler;
+import sernet.verinice.bpm.IRemindService;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * Email handler for task "indi.task.execute" from process "individual-task"
+ * defined in file: individual-task.jpdl.xml.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskReminderEmailHandler extends GenericEmailHandler implements IEmailHandler {
+public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler implements IEmailHandler {
+
+    private static final String TEMPLATE = "IndiDeadlineAdmin"; //$NON-NLS-1$
     
-    private static final String TEMPLATE = "TaskReminder";
+    private static final String TEMPLATE_TASK_TITLE = "taskTitle"; //$NON-NLS-1$
+    private static final String TEMPLATE_TASK_DESCRIPTION = "taskDescription";   //$NON-NLS-1$
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
+    /**
+     * Param uuidElement is always null for this email handler.
+     * 
+     * (non-Javadoc)
+     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map, java.lang.String, java.util.Map)
      */
     @Override
     public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException {
@@ -49,25 +59,10 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         }
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
-        String taskTitleHtml = taskTitle;
-        if(isHtml()) {
-            taskTitleHtml = replaceSpecialChars(taskTitleHtml);
-        }
-        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
-        String description = getTaskService().loadTaskDescription(type, processVariables);
-        if(isHtml()) {
-            description = replaceSpecialChars(description);
-        }
-        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);      
-        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle); 
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.GenericEmailHandler#isHtml()
-     */
-    @Override
-    public boolean isHtml() {
-        return true;
+        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice, task deadline passed: " + taskTitle ); 
+        String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
+        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
     }
 
     /* (non-Javadoc)
@@ -78,5 +73,12 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         return TEMPLATE;
     }
     
- 
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.GenericEmailHandler#isHtml()
+     */
+    @Override
+    public boolean isHtml() {
+        return true;
+    }
+
 }
