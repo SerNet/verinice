@@ -33,7 +33,6 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-@SuppressWarnings("restriction")
 public class TaskContentProvider implements ITreeContentProvider {
 
     private TreeViewer viewer;
@@ -91,6 +90,7 @@ public class TaskContentProvider implements ITreeContentProvider {
 
     public void removeTask(final ITask task) {
         Display.getDefault().syncExec(new Runnable() {
+            @Override
             public void run() {
                 model.remove(task);
                 viewer.remove(task);

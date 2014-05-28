@@ -21,6 +21,7 @@ package sernet.verinice.bpm;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -610,6 +611,23 @@ public class TaskService implements ITaskService {
                 getTaskService().assignTask(taskId, username);            
             }
             
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setAssignee(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setDuedate(Set<String> taskIdset, Date duedate) {
+        if(taskIdset!=null && !taskIdset.isEmpty() && duedate!=null) {
+            Map<String, Date> param = new HashMap<String, Date>();
+            param.put(IGenericProcess.VAR_DUEDATE, duedate);
+            for (String taskId : taskIdset) {
+                Task task = getTaskService().getTask(taskId);     
+                task.setDuedate(duedate);
+                getTaskService().saveTask(task);
+                getTaskService().setVariables(taskId, param);
+            }           
         }
     }
     

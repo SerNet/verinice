@@ -110,8 +110,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
 
-    private static final long TIMEOUT_LOAD_TASKS_MINUTES = 2;
-
     private TreeViewer treeViewer;
 
     private Browser textPanel;

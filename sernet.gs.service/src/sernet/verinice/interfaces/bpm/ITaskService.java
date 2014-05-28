@@ -20,12 +20,9 @@
 package sernet.verinice.interfaces.bpm;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Interface to handle tasks of the jBPM process engine.
@@ -108,6 +105,12 @@ public interface ITaskService {
     void setAssignee(Set<String> taskIdSet, String username);
     
     /**
+     * @param taskIdset
+     * @param duedate
+     */
+    void setDuedate(Set<String> taskIdset, Date duedate);
+    
+    /**
      * Set the assignee variable of a task.
      * Name of the var.: IGenericProcess.VAR_ASSIGNEE_NAME
      * 
@@ -127,4 +130,6 @@ public interface ITaskService {
     String loadTaskDescription(String taskId, Map<String, Object> varMap);
     
     String loadTaskTitle(String taskId, Map<String, Object> varMap);
+
+
 }

@@ -254,6 +254,12 @@
             id="sernet.verinice.bpm.rcp.assign"
             name="%command.name.assign">
       </command>
+	  <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.assign"
+            id="sernet.verinice.bpm.rcp.duedate"
+            name="%command.name.assign">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.bindings">
       <key
@@ -1134,13 +1140,18 @@
 		        </parameter>
 		    </command>
 		</menuContribution>
-		<menuContribution
-          locationURI="popup:sernet.verinice.bpm.rcp.TaskView">
-        	<command
-               commandId="sernet.verinice.bpm.rcp.assign"
+		<menuContribution locationURI="popup:sernet.verinice.bpm.rcp.TaskView">
+        	<command commandId="sernet.verinice.bpm.rcp.assign"
                disabledIcon="icons/user_edit.png"
                icon="icons/user_edit.png"
                label="%command.label.assign"
+               tooltip="%Assign a person for this task"/>  
+        </menuContribution>
+		<menuContribution locationURI="popup:sernet.verinice.bpm.rcp.TaskView">
+        	<command commandId="sernet.verinice.bpm.rcp.duedate"
+               disabledIcon="icons/date_time.gif"
+               icon="icons/date_time.gif"
+               label="%command.label.duedate"
                tooltip="%Assign a person for this task"/>  
         </menuContribution>
    </extension>
@@ -1662,6 +1673,22 @@
       <handler
             class="sernet.verinice.bpm.rcp.AssignHandler"
             commandId="sernet.verinice.bpm.rcp.assign">
+         <activeWhen>
+     		<with variable="activePartId">
+     			<equals value="sernet.verinice.bpm.rcp.TaskView" />
+    		</with>
+         </activeWhen>
+         <enabledWhen>
+        	<with variable="selection">
+        		<iterate operator="or">
+		            <instanceof value="sernet.verinice.model.bpm.TaskInformation"/>
+         		</iterate>       	
+        	</with>
+		 </enabledWhen>
+      </handler>
+      <handler
+            class="sernet.verinice.bpm.rcp.DuedateHandler"
+            commandId="sernet.verinice.bpm.rcp.duedate">
          <activeWhen>
      		<with variable="activePartId">
      			<equals value="sernet.verinice.bpm.rcp.TaskView" />

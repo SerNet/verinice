@@ -1,6 +1,7 @@
 package sernet.verinice.bpm;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,6 +107,13 @@ public class TaskServiceDummy implements ITaskService {
     @Override
     public String loadTaskTitle(String taskId, Map<String, Object> varMap) {
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#setDuedate(java.util.Set, java.util.Date)
+     */
+    @Override
+    public void setDuedate(Set<String> taskIdset, Date duedate) {     
     }
 
 }

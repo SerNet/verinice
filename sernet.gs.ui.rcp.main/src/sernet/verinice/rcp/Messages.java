@@ -27,6 +27,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.messages"; //$NON-NLS-1$
+    public static String DateSelectDialog_0;
     public static String IconSelectAction_0;
     public static String IconSelectAction_1;
     public static String IconSelectAction_3;
