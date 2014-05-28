@@ -25,6 +25,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
 import sernet.verinice.bpm.IRemindService;
+import sernet.verinice.bpm.gsm.Messages;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -48,7 +49,7 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler 
     public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException {
         CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
         if(element==null) {
-            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
+            throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement); //$NON-NLS-1$
         }
         String title = element.getTitle();
         if(isHtml()) {
@@ -57,7 +58,7 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler 
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
-        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice, task deadline passed: " + taskTitle ); 
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAssigneeEmailHandler.1",taskTitle));  //$NON-NLS-1$
         String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
     }
