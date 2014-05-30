@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.awt.FontMetrics;
 import java.awt.MouseInfo;
-import java.awt.Toolkit;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -35,17 +33,19 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
@@ -170,14 +170,14 @@ public class RelationTableViewer extends TableViewer {
         /** current x value of the verinice window */
         int shellX;
 
-        /** current font used in verinice */
-        Font font;
+        /** current parent element wich contained the table */
+        Composite parent;
 
         RelationViewLabelProvider relationViewLabelProvider;
 
-        public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Font font) {
+        public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
             this.relationViewLabelProvider = relationViewLabelProvider;
-            this.font = font;
+            this.parent = parent;
             cache = new HashMap<CnALink.Id, String>();
         }
 
@@ -256,24 +256,20 @@ public class RelationTableViewer extends TableViewer {
          */
         public String cropToolTip(String toolTipText, int mouseX) {
 
-            FontData[] fontData = font.getFontData();
+            GC gc = new GC(parent);
+            FontMetrics fmt = gc.getFontMetrics();
+            int charWidth = fmt.getAverageCharWidth();
 
-            // take first font
-            if (fontData.length > 0) {
-                FontMetrics fontMetrics = Toolkit.getDefaultToolkit().getFontMetrics(new java.awt.Font(fontData[0].name, fontData[0].style, fontData[0].getHeight()));
-                int width = fontMetrics.stringWidth(toolTipText);
+            // crop
+            int spaceLeft = shellWidth - (Math.abs(shellX - mouseX));
 
-                // crop
-                int spaceLeft = shellWidth - (Math.abs(shellX - mouseX));
+            // FIXME the 50 pixel are in magic number. The calculation of
+            // the string width seems to be too optimistic
+            if (charWidth * toolTipText.length() >= spaceLeft - 50) {
+                Path p = Paths.get(toolTipText);
 
-                // FIXME the 200 pixel are in magic number. The calculation of
-                // the string width seems to be too optimistic
-                if (width >= spaceLeft - 200) {
-                    Path p = Paths.get(toolTipText);
-
-                    // check again, if short enough
-                    return cropToolTip(p.getParent().toString() + " ...", mouseX);
-                }
+                // check again, if short enough
+                return cropToolTip(p.getParent().toString() + " ...", mouseX);
             }
 
             return toolTipText;
@@ -298,8 +294,8 @@ public class RelationTableViewer extends TableViewer {
 
     }
 
-    public RelationTableCellLabelProvider initToolTips(RelationViewLabelProvider relationViewLabelProvider, Font font) {
-        RelationTableCellLabelProvider labelProvider = new RelationTableCellLabelProvider(relationViewLabelProvider, font);
+    public RelationTableCellLabelProvider initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
+        RelationTableCellLabelProvider labelProvider = new RelationTableCellLabelProvider(relationViewLabelProvider, parent);
         col4.setLabelProvider(labelProvider);
         return labelProvider;
     }

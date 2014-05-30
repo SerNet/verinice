@@ -176,7 +176,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent.getFont());
+        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
 
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProvider);

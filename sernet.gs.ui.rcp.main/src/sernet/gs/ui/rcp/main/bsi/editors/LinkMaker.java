@@ -189,7 +189,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, getFont());
+        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, this);
 
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProvider);
