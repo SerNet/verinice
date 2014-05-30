@@ -156,7 +156,7 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    class RelationTableCellLabelProvider extends CellLabelProvider {
+    public class RelationTableCellLabelProvider extends CellLabelProvider {
 
         /**
          * Caches the object pathes. Key is the title of the target
