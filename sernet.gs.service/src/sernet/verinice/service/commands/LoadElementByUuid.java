@@ -41,7 +41,7 @@ public class LoadElementByUuid<T extends CnATreeElement> extends GenericCommand 
 	private String uuid;
 	protected T element;
     private String typeId;
-    private RetrieveInfo ri;
+    protected RetrieveInfo ri;
 
     private transient IBaseDao<T, Serializable> dao;
     

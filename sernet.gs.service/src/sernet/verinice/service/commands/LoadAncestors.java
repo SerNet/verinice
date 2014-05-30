@@ -21,11 +21,10 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
-import org.jbpm.pvm.internal.cmd.GetResourceAsStreamCmd;
-
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -52,7 +51,7 @@ public class LoadAncestors extends LoadElementByUuid {
      */
     public LoadAncestors(String uuid, RetrieveInfo ri) {
         super(uuid, ri);
-        ri.setParent(true);
+        super.ri.setParent(true);
     }
     
     /* (non-Javadoc)
@@ -62,8 +61,9 @@ public class LoadAncestors extends LoadElementByUuid {
     public void execute() {
         super.execute();
         if(getElement()!=null) {
+            HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getTypeId()), getElement(), true);
             CnATreeElement elementWithParent = loadParent(getElement());
-            element.setParent(elementWithParent.getParent());
+            element.setParent(elementWithParent.getParent());            
         }
     }
 
@@ -75,7 +75,8 @@ public class LoadAncestors extends LoadElementByUuid {
         if(parentId!=null) {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setParent(true);
-            CnATreeElement parent = (CnATreeElement) getElementDao().retrieve(parentId, ri);    
+            CnATreeElement parent = (CnATreeElement) getElementDao().retrieve(parentId, ri);   
+            HydratorUtil.hydrateElement(getDaoFactory().getDAO(parent.getTypeId()), parent, ri);
             if(parent!=null) {
                 parent = loadParent(parent);
                 child.setParent(parent);

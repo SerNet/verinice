@@ -140,7 +140,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    }
 	}
 
-    protected void replaceLinkEntities(CnALink link) {
+    public void replaceLinkEntities(CnALink link) {
         CnATreeElement dependantWithProperties = Retriever.checkRetrieveElement(link.getDependant());
         CnATreeElement dependencyWithProperties = Retriever.checkRetrieveElement(link.getDependency());        
         link.getDependant().setEntity(dependantWithProperties.getEntity());
@@ -201,6 +201,11 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	    scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
 	    titleMap = scopeCommand.getElements();
 	    return titleMap.get(elmt.getScopeId());
-	} 
+	}	
+	
+	public CnATreeElement getInputElemt()
+	{
+	    return view.getInputElmt();
+	}
 	
 }
