@@ -15,6 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster@tarent.de> - use custom SQL/HQL for query
+ *     Sebastian Hagedorn <sh[at]sernet[dot]de> - Bug fixing
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
@@ -38,7 +39,6 @@ import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCurrentUserConfiguration;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.swt.widgets.URL.URLUtil;
 import sernet.verinice.interfaces.CommandException;
@@ -49,6 +49,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * Retrieves the properties which are URLs as a {@link DocumentLinkRoot}

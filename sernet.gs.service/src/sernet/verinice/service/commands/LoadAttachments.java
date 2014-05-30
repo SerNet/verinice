@@ -17,15 +17,21 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.TimeFormatter;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAttachmentDao;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -38,11 +44,14 @@ import sernet.verinice.model.common.CnATreeElement;
  * @see LoadAttachmentFile
  * @see Attachment
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class LoadAttachments extends GenericCommand {
+public class LoadAttachments extends GenericCommand implements IAuthAwareCommand{
 
 	private transient Logger log = Logger.getLogger(LoadAttachments.class);
+	
+	private transient IAuthService authService;
 	
 	public Logger getLog() {
 		if(log==null) {
@@ -54,6 +63,8 @@ public class LoadAttachments extends GenericCommand {
 	private Integer cnAElementId;
 	
 	private List<Attachment> attachmentList;
+	
+	private String[] roles;
 	
 	public List<Attachment> getAttachmentList() {
 		return attachmentList;
@@ -74,6 +85,11 @@ public class LoadAttachments extends GenericCommand {
 		super();
 		this.cnAElementId = cnAElementId;
 	}
+	
+	public LoadAttachments(Integer cnAElementId, String[] roles){
+	    this(cnAElementId);
+	    this.roles = roles;
+	}
 
 	/**
 	 * Loads attachments for for {@link CnATreeElement}
@@ -81,29 +97,60 @@ public class LoadAttachments extends GenericCommand {
 	 * File data will not be loaded by this command. 
  	 * Use {@link LoadAttachmentFile} to load file data from database.
 	 * 
+	 * if PermissionHandling is needed, attachments are loaded by additionDao via HQL
 	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
+	@SuppressWarnings({ "unused", "unchecked" })
 	public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("executing, id is: " + getCnAElementId() + "...");
-		}
-		IAttachmentDao dao = getDaoFactory().getAttachmentDao();
-		List<Attachment> attachmentList = dao.loadAttachmentList(getCnAElementId());
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("number of attachments found: " + attachmentList.size());
-		}
-		for (Attachment attachment : attachmentList) {
-			Entity entity = attachment.getEntity();
-			if(entity!=null) {
-				for (PropertyList pl : entity.getTypedPropertyLists().values()) {
-					for (Property p : pl.getProperties()) {
-						p.setParent(entity);
-					}
-				}
-			}
-		}
-		setAttachmentList(attachmentList);
-		
+	    if (getLog().isDebugEnabled()) {
+	        getLog().debug("executing, id is: " + getCnAElementId() + "...");
+	    }
+	    IAttachmentDao dao = getDaoFactory().getAttachmentDao();
+	    long startTime = System.currentTimeMillis();
+	    if(getCnAElementId() != null || getAuthService().getAdminUsername().equals(getAuthService().getUsername())){ // no permission handling needed
+	        attachmentList = dao.loadAttachmentList(getCnAElementId());
+	    } else { 
+	        IBaseDao<Addition, Integer> additionDao = getDaoFactory().getDAO(Addition.TYPE_ID);
+	        String hql = "from Addition addition " +
+	                "where addition.cnATreeElementId IN (" +
+	                    "select elmt.dbId from CnATreeElement elmt " +
+	                    "inner join elmt.permissions as perm " +
+	                    "where elmt.dbId IN ( " +
+	                        "select ad.cnATreeElementId from Addition ad " +
+	                     ") " +
+	                     "and perm.role IN (:roles) " +
+	                     "and perm.readAllowed = :readAllowed )";
+
+	        String [] paramNames = new String[]{"roles", "readAllowed"};
+	        Object[] params = new Object[]{roles, true};
+	        attachmentList = new ArrayList<Attachment>();
+	        for(Object o : additionDao.findByQuery(hql, paramNames, params)){
+	            if(o instanceof Attachment){
+	                attachmentList.add((Attachment)o);
+	            }
+	        }
+
+
+	        if (getLog().isDebugEnabled()) {
+	            getLog().debug("number of attachments found: " + attachmentList.size());
+	        }
+	        List<Attachment> filteredList = new ArrayList<Attachment>(0);
+	        for (Attachment attachment : attachmentList) {
+	            Entity entity = attachment.getEntity();
+	            if(entity!=null) {
+	                for (PropertyList pl : entity.getTypedPropertyLists().values()) {
+	                    for (Property p : pl.getProperties()) {
+	                        p.setParent(entity);
+	                    }
+	                }
+	            }
+	        }
+	        setAttachmentList(attachmentList);
+	    }
+	    if(getLog().isDebugEnabled()){
+	        getLog().debug("Tooks :\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-startTime) + " to load " + attachmentList.size() + " attachments");
+	    }
+	    
 	}
 
 	public void setCnAElementId(Integer cnAElementId) {
@@ -114,5 +161,13 @@ public class LoadAttachments extends GenericCommand {
 	public Integer getCnAElementId() {
 		return cnAElementId;
 	}
+
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+    }
 
 }

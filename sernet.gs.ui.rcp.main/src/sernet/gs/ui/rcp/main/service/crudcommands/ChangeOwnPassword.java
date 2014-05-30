@@ -30,6 +30,7 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * @author koderman@sernet.de

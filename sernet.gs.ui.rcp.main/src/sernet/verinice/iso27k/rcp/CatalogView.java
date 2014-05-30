@@ -81,7 +81,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachments;
+import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
@@ -254,9 +254,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 			Activator.inheritVeriniceContextState();
 			if(getBsiModel()!=null) {
 				// model is loaded: load data
-				LoadAttachments command = new LoadAttachments(getBsiModel().getDbId());		
+				LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(getBsiModel().getDbId());		
 				command = getCommandService().executeCommand(command);		
-				List<Attachment> attachmentList = command.getAttachmentList();
+				List<Attachment> attachmentList = command.getResult();
 				comboModel.clear();
 				for (Attachment attachment : attachmentList) {
 					comboModel.add(attachment);

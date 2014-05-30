@@ -41,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachments;
+import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 
 /**
  *
@@ -104,15 +104,15 @@ public class LoadReportISAAttachedImages extends GenericCommand implements ICach
                     if(LOG.isDebugEnabled()){
                         LOG.debug("\tInspecting Attachments of Evidence:\t" + entry.getKey().getTitle());
                     }
-                    LoadAttachments attachmentLoader = new LoadAttachments(entry.getKey().getDbId());
-
                     try {
-                        attachmentLoader = getCommandService().executeCommand(attachmentLoader);
-                        for(int i = 0; i < attachmentLoader.getAttachmentList().size(); i++){
+                        LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(entry.getKey().getDbId());
+
+                        command = getCommandService().executeCommand(command);
+                        for(int i = 0; i < command.getResult().size(); i++){
                             // report uses two tables next to each other showing odd/even numbered images only
                             // done to restriction showing always two images in a row
                             if((i % 2 == 0 && !oddNumbers) || (i % 2 == 1 && oddNumbers)){ 
-                                Attachment attachment = (Attachment)attachmentLoader.getAttachmentList().get(i);
+                                Attachment attachment = (Attachment)command.getResult().get(i);
                                 if(LOG.isDebugEnabled()){
                                     LOG.debug("\t\tChecking MIME-Type of Attachment:\t" + attachment.getFileName());
                                 }

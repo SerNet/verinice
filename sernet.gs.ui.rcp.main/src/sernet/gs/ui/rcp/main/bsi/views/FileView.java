@@ -96,7 +96,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachments;
+import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
 
 /**
@@ -427,6 +427,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
+    @SuppressWarnings("unused")
     public void loadFiles() {
         try {
             Integer id = null;
@@ -437,10 +438,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                     return;
                 }
             }
-            LoadAttachments command = new LoadAttachments(id);
+            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(id);
             command = getCommandService().executeCommand(command);
-            attachmentList = command.getAttachmentList();
+            attachmentList = command.getResult();
             if (attachmentList != null) {
+                Display defaultDisplay = Display.getDefault();
+                Display currentDisplay = Display.getCurrent();
                 Display.getDefault().syncExec(new Runnable() {
                     @Override
                     public void run() {

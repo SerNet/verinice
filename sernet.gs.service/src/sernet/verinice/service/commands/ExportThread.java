@@ -255,9 +255,9 @@ public class ExportThread extends NotifyingThread {
     
     private void exportAttachments(CnATreeElement element, SyncObject syncObject) throws CommandException {
         if(element!=null) {
-            LoadAttachments command = new LoadAttachments(element.getDbId());
+            LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(element.getDbId());
             command = getCommandService().executeCommand(command);
-            List<Attachment> fileList = command.getAttachmentList();
+            List<Attachment> fileList = command.getResult();
             List<SyncFile> fileListXml = syncObject.getFile();
             for (Attachment attachment : fileList) {
                 SyncFile syncFile = new SyncFile();

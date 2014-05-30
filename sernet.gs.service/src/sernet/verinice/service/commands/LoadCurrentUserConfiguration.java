@@ -15,7 +15,7 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.List;
