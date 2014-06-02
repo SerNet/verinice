@@ -57,14 +57,20 @@ public class LoadAttachmentsUserFiltered extends GenericCommand {
                 LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
                 lcuc = getCommandService().executeCommand(lcuc);
                 Configuration c = lcuc.getConfiguration();
+                boolean isAdminUser = false;
+                boolean isScopeOnly = false;
+                Integer scopeId = -1;
                 if(c != null){
                     roles = c.getRoles();
+                    isAdminUser = c.isAdminUser();
+                    isScopeOnly = c.isScopeOnly();
+                    scopeId = c.getPerson().getScopeId();
                 }
 
                 if(roles == null){
                     roles = new HashSet<String>(0);
                 }
-                command = new LoadAttachments(id, roles.toArray(new String[roles.size()]));
+                command = new LoadAttachments(id, roles.toArray(new String[roles.size()]), isAdminUser, isScopeOnly, scopeId);
             } else {
                 command = new LoadAttachments(id);
             }
