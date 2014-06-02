@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.equinox.internal.p2.repository.CacheManager;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
@@ -155,9 +156,12 @@ public class RelationTableViewer extends TableViewer {
 
         /**
          * Caches the object pathes. Key is the title of the target
-         * CnaTreeElement which is listed in the title column
+         * CnaTreeElement which is listed in the title column.
+         * 
+         * FIXME use ehcache
          */
-        Map<CnALink.Id, String> cache;
+        Map<String, String> cache;        
+        		
 
         /** the current width of the verinice window */
         int shellWidth;
@@ -172,8 +176,8 @@ public class RelationTableViewer extends TableViewer {
 
         public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
             this.relationViewLabelProvider = relationViewLabelProvider;
-            this.parent = parent;
-            cache = new HashMap<CnALink.Id, String>();
+            this.parent = parent;            
+            cache = new HashMap<String, String>();
         }
 
         @Override
@@ -189,9 +193,19 @@ public class RelationTableViewer extends TableViewer {
             // calls"
             int mouseX = MouseInfo.getPointerInfo().getLocation().x;
             LOG.debug("mouse location: " + mouseX);
+            
+            
+            CnATreeElement cnATreeElement = null;
+            boolean isDownwardLink;
+            if (isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link)) {
+                cnATreeElement = link.getDependency();
+                
+            } else {
+                cnATreeElement = link.getDependant();
+            }
 
             if (cache.containsKey(link.getId())) {
-                return cropToolTip(cache.get(link.getId()), mouseX);
+                return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
             }
 
             try {
@@ -199,12 +213,7 @@ public class RelationTableViewer extends TableViewer {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 relationViewLabelProvider.replaceLinkEntities(link);
 
-                CnATreeElement cnATreeElement = null;
-                if (CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link)) {
-                    cnATreeElement = link.getDependency();
-                } else {
-                    cnATreeElement = link.getDependant();
-                }
+
 
                 LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(), cnATreeElement.getUuid(), ri);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -230,13 +239,13 @@ public class RelationTableViewer extends TableViewer {
                 }
                 
                 // FIXME use EHCache
-                cache.put(link.getId(), sb.toString());
+                cache.put(link.getId().toString() + isDownwardLink, sb.toString());
 
             } catch (CommandException e) {
                 LOG.debug("loading ancestors failed", e);
             }
 
-            return cropToolTip(cache.get(link.getId()), mouseX);
+            return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
         }
 
         /**
