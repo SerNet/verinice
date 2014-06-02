@@ -100,14 +100,16 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 	 * if PermissionHandling is needed, attachments are loaded by additionDao via HQL
 	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
+	@Override
+    @SuppressWarnings({ "unused", "unchecked" })
 	public void execute() {
 	    if (getLog().isDebugEnabled()) {
 	        getLog().debug("executing, id is: " + getCnAElementId() + "...");
 	    }
 	    IAttachmentDao dao = getDaoFactory().getAttachmentDao();
 	    long startTime = System.currentTimeMillis();
-	    if(getCnAElementId() != null || getAuthService().getAdminUsername().equals(getAuthService().getUsername())){ // no permission handling needed
+	    String username = getAuthService().getUsername();
+	    if(getCnAElementId() != null || isPermissionHandlingNeeded(username)){ // no permission handling needed
 	        attachmentList = dao.loadAttachmentList(getCnAElementId());
 	    } else { 
 	        IBaseDao<Addition, Integer> additionDao = getDaoFactory().getDAO(Addition.TYPE_ID);
@@ -152,6 +154,11 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 	    }
 	    
 	}
+	
+	private boolean isPermissionHandlingNeeded(String username) {
+        return getAuthService().isPermissionHandlingNeeded() 
+                && !(getAuthService().getAdminUsername().equals(username)) ;
+    }
 
 	public void setCnAElementId(Integer cnAElementId) {
 		this.cnAElementId = cnAElementId;
@@ -162,10 +169,12 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 		return cnAElementId;
 	}
 
+    @Override
     public IAuthService getAuthService() {
         return authService;
     }
 
+    @Override
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
     }
