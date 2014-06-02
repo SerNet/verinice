@@ -18,8 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.awt.MouseInfo;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,15 +29,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -213,7 +208,8 @@ public class RelationTableViewer extends TableViewer {
 
                 LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(), cnATreeElement.getUuid(), ri);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                CnATreeElement current = command.getElement();
+                CnATreeElement current = command.getElement();          
+                
 
                 // build object path
                 StringBuilder sb = new StringBuilder();
@@ -226,11 +222,15 @@ public class RelationTableViewer extends TableViewer {
                 }
 
                 // crop the root element, which is always ISO .. or BSI ...
-                Path p = Paths.get(sb.toString());
-                p = p.subpath(1, p.getNameCount());
-
+                String[] p = sb.toString().split("/");
+                sb = new StringBuilder();
+                for (int i = 1; i < p.length; i++)
+                {
+                	sb.append("/").append(p[i]);
+                }
+                
                 // FIXME use EHCache
-                cache.put(link.getId(), p.toString());
+                cache.put(link.getId(), sb.toString());
 
             } catch (CommandException e) {
                 LOG.debug("loading ancestors failed", e);
@@ -256,6 +256,7 @@ public class RelationTableViewer extends TableViewer {
          */
         public String cropToolTip(String toolTipText, int mouseX) {
 
+        	// FIXME should be done once in constructor
             GC gc = new GC(parent);
             FontMetrics fmt = gc.getFontMetrics();
             int charWidth = fmt.getAverageCharWidth();
@@ -266,10 +267,23 @@ public class RelationTableViewer extends TableViewer {
             // FIXME the 50 pixel are in magic number. The calculation of
             // the string width seems to be too optimistic
             if (charWidth * toolTipText.length() >= spaceLeft - 50) {
-                Path p = Paths.get(toolTipText);
+                
+            	String[] p = toolTipText.split("/");
+            	StringBuilder sb = new StringBuilder();
+            	
+            	// avoid infinit loop, since this path cannot be cropped
+            	if (p.length == 1)
+            	{
+            		return toolTipText;
+            	}
+            	
+            	for(int i = 0; i < p.length - 1; i++)
+            	{
+            		sb.append("/").append(p[i]);
+            	}
 
                 // check again, if short enough
-                return cropToolTip(p.getParent().toString() + " ...", mouseX);
+                return cropToolTip(sb.toString() + " ...", mouseX);
             }
 
             return toolTipText;
