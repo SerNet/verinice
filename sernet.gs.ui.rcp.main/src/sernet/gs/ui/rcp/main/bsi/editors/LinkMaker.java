@@ -59,9 +59,9 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
 import sernet.gs.ui.rcp.main.bsi.views.RelationByNameSorter;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
+import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.RelationTableCellLabelProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewContentProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
-import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.RelationTableCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -105,7 +105,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private SelectionListener unlinkAction;
     private LinkRemover linkRemover;
 
-    private static int oldSelection = -1;
+    private int oldSelection = -1;
 
     /**
      * @param parent

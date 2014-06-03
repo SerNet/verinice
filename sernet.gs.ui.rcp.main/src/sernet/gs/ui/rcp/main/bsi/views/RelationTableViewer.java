@@ -36,7 +36,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -58,13 +57,13 @@ public class RelationTableViewer extends TableViewer {
     private TableViewerColumn col7;
     private TableViewerColumn col8;
 
-    final TableViewerColumn col1;
-    final TableViewerColumn viewerCol2;
-    final TableViewerColumn col4;
-    final IRelationTable view;
-    final TableViewerColumn col3;
-    final TableViewerColumn viewerCol5;
-    final TableViewerColumn col5;
+    private final TableViewerColumn col1;
+    private final TableViewerColumn viewerCol2;
+    private final TableViewerColumn col4;
+    private final IRelationTable view;
+    private final TableViewerColumn col3;
+    private final TableViewerColumn viewerCol5;
+    private final TableViewerColumn col5;
 
     /**
      * @param parent
@@ -153,7 +152,7 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    public class RelationTableCellLabelProvider extends CellLabelProvider {
+    static public class RelationTableCellLabelProvider extends CellLabelProvider {
 
         /**
          * Caches the object pathes. Key is the title of the target
@@ -161,19 +160,19 @@ public class RelationTableViewer extends TableViewer {
          * 
          * FIXME use ehcache
          */
-        Map<String, String> cache;
+        private Map<String, String> cache;
 
         /** the current width of the verinice window */
-        int shellWidth;
+        private int shellWidth;
 
         /** current x value of the verinice window */
-        int shellX;
+        private int shellX;
 
         /** current parent element wich contained the table */
         Composite parent;
 
         /** current column index */
-        int column;
+        private int column;
 
         RelationViewLabelProvider relationViewLabelProvider;
 
@@ -199,8 +198,8 @@ public class RelationTableViewer extends TableViewer {
             LOG.debug("mouse location: " + mouseX);
 
             CnATreeElement cnATreeElement = null;
-            boolean isDownwardLink;
-            if (isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link)) {
+            boolean isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link);
+            if (isDownwardLink) {
                 cnATreeElement = link.getDependency();
 
             } else {
@@ -274,12 +273,12 @@ public class RelationTableViewer extends TableViewer {
 
             // FIXME the 50 pixel are in magic number. The calculation of
             // the string width seems to be too optimistic
-            if (charWidth * toolTipText.length() >= spaceLeft - 50) {
+            if (charWidth * toolTipText.length() >= spaceLeft - ("...".length() * charWidth)) {
 
                 String[] p = toolTipText.split("/");
                 StringBuilder sb = new StringBuilder();
 
-                // avoid infinit loop, since this path cannot be cropped
+                // avoid infinite loop, since this path cannot be cropped
                 if (p.length == 1) {
                     return toolTipText;
                 }
@@ -315,18 +314,15 @@ public class RelationTableViewer extends TableViewer {
             this.shellX = shellX;
         }
 
-        @Override
-        public int getToolTipTimeDisplayed(Object object) {
-            return 100000;
-        }
-
     }
 
     /**
      * Provide tool tips for column 1,3 and 4 for the relation table view.
      * 
-     * @param relationViewLabelProvider The ordinary column provider
-     * @param parent The {@link Composite} which contains the table.
+     * @param relationViewLabelProvider
+     *            The ordinary column provider
+     * @param parent
+     *            The {@link Composite} which contains the table.
      * @return A List of all initiated cell label provider.
      */
     public List<RelationTableCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
