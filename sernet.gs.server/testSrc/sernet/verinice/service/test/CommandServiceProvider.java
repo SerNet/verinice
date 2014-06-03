@@ -73,21 +73,22 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
  * Tests executing several commands.
- *
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class CommandServiceProvider extends UuidLoader {  
-    
+public abstract class CommandServiceProvider extends UuidLoader {
+
     private static final Logger LOG = Logger.getLogger(CommandServiceProvider.class);
-    
+
     public static final Map<String, Class> GROUP_TYPE_MAP;
-    
+
     static {
         GROUP_TYPE_MAP = new HashMap<String, Class>();
         GROUP_TYPE_MAP.put(AssetGroup.TYPE_ID, Asset.class); //$NON-NLS-1$
@@ -108,28 +109,28 @@ public abstract class CommandServiceProvider extends UuidLoader {
         GROUP_TYPE_MAP.put(ThreatGroup.TYPE_ID, Threat.class); //$NON-NLS-1$
         GROUP_TYPE_MAP.put(VulnerabilityGroup.TYPE_ID, Vulnerability.class); //$NON-NLS-1$
     }
-    
-    @Resource(name="commandService")
-    protected ICommandService commandService;    
-    
+
+    @Resource(name = "commandService")
+    protected ICommandService commandService;
+
     protected Organization createOrganization() throws CommandException {
         LoadModel loadModel = new LoadModel();
         loadModel = commandService.executeCommand(loadModel);
         ISO27KModel model = loadModel.getModel();
-        
+
         assertNotNull("ISO model is null.", model);
-        
+
         CreateElement<Organization> saveCommand = new CreateElement<Organization>(model, Organization.class, getClass().getSimpleName());
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         Organization organization = saveCommand.getNewElement();
-        checkOrganization(organization);  
-        
+        checkOrganization(organization);
+
         LOG.debug("Organisation created.");
-        
+
         return organization;
     }
-    
+
     protected List<String> createElementsInGroups(Organization organization, int numberPerGroup) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Set<CnATreeElement> children = organization.getChildren();
@@ -138,36 +139,41 @@ public abstract class CommandServiceProvider extends UuidLoader {
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
             for (int i = 0; i < numberPerGroup; i++) {
-                CnATreeElement newElement = createNewElement(group,i);
+                CnATreeElement newElement = createNewElement(group, i);
                 uuidList.add(newElement.getUuid());
                 LOG.debug(newElement.getTypeId() + ": " + newElement.getTitle() + " created.");
-            }         
+            }
         }
         return uuidList;
     }
-    
+
     protected Collection<? extends String> createInOrganisation(Organization organization, Class clazz, int i) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
-        Group<CnATreeElement> group = getGroupForClass(organization, clazz);   
+        Group<CnATreeElement> group;
+        if(clazz == SamtTopic.class){
+            group = getGroupForClass(organization, Control.class);
+        } else{
+            group = getGroupForClass(organization, clazz);
+        }
         for (int n = 0; n < i; n++) {
             uuidList.add(createNewElement(group, clazz, n).getUuid());
-        }                    
+        }
         return uuidList;
     }
-    
+
     protected Group<CnATreeElement> getGroupForClass(Organization organization, Class clazz) {
         Group<CnATreeElement> group = null;
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
-            assertTrue("Child of organization is not a group", child instanceof Group);       
-            if(clazz.equals(GROUP_TYPE_MAP.get(child.getTypeId()))) {
+            assertTrue("Child of organization is not a group", child instanceof Group);
+            if (clazz.equals(GROUP_TYPE_MAP.get(child.getTypeId()))) {
                 group = (Group) child;
                 break;
-            }          
+            }
         }
         return group;
     }
-    
+
     protected List<String> createGroupsInGroups(Organization organization, int numberPerGroup) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Set<CnATreeElement> children = organization.getChildren();
@@ -176,62 +182,56 @@ public abstract class CommandServiceProvider extends UuidLoader {
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
             for (int i = 0; i < numberPerGroup; i++) {
-                CnATreeElement newGroup = createNewGroup(group,i);
+                CnATreeElement newGroup = createNewGroup(group, i);
                 uuidList.add(newGroup.getUuid());
                 LOG.debug(newGroup.getTypeId() + ": " + newGroup.getTitle() + " created.");
-            }         
+            }
         }
         return uuidList;
     }
-    
+
     protected CnATreeElement createNewGroup(Group<CnATreeElement> group, int n) throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(
-                group, 
-                group.getTypeId(), 
-                getClass().getSimpleName() + "_" + n);
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, group.getTypeId(), getClass().getSimpleName() + "_" + n);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
-        checkElement(newElement);     
+        checkElement(newElement);
         return newElement;
     }
-    
+
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, int n) throws CommandException {
         Class clazz = GROUP_TYPE_MAP.get(group.getTypeId());
         return createNewElement(group, clazz, n);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n) throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(
-                group, 
-                clazz, 
-                getClass().getSimpleName() + "_" + n);
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, clazz, getClass().getSimpleName() + "_" + n);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
         checkElement(newElement);
-        
+
         return newElement;
     }
-    
+
     protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
         CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
         command = commandService.executeCommand(command);
         return command.getLink();
     }
-    
+
     protected void checkOrganization(Organization organization) {
         checkElement(organization);
         Set<CnATreeElement> children = organization.getChildren();
         assertNotNull("Children of organization are null.", children);
         assertEquals("Organization does not contain 14 groups.", 14, children.size());
     }
-    
+
     protected void checkElement(CnATreeElement element) {
         assertNotNull("Element is null.", element);
         assertNotNull("Db-id of element is null.", element.getDbId());
         assertNotNull("Scope-id of element is null.", element.getScopeId());
     }
-    
 
 }
