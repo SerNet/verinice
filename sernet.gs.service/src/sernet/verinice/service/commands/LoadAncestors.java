@@ -28,11 +28,10 @@ import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
+ * 
  */
 public class LoadAncestors extends LoadElementByUuid {
 
-    
     private transient IBaseDao<CnATreeElement, Serializable> elementDao;
 
     /**
@@ -53,17 +52,18 @@ public class LoadAncestors extends LoadElementByUuid {
         super(uuid, ri);
         super.ri.setParent(true);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.commands.LoadElementByUuid#execute()
      */
     @Override
     public void execute() {
         super.execute();
-        if(getElement()!=null) {
-            HydratorUtil.hydrateElement(getDaoFactory().getDAO(element.getTypeId()), getElement(), true);
+        if (getElement() != null) {
             CnATreeElement elementWithParent = loadParent(getElement());
-            element.setParent(elementWithParent.getParent());            
+            element.setParent(elementWithParent.getParent());
         }
     }
 
@@ -72,25 +72,27 @@ public class LoadAncestors extends LoadElementByUuid {
      */
     private CnATreeElement loadParent(CnATreeElement child) {
         Integer parentId = child.getParentId();
-        if(parentId!=null) {
+        if (parentId != null) {
+
             RetrieveInfo ri = new RetrieveInfo();
             ri.setParent(true);
-            CnATreeElement parent = (CnATreeElement) getElementDao().retrieve(parentId, ri);   
-            HydratorUtil.hydrateElement(getDaoFactory().getDAO(parent.getTypeId()), parent, ri);
-            if(parent!=null) {
+            ri.setProperties(true);
+
+            CnATreeElement parent = (CnATreeElement) getElementDao().retrieve(parentId, ri);
+            if (parent != null) {
                 parent = loadParent(parent);
                 child.setParent(parent);
-            }        
+            }
         }
         return child;
     }
-    
+
     /**
      * @return the elementDao
      */
     public IBaseDao<CnATreeElement, Serializable> getElementDao() {
-        if(elementDao==null) {
-            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);      
+        if (elementDao == null) {
+            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
         }
         return elementDao;
     }

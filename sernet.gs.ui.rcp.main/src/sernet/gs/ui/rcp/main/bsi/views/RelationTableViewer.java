@@ -157,8 +157,6 @@ public class RelationTableViewer extends TableViewer {
         /**
          * Caches the object pathes. Key is the title of the target
          * CnaTreeElement which is listed in the title column.
-         * 
-         * FIXME use ehcache
          */
         private Map<String, String> cache;
 
@@ -174,6 +172,12 @@ public class RelationTableViewer extends TableViewer {
         /** current column index */
         private int column;
 
+        private GC gc;
+
+        private FontMetrics fmt;
+
+        private int charWidth;
+
         RelationViewLabelProvider relationViewLabelProvider;
 
         public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent, int column) {
@@ -181,6 +185,11 @@ public class RelationTableViewer extends TableViewer {
             this.parent = parent;
             this.column = column;
             cache = new HashMap<String, String>();
+
+            // calc text width
+            this.gc = new GC(parent);
+            this.fmt = gc.getFontMetrics();
+            this.charWidth = fmt.getAverageCharWidth();
         }
 
         @Override
@@ -229,6 +238,9 @@ public class RelationTableViewer extends TableViewer {
                     sb.insert(0, current.getTitle());
                 }
 
+                // delete root slash
+                sb.deleteCharAt(0);
+
                 // crop the root element, which is always ISO .. or BSI ...
                 String[] p = sb.toString().split("/");
                 sb = new StringBuilder();
@@ -236,7 +248,6 @@ public class RelationTableViewer extends TableViewer {
                     sb.append("/").append(p[i]);
                 }
 
-                // FIXME use EHCache
                 cache.put(link.getId().toString() + isDownwardLink, sb.toString());
 
             } catch (CommandException e) {
@@ -264,9 +275,6 @@ public class RelationTableViewer extends TableViewer {
         public String cropToolTip(String toolTipText, int mouseX) {
 
             // FIXME should be done once in constructor
-            GC gc = new GC(parent);
-            FontMetrics fmt = gc.getFontMetrics();
-            int charWidth = fmt.getAverageCharWidth();
 
             // crop
             int spaceLeft = shellWidth - (Math.abs(shellX - mouseX));
@@ -283,6 +291,9 @@ public class RelationTableViewer extends TableViewer {
                 for (int i = 0; i < p.length - 1; i++) {
                     sb.append("/").append(p[i]);
                 }
+
+                // delete root slash
+                sb.deleteCharAt(0);
 
                 // check again, if short enough
                 return cropToolTip(sb.toString() + " ...", mouseX);
