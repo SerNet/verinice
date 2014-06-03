@@ -26,6 +26,28 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.validation.messages"; //$NON-NLS-1$
     
+    static String ISMView_10;
+    static String ISMView_11;
+    static String ISMView_12;
+    static String ISMView_2;
+    static String ISMView_4;
+    static String ISMView_5;
+    static String ISMView_6;
+    static String ISMView_7;
+    static String ISMView_8;
+    static String ISMView_9;
+    static String ISMView_InitDatabase;
+    static String ISMView_InitData;
+    static String ISMView_LoadModel;
+    static String ISMViewFilterDialog_0;
+    static String ISMViewFilterDialog_1;
+    static String ISMViewFilterDialog_2;
+    static String ISMViewFilterDialog_3;
+    static String ISMViewFilterDialog_4;
+    static String ISMViewFilterDialog_5;
+    static String ISMViewFilterDialog_6;
+    static String ISMViewFilterDialog_7;
+    
     public static String ValidationView_1;
     public static String ValidationView_2;
     public static String ValidationView_3;

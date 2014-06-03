@@ -251,12 +251,12 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
      * 
      */
     protected void addBSIModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
                         CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
                     }
@@ -276,12 +276,12 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 	 * 
 	 */
     protected void addISO27KModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData) {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask(sernet.verinice.iso27k.rcp.Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isIsoModelLoaded()) {
                         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
                     }

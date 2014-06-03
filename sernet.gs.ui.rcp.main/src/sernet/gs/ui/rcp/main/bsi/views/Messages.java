@@ -23,258 +23,260 @@ import org.eclipse.osgi.util.NLS;
 public final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.views.messages"; //$NON-NLS-1$
 
-	public static String AuditView_1;
+	static String AuditView_1;
 
-	public static String AuditView_10;
+	static String AuditView_10;
 
-	public static String AuditView_11;
+	static String AuditView_11;
 
-	public static String AuditView_12;
+	static String AuditView_12;
 
-	public static String AuditView_19;
+	static String AuditView_19;
 
-	public static String AuditView_2;
+	static String AuditView_2;
 
-	public static String AuditView_3;
+	static String AuditView_3;
 
-	public static String AuditView_4;
+	static String AuditView_4;
 
-	public static String AuditView_5;
+	static String AuditView_5;
 
-	public static String AuditView_8;
+	static String AuditView_8;
 
-	public static String AuditView_9;
+	static String AuditView_9;
 
-	public static String BrowserView_0;
+	static String BrowserView_0;
 
-    public static String BrowserView_3;
+    static String BrowserView_3;
 
-	public static String BrowserView_4;
+	static String BrowserView_4;
 
-	public static String BrowserView_5;
+	static String BrowserView_5;
 
-	public static String BSIKatalogInvisibleRoot_2;
+	static String BSIKatalogInvisibleRoot_2;
 
-	public static String BSIMassnahmenView_0;
+	static String BSIMassnahmenView_0;
 
-	public static String BSIMassnahmenView_1;
+	static String BSIMassnahmenView_1;
 
 
-	public static String BSIMassnahmenView_2;
+	static String BSIMassnahmenView_2;
 
-	public static String BSIMassnahmenView_3;
+	static String BSIMassnahmenView_3;
 
-	public static String BSIMassnahmenView_4;
+	static String BSIMassnahmenView_4;
 
-	public static String BSIMassnahmenView_5;
+	static String BSIMassnahmenView_5;
 
-	public static String BSIMassnahmenView_6;
+	static String BSIMassnahmenView_6;
 
-	public static String BsiModelView_0;
+	static String BsiModelView_0;
 
-	public static String BsiModelView_1;
+	static String BsiModelView_1;
 
-    public static String BsiModelView_11;
+    static String BsiModelView_11;
 
-    public static String BsiModelView_12;
+    static String BsiModelView_12;
 
-    public static String BsiModelView_13;
+    static String BsiModelView_13;
 
-    public static String BsiModelView_14;
+    static String BsiModelView_14;
 
-    public static String BsiModelView_15;
+    static String BsiModelView_15;
 
-    public static String BsiModelView_16;
+    static String BsiModelView_16;
 
-    public static String BsiModelView_17;
+    static String BsiModelView_17;
 
-    public static String BsiModelView_18;
+    static String BsiModelView_18;
     
-    public static String BsiModelView_19;
+    static String BsiModelView_19;
     
-    public static String BsiModelView_20;
+    static String BsiModelView_20;
        
-	public static String BsiModelView_2;
+	static String BsiModelView_2;
 
-	public static String BsiModelView_3;
+	static String BsiModelView_3;
 
-	public static String BsiModelView_4;
+	static String BsiModelView_4;
 	
-	public static String BsiModelView_5;
+	static String BsiModelView_5;
 
-    public static String BsiModelView_6;
+    static String BsiModelView_6;
 
-    public static String BsiModelView_7;
+    static String BsiModelView_7;
 
-    public static String BsiModelView_9;
+    static String BsiModelView_9;
 
-	public static String DocumentView_2;
+	static String DocumentView_2;
 
-	public static String DocumentView_4;
+	static String DocumentView_4;
 
-	public static String DocumentView_6;
+	static String DocumentView_6;
 
-	public static String DocumentView_7;
+	static String DocumentView_7;
 
-	public static String DSModelView_0;
+	static String DSModelView_0;
 
-	public static String DSModelView_1;
+	static String DSModelView_1;
 
-	public static String DSModelView_2;
+	static String DSModelView_2;
 
-	public static String DSModelView_3;
+	static String DSModelView_3;
 
-	public static String DSModelView_4;
+	static String DSModelView_4;
 
-	public static String DSModelView_5;
+	static String DSModelView_5;
 
-	public static String DSModelView_6;
+	static String DSModelView_6;
 
-	public static String DSViewLabelProvider_0;
+	static String DSViewLabelProvider_0;
 
-	public static String DSViewLabelProvider_1;
+	static String DSViewLabelProvider_1;
 
-	public static String FileView_0;
+	static String FileView_0;
 
-    public static String FileView_10;
+    static String FileView_10;
     
-    public static String FileView_11;
+    static String FileView_11;
 
-    public static String FileView_13;
+    static String FileView_13;
 
-	public static String FileView_14;
+	static String FileView_14;
 
-	public static String FileView_16;
+	static String FileView_16;
 
-	public static String FileView_17;
+	static String FileView_17;
 
-	public static String FileView_18;
+	static String FileView_18;
 
-	public static String FileView_19;
+	static String FileView_19;
 
-	public static String FileView_2;
+	static String FileView_2;
 
-	public static String FileView_22;
+	static String FileView_22;
 
-	public static String FileView_23;
+	static String FileView_23;
 
-	public static String FileView_24;
+	static String FileView_24;
 
-	public static String FileView_27;
+	static String FileView_27;
 
-	public static String FileView_29;
+	static String FileView_29;
 
-	public static String FileView_3;
+	static String FileView_3;
 
-	public static String FileView_30;
+	static String FileView_30;
 
-	public static String FileView_34;
+	static String FileView_34;
 
-	public static String FileView_4;
+	static String FileView_4;
 
-	public static String FileView_5;
+	static String FileView_5;
 
-	public static String FileView_6;
+	static String FileView_6;
 	
-	public static String FileView_7;
+	static String FileView_7;
 	
-	public static String GenericMassnahmenView_1;
+	static String GenericMassnahmenView_1;
 
-	public static String GenericMassnahmenView_10;
+	static String GenericMassnahmenView_10;
 	
-	public static String GenericMassnahmenView_11;
+	static String GenericMassnahmenView_11;
 	
-	public static String GenericMassnahmenView_12;
+	static String GenericMassnahmenView_12;
 
-	public static String GenericMassnahmenView_2;
+	static String GenericMassnahmenView_2;
 
-	public static String GenericMassnahmenView_3;
+	static String GenericMassnahmenView_3;
 
-	public static String GenericMassnahmenView_4;
+	static String GenericMassnahmenView_4;
 
-	public static String GenericMassnahmenView_5;
+	static String GenericMassnahmenView_5;
 
-	public static String GenericMassnahmenView_6;
+	static String GenericMassnahmenView_6;
 
-	public static String GenericMassnahmenView_7;
+	static String GenericMassnahmenView_7;
 
-	public static String GenericMassnahmenView_9;
+	static String GenericMassnahmenView_9;
 
-	public static String TodoView_10;
-
-	public static String TodoView_11;
-
-	public static String TodoView_12;
+    static String ISMView_InitData;
 	
-    public static String TodoView_13;
+	static String TodoView_10;
 
-    public static String TodoView_14;
+	static String TodoView_11;
 
-    public static String TodoView_15;
-
-	public static String TodoView_2;
-
-	public static String TodoView_3;
-
-	public static String TodoView_8;
-
-	public static String TodoView_9;
+	static String TodoView_12;
 	
-	public static String NoteView_0;
+    static String TodoView_13;
 
-    public static String NoteView_12;
+    static String TodoView_14;
 
-	public static String NoteView_2;
+    static String TodoView_15;
 
-	public static String NoteView_3;
+	static String TodoView_2;
 
-	public static String NoteView_4;
+	static String TodoView_3;
 
-	public static String NoteView_5;
+	static String TodoView_8;
 
-	public static String NoteView_6;
-
-	public static String NoteView_7;
-
-	public static String NoteView_8;
-
-	public static String RelationTableViewer_1;
-
-	public static String RelationTableViewer_3;
-
-	public static String RelationTableViewer_4;
+	static String TodoView_9;
 	
-	public static String RelationTableViewer_5;
+	static String NoteView_0;
 
-	public static String RelationTableViewer_6;
+    static String NoteView_12;
+
+	static String NoteView_2;
+
+	static String NoteView_3;
+
+	static String NoteView_4;
+
+	static String NoteView_5;
+
+	static String NoteView_6;
+
+	static String NoteView_7;
+
+	static String NoteView_8;
+
+	static String RelationTableViewer_1;
+
+	static String RelationTableViewer_3;
+
+	static String RelationTableViewer_4;
 	
-	public static String RelationTableViewer_7;
+	static String RelationTableViewer_5;
 
-	public static String RelationView_0;
-
-    public static String RelationView_10;
-
-	public static String RelationView_11;
-
-	public static String RelationView_12;
-
-    public static String RelationView_2;
-
-	public static String RelationView_3;
-
-	public static String RelationView_4;
-
-	public static String RelationView_7;
-
-	public static String RelationView_9;
-
-	public static String RelationViewLabelProvider_2;
-
-	public static String RelationViewLabelProvider_3;
+	static String RelationTableViewer_6;
 	
-	public static String RelationTypeEditingSupport_1;
+	static String RelationTableViewer_7;
+
+	static String RelationView_0;
+
+    static String RelationView_10;
+
+	static String RelationView_11;
+
+	static String RelationView_12;
+
+    static String RelationView_2;
+
+	static String RelationView_3;
+
+	static String RelationView_4;
+
+	static String RelationView_7;
+
+	static String RelationView_9;
+
+	static String RelationViewLabelProvider_2;
+
+	static String RelationViewLabelProvider_3;
 	
-	public static String RelationTypeEditingSupport_2;
+	static String RelationTypeEditingSupport_1;
+	
+	static String RelationTypeEditingSupport_2;
 
 	static {
 		// initialize resource bundle

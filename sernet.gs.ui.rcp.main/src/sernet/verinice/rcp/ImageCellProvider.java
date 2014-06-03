@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Attachment;
@@ -119,7 +118,7 @@ public abstract class ImageCellProvider extends OwnerDrawLabelProvider {
                 }
             } catch (Exception e) {
                 LOG.error("Error while loading attachment", e); //$NON-NLS-1$
-                ExceptionUtil.log(e, Messages.FileView_27);
+                ExceptionUtil.log(e, "Error while loading attachment");
             }
         }
         return null;

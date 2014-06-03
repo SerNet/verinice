@@ -32,7 +32,6 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -85,8 +84,9 @@ public class BSIModelViewOpenDBAction extends Action {
 	}
 
 	private void createModel(final StatusResult serverStartResult) {
-		WorkspaceJob job = new WorkspaceJob(Messages.BsiModelView_0) {
-			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+		WorkspaceJob job = new WorkspaceJob("Modell wird geladen...") {
+			@Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
 				// If server could not be started for whatever reason do not try to
 				// load the model either.
 				if (serverStartResult.status == Status.CANCEL_STATUS) {
