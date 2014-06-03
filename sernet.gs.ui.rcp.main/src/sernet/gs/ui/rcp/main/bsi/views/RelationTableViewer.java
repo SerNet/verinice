@@ -270,9 +270,6 @@ public class RelationTableViewer extends TableViewer {
 
             // crop
             int spaceLeft = shellWidth - (Math.abs(shellX - mouseX));
-
-            // FIXME the 50 pixel are in magic number. The calculation of
-            // the string width seems to be too optimistic
             if (charWidth * toolTipText.length() >= spaceLeft - ("...".length() * charWidth)) {
 
                 String[] p = toolTipText.split("/");
