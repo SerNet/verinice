@@ -1,6 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.awt.Window;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -24,7 +24,6 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -176,10 +175,10 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
+        List<RelationTableCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
 
         // register resize listener for cutting the tooltips
-        addResizeListener(parent, cellLabelProvider);
+        addResizeListener(parent, cellLabelProviders);
 
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
@@ -199,13 +198,15 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final Composite parent, final RelationTableCellLabelProvider cellLabelProvider) {
+    private void addResizeListener(final Composite parent, final List<RelationTableCellLabelProvider> cellLabelProviders) {
 
         parent.addControlListener(new ControlAdapter() {
 
             @Override
-            public void controlResized(ControlEvent e) {                
-                cellLabelProvider.updateShellWidthAndX(parent.getShell().getBounds().width, parent.getShell().getBounds().x);
+            public void controlResized(ControlEvent e) {
+                for (RelationTableCellLabelProvider c : cellLabelProviders) {
+                    c.updateShellWidthAndX(parent.getShell().getBounds().width, parent.getShell().getBounds().x);
+                }
             }
 
         });

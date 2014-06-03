@@ -189,10 +189,10 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        RelationTableCellLabelProvider cellLabelProvider = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, this);
+        List<RelationTableCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, this);
 
         // register resize listener for cutting the tooltips
-        addResizeListener(cellLabelProvider);
+        addResizeListener(cellLabelProviders);
 
         createDoubleClickAction();
         hookDoubleClickAction();
@@ -207,13 +207,15 @@ public class LinkMaker extends Composite implements IRelationTable {
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final RelationTableCellLabelProvider cellLabelProvider) {
+    private void addResizeListener(final List<RelationTableCellLabelProvider> cellLabelProviders) {
 
-       addControlListener(new ControlAdapter() {
+        addControlListener(new ControlAdapter() {
 
             @Override
             public void controlResized(ControlEvent e) {
-                cellLabelProvider.updateShellWidthAndX(getShell().getBounds().width, getShell().getBounds().x);
+                for (RelationTableCellLabelProvider c : cellLabelProviders) {
+                    c.updateShellWidthAndX(getShell().getBounds().width, getShell().getBounds().x);
+                }
             }
 
         });

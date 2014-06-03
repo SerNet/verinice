@@ -18,11 +18,12 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.awt.MouseInfo;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.equinox.internal.p2.repository.CacheManager;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
@@ -57,11 +58,11 @@ public class RelationTableViewer extends TableViewer {
     private TableViewerColumn col7;
     private TableViewerColumn col8;
 
-    final TableColumn col1;
+    final TableViewerColumn col1;
     final TableViewerColumn viewerCol2;
     final TableViewerColumn col4;
     final IRelationTable view;
-    final TableColumn col3;
+    final TableViewerColumn col3;
     final TableViewerColumn viewerCol5;
     final TableViewerColumn col5;
 
@@ -85,10 +86,10 @@ public class RelationTableViewer extends TableViewer {
         Table table = getTable();
 
         // relation icon:
-        col1 = new TableColumn(table, SWT.LEFT);
-        col1.setText(""); //$NON-NLS-1$
-        col1.setWidth(defaultColumnWidth);
-        col1.setResizable(false);
+        col1 = new TableViewerColumn(this, SWT.LEFT);
+        col1.getColumn().setText(""); //$NON-NLS-1$
+        col1.getColumn().setWidth(defaultColumnWidth);
+        col1.getColumn().setResizable(false);
 
         // name of relation: (i.e. "author of")
         viewerCol2 = new TableViewerColumn(this, SWT.LEFT);
@@ -98,9 +99,9 @@ public class RelationTableViewer extends TableViewer {
         viewerCol2.setEditingSupport(new RelationTypeEditingSupport(view, this));
 
         // element type icon:
-        col3 = new TableColumn(table, SWT.CENTER);
-        col3.setText(""); //$NON-NLS-1$
-        col3.setWidth(defaultColumnWidth);
+        col3 = new TableViewerColumn(this, SWT.CENTER);
+        col3.getColumn().setText(""); //$NON-NLS-1$
+        col3.getColumn().setWidth(defaultColumnWidth);
 
         // element title
         col4 = new TableViewerColumn(this, SWT.LEFT);
@@ -160,8 +161,7 @@ public class RelationTableViewer extends TableViewer {
          * 
          * FIXME use ehcache
          */
-        Map<String, String> cache;        
-        		
+        Map<String, String> cache;
 
         /** the current width of the verinice window */
         int shellWidth;
@@ -172,11 +172,15 @@ public class RelationTableViewer extends TableViewer {
         /** current parent element wich contained the table */
         Composite parent;
 
+        /** current column index */
+        int column;
+
         RelationViewLabelProvider relationViewLabelProvider;
 
-        public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
+        public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent, int column) {
             this.relationViewLabelProvider = relationViewLabelProvider;
-            this.parent = parent;            
+            this.parent = parent;
+            this.column = column;
             cache = new HashMap<String, String>();
         }
 
@@ -193,13 +197,12 @@ public class RelationTableViewer extends TableViewer {
             // calls"
             int mouseX = MouseInfo.getPointerInfo().getLocation().x;
             LOG.debug("mouse location: " + mouseX);
-            
-            
+
             CnATreeElement cnATreeElement = null;
             boolean isDownwardLink;
             if (isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link)) {
                 cnATreeElement = link.getDependency();
-                
+
             } else {
                 cnATreeElement = link.getDependant();
             }
@@ -213,12 +216,9 @@ public class RelationTableViewer extends TableViewer {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 relationViewLabelProvider.replaceLinkEntities(link);
 
-
-
                 LoadAncestors command = new LoadAncestors(cnATreeElement.getTypeId(), cnATreeElement.getUuid(), ri);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                CnATreeElement current = command.getElement();          
-                
+                CnATreeElement current = command.getElement();
 
                 // build object path
                 StringBuilder sb = new StringBuilder();
@@ -233,11 +233,10 @@ public class RelationTableViewer extends TableViewer {
                 // crop the root element, which is always ISO .. or BSI ...
                 String[] p = sb.toString().split("/");
                 sb = new StringBuilder();
-                for (int i = 1; i < p.length; i++)
-                {
-                	sb.append("/").append(p[i]);
+                for (int i = 1; i < p.length; i++) {
+                    sb.append("/").append(p[i]);
                 }
-                
+
                 // FIXME use EHCache
                 cache.put(link.getId().toString() + isDownwardLink, sb.toString());
 
@@ -265,7 +264,7 @@ public class RelationTableViewer extends TableViewer {
          */
         public String cropToolTip(String toolTipText, int mouseX) {
 
-        	// FIXME should be done once in constructor
+            // FIXME should be done once in constructor
             GC gc = new GC(parent);
             FontMetrics fmt = gc.getFontMetrics();
             int charWidth = fmt.getAverageCharWidth();
@@ -276,20 +275,18 @@ public class RelationTableViewer extends TableViewer {
             // FIXME the 50 pixel are in magic number. The calculation of
             // the string width seems to be too optimistic
             if (charWidth * toolTipText.length() >= spaceLeft - 50) {
-                
-            	String[] p = toolTipText.split("/");
-            	StringBuilder sb = new StringBuilder();
-            	
-            	// avoid infinit loop, since this path cannot be cropped
-            	if (p.length == 1)
-            	{
-            		return toolTipText;
-            	}
-            	
-            	for(int i = 0; i < p.length - 1; i++)
-            	{
-            		sb.append("/").append(p[i]);
-            	}
+
+                String[] p = toolTipText.split("/");
+                StringBuilder sb = new StringBuilder();
+
+                // avoid infinit loop, since this path cannot be cropped
+                if (p.length == 1) {
+                    return toolTipText;
+                }
+
+                for (int i = 0; i < p.length - 1; i++) {
+                    sb.append("/").append(p[i]);
+                }
 
                 // check again, if short enough
                 return cropToolTip(sb.toString() + " ...", mouseX);
@@ -301,7 +298,15 @@ public class RelationTableViewer extends TableViewer {
         @Override
         public void update(ViewerCell cell) {
             // delegate the cell text to the origin label provider
-            cell.setText(relationViewLabelProvider.getColumnText(cell.getElement(), 3));
+            switch (column) {
+            case 0:
+                cell.setImage(relationViewLabelProvider.getColumnImage(cell.getElement(), column));
+            case 2:
+                cell.setImage(relationViewLabelProvider.getColumnImage(cell.getElement(), column));
+                break;
+            case 3:
+                cell.setText(relationViewLabelProvider.getColumnText(cell.getElement(), column));
+            }
 
         }
 
@@ -317,9 +322,29 @@ public class RelationTableViewer extends TableViewer {
 
     }
 
-    public RelationTableCellLabelProvider initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
-        RelationTableCellLabelProvider labelProvider = new RelationTableCellLabelProvider(relationViewLabelProvider, parent);
-        col4.setLabelProvider(labelProvider);
-        return labelProvider;
+    /**
+     * Provide tool tips for column 1,3 and 4 for the relation table view.
+     * 
+     * @param relationViewLabelProvider The ordinary column provider
+     * @param parent The {@link Composite} which contains the table.
+     * @return A List of all initiated cell label provider.
+     */
+    public List<RelationTableCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
+
+        List<RelationTableCellLabelProvider> relTblCellLabelProv = new ArrayList<RelationTableCellLabelProvider>();
+
+        RelationTableCellLabelProvider relTableCellProviderCol1 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 0);
+        relTblCellLabelProv.add(relTableCellProviderCol1);
+        col1.setLabelProvider(relTableCellProviderCol1);
+
+        RelationTableCellLabelProvider relTableCellProviderCol3 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 2);
+        relTblCellLabelProv.add(relTableCellProviderCol3);
+        col3.setLabelProvider(relTableCellProviderCol3);
+
+        RelationTableCellLabelProvider relTableCellProviderCol4 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 3);
+        relTblCellLabelProv.add(relTableCellProviderCol4);
+        col4.setLabelProvider(relTableCellProviderCol4);
+
+        return relTblCellLabelProv;
     }
 }
