@@ -115,7 +115,6 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 	 * @see sernet.verinice.interfaces.ICommand#execute()
 	 */
 	@Override
-    @SuppressWarnings({ "unused", "unchecked" })
 	public void execute() {
 	    if (getLog().isDebugEnabled()) {
 	        getLog().debug("executing, id is: " + getCnAElementId() + "...");
