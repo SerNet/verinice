@@ -196,7 +196,9 @@ public class CnALink implements Serializable, ITypedElement {
 		public Id(Integer dependantId, Integer dependencyId) {
 			this(dependantId, dependencyId, ""); //$NON-NLS-1$
 		}
-
+		// link is generated from dependant to dependency
+		// dependant => dependency is downward link
+		// dependency => dependant is updward link
 		public Id(Integer dependantId, Integer dependencyId, String relationId) {
 			this.dependantId = dependantId;
 			this.dependencyId = dependencyId;
