@@ -40,6 +40,8 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
     
     private Object[] hqlParams;
     
+    private String[] paramNames;
+    
     private Object typeId;
     
     private Object results;
@@ -56,16 +58,26 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
         this.typeId = typeId;
     }
     
+    public ExecuteHQLInReportCommand(String hql, String[] paramNames, Object[] params, Class typeId){
+        this.hql = hql;
+        this.hqlParams = params;
+        this.typeId = typeId;
+        this.paramNames = paramNames;
+    }    
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
+    
         if(!resultInjectedFromCache){
             if(typeId instanceof String){
                 results = getDaoFactory().getDAO((String)typeId).findByQuery(hql, hqlParams);
-            } else if (typeId instanceof Class){
+            } else if (typeId instanceof Class && paramNames == null){
                 results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, hqlParams);
+            } else if(typeId instanceof Class && paramNames != null){
+                results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, paramNames, hqlParams);
             } else {
                 results = Collections.emptyList();
             }
