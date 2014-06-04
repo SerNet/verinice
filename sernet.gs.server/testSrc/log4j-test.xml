@@ -29,7 +29,7 @@
     
     <logger name="sernet.verinice.service.test">
         <level value="DEBUG" />
-    </logger>
+    </logger>  
     
      
 	<!-- Logger for everything else -->
