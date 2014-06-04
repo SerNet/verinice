@@ -97,7 +97,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
 	
 	private boolean useDefaultFolder = true;
 	
+	private boolean useDefaultTemplateFolder = true;
+	
 	private String defaultFolder;
+	
+	private String defaultTemplateFolder;
 	
     // estimated size of dialog for placement (doesnt have to be exact):
     private static final int SIZE_X = 750;
@@ -236,14 +240,30 @@ public class GenerateReportDialog extends TitleAreaDialog {
         textReportTemplateFile = new Text(reportGroup, SWT.BORDER);     
         textReportTemplateFile.setLayoutData(gridDataText);
         
+        
         openReportButton = new Button(reportGroup, SWT.PUSH);
         openReportButton.setText(Messages.GenerateReportDialog_3);
         openReportButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 selectTemplateFile();
-              }
-            });      
+            }
+        });
+        
+        Button useDefaultTemplateFolderButton = new Button(reportGroup, SWT.CHECK);
+        useDefaultTemplateFolderButton.setText(Messages.GenerateReportDialog_26);
+        useDefaultTemplateFolderButton.setSelection(true);        
+        GridData  useDefaultTemplateFolderButtonGridData = new GridData();
+        useDefaultTemplateFolderButtonGridData.horizontalSpan = 3;
+        useDefaultTemplateFolderButtonGridData.grabExcessHorizontalSpace = true;
+        useDefaultTemplateFolderButtonGridData.horizontalAlignment =  SWT.RIGHT;
+        useDefaultTemplateFolderButton.setLayoutData(useDefaultTemplateFolderButtonGridData);
+        useDefaultTemplateFolderButton.addSelectionListener(new SelectionAdapter() {       
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                useDefaultTemplateFolder = ((Button)e.getSource()).getSelection();
+            }          
+        });
         
         // Scope group
         Group scopeGroup = createGroup(composite);       
@@ -392,7 +412,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
     public void selectTemplateFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.OPEN);          
         String path;
-        if(isTemplateFilePath()) {
+        if(defaultTemplateFolder != null && !defaultTemplateFolder.isEmpty()){
+            path = defaultTemplateFolder;
+        } else if(isTemplateFilePath()) {
             path = getOldTemplateFolderPath();
         } else {
             path = System.getProperty("user.home"); //$NON-NLS-1$
@@ -660,6 +682,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
             if(useDefaultFolder){
                 Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
             }
+            currentPath = getOldTemplateFolderPath();
+            if(useDefaultTemplateFolder){
+                Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT, currentPath);
+            }
             outputFile = new File(f);
         } catch (Exception e) {
             LOG.error("Error while creating report.", e);
@@ -790,12 +816,19 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private String initDefaultFolder() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);    
+        defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);   
+        defaultTemplateFolder = prefs.getString(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT);
         if (defaultFolder == null || defaultFolder.isEmpty()) {
             defaultFolder = System.getProperty("user.home");
         }
+        if(defaultTemplateFolder == null || defaultTemplateFolder.isEmpty()){
+            defaultTemplateFolder = System.getProperty("user.home");
+        }
         if (!defaultFolder.endsWith(System.getProperty("file.separator"))) {
             defaultFolder = defaultFolder + System.getProperty("file.separator");
+        }
+        if(!defaultTemplateFolder.endsWith(System.getProperty("file.separator"))){
+            defaultTemplateFolder = defaultTemplateFolder + System.getProperty("file.separator");
         }
         return defaultFolder;
     }
