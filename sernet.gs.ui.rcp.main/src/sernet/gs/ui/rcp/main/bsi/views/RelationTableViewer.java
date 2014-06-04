@@ -238,8 +238,7 @@ public class RelationTableViewer extends TableViewer {
                     sb.insert(0, current.getTitle());
                 }
 
-                // delete root slash
-                sb.deleteCharAt(0);
+
 
                 // crop the root element, which is always ISO .. or BSI ...
                 String[] p = sb.toString().split("/");
@@ -247,6 +246,9 @@ public class RelationTableViewer extends TableViewer {
                 for (int i = 1; i < p.length; i++) {
                     sb.append("/").append(p[i]);
                 }
+                
+                // delete root slash
+                sb.deleteCharAt(0);
 
                 cache.put(link.getId().toString() + isDownwardLink, sb.toString());
 
