@@ -76,5 +76,7 @@ public interface IAuthService {
 	public String getAdminUsername();
 	
 	public boolean isScopeOnly();
+	
+	public boolean isDeactivated();
 
 }

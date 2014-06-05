@@ -87,7 +87,9 @@ public class Configuration implements Serializable, ITypedElement {
 	public static final String PROP_SCOPE = "configuration_scope"; //$NON-NLS-1$
     public static final String PROP_SCOPE_YES = "configuration_scope_yes"; //$NON-NLS-1$
     public static final String PROP_SCOPE_NO = "configuration_scope_no"; //$NON-NLS-1$
-	
+
+    public static final String PROP_DEACTIVATED = "configuration_deactivated"; //$NON-NLS-1$
+    
 	private CnATreeElement person;
 	
 	private Integer dbId;
@@ -162,6 +164,11 @@ public class Configuration implements Serializable, ITypedElement {
 	public boolean isAdminUser() {
 		return isRawPropertyValueEqual(PROP_ISADMIN, PROP_ISADMIN_YES);
 	}
+	
+    public boolean isDeactivatedUser() {
+        return isRawPropertyValueEqual(PROP_DEACTIVATED, "1");
+    }
+	
 	
 	public boolean isScopeOnly() {
         return isRawPropertyValueEqual(PROP_SCOPE, PROP_SCOPE_YES);

@@ -143,7 +143,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="configuration_scope_yes" name="Ja"/>
                 <option id="configuration_scope_no" name="Nein"/>
     </huiproperty>
-     
+
     <huiproperty name="Web access" 
                 id="configuration_web"
                 inputtype="singleoption">
@@ -158,6 +158,12 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="configuration_rcp_no" name="Nein"/>
     </huiproperty>
      
+    <huiproperty 
+                name="Account deactivated" 
+                id="configuration_deactivated"
+                inputtype="booleanoption"  defaultValue="0">
+    </huiproperty>
+
      <huipropertygroup
 			id="configuration_mailing"
 			name="Mailbenachrichtigung">

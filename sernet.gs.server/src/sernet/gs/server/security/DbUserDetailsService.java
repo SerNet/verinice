@@ -72,6 +72,12 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
 			    if (log.isDebugEnabled()) {
                     log.debug("User found: " + username);
                 }
+			    if("1".equals(entity.getSimpleValue(Configuration.PROP_DEACTIVATED))){
+			        if(log.isDebugEnabled()){
+			            log.debug("User " + username + " is deactivated");
+			        }
+			        throw new UsernameNotFoundException(Messages.getString("DbUserDetailsService.5"));
+			    }
 				return databaseUser(entity);
 			}
 		}

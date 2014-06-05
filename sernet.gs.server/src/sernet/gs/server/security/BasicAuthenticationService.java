@@ -49,6 +49,17 @@ public class BasicAuthenticationService implements IAuthService {
     private String adminUsername;
     private IBaseDao<Configuration, Serializable> configurationDao;
     private boolean handlingPasswords;
+    
+    private final static String HQL = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+            "inner join conf.entity as entity " + //$NON-NLS-1$
+            "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+            "inner join propertyList.properties as props " + //$NON-NLS-1$
+            "inner join conf.entity as entity2 " + //$NON-NLS-1$
+            "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+            "inner join propertyList2.properties as scopeprops " + //$NON-NLS-1$
+            "where props.propertyType = ? " + //$NON-NLS-1$
+            "and props.propertyValue like ? " + //$NON-NLS-1$
+            "and scopeprops.propertyType = ?";   //$NON-NLS-1$
 
     /**
      * @param guestUser the guestUser to set
@@ -153,28 +164,35 @@ public class BasicAuthenticationService implements IAuthService {
      */
     @Override
     public boolean isScopeOnly() {
-        String hql = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
-                "inner join conf.entity as entity " + //$NON-NLS-1$
-                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-                "inner join propertyList.properties as props " + //$NON-NLS-1$
-                "inner join conf.entity as entity2 " + //$NON-NLS-1$
-                "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
-                "inner join propertyList2.properties as scopeprops " + //$NON-NLS-1$
-                "where props.propertyType = ? " + //$NON-NLS-1$
-                "and props.propertyValue like ? " + //$NON-NLS-1$
-                "and scopeprops.propertyType = ?";   //$NON-NLS-1$
-        
         String username = getUsername();
         if(username!=null) {
                 username = username.replace("\\", "\\\\");
         }
         Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_SCOPE};                
-        List<String> resultList = getConfigurationDao().findByQuery(hql,params);
+        List<String> resultList = getConfigurationDao().findByQuery(HQL,params);
         String value = null;
         if (resultList != null && resultList.size() == 1) {
             value = resultList.get(0);
         }       
         return Configuration.PROP_SCOPE_YES.equals(value);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isDeactivated()
+     */
+    @Override
+    public boolean isDeactivated() {
+        String username = getUsername();
+        if(username!=null) {
+                username = username.replace("\\", "\\\\");
+        }
+        Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_DEACTIVATED};                
+        List<String> resultList = getConfigurationDao().findByQuery(HQL,params);
+        String value = null;
+        if (resultList != null && resultList.size() == 1) {
+            value = resultList.get(0);
+        }       
+        return "1".equals(value);
     }
 
     /**

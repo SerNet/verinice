@@ -101,4 +101,12 @@ public final class NoAuthenticationService implements IAuthService {
     public boolean isHandlingPasswords() {
         return false;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isDeactivated()
+     */
+    @Override
+    public boolean isDeactivated() {
+        return false;
+    }
 }

@@ -167,5 +167,18 @@ public final class DigestAuthenticationService implements IAuthService {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IAuthService#isDeactivated()
+     */
+    @Override
+    public boolean isDeactivated() {
+        try {
+            return getUserDetails().isAccountDeactivated();
+        } catch (Exception e) {
+            log.error( "Error while getting account deactivated value.", e ); //$NON-NLS-1$
+        }
+        return false;
+    }
+
 
 }

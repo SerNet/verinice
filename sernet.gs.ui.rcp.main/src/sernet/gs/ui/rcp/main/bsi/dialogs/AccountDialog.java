@@ -30,6 +30,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -83,6 +84,8 @@ public class AccountDialog extends TitleAreaDialog {
 	private Text textName;
 	private String name;
 	private boolean isScopeOnly;
+	private boolean isDeactivated;
+	
 	
 	private String initialUserName;
 	
@@ -160,8 +163,11 @@ public class AccountDialog extends TitleAreaDialog {
                 configureScopeOnly((Combo) huiComposite.getField(Configuration.PROP_SCOPE));
                 
                 configureIsAdmin((Combo)huiComposite.getField(Configuration.PROP_ISADMIN));
-                
+
+                configureAccountDeactivated((Button) huiComposite.getField(Configuration.PROP_DEACTIVATED));
+
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
+                
             } catch (DBException e) {
                 ExceptionUtil.log(e, Messages.BulkEditDialog_1);
             }
@@ -189,6 +195,12 @@ public class AccountDialog extends TitleAreaDialog {
             combo.setEnabled(false);
         }
         combo.addSelectionListener(getScopeGroupSelectionListener());
+    }
+    
+    private void configureAccountDeactivated(Button button){
+        if(isDeactivated){
+                button.setSelection(true);
+        }
     }
     
     private void configureIsAdmin(Combo combo){

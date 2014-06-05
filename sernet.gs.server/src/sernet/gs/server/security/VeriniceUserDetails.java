@@ -31,6 +31,7 @@ public class VeriniceUserDetails implements UserDetails {
 	private String pass;
 	private List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
 	private boolean scopeOnly;
+	private boolean accountDeactivated;
 	private boolean logoutPossible = false;
 	
 	public VeriniceUserDetails(String user, String pass) {
@@ -43,6 +44,11 @@ public class VeriniceUserDetails implements UserDetails {
         this.pass = pass;
         this.scopeOnly = scopeOnly;
     }
+	
+	public VeriniceUserDetails(String user, String pass, boolean scopeOnly, boolean deactivated){
+	    this(user, pass, scopeOnly);
+	    this.accountDeactivated = deactivated;
+	}
 	
 	public GrantedAuthority[] getAuthorities() {
 		return (GrantedAuthority[]) roles.toArray(new GrantedAuthority[roles.size()]);
@@ -90,5 +96,10 @@ public class VeriniceUserDetails implements UserDetails {
 	public void addRole(String role) {
 		roles.add(new GrantedAuthorityImpl(role));
 	}
+
+    public boolean isAccountDeactivated() {
+        boolean nonLocked = isAccountNonLocked();
+        return accountDeactivated;
+    }
 	
 }
