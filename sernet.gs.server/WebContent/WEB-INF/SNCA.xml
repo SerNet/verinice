@@ -2266,10 +2266,15 @@ the value between <param></param> will be used directly if no string is found fo
 		<huipropertygroup
 			id="mnums_group_umsetzung"
 			name="Umsetzung">
+            <huiproperty
+                id="mnums_erlaeuterung"
+                name="Erläuterung"
+                required="false"
+                inputtype="text"
+                focus="true" />
 			<huiproperty
 				id="mnums_umsetzung"
 				name="Umsetzung"
-                focus="true"
                 required="true"
 				inputtype="singleoption">
 				<option
@@ -2285,11 +2290,6 @@ the value between <param></param> will be used directly if no string is found fo
 					id="mnums_umsetzung_entbehrlich"
 					name="Entbehrlich" />
 			</huiproperty>
-			<huiproperty
-				id="mnums_erlaeuterung"
-				name="Erläuterung"
-                required="false"
-				inputtype="text" />
 			<huiproperty
 				id="mnums_umsetzungbis"
 				name="Umsetzung bis"
@@ -6375,13 +6375,18 @@ Wurden bereits weitere Stellen informiert?
 	           required="true"/>
             
           <huiproperty 
+            id="samt_topic_externalnote" 
+            tags="VDA-ISA"
+            inputtype="text"
+            focus="true"/>   
+            
+          <huiproperty 
             id="samt_topic_maturity"      
             inputtype="numericoption" 
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="VDA-ISA,VDA_ISA_Audit,Web"
-            focus="true">
+            tags="VDA-ISA,VDA_ISA_Audit,Web">
                 <validationRule class="RegExRule">
                 	<param id="regEx">(-1)|[0-5]</param>
                 </validationRule>
@@ -6403,12 +6408,7 @@ Wurden bereits weitere Stellen informiert?
             id="samt_topic_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
             id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
-
-            
-          <huiproperty 
-            id="samt_topic_externalnote" 
-            tags="VDA-ISA"
-            inputtype="text"/>
+        
           <huiproperty 
             id="samt_topic_internalnote" 
             inputtype="text"
