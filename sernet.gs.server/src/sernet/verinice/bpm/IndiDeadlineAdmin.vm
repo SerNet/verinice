@@ -21,6 +21,8 @@ ${taskTitle}<br/>
 <br/>
 ${taskDescription}<br/>
 <br/>
+Assignee of the task is: ${assignee-address} ${assignee-name}
+<br/>
 <br/>
 The tasks affects the following object in verinice:<br/>
 ${elementTitle}<br/>

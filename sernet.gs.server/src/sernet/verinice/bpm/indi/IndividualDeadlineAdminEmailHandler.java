@@ -25,6 +25,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
 import sernet.verinice.bpm.IRemindService;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -38,9 +39,9 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler imp
 
     private static final String TEMPLATE = "IndiDeadlineAdmin"; //$NON-NLS-1$
     
-    private static final String TEMPLATE_TASK_TITLE = "taskTitle"; //$NON-NLS-1$
-    private static final String TEMPLATE_TASK_DESCRIPTION = "taskDescription";   //$NON-NLS-1$
-    
+    public static final String TEMPLATE_ASSIGNEE_NAME = "assignee-name";   
+    public static final String TEMPLATE_ASSIGNEE_ADDRESS = "assignee-address";
+
     /**
      * Param uuidElement is always null for this email handler.
      * 
@@ -60,9 +61,15 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler imp
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
-        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice, task deadline passed: " + taskTitle ); 
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAdminEmailHandler.1",taskTitle));
         String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
+        
+        
+        String assignee = (String) processVariables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
+        Map<String, String> assigneeData = getRemindService().loadUserData(assignee);
+        emailParameter.put(TEMPLATE_ASSIGNEE_ADDRESS, assigneeData.get(IRemindService.TEMPLATE_ADDRESS));
+        emailParameter.put(TEMPLATE_ASSIGNEE_NAME, assigneeData.get(IRemindService.TEMPLATE_NAME));
     }
 
     /* (non-Javadoc)

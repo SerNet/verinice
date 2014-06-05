@@ -25,7 +25,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
 import sernet.verinice.bpm.IRemindService;
-import sernet.verinice.bpm.gsm.Messages;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 

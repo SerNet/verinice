@@ -22,6 +22,8 @@ ${taskTitle}<br/>
 <br/>
 ${taskDescription}<br/>
 <br/>
+Verantwortlich f&uuml;r die Aufgabe ist: ${assignee-address} ${assignee-name}
+<br/>
 <br/>
 Die Aufgabe betrifft folgendes Objekt in verinice:<br/>
 ${elementTitle}<br/>
