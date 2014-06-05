@@ -21,6 +21,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -76,6 +77,8 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
@@ -114,19 +117,25 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected ICommandService commandService;
 
     protected Organization createOrganization() throws CommandException {
+        return createOrganization(null);
+    }
+
+    protected Organization createOrganization(String name) throws CommandException {
         LoadModel loadModel = new LoadModel();
         loadModel = commandService.executeCommand(loadModel);
         ISO27KModel model = loadModel.getModel();
 
         assertNotNull("ISO model is null.", model);
 
-        CreateElement<Organization> saveCommand = new CreateElement<Organization>(model, Organization.class, getClass().getSimpleName());
+        if (name == null || name.isEmpty()) {
+            name = getClass().getSimpleName();
+        }
+
+        CreateElement<Organization> saveCommand = new CreateElement<Organization>(model, Organization.class, name);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         Organization organization = saveCommand.getNewElement();
         checkOrganization(organization);
-
-        LOG.debug("Organisation created.");
 
         return organization;
     }
@@ -150,9 +159,9 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected Collection<? extends String> createInOrganisation(Organization organization, Class clazz, int i) throws CommandException {
         List<String> uuidList = new LinkedList<String>();
         Group<CnATreeElement> group;
-        if(clazz == SamtTopic.class){
+        if (clazz == SamtTopic.class) {
             group = getGroupForClass(organization, Control.class);
-        } else{
+        } else {
             group = getGroupForClass(organization, clazz);
         }
         for (int n = 0; n < i; n++) {
@@ -182,7 +191,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
             for (int i = 0; i < numberPerGroup; i++) {
-                CnATreeElement newGroup = createNewGroup(group, i);
+                CnATreeElement newGroup = createNewNamedGroup(group, i);
                 uuidList.add(newGroup.getUuid());
                 LOG.debug(newGroup.getTypeId() + ": " + newGroup.getTitle() + " created.");
             }
@@ -190,8 +199,17 @@ public abstract class CommandServiceProvider extends UuidLoader {
         return uuidList;
     }
 
-    protected CnATreeElement createNewGroup(Group<CnATreeElement> group, int n) throws CommandException {
-        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, group.getTypeId(), getClass().getSimpleName() + "_" + n);
+    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, String name) throws CommandException {
+        return createNewGroup(group, name);
+    }    
+    
+    protected CnATreeElement createNewNamedGroup(Group<CnATreeElement> group, int n) throws CommandException {
+        return createNewGroup(group, getClass().getSimpleName() + "_" + n);
+    }
+    
+    private  CnATreeElement createNewGroup(Group<CnATreeElement> group, String name) throws CommandException
+    {
+        CreateElement<CnATreeElement> command = new CreateElement<CnATreeElement>(group, group.getTypeId(), name);
         command.setInheritAuditPermissions(true);
         command = commandService.executeCommand(command);
         CnATreeElement newElement = command.getNewElement();
@@ -232,6 +250,24 @@ public abstract class CommandServiceProvider extends UuidLoader {
         assertNotNull("Element is null.", element);
         assertNotNull("Db-id of element is null.", element.getDbId());
         assertNotNull("Scope-id of element is null.", element.getScopeId());
+    }
+
+    /**
+     * Removes all with {@link #registerElementsWithUuid(String)} registered
+     * Elements from the Database.
+     * 
+     * @throws CommandException
+     */
+    protected void removeOrganization(Organization org) throws CommandException {
+
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(org);
+        commandService.executeCommand(removeCommand);
+
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(org.getUuid());
+        command = commandService.executeCommand(command);
+        CnATreeElement element = command.getElement();
+        assertNull("organization " + org.getUuid() + " was not deleted.", element);
+
     }
 
 }
