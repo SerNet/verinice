@@ -56,7 +56,10 @@ public class RemindService implements IRemindService {
     public static final String P_NAME = "nachname"; //$NON-NLS-1$
     
     private static final String DEFAULT_ADDRESS = Messages.getString("NotificationJob.0"); //$NON-NLS-1$
-     
+    
+    private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
+    private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
+    
     private JavaMailSender mailSender;   
     
     private VelocityEngine velocityEngine;
@@ -66,6 +69,10 @@ public class RemindService implements IRemindService {
     private String emailFrom;
     
     private String replyTo;
+    
+    private String emailCc;
+    
+    private String emailBcc;
     
     private String url;
     
@@ -86,6 +93,12 @@ public class RemindService implements IRemindService {
                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                message.setTo(parameter.get(TEMPLATE_EMAIL));         
                message.setFrom(getEmailFrom());
+               if(getEmailCc()!=null) {
+                   message.setCc(getEmailCc());
+               }
+               if(getEmailBcc()!=null) {
+                   message.setBcc(getEmailBcc());
+               }
                String replyTo0 = getReplyTo();
                if(replyTo0!=null && !replyTo0.isEmpty()) {
                    message.setReplyTo(replyTo0);
@@ -104,17 +117,18 @@ public class RemindService implements IRemindService {
              for (String key : parameter.keySet()) {
                  LOG.debug( key + ": "+ parameter.get(key));
              }
-          }
-          getMailSender().send(preparator);
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Email was send successfully.");
-          }
+         }
+         
+         getMailSender().send(preparator);
          
          if (LOG.isDebugEnabled()) {
-            LOG.debug("Email send, parameter: ");
-            for (String key : parameter.keySet()) {
-                LOG.debug( key + ": "+ parameter.get(key));
-            }
+             LOG.debug("Email was send successfully.");
+             LOG.debug("Email send, parameter: ");
+             for (String key : parameter.keySet()) {
+                 LOG.debug( key + ": "+ parameter.get(key));
+             }
+             LOG.debug("CC: " + getEmailCc());
+             LOG.debug("BCC: "+ getEmailBcc() );
          }
     }
     
@@ -224,6 +238,26 @@ public class RemindService implements IRemindService {
 
     public String getReplyTo() {
         return replyTo;
+    }
+
+    public String getEmailCc() {
+        return emailCc;
+    }
+
+    public void setEmailCc(String emailCc) {
+        if(!EMAIL_CC_PROPERTY.equals(emailCc)) {
+            this.emailCc = emailCc;
+        }
+    }
+
+    public String getEmailBcc() {
+        return emailBcc;
+    }
+
+    public void setEmailBcc(String emailBcc) {
+        if(!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
+            this.emailBcc = emailBcc;
+        }
     }
 
     public String getUrl() {

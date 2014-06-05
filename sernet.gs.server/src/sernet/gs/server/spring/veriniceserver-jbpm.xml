@@ -220,7 +220,9 @@
         <property name="configurationDao" ref="configurationDao" />
         <property name="enabled" value="${veriniceserver.notification.enabled}" />
         <property name="emailFrom" value="${veriniceserver.notification.email.from}"/>
-        <property name="replyTo" value="${veriniceserver.notification.email.from}"/> 
+        <property name="replyTo" value="${veriniceserver.notification.email.from}"/>
+        <property name="emailCc" value="${veriniceserver.notification.email.cc}"/>
+        <property name="emailBcc" value="${veriniceserver.notification.email.bcc}"/>  
         <property name="url" value="${veriniceserver.notification.email.linkto}"/>    
     </bean>
     

@@ -52,24 +52,27 @@ veriniceserver.nonceValiditySeconds=300
 
 # Location of the catalogue files. The filenames denote a Java resource path.
 # By default put the catalogue files into
-veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el12_html_de.zip
+veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el13_html_de.zip
 veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
 
 
 # Access credentials of the mail server that should be used to send email notifications.
-veriniceserver.notification.smtp.host=localhost
-veriniceserver.notification.smtp.port=10025
-veriniceserver.notification.smtp.username=
-veriniceserver.notification.smtp.password=
+# veriniceserver.notification.smtp.host=
+# veriniceserver.notification.smtp.port=25
+# veriniceserver.notification.smtp.username=
+# veriniceserver.notification.smtp.password=
 # The notification.enabled property controls whether the email notificationfeature is
 # active or not. Possible values are 'false' and 'true' (default is 'false').
-veriniceserver.notification.enabled=true
+veriniceserver.notification.enabled=false
 
 # Time of day at which the verinice server starts processing the email notifications. 
 veriniceserver.notification.hour=03
 veriniceserver.notification.minute=35
 veriniceserver.notification.email.from=donotreply@verinice.invalid
 veriniceserver.notification.email.replyto=donotreply@verinice.invalid
+# CC and BCC address for every email the server is sending (optional)
+# veriniceserver.notification.email.cc=
+# veriniceserver.notification.email.bcc=
 veriniceserver.notification.email.dateformat=dd.MM.yyyy
 
 # This link is included in notification mails for users, adapt to your actual hostname and domain:

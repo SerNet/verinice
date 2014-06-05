@@ -53,6 +53,8 @@
       <entry key="pniCommand" value-ref="pniCommand" />
       <entry key="notificationEnabled" value="${veriniceserver.notification.enabled}" />
       <entry key="notificationEmailFrom" value="${veriniceserver.notification.email.from}" />
+      <entry key="notificationEmailCc" value="${veriniceserver.notification.email.cc}" />
+      <entry key="notificationEmailBcc" value="${veriniceserver.notification.email.bcc}" />
       <entry key="notificationEmailReplyTo" value="${veriniceserver.notification.email.replyto}" />
       <entry key="notificationEmailLinkTo" value="${veriniceserver.notification.email.linkto}" />
       <entry key="notificationEmailDateFormat" value="${veriniceserver.notification.email.dateformat}" />

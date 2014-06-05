@@ -20,8 +20,6 @@ package sernet.gs.server;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +64,13 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
+@SuppressWarnings("restriction")
 public class MailJob extends QuartzJobBean implements StatefulJob {
 	
 	private static final Logger LOG = Logger.getLogger(MailJob.class);
+    
+    private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
+    private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
 
 	private boolean notificationEnabled;
 	
@@ -79,6 +81,10 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	private ICommandService commandService;
 	
 	private String notificationEmailFrom;
+	
+	private String notificationEmailCc;
+    
+    private String notificationEmailBcc;
 	
 	private String notificationEmailReplyTo;
 
@@ -141,6 +147,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
         			notificationEmailReplyTo,
         			notificationEmailFrom,
         			ei.getConfiguration(),
+        			notificationEmailCc,
+                    notificationEmailBcc,
         			mailSender.createMimeMessage(),
         			notificationEmailDateFormat,
         			notificationEmailLinkTo);
@@ -198,7 +206,27 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		this.notificationEmailFrom = notificationEmailFrom;
 	}
 
-	public void setNotificationEmailReplyTo(String notificationEmailReplyTo) {
+	public String getNotificationEmailCc() {
+        return notificationEmailCc;
+    }
+
+    public void setNotificationEmailCc(String notificationEmailCc) {
+        if(!EMAIL_CC_PROPERTY.equals(notificationEmailCc)) {
+            this.notificationEmailCc = notificationEmailCc;
+        }       
+    }
+
+    public String getNotificationEmailBcc() {
+        return notificationEmailBcc;
+    }
+
+    public void setNotificationEmailBcc(String notificationEmailBcc) {
+        if(!EMAIL_BCC_PROPERTY.equals(notificationEmailBcc)) {
+            this.notificationEmailBcc = notificationEmailBcc;
+        }
+    }
+
+    public void setNotificationEmailReplyTo(String notificationEmailReplyTo) {
 		this.notificationEmailReplyTo = notificationEmailReplyTo;
 	}
 	
@@ -236,7 +264,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 	 */
 	private static class MessageHelper
 	{
-	    private String replyTo, from, to;
+	    private String replyTo, from, to, cc, bcc;
 				
 	    private List<String> events = new ArrayList<String>();
 		
@@ -252,11 +280,19 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 
         private String linkTo;
 		
-		MessageHelper(String replyTo, String from, Configuration recipient, MimeMessage mm, DateFormat df, String linkTo)
-		{
+		MessageHelper( String replyTo, 
+		               String from, 
+		               Configuration recipient, 
+		               String cc,
+                       String bcc,	               
+		               MimeMessage mm, 
+		               DateFormat df, 
+		               String linkTo) {
 			this.replyTo = replyTo;
 			this.from = from;
 			this.to = recipient.getNotificationEmail();
+			this.cc = cc;
+            this.bcc = bcc;
 			this.mm = mm;
 			dateFormat = df;
 			this.linkTo = linkTo;
@@ -270,23 +306,6 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		void addRevisionExpirationEvent()
 		{
 			events.add(MailMessages.MailJob_2);
-		}
-		
-		String titleAndDate(MassnahmenUmsetzung mu, boolean isCompletion)
-		{
-			StringBuffer sb = new StringBuffer();
-			sb.append(mu.getTitle());
-			sb.append(" ("); //$NON-NLS-1$
-			Calendar c = Calendar.getInstance();
-			Date d = (isCompletion ? mu.getUmsetzungBis() : mu.getNaechsteRevision());
-			if (d != null) {
-				c.setTime(d);
-			}
-			
-			sb.append(dateFormat.format(c.getTime()));
-			sb.append(")"); //$NON-NLS-1$
-			
-			return sb.toString();
 		}
 		
 		void addCompletionExpirationEvent(MassnahmenUmsetzung mu)
@@ -351,7 +370,12 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 			mm.setFrom(new InternetAddress(from));
 			mm.setReplyTo(new InternetAddress[] { new InternetAddress(replyTo) });
 			mm.setRecipient(RecipientType.TO, new InternetAddress(this.to));
-			
+			if(this.cc!=null) {
+			    mm.setRecipient(RecipientType.CC, new InternetAddress(this.cc)); 
+			}
+			if(this.bcc!=null) {
+                mm.setRecipient(RecipientType.BCC, new InternetAddress(this.bcc)); 
+            }
 			mm.setSubject(MailMessages.MailJob_6);
 			
 			StringBuffer sb = new StringBuffer();
