@@ -58,13 +58,13 @@
     
    <!-- Execute --> 
     
-<!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="614,317,186,52" name="indi.task.execute"> -->
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="614,317,186,52" name="indi.task.execute">
    <!-- Test settings -->
-   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="3 minutes" g="615,319,186,52" name="indi.task.execute">
+<!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="3 minutes" g="615,319,186,52" name="indi.task.execute"> -->
       <on event="reminder-timeout">
-<!--          <timer duedate="#{INDI_REMINDER_DATE}"/> -->
+         <timer duedate="#{INDI_REMINDER_DATE}"/>
          <!-- Test settings -->
-      <timer duedate="2 minute"/>
+<!--       <timer duedate="2 minute"/> -->
          <event-listener class="sernet.verinice.bpm.Reminder">
             <field name="taskType"><string value="indi.task.execute"/></field>
          </event-listener>
@@ -72,9 +72,9 @@
       <transition g="-253,136" name="indi.trans.complete" to="indi.task.check"/>
       <transition g="171,343:264,-19" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
       <transition g="-47,-24" name="timeout" to="java.sendReminder.admin">
-<!--           <timer duedate="#{ISA_DUEDATE}"/> -->
+          <timer duedate="#{ISA_DUEDATE}"/>
           <!-- Test settings -->
-          <timer duedate="3 minutes"/>
+<!--           <timer duedate="3 minutes"/> -->
       </transition>
    </task> 
    
@@ -86,15 +86,15 @@
       <transition to="java.sendReminder"/>
    </java>
    
-<!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="241,577,186,52" name="indi.task.execute.loop"> -->
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="241,577,186,52" name="indi.task.execute.loop">
    <!-- Test settings -->
-   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="241,577,186,52" name="indi.task.execute.loop">
+<!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="241,577,186,52" name="indi.task.execute.loop"> -->
       <transition g="49,-122" name="indi.trans.complete" to="indi.task.check"/>
       <transition g="173,602:8,-250" name="indi.trans.notResposible" to="indi.task.assign.nr"/> 
       <transition g="321,525:-58,-9" name="timeout" to="java.sendReminder">
-<!--          <timer duedate="#{ISA_DUEDATE}"/> -->
+         <timer duedate="#{ISA_DUEDATE}"/>
           <!-- Test settings -->
-          <timer duedate="2 minutes"/>
+<!--           <timer duedate="2 minutes"/> -->
       </transition>
    </task> 
    
