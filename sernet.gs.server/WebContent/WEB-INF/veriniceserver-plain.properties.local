@@ -71,8 +71,8 @@
 # veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
 
 # Access credentials of the mail server that should be used to send email notifications.
-# veriniceserver.notification.smtp.host=
-# veriniceserver.notification.smtp.port=25
+# veriniceserver.notification.smtp.host=localhost
+# veriniceserver.notification.smtp.port=10025
 # veriniceserver.notification.smtp.username=
 # veriniceserver.notification.smtp.password=
 # The notification.enabled property controls whether the email notificationfeature is
