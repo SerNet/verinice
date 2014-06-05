@@ -24,7 +24,6 @@ import java.io.Serializable;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.HydratorUtil;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -62,8 +61,7 @@ public class LoadAncestors extends LoadElementByUuid {
     public void execute() {
         super.execute();
         if (getElement() != null) {
-            CnATreeElement elementWithParent = loadParent(getElement());
-            element.setParent(elementWithParent.getParent());
+            loadParent(getElement());
         }
     }
 
