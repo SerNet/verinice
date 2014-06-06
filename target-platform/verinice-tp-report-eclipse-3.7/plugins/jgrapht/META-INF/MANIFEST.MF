@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: jgrapht
+Bundle-SymbolicName: jgrapht
+Bundle-Version: 0.8.3
+Bundle-ClassPath: jgrapht-jdk1.6-0.8.3.jar
+Export-Package: org.jgrapht,org.jgrapht.alg,org.jgrapht.demo,org.jgrapht.event,org.jgrapht.generate,org.jgrapht.graph,org.jgrapht.traverse,org.jgrapht.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+
