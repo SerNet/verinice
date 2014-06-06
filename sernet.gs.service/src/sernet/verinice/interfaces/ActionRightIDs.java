@@ -88,6 +88,8 @@ public class ActionRightIDs {
     public static final String TASKVIEW = "taskview";
     public static final String TASKDELETE = "taskdelete";
     public static final String TASKSHOWALL = "taskshowall";
+    public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
+    public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
@@ -34,9 +33,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.rcp.DateSelectDialog;
+import sernet.verinice.rcp.RightsEnabledHandler;
 
 
 /**
@@ -45,7 +46,7 @@ import sernet.verinice.rcp.DateSelectDialog;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class DuedateHandler extends AbstractHandler {
+public class DuedateHandler extends RightsEnabledHandler {
 
     private static final Logger LOG = Logger.getLogger(DuedateHandler.class);
     
@@ -94,6 +95,14 @@ public class DuedateHandler extends AbstractHandler {
     
     private ITaskService getTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.TASKCHANGEDUEDATE;
     }
 
 }

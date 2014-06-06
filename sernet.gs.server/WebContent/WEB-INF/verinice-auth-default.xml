@@ -26,6 +26,8 @@
             "editprofile"
             "taskdelete"
             "taskshowall"
+            "taskchangeassignee"
+            "taskchangeduedate"
             "showallfiles" -->
         <action id="addbsielement" />
         <action id="addcatalog" />
@@ -91,6 +93,8 @@
             "editprofile"
             "taskdelete"
             "taskshowall"
+            "taskchangeassignee"
+            "taskchangeduedate"
             "addismorg"
             "additverbund"
             "xmlimport" 
@@ -208,7 +212,9 @@
 	        <action id="samtview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
-	        <action id="simpleauditview" />
+	        <action id="simpleauditview" />      
+            <action id="taskchangeassignee" />
+            <action id="taskchangeduedate" />
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
@@ -272,7 +278,9 @@
 	        <action id="samtview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
-	        <action id="simpleauditview" />
+	        <action id="simpleauditview" />      
+            <action id="taskchangeassignee" />
+            <action id="taskchangeduedate" />
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />

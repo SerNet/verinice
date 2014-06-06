@@ -25,6 +25,8 @@
                 "createindividualtasks"
                 "createisatasks"
 	            "editprofile"
+                "taskchangeassignee"
+                "taskchangeduedate"
 	            "taskdelete" 
 	            "taskshowall" 
                 "importldap" -->
