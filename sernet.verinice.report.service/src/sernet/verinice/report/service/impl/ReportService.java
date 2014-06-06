@@ -44,6 +44,8 @@ public class ReportService implements IReportService {
 		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports (english)
 		        new ISMRiskManagementResultsReportDe(), // ISO 27k1 Report (german)
 		        
+		        new RiskTreatmentReport(),
+		        
 		        new ControlMaturityReport(),
 		        new StatementOfApplicabilityReport(),
 		        new InventoryOfAssetsReport(),
