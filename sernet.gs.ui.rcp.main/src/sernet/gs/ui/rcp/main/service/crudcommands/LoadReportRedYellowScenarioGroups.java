@@ -210,8 +210,8 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     }
 
     /**
-     * determins if a risk (given by asset & scenario) is categorized in the specified colour,
-     * risktype chooses the numOfYellowFields (currently CIA : 343)
+     * determines if a risk (given by asset & scenario) is categorized in the specified color,
+     * risk type chooses the numOfYellowFields (currently CIA : 343)
      * @param asset
      * @param scenario
      * @param riskColour
