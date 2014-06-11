@@ -72,7 +72,7 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
                     int groupdbid = Integer.parseInt(list.get(2));
                     LoadPolymorphicCnAElementById elmtLoader = new LoadPolymorphicCnAElementById(new Integer[] { Integer.valueOf(groupdbid) });
                     CnATreeElement szenarioGroup = getCommandService().executeCommand(elmtLoader).getElements().get(0);
-                    if (szenarioGroup.getParent().getDbId().intValue() != szenarioGroup.getScopeId().intValue() && !noDirectSzenariosConnected(szenarioGroup)) {
+                    if (szenarioGroup.getParent().getDbId().intValue() != szenarioGroup.getScopeId().intValue() && isDirectlyLinkedWithSzenario(szenarioGroup)) {
 
                         int redCount = 0;
                         int yellowCount = 0;
@@ -101,17 +101,17 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
         }
     }
 
-    private boolean noDirectSzenariosConnected(CnATreeElement szenarioGroup) {
+    private boolean isDirectlyLinkedWithSzenario(CnATreeElement szenarioGroup) {
 
         if (hasChildren(szenarioGroup)) {
             for (CnATreeElement child : szenarioGroup.getChildren()) {
                 if (IncidentScenario.TYPE_ID.equals(child.getTypeId())) {
-                    return false;
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
     private boolean hasChildren(CnATreeElement cnATreeElement) {
