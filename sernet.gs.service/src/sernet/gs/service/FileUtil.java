@@ -18,11 +18,14 @@
 package sernet.gs.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -58,6 +61,10 @@ public class FileUtil {
 	    // encode charsetTo
 	    ByteBuffer outputBuffer = charsetTo.encode(data);
 	    return outputBuffer.array();
+	}
+	
+	public static void writeStringToFile(String content, File file) throws IOException{
+	    FileUtils.writeStringToFile(file, content);
 	}
 
 }
