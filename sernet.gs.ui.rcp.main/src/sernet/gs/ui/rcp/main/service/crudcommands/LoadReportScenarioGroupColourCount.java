@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRedYellowScenarioGroups.ColoredScenarioGroup;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
@@ -67,17 +68,17 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
             try {
                 LoadReportRedYellowScenarioGroups groupLoader = new LoadReportRedYellowScenarioGroups(rootElmt, numOfYellowFields, this.scenarioProbabilityType);
                 groupLoader = getCommandService().executeCommand(groupLoader);
-                for (List<String> list : groupLoader.getResults()) {
+                for (ColoredScenarioGroup coloredScenarioGroup : groupLoader.getResults()) {
                     int overallCount = 0;
-                    int groupdbid = Integer.parseInt(list.get(2));
+                    int groupdbid = Integer.parseInt(coloredScenarioGroup.databaseId);
                     LoadPolymorphicCnAElementById elmtLoader = new LoadPolymorphicCnAElementById(new Integer[] { Integer.valueOf(groupdbid) });
                     CnATreeElement szenarioGroup = getCommandService().executeCommand(elmtLoader).getElements().get(0);
-                    if (szenarioGroup.getParent().getDbId().intValue() != szenarioGroup.getScopeId().intValue() && isDirectlyLinkedWithSzenario(szenarioGroup)) {
+                    if (szenarioGroup.getParent().getDbId().intValue() != szenarioGroup.getScopeId().intValue() ) {
 
                         int redCount = 0;
                         int yellowCount = 0;
                         ArrayList<String> result = new ArrayList<String>(0);
-                        result.add(list.get(0));
+                        result.add(coloredScenarioGroup.title);
                         LoadReportNotGreenScenarios scenarioColourLoader = new LoadReportNotGreenScenarios(groupdbid, numOfYellowFields, this.scenarioProbabilityType);
                         scenarioColourLoader = getCommandService().executeCommand(scenarioColourLoader);
                         for (List<String> scenarioResult : scenarioColourLoader.getResult()) {
@@ -99,23 +100,6 @@ public class LoadReportScenarioGroupColourCount extends GenericCommand implement
                 getLog().error("Errow while executing command", e);
             }
         }
-    }
-
-    private boolean isDirectlyLinkedWithSzenario(CnATreeElement szenarioGroup) {
-
-        if (hasChildren(szenarioGroup)) {
-            for (CnATreeElement child : szenarioGroup.getChildren()) {
-                if (IncidentScenario.TYPE_ID.equals(child.getTypeId())) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean hasChildren(CnATreeElement cnATreeElement) {
-        return cnATreeElement.getChildren() != null || cnATreeElement.getChildren().isEmpty();
     }
 
     private Logger getLog() {
