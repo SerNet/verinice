@@ -9,11 +9,13 @@ Require-Bundle: bouncycastle;bundle-version="1.46.0",
  org.eclipse.equinox.ds;bundle-version="1.1.1",
  org.eclipse.core.runtime,
  inetlib;bundle-version="1.1.1",
- gnumail;bundle-version="1.1.2"
+ gnumail;bundle-version="1.1.2",
+ com.springsource.org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  bin
 Export-Package: sernet.verinice.encryption
 Service-Component: OSGI-INF/component.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.log4j
+Import-Package: org.apache.commons.lang;version="2.4.0",
+ org.apache.log4j
