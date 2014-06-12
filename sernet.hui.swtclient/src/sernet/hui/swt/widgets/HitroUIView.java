@@ -180,7 +180,7 @@ public class HitroUIView implements IEntityChangedListener   {
 				tip.setLayout (layout);
 			
 				Label label = new Label (tip, SWT.NONE);
-				label.setText ("Hilfe: Pfeil-Runter-Taste");
+				label.setText (Messages.getString(HitroUIView.class.getSimpleName()));
 			
 				Point size = tip.computeSize (SWT.DEFAULT, SWT.DEFAULT);
 				Rectangle rect = control.getBounds ();
