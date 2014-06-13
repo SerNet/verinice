@@ -20,9 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.editors.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.editors.messages"; //$NON-NLS-1$
 
-	public static String AttachmentEditor_1;
+    public static String AttachmentEditor_1;
 
     public static String AttachmentEditor_3;
 
@@ -30,29 +30,31 @@ public class Messages extends NLS {
 
     public static String BSIElementEditor_0;
 
-	public static String BSIElementEditor_1;
+    public static String BSIElementEditor_1;
 
-	public static String BSIElementEditor_2;
+    public static String BSIElementEditor_2;
 
-	public static String BSIElementEditor_3;
+    public static String BSIElementEditor_3;
 
-	public static String BSIElementEditor_5;
+    public static String BSIElementEditor_5;
 
-	public static String BSIElementEditor_7;
+    public static String BSIElementEditor_7;
 
-	public static String BSIElementEditor_8;
+    public static String BSIElementEditor_8;
 
     public static String EditorFactory_0;
 
     public static String EditorFactory_2;
 
-	public static String InputHelperFactory_0;
+    public static String InputHelperFactory_0;
 
     public static String InputHelperFactory_1;
 
-	public static String InputHelperFactory_2;
+    public static String InputHelperFactory_2;
 
-	public static String InputHelperFactory_3;
+    public static String InputHelperFactory_3;
+
+    public static String InputHelperFactory_4;
 
     public static String InputHelperFactory_5;
 
@@ -96,11 +98,11 @@ public class Messages extends NLS {
 
     public static String NoteEditor_5;
 
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
-	private Messages() {
-	}
+    private Messages() {
+    }
 }

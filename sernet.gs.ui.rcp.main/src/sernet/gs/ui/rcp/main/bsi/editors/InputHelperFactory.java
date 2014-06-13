@@ -109,7 +109,7 @@ public class InputHelperFactory {
         if (schutzbedarfHelper == null) {
             schutzbedarfHelper = new IInputHelper() {
                 public String[] getSuggestions() {
-                    return new String[] { Schutzbedarf.MAXIMUM, Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
+                    return new String[] { Messages.InputHelperFactory_4, Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
                 }
             };
         }
