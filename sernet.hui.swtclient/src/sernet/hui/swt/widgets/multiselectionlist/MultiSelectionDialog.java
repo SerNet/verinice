@@ -119,7 +119,7 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 			}
 			
 			Button okayBtn = new Button(buttons, SWT.PUSH);
-			okayBtn.setText("Fertig");
+			okayBtn.setText(Messages.MultiSelectionControl_6);
 			okayBtn.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent arg0) {
 					close();

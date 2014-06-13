@@ -35,6 +35,8 @@ public class Messages extends NLS{
     public static String MultiSelectionControl_4;
 
     public static String MultiSelectionControl_5;
+    
+    public static String MultiSelectionControl_6;
 
     
     static {
