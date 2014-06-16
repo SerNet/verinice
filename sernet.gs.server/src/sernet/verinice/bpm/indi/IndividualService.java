@@ -69,7 +69,8 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IGenericProcess.VAR_UUID, parameter.getUuid());
         map.put(IGenericProcess.VAR_ASSIGNEE_NAME, parameter.getAssignee());
         map.put(IIndividualProcess.VAR_RELATION_ID, parameter.getAssigneeRelationId());
-        map.put(IGenericProcess.VAR_DUEDATE, parameter.getDueDate());       
+        map.put(IGenericProcess.VAR_DUEDATE, parameter.getDueDate()); 
+        map.put(IIndividualProcess.VAR_REMINDER_DAYS, parameter.getReminderPeriodDays());
         map.put(IIndividualProcess.VAR_REMINDER_DATE, getReminderDate(parameter));
         map.put(IGenericProcess.VAR_OWNER_NAME, getAuthService().getUsername());
         String description = parameter.getDescription();

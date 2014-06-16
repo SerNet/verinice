@@ -167,6 +167,8 @@
         <property name="completeHandler">
             <map>
                 <entry key="iqm.task.setAssignee.iqm.trans.setAssignee" value-ref="isaQmSetAssigneeHandler"/>
+                <entry key="indi.task.execute.indi.trans.extension" value-ref="indiExtensionHandler"/>
+                <entry key="indi.task.execute.loop.indi.trans.extension" value-ref="indiExtensionHandler"/>
             </map>
         </property>
         <property name="defaultCompleteServerHandler" ref="defaultCompleteServerHandler" />
@@ -177,16 +179,18 @@
         <property name="descriptionHandler">
             <map>
                 <entry key="iqm.task.setAssignee" value-ref="setAssigneeDescriptionHandler"/>
-                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>            
-                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>            
-                <entry key="indi.task.execute.deadline.admin" value-ref="indiDescriptionHandler"/>            
+                <entry key="iqm.task.check" value-ref="checkFeedbackDescriptionHandler"/>
+                <entry key="indi.task.execute" value-ref="indiDescriptionHandler"/>
+                <entry key="indi.task.execute.deadline.admin" value-ref="indiDescriptionHandler"/>
                 <entry key="indi.task.execute.deadline.assignee" value-ref="indiDescriptionHandler"/>
-                <entry key="indi.task.execute.loop" value-ref="indiDescriptionHandler"/>           
+                <entry key="indi.task.execute.loop" value-ref="indiDescriptionHandler"/>
                 <entry key="indi.task.check" value-ref="indiCheckDescriptionHandler"/>
                 <entry key="indi.task.assign" value-ref="indiAssignDescriptionHandler"/>
                 <entry key="indi.task.assign.deadline" value-ref="indiDeadlineDescriptionHandler"/>
-                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>                      
-                <entry key="gsm.ism.execute.task.execute" value-ref="gsmIsmDescriptionHandler"/>            
+                <entry key="indi.task.assign.nr" value-ref="indiNrDescriptionHandler"/>
+                <entry key="gsm.ism.execute.task.execute" value-ref="gsmIsmDescriptionHandler"/>
+                <entry key="indi.task.extension" value-ref="indiExtensionDescriptionHandler"/>
+                <entry key="indi.task.extension.loop" value-ref="indiExtensionDescriptionHandler"/>
             </map>
         </property>
         <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
@@ -199,6 +203,10 @@
     <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
         <property name="taskService" ref="taskService" />
     </bean>
+    
+    <bean id="indiExtensionHandler" class="sernet.verinice.bpm.indi.IndiExtensionHandler">
+        <property name="taskService" ref="taskService" />
+    </bean>
    
     <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
     <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler" />
@@ -208,6 +216,9 @@
     <bean id="indiAssignDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualAssignDescriptionHandler" />
     <bean id="indiDeadlineDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualDeadlineDescriptionHandler" />
     <bean id="indiNrDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualNotResponsibleDescriptionHandler" />
+    <bean id="indiExtensionDescriptionHandler" class="sernet.verinice.bpm.indi.IndividualExtensionDescriptionHandler">
+        <property name="remindService" ref="remindService" />
+    </bean>
     
     <bean id="gsmIsmDescriptionHandler" class="sernet.verinice.bpm.gsm.GsmServiceTaskDescriptionHandler">      
         <property name="velocityEngine" ref="velocityEngine"/>

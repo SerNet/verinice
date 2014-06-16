@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import sernet.verinice.bpm.gsm.GsmExecuteEmailHandler;
+import sernet.verinice.bpm.indi.IndiTaskReminderEmailHandler;
 import sernet.verinice.bpm.indi.IndividualDeadlineAdminEmailHandler;
 import sernet.verinice.bpm.indi.IndividualDeadlineAssigneeEmailHandler;
 import sernet.verinice.bpm.isam.AuditEmailHandler;
@@ -49,8 +50,8 @@ public final class EmailHandlerFactory {
         IEmailHandler taskReminder = new TaskReminderEmailHandler();
         HANDLERMAP.put(IIsaControlFlowProcess.TASK_ASSIGN, taskReminder);
         HANDLERMAP.put(IIsaControlFlowProcess.TASK_EXECUTE, taskReminder);
-        HANDLERMAP.put(IIndividualProcess.TASK_EXECUTE, taskReminder);
-        HANDLERMAP.put(IIndividualProcess.TASK_ASSIGN, taskReminder);
+        HANDLERMAP.put(IIndividualProcess.TASK_ASSIGN, taskReminder);  
+        
         // special reminder
         HANDLERMAP.put(IIsaControlFlowProcess.DEADLINE_PASSED, new DeadlineEmailHandler());
         HANDLERMAP.put(IIsaControlFlowProcess.NOT_RESPONSIBLE, new NotResponsibleEmailHandler());
@@ -59,6 +60,7 @@ public final class EmailHandlerFactory {
         HANDLERMAP.put(IIsaControlFlowProcess.REMINDER_NOT_CHANGED, new IssueNotFixedEmailHandler()); 
         HANDLERMAP.put(IGsmIsmExecuteProzess.TASK_EXECUTE, new GsmExecuteEmailHandler());  
 
+        HANDLERMAP.put(IIndividualProcess.TASK_EXECUTE, new IndiTaskReminderEmailHandler());
         HANDLERMAP.put(IIndividualProcess.TASK_EXECUTE_DEADLINE_ADMIN, new IndividualDeadlineAdminEmailHandler());
         HANDLERMAP.put(IIndividualProcess.TASK_EXECUTE_DEADLINE_ASSIGNEE, new IndividualDeadlineAssigneeEmailHandler());
     }

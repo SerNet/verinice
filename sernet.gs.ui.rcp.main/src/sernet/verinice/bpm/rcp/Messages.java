@@ -55,6 +55,9 @@ public class Messages extends NLS {
     public static String DatePage_7;
     public static String DatePage_8;
     public static String DatePage_9;
+    public static String DescriptionDialog_0;
+    public static String DescriptionDialog_1;
+    public static String DescriptionDialog_2;
     public static String DescriptionPage_0;
     public static String DescriptionPage_1;
     public static String DescriptionPage_10;

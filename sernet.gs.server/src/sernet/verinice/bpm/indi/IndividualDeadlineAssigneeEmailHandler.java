@@ -19,12 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.bpm.indi;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.bpm.GenericEmailHandler;
 import sernet.verinice.bpm.IEmailHandler;
 import sernet.verinice.bpm.IRemindService;
+import sernet.verinice.interfaces.bpm.IGenericProcess;
+import sernet.verinice.model.bpm.AbortException;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -60,6 +64,18 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler 
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAssigneeEmailHandler.1",taskTitle));  //$NON-NLS-1$
         String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.bpm.GenericEmailHandler#validate(java.util.Map, java.util.Map)
+     */
+    @Override
+    public void validate(Map<String, Object> processVariables, Map<String, String> userParameter) throws AbortException {
+        final Date dueDate = (Date) processVariables.get(IGenericProcess.VAR_DUEDATE);
+        final Calendar now = Calendar.getInstance();
+        if(dueDate.after(now.getTime())) {
+            throw new AbortException("Due date is in the future.");
+        }
     }
 
     /* (non-Javadoc)

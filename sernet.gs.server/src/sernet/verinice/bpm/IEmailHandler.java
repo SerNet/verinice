@@ -21,6 +21,7 @@ package sernet.verinice.bpm;
 
 import java.util.Map;
 
+import sernet.verinice.model.bpm.AbortException;
 import sernet.verinice.model.bpm.MissingParameterException;
 
 /**
@@ -63,5 +64,7 @@ public interface IEmailHandler {
     String getTemplate();
     
     boolean isHtml();
+    
+    void validate(Map<String, Object> processVariables, Map<String, String> userParameter) throws AbortException;
 
 }

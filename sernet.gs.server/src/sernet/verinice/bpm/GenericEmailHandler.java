@@ -30,6 +30,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.AbortException;
 import sernet.verinice.model.bpm.MissingParameterException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -69,11 +70,17 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     @Override
     public void send(String assignee, String type, Map<String, Object> processVariables, String uuid) {
         try { 
-            ServerInitializer.inheritVeriniceContextState();
-            Map<String , String> parameter = getRemindService().loadUserData(assignee);
-            parameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
-            addParameter(type, processVariables, uuid, parameter);                          
-            getRemindService().sendEmail(parameter, isHtml());
+            ServerInitializer.inheritVeriniceContextState();        
+            Map<String , String> userParameter = getRemindService().loadUserData(assignee);
+            userParameter.put(IRemindService.TEMPLATE_PATH, getTemplatePath());
+            addParameter(type, processVariables, uuid, userParameter);  
+            validate(processVariables, userParameter); // throws AbortException if it fails
+            getRemindService().sendEmail(userParameter, isHtml());
+        } catch(AbortException e) {
+            LOG.info("Execution aborted: " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.error("stacktrace: ", e);
+            }         
         } catch(MissingParameterException e) {
             LOG.error("Email can not be send: " + e.getMessage());
             if (LOG.isDebugEnabled()) {
@@ -145,6 +152,11 @@ public abstract class GenericEmailHandler implements IEmailHandler {
     
     protected ITaskService getTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+    
+    @Override
+    public void validate(Map<String, Object> processVariables, Map<String, String> userParameter) throws AbortException {
+        // nothing means validate success
     }
 
 }
