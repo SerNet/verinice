@@ -138,20 +138,20 @@ public class CryptoTest  {
             assertNotNull(certFile);
             FileUtil.writeStringToFile(certPEM, certFile);
             certFile.deleteOnExit();
-            byte[] encryptedData = encryptionService.encrypt(SECRET.getBytes(), certFile);
+            byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
             byte[] privateKey = keyPair.getPrivate().getEncoded();
             String privateKeyString = convertToPem(privateKey);
             File keyFile = File.createTempFile("veriniceKey", "PEM");
             assertNotNull(keyFile);
             FileUtil.writeStringToFile(privateKeyString, keyFile);
             certFile.deleteOnExit();
-            byte[] decryptedData = encryptionService.decrypt(encryptedData, certFile, keyFile);
+            byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
             assertEquals(SECRET, new String(decryptedData));
         } catch (GeneralSecurityException e) {
             LOG.error("Error creating certificate", e);
         } catch (IOException e) {
             LOG.error("Error creating certificate", e);
-        }
+        } 
     }
 
     private char[] getPassword(int length){
