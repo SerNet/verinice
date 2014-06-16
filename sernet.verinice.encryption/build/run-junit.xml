@@ -16,6 +16,7 @@
 	<path id="classpath.base">
 		<pathelement location="${basedir}/lib/el-api.jar" />
 		<pathelement location="${basedir}/bin" />
+		<pathelement location="${basedir}/../sernet.gs.service/bin" />
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${basedir}/lib/com.springsource.org.apache.log4j-1.2.15.jar" />	
