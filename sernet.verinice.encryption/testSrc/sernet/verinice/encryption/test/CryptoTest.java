@@ -67,7 +67,7 @@ public class CryptoTest  {
     
     private static final int MAX_PASSWORD_LENGTH = 100;
     
-    private IEncryptionService encryptionService;
+    private EncryptionService encryptionService;
     
     private static final String SECRET = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
             " Donec at ligula et nibh pretium vulputate vitae quis tortor. " +
