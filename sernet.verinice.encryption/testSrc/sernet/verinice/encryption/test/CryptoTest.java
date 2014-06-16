@@ -45,7 +45,6 @@ import org.junit.Test;
 
 import sernet.gs.service.FileUtil;
 import sernet.verinice.encryption.impl.EncryptionService;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sun.security.x509.AlgorithmId;
 import sun.security.x509.CertificateAlgorithmId;
 import sun.security.x509.CertificateIssuerName;
@@ -159,7 +158,7 @@ public class CryptoTest  {
         return RandomStringUtils.randomAscii(length).toCharArray();
     }
 
-    public IEncryptionService getEncryptionService() {
+    public EncryptionService getEncryptionService() {
         if(encryptionService == null){
             encryptionService = new EncryptionService();
         }
