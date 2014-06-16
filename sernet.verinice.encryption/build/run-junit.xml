@@ -18,7 +18,7 @@
 		<pathelement location="${basedir}/bin" />
 	</path>
 	<path id="classpath.test">
-		<pathelement locatiion="${basedir}/lib/com.springsource.org.apache.log4j-1.2.15.jar" />	
+		<pathelement location="${basedir}/lib/com.springsource.org.apache.log4j-1.2.15.jar" />	
 		<pathelement location="${basedir}/lib/com.springsource.org.junit-4.4.0.jar" />
 		<pathelement location="${basedir}/lib/spring-test-2.5.6.jar" />	
 		<path refid="classpath.base" />
