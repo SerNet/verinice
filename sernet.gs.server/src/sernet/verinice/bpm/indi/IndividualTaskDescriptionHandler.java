@@ -23,6 +23,7 @@ import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
+import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.Messages;
 
 /**
@@ -81,7 +82,7 @@ public class IndividualTaskDescriptionHandler implements ITaskDescriptionHandler
     }
     
     protected String getDescriptionKey() {
-        return null;
+        return IIndividualProcess.TASK_EXECUTE + ITaskService.DESCRIPTION_SUFFIX;
     }
     
     protected String getTitleKey() {
