@@ -22,11 +22,11 @@ import java.io.IOException;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 
 /**
  * This class controls all aspects of the application's execution
@@ -34,9 +34,7 @@ import org.eclipse.ui.internal.intro.impl.util.Log;
 @SuppressWarnings("restriction")
 public class Application implements IApplication {
 
-    private static final String USER_CONFIG_PROPERTY_KEY = "logging.file";
-    private static final String DEFAULT_VERINICE_LOG = "log/verinice.log";
-    private static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
+    
 
     /*
      * (non-Javadoc)
@@ -46,7 +44,9 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) throws Exception {
 
-        setLog4jFilePathSystemEnvValue();
+        LoggerInitializer.tryReadingCustomLog4jFile();
+        LoggerInitializer.tryConfiguringLoggingPath();
+        
         ConfigurationLogger.logStart();
 
         Activator.getDefault().startApplication();
@@ -65,46 +65,7 @@ public class Application implements IApplication {
         }
     }
 
-    private void setLog4jFilePathSystemEnvValue() throws IOException {
-        String p = getLoggingPath();
-        p = replaceInvalidSuffix(p);
-        configureFileAppender(p);
-    }
-
-    private void configureFileAppender(String p) {
-
-        Logger log = Logger.getRootLogger();
-        FileAppender fileAppender = (FileAppender) log.getAppender("FILE");
-        fileAppender.setFile(p);
-        fileAppender.activateOptions(); // without this call, the changes does
-                                        // have no effect
-        log.addAppender(fileAppender);
-    }
-
-    private String getLoggingPath() {
-
-        String p = readFromVeriniceIniFile();
-
-        if (p == null) {
-            p = System.getProperty(WORKSPACE_PROPERTY_KEY);
-            return p + DEFAULT_VERINICE_LOG;
-        }
-
-        return p;
-    }
-
-    private String readFromVeriniceIniFile() {
-        return System.getProperty(USER_CONFIG_PROPERTY_KEY);
-    }
-
-    private String replaceInvalidSuffix(String path) {
-        if (path.startsWith("file:/")) {
-            path = path.replaceFirst("file:", "");
-        }
-
-        return path;
-    }
-
+    
     /*
      * (non-Javadoc)
      * 

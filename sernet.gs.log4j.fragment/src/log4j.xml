@@ -12,8 +12,10 @@
 		</filter>
 	</appender>
 
+	<!-- The path to the logging file is set at runtime by verinice. If the 
+		logging path is set here, verinice would not override it, except there is 
+		defined a log path in verinice.ini -->
 	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
-		<!-- <param name="Threshold" value="INFO" /> -->
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="1000KB" />
 		<param name="MaxBackupIndex" value="20" />
@@ -40,7 +42,7 @@
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
-<!-- 		<appender-ref ref="STDOUT" /> -->
+		<!-- <appender-ref ref="STDOUT" /> -->
 	</root>
 
 </log4j:configuration>
