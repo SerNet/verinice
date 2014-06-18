@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<process key="individual-task" name="Individual task workflow" version="2" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+<process key="individual-task" name="Individual task workflow" version="5" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
    <description>Workflow to manage individual tasks.</description>
    
    <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
@@ -62,7 +62,9 @@
    <!-- Test settings -->
 <!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="3 minutes" g="730,318,186,52" name="indi.task.execute"> -->
       <on event="reminder-timeout">
-      <timer duedate="2 minute"/>
+         <timer duedate="#{INDI_REMINDER_DATE}"/>
+         <!-- Test settings -->
+<!--          <timer duedate="2 minute"/> -->
          <event-listener class="sernet.verinice.bpm.Reminder">
             <field name="taskType"><string value="indi.task.execute"/></field>
          </event-listener>
@@ -130,7 +132,6 @@
    <task assignee="#{ISA_OWNER_NAME}" duedate="7 days" g="98,245,147,52" name="indi.task.assign.nr">
       <transition g="5,22" name="indi.trans.assigned" to="checkDate"/>
    </task>
-     
    
    <!-- Check -->
    
