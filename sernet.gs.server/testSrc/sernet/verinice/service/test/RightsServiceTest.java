@@ -53,7 +53,9 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.EDITPROFILE,
         ActionRightIDs.TASKDELETE,
         ActionRightIDs.TASKSHOWALL,
-        ActionRightIDs.SHOWALLFILES
+        ActionRightIDs.SHOWALLFILES,
+        ActionRightIDs.TASKCHANGEASSIGNEE,
+        ActionRightIDs.TASKCHANGEDUEDATE
     };
     
     public static final String[] newProfileActionIds = {
