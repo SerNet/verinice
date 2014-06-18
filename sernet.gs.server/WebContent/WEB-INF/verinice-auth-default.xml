@@ -41,6 +41,7 @@
         <action id="assignallisatopics" />
         <action id="addownmodul"/>
         <action id="auditview" />
+        <action id="bausteinzuordnung" />
         <action id="bsidnd" />
         <action id="bsibrowser" />
         <action id="bsimassnahmen" />
@@ -212,7 +213,7 @@
 	        <action id="samtview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
-	        <action id="simpleauditview" />      
+	        <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
 	        <action id="taskdelete" />
@@ -278,7 +279,7 @@
 	        <action id="samtview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
-	        <action id="simpleauditview" />      
+	        <action id="simpleauditview" />
             <action id="taskchangeassignee" />
             <action id="taskchangeduedate" />
 	        <action id="taskdelete" />
