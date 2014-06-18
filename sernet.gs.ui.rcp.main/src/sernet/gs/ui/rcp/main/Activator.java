@@ -68,6 +68,7 @@ import sernet.verinice.interfaces.IInternalServer;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StartupImporter;
@@ -151,6 +152,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Makes a representation of this bundle as a service available.
         context.registerService(IMain.class.getName(), this, null);
+        context.registerService(ILogPathService.class.getName(), new LoggerInitializer(), null);
     }
 
     /**
@@ -254,21 +256,22 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private void checkPKCS11Support(Preferences prefs) {
         // May replace the JDK's built-in security settings
-        try { 
-            if (!isWin64() || isAtLeastJava8() ) {             
-                VeriniceSecurityProvider.register(prefs); // this fails on a win7/64 system
+        try {
+            if (!isWin64() || isAtLeastJava8()) {
+                VeriniceSecurityProvider.register(prefs); // this fails on a
+                                                          // win7/64 system
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("verinice security provider registered.");
                 }
             } else {
                 LOG.debug("Currently no PKCS#11 implementation for windows 64 bit available"); //$NON-NLS-1$
             }
-            
+
         } catch (Exception e) {
             LOG.error("Error while registering verinice security provider.", e); //$NON-NLS-1$
         }
     }
-    
+
     private boolean isAtLeastJava8() {
         String javaVersion = System.getProperty("java.version");
         boolean result = false;
@@ -459,7 +462,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     }
                 } catch (Exception e) {
                     LOG.error("Error while initializing database.", e); //$NON-NLS-1$
-                    if(e.getCause()!=null && e.getCause().getLocalizedMessage()!=null) {
+                    if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
                         setName(e.getCause().getLocalizedMessage());
                     }
                     status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.Activator_31, e);
@@ -495,7 +498,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     CnAElementFactory.getInstance().getISO27kModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
-                    if(e.getCause()!=null && e.getCause().getLocalizedMessage()!=null) {
+                    if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
                         setName(e.getCause().getLocalizedMessage());
                     }
                     status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.Activator_31, e); //$NON-NLS-1$

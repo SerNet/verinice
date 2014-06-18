@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.File;
 import java.util.Enumeration;
 
 import org.apache.commons.io.FilenameUtils;
@@ -27,6 +28,8 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
+
+import sernet.verinice.interfaces.ILogPathService;
 
 /**
  * Provides additional logging configuration.
@@ -42,11 +45,12 @@ import org.apache.log4j.xml.DOMConfigurator;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
-public class LoggerInitializer {
+public class LoggerInitializer implements ILogPathService {
 
     private static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
     private static final String LOGGING_PATH_KEY = "logging.file";
-    private static final String DEFAULT_VERINICE_LOG = "log/verinice.log";
+    private static final String LOG_FOLDER = "log/";
+    private static final String DEFAULT_VERINICE_LOG =  "verinice.log";
     private static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
 
     /**
@@ -83,7 +87,7 @@ public class LoggerInitializer {
         String config = System.getProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY);
         String extension = FilenameUtils.getExtension(config);
 
-        if (extension.equals("xml")) {
+        if (("xml").equals(extension)) {
             DOMConfigurator.configure(config);
         }
 
@@ -120,19 +124,22 @@ public class LoggerInitializer {
         return fileAppender.getFile() != null;
     }
 
-    private static String getLoggingPath() {
+    private static String getLoggingPathPrefix() {
 
         String p = readFromVeriniceIniFile();
 
         if (p == null) {
             p = System.getProperty(WORKSPACE_PROPERTY_KEY);
-            return p + DEFAULT_VERINICE_LOG;
         }
 
-        return p;
+        return p + LOG_FOLDER;
     }
 
-    private static String readFromVeriniceIniFile() {
+    private static String getLoggingPath() {
+        return getLoggingPathPrefix() + DEFAULT_VERINICE_LOG;
+    }
+
+    private static String readFromVeriniceIniFile() {        
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
@@ -142,6 +149,16 @@ public class LoggerInitializer {
         }
 
         return path;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.LogPathService#getLogPath()
+     */
+    @Override
+    public String getLogPath() {
+        return replaceInvalidSuffix(getLoggingPathPrefix());
     }
 
 }

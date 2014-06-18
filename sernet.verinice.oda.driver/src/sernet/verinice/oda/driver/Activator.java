@@ -29,6 +29,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
@@ -52,6 +53,8 @@ public class Activator extends AbstractUIPlugin {
 	private ServiceTracker mainTracker;
 	
 	private ServiceTracker commandServiceTracker;
+	
+	private ServiceTracker logPathTracker;
 	
 	private static final String WORK_OBJECTS = "workObjects";
 	
@@ -85,6 +88,9 @@ public class Activator extends AbstractUIPlugin {
 		
 		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
 		commandServiceTracker.open();
+		
+		logPathTracker = new ServiceTracker(context, ILogPathService.class.getName(), null);
+		logPathTracker.open();
 	}
 
 	/*
@@ -97,6 +103,7 @@ public class Activator extends AbstractUIPlugin {
 		veriniceOdaDriverTracker.close();
 		mainTracker.close();
 		commandServiceTracker.close();
+		logPathTracker.close();
 	}
 
 	/**
@@ -139,4 +146,10 @@ public class Activator extends AbstractUIPlugin {
 	            getBeanFactory().getBean(WORK_OBJECTS);
 	    VeriniceContext.setState(state);
     }
+    
+    public ILogPathService getLogPathService()
+    {
+        return (ILogPathService) logPathTracker.getService();
+    }
+
 }

@@ -17,34 +17,35 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.preferences;
 
-import java.io.File;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.oda.driver.Activator;
 
-
 /**
- *  sets defaults for report preferences
+ * sets defaults for report preferences
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+     * initializeDefaultPreferences()
      */
+    @SuppressWarnings("restriction")
     @Override
     public void initializeDefaultPreferences() {
+
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        ILogPathService logPathService = Activator.getDefault().getLogPathService();
         
-        StringBuilder sb = new StringBuilder();
-        sb.append(System.getProperty("user.home"));
-        sb.append(File.separator);
-        sb.append("verinice");
-        sb.append(File.separator);
-        sb.append("verinice-reports.log");
-        store.setDefault(PreferenceConstants.REPORT_LOG_FILE, sb.toString());
+        String loggingPath = logPathService.getLogPath();
+
+        store.setDefault(PreferenceConstants.REPORT_LOG_FILE, loggingPath + "verinice-reports.log");
         store.setDefault(PreferenceConstants.REPORT_LOGGING_ENABLED, false);
         store.setDefault(PreferenceConstants.REPORT_LOGGING_LVL, Level.SEVERE.toString());
     }
