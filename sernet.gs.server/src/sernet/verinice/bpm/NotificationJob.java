@@ -177,6 +177,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     yesterday.add(Calendar.DATE, -1);
                     param.setSince(yesterday.getTime());
                 }
+                param.setBlacklist(getTaskService().getTaskReminderBlacklist());
                 final List<ITask> taskList = getTaskService().getTaskList(param);
                 loadUserData(name);
                 if(getEmail()!=null) {         

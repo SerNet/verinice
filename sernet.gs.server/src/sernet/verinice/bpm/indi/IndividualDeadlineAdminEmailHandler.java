@@ -58,16 +58,16 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler imp
             throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
         }
         String title = element.getTitle();
+        String taskTitle = getTaskService().loadTaskTitle(type, processVariables);String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
         if(isHtml()) {
             title = replaceSpecialChars(title);
+            taskTitle = replaceSpecialChars(taskTitle);
+            taskDescription = replaceSpecialChars(taskDescription);
         }
+        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
-        String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAdminEmailHandler.1",taskTitle));
-        String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
-        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
-        
         
         String assignee = (String) processVariables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
         Map<String, String> assigneeData = getRemindService().loadUserData(assignee);

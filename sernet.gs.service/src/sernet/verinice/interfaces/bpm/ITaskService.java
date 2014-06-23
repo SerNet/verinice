@@ -131,5 +131,5 @@ public interface ITaskService {
     
     String loadTaskTitle(String taskId, Map<String, Object> varMap);
 
-
+    Set<String> getTaskReminderBlacklist();
 }

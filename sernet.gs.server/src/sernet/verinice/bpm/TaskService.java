@@ -133,6 +133,7 @@ public class TaskService implements ITaskService {
     
     private ITaskDescriptionHandler defaultDescriptionHandler;
     
+    private Set<String> taskReminderBlacklist;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
@@ -158,9 +159,9 @@ public class TaskService implements ITaskService {
         if (log.isDebugEnabled()) {
             log.debug("getTaskList called..."); //$NON-NLS-1$
         }
-        ServerInitializer.inheritVeriniceContextState();      
+        ServerInitializer.inheritVeriniceContextState();
         if(!parameter.getAllUser() && parameter.getUsername()==null) {
-            parameter.setUsername(getAuthService().getUsername());          
+            parameter.setUsername(getAuthService().getUsername());
         }
         List<ITask> taskList = Collections.emptyList();
         if(doSearch(parameter)) {      
@@ -176,7 +177,7 @@ public class TaskService implements ITaskService {
             }
             
             if(jbpmTaskList!=null && !jbpmTaskList.isEmpty()) {
-                taskList = populateTaskList(jbpmTaskList);                
+                taskList = populateTaskList(jbpmTaskList);
             }
         }    
         if (log.isDebugEnabled()) {
@@ -255,6 +256,14 @@ public class TaskService implements ITaskService {
             where = concat(sb,where);
             sb.append("task.name=? "); //$NON-NLS-1$
             paramList.add(parameter.getTaskId()); 
+        }
+        
+        if(parameter.getBlacklist()!=null && !parameter.getBlacklist().isEmpty()) {
+            where = concat(sb,where);
+            for (String taskId : parameter.getBlacklist()) {
+                sb.append("task.name!=? "); //$NON-NLS-1$
+                paramList.add(taskId); 
+            }
         }
         
         if(parameter.getSince()!=null) {
@@ -770,6 +779,15 @@ public class TaskService implements ITaskService {
 
     public void setDefaultDescriptionHandler(ITaskDescriptionHandler defaultDescriptionHandler) {
         this.defaultDescriptionHandler = defaultDescriptionHandler;
+    }
+
+    @Override
+    public Set<String> getTaskReminderBlacklist() {
+        return taskReminderBlacklist;
+    }
+
+    public void setTaskReminderBlacklist(Set<String> taskReminderBlacklist) {
+        this.taskReminderBlacklist = taskReminderBlacklist;
     }
 
 }

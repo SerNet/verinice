@@ -21,6 +21,7 @@ package sernet.verinice.model.bpm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 
@@ -46,6 +47,8 @@ public class TaskParameter implements ITaskParameter, Serializable {
     
     String taskId;
     
+    Set<String> blacklist;
+    
     public TaskParameter() {
         super();
     }
@@ -58,10 +61,12 @@ public class TaskParameter implements ITaskParameter, Serializable {
         setUsername(username);
     }
 
+    @Override
     public Boolean getRead() {
         return read;
     }
 
+    @Override
     public void setRead(Boolean read) {
         this.read = read;
     }
@@ -69,60 +74,83 @@ public class TaskParameter implements ITaskParameter, Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskParameter#getUnread()
      */
+    @Override
     public Boolean getUnread() {
         return unread;
     }
 
+    @Override
     public void setUnread(Boolean unread) {
         this.unread = unread;
     }
 
+    @Override
     public Date getSince() {
         return since;
     }
 
+    @Override
     public void setSince(Date since) {
         this.since = since;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @Override
     public String getAuditUuid() {
         return auditUuid;
     }
 
+    @Override
     public void setAuditUuid(String auditUuid) {
         this.auditUuid = auditUuid;
     }
 
+    @Override
     public boolean getAllUser() {
         return allUser;
     }
 
+    @Override
     public void setAllUser(boolean allUser) {
         this.allUser = allUser;
     }
 
+    @Override
     public String getProcessKey() {
         return processKey;
     }
 
+    @Override
     public String getTaskId() {
         return taskId;
     }
 
+    @Override
     public void setProcessKey(String processKey) {
         this.processKey = processKey;
     }
 
+    @Override
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public Set<String> getBlacklist() {
+        return blacklist;
+    }
+
+    @Override
+    public void setBlacklist(Set<String> blacklist) {
+        this.blacklist = blacklist;
     }
 
 

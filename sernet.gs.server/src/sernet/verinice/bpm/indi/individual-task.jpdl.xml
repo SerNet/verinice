@@ -97,7 +97,7 @@
       <transition to="java.sendReminder"/>
    </java>
    
-   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}" g="241,670,186,52" name="indi.task.execute.loop">
+   <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="#{ISA_DUEDATE}"  g="241,670,186,52" name="indi.task.execute.loop">
    <!-- Test settings -->
 <!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="237,577,186,52" name="indi.task.execute.loop"> -->
       <transition g="-63,8" name="indi.trans.complete" to="indi.task.check"/>

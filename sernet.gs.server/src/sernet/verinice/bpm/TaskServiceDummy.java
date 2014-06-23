@@ -116,4 +116,12 @@ public class TaskServiceDummy implements ITaskService {
     public void setDuedate(Set<String> taskIdset, Date duedate) {     
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskReminderBlacklist()
+     */
+    @Override
+    public Set<String> getTaskReminderBlacklist() {
+        return null;
+    }
+
 }

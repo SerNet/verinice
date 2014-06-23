@@ -21,6 +21,7 @@ package sernet.verinice.interfaces.bpm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -60,4 +61,7 @@ public interface ITaskParameter extends Serializable {
 
     public void setTaskId(String taskId);
     
+    public void setBlacklist(Set<String> blacklist);
+    
+    public Set<String> getBlacklist();
 }

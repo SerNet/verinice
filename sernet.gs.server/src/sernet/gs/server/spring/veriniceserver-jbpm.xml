@@ -194,6 +194,11 @@
             </map>
         </property>
         <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
+        <property name="taskReminderBlacklist">
+            <set>
+                <value>"indi.task.execute.loop</value>
+            </set>
+        </property>
     </bean>
     
     <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler">
