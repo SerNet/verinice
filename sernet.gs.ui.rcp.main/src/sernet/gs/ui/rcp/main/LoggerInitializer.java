@@ -34,24 +34,30 @@ import sernet.verinice.interfaces.ILogPathService;
 /**
  * Provides additional logging configuration.
  * 
+ * <p>
  * Sets the logging path to the verinice workspace if no path is configured for
  * a {@link FileAppender}. Verinice can be also forced to use a specific log
  * path with setting the "-Dlogging.file=<path>" in verinice.ini. This will
  * override the defined file path of all FileAppender in the root logger.
+ * </p>
  * 
+ * <p>
  * It is also possible to provide your own log4j file with the parameter
  * "-Dlog4j.configuration" in the verinice.ini file.
+ * </p>
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
 public class LoggerInitializer implements ILogPathService {
 
-    private static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
-    private static final String LOGGING_PATH_KEY = "logging.file";
-    private static final String LOG_FOLDER = "log/";
-    private static final String DEFAULT_VERINICE_LOG =  "verinice.log";
+    protected static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
+    protected static final String LOGGING_PATH_KEY = "logging.file";
+    protected static final String LOG_FOLDER = "log/";
+    private static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
     private static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
+    
+    private String loggingPath = "";
 
     /**
      * Checks if the -Dlog4j.configuration system property is set and if so it
@@ -126,20 +132,65 @@ public class LoggerInitializer implements ILogPathService {
 
     private static String getLoggingPathPrefix() {
 
-        String p = readFromVeriniceIniFile();
+        if (isConfiguredInVeriniceIniFile())
+        {
+            return readFromVeriniceIniFile();
+        } else if (existsFilePathInRootLogger())
+        {
+            return getPathFromRootLogger();
+        } else {
+            return getStandardPath();
+        }        
+    }
 
-        if (p == null) {
-            p = System.getProperty(WORKSPACE_PROPERTY_KEY);
+    private static String getStandardPath() {
+       return appendSlash(System.getProperty(WORKSPACE_PROPERTY_KEY)) + LOG_FOLDER;
+    }
+
+    private static boolean existsFilePathInRootLogger()
+    {
+        Logger log = Logger.getRootLogger();
+        Enumeration<Appender> appenders = log.getAllAppenders();
+
+        while (appenders.hasMoreElements()) {
+            Appender appender = appenders.nextElement();
+            if (appender instanceof FileAppender) {
+
+                FileAppender fileAppender = (FileAppender) appender;
+                return isFilePathConfigured(fileAppender);
+            }
         }
+        
+        return false;
+    }
+    
+    private static String getPathFromRootLogger() {
+        Logger log = Logger.getRootLogger();
+        Enumeration<Appender> appenders = log.getAllAppenders();
 
-        return p + LOG_FOLDER;
+        while (appenders.hasMoreElements()) {
+            Appender appender = appenders.nextElement();
+            if (appender instanceof FileAppender) {
+
+                FileAppender fileAppender = (FileAppender) appender;
+                return fileAppender.getFile();
+            }
+        }
+        
+        return null;
+    }
+
+    private static String appendSlash(String string) {
+        if (string.charAt(string.length() - 1) != '/')
+            return string + "/";
+        return string;
     }
 
     private static String getLoggingPath() {
         return getLoggingPathPrefix() + DEFAULT_VERINICE_LOG;
     }
 
-    private static String readFromVeriniceIniFile() {        
+    private static String readFromVeriniceIniFile() {
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
