@@ -14,7 +14,7 @@
     <property name="layoutPreference">fixed layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
-    <parameters> 
+    <parameters>
         <scalar-parameter name="root_object" id="609">
             <property name="hidden">true</property>
             <text-property name="helpText">Manually set root object for this report.</text-property>
@@ -5245,6 +5245,12 @@ columns(cols);</value>
                     <text-property name="displayName">mnums_naechsterevisionam</text-property>
                     <text-property name="heading">mnums_naechsterevisionam</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -5454,6 +5460,11 @@ columns(cols);</value>
                     <structure>
                         <property name="position">39</property>
                         <property name="name">mnums_naechsterevisionam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -5733,6 +5744,13 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">40</property>
+                    <property name="name">dbid</property>
+                    <property name="nativeName">dbid</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
@@ -5758,6 +5776,7 @@ elmtid = inpv("elmt_id");
 c2 = new LoadReportElementWithChildren("mnums", elmtid);
 elements = helper.execute(c2).getResult();
 results = new ArrayList(0);
+lists = new ArrayList(0);
 if(elements.size() > 0){
 	cols = helper.getAllPropertyTypes("mnums", false);
 	root = elements.get(0).getScopeId();
@@ -5791,32 +5810,35 @@ if(elements.size() > 0){
 		"and link.id.dependencyId = ? " +  
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
-		persons = helper.execute(c2).getResult();
-		
-		for(Object[] oArr : persons){
-			for(Object o : oArr){
-				if(o instanceof Person){
-					person = (Person)Retriever.checkRetrieveElement(o);
-					boolean nameAlreadyAdded = false;
-					for(String name : nameList){
-						if(name.equals(person.getTitle()) || name.contains(person.getTitle())){
-							nameAlreadyAdded = true;
-							break;	
+		persons = helper.execute(c2).getResult();		
+		if(persons != null &amp;&amp; persons.size() > 0){		
+			for(Object[] oArr : persons){
+				for(Object o : oArr){
+					if(o instanceof Person){
+						person = (Person)Retriever.checkRetrieveElement(o);
+						boolean nameAlreadyAdded = false;
+						for(String name : nameList){
+							if(name.equals(person.getTitle()) || name.contains(person.getTitle())){
+								nameAlreadyAdded = true;
+								break;	
+							}
 						}
+						if(!nameAlreadyAdded){
+							nameList.add(person.getTitle());
+						}				
 					}
-					if(!nameAlreadyAdded){
-						nameList.add(person.getTitle());
-					}				
+	
 				}
-
 			}
 		}
-		Collections.sort(nameList, new Comparator() {
-            public int compare(String s1, String s2) {
-                comparator = new NumericStringComparator();
-                return comparator.compare(s1, s2);
-            }
-        });
+		if(nameList.size() > 0){		
+			Collections.sort(nameList, new Comparator() {
+        	    		public int compare(String s1, String s2) {
+                			comparator = new NumericStringComparator();
+                			return comparator.compare(s1, s2);
+            			}
+        		});
+		}
 		sb = new StringBuilder();
 		for(String nameString : nameList){
 			sb.append(nameString);
@@ -5827,6 +5849,10 @@ if(elements.size() > 0){
 		l.set(umsDurchIndex, sb.toString().trim());
 	}
 }
+
+if(lists == null){
+	return new ArrayList(0);
+} 
 return lists;]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
