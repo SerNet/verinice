@@ -43,11 +43,18 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         ILogPathService logPathService = Activator.getDefault().getLogPathService();
         
-        String loggingPath = logPathService.getLogPath();
+        
 
-        store.setDefault(PreferenceConstants.REPORT_LOG_FILE, loggingPath + "verinice-reports.log");
+        store.setDefault(PreferenceConstants.REPORT_LOG_FILE, cropLogFileName(logPathService.getLogPath()) + "verinice-reports.log");
         store.setDefault(PreferenceConstants.REPORT_LOGGING_ENABLED, false);
         store.setDefault(PreferenceConstants.REPORT_LOGGING_LVL, Level.SEVERE.toString());
+    }
+    
+    private String cropLogFileName(String logFile){
+        
+        String[] splittedPath = logFile.split("/");
+        logFile = logFile.replace(splittedPath[splittedPath.length - 1], "");
+        return logFile;
     }
 
 }
