@@ -20,6 +20,8 @@
 package sernet.verinice.bpm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,6 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.log4j.Logger;
 import org.jbpm.api.Execution;
@@ -59,8 +63,10 @@ import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.IConfigurationService;
 
@@ -134,6 +140,12 @@ public class TaskService implements ITaskService {
     private ITaskDescriptionHandler defaultDescriptionHandler;
     
     private Set<String> taskReminderBlacklist;
+    
+    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private final Lock readLock = readWriteLock.readLock();
+    private final Lock writeLock = readWriteLock.writeLock();
+    
+    private Map<String, String[]> titleMap = new HashMap<String, String[]>(); 
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
@@ -421,7 +433,7 @@ public class TaskService implements ITaskService {
      * @return
      */
     private Map<String, Object> loadVariablesForProcess(String executionId) {
-        Set<String> varNameSet = getExecutionService().getVariableNames(executionId);      
+        Set<String> varNameSet = getExecutionService().getVariableNames(executionId);  
         return getExecutionService().getVariables(executionId,varNameSet);
     }
 
@@ -434,19 +446,133 @@ public class TaskService implements ITaskService {
             log.debug("map, loading audit..."); //$NON-NLS-1$
         }
         CnATreeElement audit = null;
-        String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID);     
-        if(uuidAudit!=null) {
-            taskInformation.setUuidAudit(uuidAudit);
+        String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID); 
+        String elementUuid = (String) varMap.get(IIsaExecutionProcess.VAR_UUID);
+        if(uuidAudit!=null) {// task references child of Audit
+            handleAuditElement(taskInformation, uuidAudit, elementUuid); 
+        } else { // task references child of ITVerbund or Organization
+            handleNonAuditElement(taskInformation, elementUuid);
+        }
+    }
+
+    private void handleNonAuditElement(TaskInformation taskInformation, String elementUuid) {
+        
+        String title = null;
+        String uuid = null;
+        
+        if(isCachedElement(elementUuid)){
+            String[] cacheHit = getCachedElement(elementUuid);
+            title = cacheHit[0];
+            uuid = cacheHit[1];
+        } else {
+            String[] dbResult = getTitlefromDB(elementUuid);
+            title = dbResult[0];
+            uuid = dbResult[1];                
+        }
+        if(title == null || title.equals("")){
+            taskInformation.setAuditTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
+        } else {
+            taskInformation.setAuditTitle(title);
+            taskInformation.setUuidAudit(uuid);
+        }
+    }
+
+    private void handleAuditElement(TaskInformation taskInformation, String uuidAudit, String elementUuid) {
+        CnATreeElement audit;
+        taskInformation.setUuidAudit(uuidAudit);
+        if(isCachedElement(elementUuid)){
+            String[] cacheHit = getCachedElement(elementUuid);
+            taskInformation.setAuditTitle(cacheHit[0]);
+        } else {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setProperties(true);
             audit = getElementDao().findByUuid(uuidAudit, ri);           
-        } 
-        if(audit!=null) {
-            taskInformation.setAuditTitle(audit.getTitle());
-        } else {
-            taskInformation.setAuditTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
+            if(audit!=null) { 
+                taskInformation.setAuditTitle(audit.getTitle());
+                putElementToCache(elementUuid, new String[]{audit.getTitle(), uuidAudit});
+            }
         }
     }
+    
+    private String[] getTitlefromDB(String elementUuid){
+        String[] results = null;
+        String hql = "select distinct props.propertyValue, elmt.uuid from CnATreeElement elmt " +
+                "inner join elmt.entity as entity " + 
+                "inner join entity.typedPropertyLists as propertyList " + 
+                "inner join propertyList.properties as props " +
+                "where  elmt.dbId = (" +
+                "select scopeId from CnATreeElement element2 where element2.uuid = :uuid " +
+                ") " +
+                "AND props.propertyType IN (:titleProperties)";
+        List hqlResult = getElementDao().findByQuery(hql, new String[]{"uuid", "titleProperties"}, new Object[]{
+                elementUuid, Arrays.asList(new String[]{ITVerbund.PROP_NAME, Organization.PROP_NAME})});
+        if(hqlResult instanceof Collection && hqlResult.size() == 1){
+            results = getValuesFromHQLResult(hqlResult);
+        }
+        if(results != null 
+                && results.length == 2 
+                && results[0] != null 
+                && results[1] != null){
+            putElementToCache(elementUuid, results);
+            return results;
+        } else {
+            return new String[]{"", ""};
+        }
+    }
+
+    private String[] getValuesFromHQLResult(List hqlResult) {
+        String[] results = new String[2];
+        if(hqlResult.get(0) instanceof Object[]){
+            Object[] hqlResultArr = (Object[])hqlResult.get(0);
+            if(hqlResultArr.length == 2){
+                if(hqlResultArr[0] instanceof String){
+                    results[0] = (String)hqlResultArr[0];
+                }
+                if(hqlResultArr[1] instanceof String){
+                    results[1] = (String)hqlResultArr[1];
+                }
+            }
+        }
+        return results;
+    }
+    
+    private boolean isCachedElement(String uuid){
+        try{
+         // prevent reading the configuration while another thread is writing it
+            readLock.lock();
+            return titleMap.containsKey(uuid);
+        } catch (Exception e){
+            log.error("Error reading the titleMapCache", e);
+        } finally {
+            readLock.unlock();
+        }
+        return false;
+    }
+    
+    private String[] getCachedElement(String uuid){
+        try{
+         // prevent reading the configuration while another thread is writing it
+            readLock.lock();
+            return titleMap.get(uuid);
+        } catch (Exception e){
+            log.error("Error reading the titleMapCache", e);
+        } finally {
+            readLock.unlock();
+        }
+        return new String[]{"", ""}; 
+    }
+
+    private void putElementToCache(String uuid, String[] result){
+        try{
+            // prevent reading the configuration while another thread is writing it
+            writeLock.lock();
+            titleMap.put(uuid, result);
+        } catch (Exception e){
+            log.error("Error writing the titleMapCache", e);
+        } finally {
+            writeLock.unlock();
+        }
+    }   
 
     /**
      * @param taskInformation
