@@ -56,15 +56,16 @@ public class IndividualDeadlineAssigneeEmailHandler extends GenericEmailHandler 
         }
         String title = element.getTitle();
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
+        String taskTitleHtml =  taskTitle;
         String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
         if(isHtml()) {
             title = replaceSpecialChars(title);
             taskDescription = replaceSpecialChars(taskDescription);
-            taskTitle = replaceSpecialChars(taskTitle);
+            taskTitleHtml = replaceSpecialChars(taskTitle);
         }
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
-        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
+        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAssigneeEmailHandler.1",taskTitle));  //$NON-NLS-1$
         
     }

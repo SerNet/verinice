@@ -59,14 +59,15 @@ public class IndividualDeadlineAdminEmailHandler extends GenericEmailHandler imp
         }
         String title = element.getTitle();
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);String taskDescription = getTaskService().loadTaskDescription(type, processVariables);
+        String taskTitleHtml =  taskTitle;
         if(isHtml()) {
             title = replaceSpecialChars(title);
-            taskTitle = replaceSpecialChars(taskTitle);
+            taskTitleHtml = replaceSpecialChars(taskTitle);
             taskDescription = replaceSpecialChars(taskDescription);
         }
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, taskDescription);
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
-        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitle);
+        emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, Messages.getString("IndividualDeadlineAdminEmailHandler.1",taskTitle));
         
         String assignee = (String) processVariables.get(IGenericProcess.VAR_ASSIGNEE_NAME);
