@@ -16,6 +16,7 @@
  * 
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Sebastian Hagedorn <sh[at]sernet[dot]de> - grouping by title for non-audit tasks
  ******************************************************************************/
 package sernet.verinice.bpm;
 
@@ -30,8 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.log4j.Logger;
 import org.jbpm.api.Execution;
@@ -140,12 +139,6 @@ public class TaskService implements ITaskService {
     private ITaskDescriptionHandler defaultDescriptionHandler;
     
     private Set<String> taskReminderBlacklist;
-    
-    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock readLock = readWriteLock.readLock();
-    private final Lock writeLock = readWriteLock.writeLock();
-    
-    private Map<String, String[]> titleMap = new HashMap<String, String[]>(); 
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
@@ -456,19 +449,10 @@ public class TaskService implements ITaskService {
     }
 
     private void handleNonAuditElement(TaskInformation taskInformation, String elementUuid) {
-        
-        String title = null;
-        String uuid = null;
-        
-        if(isCachedElement(elementUuid)){
-            String[] cacheHit = getCachedElement(elementUuid);
-            title = cacheHit[0];
-            uuid = cacheHit[1];
-        } else {
-            String[] dbResult = getTitlefromDB(elementUuid);
-            title = dbResult[0];
-            uuid = dbResult[1];                
-        }
+
+        String[] dbResult = getTitlefromDB(elementUuid);
+        String title = dbResult[0];
+        String uuid = dbResult[1];                
         if(title == null || title.equals("")){
             taskInformation.setAuditTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
         } else {
@@ -480,17 +464,11 @@ public class TaskService implements ITaskService {
     private void handleAuditElement(TaskInformation taskInformation, String uuidAudit, String elementUuid) {
         CnATreeElement audit;
         taskInformation.setUuidAudit(uuidAudit);
-        if(isCachedElement(elementUuid)){
-            String[] cacheHit = getCachedElement(elementUuid);
-            taskInformation.setAuditTitle(cacheHit[0]);
-        } else {
-            RetrieveInfo ri = new RetrieveInfo();
-            ri.setProperties(true);
-            audit = getElementDao().findByUuid(uuidAudit, ri);           
-            if(audit!=null) { 
-                taskInformation.setAuditTitle(audit.getTitle());
-                putElementToCache(elementUuid, new String[]{audit.getTitle(), uuidAudit});
-            }
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setProperties(true);
+        audit = getElementDao().findByUuid(uuidAudit, ri);           
+        if(audit!=null) { 
+            taskInformation.setAuditTitle(audit.getTitle());
         }
     }
     
@@ -513,7 +491,6 @@ public class TaskService implements ITaskService {
                 && results.length == 2 
                 && results[0] != null 
                 && results[1] != null){
-            putElementToCache(elementUuid, results);
             return results;
         } else {
             return new String[]{"", ""};
@@ -536,43 +513,6 @@ public class TaskService implements ITaskService {
         return results;
     }
     
-    private boolean isCachedElement(String uuid){
-        try{
-         // prevent reading the configuration while another thread is writing it
-            readLock.lock();
-            return titleMap.containsKey(uuid);
-        } catch (Exception e){
-            log.error("Error reading the titleMapCache", e);
-        } finally {
-            readLock.unlock();
-        }
-        return false;
-    }
-    
-    private String[] getCachedElement(String uuid){
-        try{
-         // prevent reading the configuration while another thread is writing it
-            readLock.lock();
-            return titleMap.get(uuid);
-        } catch (Exception e){
-            log.error("Error reading the titleMapCache", e);
-        } finally {
-            readLock.unlock();
-        }
-        return new String[]{"", ""}; 
-    }
-
-    private void putElementToCache(String uuid, String[] result){
-        try{
-            // prevent reading the configuration while another thread is writing it
-            writeLock.lock();
-            titleMap.put(uuid, result);
-        } catch (Exception e){
-            log.error("Error writing the titleMapCache", e);
-        } finally {
-            writeLock.unlock();
-        }
-    }   
 
     /**
      * @param taskInformation
