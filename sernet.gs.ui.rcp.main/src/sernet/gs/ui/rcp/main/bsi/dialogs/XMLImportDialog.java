@@ -268,6 +268,20 @@ public class XMLImportDialog extends Dialog {
         Label updateText = new Label(operationGroup, SWT.LEFT);
         updateText.setText(Messages.XMLImportDialog_9);
         updateText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        
+        delete = false;
+        SelectionAdapter deleteCheckListener = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e){
+                delete = (e.getSource() instanceof Button) ? ((Button)(e.getSource())).getSelection() : delete;
+            }
+        };
+        Button deleteCheck = SWTElementFactory.generateCheckboxButton(operationGroup, "delete", false, deleteCheckListener);
+        deleteCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+
+        Label deleteText = new Label(operationGroup, SWT.LEFT);
+        deleteText.setText("Delete objects in verinice");
+        deleteText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
         integrate = false;
         SelectionAdapter integrateListener = new SelectionAdapter() {
