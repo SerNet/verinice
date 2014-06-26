@@ -344,9 +344,8 @@ public class TaskService implements ITaskService {
         taskInformation.setType(task.getName());
         taskInformation.setCreateDate(task.getCreateTime()); 
         taskInformation.setAssignee(getConfigurationService().getName(task.getAssignee()));
-        if (log.isDebugEnabled()) {
-            log.debug("map, setting read status..."); //$NON-NLS-1$
-        }          
+      
+        log.debug("map, setting read status..."); //$NON-NLS-1$             
         
         Map<String, Object> varMap = loadVariables(task);  
         taskInformation.setName(loadTaskTitle(task.getName(), varMap));
@@ -365,8 +364,8 @@ public class TaskService implements ITaskService {
             taskInformation.setProperties((Set<String>) value);
         }
         
-        mapElement(taskInformation, varMap);       
-        mapAudit(taskInformation, varMap);
+        taskInformation = mapElement(taskInformation, varMap);       
+        taskInformation = mapAudit(taskInformation, varMap);
         
         if (log.isDebugEnabled()) {
             log.debug("map, loading type..."); //$NON-NLS-1$
@@ -381,10 +380,6 @@ public class TaskService implements ITaskService {
         return taskInformation;
     }
 
-    /**
-     * @param task
-     * @return
-     */
     private String getProcessName(Task task) {
         String executionId = task.getExecutionId();
         String processKey = executionId.substring(0,executionId.indexOf('.'));        
@@ -409,10 +404,6 @@ public class TaskService implements ITaskService {
         return handler.loadTitle(taskId, varMap);
     }
 
-    /**
-     * @param task
-     * @return
-     */
     private Map<String, Object> loadVariables(Task task) {
         if (log.isDebugEnabled()) {
             log.debug("map, loading element..."); //$NON-NLS-1$
@@ -421,55 +412,54 @@ public class TaskService implements ITaskService {
         return loadVariablesForProcess(executionId);
     }
 
-    /**
-     * @param executionId
-     * @return
-     */
     private Map<String, Object> loadVariablesForProcess(String executionId) {
         Set<String> varNameSet = getExecutionService().getVariableNames(executionId);  
         return getExecutionService().getVariables(executionId,varNameSet);
     }
 
-    /**
-     * @param taskInformation
-     * @param varMap
-     */
-    private void mapAudit(TaskInformation taskInformation, Map<String, Object> varMap) {
-        if (log.isDebugEnabled()) {
-            log.debug("map, loading audit..."); //$NON-NLS-1$
-        }
+    private TaskInformation mapAudit(TaskInformation taskInformation, Map<String, Object> varMap) {
+        
+        log.debug("map, loading audit..."); //$NON-NLS-1$
+                
         CnATreeElement audit = null;
         String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID); 
         String elementUuid = (String) varMap.get(IIsaExecutionProcess.VAR_UUID);
+        
         if(uuidAudit!=null) {// task references child of Audit
-            handleAuditElement(taskInformation, uuidAudit, elementUuid); 
+            return handleAuditElement(taskInformation, uuidAudit, elementUuid); 
         } else { // task references child of ITVerbund or Organization
-            handleNonAuditElement(taskInformation, elementUuid);
+            return handleNonAuditElement(taskInformation, elementUuid);
         }
     }
 
-    private void handleNonAuditElement(TaskInformation taskInformation, String elementUuid) {
+    private TaskInformation handleNonAuditElement(TaskInformation taskInformation, String elementUuid) {
 
         String[] dbResult = getTitlefromDB(elementUuid);
         String title = dbResult[0];
-        String uuid = dbResult[1];                
+        String uuid = dbResult[1];
+        
         if(title == null || title.equals("")){
             taskInformation.setAuditTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
         } else {
             taskInformation.setAuditTitle(title);
             taskInformation.setUuidAudit(uuid);
         }
+        
+        return taskInformation;
     }
 
-    private void handleAuditElement(TaskInformation taskInformation, String uuidAudit, String elementUuid) {
+    private TaskInformation handleAuditElement(TaskInformation taskInformation, String uuidAudit, String elementUuid) {
         CnATreeElement audit;
         taskInformation.setUuidAudit(uuidAudit);
         RetrieveInfo ri = new RetrieveInfo();
         ri.setProperties(true);
-        audit = getElementDao().findByUuid(uuidAudit, ri);           
+        audit = getElementDao().findByUuid(uuidAudit, ri);
+        
         if(audit!=null) { 
             taskInformation.setAuditTitle(audit.getTitle());
         }
+        
+        return taskInformation;
     }
     
     private String[] getTitlefromDB(String elementUuid){
@@ -513,22 +503,20 @@ public class TaskService implements ITaskService {
         return results;
     }
     
-
-    /**
-     * @param taskInformation
-     * @param varMap
-     * @return
-     */
-    private void mapElement(TaskInformation taskInformation, Map<String, Object> varMap) {
+    private TaskInformation mapElement(TaskInformation taskInformation, Map<String, Object> varMap) {
+        
         String uuid = (String) varMap.get(IGenericProcess.VAR_UUID);       
         taskInformation.setUuid(uuid);
         taskInformation.setControlTitle("no object");
+    
         if(uuid==null) {
-            return;
+            return taskInformation;
         }
+        
         RetrieveInfo ri = new RetrieveInfo();
         ri.setProperties(true);
         CnATreeElement element = getElementDao().findByUuid(uuid, ri);
+        
         if(element!=null) {
             taskInformation.setControlTitle(element.getTitle());
             taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
@@ -539,6 +527,8 @@ public class TaskService implements ITaskService {
             // uuid exits, but no element found
             throw new ElementNotFoundException(uuid);
         }
+        
+        return taskInformation;
     }
     
     private String createSortableString(String text) {
