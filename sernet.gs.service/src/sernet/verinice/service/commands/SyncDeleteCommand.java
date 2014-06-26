@@ -85,6 +85,7 @@ public class SyncDeleteCommand extends GenericCommand {
         try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
+            getLog().error("Error while loading elements by source-id: " + sourceId, e);
             errors.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = " + sourceId);
             return;
         }
@@ -101,19 +102,23 @@ public class SyncDeleteCommand extends GenericCommand {
         // this sourceId in the past, but are missing in the current list:
         for (CnATreeElement e : dbElements) {
             if (!currentExtIds.contains(e.getExtId())) {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Element with source-id: " + sourceId + " not found in VNA / XML, will be deleted now, type: " + e.getTypeId() + ", uuid: " + e.getUuid() + ", ext-id: " + e.getExtId() + "...");
-                }
-                // delete this object from the database:
-                RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
-                try {
-                    cmdRemove = getCommandService().executeCommand(cmdRemove);
-                    deleted++;
-                } catch (CommandException ex) {
-                    getLog().error("Error while deleting element, uuid: " + e.getUuid(), ex);
-                    errors.add("Konnte Objekt ( id=" + e.getId() + ", externalId=" + e.getExtId() + ") nicht löschen.");
-                }
+                deleteElement(e);
             }
+        }
+    }
+
+    private void deleteElement(CnATreeElement e) {
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Element with source-id: " + sourceId + " not found in VNA / XML, will be deleted now, type: " + e.getTypeId() + ", uuid: " + e.getUuid() + ", ext-id: " + e.getExtId() + "...");
+        }
+        // delete this object from the database:
+        RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
+        try {
+            cmdRemove = getCommandService().executeCommand(cmdRemove);
+            deleted++;
+        } catch (CommandException ex) {
+            getLog().error("Error while deleting element, uuid: " + e.getUuid(), ex);
+            errors.add("Konnte Objekt ( id=" + e.getId() + ", externalId=" + e.getExtId() + ") nicht löschen.");
         }
     }
 
