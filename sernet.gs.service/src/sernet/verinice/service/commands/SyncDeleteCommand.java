@@ -36,78 +36,74 @@ import de.sernet.sync.data.SyncObject;
 @SuppressWarnings("serial")
 public class SyncDeleteCommand extends GenericCommand {
 
-	private String sourceId;
-	private SyncData syncData;
+    private String sourceId;
+    private SyncData syncData;
 
-	private List<String> errors;
+    private List<String> errors;
 
-	private int deleted = 0;
+    private int deleted = 0;
 
-	public int getDeleted() {
-		return deleted;
-	}
+    public int getDeleted() {
+        return deleted;
+    }
 
-	public SyncDeleteCommand(String sourceId, SyncData syncData,
-			List<String> errorList) {
-		this.sourceId = sourceId;
-		this.syncData = syncData;
-		this.errors = errorList;
-	}
+    public SyncDeleteCommand(String sourceId, SyncData syncData, List<String> errorList) {
+        this.sourceId = sourceId;
+        this.syncData = syncData;
+        this.errors = errorList;
+    }
 
-	/************************************************************
-	 * methodName()
-	 * 
-	 * Search for objects within database, which have previously been synced
-	 * from the given sourceId, but not listed any more. Delete those objects
-	 * from the database!
-	 * 
-	 * Be VERY CAREFUL with this command, since it DELETES STUFF!! This should
-	 * only be used, if the delete-flag has been explicitely set (default:
-	 * false) by the user within the sync process...
-	 * 
-	 ************************************************************/
-	public void execute() {
-		LoadCnAElementsBySourceID command = new LoadCnAElementsBySourceID(
-				sourceId);
+    /************************************************************
+     * methodName()
+     * 
+     * Search for objects within database, which have previously been synced
+     * from the given sourceId, but not listed any more. Delete those objects
+     * from the database!
+     * 
+     * Be VERY CAREFUL with this command, since it DELETES STUFF!! This should
+     * only be used, if the delete-flag has been explicitely set (default:
+     * false) by the user within the sync process...
+     * 
+     ************************************************************/
+    @Override
+    public void execute() {
+        LoadCnAElementsBySourceID command = new LoadCnAElementsBySourceID(sourceId);
 
-		try {
-			command = getCommandService().executeCommand(
-					command);
-		} catch (CommandException e) {
-			errors.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = "
-							+ sourceId);
-			return;
-		}
+        try {
+            command = getCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            errors.add("Fehler beim Ausführen von LoadCnAElementsBySourceID mit der sourceId = " + sourceId);
+            return;
+        }
 
-		List<CnATreeElement> dbElements = command.getElements();
+        List<CnATreeElement> dbElements = command.getElements();
 
-		// create a hash map, which contains a token for all
-		// extId's which are present in the sync Data:
-		HashSet<String> currentExtIds = new HashSet<String>();
-		
-		for (SyncObject so : syncData.getSyncObject()) {
-			// store a token for the extId of every <syncObject> in the sync data:
-			currentExtIds.add(so.getExtId());
-		}
+        // create a hash map, which contains a token for all
+        // extId's which are present in the sync Data:
+        HashSet<String> currentExtIds = new HashSet<String>();
 
-		// find objects in the db, which have been synched from
-		// this sourceId in the past, but are missing in the current list:
-		for (CnATreeElement e : dbElements) {
+        for (SyncObject so : syncData.getSyncObject()) {
+            // store a token for the extId of every <syncObject> in the sync
+            // data:
+            currentExtIds.add(so.getExtId());
+        }
 
-			if (!currentExtIds.contains(e.getExtId())) // delete this object from the database:
-			{
-				RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
+        // find objects in the db, which have been synched from
+        // this sourceId in the past, but are missing in the current list:
+        for (CnATreeElement e : dbElements) {
 
-				try {
-					cmdRemove = getCommandService()
-							.executeCommand(cmdRemove);
-					deleted++;
-				} catch (CommandException ex) {
-					errors.add("Konnte Objekt ( id=" + e.getId()
-							+ ", externalId=" + e.getExtId()
-							+ ") nicht löschen.");
-				}
-			}
-		}
-	}
+            if (!currentExtIds.contains(e.getExtId())) // delete this object
+                                                       // from the database:
+            {
+                RemoveElement<?> cmdRemove = new RemoveElement<CnATreeElement>(e);
+
+                try {
+                    cmdRemove = getCommandService().executeCommand(cmdRemove);
+                    deleted++;
+                } catch (CommandException ex) {
+                    errors.add("Konnte Objekt ( id=" + e.getId() + ", externalId=" + e.getExtId() + ") nicht löschen.");
+                }
+            }
+        }
+    }
 }
