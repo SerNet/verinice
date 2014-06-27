@@ -50,6 +50,8 @@ public class LoadCnAElementByExternalID extends GenericCommand {
 	private boolean fetchLinksDown = false;
     
     private boolean fetchLinksUp = false;
+    
+    private boolean parent = false;
 
 	public LoadCnAElementByExternalID( String sourceID, String id) {
 		this(id,sourceID,false,false);
@@ -69,6 +71,7 @@ public class LoadCnAElementByExternalID extends GenericCommand {
         this.fetchLinksUp = fetchLinksUp;
     }
 
+    @Override
     public void execute() {
 		IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 		DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class);
@@ -83,11 +86,19 @@ public class LoadCnAElementByExternalID extends GenericCommand {
             criteria.setFetchMode("linksUp", FetchMode.JOIN);
             criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
         }
+        if(parent) {
+            criteria.setFetchMode("parent", FetchMode.JOIN);
+            criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
+        }
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(criteria);
 	}
 
-	public List<CnATreeElement> getElements() {
+	public void setParent(boolean parent) {
+        this.parent = parent;
+    }
+
+    public List<CnATreeElement> getElements() {
 		return list;
 	}
 

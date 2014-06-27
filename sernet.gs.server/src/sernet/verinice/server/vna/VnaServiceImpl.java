@@ -106,6 +106,7 @@ public class VnaServiceImpl implements VnaService {
     private void createResponse(SyncCommand command, Response response) {
         response.setInserted(command.getInserted());
         response.setUpdated(command.getUpdated());
+        response.setDeleted(command.getDeleted());
     }
     
     private static SyncParameter getParameterForRequest(Vna request) {
