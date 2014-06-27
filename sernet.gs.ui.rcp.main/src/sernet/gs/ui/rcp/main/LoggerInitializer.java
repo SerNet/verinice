@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.io.File;
 import java.util.Enumeration;
 
 import org.apache.commons.io.FilenameUtils;
@@ -56,8 +55,6 @@ public class LoggerInitializer implements ILogPathService {
     protected static final String LOG_FOLDER = "log/";
     private static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
     private static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
-    
-    private String loggingPath = "";
 
     /**
      * Checks if the -Dlog4j.configuration system property is set and if so it
@@ -132,23 +129,20 @@ public class LoggerInitializer implements ILogPathService {
 
     private static String getLoggingPathPrefix() {
 
-        if (isConfiguredInVeriniceIniFile())
-        {
+        if (isConfiguredInVeriniceIniFile()) {
             return readFromVeriniceIniFile();
-        } else if (existsFilePathInRootLogger())
-        {
+        } else if (existsFilePathInRootLogger()) {
             return getPathFromRootLogger();
         } else {
             return getStandardPath();
-        }        
+        }
     }
 
     private static String getStandardPath() {
-       return appendSlash(System.getProperty(WORKSPACE_PROPERTY_KEY)) + LOG_FOLDER;
+        return appendSlash(System.getProperty(WORKSPACE_PROPERTY_KEY)) + LOG_FOLDER;
     }
 
-    private static boolean existsFilePathInRootLogger()
-    {
+    private static boolean existsFilePathInRootLogger() {
         Logger log = Logger.getRootLogger();
         Enumeration<Appender> appenders = log.getAllAppenders();
 
@@ -160,10 +154,10 @@ public class LoggerInitializer implements ILogPathService {
                 return isFilePathConfigured(fileAppender);
             }
         }
-        
+
         return false;
     }
-    
+
     private static String getPathFromRootLogger() {
         Logger log = Logger.getRootLogger();
         Enumeration<Appender> appenders = log.getAllAppenders();
@@ -176,7 +170,7 @@ public class LoggerInitializer implements ILogPathService {
                 return fileAppender.getFile();
             }
         }
-        
+
         return null;
     }
 
