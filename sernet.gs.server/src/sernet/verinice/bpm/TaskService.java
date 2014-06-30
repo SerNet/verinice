@@ -165,6 +165,10 @@ public class TaskService implements ITaskService {
             log.debug("getTaskList called..."); //$NON-NLS-1$
         }
         ServerInitializer.inheritVeriniceContextState();
+        
+        // Workaround for null index column (JBPM4_EXECUTION.PARENT_IDX_) for collection: org.jbpm.pvm.internal.model.ExecutionImpl.executions
+        getElementDao().executeCallback(ParentIdxFixCallback.getInstance());
+        
         if(!parameter.getAllUser() && parameter.getUsername()==null) {
             parameter.setUsername(getAuthService().getUsername());
         }
