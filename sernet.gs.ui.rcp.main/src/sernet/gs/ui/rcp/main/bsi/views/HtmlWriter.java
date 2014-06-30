@@ -76,7 +76,7 @@ public abstract class HtmlWriter {
             if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals("null")) { //$NON-NLS-1$
                 html = toHtml(gefUms);
             } else {
-                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), ISO_8859_1); //$NON-NLS-1$
+                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), UTF_8); //$NON-NLS-1$
                 
             }
         }
