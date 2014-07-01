@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -35,36 +36,37 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.commands.CutCommand;
+import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 
 /**
- * Test {@link CutCommand} by moving elements of all types to a sub-folder.
+ * Test {@link CopyCommand} by copying all elements of all types to a sub-folder.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class CutTest extends CommandServiceProvider {
+public class CopyTest extends CommandServiceProvider {
 
-    private static final Logger LOG = Logger.getLogger(CutTest.class);
+    private static final Logger LOG = Logger.getLogger(CopyTest.class);
 
-    private static final int NUMBER_PER_GROUP = 1; 
+    private static final int NUMBER_OF_ELEMENTS = 10; 
+    private static final int NUMBER_OF_GROUPS = 1; 
     
     private List<String> uuidList;
     
     @Test
-    public void testCut() throws Exception {
+    public void testCopy() throws Exception {
         // create
         uuidList = new LinkedList<String>();
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));       
-        uuidList.addAll(createGroupsInGroups(organization, NUMBER_PER_GROUP));      
+        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
+        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
         LOG.debug("Total number of created elements: " + uuidList.size());
         
         // move (cut and paste) elements
-        moveAllElements(organization); 
-        checkMovedElements(organization);
+        copyAllElements(organization); 
+        checkCopiedElements(organization);
         
         // remove
         RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
@@ -81,50 +83,51 @@ public class CutTest extends CommandServiceProvider {
      * @param organization
      * @throws CommandException 
      */
-    private void moveAllElements(Organization organization) throws CommandException {
+    private void copyAllElements(Organization organization) throws CommandException {
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
             Set<CnATreeElement> childrenOfGroup = group.getChildren();
             Group<CnATreeElement> subGroup = null;
-            CnATreeElement element = null;
+            List<String> copyUuidList = new LinkedList<String>();
             for (CnATreeElement subChild : childrenOfGroup) {
                 if(subChild instanceof Group) {
                     subGroup = (Group<CnATreeElement>) subChild;
                 } else {
-                    element = subChild;
+                    copyUuidList.add(subChild.getUuid());
                 }
             }
-            assertNotNull("No element found in group: " + child.getTypeId(), element);
+            assertFalse("Number of elements in group is not " + NUMBER_OF_ELEMENTS + ", type: " + child.getTypeId(), copyUuidList.size()==NUMBER_OF_ELEMENTS);
             assertNotNull("No sub-group found in group: " + child.getTypeId(), subGroup);
-            List<String> copyUuidList = new LinkedList<String>();
-            copyUuidList.add(element.getUuid());
-            CutCommand cutCommand = new CutCommand(subGroup.getUuid(), copyUuidList);
-            cutCommand = commandService.executeCommand(cutCommand);
-            LOG.debug("Element " + element.getTypeId() + " moved to group.");
+            
+            CopyCommand copyCommand = new CopyCommand(subGroup.getUuid(), copyUuidList);
+            copyCommand = commandService.executeCommand(copyCommand);
         }
     }
     
     /**
      * @param organization
      */
-    private void checkMovedElements(Organization organization) {
+    private void checkCopiedElements(Organization organization) {
         Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
-            child = elementDao.findByUuid(child.getUuid(), RetrieveInfo.getChildrenInstance());
+            RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
+            ri.setGrandchildren(true);
+            child = elementDao.findByUuid(child.getUuid(), ri);
             assertTrue("Child of organization is not a group", child instanceof Group);
             Group<CnATreeElement> group = (Group) child;
             
             Set<CnATreeElement> childrenOfGroup =  group.getChildren();
-            assertTrue("Group has more or less than one child (" + childrenOfGroup.size() + "): " + child.getTypeId(), childrenOfGroup.size()==1);
+            assertTrue("Number of elements in group is not:" + (NUMBER_OF_ELEMENTS+1) + "): " + child.getTypeId(), childrenOfGroup.size()==(NUMBER_OF_ELEMENTS+1));
             
-            CnATreeElement subChild = childrenOfGroup.iterator().next();
-            assertTrue("Sub-child of organization is not a group", subChild instanceof Group);
-            Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
-            
-            Set<CnATreeElement> childrenOfSubGroup =  subGroup.getChildren();
-            assertTrue("Sub-group has more or less than one child: " + child.getTypeId(), childrenOfGroup.size()==1);        
+            for (CnATreeElement subChild : childrenOfGroup) {
+                if(subChild instanceof Group) {
+                    Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
+                    assertTrue("Number of elements in group is not: " + NUMBER_OF_ELEMENTS, subGroup.getChildren().size()==NUMBER_OF_ELEMENTS);
+                } 
+            }
+       
         }
     }
 }
