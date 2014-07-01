@@ -98,7 +98,7 @@ public class CopyTest extends CommandServiceProvider {
                     copyUuidList.add(subChild.getUuid());
                 }
             }
-            assertFalse("Number of elements in group is not " + NUMBER_OF_ELEMENTS + ", type: " + child.getTypeId(), copyUuidList.size()==NUMBER_OF_ELEMENTS);
+            assertFalse("Number of elements in group is not " + (NUMBER_OF_ELEMENTS+1) + ", type: " + child.getTypeId(), copyUuidList.size()==(NUMBER_OF_ELEMENTS+1));
             assertNotNull("No sub-group found in group: " + child.getTypeId(), subGroup);
             
             CopyCommand copyCommand = new CopyCommand(subGroup.getUuid(), copyUuidList);
