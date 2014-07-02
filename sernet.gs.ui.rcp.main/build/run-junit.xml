@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     02.07.2014                                                        
+
+     verinice    
+     ant buildfile to run JUnit-tests
+                   
+     author: Benjamin Weißenfels - bw[at]sernet[dot]de                                                         
+     ====================================================================== -->
+<project name="verinice" default="test" basedir="../">
+	<description>ant buildfile to run JUnit-tests</description>
+
+	<property name="reports" location="${basedir}/build/reports" />
+	<property name="src.tests" location="${basedir}/testSrc" />
+	<property name="testlib" location="${basedir}/testlib/" />
+	<property name="snca.path" location="${basedir}../sernet.gs.server/WebContent/WEB-INF/SNCA.xml"></property>
+
+	<path id="classpath.testlibs">
+		<fileset dir="${testlib}" includes="**/*.jar" />
+		<pathelement location="${basedir}/../sernet.gs.service/bin/" />
+		<pathelement location="${basedir}/../sernet.hui.common/bin/"/>
+		<pathelement location="${basedir}/bin" />
+	</path>
+
+	<target name="test" description="runs JUnit tests">
+		<mkdir dir="${reports}" />
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath refid="classpath.testlibs" />
+			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+			<jvmarg value="-Dsnca.path=${snca.path}"/>
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${reports}">
+				<fileset dir="${src.tests}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+</project>

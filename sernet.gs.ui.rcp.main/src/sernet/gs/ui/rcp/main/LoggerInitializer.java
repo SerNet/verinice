@@ -54,7 +54,7 @@ public class LoggerInitializer implements ILogPathService {
     protected static final String LOGGING_PATH_KEY = "logging.file";
     protected static final String LOG_FOLDER = "log/";
     private static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
-    private static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
+    protected static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
 
     /**
      * Checks if the -Dlog4j.configuration system property is set and if so it

@@ -41,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class TestHibernate extends TestCase {
 	
 	public void testCreate() throws Exception {
-		HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml"));
+		HUITypeFactory htf = HUITypeFactory.createInstance(new URL(getSNCAPath()));
 		CnAElementHome.getInstance().open("/home/akoderman/java/runtime-oc.product/conf",
 				new NullMonitor());
 		BSIModel model = CnAElementFactory.getInstance().loadOrCreateModel(new NullMonitor());
@@ -73,7 +73,7 @@ public class TestHibernate extends TestCase {
 	}
 	
 	public void testLoad() throws Exception {
-		HUITypeFactory htf = HUITypeFactory.createInstance(new URL("/home/akoderman/java/runtime-oc.product/conf/SNCA.xml"));
+		HUITypeFactory htf = HUITypeFactory.createInstance(new URL(getSNCAPath()));
 		CnAElementHome.getInstance().open("/home/akoderman/java/runtime-oc.product/conf",
 				new NullMonitor());
 		
@@ -99,4 +99,8 @@ public class TestHibernate extends TestCase {
 //		}
 	}
 	
+	
+	private String getSNCAPath() {
+	    return System.getProperty("snca.path");
+	}
 }

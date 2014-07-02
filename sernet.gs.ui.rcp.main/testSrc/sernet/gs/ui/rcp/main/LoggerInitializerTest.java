@@ -58,7 +58,10 @@ public class LoggerInitializerTest extends LoggerInitializer {
     public void getDefaultLogPath() {
         clearEnvironment();
         System.setProperty("osgi.instance.area",  System.getProperty("java.io.tmpdir"));
+        
         LoggerInitializer.tryReadingCustomLog4jFile();
+        LoggerInitializer.tryConfiguringLoggingPath();
+        
         Assert.assertEquals(System.getProperty("osgi.instance.area") + "/" + LOG_FOLDER, new LoggerInitializer().getLogPath());
     }
 
@@ -70,6 +73,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         String path = extractLoggingPath(CUSTOM_LOG4J_XML);
         
         LoggerInitializer.tryReadingCustomLog4jFile();
+        LoggerInitializer.tryConfiguringLoggingPath();
         
         Assert.assertEquals(path.replaceFirst("\\$\\{java.io.tmpdir\\}", System.getProperty("java.io.tmpdir")), getLogPath());
     }
@@ -100,6 +104,8 @@ public class LoggerInitializerTest extends LoggerInitializer {
     public void clearEnvironment() {
         System.clearProperty(LOGGING_PATH_KEY);
         System.clearProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY);
+        System.clearProperty(WORKSPACE_PROPERTY_KEY);
+        Logger.getRootLogger().getLoggerRepository().resetConfiguration();
     }
 
     private String extractLoggingPath(String customLog4jXml) throws ParserConfigurationException, SAXException, IOException {
