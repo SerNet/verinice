@@ -25,6 +25,7 @@
 		<pathelement location="${basedir}/lib/spring-test-2.5.6.jar" />	
 		<pathelement location="${basedir}/lib/bouncycastle/bcprov-jdk16-146.jar" />	
 		<pathelement location="${basedir}/lib/bouncycastle/bcmail-jdk16-146.jar" />
+		<pathelement location="${basedir}/../../../gs.server/plugins/sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.javax.mail-1.4.1.jar" />
 		<path refid="classpath.base" />
 	</path>
 	
