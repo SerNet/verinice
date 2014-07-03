@@ -137,14 +137,14 @@ public class CryptoTest  {
             assertNotNull(certPEM);
             File certFile = File.createTempFile("veriniceCert", "PEM");
             assertNotNull(certFile);
-            FileUtil.writeStringToFile(certPEM, certFile);
+            FileUtil.writeStringToFile(certPEM, certFile.getAbsolutePath());
             certFile.deleteOnExit();
             byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
             byte[] privateKey = keyPair.getPrivate().getEncoded();
             String privateKeyString = convertToPem(privateKey);
             File keyFile = File.createTempFile("veriniceKey", "PEM");
             assertNotNull(keyFile);
-            FileUtil.writeStringToFile(privateKeyString, keyFile);
+            FileUtil.writeStringToFile(privateKeyString, keyFile.getAbsolutePath());
             certFile.deleteOnExit();
             byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
             assertEquals(SECRET, new String(decryptedData));
