@@ -41,6 +41,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
 import sernet.gs.service.FileUtil;
@@ -200,7 +201,7 @@ public class CryptoTest  {
     KeyPair generateKeyPair(){
         KeyPairGenerator keyGen;
         try {
-            keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
+            keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
             keyGen.initialize(1024, SecureRandom.getInstance("SHA1PRNG", "SUN"));
             return keyGen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
