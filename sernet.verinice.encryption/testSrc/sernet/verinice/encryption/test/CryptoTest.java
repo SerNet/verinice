@@ -28,35 +28,35 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.Date;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Calendar;
 
+import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Test;
 
 import sernet.gs.service.FileUtil;
 import sernet.verinice.encryption.impl.EncryptionService;
-import sun.security.x509.AlgorithmId;
-import sun.security.x509.CertificateAlgorithmId;
-import sun.security.x509.CertificateIssuerName;
-import sun.security.x509.CertificateSerialNumber;
-import sun.security.x509.CertificateSubjectName;
-import sun.security.x509.CertificateValidity;
-import sun.security.x509.CertificateVersion;
-import sun.security.x509.CertificateX509Key;
-import sun.security.x509.X500Name;
-import sun.security.x509.X509CertImpl;
-import sun.security.x509.X509CertInfo;
 
 /**
  *
@@ -130,23 +130,22 @@ public class CryptoTest  {
         assertNotNull("Keypair is null", keyPair);
         String distinguishedName = "CN=Test, L=Berlin, C=DE";
         int days = 365;
-        String algorithm = "SHA1withRSA";
-            X509Certificate cert = generateCertificate(distinguishedName, keyPair, days, algorithm);
-            String certPEM = convertToPem(cert.getEncoded());
-            assertNotNull(certPEM);
-            File certFile = File.createTempFile("veriniceCert", "PEM");
-            assertNotNull(certFile);
-            FileUtil.writeStringToFile(certPEM, certFile.getAbsolutePath());
-            certFile.deleteOnExit();
-            byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
-            byte[] privateKey = keyPair.getPrivate().getEncoded();
-            String privateKeyString = convertToPem(privateKey);
-            File keyFile = File.createTempFile("veriniceKey", "PEM");
-            assertNotNull(keyFile);
-            FileUtil.writeStringToFile(privateKeyString, keyFile.getAbsolutePath());
-            certFile.deleteOnExit();
-            byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
-            assertEquals(SECRET, new String(decryptedData));
+        X509Certificate cert = generateCertificate(distinguishedName, keyPair, days);
+        String certPEM = convertToPem(cert.getEncoded(), false, true);
+        assertNotNull(certPEM);
+        File certFile = File.createTempFile("veriniceCert", "PEM");
+        assertNotNull(certFile);
+        FileUtil.writeStringToFile(certPEM, certFile.getAbsolutePath());
+        certFile.deleteOnExit();
+        byte[] encryptedData = getEncryptionService().encrypt(SECRET.getBytes(), certFile);
+        byte[] privateKey = keyPair.getPrivate().getEncoded();
+        String privateKeyString = convertToPem(privateKey, true, false);
+        File keyFile = File.createTempFile("veriniceKey", "PEM");
+        assertNotNull(keyFile);
+        FileUtil.writeStringToFile(privateKeyString, keyFile.getAbsolutePath());
+        certFile.deleteOnExit();
+        byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
+        assertEquals(SECRET, new String(decryptedData));
     }
 
     private char[] getPassword(int length){
@@ -160,55 +159,66 @@ public class CryptoTest  {
         return encryptionService;
     }
     
-    X509Certificate generateCertificate(String dn, KeyPair pair, int days, String algorithm)
+    X509Certificate generateCertificate(String dn, KeyPair pair, int days)
             throws GeneralSecurityException, IOException
-          {
-            PrivateKey privkey = pair.getPrivate();
-            X509CertInfo info = new X509CertInfo();
-            Date from = new Date();
-            Date to = new Date(from.getTime() + days * 86400000l);
-            CertificateValidity interval = new CertificateValidity(from, to);
-            BigInteger sn = new BigInteger(64, new SecureRandom());
-            X500Name owner = new X500Name(dn);
-           
-            info.set(X509CertInfo.VALIDITY, interval);
-            info.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(sn));
-            info.set(X509CertInfo.SUBJECT, new CertificateSubjectName(owner));
-            info.set(X509CertInfo.ISSUER, new CertificateIssuerName(owner));
-            info.set(X509CertInfo.KEY, new CertificateX509Key(pair.getPublic()));
-            info.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
-            AlgorithmId algo = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
-            info.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(algo));
-           
-            // Sign the cert to identify the algorithm that's used.
-            X509CertImpl cert = new X509CertImpl(info);
-            cert.sign(privkey, algorithm);
-           
-            // Update the algorith, and resign.
-            algo = (AlgorithmId)cert.get(X509CertImpl.SIG_ALG);
-            info.set(CertificateAlgorithmId.NAME + "." + CertificateAlgorithmId.ALGORITHM, algo);
-            cert = new X509CertImpl(info);
-            cert.sign(privkey, algorithm);
-            return cert;
-          }  
-    
-    KeyPair generateKeyPair(){
-        KeyPairGenerator keyGen;
-        try {
-            keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
-            keyGen.initialize(1024, SecureRandom.getInstance("SHA1PRNG", "SUN"));
-            return keyGen.generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            LOG.error("Error creating a keyPair:\t", e);
-        } catch (NoSuchProviderException e) {
-            LOG.error("Error creating a keyPair:\t", e);
+            {
+        PublicKey publicKey = pair.getPublic();
+        PrivateKey privateKey = pair.getPrivate();
+        if(publicKey instanceof RSAPublicKey){
+            RSAPublicKey rsaPk = (RSAPublicKey)publicKey;
+            RSAPublicKeySpec rsaPkSpec = new RSAPublicKeySpec(rsaPk.getModulus(), rsaPk.getPublicExponent());
+            try{
+                publicKey = KeyFactory.getInstance("RSA").generatePublic(rsaPkSpec);
+            } catch (InvalidKeySpecException e){
+                publicKey = pair.getPublic();
+            }
         }
-        return null;
+        if(privateKey instanceof RSAPrivateKey){
+            RSAPrivateKey rsaPk = (RSAPrivateKey)privateKey;
+            RSAPrivateKeySpec rsaPkSpec = new RSAPrivateKeySpec(rsaPk.getModulus(), rsaPk.getPrivateExponent());
+            try{
+                privateKey = KeyFactory.getInstance("RSA").generatePrivate(rsaPkSpec);
+            } catch ( InvalidKeySpecException e){
+                privateKey = pair.getPrivate();
+            }
+        }
+
+        X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+        String commonName = "CN=" + dn
+                + ", OU=None, O=None L=None, C=None";
+        X500Principal dnName = new X500Principal(commonName);
+        certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
+        certGen.setIssuerDN(dnName);
+        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(true));
+        Calendar cal = Calendar.getInstance();
+        certGen.setNotBefore(cal.getTime());
+        cal.add(Calendar.YEAR, 5);
+        certGen.setNotAfter(cal.getTime());
+        certGen.setSubjectDN(dnName);
+        certGen.setPublicKey(publicKey);
+        certGen.setSignatureAlgorithm("MD5WithRSA");
+        return certGen.generate(privateKey, BouncyCastleProvider.PROVIDER_NAME);
+            }  
+    
+    KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException{
+        KeyPairGenerator keyGen;
+        keyGen = org.bouncycastle.jce.provider.asymmetric.ec.KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
+        keyGen.initialize(1024, new SecureRandom());
+        return keyGen.generateKeyPair();
     }
     
-    private String convertToPem(byte[] data) {
-        String prefix = "-----BEGIN CERTIFICATE-----\n";
-        String suffix = "\n-----END CERTIFICATE-----";
+    
+    private String convertToPem(byte[] data, boolean isKey, boolean isCert) {
+        String prefix = "";
+        String suffix = "";
+        if(isCert && !isKey){
+            prefix = "-----BEGIN CERTIFICATE-----\n";
+            suffix = "\n-----END CERTIFICATE-----";
+        } 
+        if(!isCert && isKey){
+            prefix = "-----BEGIN PRIVATE KEY-----\n";
+            suffix = "\n-----END PRIVATE KEY-----"    ;      
+        }
         String certData;
         try {
             certData = DatatypeConverter.printBase64Binary(data);
