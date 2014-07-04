@@ -125,13 +125,12 @@ public class CryptoTest  {
     }
     
     @Test
-    public void certificateByteBasedCryptoTest(){
+    public void certificateByteBasedCryptoTest() throws GeneralSecurityException, IOException{
         KeyPair keyPair = generateKeyPair();
         assertNotNull("Keypair is null", keyPair);
         String distinguishedName = "CN=Test, L=Berlin, C=DE";
         int days = 365;
         String algorithm = "SHA1withRSA";
-        try {
             X509Certificate cert = generateCertificate(distinguishedName, keyPair, days, algorithm);
             String certPEM = convertToPem(cert.getEncoded());
             assertNotNull(certPEM);
@@ -148,11 +147,6 @@ public class CryptoTest  {
             certFile.deleteOnExit();
             byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
             assertEquals(SECRET, new String(decryptedData));
-        } catch (GeneralSecurityException e) {
-            LOG.error("Error creating certificate", e);
-        } catch (IOException e) {
-            LOG.error("Error creating certificate", e);
-        } 
     }
 
     private char[] getPassword(int length){
@@ -213,8 +207,8 @@ public class CryptoTest  {
     }
     
     private String convertToPem(byte[] data) {
-        String prefix = "-----BEGIN CERTIFICATE-----";
-        String suffix = "-----END CERTIFICATE-----";
+        String prefix = "-----BEGIN CERTIFICATE-----\n";
+        String suffix = "\n-----END CERTIFICATE-----";
         String certData;
         try {
             certData = DatatypeConverter.printBase64Binary(data);
