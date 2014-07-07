@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -35,10 +36,12 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
+import sernet.verinice.service.iso27k.LoadModel;
 
 /**
  * Test {@link CopyCommand} by copying all elements of all types to a sub-folder.
@@ -77,6 +80,47 @@ public class CopyTest extends CommandServiceProvider {
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
         } 
+    }
+    
+    @Test
+    public void testCopyOrganization() throws Exception {
+        // create
+        uuidList = new LinkedList<String>();
+        Organization organization = createOrganization();
+        uuidList.add(organization.getUuid());
+        uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
+        uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
+        LOG.debug("Total number of created elements: " + uuidList.size());
+        
+        // copy org
+        copyAllElements(organization);
+        String uuid = copyOrganization(organization);    
+        uuidList.add(uuid);
+        Organization organizationCopy = (Organization) elementDao.findByUuid(uuid, RetrieveInfo.getChildrenInstance());
+        checkCopiedElements(organizationCopy);
+        
+        // remove
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+        commandService.executeCommand(removeCommand);
+        removeCommand = new RemoveElement<CnATreeElement>(organizationCopy);
+        commandService.executeCommand(removeCommand);
+        for (String uuidDeleted: uuidList) {
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuidDeleted);
+            command = commandService.executeCommand(command);
+            CnATreeElement element = command.getElement();
+            assertNull("Organization was not deleted.", element);
+        } 
+    }
+
+    private String copyOrganization(Organization organization) throws CommandException {
+        ISO27KModel model = loadIsoModel();
+        List<String> uuidList = new ArrayList<String>();
+        uuidList.add(organization.getUuid());
+        CopyCommand copyCommand = new CopyCommand(model.getUuid(), uuidList);
+        copyCommand = commandService.executeCommand(copyCommand);
+        List<String> newUuidList = copyCommand.getNewElements();
+        assertTrue("Not only one element in result list", newUuidList!=null && newUuidList.size()==1);
+        return newUuidList.get(0);
     }
 
     /**
@@ -129,5 +173,11 @@ public class CopyTest extends CommandServiceProvider {
             }
        
         }
+    }
+    
+    private ISO27KModel loadIsoModel() throws CommandException {
+        LoadModel loadModel = new LoadModel();
+        loadModel = commandService.executeCommand(loadModel);
+        return loadModel.getModel();
     }
 }
