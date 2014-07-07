@@ -153,28 +153,32 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @Override
     public void execute() {
         try {
+            
             if (getLogrt().isDebugEnabled()) {
                 globalStart = System.currentTimeMillis();
             }
+            
             merged = 0;
+            
             CheckSourceId checkSourceId = new CheckSourceId(sourceId);
             checkSourceId = getCommandService().executeCommand(checkSourceId);
             sourceIdExists = checkSourceId.exists();
+            
             if (sourceIdExists && getLog().isDebugEnabled()) {
                 getLog().debug("Source-Id exists in DB: " + sourceId);
             }
-            List<SyncObject> soList = syncData.getSyncObject();
             
+            List<SyncObject> soList = syncData.getSyncObject();            
             for (SyncObject so : soList) {
                 importObject(null, so);        
-            } // for <syncObject>
-            if (getLogrt().isDebugEnabled()) {
-                getLogrt().debug("Elements: " + merged);
-            }
+            }            
+            
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 importLink(syncLink);
             }
+            
             finalizeDaos();
+            
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while importing", e);
             throw e;
