@@ -81,6 +81,9 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     public static final String TEMPLATE_NAME = "name"; //$NON-NLS-1$
     public static final String TEMPLATE_ADDRESS = "address"; //$NON-NLS-1$
     
+    private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
+    private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
+    
     // template path without lang code "_en" and file extension ".vm"
     public static final String TEMPLATE_BASE_PATH = "sernet/verinice/bpm/TaskNotification"; //$NON-NLS-1$
     public static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
@@ -104,6 +107,10 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
     private String emailFrom;
     
     private String replyTo;
+    
+    private String emailCc;
+    
+    private String emailBcc;
     
     private String taskListPath;
     
@@ -205,6 +212,12 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                             message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
                             String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
                             message.setText(text, false);
+                            if(getEmailCc()!=null) {
+                                message.setCc(getEmailCc());
+                            }
+                            if(getEmailBcc()!=null) {
+                                message.setBcc(getEmailBcc());
+                            }
                         }
 
                     };
@@ -406,6 +419,26 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
 
     public void setReplyTo(String replyTo) {
         this.replyTo = replyTo;
+    }
+    
+    public String getEmailCc() {
+        return emailCc;
+    }
+
+    public void setEmailCc(String emailCc) {
+        if(!EMAIL_CC_PROPERTY.equals(emailCc)) {
+            this.emailCc = emailCc;
+        }
+    }
+
+    public String getEmailBcc() {
+        return emailBcc;
+    }
+
+    public void setEmailBcc(String emailBcc) {
+        if(!EMAIL_BCC_PROPERTY.equals(emailBcc)) {
+            this.emailBcc = emailBcc;
+        }
     }
 
     public String getTaskListPath() {
