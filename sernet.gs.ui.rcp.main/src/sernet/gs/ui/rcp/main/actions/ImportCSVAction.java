@@ -26,6 +26,7 @@ import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
 import de.sernet.sync.sync.SyncRequest;
 
 public class ImportCSVAction extends RightsEnabledAction {
@@ -100,7 +101,7 @@ public class ImportCSVAction extends RightsEnabledAction {
         }
 	}
 	
-	protected void doImport() throws IOException, CommandException {     
+	protected void doImport() throws IOException, CommandException, SyncParameterException {     
         SyncCommand command = new SyncCommand( new SyncParameter(
                         insert, 
                         update, 

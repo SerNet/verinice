@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameterException;
 import de.sernet.sync.sync.SyncResponse;
 import de.sernet.sync.sync_service.SyncService;
 
@@ -53,6 +54,10 @@ public class SyncServiceImpl implements SyncService {
         } catch (CommandException ce) {
             LOG.error("Error while executing command: SyncCommand", ce);
             errors.add(ce.getLocalizedMessage());
+        } catch (SyncParameterException ex)
+        {
+            LOG.error(ex.getLocalizedMessage());
+            errors.add(ex.getLocalizedMessage());
         }
 
         return response;

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -38,7 +39,7 @@ public class SyncParameter implements Serializable {
     
     private Integer format = EXPORT_FORMAT_DEFAULT;
 
-    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) {
+    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) throws SyncParameterException {
         super();
         this.insert = insert;
         this.update = update;
@@ -47,14 +48,17 @@ public class SyncParameter implements Serializable {
         if(format!=null) {
             this.format = format;
         }
+        
+        validateParameter();
     }
 
     /**
      * @param insertState
      * @param updateState
      * @param deleteState
+     * @throws SyncParameterException 
      */
-    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState) {
+    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState) throws SyncParameterException {
         this(insertState, updateState, deleteState, true, SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
@@ -96,5 +100,10 @@ public class SyncParameter implements Serializable {
 
     public void setFormat(Integer format) {
         this.format = format;
+    }
+    
+    private void validateParameter() throws SyncParameterException {
+        if ((this.insert || this.update || this.delete || this.integrate) == false)
+            throw new SyncParameterException();
     }
 }

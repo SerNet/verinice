@@ -33,6 +33,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
 import de.sernet.service.vna.FileType;
 import de.sernet.service.vna.Response;
 import de.sernet.service.vna.Vna;
@@ -81,7 +82,7 @@ public class VnaServiceImpl implements VnaService {
         return response;
     }
 
-    protected void doImport(Vna request, Response response) throws IOException, CommandException {
+    protected void doImport(Vna request, Response response) throws IOException, CommandException, SyncParameterException {
         if(request!=null && request.getData()!=null) {        
             DataHandler handler = request.getData();
             InputStream is = handler.getInputStream();
@@ -109,7 +110,7 @@ public class VnaServiceImpl implements VnaService {
         response.setDeleted(command.getDeleted());
     }
     
-    private static SyncParameter getParameterForRequest(Vna request) {
+    private static SyncParameter getParameterForRequest(Vna request) throws SyncParameterException {
         SyncParameter parameter = new SyncParameter(
                 request.isInsert(), 
                 request.isUpdate(), 

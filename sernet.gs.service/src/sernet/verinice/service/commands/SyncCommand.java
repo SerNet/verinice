@@ -135,8 +135,9 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      * Called by soap web-service
      * 
      * @param sr SyncRequest
+     * @throws SyncParameterException 
      */
-    public SyncCommand(SyncRequest sr) {
+    public SyncCommand(SyncRequest sr) throws SyncParameterException {
         veriniceArchive = new PureXml();
         this.veriniceArchive.setSourceId(sr.getSourceId());
         this.veriniceArchive.setSyncData(sr.getSyncData());
