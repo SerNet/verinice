@@ -52,6 +52,8 @@ public class LoadCnAElementByExternalID extends GenericCommand {
     private boolean fetchLinksUp = false;
     
     private boolean parent = false;
+    
+    private boolean properties = false;
 
 	public LoadCnAElementByExternalID( String sourceID, String id) {
 		this(id,sourceID,false,false);
@@ -90,12 +92,25 @@ public class LoadCnAElementByExternalID extends GenericCommand {
             criteria.setFetchMode("parent", FetchMode.JOIN);
             criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
         }
+        if(properties) {
+            criteria.setFetchMode("entity", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        }
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(criteria);
 	}
 
 	public void setParent(boolean parent) {
         this.parent = parent;
+    }
+
+    public boolean isProperties() {
+        return properties;
+    }
+
+    public void setProperties(boolean properties) {
+        this.properties = properties;
     }
 
     public List<CnATreeElement> getElements() {

@@ -36,6 +36,13 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	public static final String PROP_ABBR = "asset_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
+	public static final String ASSET_VALUE_CONFIDENTIALITY = "asset_value_confidentiality"; //$NON-NLS-1$
+    public static final String ASSET_VALUE_INTEGRITY = "asset_value_integrity"; //$NON-NLS-1$
+    public static final String ASSET_VALUE_AVAILABILITY = "asset_value_availability"; //$NON-NLS-1$
+
+    public static final String ASSET_VALUE_METHOD_CONFIDENTIALITY = "asset_value_method_confidentiality"; //$NON-NLS-1$
+    public static final String ASSET_VALUE_METHOD_INTEGRITY = "asset_value_method_integrity"; //$NON-NLS-1$
+    public static final String ASSET_VALUE_METHOD_AVAILABILITY = "asset_value_method_availability"; //$NON-NLS-1$
 	
 	public static final String REL_ASSET_PERSON_RESPO = "rel_asset_person_respo"; //$NON-NLS-1$
 	

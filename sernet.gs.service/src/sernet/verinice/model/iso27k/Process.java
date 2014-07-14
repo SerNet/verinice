@@ -35,6 +35,10 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_ABBR = "process_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "process_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "process_tag"; //$NON-NLS-1$
+	public static final String PROCESS_VALUE_CONFIDENTIALITY = "process_value_confidentiality"; //$NON-NLS-1$
+	public static final String PROCESS_VALUE_INTEGRITY = "process_value_integrity"; //$NON-NLS-1$
+	public static final String PROCESS_VALUE_AVAILABILITY = "process_value_availability"; //$NON-NLS-1$
+	public static final String REL_PROCESS_ASSET = "rel_process_asset"; //$NON-NLS-1$
 	
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
@@ -82,11 +86,13 @@ public class Process extends CnATreeElement implements IISO27kElement {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 	
@@ -94,7 +100,8 @@ public class Process extends CnATreeElement implements IISO27kElement {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 

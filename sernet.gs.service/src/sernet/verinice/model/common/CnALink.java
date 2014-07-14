@@ -43,7 +43,7 @@ import sernet.verinice.model.iso27k.InheritLogger;
 @SuppressWarnings("serial")
 public class CnALink implements Serializable, ITypedElement {
     
-    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnALink.class);
     
     // constants for link typeId, now replaced by relationIDs that can be defined in SNCA.xml.
     // these can still be used to differentiate link categories such as "system links" that should never be displayed to the end user
