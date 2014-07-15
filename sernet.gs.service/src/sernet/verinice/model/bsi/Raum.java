@@ -35,6 +35,10 @@ public class Raum extends CnATreeElement
 	public static final String PROP_ERLAEUTERUNG = "raum_erlaeuterung"; //$NON-NLS-1$
 	private static final String PROP_ANZAHL = "raum_anzahl"; //$NON-NLS-1$
 	
+	public static final String PROP_VERTRAULICHKEIT = "raum_vertraulichkeit"; //$NON-NLS-1$
+    public static final String PROP_VERFUEGBARKEIT = "raum_verfuegbarkeit"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITAET = "raum_integritaet"; //$NON-NLS-1$
+	
 
 	private  ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
@@ -55,14 +59,17 @@ public class Raum extends CnATreeElement
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 2;
 	}
 	
@@ -85,7 +92,8 @@ public class Raum extends CnATreeElement
 		return CnaStructureHelper.canContain(obj);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	

@@ -84,14 +84,30 @@ public class Anwendung extends CnATreeElement
 	private static final String PROP_PROZESSBESCHREIBUNG = "anwendung_prozess"; //$NON-NLS-1$
 
 	private static final String PROP_DRINGLICHKEIT_BEGRUENDUNG = "anwendung_prozessbezug_begruendung"; //$NON-NLS-1$
+	
+	public static final String PROP_VERTRAULICHKEIT = "anwendung_vertraulichkeit"; //$NON-NLS-1$
+	public static final String PROP_VERTRAULICHKEIT_NORMAL = "anwendung_vertraulichkeit_normal"; //$NON-NLS-1$
+    public static final String PROP_VERTRAULICHKEIT_HOCH = "anwendung_vertraulichkeit_hoch"; //$NON-NLS-1$
+    public static final String PPROP_VERTRAULICHKEIT_SEHR_HOCH = "anwendung_vertraulichkeit_sehrhoch"; //$NON-NLS-1$
+    public static final String PROP_VERFUEGBARKEIT = "anwendung_verfuegbarkeit"; //$NON-NLS-1$
+    public static final String PROP_VERFUEGBARKEIT_NORMAL = "anwendung_verfuegbarkeit_normal"; //$NON-NLS-1$
+    public static final String PROP_VERFUEGBARKEIT_HOCH = "anwendung_verfuegbarkeit_hoch"; //$NON-NLS-1$
+    public static final String PROP_VERFUEGBARKEIT_SEHR_HOCH = "anwendung_verfuegbarkeit_sehrhoch"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITAET = "anwendung_integritaet"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITAET_NORMAL = "anwendung_integritaet_normal"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITAET_HOCH = "anwendung_integritaet_hoch"; //$NON-NLS-1$
+    public static final String PROP_INTEGRITAET_SEHR_HOCH = "anwendung_integritaet_sehrhoch"; //$NON-NLS-1$
+    
 
 
 
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return SCHICHT;
 	}
 
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
 
@@ -120,7 +136,8 @@ public class Anwendung extends CnATreeElement
 				.getPropertyValue();
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
@@ -164,7 +181,8 @@ public class Anwendung extends CnATreeElement
 		return schutzbedarfProvider;
 	}
 
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 

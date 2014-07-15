@@ -44,13 +44,18 @@ public class Server extends CnATreeElement
 	@Deprecated
 	public static final String P_ADMIN_OLD = "server_admin"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "server_tag"; //$NON-NLS-1$
+    
+    public static final String REL_SERVER_RAUM = "server_raum_located"; //$NON-NLS-1$
 	
 	@Deprecated
 	public static final String P_ANWENDER_OLD = "server_anwender"; //$NON-NLS-1$
 	public static final String PROP_ERLAEUTERUNG = "server_erlaeuterung"; //$NON-NLS-1$
 	private static final String PROP_ANZAHL = "server_anzahl"; //$NON-NLS-1$
-
 	
+	public static final String PROP_VERTRAULICHKEIT_BEGRUENDUNG = "server_vertraulichkeit_begruendung"; //$NON-NLS-1$
+	public static final String PROP_VERFUEGBARKEIT_BEGRUENDUNG = "server_verfuegbarkeit_begruendung"; //$NON-NLS-1$
+	public static final String PROP_INTEGRITAET_BEGRUENDUNG = "server_integritaet_begruendung"; //$NON-NLS-1$
+    
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 				= new SchutzbedarfAdapter(this);
 				
@@ -69,14 +74,17 @@ public class Server extends CnATreeElement
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 3;
 	}
 	
@@ -84,7 +92,8 @@ public class Server extends CnATreeElement
 		
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	

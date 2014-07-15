@@ -42,6 +42,10 @@ implements IBSIStrukturElement {
 	public static final String PROP_NAME = "gebaeude_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "gebaeude_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "gebaeude_tag"; //$NON-NLS-1$
+	
+	public static final String PROP_VERTRAULICHKEIT = "gebaeude_vertraulichkeit"; //$NON-NLS-1$
+	public static final String PROP_VERFUEGBARKEIT = "gebaeude_verfuegbarkeit"; //$NON-NLS-1$
+	public static final String PROP_INTEGRITAET = "gebaeude_integritaet"; //$NON-NLS-1$
 
 	public static final String PROP_ERLAEUTERUNG = "gebaeude_erlaeuterung"; //$NON-NLS-1$
 
@@ -67,15 +71,18 @@ implements IBSIStrukturElement {
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 2;
 	}
 	
@@ -98,7 +105,8 @@ implements IBSIStrukturElement {
 		return CnaStructureHelper.canContain(obj);
 	}
 
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
