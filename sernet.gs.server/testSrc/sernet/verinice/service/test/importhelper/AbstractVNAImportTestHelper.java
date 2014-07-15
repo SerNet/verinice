@@ -20,21 +20,16 @@
 package sernet.verinice.service.test.importhelper;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Set;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -45,7 +40,7 @@ import sernet.verinice.service.test.CommandServiceProvider;
  * 
  */
 abstract public class AbstractVNAImportTestHelper extends CommandServiceProvider {
-    
+
     private Logger log = Logger.getLogger(AbstractVNAImportTestHelper.class);
 
     private String vnaFilePath;
@@ -53,35 +48,46 @@ abstract public class AbstractVNAImportTestHelper extends CommandServiceProvider
     private SyncParameter syncParameter;
 
     private SyncCommand syncCommand;
-    
+
     public void setUp() throws Exception {
 
         try {
-            vnaFilePath = getFilePath();
-            syncParameter = getSyncParameter();
+            this.vnaFilePath = getFilePath();
+            this.syncParameter = getSyncParameter();
+
             byte[] it_network_vna = FileUtils.readFileToByteArray(new File(vnaFilePath));
+
             this.syncCommand = new SyncCommand(syncParameter, it_network_vna);
             this.syncCommand = commandService.executeCommand(syncCommand);
+
         } catch (Exception e) {
             log.debug("import of " + vnaFilePath + " aborted", e);
             throw e;
         }
     }
-    
+
     abstract protected String getFilePath();
-    
-    abstract protected SyncParameter getSyncParameter() throws SyncParameterException;   
-  
+
+    abstract protected SyncParameter getSyncParameter() throws SyncParameterException;
+
     public void tearDown() throws CommandException {
-        Set<CnATreeElement> importedElements = this.syncCommand.getElementSet();
-        for (CnATreeElement element : importedElements) {
-            if (element instanceof Organization)
-                try {
-                    removeOrganization((Organization) element);
-                } catch (CommandException e) {
-                    log.error("deleting organzition of " + vnaFilePath + " failed", e);
-                    throw e;
+        try {
+            Set<CnATreeElement> importedElements = this.syncCommand.getElementSet();
+            for (CnATreeElement element : importedElements) {
+                
+                if (element instanceof Organization) {
+                    RemoveElement<Organization> removeCommand = new RemoveElement<Organization>((Organization) element);
+                    commandService.executeCommand(removeCommand);
                 }
+                
+                else if (element instanceof ITVerbund) {
+                    RemoveElement<ITVerbund> removeCommand = new RemoveElement<ITVerbund>((ITVerbund) element);
+                    commandService.executeCommand(removeCommand);
+                }
+            }
+        } catch (CommandException e) {
+            log.error("deleting element of " + vnaFilePath + " failed", e);
+            throw e;
         }
     }
 }
