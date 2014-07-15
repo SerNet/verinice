@@ -28,7 +28,7 @@ import sernet.verinice.interfaces.CommandException;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class BeforeAllTestsVNAImportHelper extends AbstractVNAImportTestHelper {
+public abstract class BeforeAllVNAImportHelper extends AbstractVNAImportHelper {
 
     @BeforeClass
     public void setUp() throws Exception

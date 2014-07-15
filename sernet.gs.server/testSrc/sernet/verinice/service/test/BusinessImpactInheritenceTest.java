@@ -41,6 +41,8 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.test.importhelper.BeforeEachVNAImportHelper;
 
 /**
  * ISO27000 Business Impact Inheritence test.
@@ -49,7 +51,7 @@ import sernet.verinice.service.commands.SyncParameter;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class BusinessImpactInheritenceTest extends CommandServiceProvider {
+public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(BusinessImpactInheritenceTest.class);
     
@@ -65,7 +67,6 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
     
     @Test
     public void testRemoveElement() throws Exception {
-        importVna();
         
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_1);
         checkCIA(asset, 2, 2, 4);
@@ -80,7 +81,6 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
     
     @Test
     public void testAddAndRemoveLink() throws Exception {
-        importVna();
         
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         setInheritence(asset, true);
@@ -106,7 +106,6 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
     
     @Test
     public void testChangeBiNumber() throws Exception {
-        importVna();
         
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_NETWORK_SWITCH);
         checkCIA(asset, 2, 2, 4);
@@ -120,7 +119,6 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
     
     @Test
     public void testChangeInheritence() throws Exception {
-        importVna();
         
         Asset asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 1, 1, 1);
@@ -184,14 +182,14 @@ public class BusinessImpactInheritenceTest extends CommandServiceProvider {
         assertEquals("Element with source-id " + sourceId + " and ext-id" + extIdExterneKommunikation + " was not found.", elementList.size(), 1);
         return elementList.get(0);
     }
-     
-    private void importVna() throws Exception {
-        SyncParameter parameter = new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        URL vnaUrl = this.getClass().getResource(VNA_FILENAME);
 
-        SyncCommand command = new SyncCommand(parameter, vnaUrl.getPath());
-        command = commandService.executeCommand(command);
-        
-        LOG.debug("VNA imported: " + vnaUrl.getPath());
+    @Override
+    protected String getFilePath() {
+        return this.getClass().getResource(VNA_FILENAME).getPath();
+    }
+
+    @Override
+    protected SyncParameter getSyncParameter() throws SyncParameterException {
+       return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }

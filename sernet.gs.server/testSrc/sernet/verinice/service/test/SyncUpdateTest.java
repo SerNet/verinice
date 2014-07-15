@@ -19,19 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.importhelper.BeforeEachTestVNAImportHelper;
-import sernet.verinice.service.test.importhelper.AbstractVNAImportTestHelper;
+import sernet.verinice.service.test.importhelper.BeforeEachVNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class SyncUpdateTest extends BeforeEachTestVNAImportHelper {
+public class SyncUpdateTest extends BeforeEachVNAImportHelper {
 
     
     private static final String IT_NETWORK_VNA = "IT_Network.vna";

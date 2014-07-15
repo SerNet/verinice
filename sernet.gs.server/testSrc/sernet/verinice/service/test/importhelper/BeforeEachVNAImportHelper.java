@@ -30,7 +30,7 @@ import sernet.verinice.service.commands.SyncParameterException;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class BeforeEachTestVNAImportHelper extends AbstractVNAImportTestHelper {
+public abstract class BeforeEachVNAImportHelper extends AbstractVNAImportHelper {
 
     @Before
     public void setUp() throws Exception
