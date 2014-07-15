@@ -46,7 +46,7 @@ import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 
 /**
- * ISO27000 Business Impact Inheritence test.
+ * Test of Schutzbedarfsvererbung.
  * See https://wiki.sernet.private/wiki/Verinice/Business_Impact_Inheritence/de
  * for a description of the test cases. 
  *
