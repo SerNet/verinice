@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowProcess;
 
 
@@ -52,6 +53,8 @@ public abstract class CompleteWebHandlerRegistry {
     static {
         handler = new Hashtable<String, String>();
         handler.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, NewQmIssueBean.NAME);
+        handler.put(IIndividualProcess.TASK_EXECUTE + "." + IIndividualProcess.TRANS_EXTENSION, IndiExecuteExtensionBean.NAME);
+        handler.put(IIndividualProcess.TASK_EXECUTE_LOOP + "." + IIndividualProcess.TRANS_EXTENSION, IndiExecuteExtensionBean.NAME);
     }
     
     
