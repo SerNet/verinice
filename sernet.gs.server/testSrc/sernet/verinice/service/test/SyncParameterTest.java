@@ -43,12 +43,12 @@ import sernet.verinice.service.commands.SyncParameterException;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
-public class SyncCommandTest extends ContextConfiguration {
+public class SyncParameterTest extends ContextConfiguration {
 
     private static final String IT_NETWORK_VNA = "IT_Network.vna";
     private static final String IT_NETWORK_XML = "IT_Network.xml";
 
-    private Logger log = Logger.getLogger(SyncCommand.class.getName());
+    private Logger log = Logger.getLogger(SyncParameter.class);
 
     @Resource(name = "commandService")
     protected ICommandService commandService;
