@@ -44,6 +44,8 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.test.importhelper.BeforeEachVNAImportHelper;
 
 /**
  * Test of Schutzbedarfsvererbung.
@@ -52,7 +54,7 @@ import sernet.verinice.service.commands.SyncParameter;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
+public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(SchutzbedarfsvererbungsTest.class);
     
@@ -73,7 +75,6 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
     
     @Test
     public void testRemoveElement() throws Exception {
-        importVna();
         
         Gebaeude gebaeude = (Gebaeude) loadElement(SOURCE_ID, EXT_ID_GEBAEUDE_1);
         checkSchutzbedarf(gebaeude, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
@@ -88,7 +89,6 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
     
     @Test
     public void testAddAndRemoveLink() throws Exception {
-        importVna();
         
         Gebaeude gebaeude = (Gebaeude) loadElement(SOURCE_ID, EXT_ID_GEBAEUDE_1);
         checkSchutzbedarf(gebaeude, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
@@ -117,7 +117,6 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
     
     @Test
     public void testChangeSchutzbedarf() throws Exception {
-        importVna();
         
         Raum raum = (Raum) loadElement(SOURCE_ID, EXT_ID_RAUM_2);
         checkSchutzbedarf(raum, HOCH, NORMAL, HOCH);
@@ -134,7 +133,6 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
     
     @Test
     public void testChangeInheritence() throws Exception {
-        importVna();
         
         Raum raum = (Raum) loadElement(SOURCE_ID, EXT_ID_RAUM_1);
         checkSchutzbedarf(raum, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
@@ -204,14 +202,14 @@ public class SchutzbedarfsvererbungsTest extends CommandServiceProvider {
         assertEquals("Element with source-id " + sourceId + " and ext-id" + extId + " was not found.", elementList.size(), 1);
         return elementList.get(0);
     }
-     
-    private void importVna() throws Exception {
-        SyncParameter parameter = new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
-        URL vnaUrl = this.getClass().getResource(VNA_FILENAME);
 
-        SyncCommand command = new SyncCommand(parameter, vnaUrl.getPath());
-        command = commandService.executeCommand(command);
-        
-        LOG.debug("VNA imported: " + vnaUrl.getPath());
+    @Override
+    protected String getFilePath() {
+        return this.getClass().getResource(VNA_FILENAME).getPath();
+    }
+
+    @Override
+    protected SyncParameter getSyncParameter() throws SyncParameterException {
+        return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
     }
 }
