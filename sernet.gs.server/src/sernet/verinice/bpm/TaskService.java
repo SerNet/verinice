@@ -468,7 +468,7 @@ public class TaskService implements ITaskService {
     
     private String[] getTitlefromDB(String elementUuid){
         String[] results = null;
-        String hql = "select distinct props.propertyValue, elmt.uuid from CnATreeElement elmt " +
+        String hql = "select props.propertyValue, elmt.uuid from CnATreeElement elmt " +
                 "inner join elmt.entity as entity " + 
                 "inner join entity.typedPropertyLists as propertyList " + 
                 "inner join propertyList.properties as props " +
