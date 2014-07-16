@@ -14,83 +14,88 @@
  * 
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - Test of multiple attachments, MD5 hash sum check
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import sernet.gs.service.FileUtil;
 import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
-*
+* Test class creates <code>numberOfFiles</code> files with a ramdom size
+* between 0-10 MB. Each of these files is attached to one organization.
+* Test stores the MD5 hash sum of the files in a map before saving it in DB.
+* Every attachment is loaded after that and the MD5 hash sum is compared 
+* to the values in the map.
 */
-
 public class AttachmentTest extends CommandServiceProvider {
     
     private static final Logger LOG = Logger.getLogger(AttachmentTest.class);
     
+    private static final int numberOfFiles = 100;
+    
     @Resource(name="additionDAO")
     private IBaseDao<Addition, Integer> additionDao;
     
+    Map<Integer, String> dbIdHashSumMap = new HashMap<Integer, String>();
+    
     @Test
-    public void createAndDeleteAttachment() throws CommandException, IOException{
+    public void createLoadAndDeleteAttachment() throws Exception{
         // pre-setup 
-        Organization org = createOrganization();
+        Organization org = createOrganization(AttachmentTest.class.getSimpleName());
         checkOrganization(org);
         assertNotNull(org);
         
-        // create the file to be attached
-        Attachment a = createAndSave(org);
+        for (int i = 0; i < numberOfFiles; i++) {
+            createAttachment(org);
+        }
+        assertSame("Size of dbIdHashSumMap is not: " + numberOfFiles, numberOfFiles, dbIdHashSumMap.size());
         
         // load attachment and file from db and check 
         loadAndCheck(org);
         
         // clean up by deleting attachment and org
-        cleanUp(org, a);
+        cleanUp(org);
     }
-
-    private void loadAndCheck(Organization org) throws CommandException {
-        Attachment attachmentFromDB = loadAttachmentFromDb(org);
-        assertNotNull(attachmentFromDB);
-        
-        AttachmentFile fileFromDB = loadFileDataFromDB(attachmentFromDB);
-        assertNotNull(fileFromDB);
-    }
-
-    private Attachment createAndSave(Organization org) throws IOException, FileNotFoundException, CommandException {
+    
+    private Attachment createAttachment(Organization org) throws Exception {
         File f = File.createTempFile("veriniceAttachment", "test");
         f.deleteOnExit();
         RandomAccessFile raf = new RandomAccessFile(f, "rw");
-        raf.setLength(1024*1024); // create 1mb of trash data
+        long length = Math.round(Math.random() * (1024*1024*10.0)); // 0-10MB
+        raf.setLength(length); // create 1mb of trash data
         assertNotNull(f);
         assertNotNull(raf);
         
@@ -103,22 +108,58 @@ public class AttachmentTest extends CommandServiceProvider {
         
         // create and save file to attachment
         attachFileData(f, a);
+        
+        String hashSum = FileUtil.getMD5Checksum(f.getAbsolutePath());
+        dbIdHashSumMap.put(a.getDbId(), hashSum);
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("File created, length: " + length + ", path: " + f.getAbsolutePath() + ", hash sum: " + hashSum);
+        }
+        
         return a;
     }
 
-    private void cleanUp(Organization org, Attachment a) throws CommandException {
-        int attachmentDbId = a.getDbId();
-        DeleteNote deleteNote = new DeleteNote(a);
-        deleteNote = commandService.executeCommand(deleteNote);
-        Addition addition = null;
-        try{
-            addition = additionDao.findById(attachmentDbId);
-        } catch (DataIntegrityViolationException e){
-            LOG.debug("Element not found, but that was expected here");
+    private void loadAndCheck(Organization org) throws Exception {
+        List<Attachment> attachments = loadAttachmentFromDb(org);
+        assertNotNull("Attachment list is null", attachments);
+        assertSame("Number of attachments is not: " + numberOfFiles, numberOfFiles, attachments.size());
+        
+        for (Attachment attachment : attachments) {
+            checkAttachment(attachment);
         }
-        assertNull(addition);
+    }
+
+    private void checkAttachment(Attachment attachment) throws CommandException, IOException, Exception {
+        Integer dbId = attachment.getDbId();
+        assertNotNull("Attachment from db not found in hash map, db-id: " + dbId, dbIdHashSumMap.get(dbId));
+        AttachmentFile fileFromDB = loadFileDataFromDB(attachment);
+        assertNotNull("File data not found in DB, db-id: " + dbId, fileFromDB);
+        File tempFile = File.createTempFile("veriniceAttachment_" + dbId, "test");
+        fileFromDB.writeFileData(tempFile.getAbsolutePath());
+        String checkSum = FileUtil.getMD5Checksum(tempFile.getAbsolutePath());
+        String checkSumExpected = dbIdHashSumMap.get(dbId);
+        assertEquals("MD5 checksum is not: " + checkSumExpected + ", db-id: " + dbId,checkSumExpected , checkSum);
+        FileUtils.deleteQuietly(tempFile);
+    }
+
+   
+
+    private void cleanUp(Organization org) throws CommandException {
+        List<Attachment> attachments = loadAttachmentFromDb(org);
+        for (Attachment attachment : attachments) {
+            int attachmentDbId = attachment.getDbId();
+            DeleteNote deleteNote = new DeleteNote(attachment);
+            deleteNote = commandService.executeCommand(deleteNote);
+            Addition addition = null;
+            try{
+                addition = additionDao.findById(attachmentDbId);
+            } catch (DataIntegrityViolationException e){
+                LOG.debug("Element not found, but that was expected here");
+            }
+            assertNull("Addition was not deleted.", addition);
+        }      
         checkOrganization(org);
-        deleteElement(org);
+        removeOrganization(org);
     }
 
     private AttachmentFile loadFileDataFromDB(Attachment attachmentFromDB) throws CommandException {
@@ -128,14 +169,10 @@ public class AttachmentTest extends CommandServiceProvider {
         return fileFromDB;
     }
 
-    private Attachment loadAttachmentFromDb(Organization org) throws CommandException {
+    private List<Attachment> loadAttachmentFromDb(Organization org) throws CommandException {
         LoadAttachments attachmentLoader = new LoadAttachments(org.getDbId());
         attachmentLoader = commandService.executeCommand(attachmentLoader);
-        List<Attachment> listFromDB = attachmentLoader.getAttachmentList();
-        assertNotNull(listFromDB);
-        assertNotSame(0, listFromDB.size());
-        Attachment attachmentFromDB = listFromDB.get(0);
-        return attachmentFromDB;
+        return attachmentLoader.getAttachmentList();
     }
 
     private void attachFileData(File f, Attachment a) throws CommandException {
@@ -174,9 +211,7 @@ public class AttachmentTest extends CommandServiceProvider {
             fis = new FileInputStream(f);
             fis.read(bFile);
             fis.close();
- 
- 
-        }catch(Exception e){
+        } catch(Exception e){
             LOG.error("Error reading file content into byte[]",e );
         }
         assertNotNull(bFile);
@@ -184,24 +219,6 @@ public class AttachmentTest extends CommandServiceProvider {
         return bFile;
     }
     
-    /**
-     * deletes given element from db and referencing validation elements
-     * @param element
-     */
-    private void deleteElement(CnATreeElement element){
-        assertNotNull(element);
-        String uuid = element.getUuid();
-        RemoveElement<CnATreeElement> deleteElement = new RemoveElement<CnATreeElement>(element);
-        try {
-            commandService.executeCommand(deleteElement);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(element.getUuid());
-            command = commandService.executeCommand(command);
-            CnATreeElement e2 = command.getElement();
-            assertNull("Organization was not deleted.", e2);
-        } catch (CommandException e) {
-            LOG.error("Error while deleting element", e);
-        }
-        LOG.debug("Element " + uuid + " deleted");
-    }
+
 
 }
