@@ -45,7 +45,7 @@ import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.importhelper.BeforeEachVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
  * Test of Schutzbedarfsvererbung.

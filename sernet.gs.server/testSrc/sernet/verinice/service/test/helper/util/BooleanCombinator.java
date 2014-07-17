@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.test;
+package sernet.verinice.service.test.helper.util;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

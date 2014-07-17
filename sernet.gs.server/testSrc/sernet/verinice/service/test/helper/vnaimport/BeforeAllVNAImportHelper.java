@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.test.importhelper;
+package sernet.verinice.service.test.helper.vnaimport;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

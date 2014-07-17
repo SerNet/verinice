@@ -17,36 +17,31 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.test;
+package sernet.verinice.service.test.helper.vnaimport;
 
-import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
 
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.test.importhelper.BeforeEachVNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class SyncUpdateTest extends BeforeEachVNAImportHelper {
+public abstract class BeforeEachVNAImportHelper extends AbstractVNAImportHelper {
 
-    
-    private static final String IT_NETWORK_VNA = "IT_Network.vna";
-    
-    @Test    
-    public void updateTest() {
-        //
+    @Before
+    public void setUp() throws Exception
+    {
+        super.setUp();
     }
 
-    @Override
-    protected String getFilePath() {
-        return getClass().getResource(IT_NETWORK_VNA).getPath();
-    }
     
-    @Override
-    protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true);
+    @After
+    public void tearDown() throws CommandException
+    {
+        super.tearDown();
     }
-
 }

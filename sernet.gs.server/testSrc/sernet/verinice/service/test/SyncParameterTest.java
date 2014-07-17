@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.test.helper.util.BooleanCombinator;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
