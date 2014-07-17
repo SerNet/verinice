@@ -29,17 +29,28 @@ import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -104,16 +115,16 @@ public class RemoveElementTest extends CommandServiceProvider {
         GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, itVerbund);
         Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
 
-        RemoveElement<GebaeudeKategorie> removeCommand = removeElement(gebaeudeKategorie);
+        removeElement(gebaeudeKategorie);
 
         assertElementIsDeleted(gebaeude);
-        }
+    }
 
     @Test
-    public void removeElementFromGroup() throws CommandException {
+    public void removeParentElementFromGroup() throws CommandException {
 
         for (Entry<String, Class> entry : GROUP_TYPE_MAP.entrySet()) {
-            
+
             CnATreeElement element = createElement(entry.getValue(), organization);
 
             int documents = new SecureRandom().nextInt(20);
@@ -130,6 +141,56 @@ public class RemoveElementTest extends CommandServiceProvider {
 
             assertElementIsDeleted(element);
         }
+    }
+
+    /**
+     * RemoveElement throws a {@link NullPointerException} when no
+     * {@link FinishedRiskAnalysisLists} exists. {@link RemoveElement} should be
+     * harden against this case.
+     */
+    @Ignore
+    @Test
+    public void removeRiskAnalysis() throws CommandException {
+
+        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
+        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
+        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
+        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
+
+        MassnahmenUmsetzung massnahmenUmsetzung = createElement(MassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
+        RemoveElement removeElementCommand = removeElement(finishedRiskAnalysis);
+    }
+
+    /**
+     * The create command throws an exception, since there is no matching
+     * constructor in {@link RisikoMassnahmenUmsetzung}. {@link CreateElement}
+     * should be harden against this case.
+     * 
+     */
+    @Ignore
+    @Test
+    public void removeRiskAnalysisWithRisikoUmsetzung() throws CommandException {
+
+        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
+        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
+        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
+        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
+
+        RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung = createElement(RisikoMassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
+        removeElement(finishedRiskAnalysis);
+    }
+    
+    @Test
+    public void removePerson() throws CommandException{
+        PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, organization);
+        Person person = createElement(Person.class, personenKategorie);
+        
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person)).getConfiguration();        
+        removeElement(person);
+        assertElementIsDeleted(person);
+        
+        configuration = commandService.executeCommand(new LoadConfiguration(person)).getConfiguration();
+        assertNull(configuration);
     }
 
     private void assertElementIsDeleted(CnATreeElement element) throws CommandException {
