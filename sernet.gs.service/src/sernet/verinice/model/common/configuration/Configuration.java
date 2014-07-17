@@ -374,12 +374,14 @@ public class Configuration implements Serializable, ITypedElement {
 		return false;
 	}
 
-	public int hashCode()
+	@Override
+    public int hashCode()
 	{
 		return dbId.hashCode();
 	}
 	
-	public boolean equals(Object o) {
+	@Override
+    public boolean equals(Object o) {
 	    if(o==null) {
 	        return false;
 	    }
@@ -398,11 +400,32 @@ public class Configuration implements Serializable, ITypedElement {
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
+    @Override
     public String getTypeId() {
         return TYPE_ID;
     }
     
 	protected HUITypeFactory getTypeFactory() {
 		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Login: " + getUser());
+        sb.append(", Email: " + getNotificationEmail());
+        sb.append("\nMailbenachrichtigung aktivieren: ").append(isNotificationEnabled());
+        sb.append("\nAlle Massnahmen / nur eigene: ").append(isNotificationGlobal());
+        sb.append("\nNeue zu pruefende Aufgaben: ").append(isNotificationMeasureAssignment());
+        sb.append("\nAenderung an Massnahmen: ").append(isNotificationMeasureModification());
+        sb.append("\nTerminwarnung: an / aus: ").append(isNotificationExpirationEnabled());
+        sb.append("\nTerminwarnung: bei Ablauf in X Tagen: ").append(getNotificationExpirationDays());
+        sb.append("\n(Auditor) Alle Massnahmen / nur eigene: ").append(isAuditorNotificationGlobal());
+        sb.append("\n(Auditor) Terminwarnung: an / aus: ").append(isAuditorNotificationExpirationEnabled());
+        sb.append("\n(Auditor) Terminwarnung: bei Ablauf in X Tagen: ").append(getAuditorNotificationExpirationDays());
+        return sb.toString();
 	}
 }

@@ -123,6 +123,7 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
             }
             if(pniCommand!=null) {
                 pniCommand.clear();
+                pniCommand.reset();
             }
     		sendMail();
         } finally {

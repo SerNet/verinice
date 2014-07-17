@@ -68,7 +68,7 @@ import sernet.verinice.service.commands.LoadConfiguration;
 @SuppressWarnings("serial")
 public class PrepareNotificationInfo extends GenericCommand {
 	
-	private transient Logger log = Logger.getLogger(CreateIsoModel.class);
+	private transient Logger log = Logger.getLogger(PrepareNotificationInfo.class);
 
     public Logger getLog() {
         if (log == null) {
@@ -90,10 +90,11 @@ public class PrepareNotificationInfo extends GenericCommand {
 		return resultMap.values();
 	}
 	
-	public void execute() {	    
+	@Override
+    public void execute() {	    
 		LoadGenericElementByType<Configuration> lc = new LoadGenericElementByType<Configuration>(Configuration.class);
 		try {
-			lc = (LoadGenericElementByType<Configuration>) getCommandService().executeCommand(lc);
+			lc = getCommandService().executeCommand(lc);
 		} catch (CommandException e) {
 			throw new RuntimeException(e);
 		}
@@ -121,6 +122,9 @@ public class PrepareNotificationInfo extends GenericCommand {
 		Set<Configuration> globalAuditorNotifees = new HashSet<Configuration>();
 		for (Configuration c : configurations)
 		{
+		    if (log.isDebugEnabled()) {
+                log.debug("Handling account: " + c.toString());
+            }
 			if (c.isNotificationEnabled()
 					&& c.isNotificationExpirationEnabled()
 					&& c.isNotificationGlobal())
@@ -144,7 +148,7 @@ public class PrepareNotificationInfo extends GenericCommand {
         LoadCnAElementByType<MassnahmenUmsetzung> lmu = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, false);
 		
 		try {
-			lmu = (LoadCnAElementByType<MassnahmenUmsetzung>) getCommandService().executeCommand(lmu);
+			lmu = getCommandService().executeCommand(lmu);
 		} catch (CommandException e) {
 		    getLog().error("Error in collectExpirationNotifees", e);
 			throw new RuntimeException(e);
@@ -170,7 +174,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		{
 			LoadConfiguration lc = new LoadConfiguration(p, false);
 			try {
-				lc = (LoadConfiguration) getCommandService().executeCommand(lc);
+				lc = getCommandService().executeCommand(lc);
 			} catch (CommandException e) {
 				throw new RuntimeException(e);
 			}
@@ -185,10 +189,16 @@ public class PrepareNotificationInfo extends GenericCommand {
 		return result;
 	}
 	
-	public void clear()
+	@Override
+    public void clear()
 	{
 		personCache.clear();
 	}
+	
+	public void reset() {
+        personCache.clear();
+        resultMap.clear();
+    }
 	
 	private void addGlobalNotificationRevision(Configuration c, MassnahmenUmsetzung mu)
 	{
@@ -431,7 +441,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		GetChangedElementsSince gces = new GetChangedElementsSince(keydate, ChangeLogEntry.TYPE_UPDATE, MassnahmenUmsetzung.class);
 		
 		try {
-			gces = (GetChangedElementsSince) getCommandService().executeCommand(gces);
+			gces = getCommandService().executeCommand(gces);
 		} catch (CommandException e) {
 			throw new RuntimeException(e);
 		}
