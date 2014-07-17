@@ -11,6 +11,7 @@
     <description>ant buildfile to run JUnit-tests</description>
 
 	<property name="reports" location="${basedir}/build/reports" />
+	<property name="reports.oracle" location="${basedir}/build/reports-oracle" />
 	<property name="src.tests" location="testSrc" />
 	<property name="bin" location="bin" />
 	
@@ -42,25 +43,25 @@
 	</target>
 	
 	<target name="test-oracle" description="runs JUnit tests">
-		<rename src="${src.tests}/veriniceserver-plain.properties.test" dest="${src.tests}/veriniceserver-plain.properties.test.postgresql"/>
-		<rename src="${src.tests}/veriniceserver-plain.properties.oracle" dest="${src.tests}/veriniceserver-plain.properties.test"/>
-		<rename src="${bin}/veriniceserver-plain.properties.test" dest="${bin}/veriniceserver-plain.properties.test.postgresql"/>
-		<rename src="${bin}/veriniceserver-plain.properties.oracle" dest="${bin}/veriniceserver-plain.properties.test"/>					
-		<mkdir dir="${reports}"/>
+		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.test.postgresql"/>
+		<move file="${src.tests}/veriniceserver-plain.properties.oracle" tofile="${src.tests}/veriniceserver-plain.properties.test"/>
+		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.test.postgresql"/>
+		<move file="${bin}/veriniceserver-plain.properties.oracle" tofile="${bin}/veriniceserver-plain.properties.test"/>					
+		<mkdir dir="${reports.oracle}"/>
 		<junit printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 		  	<classpath refid="classpath.test" />
 		  	<formatter type="xml"/>
-			<batchtest fork="yes" todir="${reports}">
+			<batchtest fork="yes" todir="${reports.oracle}">
 				<fileset dir="${src.tests}">
 					<include name="**/*Test*.java"/>
 				</fileset>
 			</batchtest>
 		</junit>
-		<rename src="${src.tests}/veriniceserver-plain.properties.test" dest="${src.tests}/veriniceserver-plain.properties.test.oracle"/>
-		<rename src="${src.tests}/veriniceserver-plain.properties.postgresql" dest="${src.tests}/veriniceserver-plain.properties.test"/>
-		<rename src="${bin}/veriniceserver-plain.properties.test" dest="${bin}/veriniceserver-plain.properties.test.oracle"/>
-		<rename src="${bin}/veriniceserver-plain.properties.postgresql" dest="${bin}/veriniceserver-plain.properties.test"/>									
+		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.test.oracle"/>
+		<move file="${src.tests}/veriniceserver-plain.properties.postgresql" tofile="${src.tests}/veriniceserver-plain.properties.test"/>
+		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.test.oracle"/>
+		<move file="${bin}/veriniceserver-plain.properties.postgresql" tofile="${bin}/veriniceserver-plain.properties.test"/>									
 	</target>
 	
 	<rename src="foo.jar" dest="${name}-${version}.jar"/>
