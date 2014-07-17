@@ -65,6 +65,7 @@ public class AttachmentTest extends CommandServiceProvider {
     private static final Logger LOG = Logger.getLogger(AttachmentTest.class);
     
     private static final int numberOfFiles = 100;
+    private static final int maxFileSizeInMb = 5;
     
     @Resource(name="additionDAO")
     private IBaseDao<Addition, Integer> additionDao;
@@ -94,7 +95,7 @@ public class AttachmentTest extends CommandServiceProvider {
         File f = File.createTempFile("veriniceAttachment", "test");
         f.deleteOnExit();
         RandomAccessFile raf = new RandomAccessFile(f, "rw");
-        long length = Math.round(Math.random() * (1024*1024*10.0)); // 0-10MB
+        long length = Math.round(Math.random() * (1024*1024.0*maxFileSizeInMb));
         raf.setLength(length); // create 1mb of trash data
         assertNotNull(f);
         assertNotNull(raf);
