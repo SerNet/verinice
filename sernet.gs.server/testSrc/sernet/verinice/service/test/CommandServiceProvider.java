@@ -249,7 +249,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected void checkElement(CnATreeElement element) {
         assertNotNull("Element is null.", element);
         assertNotNull("Db-id of element is null.", element.getDbId());
-        assertNotNull("Scope-id of element is null.", element.getScopeId());
+        checkScopeId(element);
     }
 
     /**

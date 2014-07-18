@@ -71,7 +71,9 @@ public class DaoTest extends UuidLoader {
         LOG.debug("Number of elements: " + uuidList.size());
         
         for (String uuid : uuidList) {
-            CnATreeElement element = elementDao.findByUuid(uuid, null);
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setParent(true);
+            CnATreeElement element = elementDao.findByUuid(uuid, ri);
             assertNotNull(element);
             checkScopeId(element);
          }  

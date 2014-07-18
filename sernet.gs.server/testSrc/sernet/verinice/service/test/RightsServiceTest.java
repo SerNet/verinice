@@ -132,19 +132,6 @@ public class RightsServiceTest extends ContextConfiguration {
         rightsService.updateConfiguration(clone(conf));
         testDefaultProfile();
     }
-
-    private void setProfileForLogin(Auth conf, String profile, String login) {
-        List<Userprofile> userProfileList  = conf.getUserprofiles().getUserprofile();
-        for (Userprofile userprofile : userProfileList) {
-            if(userprofile.getLogin().equals(login)) {
-                userprofile.getProfileRef().clear();
-                ProfileRef profileRef = new ProfileRef();
-                profileRef.setName(profile);              
-                userprofile.getProfileRef().add(profileRef);
-                userprofile.setOrigin(OriginType.MODIFICATION);
-            }
-        }
-    }
     
     @Test
     public void testDefaultProfile() throws Exception {
@@ -165,6 +152,19 @@ public class RightsServiceTest extends ContextConfiguration {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
         for (String id : allActionIds) {
             assertTrue( "Action: " + id + " is disabled for admin.", rightsServerHandler.isEnabled(ADMIN_NAME, id));
+        }
+    }
+    
+    private void setProfileForLogin(Auth conf, String profile, String login) {
+        List<Userprofile> userProfileList  = conf.getUserprofiles().getUserprofile();
+        for (Userprofile userprofile : userProfileList) {
+            if(userprofile.getLogin().equals(login)) {
+                userprofile.getProfileRef().clear();
+                ProfileRef profileRef = new ProfileRef();
+                profileRef.setName(profile);              
+                userprofile.getProfileRef().add(profileRef);
+                userprofile.setOrigin(OriginType.MODIFICATION);
+            }
         }
     }
 
