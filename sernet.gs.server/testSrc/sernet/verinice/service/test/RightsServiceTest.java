@@ -65,6 +65,8 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.XMLIMPORT
     };
     
+    public static final String NEW_ACTION_ID = "RightsServiceTestAction";
+    
     public static final String USER_NAME = "nn"; 
     
     public static final String ADMIN_NAME = "rr";
@@ -81,32 +83,65 @@ public class RightsServiceTest extends ContextConfiguration {
     
     @Test
     public void testUpdate() throws Exception {
-        Action removedAction = new Action();
-        removedAction.setId(ActionRightIDs.ISMVIEW);
+        Action action = new Action();
+        action.setId(NEW_ACTION_ID);
+        
         Auth conf = rightsService.getConfiguration();
         List<Profile> profileList = conf.getProfiles().getProfile();
         for (Profile profile : profileList) {
-            if(profile.getAction().contains(removedAction)) {
-                profile.getAction().remove(removedAction);  
+            profile.getAction().add(action);  
+            profile.setOrigin(OriginType.MODIFICATION);
+        }
+        rightsService.updateConfiguration(clone(conf));
+        assertTrue( "Action: " + NEW_ACTION_ID + " is disabled after adding.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));
+        
+        conf = rightsService.getConfiguration();
+        profileList = conf.getProfiles().getProfile();
+        for (Profile profile : profileList) {
+            if(profile.getAction().contains(action)) {
+                profile.getAction().remove(action);  
                 profile.setOrigin(OriginType.MODIFICATION);
             }
         }
         rightsService.updateConfiguration(clone(conf));
-        assertFalse( "Action: " + ActionRightIDs.ISMVIEW + " is enabled after removal.", rightsServerHandler.isEnabled(USER_NAME, ActionRightIDs.ISMVIEW));
-        conf = rightsService.getConfiguration();
-        profileList = conf.getProfiles().getProfile();
-        for (Profile profile : profileList) {
-            profile.getAction().add(removedAction);  
-            profile.setOrigin(OriginType.MODIFICATION);
-        }
-        rightsService.updateConfiguration(clone(conf));
-        assertTrue( "Action: " + ActionRightIDs.ISMVIEW + " is disabled after adding.", rightsServerHandler.isEnabled(USER_NAME, ActionRightIDs.ISMVIEW));
+        assertFalse( "Action: " + NEW_ACTION_ID + " is enabled after removal.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));       
     }
     
     @Test
     public void testAddProfile() throws Exception {
+        Profile unitTestProfile = createNewProfile();
+        Auth conf = addNewProfile(unitTestProfile);
+        setProfileForLogin(conf, PROFILE_NAME, IRightsService.USERDEFAULTGROUPNAME);
+        rightsService.updateConfiguration(clone(conf));
+        testNewProfile();
+        setProfileForLogin(conf, USER_DEFAULT_PROFILE, IRightsService.USERDEFAULTGROUPNAME);
+        rightsService.updateConfiguration(clone(conf));
+        testDefaultProfile();
+        conf = removeNewProfile(unitTestProfile);
+        rightsService.updateConfiguration(clone(conf));
+    }
+
+    private void testNewProfile() {
+        String[] allActionIds = ActionRightIDs.getAllRightIDs();
+        Arrays.sort(newProfileActionIds);
+        for (String id : allActionIds) {
+            boolean expected = Arrays.binarySearch(newProfileActionIds,id) > -1;
+            if(expected) {
+                assertTrue( "Action: " + id + " is disabled for user.", rightsServerHandler.isEnabled(USER_NAME, id));
+            } else {
+                assertFalse( "Action: " + id + " is enabled for  user.", rightsServerHandler.isEnabled(USER_NAME, id));
+            }
+        }
+    }
+
+    private Auth addNewProfile(Profile unitTestProfile) {
         Auth conf = rightsService.getConfiguration();
         List<Profile> profileList = conf.getProfiles().getProfile();
+        profileList.add(unitTestProfile);
+        return conf;
+    }
+
+    private Profile createNewProfile() {
         Profile unitTestProfile = new Profile();
         unitTestProfile.setName(PROFILE_NAME);
         unitTestProfile.setOrigin(OriginType.MODIFICATION);
@@ -115,22 +150,13 @@ public class RightsServiceTest extends ContextConfiguration {
             action.setId(actionId);
             unitTestProfile.getAction().add(action);
         }
-        profileList.add(unitTestProfile);
-        setProfileForLogin(conf, PROFILE_NAME, IRightsService.USERDEFAULTGROUPNAME);
-        rightsService.updateConfiguration(clone(conf));
-        String[] allActionIds = ActionRightIDs.getAllRightIDs();
-        Arrays.sort(newProfileActionIds);
-        for (String id : allActionIds) {
-            boolean expected = Arrays.binarySearch(newProfileActionIds,id) > -1;
-            if(expected) {
-                assertTrue( "Action: " + id + " is disabled for user.", rightsServerHandler.isEnabled(USER_NAME, id));
-            } else {
-                assertFalse( "Admin action: " + id + " is enabled for  user.", rightsServerHandler.isEnabled(USER_NAME, id));
-            }
-        }
-        setProfileForLogin(conf, USER_DEFAULT_PROFILE, IRightsService.USERDEFAULTGROUPNAME);
-        rightsService.updateConfiguration(clone(conf));
-        testDefaultProfile();
+        return unitTestProfile;
+    }
+    
+    private Auth removeNewProfile(Profile unitTestProfile) {
+        Auth conf = rightsService.getConfiguration();
+        conf.getProfiles().getProfile().remove(unitTestProfile);
+        return conf;
     }
     
     @Test
