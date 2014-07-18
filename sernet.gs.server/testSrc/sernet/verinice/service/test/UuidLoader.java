@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
@@ -55,10 +56,17 @@ public abstract class UuidLoader extends ContextConfiguration {
     
     protected void checkScopeId(CnATreeElement element) {
         String typeId = element.getTypeId();
+        String parentTypeId = null;
+        if(element.getParent()!=null) {
+            parentTypeId = element.getParent().getTypeId();
+        }
         if(!ISO27KModel.TYPE_ID.equals(typeId) 
            && !BSIModel.TYPE_ID.equals(typeId)
            && !ImportIsoGroup.TYPE_ID.equals(typeId)
-           && !ImportBsiGroup.TYPE_ID.equals(typeId)) {
+           && !ImportBsiGroup.TYPE_ID.equals(typeId)
+           && !(GefaehrdungsUmsetzung.TYPE_ID.equals(typeId) && element.getParentId()==null)
+           && !ImportBsiGroup.TYPE_ID.equals(parentTypeId)
+           && !ImportIsoGroup.TYPE_ID.equals(parentTypeId)) {
             assertNotNull("Scope-Id is null, uuid: " + element.getUuid() + ", type: " + element.getTypeId(), element.getScopeId());
         } 
     }

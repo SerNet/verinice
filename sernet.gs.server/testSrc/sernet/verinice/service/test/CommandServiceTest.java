@@ -53,6 +53,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kRoot;
@@ -145,7 +146,9 @@ public class CommandServiceTest extends CommandServiceProvider {
         List<String> uuidList = getAllUuids();
         
         for (String uuid : uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
+            RetrieveInfo ri = new RetrieveInfo();
+            ri.setParent(true);
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, ri);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNotNull(element);
@@ -248,7 +251,8 @@ public class CommandServiceTest extends CommandServiceProvider {
            ! (element instanceof IISO27kRoot) && 
            ! (element instanceof BSIModel) &&
            ! (element instanceof ImportIsoGroup) &&
-           ! (element instanceof ImportBsiGroup);
+           ! (element instanceof ImportBsiGroup) &&
+           ! (element instanceof FinishedRiskAnalysis);
     }
     
     private void changeProperties(CnATreeElement element) {
