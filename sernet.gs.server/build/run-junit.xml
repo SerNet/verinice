@@ -43,7 +43,7 @@
 	</target>
 	
 	<target name="test-oracle" description="runs JUnit tests">
-		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.test.postgresql"/>
+		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.postgresql"/>
 		<move file="${src.tests}/veriniceserver-plain.properties.oracle" tofile="${src.tests}/veriniceserver-plain.properties.test"/>
 		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.test.postgresql"/>
 		<move file="${bin}/veriniceserver-plain.properties.oracle" tofile="${bin}/veriniceserver-plain.properties.test"/>					
@@ -58,13 +58,10 @@
 				</fileset>
 			</batchtest>
 		</junit>
-		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.test.oracle"/>
+		<move file="${src.tests}/veriniceserver-plain.properties.test" tofile="${src.tests}/veriniceserver-plain.properties.oracle"/>
 		<move file="${src.tests}/veriniceserver-plain.properties.postgresql" tofile="${src.tests}/veriniceserver-plain.properties.test"/>
-		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.test.oracle"/>
+		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.oracle"/>
 		<move file="${bin}/veriniceserver-plain.properties.postgresql" tofile="${bin}/veriniceserver-plain.properties.test"/>									
-	</target>
-	
-	<rename src="foo.jar" dest="${name}-${version}.jar"/>
-	
+	</target>		
 
 </project>

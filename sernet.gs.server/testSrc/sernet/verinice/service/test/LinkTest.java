@@ -107,7 +107,9 @@ public class LinkTest extends CommandServiceProvider {
         linkMap = new Hashtable<String, Set<CnALink>>();
         elementMap = new Hashtable<String, CnATreeElement>();
         for (String uuid : uuidList) {
-            CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance());
+            RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+            ri.setParent(true);
+            CnATreeElement element = elementDao.findByUuid(uuid, ri);
             checkElement(element);
             elementMap.put(element.getTypeId(), element);
         }
