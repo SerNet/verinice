@@ -1,4 +1,4 @@
-## Default/English email template for tasks notification
+## Default/English email template for GSM tasks notifications
 ## Notification properties: veriniceserver-plain.properties
 ## Notification configuration: veriniceserver-plain.xml, veriniceserver-jbpm.xml
 ## Notifications are send as plain text, don't use HTML.
