@@ -192,6 +192,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 			return "";
 		}
 		PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyType);
+		if(type==null) {
+		    return "";
+		}
 		StringBuffer result = new StringBuffer();
 		
 		List<IMLPropertyOption> referencedEntities = null;
