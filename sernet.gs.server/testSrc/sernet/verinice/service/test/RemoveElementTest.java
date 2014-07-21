@@ -21,12 +21,15 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,6 +41,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
@@ -49,13 +53,21 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Document;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
+import sernet.verinice.service.commands.SyncCommand;
+import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper;
+import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -66,6 +78,8 @@ public class RemoveElementTest extends CommandServiceProvider {
     private ITVerbund itVerbund;
 
     private Organization organization;
+
+    private static final String VNA_FILE = "RemoveElementTest.vna";
 
     @Before
     public void setUp() throws CommandException {
@@ -179,18 +193,57 @@ public class RemoveElementTest extends CommandServiceProvider {
         RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung = createElement(RisikoMassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
         removeElement(finishedRiskAnalysis);
     }
-    
+
     @Test
-    public void removePerson() throws CommandException{
+    public void removePerson() throws CommandException {
         PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, organization);
         Person person = createElement(Person.class, personenKategorie);
-        
-        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person)).getConfiguration();        
+
+        Configuration configuration = commandService.executeCommand(new CreateConfiguration(person)).getConfiguration();
         removeElement(person);
         assertElementIsDeleted(person);
-        
+
         configuration = commandService.executeCommand(new LoadConfiguration(person)).getConfiguration();
         assertNull(configuration);
+    }
+
+    @Test
+    public void removeVerbundFromImportedBSIVerbund() throws CommandException {
+        LoadBSIModel loadBSIModel = new LoadBSIModel();
+        BSIModel bSIModel = commandService.executeCommand(loadBSIModel).getModel();
+
+        ImportBsiGroup importBsiGroup = createElement(ImportBsiGroup.class, bSIModel);
+        ITVerbund itVerbund = createElement(ITVerbund.class, importBsiGroup);
+
+        removeElement(itVerbund);
+        assertElementIsDeleted(itVerbund);        
+    }
+
+    /**
+     * {@link ImportBsiGroup} and {@link ImportIsoGroup} are not deleted when
+     * they imported from a {@link VeriniceArchive}.
+     */
+    @Test
+    @Ignore
+    public void removeVNAImportedBSIVerbund() throws IOException, CommandException, SyncParameterException {
+
+        String path = getClass().getResource(VNA_FILE).getPath();
+        SyncParameter syncParameter = new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+        byte[] it_network_vna = FileUtils.readFileToByteArray(new File(path));
+
+        SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
+        syncCommand = commandService.executeCommand(syncCommand);
+
+        for (CnATreeElement element : syncCommand.getElementSet()) {
+            if (element instanceof ITVerbund) {
+                removeElement((ITVerbund) element);
+                assertElementIsDeleted(element);
+            } else if (element instanceof Organization) {
+                removeElement((Organization) element);
+                assertElementIsDeleted(element);
+            }
+        }
+
     }
 
     private void assertElementIsDeleted(CnATreeElement element) throws CommandException {
@@ -212,10 +265,24 @@ public class RemoveElementTest extends CommandServiceProvider {
         return commandService.executeCommand(removeCommand);
     }
 
+    private void removeAllElementsByType(String type) throws CommandException {
+        LoadElementByTypeId loadElementByTypeId = new LoadElementByTypeId(type);
+        loadElementByTypeId = commandService.executeCommand(loadElementByTypeId);
+
+        for (CnATreeElement element : loadElementByTypeId.getElementList()) {
+            removeElement(element);
+        }
+    }
+
     @After
     public void tearDown() throws CommandException {
         removeElement(itVerbund);
         removeElement(organization);
+
+        // clean up the parents of imported cnatreeelements
+        removeAllElementsByType(ImportBsiGroup.TYPE_ID);
+        removeAllElementsByType(ImportIsoGroup.TYPE_ID);
+
         this.itVerbund = null;
         this.organization = null;
     }
