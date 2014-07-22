@@ -35,8 +35,10 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -77,6 +79,7 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
@@ -268,6 +271,21 @@ public abstract class CommandServiceProvider extends UuidLoader {
         CnATreeElement element = command.getElement();
         assertNull("organization " + org.getUuid() + " was not deleted.", element);
 
+    }
+    
+    
+    protected void updateElement(CnATreeElement element) throws CommandException {
+        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
+        updateElementCommand = commandService.executeCommand(updateElementCommand);
+    }
+
+    protected CnATreeElement loadElement(String sourceId, String extId) throws CommandException {
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId, false, true);
+        command.setProperties(true);
+        command = commandService.executeCommand(command);
+        List<CnATreeElement> elementList = command.getElements();
+        assertEquals("Element with source-id " + sourceId + " and ext-id" + extId + " was not found.", elementList.size(), 1);
+        return elementList.get(0);
     }
 
 }

@@ -187,7 +187,7 @@ public class CommandServiceTest extends CommandServiceProvider {
     
     protected void loadChangeAndCheckElement(String uuid) throws CommandException {
         LoadElementByUuid<CnATreeElement> loadByUuid;
-        CnATreeElement element = loadElement(uuid,null);
+        CnATreeElement element = loadElement(uuid, new RetrieveInfo());
         
         LOG.debug("Element opened: " + element.getTitle());
         
@@ -198,6 +198,7 @@ public class CommandServiceTest extends CommandServiceProvider {
             checkChangedProperties(changedElement);
         }
     }
+    
 
     /**
      * Loads an element similar to the BsiElementEditor

@@ -169,20 +169,6 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
         assertEquals("Integrity of element is not " + i, i, element.getNumericProperty(Asset.ASSET_VALUE_INTEGRITY));
     }
     
-    private void updateElement(CnATreeElement element) throws CommandException {
-        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
-        updateElementCommand = commandService.executeCommand(updateElementCommand);
-    }
-
-    private CnATreeElement loadElement(String sourceId, String extIdExterneKommunikation) throws CommandException {
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extIdExterneKommunikation, false, true);
-        command.setProperties(true);
-        command = commandService.executeCommand(command);
-        List<CnATreeElement> elementList = command.getElements();
-        assertEquals("Element with source-id " + sourceId + " and ext-id" + extIdExterneKommunikation + " was not found.", elementList.size(), 1);
-        return elementList.get(0);
-    }
-
     @Override
     protected String getFilePath() {
         return this.getClass().getResource(VNA_FILENAME).getPath();
