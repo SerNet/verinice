@@ -189,19 +189,6 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
         assertEquals("Vertraulichkeit of element is not " + vertraulichkeit, vertraulichkeit, element.getEntity().getSimpleValue(Raum.PROP_VERTRAULICHKEIT));
     }
     
-    private void updateElement(CnATreeElement element) throws CommandException {
-        UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
-        updateElementCommand = commandService.executeCommand(updateElementCommand);
-    }
-
-    private CnATreeElement loadElement(String sourceId, String extId) throws CommandException {
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, extId, false, true);
-        command.setProperties(true);
-        command = commandService.executeCommand(command);
-        List<CnATreeElement> elementList = command.getElements();
-        assertEquals("Element with source-id " + sourceId + " and ext-id" + extId + " was not found.", elementList.size(), 1);
-        return elementList.get(0);
-    }
 
     @Override
     protected String getFilePath() {
