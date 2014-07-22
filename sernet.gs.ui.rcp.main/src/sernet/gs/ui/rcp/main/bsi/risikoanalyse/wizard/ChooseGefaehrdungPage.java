@@ -96,6 +96,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
      * @param parent
      *            the parent Composite
      */
+    @Override
     public void createControl(Composite parent) {
         final int checkboxColumnWidth = 35;
         final int imageColumnWidth = checkboxColumnWidth;
@@ -148,6 +149,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
          * Gefaehrdungen
          */
         viewer.addCheckStateListener(new ICheckStateListener() {
+            @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 Gefaehrdung currentGefaehrdung = (Gefaehrdung) event.getElement();
 
@@ -169,6 +171,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
              * @param event
              *            event object describing the double-click
              */
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 /* retrieve selected Gefaehrdung and open edit dialog with it */
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -272,6 +275,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
              * @param event
              *            event containing information about the selection
              */
+            @Override
             public void modifyText(ModifyEvent event) {
                 Text text = (Text) event.widget;
                 if (text.getText().length() > 0) {
@@ -467,7 +471,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
             for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
                 for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
-                    if (gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+                    if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
                         associateGefaehrdung(gefaehrdung, true);
                     }
                 }
