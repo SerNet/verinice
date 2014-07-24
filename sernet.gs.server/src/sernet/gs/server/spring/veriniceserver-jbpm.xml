@@ -196,7 +196,7 @@
         <property name="defaultDescriptionHandler" ref="defaultDescriptionHandler" />
         <property name="taskReminderBlacklist">
             <set>
-                <value>"indi.task.execute.loop</value>
+                <value>indi.task.execute.loop</value>
             </set>
         </property>
     </bean>
