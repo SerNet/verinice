@@ -5,35 +5,50 @@
         <value>incidents</value>
     </simple-property-list>
     <property name="units">in</property>
-    <method name="initialize"><![CDATA[function isIn(list, charToTest){
+    <method name="initialize"><![CDATA[// lets check if our javascript interpreter is capable of String.trim(), and implement it if not
+if(String.prototype != null){
+	if(!String.prototype.trim){  
+ 		String.prototype.trim = function(){  
+			return this.replace(/^\s+|\s+$/g,'');  
+		};  
+	}
+}
+
+function isIn(list, charToTest){
+	list = String(list); // ensure we are working on javascript strings, not on java.lang.string, to avoid ambiguity
+	chartToTest = String(charToTest);
+	
 	if(list != null &amp;&amp; list.indexOf(",") != -1){
 		sArr = list.split(",");
 		for(var i=0; i < sArr.length; i++){
 			token = sArr[i];
-			token = trim(token);
-
-			if(token.equals(trim(charToTest))){
+			token = token.trim(); // could only be used because of initial additional implementation of String.trim()
+			trimmedTestChar = charToTest.trim();
+			if(token.equals(trimmedTestChar)){
 				return true;
 			}
 		}
 	} else if(list != null){
-			if(list.equals(trim(charToTest))){
-				return true;
-			} 
+		list = list.trim();
+		trimmedTestChar = charToTest.trim();
+		if(list.equals(trimmedTestChar)){
+			return true;
+		} 
 	}
 	return false;
-
 }
 
 function isEqual(a, b){
-	if(new String(trim(a)).valueOf() == new String(trim(b)).valueOf() ){
+	if(new String(a).trim().equals(new String(b).trim()) ){
 		return true;
 	}
 	return false;
 }
 
 function trim(str) {
-        return str.replace("/^\s+|\s+$/g","");
+        //return str.replace("/^\s+|\s+$/g","");
+        //return str.replace(String(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g),String('')).replace(String(/\s+/g),String(' '));
+        return str.replace(String(/^\s+|\s+$|\s+(?=\s)/g), String(""));
 }
 
 function getOptionValuesForPropertyIDs(propertyTypeIds){
@@ -81,8 +96,8 @@ function getOptionValuesForPropertyIDs(propertyTypeIds){
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="7">
-            <property name="sncaUrl">http://localhost:8088/veriniceserver-1.6.4/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8088/veriniceserver-1.6.4/</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver/</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
