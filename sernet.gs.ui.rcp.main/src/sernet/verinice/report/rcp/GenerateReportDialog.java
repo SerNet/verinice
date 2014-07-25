@@ -563,7 +563,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         textReportTemplateFile.setEnabled(userTemplate);
         openReportButton.setEnabled(userTemplate);
         useDefaultTemplateFolder = userTemplate;
-        useDefaultTemplateFolderButton.setEnabled(false);
+        useDefaultTemplateFolderButton.setEnabled(userTemplate);
     }
 
     private void setupComboOutputFormatContent() {
