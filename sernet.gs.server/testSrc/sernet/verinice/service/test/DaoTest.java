@@ -154,29 +154,37 @@ public class DaoTest extends UuidLoader {
         for (String uuid : uuidList) {
             CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance());
             assertNotNull(element);
-            checkSearchTerm(element,searchTerm);
+            boolean found = checkSearchTerm(element,searchTerm);
+            assertTrue("Could not find term: " + searchTerm + " in element type/uuid: " + element.getTypeId() + "/" + element.getUuid() , found);
          }
     }
 
-    private void checkSearchTerm(CnATreeElement element, String searchTerm) {
+    private boolean checkSearchTerm(CnATreeElement element, String searchTerm) {
         String type = element.getTypeId();
-        boolean found = false;
+        LOG.debug("element type/uuid: " + type + "/" + element.getUuid() );
         String[] propertyTypes = huiTypeFactory.getEntityType(type).getAllPropertyTypeIds();
-        propertyTypeLoop: for (String propertyType : propertyTypes) {
-            List<Property> propertyList = element.getEntity().getProperties(propertyType).getProperties();          
-            for (Property property : propertyList) {
-                String value = property.getPropertyValue();
-                if(value!=null && value.contains(searchTerm)) {
-                    found = true;
-                    if(value.length()>30) {
-                        value = value.substring(0, 30) + "...";
-                    }
-                    LOG.debug("element type/uuid: " + type + "/" + element.getUuid() + ", " + searchTerm + " found in: " + property.getPropertyType() + " = " + value);
-                    break propertyTypeLoop;
-                }
+        for (String propertyType : propertyTypes) {
+            List<Property> propertyList = element.getEntity().getProperties(propertyType).getProperties();  
+            if(checkSearchTerm(propertyList, searchTerm)) {
+                return true;
             }
         }
-        assertTrue("Could not find term: " + searchTerm + " in element type/uuid: " + type + "/" + element.getUuid() , found);
+        return false;
+    }
+    
+    private boolean checkSearchTerm(List<Property> propertyList, String searchTerm) {         
+        for (Property property : propertyList) {
+            String value = property.getPropertyValue();
+            LOG.debug("checking property: " + property.getPropertyType() + " = " + value);
+            if(value!=null && value.contains(searchTerm)) {
+                if(value.length()>30) {
+                    value = value.substring(0, 30) + "...";
+                }
+                LOG.debug(searchTerm + " found");
+                return true;
+            }
+        }
+        return false;
     }
     
     protected List<String> getAssetGroupUuids() {

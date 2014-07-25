@@ -143,7 +143,7 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="configuration_scope_yes" name="Ja"/>
                 <option id="configuration_scope_no" name="Nein"/>
     </huiproperty>
-     
+
     <huiproperty name="Web access" 
                 id="configuration_web"
                 inputtype="singleoption">
@@ -158,6 +158,12 @@ the value between <param></param> will be used directly if no string is found fo
                 <option id="configuration_rcp_no" name="Nein"/>
     </huiproperty>
      
+    <huiproperty 
+                name="Account deactivated" 
+                id="configuration_deactivated"
+                inputtype="booleanoption"  defaultValue="0">
+    </huiproperty>
+
      <huipropertygroup
 			id="configuration_mailing"
 			name="Mailbenachrichtigung">
@@ -2076,7 +2082,7 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 				id="gefaehrdungsumsetzung_mechanismenstaerke"
 				inputtype="singleoption"
-				name="Mechanismensstärke" >
+				name="Mechanismenstärke" >
 				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_ja"
 					name="Ausreichend" />
 				<option	id="gefaehrdungsumsetzung_mechanismenstaerke_nein"
@@ -2260,10 +2266,15 @@ the value between <param></param> will be used directly if no string is found fo
 		<huipropertygroup
 			id="mnums_group_umsetzung"
 			name="Umsetzung">
+            <huiproperty
+                id="mnums_erlaeuterung"
+                name="Erläuterung"
+                required="false"
+                inputtype="text"
+                focus="true" />
 			<huiproperty
 				id="mnums_umsetzung"
 				name="Umsetzung"
-                focus="true"
                 required="true"
 				inputtype="singleoption">
 				<option
@@ -2279,11 +2290,6 @@ the value between <param></param> will be used directly if no string is found fo
 					id="mnums_umsetzung_entbehrlich"
 					name="Entbehrlich" />
 			</huiproperty>
-			<huiproperty
-				id="mnums_erlaeuterung"
-				name="Erläuterung"
-                required="false"
-				inputtype="text" />
 			<huiproperty
 				id="mnums_umsetzungbis"
 				name="Umsetzung bis"
@@ -3144,6 +3150,7 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huirelation to="audit" id="rel_org_audit" />
         <huirelation to="auditgroup" id="rel_org_auditgroup" />
+        <huirelation to="person-iso" id="rel_org_personiso_vv_bsig" name="VV BSIG Reporting Person" reversename="VV BSIG Reported Org"/>
         
         <huiproperty
             name="Title"
@@ -3289,7 +3296,13 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
         </huipropertygroup>        
-        
+        <huipropertygroup name="VV BSIG" id="org_vv_bsig">
+            <huiproperty name="Authority" id="org_vv_bsig_authority"/>       	
+        	<huiproperty name="Availability Phone" id="org_vv_bsig_availability_phone" />
+        	<huiproperty name="Availability E-Mail" id="org_vv_bsig_availability_email" />
+        	<huiproperty name="Enquiry Phone" id="org_vv_bsig_enquiry_phone" />
+        	<huiproperty name="Enquiry E-Mail" id="org_vv_bsig_equiry_email" />            
+        </huipropertygroup>
     </huientity>
     
     <huientity
@@ -4346,7 +4359,7 @@ the value between <param></param> will be used directly if no string is found fo
         
           <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
                 <huiproperty id="gsm_ism_control_description" name="GSM Description" tags="Greenbone_GSM" inputtype="text" editable="false" />
-                <huiproperty id="gsm_ism_control_tag" name="GSM Tag" tags="Greenbone_GSM" editable="true"/>              
+                <huiproperty id="gsm_ism_control_tag" name="GSM Tag" tags="Greenbone_GSM" editable="false"/>              
                 <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" editable="false" />
             </huipropertygroup>
         
@@ -4846,6 +4859,166 @@ the value between <param></param> will be used directly if no string is found fo
             name="Document"
             id="incident_document"
             isURL="true" />
+        <huipropertygroup name="VV BSIG" id="incident_vv_bsig" tags="VV-BSIG">
+        	<huiproperty name="VV BSIG Type" id="incident_vv_bsig_type" inputtype="singleoption">
+				<option name="Parried Malware" id="incident_vv_bsig_parried_malware" />       	
+				<option name="Successful Malware Installation" id="incident_vv_bsig_succ_malware_installation" />       	
+				<option name="System intrusion" id="incident_vv_bsig_system_intrusion" />       	
+				<option name="Unauthorized use of System" id="incident_vv_bsig_unauthorized_system_use" />       	
+				<option name="Dataloss by Malware or Hackers" id="incident_vv_bsig_dataloss" />
+				<option name="Manipulation of Hard- / Software" id="incident_vv_bsig_hardsoftware_manipulation"/>       	
+			    <option name="DDos" id="incident_vv_bsig_ddos"/>
+			    <option name="Theft or loss of IT-System" id="incident_vv_bsig_itsystem_theft"/>
+			    <option name="Theft or loss of Data Storage media" id="incident_vv_bsig_data_media_theft"/>
+			    <option name="Improper disposal" id="incident_vv_bsig_improper_disposal"/>
+			    <option name="Disclosure by unauthorized employees" id="incident_vv_bsig_unauthorized_employees_disclosure"/>
+			    <option name="Security vulnerability" id="incident_vv_bsig_security_vulnerability"/>
+			    <option name="Severe cancellation of resources" id="incident_vv_bsig_severe_resources_cancellation"/>
+			    <option name="Severe Function error" id="incident_vv_bsig_severe_function_error"/>
+			    <option name="Severe Overloadsituations" id="incident_vv_bsig_severe_overload"/>
+			    <option name="Violation of IT-Security-Policy" id="incident_vv_bsig_policy_violation"/>
+			    <option name="Internal reasons" id="incident_vv_bsig_internal_reasons"/>
+			    <option name="Forces of Nature" id="incident_vv_bsig_forces_of_nature"/>
+			    <option name="Damage" id="incident_vv_bsig_damage"/>
+			    <option name="Special Findings" id="incident_vv_bsig_special_findings"/>
+			</huiproperty>
+
+        	<huiproperty
+				name="Classification of external Attack"
+				id="incident_vv_bsig_classification_external_attack"
+				required="false"
+				inputtype="multioption">
+			
+				<option
+					id="incident_vv_bsig_classification_external_attack_directed"
+					name="Directed" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_parried_malware"
+					name="Parried Malware" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_succ_malware_installation"
+					name="Successful Malware Installation" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_system_intrusion"
+					name="System Intrusion" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_unauthorized_system_use"
+					name="Unauthorized use of System" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_dataloss"
+					name="Dataloss by Malware or Hackers" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_hardsoftware_manipulation"
+					name="Manipulation of Hard- / Software" />
+				<option
+					id="incident_vv_bsig_classification_external_attack_ddos"
+					name="DDoS" />
+			</huiproperty>
+			<huiproperty
+				name="Classification of data loss"
+				id="incident_vv_bsig_classification_data_loss"
+				required="false"
+				inputtype="multioption">
+				<option
+					id="incident_vv_bsig_classification_data_loss_itsystem_theft"
+					name="Theft or loss of IT-System" />
+				<option
+					id="incident_vv_bsig_classification_data_loss_data_media_theft"
+					name="Theft or loss of Data Storage media" />
+				<option
+					id="incident_vv_bsig_classification_data_loss_improper_disposal"
+					name="Improper disposal" />
+				<option
+					id="incident_vv_bsig_classification_data_loss_unauthorized_employees_disclosure"
+					name="Disclosure by unauthorized employees" />		
+			</huiproperty>	
+			<huiproperty id="incident_vv_bsig_classification_security_vulnerability" 
+				name="Classification IT-Security-Vulnerability"
+				inputtype="booleanoption" defaultValue="0"/>
+			<huiproperty id="incident_vv_bsig_classification_swhw_component_error"
+				name="Classification Soft- Hardware Component Error"
+				required="false"
+				inputtype="multioption">
+				<option
+					id="incident_vv_bsig_classification_swhw_component_error_severe_resources_cancellation"
+					name="Severe Cancellation of Resources" />
+				<option
+					id="incident_vv_bsig_classification_swhw_component_error_severe_function_error"
+					name="Severe Function error" />
+				<option
+					id="incident_vv_bsig_classification_swhw_component_error_severe_overload"
+					name="Severe Overloadsituations" />
+			</huiproperty>
+			<huiproperty id="incident_vv_bsig_classification_policy_violation" 
+				name="Violation of IT-Security-Policy"
+				inputtype="booleanoption" defaultValue="0"/>
+			<huiproperty id="incident_vv_bsig_classification_internal_reasons" 
+				name="Internal Reasons"
+				inputtype="booleanoption" defaultValue="0"/>
+			<huiproperty id="incident_vv_bsig_classification_external_influences"
+				name="External Influences"
+				required="false"
+				inputtype="multioption">
+				<option
+					id="incident_vv_bsig_classification_external_influences_forces_of_nature"
+					name="Forces of Nature" />
+				<option
+					id="incident_vv_bsig_classification_external_influences_damage"
+					name="Damage" />									
+			</huiproperty>
+			<huiproperty id="incident_vv_bsig_classification_particular_findings" 
+				name="Particular Findings"
+				inputtype="booleanoption" defaultValue="0"/>			
+			<huiproperty id="incident_vv_bsig_purpose_of_information"
+				name="Purpose of Information"
+				inputtype="multioption">
+				<option
+					id="incident_vv_bsig_purpose_of_information_attention"
+					name="For your Attention"/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_approval"
+					name="Approval for report admission "/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_explicit_approval"
+					name="Explicit Approval for report admission by reporting person required"/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_callback"
+					name="Call-Back"/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_statement"
+					name="Request for Statement"/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_support"
+					name="Support required"/>
+				<option
+					id="incident_vv_bsig_purpose_of_information_processing"
+					name="Incident processing by BSI-IT-LZ"/>																														
+				</huiproperty>
+				<huiproperty id="incident_vv_bsig_circumstances" name="Circumstances"
+					inputtype="text"
+					textrows="10">
+					<defaultRule class="SimpleValue">
+                		<param id="incident_vv_bsig_circumstances_default">Leitfragen:
+Was wurde festgestellt / was ist passiert?
+Wer, bzw. was ist betroffen? 
+Welcher Schaden wurde bereits festgestellt?
+Ist eine Kompromittierung weiterer 
+Systeme in anderen Organisationen wahrscheinlich?
+Wurden bereits (Gegen-)
+Maßnahmen ergriffen? Wenn ja, welche?
+Wurden bereits weitere Stellen informiert?
+</param>
+                	</defaultRule>
+                </huiproperty>
+				<huiproperty id="incident_vv_bsig_procedure_proposals" name="Procedure Proposals"
+					inputtype="text"
+					textrows="10"
+					/>					
+				<huiproperty id="incident_vv_bsig_miscellaneous" name="Miscellaneous"
+					inputtype="text"
+					textrows="10"
+					/>
+        </huipropertygroup>        
     </huientity>
     
     <huientity
@@ -6202,13 +6375,18 @@ the value between <param></param> will be used directly if no string is found fo
 	           required="true"/>
             
           <huiproperty 
+            id="samt_topic_externalnote" 
+            tags="VDA-ISA"
+            inputtype="text"
+            focus="true"/>   
+            
+          <huiproperty 
             id="samt_topic_maturity"      
             inputtype="numericoption" 
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="VDA-ISA,VDA_ISA_Audit,Web"
-            focus="true">
+            tags="VDA-ISA,VDA_ISA_Audit,Web">
                 <validationRule class="RegExRule">
                 	<param id="regEx">(-1)|[0-5]</param>
                 </validationRule>
@@ -6230,12 +6408,7 @@ the value between <param></param> will be used directly if no string is found fo
             id="samt_topic_min1"  visible="false" inputtype="numericoption" min="0" max="10" />
           <huiproperty 
             id="samt_topic_min2"  visible="false" inputtype="numericoption" min="0" max="10" />
-
-            
-          <huiproperty 
-            id="samt_topic_externalnote" 
-            tags="VDA-ISA"
-            inputtype="text"/>
+        
           <huiproperty 
             id="samt_topic_internalnote" 
             inputtype="text"
