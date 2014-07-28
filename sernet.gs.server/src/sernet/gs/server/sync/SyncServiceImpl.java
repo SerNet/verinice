@@ -50,7 +50,7 @@ public class SyncServiceImpl implements SyncService {
             errors.addAll(command.getErrors());
             response.setDeleted(command.getDeleted());
             response.setInserted(command.getInserted());
-            response.setUpdated(command.getUpdated());
+            response.setUpdated(command.getPotentiallyUpdated());
         } catch (CommandException ce) {
             LOG.error("Error while executing command: SyncCommand", ce);
             errors.add(ce.getLocalizedMessage());

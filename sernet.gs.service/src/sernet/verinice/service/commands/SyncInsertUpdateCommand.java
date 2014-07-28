@@ -104,7 +104,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     
     private List<String> errorList;
 
-    private int inserted = 0, updated = 0, merged = 0;
+    private int inserted = 0, potentiallyUpdated = 0, merged = 0;
     
     private long globalStart = 0;
     
@@ -231,7 +231,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     elementInDB.setExtId(null);
                 }
                 setAttributes = true;
-                updated++;
+                potentiallyUpdated++;
             } else {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db, update disabled, uuid: " + elementInDB.getUuid());
@@ -696,7 +696,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
     
     public int getUpdated() {
-        return updated;
+        return potentiallyUpdated;
     }
 
     public int getInserted() {
