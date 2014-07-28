@@ -96,6 +96,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			lc = getCommandService().executeCommand(lc);
 		} catch (CommandException e) {
+		    getLog().error("Erroe while loading accounts", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -145,26 +146,27 @@ public class PrepareNotificationInfo extends GenericCommand {
 	}
 
     private void handleMeasures(Set<Configuration> globalNotifees, Set<Configuration> globalAuditorNotifees) {
-        LoadCnAElementByType<MassnahmenUmsetzung> lmu = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, false);
-		
-		try {
-			lmu = getCommandService().executeCommand(lmu);
-		} catch (CommandException e) {
-		    getLog().error("Error in collectExpirationNotifees", e);
-			throw new RuntimeException(e);
-		}
-		
-		for (MassnahmenUmsetzung mu : lmu.getElements())
-		{
-			if (mu.isCompleted())
-			{
-				handleCompletedMeasure(mu, globalAuditorNotifees);
-			}
-			else
-			{
-				handleIncompletedMeasure(mu, globalNotifees);
-			}
-		}
+        try {
+            LoadCnAElementByType<MassnahmenUmsetzung> lmu = new LoadCnAElementByType<MassnahmenUmsetzung>(MassnahmenUmsetzung.class, true);
+			lmu = getCommandService().executeCommand(lmu);	
+    		for (MassnahmenUmsetzung mu : lmu.getElements())
+    		{
+    			if (mu.isCompleted())
+    			{
+    				handleCompletedMeasure(mu, globalAuditorNotifees);
+    			}
+    			else
+    			{
+    				handleIncompletedMeasure(mu, globalNotifees);
+    			}
+    		}
+        } catch (CommandException e) {
+            getLog().error("CommandException in collectExpirationNotifees", e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            getLog().error("RuntimeException in collectExpirationNotifees", e);
+            throw e;
+        }
     }
 	
 	private Configuration retrieveConfiguration(CnATreeElement p)
@@ -176,6 +178,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 			try {
 				lc = getCommandService().executeCommand(lc);
 			} catch (CommandException e) {
+			    getLog().error("Error while loading account.", e);
 				throw new RuntimeException(e);
 			}
 			
@@ -336,6 +339,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				
 				res = frp.getFoundPersons();
 			} catch (CommandException e) {
+                getLog().error("Error while loading responsible person.", e);
 				throw new RuntimeException(e);
 			}
 		}
@@ -443,6 +447,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			gces = getCommandService().executeCommand(gces);
 		} catch (CommandException e) {
+            getLog().error("Error while loading changed elements.", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -515,6 +520,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			gces = getCommandService().executeCommand(gces);
 		} catch (CommandException e) {
+            getLog().error("Error while loading changed elements.", e);
 			throw new RuntimeException(e);
 		}
 		

@@ -34,7 +34,7 @@ import org.eclipse.osgi.util.NLS;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
-import org.springframework.mail.MailSendException;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.context.SecurityContext;
@@ -126,6 +126,8 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
                 pniCommand.reset();
             }
     		sendMail();
+        } catch (Exception e) {
+            LOG.error("Error while executing job.", e);
         } finally {
             if(dummyAuthAdded) {
                 securityContext.setAuthentication(null);
@@ -134,13 +136,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
 		
 	}
 
-    private void sendMail() {
+    private void sendMail() throws MailException, MessagingException, CommandException {
         // Retrieves the notification information.
-        try {
-        	commandService.executeCommand(pniCommand);
-        } catch (CommandException e) {
-        	LOG.warn("Exception when retrieving notification information. Notification mails may miss details!", e); //$NON-NLS-1$
-        }
+        commandService.executeCommand(pniCommand);
         
         // Iterates through the result, generate and send the individual messages.
         for (NotificationInfo ei : pniCommand.getNotificationInfos()) {
@@ -154,14 +152,9 @@ public class MailJob extends QuartzJobBean implements StatefulJob {
         			notificationEmailDateFormat,
         			notificationEmailLinkTo);
         	
-        	try {
-        		mh = prepareMessageHelper(ei, mh);
-        		mailSender.send(mh.createMailMessage());
-        	} catch (MessagingException me) {
-        		LOG.warn("failed to prepare notification message: " + me); //$NON-NLS-1$
-        	} catch (MailSendException mse) {
-        		LOG.warn("failed to send notification message: " + mse); //$NON-NLS-1$
-        	}			
+        	
+        	mh = prepareMessageHelper(ei, mh);
+        	mailSender.send(mh.createMailMessage());  				
         }
     }
 
