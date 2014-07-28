@@ -53,7 +53,7 @@ public class LoggerInitializer implements ILogPathService {
     protected static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
     protected static final String LOGGING_PATH_KEY = "logging.file";
     protected static final String LOG_FOLDER = "log/";
-    private static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
+    protected static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
     protected static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
 
     /**
@@ -158,7 +158,7 @@ public class LoggerInitializer implements ILogPathService {
         return false;
     }
 
-    private static String getPathFromRootLogger() {
+    protected static String getPathFromRootLogger() {
         Logger log = Logger.getRootLogger();
         Enumeration<Appender> appenders = log.getAllAppenders();
 
