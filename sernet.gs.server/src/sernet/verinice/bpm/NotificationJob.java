@@ -186,51 +186,55 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                 }
                 param.setBlacklist(getTaskService().getTaskReminderBlacklist());
                 final List<ITask> taskList = getTaskService().getTaskList(param);
+                if(taskList==null || taskList.isEmpty()) {
+                    continue;
+                }
                 loadUserData(name);
-                if(getEmail()!=null) {         
-                    if (log.isDebugEnabled()) {
-                        log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " + taskList.size()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    }
-                    model.put(TEMPLATE_NUMBER,String.valueOf(taskList.size()));
-                    if(getUrl()!=null && !getUrl().isEmpty()) {
-                        model.put(TEMPLATE_URL,getUrl());
-                    } else {
-                        model.put(TEMPLATE_URL,VeriniceContext.getServerUrl() + getTaskListPath());
-                    }
-                    model.put(TEMPLATE_EMAIL_FROM,getEmailFrom());
-                    model.put(TEMPLATE_REPLY_TO,getReplyTo());
-                    MimeMessagePreparator preparator = new MimeMessagePreparator() {
+                if(getEmail()==null) {
+                    continue;
+                }                                  
+                if (log.isDebugEnabled()) {
+                    log.debug("User/Email: " + name + "/" + getEmail() + ", number of tasks: " + taskList.size()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
+                model.put(TEMPLATE_NUMBER,String.valueOf(taskList.size()));
+                if(getUrl()!=null && !getUrl().isEmpty()) {
+                    model.put(TEMPLATE_URL,getUrl());
+                } else {
+                    model.put(TEMPLATE_URL,VeriniceContext.getServerUrl() + getTaskListPath());
+                }
+                model.put(TEMPLATE_EMAIL_FROM,getEmailFrom());
+                model.put(TEMPLATE_REPLY_TO,getReplyTo());
+                MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
-                        @Override
-                        public void prepare(MimeMessage mimeMessage) throws MessagingException {
-                            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                            message.setTo(getEmail());
-                            message.setFrom(getEmailFrom());
-                            if(getReplyTo()!=null && !getReplyTo().isEmpty()) {
-                                message.setReplyTo(getReplyTo());
-                            }
-                            message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
-                            String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
-                            message.setText(text, false);
-                            if(getEmailCc()!=null) {
-                                message.setCc(getEmailCc());
-                            }
-                            if(getEmailBcc()!=null) {
-                                message.setBcc(getEmailBcc());
-                            }
+                    @Override
+                    public void prepare(MimeMessage mimeMessage) throws MessagingException {
+                        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                        message.setTo(getEmail());
+                        message.setFrom(getEmailFrom());
+                        if(getReplyTo()!=null && !getReplyTo().isEmpty()) {
+                            message.setReplyTo(getReplyTo());
                         }
-
-                    };
-                    if (log.isDebugEnabled()) {
-                        log.debug("Sending email... parameter: ");
-                        for (String key : model.keySet()) {
-                            log.debug( key + ": "+ model.get(key));
+                        message.setSubject(NLS.bind(Messages.getString("NotificationJob.1"), new Object[] {taskList.size()})); //$NON-NLS-1$
+                        String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), model);
+                        message.setText(text, false);
+                        if(getEmailCc()!=null) {
+                            message.setCc(getEmailCc());
+                        }
+                        if(getEmailBcc()!=null) {
+                            message.setBcc(getEmailBcc());
                         }
                     }
-                    this.mailSender.send(preparator);
-                    if (log.isDebugEnabled()) {
-                        log.debug("Email was send successfully.");
+
+                };
+                if (log.isDebugEnabled()) {
+                    log.debug("Sending email... parameter: ");
+                    for (String key : model.keySet()) {
+                        log.debug( key + ": "+ model.get(key));
                     }
+                }
+                this.mailSender.send(preparator);
+                if (log.isDebugEnabled()) {
+                    log.debug("Email was send successfully.");
                 }
             }
         } catch (Throwable t){
