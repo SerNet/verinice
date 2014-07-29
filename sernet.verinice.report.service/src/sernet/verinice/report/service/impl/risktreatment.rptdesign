@@ -32,8 +32,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -12276,6 +12276,30 @@ columns(cols);</value>
                                                                                             </simple-property-list>
                                                                                             <property name="style">bg_grey</property>
                                                                                         </structure>
+                                                                                        <structure>
+                                                                                            <property name="operator">eq</property>
+                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                            <simple-property-list name="value1">
+                                                                                                <value type="javascript">"Yes"</value>
+                                                                                            </simple-property-list>
+                                                                                            <property name="style">bg_green</property>
+                                                                                        </structure>
+                                                                                        <structure>
+                                                                                            <property name="operator">eq</property>
+                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                            <simple-property-list name="value1">
+                                                                                                <value type="javascript">"Partly"</value>
+                                                                                            </simple-property-list>
+                                                                                            <property name="style">bg_yellow</property>
+                                                                                        </structure>
+                                                                                        <structure>
+                                                                                            <property name="operator">eq</property>
+                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                            <simple-property-list name="value1">
+                                                                                                <value type="javascript">"No"</value>
+                                                                                            </simple-property-list>
+                                                                                            <property name="style">bg_red</property>
+                                                                                        </structure>
                                                                                     </list-property>
                                                                                     <property name="resultSetColumn">control_implemented</property>
                                                                                 </data>
@@ -13074,6 +13098,30 @@ columns(cols);</value>
                                                                                                                 <value type="javascript">"N.a"</value>
                                                                                                             </simple-property-list>
                                                                                                             <property name="style">bg_grey</property>
+                                                                                                        </structure>
+                                                                                                        <structure>
+                                                                                                            <property name="operator">eq</property>
+                                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                                            <simple-property-list name="value1">
+                                                                                                                <value type="javascript">"Yes"</value>
+                                                                                                            </simple-property-list>
+                                                                                                            <property name="style">bg_green</property>
+                                                                                                        </structure>
+                                                                                                        <structure>
+                                                                                                            <property name="operator">eq</property>
+                                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                                            <simple-property-list name="value1">
+                                                                                                                <value type="javascript">"No"</value>
+                                                                                                            </simple-property-list>
+                                                                                                            <property name="style">bg_red</property>
+                                                                                                        </structure>
+                                                                                                        <structure>
+                                                                                                            <property name="operator">eq</property>
+                                                                                                            <expression name="testExpr" type="javascript">row["control_implemented"]</expression>
+                                                                                                            <simple-property-list name="value1">
+                                                                                                                <value type="javascript">"Partly"</value>
+                                                                                                            </simple-property-list>
+                                                                                                            <property name="style">bg_yellow</property>
                                                                                                         </structure>
                                                                                                     </list-property>
                                                                                                     <property name="resultSetColumn">control_implemented</property>
