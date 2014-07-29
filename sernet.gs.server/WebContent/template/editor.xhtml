@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" 
+    xmlns:vn="http://www.verinice.org/taglib">
+
+	<ui:composition>
+		<h:form id="editForm" rendered="#{rendered}">
+            <p:remoteCommand name="loadLinks" actionListener="#{link.init}" update=":editForm:linkPanel"/>
+			<p:outputPanel id="editPanel" rendered="#{edit.element!=null}">
+				<div class="csc-header csc-header-n1" style="height:40px;">
+		    		<h1><h:outputText value="#{edit.title}"/></h1>
+		    	</div>
+		    	<p:outputPanel styleClass="#{edit.saveButtonClass}">				      							      			
+		  			<p:commandButton id="submit" 
+		  				value="#{msgEdit['save']}" 
+		  				action="#{edit.save}" 
+		  				styleClass="button"
+		  				update=":editForm :tableForm" />
+		  			<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
+		  				<p:commandButton action="#{actionHandler.execute}" 
+		  				value="#{actionHandler.label}"
+		  				oncomplete="loadLinks();"
+                    	update=":editForm :tableForm" />  				
+		  			</ui:repeat>
+		  			<p:remoteCommand name="submitEditForm" process="@form" update=":editForm :tableForm :navForm" action="#{edit.save}"/>
+		        </p:outputPanel>
+		        <p:panel header="#{msgEdit['general']}" collapsed="#{not edit.generalOpen}" toggleable="true" toggleSpeed="50" style="margin-top: 3px;">
+		    		<vn:properties list="#{edit.labelPropertyList}" listNoLabel="#{edit.noLabelPropertyList}"/>
+		      	</p:panel>
+		     	<c:forEach var="group" items="#{edit.groupList}" > 
+		      		<p:panel header="#{group.name}" collapsed="#{not edit.groupOpen}" toggleable="true" toggleSpeed="50">
+		     			<vn:properties list="#{group.labelPropertyList}" listNoLabel="#{group.noLabelPropertyList}" />     			
+		      		</p:panel>
+		     	</c:forEach>
+		     	<!-- Attachments -->
+		     	<p:panel id="attachmentPanel" header="#{msgEdit['attachments']}" collapsed="#{not edit.attachmentOpen}" rendered="#{edit.attachmentEnabled and (auth.attachments or auth.addAttachments)}" toggleable="true" toggleSpeed="50">				      							      					  					  			
+		     		<p:dataTable id="attachmentTable"
+	     				value="#{attachment.attachments}" 
+		                var="item"
+		                rendered="#{auth.attachments}"
+		                height="150px"
+		                width="400px"
+		                styleClass="noheader">
+		                <p:column headerText="#{msgEdit['file']}" style="width:400px">
+		                	<p:commandLink value="#{item.titel}" action="#{attachment.download}" ajax="false" immediate="true">
+		                    	<f:param name="id" value="#{item.dbId}" />
+		                    	<f:param name="name" value="#{item.titel}" />	                    	                    	
+		                    </p:commandLink>
+				        </p:column>
+		            </p:dataTable> 
+					<!-- 104857600 b = 100 mb -->
+					<p:fileUpload fileUploadListener="#{attachment.handleFileUpload}"
+						rendered="#{auth.addAttachments}"  
+			        	mode="advanced"  
+			            multiple="true"  
+            			auto="true"      
+			            sizeLimit="104857600"
+			            update="attachmentTable"
+			            allowTypes="/(\.|\/).*$/"/>
+				</p:panel>
+				<!-- Links -->
+				<p:panel id="linkPanel" widgetVar="linkPanelJs" header="#{msgEdit['links']}" rendered="#{auth.relations}" collapsed="#{edit.linkCollapsed}" toggleable="true" toggleSpeed="50">	     		
+	      			
+	      			<p:ajax event="toggle" listener="#{link.init}" update="linkPanel" />      			
+					<p:outputPanel rendered="#{not link.loading}">
+		      			<table>
+		      				<tr>
+		      					<td>
+		      						<p:selectOneMenu id="linkType" value="#{link.selectedLinkType}" style="width:152px">
+		      							<f:selectItem itemLabel="#{msgEdit['selectType']}" itemValue="" />  
+										<f:selectItems value="#{link.linkTypeList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+										<p:ajax update="linkTarget" event="change" listener="#{link.loadLinkTargets}" process="linkType"/>
+									</p:selectOneMenu>
+		      					</td>
+		      					<td>
+		      						<p:selectOneMenu id="linkTarget" value="#{link.selectedLinkTargetName}" style="width:152px">
+		      							<f:selectItem itemLabel="#{msgEdit['selectTarget']}" itemValue="" />  
+										<f:selectItems value="#{link.linkTargetNameList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+									</p:selectOneMenu>
+		      					</td>					      					
+		      					<td><p:commandButton id="addLink" value="#{msgEdit['addLink']}" action="#{link.addLink}" update="linkPanel"/></td>
+		      				</tr>
+		      			</table>		      						      			
+		      			<p:dataTable
+		     				value="#{link.linkList}" 
+			                var="item"		                
+			                selectionMode="single"
+		             		selection="#{link.selectedLink}"
+		             		rowKey="#{item.id}"
+			                height="150px"
+			                width="400px">
+			                <p:ajax event="rowSelect" 
+								listener="#{link.selectLink}"   
+		                    	update=":editForm:linkDeletePanel " />
+		                    <p:column headerText="#{msgEdit['linkType']}" style="width:200px">
+								<h:outputText value="#{item.type}"/>	
+					        </p:column>
+					        <p:column headerText="#{msgEdit['linkTarget']}" style="width:200px">
+								<h:outputText value="#{item.targetName}"/>	
+					        </p:column>
+				        </p:dataTable>
+				        <p:panel id="linkDeletePanel">
+				        	<table style="width: 400px;">
+			      				<tr>
+			      					<td style="text-align: right; vertical-align: middle;width: 330px;">
+			      						<h:outputText value="#{msgEdit['reallyDelete']}" rendered="#{link.deleteVisible}" style="margin-right: 5px;"/>
+			      					</td>
+			      					<td style="text-align: right; vertical-align: middle;width: 20px;">	
+			      						<p:commandLink value="#{msgEdit['yes']}" id="deleteConfirmLink" action="#{link.deleteLink}" update="linkPanel,linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 3px; color:#00aa00;"/>
+			      					</td>
+			      					<td style="text-align: left; vertical-align: middle;width: 25px;">	
+			      						<p:commandLink value="#{msgEdit['no']}" id="hideDeleteLink" action="#{link.hideDeleteLink}" update="linkDeletePanel" rendered="#{link.deleteVisible}"  style="margin-right: 5px; color:#aa0000;"/>
+			      					</td>
+			      					<td style="text-align: right; vertical-align: middle;width: 25px;">
+			      						<p:commandLink id="deleteLink" action="#{link.showDeleteLink}" update="linkDeletePanel" rendered="#{link.selectedLink!=null}"><h:graphicImage value="/image/delete.png" rendered="#{link.selectedLink!=null}"/></p:commandLink>
+			      					</td>				      					
+			      				</tr>
+			      			</table>
+				        </p:panel>
+			        </p:outputPanel>
+			        <p:outputPanel rendered="#{link.loading}">
+			        	<h:outputText value="#{msgEdit['loading']}"/>
+			        </p:outputPanel>						      			      			
+		     	</p:panel>
+			</p:outputPanel>    
+		</h:form>			     			     			     		     	
+	</ui:composition>
+</html>

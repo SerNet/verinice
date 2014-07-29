@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!--
+	This application context does nothing more than initializing a PropertyPlaceholderConfigurer
+	that uses a different property file from the one in veriniceserver-plain.xml .
+	
+	This file is referenced in the Activator class. 
+ -->
+
+<bean
+	id="configurer"
+	class="sernet.gs.server.ServerPropertyPlaceholderConfigurer">
+    <property name="locations">
+        <list>
+	        <value>classpath:WebContent/WEB-INF/veriniceserver-osgi.properties</value>
+	        <value>classpath:WebContent/WEB-INF/verinice-ldap.properties</value>
+        </list>
+    </property>
+</bean>
+
+</beans>

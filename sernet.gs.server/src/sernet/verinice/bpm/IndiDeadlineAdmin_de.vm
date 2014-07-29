@@ -1,0 +1,40 @@
+## Default/English email template for tasks notification
+## Notification properties: veriniceserver-plain.properties
+## Notification configuration: veriniceserver-plain.xml, veriniceserver-jbpm.xml
+## Notifications are send as plain text, don't use HTML.
+## Save this file UTF-8 encoded.
+##
+## Notifications service sets variables:
+## ${address}: Mr, Mrs or if not set Mrs/Mr
+## ${name}: Surname
+## ${n}: Number of new tasks
+## ${url}: Url to task site of verinice.WEB
+## ${email}: Recipient 
+## ${emailFrom}: Sender
+## ${replyTo}: reply to email
+##
+Hallo ${address} ${name},<br/>
+<br/>
+die Frist f&uuml;r die Umsetzung einer Aufgabe ist abgelaufen. 
+Die Aufgabe wurde vom Verantwortlichen noch nicht umgesetzt:<br/>
+<br/>
+${taskTitle}<br/>
+<br/>
+${taskDescription}<br/>
+<br/>
+Verantwortlich f&uuml;r die Aufgabe ist: ${assignee-address} ${assignee-name}
+<br/>
+<br/>
+Die Aufgabe betrifft folgendes Objekt in verinice:<br/>
+${elementTitle}<br/>
+<br/>
+Eine Liste mit allen Aufgaben finden Sie hier:<br/>
+<a href="${url}">${url}</a><br/>
+<br/>
+<br/>
+Nach dem Login k&ouml;nnen Sie Ihre Aufgaben im Browser bearbeiten.<br/>
+<br/>
+[Diese Email wurde automatisch erzeugt.]<br/>
+<br/>
+verinice ist ein ISMS-Tool f&uuml;r das Management von Informationssicherheit:<br/>
+http://www.verinice.org/

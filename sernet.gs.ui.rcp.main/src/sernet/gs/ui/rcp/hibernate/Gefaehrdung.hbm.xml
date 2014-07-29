@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+	Individual threat for BSI risk analysis
+	@author ahanekop@sernet.de
+ -->
+ 
+<hibernate-mapping package="sernet.gs.model">
+	<class name="Gefaehrdung" table="gefaehrdung">
+		
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property
+			name="uuid"
+			unique="true"
+		/>
+		
+		<property name="id"/>
+
+		<property name="titel"/>
+
+		<property name="kategorie"/>
+
+		<property name="url"/>
+
+		<property name="stand"/>
+		
+		<joined-subclass
+			name="sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung"
+			extends="Gefaehrdung"
+			table="owngefaehrdung">
+			
+			<key column="dbId"/>
+			
+			<property name="ownkategorie"/>
+			
+			<property 
+				name="beschreibung"
+				length="30000"/>
+			
+		</joined-subclass>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+    name="sync-service" 
+    targetNamespace="http://www.sernet.de/service/vna-service" 
+    xmlns:vnas="http://www.sernet.de/service/vna-service"
+    xmlns:vna="http://www.sernet.de/service/vna" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://www.sernet.de/service/vna-service">
+            <xsd:import namespace="http://www.sernet.de/service/vna" schemaLocation="vna-service-schema.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="request">
+        <wsdl:part name="request" element="vna:vna" />
+    </wsdl:message>
+    <wsdl:message name="response">
+        <wsdl:part name="response" element="vna:response" />
+    </wsdl:message>
+
+    <wsdl:portType name="vna-service">
+        <wsdl:operation name="import">
+            <wsdl:input message="vnas:request" />
+            <wsdl:output message="vnas:response" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="vna-serviceSOAP" type="vnas:vna-service">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="import">
+            <soap:operation soapAction="http://www.sernet.de/service/vna" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="vna-service">
+        <wsdl:port name="vna-service" binding="vnas:vna-serviceSOAP">
+            <soap:address location="http://localhost:8080/vna-service" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

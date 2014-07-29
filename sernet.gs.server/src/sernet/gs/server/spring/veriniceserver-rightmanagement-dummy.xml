@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<bean id="rightsService" class="sernet.verinice.service.DummyRightsService">
+    <property name="authConfigurationDefault" value="${rights.authConfigurationDefault}"/>
+	<property name="authConfigurationSchema" value="${rights.authConfigurationSchema}"/>
+	<property name="configurationDao" ref="configurationDao" />
+	<property name="propertyDao" ref="propertyDao" />
+	<property name="messages" ref="rightsServiceMessages" /> 
+</bean>
+
+<bean id="rightsServerHandler" class="sernet.verinice.service.DummyRightsServerHandler" />
+	
+</beans>
