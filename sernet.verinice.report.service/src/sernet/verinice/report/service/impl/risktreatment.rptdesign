@@ -1361,13 +1361,13 @@ columns(cols);</value>
                     <property name="name">control_status</property>
                     <expression name="expression">status = row["control_implemented"]
 
-if (status == "Ja")
+if (status == "Ja" || status == "Yes")
 {	 
     3
-} else if (status == "Teilweise")
+} else if (status == "Teilweise" || status == "Partly")
 {
     2
-} else if (status == "Nein")
+} else if (status == "Nein" || status == "No")
 {
     1
 } else {
@@ -2423,13 +2423,13 @@ columns(cols);</value>
                     <property name="name">control_status</property>
                     <expression name="expression">status = row["control_implemented"]
 
-if (status == "Ja")
+if (status == "Ja" || status == "Yes")
 {	 
     3
-} else if (status == "Teilweise")
+} else if (status == "Teilweise" || status == "Partly")
 {
     2
-} else if (status == "Nein")
+} else if (status == "Nein" || status == "No")
 {
     1
 } else {
