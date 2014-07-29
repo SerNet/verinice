@@ -448,9 +448,11 @@ public class ChooseGefaehrdungPage extends WizardPage {
     private void checkAllSelectedGefaehrdungen() {
         List<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>();
         for (GefaehrdungsUmsetzung associatedGefaehrdung : wizard.getAssociatedGefaehrdungen()) {
-            for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
-                if (gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
-                    toCheck.add(gefaehrdung);
+            if(associatedGefaehrdung!=null) {
+                for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+                    if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
+                        toCheck.add(gefaehrdung);
+                    }
                 }
             }
         }
@@ -470,9 +472,11 @@ public class ChooseGefaehrdungPage extends WizardPage {
             List<GefaehrdungsUmsetzung> list = command.getAssociatedGefaehrdungen();
 
             for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
-                for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
-                    if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
-                        associateGefaehrdung(gefaehrdung, true);
+                if(selectedGefaehrdung!=null) {
+                    for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+                        if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+                            associateGefaehrdung(gefaehrdung, true);
+                        }
                     }
                 }
             }
