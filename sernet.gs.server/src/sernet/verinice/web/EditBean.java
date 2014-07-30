@@ -203,20 +203,22 @@ public class EditBean {
         if(getVisiblePropertyIds()!=null && !getVisiblePropertyIds().isEmpty()) {
             return isVisibleType(huiType);
         } else {
-            return isVisible(getTagSet(huiType.getTags()));
+            return isVisibleByTags(huiType);
         }
     }
 
     private boolean isVisibleType(PropertyType type) {
         return type.isVisible() && getVisiblePropertyIds().contains(type.getId());
     }
+    
+    private boolean isVisibleByTags(PropertyType type) {
+        if(!type.isVisible()) {
+            return false;
+        }
+        Set<String> tagSet = getTagSet(type.getTags());
+        return isVisible(tagSet);
+    }
 
-    /**
-     * 
-     * 
-     * @param groupHui
-     * @return
-     */
     private boolean isVisible(PropertyGroup groupHui) {
         boolean visible = isVisible(getTagSet(groupHui.getTags()));
         if(!visible) {

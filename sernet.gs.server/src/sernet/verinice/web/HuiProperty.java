@@ -82,6 +82,14 @@ public class HuiProperty<K,V> implements Serializable{
         return isEditable();
     }
     
+    public boolean isVisible() {
+        return type.isVisible();
+    }
+    
+    public boolean getIsVisible() {
+        return isVisible();
+    }
+    
     public boolean getIsSingleSelect() {
         return type.isSingleSelect();
     }
