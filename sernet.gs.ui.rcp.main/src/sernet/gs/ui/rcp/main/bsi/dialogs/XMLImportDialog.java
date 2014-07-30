@@ -85,6 +85,8 @@ public class XMLImportDialog extends Dialog {
     private boolean update;
     private boolean delete;
     private boolean integrate;
+    
+    private Button integrateButton;
 
     private Text dataPathText;
     private boolean dataPathFlag;
@@ -259,6 +261,7 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 insert = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : insert;
+                integrateButton.setEnabled(insert || update);
             }
         };
 
@@ -274,6 +277,7 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 update = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : update;
+                integrateButton.setEnabled(insert || update);
             }
         };
         Button updateCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
@@ -304,8 +308,10 @@ public class XMLImportDialog extends Dialog {
                 integrate = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : integrate;
             }
         };
-        Button integrateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_31, false, integrateListener);
+        
+        integrateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_31, false, integrateListener);
         integrateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        integrateButton.setEnabled(insert || update);
 
         Label integrateText = new Label(operationGroup, SWT.LEFT);
         integrateText.setText(Messages.XMLImportDialog_37);
