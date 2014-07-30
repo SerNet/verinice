@@ -173,7 +173,9 @@ public class EditBean {
                         }
                     }
                     group.setPropertyList(listOfGroup);
-                    groupList.add(group);
+                    if(!listOfGroup.isEmpty()) {
+                        groupList.add(group);
+                    }
                 }
             }              
             propertyList = new ArrayList<HuiProperty<String,String>>();

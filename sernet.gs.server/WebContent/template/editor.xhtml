@@ -30,7 +30,7 @@
 		  			</ui:repeat>
 		  			<p:remoteCommand name="submitEditForm" process="@form" update=":editForm :tableForm :navForm" action="#{edit.save}"/>
 		        </p:outputPanel>
-		        <p:panel header="#{msgEdit['general']}" collapsed="#{not edit.generalOpen}" toggleable="true" toggleSpeed="50" style="margin-top: 3px;">
+		        <p:panel header="#{msgEdit['general']}" collapsed="#{not edit.generalOpen}" toggleable="true" toggleSpeed="50" style="margin-top: 3px;" rendered="#{!empty edit.labelPropertyList}">
 		    		<vn:properties list="#{edit.labelPropertyList}" listNoLabel="#{edit.noLabelPropertyList}"/>
 		      	</p:panel>
 		     	<c:forEach var="group" items="#{edit.groupList}" > 
