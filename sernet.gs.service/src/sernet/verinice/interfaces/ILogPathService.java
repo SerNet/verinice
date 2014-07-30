@@ -24,5 +24,5 @@ package sernet.verinice.interfaces;
  *
  */
 public interface ILogPathService {
-    public String getLogPath();
+    public String getLogDirectory();
 }

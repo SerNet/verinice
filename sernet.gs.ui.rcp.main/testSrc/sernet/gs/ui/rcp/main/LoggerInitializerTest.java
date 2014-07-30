@@ -57,30 +57,36 @@ public class LoggerInitializerTest extends LoggerInitializer {
     }
 
     @Test
-    public void getLogPathTest() {
-
-        String logFileWithUuid = "/tmp/verinice-" + UUID.randomUUID();
+    public void getLogDirectoryTest() {
+        String directory = System.getProperty("java.io.tmpdir") + "/";
+        String logFileWithUuid = directory + UUID.randomUUID().toString();
         System.setProperty(LOGGING_PATH_KEY, logFileWithUuid);
-        Assert.assertEquals(logFileWithUuid, new LoggerInitializer().getLogPath());
+        Assert.assertEquals(directory, new LoggerInitializer().getLogDirectory());
+    }
+    
+    @Test
+    public void getLogInvalidDirectoryTest() {
+        String directory = "";
+        String logFileWithUuid = directory + UUID.randomUUID().toString();
+        System.setProperty(LOGGING_PATH_KEY, logFileWithUuid);
+        Assert.assertEquals(directory, new LoggerInitializer().getLogDirectory());
     }
 
     @Test
-    @Ignore
     public void getDefaultLogDirectory() {
- 
+
         System.setProperty("osgi.instance.area", System.getProperty("java.io.tmpdir"));
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(WITHOUT_FILE_PATH_LOG4J_XML).getPath());
 
         LoggerInitializer.tryReadingCustomLog4jFile();
         LoggerInitializer.tryConfiguringLoggingPath();
 
-        Assert.assertEquals(System.getProperty("osgi.instance.area") + "/" + LOG_FOLDER, new LoggerInitializer().getLogPath());
+        Assert.assertEquals(System.getProperty("osgi.instance.area") + "/" + LOG_FOLDER, new LoggerInitializer().getLogDirectory());
     }
 
     @Test
-    @Ignore
     public void getDefaultLogFilePath() {
-    
+
         System.setProperty("osgi.instance.area", System.getProperty("java.io.tmpdir"));
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(WITHOUT_FILE_PATH_LOG4J_XML).getPath());
 
@@ -99,11 +105,10 @@ public class LoggerInitializerTest extends LoggerInitializer {
         LoggerInitializer.tryReadingCustomLog4jFile();
         LoggerInitializer.tryConfiguringLoggingPath();
 
-        Assert.assertEquals(path.replaceFirst("\\$\\{java.io.tmpdir\\}", System.getProperty("java.io.tmpdir")), getLogPath());
+        Assert.assertEquals(path.replaceFirst("\\$\\{java.io.tmpdir\\}", System.getProperty("java.io.tmpdir")), getPathFromRootLogger());
     }
 
     @Test
-    @Ignore
     public void filePathFromVeriniceIniOverride() {
 
         String uuidLogFile = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString() + ".log";
@@ -117,7 +122,6 @@ public class LoggerInitializerTest extends LoggerInitializer {
     }
 
     @Test
-    @Ignore
     public void pathFromVeriniceIniOverride() {
 
         String uuidLogFile = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString() + ".log";
@@ -127,11 +131,10 @@ public class LoggerInitializerTest extends LoggerInitializer {
         LoggerInitializer.tryReadingCustomLog4jFile();
         LoggerInitializer.tryConfiguringLoggingPath();
 
-        Assert.assertEquals(System.getProperty("java.io.tmpdir") + "/", getLogPath());
+        Assert.assertEquals(System.getProperty("java.io.tmpdir") + "/", getLogDirectory());
     }
 
     @Test
-    @Ignore
     public void parseLog4jFile() throws ParserConfigurationException, SAXException, IOException {
 
         Document customLog4jConfig = loadLog4jFile(CUSTOM_LOG4J_XML);

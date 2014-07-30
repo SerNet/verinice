@@ -75,7 +75,7 @@ public class LoggerInitializer implements ILogPathService {
      * origin file path defined in a log4j file.
      */
     static void tryConfiguringLoggingPath() {
-        String p = getLoggingPath();
+        String p = getLoggingPathPrefix();
         p = replaceInvalidSuffix(p);
         configureAllFileAppender(p);
     }
@@ -134,11 +134,31 @@ public class LoggerInitializer implements ILogPathService {
         } else if (existsFilePathInRootLogger()) {
             return getPathFromRootLogger();
         } else {
-            return getStandardPath();
+            return getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
     }
 
-    private static String getStandardPath() {
+    private static String getBaseDirectory(String filePath) {
+
+        String[] sSplitted = filePath.split("/");
+        StringBuilder directory = new StringBuilder();
+
+        for (int i = 0; i < sSplitted.length - 1; i++) {
+            directory.append(sSplitted[i]).append("/");
+        }
+
+        return directory.toString();
+    }
+
+    private static String removeSlash(String s) {
+        if (s.charAt(s.length() - 1) == '/') {
+            return s.substring(0, s.length() - 1);
+        }
+
+        return s;
+    }
+
+    private static String getStandardDirectory() {
         return appendSlash(System.getProperty(WORKSPACE_PROPERTY_KEY)) + LOG_FOLDER;
     }
 
@@ -180,10 +200,6 @@ public class LoggerInitializer implements ILogPathService {
         return string;
     }
 
-    private static String getLoggingPath() {
-        return getLoggingPathPrefix() + DEFAULT_VERINICE_LOG;
-    }
-
     private static String readFromVeriniceIniFile() {
         return System.getProperty(LOGGING_PATH_KEY);
     }
@@ -202,8 +218,8 @@ public class LoggerInitializer implements ILogPathService {
      * @see sernet.gs.ui.rcp.main.LogPathService#getLogPath()
      */
     @Override
-    public String getLogPath() {
-        return replaceInvalidSuffix(getLoggingPathPrefix());
+    public String getLogDirectory() {
+        return replaceInvalidSuffix(getBaseDirectory(getLoggingPathPrefix()));
     }
 
 }
