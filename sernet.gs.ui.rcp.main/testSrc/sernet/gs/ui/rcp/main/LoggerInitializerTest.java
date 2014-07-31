@@ -133,8 +133,8 @@ public class LoggerInitializerTest extends LoggerInitializer {
 
         Assert.assertEquals(System.getProperty("java.io.tmpdir") + "/", getLogDirectory());
     }
-
-    @Test
+    
+   @Test
     public void parseLog4jFile() throws ParserConfigurationException, SAXException, IOException {
 
         Document customLog4jConfig = loadLog4jFile(CUSTOM_LOG4J_XML);

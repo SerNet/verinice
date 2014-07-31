@@ -75,7 +75,7 @@ public class LoggerInitializer implements ILogPathService {
      * origin file path defined in a log4j file.
      */
     static void tryConfiguringLoggingPath() {
-        String p = getLoggingPathPrefix();
+        String p = getLogFilePath();
         p = replaceInvalidSuffix(p);
         configureAllFileAppender(p);
     }
@@ -127,15 +127,19 @@ public class LoggerInitializer implements ILogPathService {
         return fileAppender.getFile() != null;
     }
 
-    private static String getLoggingPathPrefix() {
-
+    private static String getLogFilePath() {
+        
+        String filePath = null;
+        
         if (isConfiguredInVeriniceIniFile()) {
-            return readFromVeriniceIniFile();
+            filePath = readFromVeriniceIniFile();
         } else if (existsFilePathInRootLogger()) {
-            return getPathFromRootLogger();
+            filePath = getPathFromRootLogger();
         } else {
-            return getStandardDirectory() + DEFAULT_VERINICE_LOG;
+            filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
+        
+        return filePath != null ? filePath.replace('\\', '/') : null ;
     }
 
     private static String getBaseDirectory(String filePath) {
@@ -148,14 +152,6 @@ public class LoggerInitializer implements ILogPathService {
         }
 
         return directory.toString();
-    }
-
-    private static String removeSlash(String s) {
-        if (s.charAt(s.length() - 1) == '/') {
-            return s.substring(0, s.length() - 1);
-        }
-
-        return s;
     }
 
     private static String getStandardDirectory() {
@@ -219,7 +215,7 @@ public class LoggerInitializer implements ILogPathService {
      */
     @Override
     public String getLogDirectory() {
-        return replaceInvalidSuffix(getBaseDirectory(getLoggingPathPrefix()));
+        return replaceInvalidSuffix(getBaseDirectory(getLogFilePath()));
     }
 
 }
