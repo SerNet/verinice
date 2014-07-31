@@ -194,7 +194,9 @@ public class CopyCommand extends GenericCommand {
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
             newElement.getEntity().copyEntity(copyElement.getEntity());
-            newElement.setIconPath(copyElement.getIconPath());
+            if(copyElement.getIconPath()!=null) {
+                newElement.setIconPath(copyElement.getIconPath());
+            }
             if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
                if (newElement instanceof GefaehrdungsUmsetzung){
                     String title = newElement.getTitle();

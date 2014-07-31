@@ -148,7 +148,8 @@ public class ControlTransformService {
 		numberProcessed++;
 		monitor.setTaskName(getText(numberOfControls,numberProcessed,element.getTitle()));
         if (group.canContain(element)) {         
-            element.setParentAndScope(group);           
+            element.setParentAndScope(group);  
+            element.setIconPath(group.getIconPath());
         } else {
             throw new ItemTransformException(Messages.getString("ControlTransformService.0")); //$NON-NLS-1$
         }

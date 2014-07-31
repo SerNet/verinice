@@ -44,6 +44,11 @@ public class InterviewGroup extends Group<Asset> {
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
+	
+	public InterviewGroup(CnATreeElement parent, String iconPath) {
+        this(parent);
+        this.setIconPath(iconPath);
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -58,7 +63,8 @@ public class InterviewGroup extends Group<Asset> {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 

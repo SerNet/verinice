@@ -37,7 +37,8 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		super();
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 	    return "";
 	}
 	
@@ -48,13 +49,14 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		super(parent);
 	}
 
-	/**
+    /**
 	 * Returns a array of child-type-ids of this group.
 	 * Implemnt this and use TYPE_ID of childs
 	 * 
 	 * @return array of child-type-ids
 	 */
-	public abstract String[] getChildTypes();
+	@Override
+    public abstract String[] getChildTypes();
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#canContain(java.lang.Object)
@@ -70,7 +72,8 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		return canContain;
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		// empty, override this to add tags to groups
 		// dont't forget to add a huiproperty to your SNCA.xml
 		return Collections.emptyList();

@@ -114,6 +114,10 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     @Override
     public void execute() {
         try {
+            if(clazz==null) {
+                clazz = CnATypeMapper.getClassFromTypeId(typeId);
+            }
+            
             if (!skipReload && !getContainerDAO().contains(container)) {
                 getContainerDAO().reload(container, container.getDbId());
             }

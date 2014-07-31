@@ -254,9 +254,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public CnATreeElement(CnATreeElement parent) {
 		this();
 		this.parent = parent;
-		if(parent!=null && this.getScopeId()==null) {
-		    this.setScopeId(parent.getScopeId());
-		}
+		inherit(parent);
 	}
 
 	protected CnATreeElement() {
@@ -267,6 +265,25 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		
 		children = new HashSet<CnATreeElement>();
 	}
+	
+    protected void inherit(CnATreeElement parent) {
+        if (parent != null) {
+            inheritScopeId(parent);
+            inheritIcon(parent);
+        }
+    }
+
+    protected void inheritIcon(CnATreeElement parent) {
+        if (this.getIconPath() == null) {
+            this.setIconPath(parent.getIconPath());
+        }
+    }
+
+    protected void inheritScopeId(CnATreeElement parent) {
+        if (this.getScopeId() == null) {
+            this.setScopeId(parent.getScopeId());
+        }
+    }
 
 	public CnATreeElement getParent() {
 		return parent;

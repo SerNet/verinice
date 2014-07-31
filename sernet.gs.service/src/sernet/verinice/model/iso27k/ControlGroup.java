@@ -53,7 +53,10 @@ public class ControlGroup extends Group<Control> {
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-
+	public ControlGroup(CnATreeElement parent, String iconPath) {
+        this(parent);
+        this.setIconPath(iconPath);
+    }
 
     /* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -67,14 +70,16 @@ public class ControlGroup extends Group<Control> {
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTitle()
 	 */
-	public String getTitle() {
+	@Override
+    public String getTitle() {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#setTitel(java.lang.String)
 	 */
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	

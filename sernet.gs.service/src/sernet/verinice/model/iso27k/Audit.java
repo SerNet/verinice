@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.TagHelper;
@@ -75,12 +74,12 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
         if(createChildren) {
-            addChild(new AssetGroup(this));
-            addChild(new ControlGroup(this));
-            addChild(new PersonGroup(this));
-            addChild(new FindingGroup(this));
-            addChild(new EvidenceGroup(this));
-            addChild(new InterviewGroup(this));
+            addChild(new AssetGroup(this, null));
+            addChild(new ControlGroup(this, null));
+            addChild(new PersonGroup(this, null));
+            addChild(new FindingGroup(this, null));
+            addChild(new EvidenceGroup(this, null));
+            addChild(new InterviewGroup(this, null));
         }
     }
 	
@@ -122,11 +121,13 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
-	public String getAbbreviation() {
+	@Override
+    public String getAbbreviation() {
 		return getEntity().getSimpleValue(PROP_ABBR);
 	}
 	
@@ -134,7 +135,8 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
 	}
 	
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	

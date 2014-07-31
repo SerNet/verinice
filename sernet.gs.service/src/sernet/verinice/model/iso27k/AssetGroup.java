@@ -48,6 +48,11 @@ public class AssetGroup extends Group<Asset> {
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
+	
+	public AssetGroup(CnATreeElement parent, String iconPath) {
+	    this(parent);
+	    this.setIconPath(iconPath);
+	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()

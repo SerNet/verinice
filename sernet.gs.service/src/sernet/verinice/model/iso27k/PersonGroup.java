@@ -43,6 +43,11 @@ public class PersonGroup extends Group<PersonIso> {
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
+	
+	public PersonGroup(CnATreeElement parent, String iconPath) {
+        this(parent);
+        this.setIconPath(iconPath);
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -57,7 +62,8 @@ public class PersonGroup extends Group<PersonIso> {
 		return getEntity().getSimpleValue(PROP_NAME);
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	

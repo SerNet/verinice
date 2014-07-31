@@ -190,6 +190,10 @@ public class CutCommand extends ChangeLoggingCommand implements IChangeLoggingCo
         
         group.addChild(element);
         
+        if(element.getIconPath()==null) {
+            element.setIconPath(group.getIconPath());
+        }
+        
         // save element (switch to dao from command call because of Bug 918)
         getDao().merge(element, false);
         getDao().flush();

@@ -100,6 +100,14 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.common.CnATreeElement#inheritIcon(sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    protected void inheritIcon(CnATreeElement parent) {
+        // do not inherit icon from import groups if this org. is imported
+    }
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
