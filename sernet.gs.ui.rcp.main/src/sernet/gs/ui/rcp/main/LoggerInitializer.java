@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Appender;
@@ -140,7 +141,12 @@ public class LoggerInitializer implements ILogPathService {
             filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
         
-        return  (filePath != null) ? filePath.replaceAll("(/)|(\\\\)", File.separator) : null; 
+        if (filePath != null){
+            return replaceInvalidSuffix(filePath);
+        }
+        
+        return null;
+         
     }
 
     private static String getBaseDirectory(String filePath) {
@@ -153,6 +159,11 @@ public class LoggerInitializer implements ILogPathService {
         }
 
         return directory.toString();
+    }
+    
+    private String replaceSeparatorWithSystemSeparator(String s){
+        String r = s.replace('\\', File.pathSeparatorChar);
+        return r.replace('/', File.pathSeparatorChar);
     }
 
     private static String getStandardDirectory() {
