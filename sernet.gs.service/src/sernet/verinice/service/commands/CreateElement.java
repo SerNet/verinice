@@ -18,6 +18,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,29 +51,24 @@ import sernet.verinice.model.iso27k.Organization;
 @SuppressWarnings("serial")
 public class CreateElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-    transient private Logger log = Logger.getLogger(CreateElement.class);
+    private transient Logger log = Logger.getLogger(CreateElement.class);
 
-    private CnATreeElement container;
+    protected CnATreeElement container;
     private Class<T> clazz;
     private String typeId;
     // may be null
     private String title;
-    protected T child;
+    protected T element;
     private String stationId;
 
     private transient IAuthService authService;
+    private transient IBaseDao<T, Serializable> dao;
+    private transient IBaseDao<CnATreeElement, Serializable> containerDAO;
 
-    private boolean skipReload;
-    
-    protected boolean createChildren;
-    
+    private boolean skipReload;   
+    protected boolean createChildren; 
     protected boolean inheritAuditPermissions = false;
 
-    /**
-     * @param container2
-     * @param clazz
-     * @param typeId
-     */
     public CreateElement(CnATreeElement container, Class<T> clazz, String title, boolean skipReload, boolean createChildren) {
         this.container = container;
         this.clazz = clazz;
@@ -117,52 +113,47 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     @Override
     public void execute() {
-        IBaseDao<T, Serializable> dao;
-        if(clazz==null) {
-            clazz = CnATypeMapper.getClassFromTypeId(typeId);
-        }
-        
-        dao = getDaoFactory().getDAO(clazz);
-        
-        IBaseDao<CnATreeElement, Serializable> containerDAO = getDaoFactory().getDAOforTypedElement(container);
-
         try {
-            if (!skipReload && !containerDAO.contains(container)) {
-                containerDAO.reload(container, container.getDbId());
+            if (!skipReload && !getContainerDAO().contains(container)) {
+                getContainerDAO().reload(container, container.getDbId());
             }
-
-            // get constructor with parent-parameter and create new object:
-            if(isOrganization()) {
-                child = (T) Organization.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
-            } else if(isAudit()) {
-                child = (T) Audit.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
-            } else {
-                child = clazz.getConstructor(CnATreeElement.class).newInstance(container);
-            
-            }
-            if (title != null) {
-                // override the default title
-                child.setTitel(title);
-            }
-
+            element = createInstance();         
             if (authService.isPermissionHandlingNeeded()) {
-                addPermissions(containerDAO);
+                element = addPermissions(element);
             }
-
-            child = dao.merge(child, false);
-            container.addChild(child);
-            child.setParentAndScope(container);
-
-            if(isOrganization() || isItVerbund()) {
-                setScopeOfScope(child);
-            }
-            
-            // initialize UUID, used to find container in display in views:
-            container.getUuid();
+            element = saveElement();
         } catch (Exception e) {
             getLogger().error("Error while creating element", e);
             throw new RuntimeCommandException(e);
         }
+    }
+
+    protected T saveElement() {
+        element = getDao().merge(element, false);
+        container.addChild(element);
+        element.setParentAndScope(container);
+
+        if(isOrganization() || isItVerbund()) {
+            setScopeOfScope(element);
+        }
+        return element;
+    }
+
+    protected T createInstance() throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        T element = null;
+        // get constructor with parent-parameter and create new object:
+        if(isOrganization()) {
+            element = (T) Organization.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
+        } else if(isAudit()) {
+            element = (T) Audit.class.getConstructor(CnATreeElement.class,boolean.class).newInstance(container,createChildren);
+        } else {
+            element = clazz.getConstructor(CnATreeElement.class).newInstance(container);         
+        }
+        if (title != null) {
+            // override the default title
+            element.setTitel(title);
+        }
+        return element;
     }
 
     private boolean isOrganization() {
@@ -177,9 +168,6 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         return Audit.class.equals(clazz) || Audit.TYPE_ID.equals(typeId);
     }
 
-    /**
-     * @param child2
-     */
     private void setScopeOfScope(CnATreeElement orgOrItVerbund) {
         orgOrItVerbund.setScopeId(orgOrItVerbund.getDbId());
         for (CnATreeElement child : orgOrItVerbund.getChildren()) {
@@ -187,42 +175,53 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
         
     }
-
-    private void addPermissions(IBaseDao<CnATreeElement, Serializable> containerDAO) {
+    
+    protected T addPermissions(/*not final*/ T pElement) {
         // By default, inherit permissions from parent element but ITVerbund
         // instances cannot do this, as its parents (BSIModel) is not visible
         // and has no permissions. Therefore we use the name of the currently
         // logged in user as a role which has read and write permissions for
         // the new ITVerbund.
-        if (child instanceof ITVerbund || child instanceof Organization || (child instanceof Audit && !isInheritAuditPermissions())) {
-            addPermissions(child);           
+        if (pElement instanceof ITVerbund || pElement instanceof Organization ) {
+            addPermissionsForScope(pElement);           
+        } else if (pElement instanceof Audit && isInheritAuditPermissions()) {
+            addPermissionsForAudit((Audit) pElement);
         } else {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setPermissions(true);
-            CnATreeElement elementPerm = containerDAO.retrieve(container.getDbId(), ri);
-            child.setPermissions(Permission.clonePermissionSet(child, elementPerm.getPermissions()));
+            CnATreeElement elementPerm = getContainerDAO().retrieve(container.getDbId(), ri);
+            pElement.setPermissions(Permission.clonePermissionSet(pElement, elementPerm.getPermissions()));
+        }
+        return pElement;
+    }
+    
+    protected void addPermissionsForScope(/*not final*/ T pElement) {
+        HashSet<Permission> newperms = new HashSet<Permission>();
+        newperms.add(Permission.createPermission(pElement, authService.getUsername(), true, true));
+        pElement.setPermissions(newperms);
+        for (CnATreeElement child : pElement.getChildren()) {
+            addPermissionsForScope((T) child);
         }
     }
     
-    protected void addPermissions(/*not final*/ CnATreeElement element) {
-        HashSet<Permission> newperms = new HashSet<Permission>();
-        newperms.add(Permission.createPermission(element, authService.getUsername(), true, true));
-        element.setPermissions(newperms);
-        for (CnATreeElement child : element.getChildren()) {
-            addPermissions(child);
+    protected void addPermissionsForAudit(/*not final*/ Audit audit) {
+        HashSet<Permission> newperms = new HashSet<Permission>();       
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setPermissions(true);
+        CnATreeElement containerWithPerm = getContainerDAO().retrieve(container.getDbId(), ri);
+        newperms.addAll(Permission.clonePermissionSet(audit, containerWithPerm.getPermissions()));     
+        audit.setPermissions(newperms);
+        for (CnATreeElement child : audit.getChildren()) {
+            addPermissions((T) child);
         }
     }
 
     public T getNewElement() {
-        return child;
+        return element;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType
-     * ()
+    /* 
+     * (non-Javadoc) @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
      */
     @Override
     public int getChangeType() {
@@ -230,11 +229,7 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
-     * ()
+     * (non-Javadoc) @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
      */
     @Override
     public String getStationId() {
@@ -250,15 +245,12 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
-     * getChangedElements()
+     * (non-Javadoc) @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
         ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(1);
-        result.add(child);
+        result.add(element);
         return result;
     }
 
@@ -270,6 +262,20 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     @Override
     public void setAuthService(IAuthService service) {
         this.authService = service;
+    }
+    
+    public IBaseDao<T, Serializable> getDao() {
+        if(dao==null) {
+            dao = getDaoFactory().getDAOforTypedElement(element);
+        }
+        return dao;
+    }
+    
+    public IBaseDao<CnATreeElement, Serializable> getContainerDAO() {
+        if(containerDAO==null) {
+            containerDAO = getDaoFactory().getDAOforTypedElement(container);
+        }
+        return containerDAO;
     }
 
     /**

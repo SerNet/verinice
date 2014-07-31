@@ -15,48 +15,29 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
-import java.util.Set;
-
-import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.CreateElement;
 
-@SuppressWarnings({ "serial", "restriction", "unchecked", "rawtypes" })
-public class CreateITVerbund extends CreateElement {
-    
-	public CreateITVerbund(CnATreeElement container, Class type) {
-		super(container,type,true,true);
+public class CreateAnwendung extends CreateElement {
+
+	public CreateAnwendung(CnATreeElement container, Class type) {
+		super(container, type);
 	}
-	
-    public CreateITVerbund(CnATreeElement container, Class type, boolean createChildren) {
-        super(container, type, true, createChildren);
-    }
 	
 	@Override
 	public void execute() {
 		super.execute();
-		if (super.child instanceof ITVerbund) {
-			ITVerbund verbund = (ITVerbund) child;
-			if(createChildren) {
-			    verbund.createNewCategories();
-			}
-			Set<CnATreeElement> children = verbund.getChildren();
-			for (CnATreeElement child : children) {
-                addPermissions(child);
-            }
-			child.setScopeId(child.getDbId());
-			for (CnATreeElement group : child.getChildren()) {
-			    group.setScopeId(child.getDbId());
-	        }
+		if (super.element instanceof Anwendung) {
+			Anwendung anwendung = (Anwendung) element;
+			anwendung.createCategories();
 		}
-		
 	}
 	
 	@Override
-	public ITVerbund getNewElement() {
-		return (ITVerbund) super.getNewElement();
+	public Anwendung getNewElement() {
+		return (Anwendung) super.getNewElement();
 	}
 
 }
