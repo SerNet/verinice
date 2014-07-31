@@ -155,7 +155,7 @@ public class LoggerInitializer implements ILogPathService {
         StringBuilder directory = new StringBuilder();
 
         for (int i = 0; i < sSplitted.length - 1; i++) {
-            directory.append(sSplitted[i]).append(File.separator);
+            directory.append(sSplitted[i]).append(File.pathSeparatorChar);
         }
 
         return directory.toString();
