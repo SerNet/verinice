@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.File;
 import java.util.Enumeration;
 
 import org.apache.commons.io.FilenameUtils;
@@ -139,16 +140,16 @@ public class LoggerInitializer implements ILogPathService {
             filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
         
-        return filePath != null ? filePath.replace('\\', '/') : null ;
+        return  (filePath != null) ? filePath.replaceAll("(/)|(\\\\)", File.separator) : null; 
     }
 
     private static String getBaseDirectory(String filePath) {
 
-        String[] sSplitted = filePath.split("/");
+        String[] sSplitted = filePath.split(File.separator);
         StringBuilder directory = new StringBuilder();
 
         for (int i = 0; i < sSplitted.length - 1; i++) {
-            directory.append(sSplitted[i]).append("/");
+            directory.append(sSplitted[i]).append(File.separator);
         }
 
         return directory.toString();
