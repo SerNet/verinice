@@ -142,7 +142,7 @@ public class LoggerInitializer implements ILogPathService {
         }
         
         if (filePath != null){
-            return replaceInvalidSuffix(filePath);
+            return replaceSeparatorWithSystemSeparator(filePath);
         }
         
         return null;
@@ -161,7 +161,7 @@ public class LoggerInitializer implements ILogPathService {
         return directory.toString();
     }
     
-    private String replaceSeparatorWithSystemSeparator(String s){
+    private static String replaceSeparatorWithSystemSeparator(String s){
         String r = s.replace('\\', File.pathSeparatorChar);
         return r.replace('/', File.pathSeparatorChar);
     }
