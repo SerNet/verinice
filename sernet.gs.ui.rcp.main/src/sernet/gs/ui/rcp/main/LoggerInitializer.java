@@ -151,19 +151,19 @@ public class LoggerInitializer implements ILogPathService {
 
     private static String getBaseDirectory(String filePath) {
 
-        String[] sSplitted = filePath.split(File.pathSeparator);
+        String[] sSplitted = filePath.split(File.separator);
         StringBuilder directory = new StringBuilder();
 
         for (int i = 0; i < sSplitted.length - 1; i++) {
-            directory.append(sSplitted[i]).append(File.pathSeparatorChar);
+            directory.append(sSplitted[i]).append(File.separatorChar);
         }
 
         return directory.toString();
     }
     
     private static String replaceSeparatorWithSystemSeparator(String s){
-        String r = s.replace('\\', File.pathSeparatorChar);
-        return r.replace('/', File.pathSeparatorChar);
+        String r = s.replace('\\', File.separatorChar);
+        return r.replace('/', File.separatorChar);
     }
 
     private static String getStandardDirectory() {
